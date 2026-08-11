@@ -1,4 +1,4 @@
-# @version 1
+# @version 2
 # @case_insensitive true
 # Mermaid 11.16.1 sequence diagram token grammar.
 # Derived from packages/mermaid/src/diagrams/sequence/parser/sequenceDiagram.jison.
@@ -55,6 +55,7 @@ PLUS                     = "+"
 MINUS                    = "-"
 NUMBER                   = /(?:[0-9]+(?:\.[0-9]{1,2})?|\.[0-9]{1,2})/
 IDENTIFIER               = /[A-Za-z0-9_.$]+/
+ANGLE_TEXT               = /[<>]+/
 WORD                     = /[^ \t\r\n:,+-@;]+/
 
 keywords:

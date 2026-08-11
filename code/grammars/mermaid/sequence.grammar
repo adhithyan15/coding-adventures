@@ -1,4 +1,4 @@
-# @version 2
+# @version 3
 # Mermaid 11.16.1 sequence diagram parser grammar: initial native subset.
 
 document = { terminator } HEADER body EOF ;
@@ -12,7 +12,7 @@ destroy_stmt = "destroy" actor_ref ;
 message_stmt = actor_ref [ CENTRAL ] message_arrow [ CENTRAL ] [ PLUS | MINUS ] actor_ref COLON wrapped_text ;
 activation_stmt = ( "activate" | "deactivate" ) actor_ref ;
 note_stmt = "note" ( ( "left" | "right" ) "of" actor_ref | "over" actor_pair ) COLON wrapped_text ;
-link_stmt = "link" actor_ref COLON text AT URL ;
+link_stmt = "link" actor_ref COLON link_label AT URL ;
 links_stmt = "links" actor_ref COLON JSON_OBJECT ;
 properties_stmt = "properties" actor_ref COLON JSON_OBJECT ;
 details_stmt = "details" actor_ref COLON details_reference ;
@@ -32,7 +32,10 @@ actor_pair = actor_ref [ COMMA actor_ref ] ;
 message_arrow = SOLID_OPEN_ARROW | DOTTED_OPEN_ARROW | SOLID_FILLED_ARROW | DOTTED_FILLED_ARROW | BIDIRECTIONAL_SOLID | BIDIRECTIONAL_DOTTED | SOLID_CROSS_ARROW | DOTTED_CROSS_ARROW | SOLID_POINT_ARROW | DOTTED_POINT_ARROW | SOLID_FILLED_TOP | SOLID_FILLED_BOTTOM | SOLID_STICK_TOP | SOLID_STICK_BOTTOM | DOTTED_FILLED_TOP | DOTTED_FILLED_BOTTOM | DOTTED_STICK_TOP | DOTTED_STICK_BOTTOM | SOLID_REVERSE_FILLED_TOP | SOLID_REVERSE_FILLED_BOTTOM | SOLID_REVERSE_STICK_TOP | SOLID_REVERSE_STICK_BOTTOM | DOTTED_REVERSE_FILLED_TOP | DOTTED_REVERSE_FILLED_BOTTOM | DOTTED_REVERSE_STICK_TOP | DOTTED_REVERSE_STICK_BOTTOM ;
 actor_ref = actor_atom { [ MINUS ] actor_atom } ;
 actor_atom = IDENTIFIER | WORD | NUMBER ;
-identifier = IDENTIFIER | WORD | COLOR | NUMBER | ENTITY | LINE_BREAK ;
-text = identifier { identifier } ;
+identifier = IDENTIFIER | WORD | ANGLE_TEXT | COLOR | NUMBER | ENTITY | LINE_BREAK ;
+link_label = identifier { identifier | COLON | COMMA | MINUS | PLUS | sequence_keyword } ;
+text = text_atom { text_atom } ;
+text_atom = identifier | COLON | COMMA | MINUS | PLUS | AT | CENTRAL | CONFIG | JSON_OBJECT | URL | WRAP_DIRECTIVE | message_arrow | sequence_keyword ;
+sequence_keyword = "participant" | "actor" | "create" | "destroy" | "link" | "links" | "properties" | "details" | "accTitle" | "accDescr" | "box" | "as" | "activate" | "deactivate" | "note" | "left" | "right" | "of" | "over" | "title" | "autonumber" | "off" | "loop" | "rect" | "opt" | "alt" | "else" | "par" | "par_over" | "and" | "critical" | "option" | "break" | "end" ;
 wrapped_text = [ WRAP_DIRECTIVE ] [ text ] ;
 terminator = NEWLINE | SEMICOLON ;

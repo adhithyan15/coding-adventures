@@ -159,6 +159,9 @@ Both modern `title Text` and legacy `title: Text` sequence title forms lower
 through the same title semantics and native text pipeline.
 Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
 before layout and Paint glyph shaping.
+Message, note, participant, and control labels reconstruct skipped whitespace
+from token source columns so punctuation, angle text, embedded arrows, and
+keyword-shaped words retain their authored spelling without synthetic spaces.
 Sequence `#` comments are discarded by the grammar-driven lexer while numeric
 and named `#...;` entities remain semantic label text.
 Message and note `<br>`, `<br/>`, and `<br />` tags become semantic newlines;
