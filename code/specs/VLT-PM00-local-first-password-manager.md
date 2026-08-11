@@ -1501,8 +1501,9 @@ changelog, focused build, and downstream validation.
              exact trace lookup: each call publishes its own successful
              `AuditRead` first, fully verifies the newly advanced chain, and
              exposes only explicit audit-surface facts with redacted debug.
-9b-2c-5c-2. CLI audit list/show, trace-aware rendering, and
-             tamper/fault/real-process acceptance.
+9b-2c-5c-2. completed CLI audit list/show with canonical trace-aware rendering,
+             audited missing lookups, tamper-with-no-output enforcement,
+             ambiguous-provider recovery, and real-process PTY acceptance.
 9b-2c-4c-1. completed production application boundary for a single durable,
              crash-resumable pre-audit-vault migration epoch.
 9b-2c-4c-2. completed explicit authenticated CLI audit migration after every
