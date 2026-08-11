@@ -262,6 +262,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The page's Arabic ص clip closes its oval and rises into the short shoulder in
 // one run, then restarts once at the baseline junction for the trailing bowl.
 // The pause and restart keep Saad's path distinct from the adjacent س and ش.
+// The page's embedded Arabic ض lesson repeats those two Saad body runs, then
+// lifts again to place the upper dot last. Its independently observed order is
+// recorded even though the directly linked short MOV was unavailable at audit.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -972,6 +975,80 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ص"),
+  },
+  [ductusKey("arabic", "ض")]: {
+    script: "arabic",
+    glyph: "ض",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "close the oval clockwise from its lower-left junction",
+            path: [
+              { x: 535, y: 30 },
+              { x: 560, y: 90 },
+              { x: 620, y: 160 },
+              { x: 700, y: 230 },
+              { x: 790, y: 305 },
+              { x: 870, y: 320 },
+              { x: 950, y: 285 },
+              { x: 1010, y: 230 },
+              { x: 1015, y: 175 },
+              { x: 970, y: 115 },
+              { x: 900, y: 70 },
+              { x: 810, y: 45 },
+              { x: 720, y: 38 },
+              { x: 630, y: 42 },
+              { x: 535, y: 30 },
+            ],
+          },
+          {
+            label: "turn left and rise into the short shoulder without lifting",
+            path: [
+              { x: 535, y: 30 },
+              { x: 530, y: 65 },
+              { x: 520, y: 105 },
+              { x: 510, y: 145 },
+              { x: 495, y: 190 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the baseline junction, and sweep through the trailing bowl",
+            path: [
+              { x: 500, y: -54 },
+              { x: 475, y: -115 },
+              { x: 425, y: -175 },
+              { x: 360, y: -215 },
+              { x: 280, y: -232 },
+              { x: 205, y: -225 },
+              { x: 145, y: -185 },
+              { x: 105, y: -125 },
+              { x: 92, y: -65 },
+              { x: 100, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then place the upper dot last",
+            path: [
+              { x: 725, y: 470 },
+              { x: 675, y: 515 },
+              { x: 725, y: 568 },
+              { x: 770, y: 520 },
+              { x: 725, y: 470 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ض"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

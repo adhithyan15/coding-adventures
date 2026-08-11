@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `Icon` now lowers through a dependency-free native font-glyph vocabulary,
+  including runtime glyph and accessibility-label slots, MSL color/size/test
+  tags, and a visible fallback. The semantic `spinner` glyph becomes Compose's
+  indeterminate `CircularProgressIndicator` with a default "Loading"
+  description, allowing all 23 toolkit components to emit on this backend.
 - `HostDialog` now lowers modal content to Compose's native `Dialog` and the
   contract's non-modal form to `Popup`. Generated overlays honor controlled
   visibility and interactive-dismiss policy, dispatch open/close events, render

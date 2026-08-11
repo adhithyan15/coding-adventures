@@ -35,6 +35,7 @@ const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
 const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
+const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -586,6 +587,22 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
   });
 
+  it("Arabic independent ض repeats the ص body before a second lift places its dot", () => {
+    expect(ARABIC_DAAD.script).toBe("arabic");
+    expect(penLifts(ARABIC_DAAD)).toBe(2);
+    expect(ARABIC_DAAD.strokes).toHaveLength(3);
+    expect(ARABIC_DAAD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    expect(ARABIC_DAAD.strokes.slice(0, 2)).toEqual(ARABIC_SAAD.strokes);
+    const dot = ARABIC_DAAD.strokes[2].segments[0].path;
+    const bodyTop = Math.max(
+      ...ARABIC_DAAD.strokes.slice(0, 2).flatMap((stroke) =>
+        stroke.segments.flatMap((segment) => segment.path.map((point) => point.y)),
+      ),
+    );
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(bodyTop);
+    expect(dot[0]).toEqual(dot.at(-1));
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -990,6 +1007,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /FullSizeRender-6.mov.*two pen-down runs.*00:01.1–00:02.4.*lower-left junction.*oval clockwise.*turns left.*short shoulder.*without lifting.*one lift.*00:02.6–00:03.3.*baseline junction.*descends.*trailing bowl.*sweeps left.*finishes above the baseline.*two-way connector.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*distinct from.*Seen and Shiin/i,
+    );
+  });
+
+  it("Arabic independent ض traces its Saad skeleton and final dot to the embedded Oregon lesson", () => {
+    const src = ARABIC_DAAD.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Daad.*00:43.1–00:46.3.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /embedded Panopto Daad lesson.*three pen-down runs.*00:43.1–00:46.3.*00:43.1–00:45.0.*lower-left junction.*oval clockwise.*short shoulder.*without lifting.*one lift.*00:45.2–00:45.4.*baseline junction.*trailing bowl.*second lift.*upper dot last.*00:46.0–00:46.3.*FullSizeRender-5.mov.*HTTP 403.*accessible embedded primary lesson.*embedded Saad lesson.*direct Saad clip.*same two body runs.*two-way connector.*contextual shapes.*three-stroke.*two-lift.*Noto Naskh.*independently evidenced.*Saad/i,
     );
   });
 

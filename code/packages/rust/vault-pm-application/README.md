@@ -6,8 +6,11 @@ device secrets, item revisions, catalog snapshots, and signed VLT-PM15
 operation events, plus domain-separated V1 encrypted object framing and an
 authority-anchored repository verifier for the single authorized Phase 1A
 device. Audit events use their own authenticated object-kind domain; durable
-publication, chain verification, and CLI enforcement remain later slices. It
-also defines the exact canonical
+owner state can now journal a redacted per-device event head and refuses to
+activate a later publication that omits or reuses that head. Legacy local state
+decodes with auditing disabled. Audit activation, event construction, chain
+verification, and CLI enforcement remain later slices. It also defines the
+exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
 byte-oriented bootstrap/local-state store contracts.

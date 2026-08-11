@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.31.0] - 2026-08-10
+
+### Added
+
+- Add an optional owner-private per-device audit-event head to active state and
+  pending publication journals, with backward-compatible decoding of pre-audit
+  state records.
+
+### Security
+
+- Require every publication after audit activation to advance to a distinct
+  newly published event object, preventing a journal from silently skipping or
+  reusing the durable audit chain head.
+- Keep event identities redacted from diagnostics; this dormant state boundary
+  does not activate auditing or claim current command enforcement by itself.
+
 ## [0.30.0] - 2026-08-10
 
 ### Added
