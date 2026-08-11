@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 人 ductus (HL-C09BZ)
+
+- Render **人** in two evidence-aligned frames: left-falling piě first, then
+  lift once and draw right-falling nà from the central junction.
+- Pin the per-character Hanzi Writer Data record derived from Make Me a Hanzi's
+  documented PRC stroke order, while fitting its medians to Noto Sans SC.
+- Establish a reusable source convention for the remaining Chinese inventory.
+
 ### Added — cited Hebrew Tav ductus (HL-C09BY)
 
 - Render **ת** in four evidence-aligned frames: draw the top bar and right side

@@ -57,6 +57,11 @@ const hebrewOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const chineseOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansSC-Subset.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -79,6 +84,8 @@ const RETROFLEX_NNA = DUCTUS["ண"];
 const retroflexNnaOutline = tamilOutline("ண");
 const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
+const CHINESE_REN = ductusFor("人", "chinese")!;
+const chineseRenOutline = chineseOutline("人");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -780,6 +787,36 @@ describe("ந — a real cited three-stroke six-movement filmstrip", () => {
       penPathD(DENTAL_NA.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(DENTAL_NA.strokes[2], 1));
+  });
+});
+
+describe("Chinese 人 — two cited falling strokes in PRC order", () => {
+  const steps = ductusSteps(CHINESE_REN);
+  const strip = ductusFilmstrip(CHINESE_REN, chineseRenOutline);
+
+  it("shows the left-falling stroke before restarting for the right-falling stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left-falling piě stroke from the upper centre",
+      "lift, then draw the right-falling nà stroke from the junction",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with the first stroke settled behind the second", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseRenOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CHINESE_REN.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_REN.strokes[1], 1),
+    );
   });
 });
 

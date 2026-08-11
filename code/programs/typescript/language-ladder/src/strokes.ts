@@ -8,6 +8,7 @@
 // where (if ever) it lifts.
 
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
+import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
@@ -199,6 +200,14 @@ const arabicAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const chineseCharacterSource = (glyph: string): StrokeSource => {
+  const letter = chinese.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Chinese ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const hebrewAlphabetSource = (glyph: string): StrokeSource => {
   const letter = hebrew.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -368,6 +377,57 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // ---------------------------------------------------------------------------
 
 export const DUCTUS: Record<string, LetterDuctus> = {
+  // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
+  // first, then restart at the central junction for the right-falling stroke.
+  // The source's Arphic-derived proportions are fitted to the vendored Noto
+  // Sans SC outline while preserving both directions and the intervening lift.
+  [ductusKey("chinese", "人")]: {
+    script: "chinese",
+    glyph: "人",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left-falling piě stroke from the upper centre",
+            path: [
+              { x: 500, y: 810 },
+              { x: 500, y: 740 },
+              { x: 490, y: 650 },
+              { x: 470, y: 555 },
+              { x: 445, y: 465 },
+              { x: 410, y: 375 },
+              { x: 365, y: 285 },
+              { x: 310, y: 200 },
+              { x: 245, y: 120 },
+              { x: 175, y: 55 },
+              { x: 105, y: 5 },
+              { x: 65, y: -25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the right-falling nà stroke from the junction",
+            path: [
+              { x: 500, y: 690 },
+              { x: 515, y: 620 },
+              { x: 535, y: 535 },
+              { x: 565, y: 445 },
+              { x: 605, y: 355 },
+              { x: 655, y: 265 },
+              { x: 715, y: 180 },
+              { x: 785, y: 105 },
+              { x: 860, y: 45 },
+              { x: 925, y: 0 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("人"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

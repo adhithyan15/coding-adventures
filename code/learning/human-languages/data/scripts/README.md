@@ -413,8 +413,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   and continues down the right side in one run, then one lift precedes the
   separate left leg and its small leftward foot. Its four-frame Noto Sans
   Hebrew path preserves the adjacent purple cursive form's one-run retracing
-  stem and right arch. The remaining **155** prose part orders across six
-  scripts (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28,
+  stem and right arch. Chinese **人** then opens the smallest actionable
+  inventory from Hanzi Writer Data's pinned, Make Me a Hanzi-derived PRC stroke
+  record: draw the left-falling stroke, lift once, then draw the right-falling
+  stroke. Its two-frame Noto Sans SC path preserves the source medians' order
+  and direction while documenting the source font's different proportions.
+  The remaining **154** prose part orders across six
+  scripts (`arabic` 3, `chinese` 23, `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
