@@ -1,0 +1,79 @@
+% ============================================================================
+% plant-need — what a plant needs to grow, and the specific role each input
+% plays in photosynthesis (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A plant does not simply "eat" like an animal: it builds its own food from
+% raw ingredients, and each ingredient does a DIFFERENT job in that process.
+% Sunlight excites electrons; water supplies electrons and oxygen; carbon
+% dioxide is combined with those electrons to build sugar. Before a learner
+% can reason about photosynthesis, they must know WHICH input does WHAT.
+% Recall is a binding query:
+%
+%     ? plant_need(sunlight, $Role)      % excites_chlorophyll_electrons
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `plant_need(need, role)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% role WITH its source, on the CPU, with zero model calls, and abstains on a
+% word that is not one of these three cited inputs (it never invents a role).
+%
+% Each input and the role the source states for it, as a little truth table:
+%
+%     input             role                          a beginner's cue
+%     ---------------   ---------------------------   -------------------------------------
+%     sunlight          excites_chlorophyll_electrons  light energizes electrons in the leaf
+%     water              split_for_oxygen_and_electrons water is broken apart for its pieces
+%     carbon_dioxide     combined_to_make_glucose       CO2 + excited electrons become sugar
+%
+% The query also runs BACKWARD — bind a role and recall the input:
+%
+%     ? plant_need($Need, combined_to_make_glucose)   % carbon_dioxide
+%
+% A word that is a REAL plant-growth input but not one of these three named
+% roles — `soil` (the source mentions it only as a place nutrients come from,
+% with no distinct role sentence of its own) or `moonlight` (not a real
+% input at all) — is deliberately NOT a row, so a recall on it ABSTAINS
+% rather than inventing a role. That honest-abstention property is what
+% makes the table safe to build a reasoner on: it answers exactly the
+% input→role pairs it can ground, and only those.
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is quoted verbatim from Washington State University's "Ask Dr.
+% Universe" — a university science-outreach column that answers real
+% kid-submitted science questions — hence `trust consensus` (NOT
+% `authoritative`, which is reserved for a primary/official .gov/.edu
+% research paper or standards source; this is an outreach column, not a
+% primary research publication). Nothing here is asserted from memory. The
+% envelope below cites the article's own opening ingredient sentence at its
+% `locator`. For full auditability, here is the exact span that grounds EACH
+% row, copied character-for-character, from the same article:
+%
+%   sunlight → excites_chlorophyll_electrons
+%     "The light excites electrons in the chlorophyll."
+%
+%   water → split_for_oxygen_and_electrons
+%     "That energy has the power to split water into oxygen and electrons."
+%
+%   carbon_dioxide → combined_to_make_glucose
+%     "Then the excited electrons can jump to the carbon dioxide to make a
+%      sugar called glucose."
+%
+%   https://askdruniverse.wsu.edu/2024/01/23/flowers-use-sunlight-water-grow/
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table plant_need {
+    columns need, role
+
+    row (sunlight, excites_chlorophyll_electrons)
+    row (water, split_for_oxygen_and_electrons)
+    row (carbon_dioxide, combined_to_make_glucose)
+
+    source "The light excites electrons in the chlorophyll."
+    locator "https://askdruniverse.wsu.edu/2024/01/23/flowers-use-sunlight-water-grow/"
+    trust consensus
+}
