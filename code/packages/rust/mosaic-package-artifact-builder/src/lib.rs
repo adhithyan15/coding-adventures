@@ -734,6 +734,44 @@ fn ignored_native_property(
     property: &LayoutProp,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        ("HostDialog", "open") if backend == Backend::Xaml => Some((
+            "property.dialog-open-host-required",
+            "the XAML emitter documents the authored open state but requires application code-behind to show and hide the native dialog",
+        )),
+        ("HostDialog", "dismiss-on-backdrop")
+            if backend == Backend::Xaml
+                && matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false") =>
+        {
+            Some((
+                "property.dialog-dismiss-policy-ignored",
+                "the XAML emitter cannot enforce dismiss-on-backdrop false and leaves native dismissal behavior to application code-behind",
+            ))
+        }
+        ("HostDialog", "onOpen")
+            if matches!(backend, Backend::SwiftUI | Backend::Xaml) =>
+        {
+            Some((
+                "event.dialog-open-ignored",
+                "the backend does not dispatch the authored HostDialog onOpen event",
+            ))
+        }
+        ("HostDialog", "onClose")
+            if backend == Backend::SwiftUI && node_has_keyword(node, "modal", "false") =>
+        {
+            Some((
+                "event.dialog-close-ignored",
+                "the SwiftUI popover lowering does not dispatch the authored HostDialog onClose event",
+            ))
+        }
+        ("HostLink", "onActivate")
+            if matches!(backend, Backend::SwiftUI | Backend::Xaml)
+                && !node_has_keyword(node, "external", "false") =>
+        {
+            Some((
+                "event.link-activate-ignored",
+                "the backend opens the external URL but does not dispatch the authored HostLink onActivate event",
+            ))
+        }
         ("HostCheckbox", "indeterminate")
             if matches!(
                 backend,
@@ -760,11 +798,15 @@ fn ignored_native_property(
     }
 }
 
-fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
-    !node.props.iter().any(|prop| {
-        prop.name == "external"
-            && matches!(&prop.value, LayoutPropValue::Keyword(value) if value == "false")
+fn node_has_keyword(node: &LayoutNode, property_name: &str, expected: &str) -> bool {
+    node.props.iter().any(|prop| {
+        prop.name == property_name
+            && matches!(&prop.value, LayoutPropValue::Keyword(value) if value == expected)
     })
+}
+
+fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
+    !node_has_keyword(node, "external", "false")
 }
 
 /// Build a package's artifact for a single backend.
@@ -3711,6 +3753,132 @@ layout Controls {
             BuildProfile::NativeComplete,
         )
         .expect("no-op property analysis");
+
+        assert!(report.degradations.is_empty());
+        assert!(report.native_complete);
+    }
+
+    #[test]
+    fn native_degradation_analysis_reports_ignored_dialog_and_link_contracts() {
+        let pkg = make_package("mosaic-pkg-dialog-links", &["DialogLinks"]);
+        fs::write(
+            pkg.path().join("src/DialogLinks.mil"),
+            "component DialogLinks { slot dialog-open : bool ; emit onDialogOpen ; emit onDialogClose ; emit onLinkActivate ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/DialogLinks.mll"),
+            r#"
+layout DialogLinks {
+  Column [ root ] {
+    HostDialog [ dialog ] (
+      open : slot: dialog-open,
+      modal : false,
+      dismiss-on-backdrop : false,
+      onOpen : emit: onDialogOpen,
+      onClose : emit: onDialogClose
+    )
+    HostLink [ docs ] (
+      href : "https://example.com/docs",
+      external : true,
+      onActivate : emit: onLinkActivate
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for (backend, expected) in [
+            (Backend::Compose, vec![]),
+            (Backend::Qt, vec![]),
+            (
+                Backend::SwiftUI,
+                vec![
+                    ("event.dialog-open-ignored", "root.children[0].props[3]"),
+                    ("event.dialog-close-ignored", "root.children[0].props[4]"),
+                    ("event.link-activate-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (
+                Backend::Xaml,
+                vec![
+                    (
+                        "property.dialog-open-host-required",
+                        "root.children[0].props[0]",
+                    ),
+                    (
+                        "property.dialog-dismiss-policy-ignored",
+                        "root.children[0].props[2]",
+                    ),
+                    ("event.dialog-open-ignored", "root.children[0].props[3]"),
+                    ("event.link-activate-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("dialog/link property analysis");
+            let actual = report
+                .degradations
+                .iter()
+                .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                .collect::<Vec<_>>();
+            assert_eq!(actual, expected, "unexpected {backend:?} inventory");
+        }
+    }
+
+    #[test]
+    fn supported_dialog_and_link_event_shapes_remain_native_complete() {
+        let pkg = make_package("mosaic-pkg-native-events", &["NativeEvents"]);
+        fs::write(
+            pkg.path().join("src/NativeEvents.mil"),
+            "component NativeEvents { slot dialog-open : bool ; emit onDialogClose ; emit onLinkActivate ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/NativeEvents.mll"),
+            r#"
+layout NativeEvents {
+  Column [ root ] {
+    HostDialog [ dialog ] (
+      open : slot: dialog-open,
+      modal : true,
+      dismiss-on-backdrop : true,
+      onClose : emit: onDialogClose
+    )
+    HostLink [ route ] (
+      href : "/settings",
+      external : false,
+      onActivate : emit: onLinkActivate
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("supported event analysis");
 
         assert!(report.degradations.is_empty());
         assert!(report.native_complete);

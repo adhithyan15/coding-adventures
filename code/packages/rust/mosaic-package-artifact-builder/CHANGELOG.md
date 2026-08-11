@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] - ignored native dialog and link contract inventory
+
+- Native-complete analysis now rejects XAML dialogs whose open state still
+  requires application code-behind, XAML's unsupported no-dismiss policy, and
+  ignored dialog lifecycle events in XAML and SwiftUI.
+- External `HostLink.onActivate` event loss in XAML and SwiftUI is now reported
+  at the exact package-expanded property path. Supported internal-link dispatch
+  and SwiftUI modal-close shapes remain clean.
+
 ## [Unreleased] - complete Flutter package source set
 
 - Generated Flutter project shells now copy every exported widget into `lib/`

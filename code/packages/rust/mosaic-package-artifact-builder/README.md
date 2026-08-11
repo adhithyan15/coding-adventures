@@ -33,9 +33,11 @@ the selected backend has a known degradation.
 
 The inventory identifies passive drag/drop lowerings, native table lowerings
 without table semantics, Flutter's dialog placeholder and missing URL effect
-host, ignored tri-state checkbox and radio-group properties, and generated
-native project shells that can fall back to sample props. Compose, Flutter, Qt,
-SwiftUI, and XAML now have closed shells: their strict profiles
+host, ignored tri-state checkbox and radio-group properties, XAML dialog state
+that still requires code-behind, ignored XAML/SwiftUI dialog lifecycle events,
+ignored XAML/SwiftUI external-link activation events, and generated native
+project shells that can fall back to sample props. Compose, Flutter, Qt, SwiftUI,
+and XAML now have closed shells: their strict profiles
 require Mosaic's standard Rust runtime, wait for the first props envelope,
 reject missing required props, and omit sample-data and optional-host fallbacks.
 The overall native-complete milestone remains open while ignored properties,
@@ -48,6 +50,11 @@ For example, Compose/Flutter/SwiftUI report an authored, non-false
 `HostRadio.group` until those emitters provide native mutual exclusion. An
 explicit `indeterminate: false` is a semantic no-op and does not fail a strict
 build.
+
+Dialog/link degradations are likewise value-sensitive. SwiftUI's modal
+`HostDialog.onClose` and XAML/SwiftUI internal-link `onActivate` dispatch are
+supported, while SwiftUI's non-modal close event and external-link activation
+events are rejected until those emitter paths preserve the authored behavior.
 
 `compose_component` is the canonical in-memory entry point shared by package
 builds and standalone three-file compilation. It returns the compiled model,

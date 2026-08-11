@@ -315,8 +315,10 @@ unblocks multiple downstream targets; never count source generation as completio
     metadata across every native emitter, and add the equivalent package setting.
     - [x] Report property-level degradations for ignored tri-state checkbox
       state and radio-group behavior, including package-expanded paths.
-    - [ ] Inventory the remaining ignored dialog/link events, layout properties,
-      MSL styles, effects, and accessibility metadata.
+    - [x] Report known XAML/SwiftUI dialog lifecycle and external-link event
+      losses, including XAML dialog state that still requires app code-behind.
+    - [ ] Inventory the remaining ignored layout properties, MSL styles,
+      effects, accessibility metadata, and dialog/link target semantics.
     - [ ] Define a serializable native-view reference contract for `node` and
       component slots; Flutter's JSON runtime cannot currently materialize a
       Dart `Widget` value for those otherwise typed composition seams.
