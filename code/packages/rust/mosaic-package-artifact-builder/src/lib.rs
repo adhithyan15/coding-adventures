@@ -671,7 +671,8 @@ fn collect_native_degradations(
 ) {
     let backend_name = backend.dir_name();
     let reason = match node.tag.as_str() {
-        "HostDraggable" | "HostDropTarget" if backend.is_native() => Some((
+        "HostDraggable" | "HostDropTarget"
+            if backend.is_native() && backend != Backend::Flutter => Some((
             "interaction.drag-drop-inert",
             "the backend lowers this interactive primitive to a non-interactive container",
         )),
@@ -3618,6 +3619,52 @@ layout Board {
             analyze_package_degradations(&opts, BuildProfile::NativeComplete)
                 .expect("repeat analysis"),
             "the report must not depend on directory iteration order"
+        );
+    }
+
+    #[test]
+    fn flutter_native_drag_drop_is_not_reported_as_inert() {
+        let pkg = make_package("mosaic-pkg-board", &["Board"]);
+        fs::write(
+            pkg.path().join("src/Board.mll"),
+            r#"
+layout Board {
+  Column [ root ] {
+    HostDropTarget [ lane ] ( drop-key: "lane-a", accepts: "task" ) {
+      HostDraggable [ card ] ( drag-key: "task-a", drag-kind: "task" ) {
+        Text ( content: "Card" )
+      }
+    }
+  }
+}
+"#,
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let options = |backend| BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: false,
+            theme: None,
+        };
+
+        let flutter =
+            analyze_package_degradations(&options(Backend::Flutter), BuildProfile::NativeComplete)
+                .expect("Flutter analysis");
+        assert!(flutter.native_complete);
+        assert!(flutter.degradations.is_empty());
+
+        let compose =
+            analyze_package_degradations(&options(Backend::Compose), BuildProfile::NativeComplete)
+                .expect("Compose analysis");
+        assert_eq!(
+            compose
+                .degradations
+                .iter()
+                .map(|entry| entry.code.as_str())
+                .collect::<Vec<_>>(),
+            vec!["interaction.drag-drop-inert", "interaction.drag-drop-inert"]
         );
     }
 

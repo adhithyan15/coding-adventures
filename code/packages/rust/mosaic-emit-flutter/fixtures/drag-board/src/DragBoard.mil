@@ -1,0 +1,8 @@
+component DragBoard {
+  emit onDragStart ( key : text , kind : text ) ;
+  emit onDragEnd ( key : text , kind : text , dropped : bool ) ;
+  emit onDragEnter ( key : text , kind : text ) ;
+  emit onDragLeave ( key : text , kind : text ) ;
+  emit onDropHover ( key : text , kind : text , targetKey : text , position : text ) ;
+  emit onDrop ( key : text , kind : text , targetKey : text , position : text ) ;
+}

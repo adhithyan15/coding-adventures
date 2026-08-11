@@ -27,6 +27,8 @@
 //! | `HostCheckbox`       | `Checkbox(value: ..., onChanged: ...)`              |
 //! | `HostRadio`          | `Radio<String>(value: ..., groupValue: ..., onChanged: ...)` |
 //! | `HostTable`          | `DataTable(columns: [...], rows: [...])`            |
+//! | `HostDraggable`      | native `Draggable<_MosaicDragData>` + keyboard/semantics controller |
+//! | `HostDropTarget`     | native `DragTarget<_MosaicDragData>` + scoped target registry |
 //! | `HostLink`           | `InkWell(onTap: () => launchUrl(...), child: Text(...))` (UI29-4) |
 //! | `HostTooltip`        | `Tooltip(message: ..., child: ...)` (UI29-4)        |
 //! | `HostNumberInput`    | `TextField(keyboardType: TextInputType.number, ...)` (UI29-4) |
@@ -1040,8 +1042,21 @@ pub fn from_pipeline(
     let uses_checkbox = layout_contains_tag(&layout.root, "HostCheckbox");
     let uses_radio = layout_contains_tag(&layout.root, "HostRadio");
     let uses_tooltip = layout_contains_tag(&layout.root, "HostTooltip");
+    let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget");
     if uses_radio {
         writeln!(out, "// ignore_for_file: deprecated_member_use").unwrap();
+    }
+    if uses_drag {
+        // The generated private helper exposes the complete UI35 callback
+        // contract even when a particular component binds only a subset.
+        // `SemanticsService.announce` is retained for the documented Flutter
+        // 3.24 floor; newer SDKs deprecate it in favor of a multi-view API.
+        writeln!(
+            out,
+            "// ignore_for_file: unused_element_parameter, deprecated_member_use"
+        )
+        .unwrap();
     }
     writeln!(
         out,
@@ -1066,11 +1081,19 @@ pub fn from_pipeline(
         )
         .unwrap();
     }
+    if uses_drag {
+        writeln!(out, "import 'package:flutter/services.dart';").unwrap();
+        writeln!(out, "import 'package:flutter/semantics.dart';").unwrap();
+    }
     writeln!(out).unwrap();
 
     // 2. Event union — sealed base class + one subclass per emit.
     out.push_str(&emit_event_union(name, &interface.emits)?);
     writeln!(out).unwrap();
+    if uses_drag {
+        out.push_str(&emit_drag_helpers());
+        writeln!(out).unwrap();
+    }
 
     // 3. Pre-compute the per-part style map. Same shape as the React
     //    emitter's `build_part_style_map`: kebab part-name → joined
@@ -1194,6 +1217,317 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
     Ok(out)
 }
 
+/// Emit the package-independent Flutter drag/drop runtime used by generated
+/// components. Pointer and keyboard releases both call `accept`, so the
+/// proposal payload and accepted outcome cannot diverge. The scope is mounted
+/// once per generated component instance, which keeps keyboard target
+/// enumeration out of sibling or nested component instances.
+fn emit_drag_helpers() -> String {
+    r#"class _MosaicDragData {
+  const _MosaicDragData({required this.key, required this.kind, required this.label});
+
+  final String key;
+  final String kind;
+  final String label;
+}
+
+class _MosaicDragScope extends StatefulWidget {
+  const _MosaicDragScope({required this.child});
+
+  final Widget child;
+
+  static _MosaicDragScopeState of(BuildContext context) {
+    final host = context.dependOnInheritedWidgetOfExactType<_MosaicDragScopeHost>();
+    assert(host != null, 'Mosaic drag primitives require a component drag scope');
+    return host!.state;
+  }
+
+  @override
+  State<_MosaicDragScope> createState() => _MosaicDragScopeState();
+}
+
+class _MosaicDragScopeHost extends InheritedWidget {
+  const _MosaicDragScopeHost({required this.state, required super.child});
+
+  final _MosaicDragScopeState state;
+
+  @override
+  bool updateShouldNotify(_MosaicDragScopeHost oldWidget) => false;
+}
+
+class _MosaicDragScopeState extends State<_MosaicDragScope> {
+  final List<_MosaicDropTargetState> _targets = <_MosaicDropTargetState>[];
+  _MosaicDragData? _active;
+  void Function(bool dropped)? _onDragEnd;
+  _MosaicDropTargetState? _activeTarget;
+
+  void register(_MosaicDropTargetState target) {
+    if (!_targets.contains(target)) _targets.add(target);
+  }
+
+  void unregister(_MosaicDropTargetState target) {
+    _targets.remove(target);
+    if (identical(_activeTarget, target)) _activeTarget = null;
+  }
+
+  void announce(String message) {
+    SemanticsService.announce(message, Directionality.of(context));
+  }
+
+  void grab(
+    _MosaicDragData data,
+    VoidCallback? onDragStart,
+    void Function(bool dropped)? onDragEnd,
+  ) {
+    if (_active != null) return;
+    _active = data;
+    _onDragEnd = onDragEnd;
+    _activeTarget = null;
+    onDragStart?.call();
+    announce('Grabbed ${data.label}. Use arrow keys to choose a target, then press Space or Enter to drop.');
+  }
+
+  List<_MosaicDropTargetState> get _eligibleTargets {
+    final data = _active;
+    if (data == null) return const <_MosaicDropTargetState>[];
+    return _targets.where((target) => target.accepts(data)).toList(growable: false);
+  }
+
+  void step(int delta) {
+    final data = _active;
+    final targets = _eligibleTargets;
+    if (data == null || targets.isEmpty) {
+      announce('No available drop targets.');
+      return;
+    }
+    final previous = _activeTarget;
+    var targetIndex = previous == null ? -1 : targets.indexOf(previous);
+    targetIndex = (targetIndex + delta) % targets.length;
+    if (targetIndex < 0) targetIndex += targets.length;
+    final next = targets[targetIndex];
+    if (!identical(previous, next)) {
+      previous?.leave(data);
+      next.enter(data);
+    }
+    next.hover(data, 'into');
+    _activeTarget = next;
+    announce('Move to ${next.widget.targetKey}, position ${targetIndex + 1} of ${targets.length}.');
+  }
+
+  bool drop() {
+    final data = _active;
+    final target = _activeTarget;
+    if (data == null || target == null || !target.accepts(data)) return false;
+    target.accept(data, 'into');
+    _finish(true);
+    return true;
+  }
+
+  void cancel() {
+    final data = _active;
+    if (data == null) return;
+    _activeTarget?.leave(data);
+    announce('Cancelled drag.');
+    _finish(false);
+  }
+
+  void _finish(bool dropped) {
+    final onDragEnd = _onDragEnd;
+    _active = null;
+    _onDragEnd = null;
+    _activeTarget = null;
+    onDragEnd?.call(dropped);
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      _MosaicDragScopeHost(state: this, child: widget.child);
+}
+
+class _MosaicDraggable extends StatelessWidget {
+  const _MosaicDraggable({
+    required this.data,
+    required this.disabled,
+    required this.child,
+    this.onDragStart,
+    this.onDragEnd,
+  });
+
+  final _MosaicDragData data;
+  final bool disabled;
+  final Widget child;
+  final VoidCallback? onDragStart;
+  final void Function(bool dropped)? onDragEnd;
+
+  void _toggle(BuildContext context) {
+    final scope = _MosaicDragScope.of(context);
+    if (scope._active == null) {
+      scope.grab(data, onDragStart, onDragEnd);
+    } else if (!scope.drop()) {
+      scope.cancel();
+    }
+  }
+
+  KeyEventResult _onKey(BuildContext context, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final scope = _MosaicDragScope.of(context);
+    final key = event.logicalKey;
+    if (key == LogicalKeyboardKey.escape && scope._active != null) {
+      scope.cancel();
+      return KeyEventResult.handled;
+    }
+    if (disabled) return KeyEventResult.ignored;
+    if (key == LogicalKeyboardKey.space || key == LogicalKeyboardKey.enter) {
+      _toggle(context);
+      return KeyEventResult.handled;
+    }
+    if (scope._active != null &&
+        (key == LogicalKeyboardKey.arrowDown || key == LogicalKeyboardKey.arrowRight)) {
+      scope.step(1);
+      return KeyEventResult.handled;
+    }
+    if (scope._active != null &&
+        (key == LogicalKeyboardKey.arrowUp || key == LogicalKeyboardKey.arrowLeft)) {
+      scope.step(-1);
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = _MosaicDragScope.of(context);
+    final semanticChild = Semantics(
+      button: true,
+      label: 'Draggable ${data.label}. Press Space or Enter to grab.',
+      onTap: disabled && scope._active == null ? null : () => _toggle(context),
+      child: child,
+    );
+    return Focus(
+      canRequestFocus: !disabled,
+      onKeyEvent: (node, event) => _onKey(context, event),
+      child: Draggable<_MosaicDragData>(
+        data: data,
+        maxSimultaneousDrags: disabled ? 0 : 1,
+        onDragStarted: () {
+          onDragStart?.call();
+          scope.announce('Grabbed ${data.label}.');
+        },
+        onDragEnd: (details) {
+          onDragEnd?.call(details.wasAccepted);
+          if (!details.wasAccepted) scope.announce('Cancelled drag.');
+        },
+        feedback: Material(
+          type: MaterialType.transparency,
+          child: Opacity(opacity: 0.8, child: child),
+        ),
+        childWhenDragging: Opacity(opacity: 0.45, child: semanticChild),
+        child: semanticChild,
+      ),
+    );
+  }
+}
+
+class _MosaicDropTarget extends StatefulWidget {
+  const _MosaicDropTarget({
+    required this.targetKey,
+    required this.disabled,
+    required this.child,
+    this.acceptsKinds,
+    this.onDragEnter,
+    this.onDragLeave,
+    this.onDropHover,
+    this.onDrop,
+  });
+
+  final String targetKey;
+  final bool disabled;
+  final List<String>? acceptsKinds;
+  final Widget child;
+  final void Function(_MosaicDragData data)? onDragEnter;
+  final void Function(_MosaicDragData data)? onDragLeave;
+  final void Function(_MosaicDragData data, String position)? onDropHover;
+  final void Function(_MosaicDragData data, String position)? onDrop;
+
+  @override
+  State<_MosaicDropTarget> createState() => _MosaicDropTargetState();
+}
+
+class _MosaicDropTargetState extends State<_MosaicDropTarget> {
+  _MosaicDragScopeState? _scope;
+  String _position = 'into';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final next = _MosaicDragScope.of(context);
+    if (!identical(_scope, next)) {
+      _scope?.unregister(this);
+      _scope = next;
+      next.register(this);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scope?.unregister(this);
+    super.dispose();
+  }
+
+  bool accepts(_MosaicDragData data) =>
+      !widget.disabled &&
+      (widget.acceptsKinds == null || widget.acceptsKinds!.contains(data.kind));
+
+  String _positionFor(Offset globalOffset) {
+    final renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox || renderObject.size.height <= 0) return 'into';
+    final ratio = renderObject.globalToLocal(globalOffset).dy / renderObject.size.height;
+    return ratio < 1 / 3 ? 'before' : ratio > 2 / 3 ? 'after' : 'into';
+  }
+
+  void accept(_MosaicDragData data, String position) {
+    if (!accepts(data)) return;
+    widget.onDrop?.call(data, position);
+    _scope?.announce('Dropped ${data.label} on ${widget.targetKey}.');
+  }
+
+  void enter(_MosaicDragData data) => widget.onDragEnter?.call(data);
+
+  void leave(_MosaicDragData data) => widget.onDragLeave?.call(data);
+
+  void hover(_MosaicDragData data, String position) {
+    _position = position;
+    widget.onDropHover?.call(data, position);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<_MosaicDragData>(
+      onWillAcceptWithDetails: (details) {
+        final accepted = accepts(details.data);
+        if (accepted) enter(details.data);
+        return accepted;
+      },
+      onMove: (details) {
+        if (!accepts(details.data)) return;
+        hover(details.data, _positionFor(details.offset));
+      },
+      onLeave: (data) {
+        if (data != null) leave(data);
+      },
+      onAcceptWithDetails: (details) => accept(details.data, _position),
+      builder: (context, candidateData, rejectedData) => Semantics(
+        container: true,
+        label: 'Drop target ${widget.targetKey}',
+        child: widget.child,
+      ),
+    );
+  }
+}
+"#
+    .to_string()
+}
+
 /// Emit the `StatelessWidget` class: fields for every slot, a
 /// `dispatch` field (always present, matches React's required prop),
 /// a const constructor with named-required parameters, and the
@@ -1233,7 +1567,7 @@ fn emit_widget_class(
     writeln!(out, "    required this.dispatch,").unwrap();
     writeln!(out, "  }});").unwrap();
 
-    let tree = emit_widget_tree(
+    let mut tree = emit_widget_tree(
         layout_root,
         6,
         part_styles,
@@ -1241,6 +1575,18 @@ fn emit_widget_class(
         emits,
         TableCtx::default(),
     )?;
+
+    if layout_contains_tag(layout_root, "HostDraggable")
+        || layout_contains_tag(layout_root, "HostDropTarget")
+    {
+        let nested = tree
+            .trim_end()
+            .lines()
+            .map(|line| format!("    {line}"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        tree = format!("      _MosaicDragScope(\n        child:\n{nested},\n      )\n");
+    }
 
     // Mosaic conditions use value truthiness, while Dart requires a
     // statically-typed bool. Keep the conversion on the generated widget so
@@ -1406,6 +1752,12 @@ fn emit_widget_tree(
     if node.tag == "HostTable" {
         return emit_host_table(node, indent, part_styles, component, emits, ctx);
     }
+    if node.tag == "HostDraggable" {
+        return emit_host_draggable(node, indent, part_styles, component, emits, ctx);
+    }
+    if node.tag == "HostDropTarget" {
+        return emit_host_drop_target(node, indent, part_styles, component, emits, ctx);
+    }
     // UI29-4 kernel — three new primitives. `HostLink` lowers to an
     // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
     // since Flutter has no built-in URL-launch capability without an
@@ -1475,11 +1827,6 @@ fn emit_widget_tree(
         "Box" => Some("Container"),
         "Row" => Some("Row"),
         "Column" => Some("Column"),
-        // UI35 — the drag family. This backend does not implement dragging yet, so
-        // both lower to a Column: the content still renders, it
-        // just isn't draggable here. Erroring instead would mean a layout using drag
-        // cannot be emitted to this backend AT ALL. See UI35-host-drag-drop.md.
-        "HostDraggable" | "HostDropTarget" => Some("Column"),
         "Stack" => Some("Stack"),
         // UI28-1 / U29-D1 — HostTable structural sub-tags lower to
         // `Column` containers on Flutter (Flutter has no semantic
@@ -2141,6 +2488,10 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
         )),
         "width" => Some(format!("width: {}", parse_pixel_value(value))),
         "height" => Some(format!("height: {}", parse_pixel_value(value))),
+        "min-height" => Some(format!(
+            "constraints: const BoxConstraints(minHeight: {})",
+            parse_pixel_value(value)
+        )),
         "background-color" | "color" => css_color_to_dart(value).map(|c| format!("color: {c}")),
         _ => None,
     }
@@ -2362,6 +2713,12 @@ fn emit_styled_box(
     }
     if let Some(h) = base.get("height") {
         args.push(format!("height: {}", parse_pixel_value(h)));
+    }
+    if let Some(min_height) = base.get("min-height") {
+        args.push(format!(
+            "constraints: const BoxConstraints(minHeight: {})",
+            parse_pixel_value(min_height)
+        ));
     }
     if let Some(ta) = base.get("text-align") {
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
@@ -3097,6 +3454,229 @@ fn emit_host_dialog(
     Ok(format!(
         "{pad}const SizedBox.shrink() /* TODO: HostDialog showDialog wiring */\n"
     ))
+}
+
+/// `HostDraggable` and `HostDropTarget` lower through a small generated
+/// runtime that keeps native pointer drag/drop and the keyboard interaction
+/// on one payload path. The surrounding `_MosaicDragScope` is mounted once
+/// per generated component instance by `emit_widget_class`.
+fn emit_host_draggable(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let key = drag_text_prop_expression(node, "drag-key", "")?;
+    let kind = drag_text_prop_expression(node, "drag-kind", "")?;
+    let label = drag_text_prop_expression(node, "drag-label", &key)?;
+    let disabled = bool_prop_expression(node, "drag-disabled")?
+        .or(bool_prop_expression(node, "disabled")?)
+        .unwrap_or_else(|| "false".to_string());
+    let child = emit_container(
+        node,
+        "Container",
+        indent + 4,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
+
+    let mut callbacks = String::new();
+    if let Some(call) = drag_event_dispatch(
+        node,
+        "onDragStart",
+        component,
+        emits,
+        &[("key", &key), ("kind", &kind)],
+    )? {
+        writeln!(callbacks, "{pad}  onDragStart: () {{ {call}; }},").unwrap();
+    }
+    if let Some(call) = drag_event_dispatch(
+        node,
+        "onDragEnd",
+        component,
+        emits,
+        &[("key", &key), ("kind", &kind), ("dropped", "dropped")],
+    )? {
+        writeln!(callbacks, "{pad}  onDragEnd: (dropped) {{ {call}; }},").unwrap();
+    }
+
+    Ok(format!(
+        "{pad}_MosaicDraggable(\n\
+         {pad}  data: _MosaicDragData(key: {key}, kind: {kind}, label: {label}),\n\
+         {pad}  disabled: {disabled},\n\
+         {callbacks}\
+         {pad}  child:\n{child}\
+         {pad})\n"
+    ))
+}
+
+fn emit_host_drop_target(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let target_key = drag_text_prop_expression(node, "drop-key", "")?;
+    let disabled = bool_prop_expression(node, "drop-disabled")?
+        .or(bool_prop_expression(node, "disabled")?)
+        .unwrap_or_else(|| "false".to_string());
+    let accepts = drag_accepts_expression(node)?;
+    let child = emit_container(
+        node,
+        "Container",
+        indent + 4,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
+
+    let enter_values = [("key", "data.key"), ("kind", "data.kind")];
+    let hover_values = [
+        ("key", "data.key"),
+        ("kind", "data.kind"),
+        ("targetKey", target_key.as_str()),
+        ("position", "position"),
+    ];
+    let mut callbacks = String::new();
+    for (prop, callback, values) in [
+        (
+            "onDragEnter",
+            "onDragEnter: (data)",
+            enter_values.as_slice(),
+        ),
+        (
+            "onDragLeave",
+            "onDragLeave: (data)",
+            enter_values.as_slice(),
+        ),
+        (
+            "onDropHover",
+            "onDropHover: (data, position)",
+            hover_values.as_slice(),
+        ),
+        (
+            "onDrop",
+            "onDrop: (data, position)",
+            hover_values.as_slice(),
+        ),
+    ] {
+        if let Some(call) = drag_event_dispatch(node, prop, component, emits, values)? {
+            writeln!(callbacks, "{pad}  {callback} {{ {call}; }},").unwrap();
+        }
+    }
+
+    let accepts_arg = accepts
+        .map(|value| format!("{pad}  acceptsKinds: {value},\n"))
+        .unwrap_or_default();
+    Ok(format!(
+        "{pad}_MosaicDropTarget(\n\
+         {pad}  targetKey: {target_key},\n\
+         {pad}  disabled: {disabled},\n\
+         {accepts_arg}\
+         {callbacks}\
+         {pad}  child:\n{child}\
+         {pad})\n"
+    ))
+}
+
+fn drag_text_prop_expression(
+    node: &LayoutNode,
+    name: &str,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    let value = match find_prop_value(node, name) {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_dart_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            format!("{field}.toString()")
+        }
+        Some(LayoutPropValue::Expr(expression)) => {
+            format!("({}).toString()", expression.trim())
+        }
+        Some(LayoutPropValue::Number(number)) => format!("\"{number}\""),
+        Some(LayoutPropValue::EmitRef(_)) | None => {
+            if fallback.starts_with('"') || fallback.ends_with(".toString()") {
+                fallback.to_string()
+            } else {
+                format!("\"{}\"", escape_dart_string(fallback))
+            }
+        }
+    };
+    Ok(value)
+}
+
+fn drag_accepts_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, "accepts") else {
+        // Historical Mosaic layouts omitted `accepts`; preserve that useful
+        // accept-all behavior. An explicitly authored empty list remains an
+        // empty list and accepts nothing, as UI35 specifies.
+        return Ok(None);
+    };
+    let expression = match value {
+        LayoutPropValue::String(kind) => {
+            format!("const <String>[\"{}\"]", escape_dart_string(kind))
+        }
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            field
+        }
+        LayoutPropValue::Expr(expression) => {
+            format!("List<String>.from(({}) as Iterable)", expression.trim())
+        }
+        LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => "const <String>[]".to_string(),
+    };
+    Ok(Some(expression))
+}
+
+fn drag_event_dispatch(
+    node: &LayoutNode,
+    prop: &str,
+    component: &str,
+    emits: &[EmitDecl],
+    values: &[(&str, &str)],
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+        return Ok(None);
+    };
+    let case = pascalize(&strip_on_prefix(emit_name));
+    validate_emit_name(&case)?;
+    let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(Some(format!("dispatch({component}Event{case}())")));
+    };
+    let args = emit
+        .params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            let expression = values
+                .iter()
+                .find_map(|(name, value)| (*name == field).then_some(*value))
+                .map(ToString::to_string)
+                .unwrap_or_else(|| match &param.r#type {
+                    EmitPayloadType::Text | EmitPayloadType::Color => "\"\"".to_string(),
+                    EmitPayloadType::Number => "0".to_string(),
+                    EmitPayloadType::Bool => "false".to_string(),
+                    EmitPayloadType::Component(_) => "throw UnimplementedError()".to_string(),
+                });
+            Ok(format!("{field}: {expression}"))
+        })
+        .collect::<Result<Vec<_>, PipelineEmitError>>()?
+        .join(", ");
+    Ok(Some(format!("dispatch({component}Event{case}({args}))")))
 }
 
 /// `HostTable` → `DataTable`. v1 emits a minimal `DataTable(columns:
@@ -4881,6 +5461,276 @@ mod tests {
             "expected `Radio<String>(value: \"vanilla\"`, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn host_drag_drop_emits_native_pointer_keyboard_and_semantics_runtime() {
+        let m = component(
+            "Board",
+            vec![
+                slot("drag-key", SlotType::Text, true),
+                slot("drag-kind", SlotType::Text, true),
+                slot("drag-label", SlotType::Text, true),
+                slot("drag-disabled", SlotType::Bool, true),
+                slot(
+                    "accepted-kinds",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot("drop-disabled", SlotType::Bool, true),
+            ],
+            vec![
+                emit(
+                    "onDragStart",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDragEnd",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "dropped".into(),
+                            r#type: EmitPayloadType::Bool,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDragEnter",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDragLeave",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDropHover",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "target-key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "position".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDrop",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "target-key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "position".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+            ],
+        );
+        let draggable = node_with(
+            "HostDraggable",
+            vec![
+                LayoutProp {
+                    name: "drag-key".into(),
+                    value: LayoutPropValue::SlotRef("drag-key".into()),
+                },
+                LayoutProp {
+                    name: "drag-kind".into(),
+                    value: LayoutPropValue::SlotRef("drag-kind".into()),
+                },
+                LayoutProp {
+                    name: "drag-label".into(),
+                    value: LayoutPropValue::SlotRef("drag-label".into()),
+                },
+                LayoutProp {
+                    name: "drag-disabled".into(),
+                    value: LayoutPropValue::SlotRef("drag-disabled".into()),
+                },
+                LayoutProp {
+                    name: "onDragStart".into(),
+                    value: LayoutPropValue::EmitRef("onDragStart".into()),
+                },
+                LayoutProp {
+                    name: "onDragEnd".into(),
+                    value: LayoutPropValue::EmitRef("onDragEnd".into()),
+                },
+            ],
+            vec![node_with(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("Card".into()),
+                }],
+                vec![],
+            )],
+        );
+        let drop_target = node_with(
+            "HostDropTarget",
+            vec![
+                LayoutProp {
+                    name: "drop-key".into(),
+                    value: LayoutPropValue::String("lane-a".into()),
+                },
+                LayoutProp {
+                    name: "accepts".into(),
+                    value: LayoutPropValue::SlotRef("accepted-kinds".into()),
+                },
+                LayoutProp {
+                    name: "drop-disabled".into(),
+                    value: LayoutPropValue::SlotRef("drop-disabled".into()),
+                },
+                LayoutProp {
+                    name: "onDragEnter".into(),
+                    value: LayoutPropValue::EmitRef("onDragEnter".into()),
+                },
+                LayoutProp {
+                    name: "onDragLeave".into(),
+                    value: LayoutPropValue::EmitRef("onDragLeave".into()),
+                },
+                LayoutProp {
+                    name: "onDropHover".into(),
+                    value: LayoutPropValue::EmitRef("onDropHover".into()),
+                },
+                LayoutProp {
+                    name: "onDrop".into(),
+                    value: LayoutPropValue::EmitRef("onDrop".into()),
+                },
+            ],
+            vec![draggable],
+        );
+        let out = from_pipeline(&m, &layout("Board", drop_target), &empty_style("Board"))
+            .expect("emit native Flutter drag/drop")
+            .output;
+
+        for expected in [
+            "import 'package:flutter/services.dart';",
+            "import 'package:flutter/semantics.dart';",
+            "class _MosaicDragScope extends StatefulWidget",
+            "final List<_MosaicDropTargetState> _targets",
+            "Draggable<_MosaicDragData>(",
+            "DragTarget<_MosaicDragData>(",
+            "LogicalKeyboardKey.space",
+            "LogicalKeyboardKey.enter",
+            "LogicalKeyboardKey.escape",
+            "LogicalKeyboardKey.arrowDown",
+            "SemanticsService.announce",
+            "onTap: disabled && scope._active == null ? null : () => _toggle(context)",
+            "previous?.leave(data);",
+            "next.enter(data);",
+            "next.hover(data, 'into');",
+            "_MosaicDragScope(",
+            "acceptsKinds: acceptedKinds",
+            "disabled: _mosaicTruthy(dragDisabled)",
+            "disabled: _mosaicTruthy(dropDisabled)",
+            "BoardEventDragStart(key: dragKey.toString(), kind: dragKind.toString())",
+            "BoardEventDragEnd(key: dragKey.toString(), kind: dragKind.toString(), dropped: dropped)",
+            "BoardEventDragEnter(key: data.key, kind: data.kind)",
+            "BoardEventDragLeave(key: data.key, kind: data.kind)",
+            "BoardEventDropHover(key: data.key, kind: data.kind, targetKey: \"lane-a\", position: position)",
+            "BoardEventDrop(key: data.key, kind: data.kind, targetKey: \"lane-a\", position: position)",
+        ] {
+            assert!(out.contains(expected), "missing `{expected}`:\n{out}");
+        }
+    }
+
+    #[test]
+    fn non_drag_component_omits_drag_runtime_and_services_import() {
+        let out = from_pipeline(
+            &component("Plain", vec![], vec![]),
+            &layout("Plain", node("Box")),
+            &empty_style("Plain"),
+        )
+        .expect("emit non-drag component")
+        .output;
+        assert!(!out.contains("package:flutter/services.dart"));
+        assert!(!out.contains("_MosaicDragScope"));
+        assert!(!out.contains("Draggable<_MosaicDragData>"));
+    }
+
+    #[test]
+    fn empty_drop_target_preserves_authored_minimum_hit_area() {
+        let style = StyleDef {
+            component_name: "Board".into(),
+            parts: vec![PartStyle {
+                name: "lane".into(),
+                base: vec![StyleProp {
+                    name: "min-height".into(),
+                    value: "60".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![LayoutProp {
+                name: "drop-key".into(),
+                value: LayoutPropValue::String("empty-lane".into()),
+            }],
+            vec![],
+        );
+        target.part_name = Some("lane".into());
+        let out = from_pipeline(
+            &component("Board", vec![], vec![]),
+            &layout("Board", target),
+            &style,
+        )
+        .expect("emit styled empty drop target")
+        .output;
+        assert!(out.contains("constraints: const BoxConstraints(minHeight: 60)"));
     }
 
     // ----- HostScroll ---------------------------------------------------

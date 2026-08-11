@@ -54,6 +54,10 @@ false when the drag was cancelled, so an author can undo an optimistic move.
 | `accepts` | list<text> | The `drag-kind`s this target takes. Empty = accept nothing (an inert region). |
 | `drop-disabled` | bool | Temporarily refuse drops (e.g. a WIP-limited column that's full). |
 
+An explicitly authored empty `accepts` list is inert. Omitting `accepts` retains
+TaskApp's original accept-all behavior for source compatibility; new layouts
+should author the accepted kinds whenever they need filtering.
+
 Emits:
 - `onDragEnter { key, kind }` / `onDragLeave { … }` — for hover styling.
 - `onDropHover { key, kind, position }` — continuous, so the author can render a drop
@@ -237,6 +241,9 @@ render and are still readable, they simply aren't draggable there.
 > Lower the two primitives to a plain container and carry on. Implementing the real
 > interaction is then a strict upgrade, not a prerequisite for the app to build.
 
-Status: **react** and **html** implement the interaction; **swiftui**, **xaml**, **qt**,
-**compose**, **flutter** and **webcomponent** degrade to a container.
-
+Status: **react**, **html**, and **flutter** implement the interaction; **swiftui**,
+**xaml**, **qt**, **compose**, and **webcomponent** degrade to a container. Flutter
+uses native `Draggable`/`DragTarget` widgets and a component-instance target scope;
+pointer/touch and keyboard paths share the accepted-drop function and lifecycle
+payload construction. React and HTML still need the authored `accepts` filter
+applied to their otherwise-interactive lowerings; UI38 tracks that follow-up.
