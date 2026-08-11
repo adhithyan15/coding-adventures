@@ -4804,6 +4804,51 @@
       "tex": "spanish/book/chapters/ch157-synthesis-por-para.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 158,
+      "sourceHash": "fnv1a64:0c592aa57ca89f8c",
+      "lessonIds": [
+        "ES-C52-se-habla"
+      ],
+      "tex": "spanish/book/chapters/ch158-se-impersonal.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 159,
+      "sourceHash": "fnv1a64:0be3ac02d4ad7827",
+      "lessonIds": [
+        "ES-C52-se-venden"
+      ],
+      "tex": "spanish/book/chapters/ch159-se-agreement.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 160,
+      "sourceHash": "fnv1a64:6b42efc7e49ddb7f",
+      "lessonIds": [
+        "ES-C52-como-se-dice"
+      ],
+      "tex": "spanish/book/chapters/ch160-como-se-dice.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 161,
+      "sourceHash": "fnv1a64:231e0510a4fdbf04",
+      "lessonIds": [
+        "ES-C52-tres-ses"
+      ],
+      "tex": "spanish/book/chapters/ch161-review-three-se.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 162,
+      "sourceHash": "fnv1a64:72b3e212bebc633f",
+      "lessonIds": [
+        "ES-C52-sintesis-el-letrero"
+      ],
+      "tex": "spanish/book/chapters/ch162-synthesis-se.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",

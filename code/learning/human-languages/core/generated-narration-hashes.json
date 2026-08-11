@@ -8646,6 +8646,76 @@
       "jsonHash": "fnv1a64:54b3d8cdeb4056e8"
     },
     {
+      "language": "spanish",
+      "chapter": 158,
+      "sourceHash": "fnv1a64:25b05071a6606d48",
+      "lessonIds": [
+        "ES-C52-se-habla"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch158.txt",
+      "json": "spanish/narration/ch158.json",
+      "textHash": "fnv1a64:cc1b7ffa6773a250",
+      "jsonHash": "fnv1a64:8ee6f7ca632ddf2b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 159,
+      "sourceHash": "fnv1a64:bcd9b5098214a91f",
+      "lessonIds": [
+        "ES-C52-se-venden"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch159.txt",
+      "json": "spanish/narration/ch159.json",
+      "textHash": "fnv1a64:27df1c395791f6e9",
+      "jsonHash": "fnv1a64:1775a3896e965f2f"
+    },
+    {
+      "language": "spanish",
+      "chapter": 160,
+      "sourceHash": "fnv1a64:2715b1bffaf0e803",
+      "lessonIds": [
+        "ES-C52-como-se-dice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch160.txt",
+      "json": "spanish/narration/ch160.json",
+      "textHash": "fnv1a64:b318072c5bc2fc48",
+      "jsonHash": "fnv1a64:0e7ef3bda588bee2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 161,
+      "sourceHash": "fnv1a64:f85007ffda1260ee",
+      "lessonIds": [
+        "ES-C52-tres-ses"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch161.txt",
+      "json": "spanish/narration/ch161.json",
+      "textHash": "fnv1a64:b9d8212f19080ec3",
+      "jsonHash": "fnv1a64:ab2820194a405d7b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 162,
+      "sourceHash": "fnv1a64:295cf3ec0e950f4d",
+      "lessonIds": [
+        "ES-C52-sintesis-el-letrero"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch162.txt",
+      "json": "spanish/narration/ch162.json",
+      "textHash": "fnv1a64:6906439f9d5bd2e2",
+      "jsonHash": "fnv1a64:c6fac3dcb180d453"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

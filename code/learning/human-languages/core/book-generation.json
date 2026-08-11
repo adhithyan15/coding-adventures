@@ -3108,6 +3108,31 @@
       "output": "spanish/book/chapters/ch157-synthesis-por-para.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 158,
+      "output": "spanish/book/chapters/ch158-se-impersonal.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 159,
+      "output": "spanish/book/chapters/ch159-se-agreement.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 160,
+      "output": "spanish/book/chapters/ch160-como-se-dice.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 161,
+      "output": "spanish/book/chapters/ch161-review-three-se.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 162,
+      "output": "spanish/book/chapters/ch162-synthesis-se.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

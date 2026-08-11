@@ -1657,6 +1657,66 @@
         "ES-EXT-037-SYNTH-PP"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-037-SE-IMP",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C52-se-habla"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-SE-IMP"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-SE-AGREE",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C52-se-venden"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-SE-AGREE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-COMO-SE-DICE",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C52-como-se-dice"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-COMO-SE-DICE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-REVIEW-SE",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C52-tres-ses"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-REVIEW-SE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-SYNTH-SE",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C52-sintesis-el-letrero"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-SYNTH-SE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -1926,7 +1986,12 @@
         "ES-PATH-037-POR",
         "ES-PATH-037-ARROW",
         "ES-PATH-037-REVIEW-PP",
-        "ES-PATH-037-SYNTH-PP"
+        "ES-PATH-037-SYNTH-PP",
+        "ES-PATH-037-SE-IMP",
+        "ES-PATH-037-SE-AGREE",
+        "ES-PATH-037-COMO-SE-DICE",
+        "ES-PATH-037-REVIEW-SE",
+        "ES-PATH-037-SYNTH-SE"
       ],
       "omits": [],
       "relocates": {}
@@ -3789,6 +3854,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C51-sintesis-regalo-motivo"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-SE-IMP",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C52-se-habla"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-SE-AGREE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C52-se-venden"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-COMO-SE-DICE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C52-como-se-dice"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-REVIEW-SE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C52-tres-ses"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-SYNTH-SE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C52-sintesis-el-letrero"
       ]
     }
   ]
