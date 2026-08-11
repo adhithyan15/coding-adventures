@@ -1,0 +1,20 @@
+% ============================================================================
+% animal-habitat.query.adj — a worked recall over the animal-habitat library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what biome does a
+% giraffe live in?": it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `animal_habitat` rows and returns the biome + the table's
+% source/locator/trust. An animal the table does not carry abstains
+% honestly — the engine never invents a habitat.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-habitat.query.adj
+% ============================================================================
+% (path is relative to code/specs/data/adj-facts-stdlib/biology/)
+
+import "animal-habitat.adj"
+
+? animal_habitat(polar_bear, $Biome)     % expect arctic
+? animal_habitat($Animal, desert)        % expect bactrian_camel
+? animal_habitat(dog, $Biome)            % expect abstain — no habitat is shipped for dog
