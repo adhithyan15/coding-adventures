@@ -228,17 +228,20 @@ pub fn parser_grammar() -> ParserGrammar {
             line_number: 115,
         },
         GrammarRule {
+            // Narrowly synchronized with the source grammar's repeated label
+            // prefixes. Dummy statements and the surrounding broader grammar
+            // drift remain separate frontend work.
             name: r#"statement"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Sequence { elements: vec![
-                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
                             GrammarElement::RuleReference { name: r#"label"#.to_string() },
                             GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
                         ] }) },
                     GrammarElement::RuleReference { name: r#"unlabeled_stmt"#.to_string() },
                 ] },
                 GrammarElement::Sequence { elements: vec![
-                    GrammarElement::Optional { element: Box::new(GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Repetition { element: Box::new(GrammarElement::Sequence { elements: vec![
                             GrammarElement::RuleReference { name: r#"label"#.to_string() },
                             GrammarElement::TokenReference { name: r#"COLON"#.to_string() },
                         ] }) },

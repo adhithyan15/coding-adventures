@@ -1,0 +1,65 @@
+% ============================================================================
+% contraction — a contraction and the two-word phrase it stands for
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A contraction combines two words into a shorter one, marking the missing
+% letters with an apostrophe: "do not" becomes "don't." Recall is a binding
+% query:
+%
+%     ? contraction(dont, $Expansion)
+%       % do_not
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `contraction(word, expansion)` carrying the source citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the expansion
+% WITH its source, on the CPU, with zero model calls, and abstains on any
+% contraction the source does not expand this way. The query also runs
+% BACKWARD — bind an expansion and recall which contraction it names:
+%
+%     ? contraction($Word, will_not)
+%       % wont
+%
+% DESIGN NOTE — why `word` and `expansion` are apostrophe-free atom labels
+% rather than the punctuated spellings: ADJ atom labels cannot contain an
+% apostrophe, so this table uses the same short atom-style-label discipline
+% `sentence-type.adj`/`part-of-speech.adj` already established for
+% punctuation-bearing content — `dont` stands for "don't," and the
+% underscore-joined `do_not` stands for the two-word expansion. The `source`
+% citation string below still quotes the ORIGINAL punctuated text, so the
+% mapping remains independently checkable against the cited page.
+%
+% Provenance: quoted verbatim from Grammarly's "What Are Contractions in
+% Writing? Definition and Examples" article, whose contraction-list tables
+% give each contraction's expansion directly:
+%
+%     word (this table's atom label)   expansion (atom label)   source pair (verbatim)
+%     --------------------------------  ------------------------  ---------------------------------
+%     dont                               do_not                    "don't" = "do not"
+%     cant                               can_not                   "can't" = "can not"
+%     wont                               will_not                  "won't" = "will not"
+%
+% WebFetch-verified before writing. `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources and the same
+% source family already cited by `sentence-type.adj`/`part-of-speech.adj`.
+% Note the source's own table expands "can't" to the TWO-word "can not,"
+% not the more common single-word spelling "cannot" — this table uses
+% exactly what the source states, not a silently "corrected" spelling.
+% A contraction that is NOT one of these three — e.g. "shouldn't," a real
+% contraction, but not one this specific cited page's table this row set
+% draws from — is deliberately NOT a row, so a recall ABSTAINS on it rather
+% than inventing an expansion. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table contraction {
+    columns word, expansion
+
+    row (dont, do_not)
+    row (cant, can_not)
+    row (wont, will_not)
+
+    source "don't = do not"
+    locator "https://www.grammarly.com/blog/grammar/contractions/"
+    trust consensus
+}

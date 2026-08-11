@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-08-11
+
+### Added
+
+- **Multiple labels per statement.** The checked-in Rust grammar artifact now
+  accepts repeated `label:` prefixes before ordinary and conditional statements,
+  matching that bounded portion of the source ALGOL grammar. Dummy statements
+  and the remaining grammar drift stay separate follow-up work.
+
 ## [0.3.2] - 2026-07-31
 
 ### Added
