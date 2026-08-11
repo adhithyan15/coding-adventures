@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-saad ductus (HL-C09AS)
+
+- Render **ص** in three evidence-aligned frames: its clockwise oval, the joined
+  rise into the short shoulder, and the separately restarted trailing bowl.
+- Keep the source's two pen-down runs, one lift, and two-way-connector context
+  explicit while fitting the vendored Noto Naskh outline.
+- Preserve Saad's evidence independently of adjacent Seen and Shiin, with the
+  same page's directly linked Daad MOV queued next.
+
 ### Added — cited Arabic independent-shiin ductus (HL-C09AR)
 
 - Render **ش** in five evidence-aligned frames: two joined body movements,

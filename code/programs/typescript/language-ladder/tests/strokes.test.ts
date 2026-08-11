@@ -34,6 +34,7 @@ const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
+const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -569,6 +570,22 @@ describe("handwriting ductus", () => {
     expect(upper[0].y).toBeGreaterThan(lowerRight[0].y);
   });
 
+  it("Arabic independent ص lifts once between its closed oval and trailing bowl", () => {
+    expect(ARABIC_SAAD.script).toBe("arabic");
+    expect(penLifts(ARABIC_SAAD)).toBe(1);
+    expect(ARABIC_SAAD.strokes).toHaveLength(2);
+    expect(ARABIC_SAAD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const oval = ARABIC_SAAD.strokes[0].segments[0].path;
+    const shoulder = ARABIC_SAAD.strokes[0].segments[1].path;
+    expect(oval[0]).toEqual(oval.at(-1));
+    expect(oval.at(-1)).toEqual(shoulder[0]);
+    expect(shoulder.at(-1)!.y).toBeGreaterThan(shoulder[0].y);
+    const bowl = ARABIC_SAAD.strokes[1].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -961,6 +978,19 @@ describe("handwriting ductus", () => {
       /FullSizeRender-7.mov.*body-first.*one continuous pen-down run.*00:00.7–00:02.2.*three close teeth.*right to left.*final bowl.*lower-left dot.*00:02.4–00:02.5.*lower-right dot.*00:02.7–00:02.8.*centered upper dot.*00:02.9–00:03.0.*two-way connector.*contextual shapes.*four-stroke.*three-lift.*Noto Naskh.*scoped to Arabic.*Urdu ش source.*same Unicode glyph/i,
     );
     expect(src.url).not.toBe(URDU_SHIN.source.url);
+  });
+
+  it("Arabic independent ص traces its lifted trailing bowl to the University of Oregon", () => {
+    const src = ARABIC_SAAD.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Saad.*00:01.1–00:03.3.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /FullSizeRender-6.mov.*two pen-down runs.*00:01.1–00:02.4.*lower-left junction.*oval clockwise.*turns left.*short shoulder.*without lifting.*one lift.*00:02.6–00:03.3.*baseline junction.*descends.*trailing bowl.*sweeps left.*finishes above the baseline.*two-way connector.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*distinct from.*Seen and Shiin/i,
+    );
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

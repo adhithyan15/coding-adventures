@@ -286,8 +286,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   one run at 00:00.7–00:02.2, then lift for the lower-left, lower-right, and
   centered upper dots through 00:03.0. Its five-frame path preserves those
   three lifts, two-way-connector context, and Arabic-scoped provenance
-  independently of Urdu ش. The remaining **185** prose part orders across
-  seven scripts (`arabic` 11,
+  independently of Urdu ش. The page's `FullSizeRender-6.mov` then verifies
+  independent **ص** in two runs: close the oval clockwise and rise into its
+  short shoulder at 00:01.1–00:02.4, then lift once and restart at the baseline
+  junction for the trailing bowl at 00:02.6–00:03.3. Its three-frame path keeps
+  Saad's motion distinct from adjacent Seen and Shiin. The remaining **184**
+  prose part orders across seven scripts (`arabic` 10,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
