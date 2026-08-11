@@ -63,12 +63,21 @@ fn binop(name: &str, lhs: Expr, rhs: Expr) -> Expr {
 }
 
 /// `<builtin>(expr)` as an effectful statement (MayPrint, matching the
-/// frontend) — `builtin` is `"puts"` or `"print"`.
+/// frontend) — `builtin` is `"puts"` or `"print"`, translated to the
+/// equivalent `__sys_write__` envelope (SIR28 §2): `"puts"` is
+/// `terminator: "per_value"`/`unpack_arrays: true`, `"print"` is
+/// `terminator: "once"`/`unpack_arrays: false`.
 fn print_like_stmt(builtin: &str, expr: Expr) -> Stmt {
+    let (terminator, unpack_arrays) = if builtin == "puts" { ("per_value", true) } else { ("once", false) };
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: builtin.into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                slit("stdout"),
+                slit(terminator),
+                Expr::BoolLit { value: unpack_arrays, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -80,7 +89,11 @@ fn print_like_stmt(builtin: &str, expr: Expr) -> Stmt {
 fn print_module(builtin: &str, tag: &str, expr: Expr) -> Module {
     Module {
         name: format!("polyops_{tag}"),
-        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        manifest: FeatureManifest::from_features(&[
+            Feature::Sequences,
+            Feature::Strings,
+            Feature::ConsoleIO,
+        ]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

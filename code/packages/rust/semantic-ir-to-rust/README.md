@@ -292,9 +292,10 @@ the string/array arms *ahead of* the unchanged numeric fold:
 against a closed set) are lifted to Rust `&str` literals at emit time
 (same rationale as `__method__`'s method-name lift: keeps the runtime's
 `match` on a compile-time-known `&str`), the rest pass through as an
-ordinary `vec![...]`. Generalizes the existing `print`/`puts` — still
-present, still used by bare `"print"`/`"puts"` — into one function. Not
-yet emitted by any frontend — see
+ordinary `vec![...]`. This is now the ONLY console-output primitive the
+backend emits — bare `"print"`/`"puts"` `BuiltinCall`s and the `print`/
+`puts` runtime functions that used to implement them were removed once
+every frontend finished migrating to `__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
