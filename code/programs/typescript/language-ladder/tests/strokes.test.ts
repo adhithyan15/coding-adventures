@@ -40,6 +40,7 @@ const HEBREW_MEM = DUCTUS[ductusKey("hebrew", "מ")];
 const HEBREW_NUN = DUCTUS[ductusKey("hebrew", "נ")];
 const HEBREW_SAMEKH = DUCTUS[ductusKey("hebrew", "ס")];
 const HEBREW_AYIN = DUCTUS[ductusKey("hebrew", "ע")];
+const HEBREW_PE = DUCTUS[ductusKey("hebrew", "פ")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -442,6 +443,23 @@ describe("handwriting ductus", () => {
     expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
     expect(left[0]).toEqual(base.at(-1));
     expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+  });
+
+  it("Hebrew פ draws its outer body before the lifted inner curl", () => {
+    expect(HEBREW_PE.script).toBe("hebrew");
+    expect(penLifts(HEBREW_PE)).toBe(1);
+    expect(HEBREW_PE.strokes).toHaveLength(2);
+    expect(HEBREW_PE.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    const [top, side, base] = HEBREW_PE.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const inner = HEBREW_PE.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(side[0]).toEqual(top.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(inner[0].x).toBeLessThan(inner.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1101,6 +1119,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ע", HEBREW_AYIN.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("פ", HEBREW_PE.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1309,6 +1330,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Ayin.*one continuous run.*02:27.4–02:28.9.*right branch.*descends.*left into the base.*farther left.*turns back.*climbs the left branch.*without lifting.*cursive Ayin.*purple.*compact looped form.*02:31.6–02:32.7.*without lifting.*Noto Sans Hebrew.*cursive variation/i,
+    );
+  });
+
+  it("Hebrew פ traces its two-run printed form and records the cursive spiral", () => {
+    const src = HEBREW_PE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:36.3–02:38.9.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Pe.*two runs.*02:36.3–02:38.9.*outer body.*upper left.*right across the top.*right side.*left along the base.*one lift.*short inner curl.*left to right.*cursive Pe.*purple.*one inward spiral.*02:41.5–02:43.0.*without lifting.*Noto Sans Hebrew.*rounded cursive variation/i,
     );
   });
 
