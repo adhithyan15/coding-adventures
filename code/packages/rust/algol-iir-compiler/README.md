@@ -199,6 +199,8 @@ same finite literal-only arithmetic evaluator, while every nested call remains
 subject to the same override, domain, exact-root, and finiteness checks.
 Runtime arithmetic conditionals may select between those validated static
 standard-function expressions, branching directly to each precomputed string.
+The exact identities `sin(0)=0`, `cos(0)=1`, `ln(1)=0`, `exp(0)=1`, and
+`arctan(0)=0` also use this path without host or backend transcendental math.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
