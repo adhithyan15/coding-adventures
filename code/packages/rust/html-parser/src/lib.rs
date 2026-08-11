@@ -5246,6 +5246,12 @@ impl HtmlParser {
             && !self.current_element_is("tr")
             && self.current_has_child_element("tr")
         {
+            if self.first_authored_open_template_index().is_some() {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-cell-start-tag-in-template-table-body",
+                    format!("start tag `<{name}>` in a template table body implied a missing row"),
+                ));
+            }
             self.append_implied_element("tr");
         }
 
@@ -34564,6 +34570,65 @@ mod tests {
                 .unwrap();
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-row-end-tag-in-template-table-mode"
+        }));
+    }
+
+    #[test]
+    fn reports_cell_start_tags_that_imply_rows_in_template_table_bodies() {
+        for (source, control, name) in [
+            (
+                "<!doctype html><template><tr></tr><td>x</td></template>",
+                "<!doctype html><template><tr></tr><tr><td>x</td></tr></template>",
+                "td",
+            ),
+            (
+                "<!doctype html><template><tr></tr><th>x</th></template>",
+                "<!doctype html><template><tr></tr><tr><th>x</th></tr></template>",
+                "th",
+            ),
+            (
+                "<!doctype html><template><tr></tr><template></template><td>x</td></template>",
+                "<!doctype html><template><tr></tr><template></template><tr><td>x</td></tr></template>",
+                "td",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-cell-start-tag-in-template-table-body",
+                    format!(
+                        "start tag `<{name}>` in a template table body implied a missing row"
+                    ),
+                )],
+                "source {source:?}"
+            );
+            assert_eq!(
+                output.document,
+                parse_html(control).unwrap(),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><tbody><tr><td>x</td></tr></tbody></table>",
+            "<!doctype html><template><tr><td>x</td></tr></template>",
+            "<!doctype html><template><td>x</td></template>",
+            "<!doctype html><template><tr></tr><template><td>x</td></template></template>",
+            "<!doctype html><svg><template><tr></tr><td>x</td></template></svg>",
+            "<!doctype html><div><td>x</td></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-cell-start-tag-in-template-table-body"
+            }));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<tr></tr><td>x</td>", "template")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-cell-start-tag-in-template-table-body"
         }));
     }
 
