@@ -631,6 +631,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ה"),
   },
+  // The dedicated Vav lesson draws the printed head left-to-right and turns
+  // directly into the top-to-bottom stem. This two-movement learner path is
+  // one continuous zero-lift stroke on the Noto Sans Hebrew outline.
+  [ductusKey("hebrew", "ו")]: {
+    script: "hebrew",
+    glyph: "ו",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the small head from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 120, y: 555 },
+              { x: 175, y: 555 },
+            ],
+          },
+          {
+            label: "continue straight down without lifting",
+            path: [
+              { x: 175, y: 555 },
+              { x: 175, y: 480 },
+              { x: 175, y: 380 },
+              { x: 175, y: 270 },
+              { x: 175, y: 160 },
+              { x: 175, y: 60 },
+              { x: 175, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ו"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

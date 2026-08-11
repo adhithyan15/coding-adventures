@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Vav ductus (HL-C09BI)
+
+- Render **ו** in two evidence-aligned frames: draw the small head left-to-right
+  and continue straight down the stem without lifting.
+- Keep the source's explicit one-stroke, top-to-bottom order while recording its
+  simpler handwritten variation and excluding later vowel marks from base ו.
+- Queue the series' Zayin/Heit lesson (`XTqG_1dsFSU`) next.
+
 ### Added — cited Hebrew Hei ductus (HL-C09BH)
 
 - Render **ה** in three evidence-aligned frames: join the left-to-right top bar

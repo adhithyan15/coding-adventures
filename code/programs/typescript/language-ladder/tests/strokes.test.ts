@@ -29,6 +29,7 @@ const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
 const HEBREW_DALET = DUCTUS[ductusKey("hebrew", "ד")];
 const HEBREW_HEI = DUCTUS[ductusKey("hebrew", "ה")];
+const HEBREW_VAV = DUCTUS[ductusKey("hebrew", "ו")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -261,6 +262,18 @@ describe("handwriting ductus", () => {
     expect(down[0]).toEqual(top.at(-1));
     expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
     expect(detached[0].y).toBeGreaterThan(detached.at(-1)!.y);
+  });
+
+  it("Hebrew ו joins its small head directly to its descending stem", () => {
+    expect(HEBREW_VAV.script).toBe("hebrew");
+    expect(penLifts(HEBREW_VAV)).toBe(0);
+    expect(HEBREW_VAV.strokes).toHaveLength(1);
+    expect(HEBREW_VAV.strokes.map((stroke) => stroke.segments.length)).toEqual([2]);
+    const head = HEBREW_VAV.strokes[0].segments[0].path;
+    const stem = HEBREW_VAV.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(stem[0]).toEqual(head.at(-1));
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -887,6 +900,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ה", HEBREW_HEI.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ו", HEBREW_VAV.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -974,6 +990,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /curved handwritten Hei.*00:53.7–00:55.1.*printed form.*sharp angles.*top bar left-to-right.*right side.*without lifting.*00:59.6–01:00.8.*lifts once.*detached left leg top-to-bottom.*01:01.2–01:01.9.*curved in handwriting.*sharp angles in print.*01:03.5–01:09.4.*Noto Sans Hebrew/i,
+    );
+  });
+
+  it("Hebrew ו keeps its printed head and stem in one sourced run", () => {
+    const src = HEBREW_VAV.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=kJUMyHR0zN4");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Vav, Hirik, and Shuruk.*01:08.6–01:09.8.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Vav.*top to bottom.*00:57.3–00:58.2.*printed form.*01:08.6–01:09.8.*head runs left-to-right.*vertical stem without lifting.*one stroke from top to bottom.*01:00.0–01:02.5.*print version.*small difference.*01:03.6–01:10.9.*Noto Sans Hebrew.*Hirik and Shuruk.*vowel marks.*not part of base U\+05D5.*zero-lift body count/i,
     );
   });
 

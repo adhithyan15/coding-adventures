@@ -342,9 +342,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   printed **ה**: its left-to-right top bar continues down the right side, then
   one lift precedes the detached left leg from top to bottom. Its three-frame
   path follows Noto Sans Hebrew's angular outline while preserving the lesson's
-  explicitly contrasted curved handwritten form. The remaining **172** prose
+  explicitly contrasted curved handwritten form. The dedicated Vav lesson
+  verifies printed **ו** as one stroke: draw the small head left-to-right, then
+  turn directly down the stem without lifting. Its two-frame path follows Noto
+  Sans Hebrew and excludes the lesson's later vowel marks from the base letter's
+  zero-lift count. The remaining **171** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 17,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 16,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
