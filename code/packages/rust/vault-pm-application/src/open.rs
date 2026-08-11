@@ -159,6 +159,11 @@ impl UnlockedVaultV1 {
         self.active.pinned_heads()
     }
 
+    /// Return whether this vault has entered its durable operation-audit epoch.
+    pub const fn audit_enabled(&self) -> bool {
+        self.active.audit_event_head().is_some()
+    }
+
     /// Begin the durable signed operation-audit epoch for a pre-audit vault.
     ///
     /// The unlocked session is consumed and the successful genesis event is

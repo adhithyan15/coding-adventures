@@ -2,6 +2,13 @@
 
 All notable changes to this package are documented here.
 
+## [0.40.0] - 2026-08-11
+
+### Added
+
+- Expose a payload-free unlocked-session predicate so transitional hosts can
+  require audited access whenever a durable audit epoch already exists.
+
 ## [0.39.0] - 2026-08-11
 
 ### Added
