@@ -405,6 +405,36 @@ impl UnlockedVaultV1 {
         Ok(matches!(candidate.state(), ItemState::Live(_)).then_some(candidate.revision_id()))
     }
 
+    /// Return the exact sole current live revision capability only after its
+    /// item-read event and next owner state are durable.
+    ///
+    /// Missing and tombstoned items become audited `NotFound` failures, while
+    /// current conflicts become audited `ConflictRequired` failures. A
+    /// successful event binds the exact returned revision. Publication failure
+    /// withholds both the capability and original operation error.
+    pub fn audited_current_item_revision(
+        self,
+        item_id: ItemId,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<RevisionId>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = self
+            .current_item_revision(item_id)
+            .and_then(|revision| revision.ok_or(ApplicationError::NotFound));
+        let selected_revision = operation.as_ref().ok().copied();
+        self.finish_audited_access(
+            AuditActionV1::ItemRead,
+            Some(item_id),
+            selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
     /// Return every unambiguous live item as an ordinary redacted view.
     ///
     /// Views are ordered by exact item-ID bytes. A current conflict aborts the
@@ -628,6 +658,33 @@ impl UnlockedVaultV1 {
         } else {
             AuditOutcomeV1::Failed
         };
+        self.finish_audited_access_with_outcome(
+            action,
+            outcome,
+            item_id,
+            selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn finish_audited_access_with_outcome<T>(
+        self,
+        action: AuditActionV1,
+        outcome: AuditOutcomeV1,
+        item_id: Option<ItemId>,
+        selected_revision: Option<RevisionId>,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+        operation: Result<T, ApplicationError>,
+    ) -> Result<crate::AuditedAccessResultV1<T>, ApplicationError> {
+        if operation.is_ok() != (outcome == AuditOutcomeV1::Succeeded) {
+            return Err(ApplicationError::InternalInvariant);
+        }
         let active = publish_audited_access(
             &self.active,
             &self._keys,
@@ -668,6 +725,42 @@ impl UnlockedVaultV1 {
         Ok(Zeroizing::new(document.as_ref().clone()))
     }
 
+    /// Reveal one exact live revision for an item only after its item-read
+    /// event and next owner state are durable.
+    ///
+    /// The caller supplies the item identity explicitly so the event can bind
+    /// the complete resource. A mismatched, unreachable, or tombstoned
+    /// revision is retained as a closed failed attempt without releasing a
+    /// document. The successful owned document remains wipe-on-drop.
+    pub fn audited_reveal_item_revision(
+        self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Zeroizing<ItemDocument>>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = self
+            .reveal_item_revision(selected_revision)
+            .and_then(|document| {
+                if document.id() != item_id {
+                    return Err(ApplicationError::InvalidInput);
+                }
+                Ok(document)
+            });
+        let event_revision = operation.is_ok().then_some(selected_revision);
+        self.finish_audited_access(
+            AuditActionV1::ItemRead,
+            Some(item_id),
+            event_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
     /// Select and authorize disclosure of one secret-bearing field from one
     /// exact reachable live revision.
     ///
@@ -684,6 +777,57 @@ impl UnlockedVaultV1 {
         intent.authorize()?;
         let document = self.reveal_item_revision(selected_revision)?;
         crate::disclosure::select_secret(document.payload(), field)
+    }
+
+    /// Authorize and reveal one secret field only after its item-read event and
+    /// next owner state are durable.
+    ///
+    /// A refused disclosure ceremony publishes a `Denied` event without
+    /// traversing the selected revision. Authorized selection failures publish
+    /// `Failed`; success binds the exact item and revision and holds the owned
+    /// non-printable secret until publication completes.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_reveal_item_revision_field(
+        self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+        field: SecretFieldV1,
+        intent: SecretDisclosureIntentV1,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<RevealedSecretV1>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let (outcome, event_revision, operation) = match intent.authorize() {
+            Err(error) => (AuditOutcomeV1::Denied, None, Err(error)),
+            Ok(()) => match self.reveal_item_revision(selected_revision) {
+                Err(error) => (AuditOutcomeV1::Failed, None, Err(error)),
+                Ok(document) if document.id() != item_id => (
+                    AuditOutcomeV1::Failed,
+                    None,
+                    Err(ApplicationError::InvalidInput),
+                ),
+                Ok(document) => {
+                    let operation = crate::disclosure::select_secret(document.payload(), field);
+                    let outcome = if operation.is_ok() {
+                        AuditOutcomeV1::Succeeded
+                    } else {
+                        AuditOutcomeV1::Failed
+                    };
+                    (outcome, Some(selected_revision), operation)
+                }
+            },
+        };
+        self.finish_audited_access_with_outcome(
+            AuditActionV1::ItemRead,
+            outcome,
+            Some(item_id),
+            event_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
     }
 
     /// Add one new item through the exact crash-resumable publication state
@@ -2896,6 +3040,238 @@ mod tests {
         assert_eq!(report.commit_count(), 6);
         assert_eq!(report.catalog_count(), 1);
         assert_eq!(report.audit_event_count(), 5);
+    }
+
+    #[test]
+    fn audited_revision_capabilities_and_secret_disclosure_form_one_exact_chain() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0xe1);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Audited secret portal", "held-secret"),
+            740,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let exact_revision = session.current_catalog.items[&item_id][0].revision_id();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            741,
+            None,
+            None,
+            [0xe2; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let (_, capability) = session
+            .audited_current_item_revision(item_id, 742, audited_access_randomness(0xe3), &local)
+            .unwrap()
+            .into_parts();
+        assert_eq!(capability.unwrap(), exact_revision);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(exact_revision),
+            )
+        );
+
+        let (_, document) = session
+            .audited_reveal_item_revision(
+                item_id,
+                exact_revision,
+                743,
+                audited_access_randomness(0xe4),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        let document = document.unwrap();
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!("fixture must reveal a login")
+        };
+        assert_eq!(login.password, "held-secret");
+        drop(document);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(exact_revision),
+            )
+        );
+
+        let (_, denied) = session
+            .audited_reveal_item_revision_field(
+                item_id,
+                RevisionId::new([0xea; 32]),
+                SecretFieldV1::LoginPassword,
+                SecretDisclosureIntentV1::InteractiveReveal { confirmed: false },
+                744,
+                audited_access_randomness(0xe5),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        assert!(matches!(denied, Err(ApplicationError::InvalidInput)));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Denied,
+                Some(item_id),
+                None,
+            )
+        );
+
+        let (_, revealed) = session
+            .audited_reveal_item_revision_field(
+                item_id,
+                exact_revision,
+                SecretFieldV1::LoginPassword,
+                SecretDisclosureIntentV1::Clipboard,
+                745,
+                audited_access_randomness(0xe6),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        let revealed = revealed.unwrap();
+        assert_eq!(revealed.as_bytes(), b"held-secret");
+        drop(revealed);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(exact_revision),
+            )
+        );
+
+        let (_, wrong_field) = session
+            .audited_reveal_item_revision_field(
+                item_id,
+                exact_revision,
+                SecretFieldV1::CardCvv,
+                SecretDisclosureIntentV1::Clipboard,
+                746,
+                audited_access_randomness(0xe7),
+                &local,
+            )
+            .unwrap()
+            .into_parts();
+        assert!(matches!(wrong_field, Err(ApplicationError::InvalidInput)));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                Some(exact_revision),
+            )
+        );
+
+        let missing = ItemId::new([0xe8; 16]);
+        let (_, missing_capability) = session
+            .audited_current_item_revision(missing, 747, audited_access_randomness(0xe9), &local)
+            .unwrap()
+            .into_parts();
+        assert_eq!(missing_capability, Err(ApplicationError::NotFound));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRead,
+                AuditOutcomeV1::Failed,
+                Some(missing),
+                None,
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 9);
+        assert_eq!(report.catalog_count(), 2);
+        assert_eq!(report.audit_event_count(), 7);
     }
 
     #[test]
