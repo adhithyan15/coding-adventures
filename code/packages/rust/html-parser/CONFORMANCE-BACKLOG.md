@@ -190,12 +190,14 @@ Prioritized work items:
    `<template><tr></tr></table>` and `<template><td></td></table>` evidence.
    Matching real-table closure, nested templates, foreign content, ordinary
    stray end tags, and synthetic template fragments remain on their existing
-   diagnostic paths. The next evidence-backed adjacent boundary is a `tr` end
-   tag after a template-owned cell: WPT `template.dat` declares an error for
-   `<template><td></td></tr>`, while the parser currently finds no matching row
-   and returns silently. Audit that in-row scope guard and its real-table,
-   nested-template, foreign-content, and fragment controls before moving to
-   adoption agency.
+   diagnostic paths. A `tr` end tag rejected after a template-owned cell now
+   reports the in-row scope parse error while remaining ignored, matching WPT
+   `template.dat`'s `<template><td></td></tr>` evidence. Matching real-row
+   closure, nested templates, foreign content, ordinary stray end tags, and
+   synthetic template fragments remain on their existing paths. The next
+   evidence-backed boundary is a `td` or `th` start after a closed
+   template-owned row, matching WPT's `<template><tr></tr><td>` parse error.
+   Audit that start-tag scope recovery before moving to adoption agency.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
