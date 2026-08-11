@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.49.0
+
+- Parse state inline fill, stroke, text-color, and stroke-width styles into shared graph IR.
+
 ## 0.48.0
 
 - Parse Mermaid state fork/join markers and lower them to compact, styled graph-IR bars.

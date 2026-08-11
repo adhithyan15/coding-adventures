@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.27.0";
+pub const VERSION: &str = "0.28.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.27.0");
+        assert_eq!(VERSION, "0.28.0");
     }
 
     #[test]
@@ -252,6 +252,21 @@ mod tests {
             .map(|token| token.value.as_str())
             .collect();
         assert_eq!(markers, vec!["<<fork>>", "[[join]]"]);
+    }
+
+    #[test]
+    fn tokenizes_state_inline_styles() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("HASH_COLOR"))
+                .count(),
+            3
+        );
+        assert_eq!(tokens.iter().filter(|token| token.value == ",").count(), 2);
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.28.0
+
+- Tokenize state inline-style separators and hexadecimal colors without folding them into labels.
+
 ## 0.27.0
 
 - Tokenize angle-bracket and bracket Mermaid state fork/join markers.

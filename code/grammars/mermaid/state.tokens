@@ -1,4 +1,4 @@
-# @version 3
+# @version 4
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -16,12 +16,15 @@ EDGE_STATE   = "[*]"
 CHOICE       = /(?:<<choice>>|\[\[choice\]\])/
 FORK_JOIN    = /(?:<<(?:fork|join)>>|\[\[(?:fork|join)\]\])/
 COLON        = ":"
+COMMA        = ","
+HASH_COLOR   = /#[0-9A-Fa-f]{3,8}/
 STRING       = /"[^"\r\n]*"/
 DIRECTION    = /TB|BT|LR|RL/
 ID           = /[A-Za-z_][A-Za-z0-9_-]*/
-WORD         = /[^ \t\r\n;:]+/
+WORD         = /[^ \t\r\n;:,]+/
 
 keywords:
   state
+  style
   direction
   as
