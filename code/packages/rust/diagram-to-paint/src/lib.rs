@@ -480,6 +480,14 @@ where
     let text_scene = layout_to_paint(&text_root, &text_opts);
     instructions.extend(text_scene.instructions);
 
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
+
     let bg = options.background;
     PaintScene {
         width: diagram.width,
@@ -492,7 +500,7 @@ where
         },
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
     }
 }
 
@@ -2838,6 +2846,8 @@ mod tests {
         LayoutedGraphDiagram {
             direction: DiagramDirection::Lr,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             width: 400.0,
             height: 200.0,
             nodes: vec![
@@ -3207,6 +3217,25 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
         }));
+    }
+
+    #[test]
+    fn graph_accessibility_metadata_reaches_paint_scene() {
+        let mut layout = simple_layout();
+        layout.accessibility_title = Some("State lifecycle".into());
+        layout.accessibility_description = Some("Ready transitions to running".into());
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+
+        assert_eq!(metadata["accessibility.title"], "State lifecycle");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Ready transitions to running"
+        );
     }
 
     #[test]

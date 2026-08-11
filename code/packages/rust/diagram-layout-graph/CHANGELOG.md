@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.4.0
+
+- Forward graph accessibility metadata into layout IR for backend export.
+
 ## 0.3.0
 
 - Reserve line-aware geometry for backend-neutral note nodes.

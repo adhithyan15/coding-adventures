@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.53.0";
+pub const VERSION: &str = "0.54.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -295,6 +295,8 @@ pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     Ok(GraphDiagram {
         direction,
         title: None,
+        accessibility_title: None,
+        accessibility_description: None,
         nodes: builder.nodes,
         edges: builder.edges,
     })
@@ -1055,6 +1057,8 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut direction = DiagramDirection::Tb;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut edges = Vec::new();
@@ -1064,7 +1068,22 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut pending_classes: Vec<(Vec<String>, String)> = Vec::new();
 
     while !cursor.at_eof() {
-        if cursor.current().value.eq_ignore_ascii_case("direction") {
+        if token_name(cursor.current()) == "ACC_TITLE" {
+            cursor.advance();
+            accessibility_title = Some(take_state_text(&mut cursor));
+        } else if token_name(cursor.current()) == "ACC_DESCR" {
+            cursor.advance();
+            accessibility_description = Some(take_state_text(&mut cursor));
+        } else if token_name(cursor.current()) == "ACC_DESCR_START" {
+            cursor.advance();
+            cursor.consume_if("NEWLINE").ok_or_else(|| {
+                token_error(
+                    cursor.current(),
+                    "expected newline before multiline accessibility description",
+                )
+            })?;
+            accessibility_description = Some(take_state_multiline_accessibility_text(&mut cursor)?);
+        } else if cursor.current().value.eq_ignore_ascii_case("direction") {
             cursor.advance();
             let token = cursor
                 .consume_if("DIRECTION")
@@ -1317,6 +1336,8 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     Ok(GraphDiagram {
         direction,
         title: None,
+        accessibility_title,
+        accessibility_description,
         nodes,
         edges,
     })
@@ -1532,6 +1553,29 @@ fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, Pa
     cursor
         .consume_if("END_NOTE")
         .ok_or_else(|| token_error(cursor.current(), "expected end note terminator"))?;
+    while lines.last().is_some_and(String::is_empty) {
+        lines.pop();
+    }
+    Ok(lines.join("\n"))
+}
+
+fn take_state_multiline_accessibility_text(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let mut lines = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "RBRACE" {
+        if cursor.consume_if("NEWLINE").is_some() {
+            lines.push(String::new());
+            continue;
+        }
+        let line = take_state_text(cursor);
+        lines.push(line);
+        cursor.consume_if("NEWLINE");
+    }
+    cursor.consume_if("RBRACE").ok_or_else(|| {
+        token_error(
+            cursor.current(),
+            "expected '}' after accessibility description",
+        )
+    })?;
     while lines.last().is_some_and(String::is_empty) {
         lines.pop();
     }
@@ -4311,6 +4355,23 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_accessibility_metadata() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\naccTitle: State lifecycle\naccDescr {\nReady transitions to running\nAcross two lines\n}\nReady --> Running\n",
+        )
+        .expect("state accessibility metadata should parse");
+
+        assert_eq!(
+            diagram.accessibility_title.as_deref(),
+            Some("State lifecycle")
+        );
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Ready transitions to running\nAcross two lines")
+        );
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5081,7 +5142,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.53.0");
+        assert_eq!(crate::VERSION, "0.54.0");
     }
 
     #[test]
