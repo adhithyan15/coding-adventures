@@ -135,8 +135,8 @@ use std::collections::HashSet;
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function, Metadata,
-    Module, Scope, Span, Stmt,
+    Block, Effect, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function,
+    Metadata, Module, Scope, Span, Stmt,
 };
 
 /// Maximum expression-nesting depth. Mirrors every other SIR frontend's
@@ -360,11 +360,25 @@ impl Lowerer {
                     .ok_or_else(|| self.err_at(node, "malformed value_expr statement".to_string()))?;
                 let v = self.lower_value_expr(value_expr_node, depth + 1)?;
                 let span = v.span().clone();
+                // SIR28 §2: auto-print lowers to `__sys_write__`, not a bare
+                // `BuiltinCall("print", ...)` — `terminator: "once"`
+                // (space-join, one trailing newline) matches a single-value
+                // display statement identically to every other terminator
+                // choice here (there is only ever one value), and mirrors
+                // the convention `python-to-semantic-ir`'s `print`/
+                // `javascript-to-semantic-ir`'s `console.log` already use.
+                self.observed.add(Feature::ConsoleIO);
+                self.observed.add(Feature::Strings);
                 Ok(vec![Stmt::ExprStmt {
                     expr: Expr::BuiltinCall {
-                        name: "print".to_string(),
-                        args: vec![v],
-                        effects: EffectSet::PURE,
+                        name: "__sys_write__".to_string(),
+                        args: vec![
+                            Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                            Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                            Expr::BoolLit { value: false, span: span.clone() },
+                            v,
+                        ],
+                        effects: EffectSet::PURE.with(Effect::MayPrint),
                         span: span.clone(),
                     },
                     span,

@@ -91,9 +91,11 @@ through unchanged. The other five monadic scalar atoms map onto
 | `⌈`  | ceiling     | `"ceil"` (new) |
 | `⌊`  | floor       | `"floor"` (new) |
 
-A bare top-level value expression is wrapped in `BuiltinCall("print", ...)`,
-reusing the exact name `matlab-to-semantic-ir` maps its own `disp(x)` call
-onto.
+A bare top-level value expression is wrapped in SIR28's `__sys_write__`
+primitive (`BuiltinCall("__sys_write__", [StrLit("stdout"),
+StrLit("once"), BoolLit(false), value])`), the same primitive
+`matlab-to-semantic-ir` maps its own `disp(x)` call onto — see
+[SIR28-syscall-primitives.md](../../specs/SIR28-syscall-primitives.md) §2.1.
 
 ### Testing
 

@@ -315,7 +315,7 @@
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function, Global,
+    Block, Effect, EffectSet, ElementwiseOpKind, Expr, Feature, FeatureManifest, Function, Global,
     Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
 };
 use std::collections::{HashMap, HashSet};
@@ -705,11 +705,21 @@ impl Lowerer {
                     .ok_or_else(|| self.err_at(node, "malformed noun_expr statement".to_string()))?;
                 let v = self.lower_noun_expr(noun_expr_node, depth + 1, top_scope)?;
                 let span = v.span().clone();
+                // SIR28 §2: auto-print lowers to `__sys_write__`, not a bare
+                // `BuiltinCall("print", ...)` — see `apl-to-semantic-ir`'s
+                // identical migration (same MA05/MA11 auto-print convention).
+                self.observed.add(Feature::ConsoleIO);
+                self.observed.add(Feature::Strings);
                 Ok(vec![Stmt::ExprStmt {
                     expr: Expr::BuiltinCall {
-                        name: "print".to_string(),
-                        args: vec![v],
-                        effects: EffectSet::PURE,
+                        name: "__sys_write__".to_string(),
+                        args: vec![
+                            Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                            Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                            Expr::BoolLit { value: false, span: span.clone() },
+                            v,
+                        ],
+                        effects: EffectSet::PURE.with(Effect::MayPrint),
                         span: span.clone(),
                     },
                     span,
