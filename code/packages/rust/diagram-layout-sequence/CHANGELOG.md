@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.0 - 2026-08-11
+
+- Bound still-open activation bars to a destroyed participant's final message instead of the diagram footer.
+
 ## 0.29.0 - 2026-08-11
 
 - Move destroyed participant footers to their associated message and terminate messages at the footer edge.
