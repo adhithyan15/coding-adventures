@@ -1,0 +1,68 @@
+% ============================================================================
+% homophones — a common word and another word that sounds exactly the same
+% (a homophone) but is spelled differently and means something different
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling library to `opposites.adj` and `synonyms.adj`: some words SOUND
+% identical when spoken but are spelled differently and mean different
+% things. THERE and THEIR sound the same but are not the same word. The word
+% for "sounds the same but is spelled/means differently" is a HOMOPHONE.
+% This tiny library records a handful of clean word→homophone pairs so an
+% ADJ program can recall them, each one cited to a dictionary. Recall is a
+% binding query:
+%
+%     ? homophone(there, $Word)      % their
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `homophone(word, sound_alike)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% sound-alike word WITH its source, on the CPU, with zero model calls, and
+% ABSTAINS on any word not in the table (it never invents a homophone it
+% cannot cite).
+%
+% The pairs, as a truth table:
+%
+%     word     sound_alike   read as…
+%     -------  ------------  ---------------------------------------
+%     there    their         "there and their sound the same"
+%     flower   flour         "flower and flour sound the same"
+%     to       too           "to and too sound the same"
+%
+% Only ONE direction is shipped per pair (word → its sound-alike). A query
+% like `? homophone(their, $W)` therefore ABSTAINS: the honest-abstention
+% property is deliberate — the table answers only what its source explicitly
+% lists, and a word with no shipped homophone in this table (e.g. `here`, a
+% real word with a real homophone "hear" that this table does not carry)
+% returns no invented answer. (This mirrors `opposites.adj`'s and
+% `synonyms.adj`'s own one-direction convention.)
+%
+% Provenance — nothing here is from memory. Each pair is copied from the
+% English Wiktionary entry for the FIRST word, whose "Homophones" line lists
+% the sound-alike word verbatim. The per-pair citable spans (quoted exactly
+% as printed) are:
+%
+%     there  → en.wiktionary.org/wiki/there   "Homophones: their, they're"
+%     flower → en.wiktionary.org/wiki/flower  "Homophone: flour (for people who pronounce flower as
+%                                              one syllable, or flour as two)"
+%     to     → en.wiktionary.org/wiki/to      "Homophones: too, two"
+%
+% The single `source` span below is the clearest one (the `there` entry); the
+% `locator` points at that entry, and each remaining pair's own page + verbatim
+% span is quoted above so every row is independently checkable. `trust
+% consensus` — a dictionary is a secondary reference, not a primary authority,
+% the same tier `opposites.adj`/`synonyms.adj` already established for the
+% same Wiktionary source. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table homophone {
+    columns word, sound_alike
+
+    row (there, their)
+    row (flower, flour)
+    row (to, too)
+
+    source "Homophones: their, they're"
+    locator "https://en.wiktionary.org/wiki/there"
+    trust consensus
+}
