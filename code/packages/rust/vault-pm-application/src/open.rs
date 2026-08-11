@@ -1058,6 +1058,108 @@ impl UnlockedVaultV1 {
         )
     }
 
+    /// Restore one bounded historical live revision bound to an item ID.
+    ///
+    /// Selection, item binding, tombstone rejection, current-conflict checks,
+    /// and same-revision rejection all remain inside the application boundary.
+    /// `history_limit` has the same strict bounds and deterministic ancestry
+    /// semantics as [`Self::item_history`].
+    #[allow(clippy::too_many_arguments)]
+    pub fn restore_item_for_item(
+        self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+        history_limit: usize,
+        wall_time_ms: u64,
+        randomness: RestoreItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.restore_selection_validation(item_id, selected_revision, history_limit)
+            .0?;
+        self.restore_item(
+            selected_revision,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Restore one item-bound historical revision after durable audit outcome.
+    ///
+    /// A successful `ItemRestore` event and its new live revision share the
+    /// causal mutation publication. Invalid bounds, missing or cross-item
+    /// selectors, tombstone selectors, same-revision requests, and current
+    /// conflicts publish a failed event before their closed operation error is
+    /// observable. Audit publication failure supersedes and withholds that
+    /// operation error.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_restore_item_for_item(
+        self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+        history_limit: usize,
+        wall_time_ms: u64,
+        mutation_randomness: RestoreItemRandomnessV1,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let (validation, event_revision) =
+            self.restore_selection_validation(item_id, selected_revision, history_limit);
+        match validation {
+            Ok(()) => {
+                let active = self.restore_item(
+                    selected_revision,
+                    wall_time_ms,
+                    mutation_randomness,
+                    local_state_store,
+                )?;
+                Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+            }
+            Err(error) => self.finish_audited_access(
+                AuditActionV1::ItemRestore,
+                Some(item_id),
+                event_revision,
+                wall_time_ms,
+                failure_randomness,
+                local_state_store,
+                Err(error),
+            ),
+        }
+    }
+
+    fn restore_selection_validation(
+        &self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+        history_limit: usize,
+    ) -> (Result<(), ApplicationError>, Option<RevisionId>) {
+        let history = match self.item_history(item_id, history_limit) {
+            Ok(history) => history,
+            Err(error) => return (Err(error), None),
+        };
+        let Some(selected) = history
+            .into_iter()
+            .find(|candidate| candidate.revision_id() == selected_revision)
+        else {
+            return (Err(ApplicationError::NotFound), None);
+        };
+        let event_revision = Some(selected_revision);
+        if selected.is_deleted() {
+            return (Err(ApplicationError::InvalidInput), event_revision);
+        }
+        let Some(current) = self.current_catalog.items.get(&item_id) else {
+            return (Err(ApplicationError::NotFound), event_revision);
+        };
+        let [current] = current.as_slice() else {
+            return (Err(ApplicationError::ConflictRequired), event_revision);
+        };
+        if current.revision_id() == selected_revision {
+            return (Err(ApplicationError::InvalidInput), event_revision);
+        }
+        (Ok(()), event_revision)
+    }
+
     /// Resolve one current conflict by choosing an existing authenticated
     /// candidate and publishing it as a new current revision.
     ///
@@ -7065,6 +7167,164 @@ mod tests {
             local.0.lock().unwrap().as_deref(),
             Some(exact_deleted.as_slice())
         );
+    }
+
+    #[test]
+    fn audited_item_bound_restore_records_selection_failures_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x31);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Restore audit", "original-secret"),
+            620,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let original_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .delete_item(
+                original_revision,
+                621,
+                622,
+                delete_item_randomness(0x32),
+                &local,
+            )
+            .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let tombstone_revision = session.current_catalog.items[&item_id][0].revision_id();
+        session
+            .activate_audit_epoch(623, audited_access_randomness(0x33), &local)
+            .unwrap();
+
+        let wrong_item_id = ItemId::new([0x91; 16]);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let wrong_item = session
+            .audited_restore_item_for_item(
+                wrong_item_id,
+                original_revision,
+                100,
+                624,
+                restore_item_randomness(0x34),
+                audited_access_randomness(0x35),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(wrong_item.into_operation(), Err(ApplicationError::NotFound));
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRestore,
+                AuditOutcomeV1::Failed,
+                Some(wrong_item_id),
+                None,
+            )
+        );
+        let tombstone = session
+            .audited_restore_item_for_item(
+                item_id,
+                tombstone_revision,
+                100,
+                625,
+                restore_item_randomness(0x36),
+                audited_access_randomness(0x37),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(
+            tombstone.into_operation(),
+            Err(ApplicationError::InvalidInput)
+        );
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRestore,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                Some(tombstone_revision),
+            )
+        );
+        let restored = session
+            .audited_restore_item_for_item(
+                item_id,
+                original_revision,
+                100,
+                626,
+                restore_item_randomness(0x38),
+                audited_access_randomness(0x39),
+                &local,
+            )
+            .unwrap();
+        assert!(restored.operation_succeeded());
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemRestore,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(original_revision),
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 7);
+        assert_eq!(report.audit_event_count(), 4);
     }
 
     #[test]
