@@ -1,97 +1,124 @@
-Spanish, chapter 30: Parents and Siblings.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 30: Black, White, Red, and Blue.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-el padre, la madre — among the oldest words there are.
+Lesson 1 of 4.
+negro, blanco — two colours, and one of their histories.
 
 Warm-up.
 [pause 2 seconds]
-"Father" and "mother" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother.
+Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next.
 
-The words, taken apart: padre and madre.
-el padre ("father") from Latin pater from PIE ph₂tḗr.
-la madre ("mother") from Latin māter from PIE méh₂tēr.
+The words, taken apart: negro.
+negro ("black") from Latin niger. Nothing surprising: the same Latin root gives English denigrate ("to blacken someone's name") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language.
+Hold that in mind as the baseline. It is what a colour word normally does.
 
-Why it's said this way: the English sound-law.
-Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:
-[a table of 2 rows, read aloud]
-PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.
-PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother.
-So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their "of a parent" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, "the stuff a tree-mother produces," gives Spanish materia and, separately, matriz — "womb" — via Latin mātrix.)
+The two words in use.
+blanco ("white") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca).
+But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish "white" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el padre, la madre"]
+[your turn — say: "negro, blanco"]
 [pause 8 seconds for the answer]
-[your turn — say: the sound-law — "padre keeps p; father shifts to f — same word"]
+[your turn — say: with a noun — "el gato negro, la casa blanca"]
 [pause 8 seconds for the answer]
-[your turn — say: "padre becomes paternal; madre becomes maternal"]
+[your turn — say: "negro" then English "denigrate" — the niger root]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "father" and "mother" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)
+Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's "white" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)
 
 
-Lesson 2 of 3.
-el hermano, la hermana — brother and sister, from a different word entirely.
-
-Warm-up.
-[pause 2 seconds]
-You might expect Spanish "brother" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds.
-
-The words, taken apart: hermano and hermana.
-Classical Latin could say frāter germānus, literally "a brother of the same stock/blood" — distinguishing a full brother from a half-brother, or from a "brother" in some looser sense.
-Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:
-el hermano ("brother") from Latin germānus.
-la hermana ("sister") from Latin germāna.
-So Spanish's everyday word for brother is, grammatically, a leftover adjective.
-
-Why it's said this way: where germanus comes from.
-Germānus traces back to germen, "sprout, bud, seed" — the same root that gives English germ, germinate, and germane (originally "closely related," from the same seed, before it loosened into just "relevant").
-So calling someone your hermano is, at the etymological root, calling them "sprung from the same seed." (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el hermano, la hermana" — brother, sister]
-[pause 8 seconds for the answer]
-[your turn — say: the root chain — "germen, seed" becomes "germānus, of the same seed" becomes "hermano"]
-[pause 8 seconds for the answer]
-[your turn — say: "hermano" then English "germinate, germane"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Does Spanish hermano come from Latin frāter? (No — from germānus, "of the same stock/seed," an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is.
-
-
-Lesson 3 of 3.
-the h in hermano — a letter that was never spoken.
+Lesson 2 of 4.
+blanco — the colour Spanish did not inherit.
 
 Warm-up.
 [pause 2 seconds]
-Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one.
+Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in.
 
 You'll want to know first.
-el hermano, la hermana — the words and the germen root.
+negro, blanco — the two colour words.
 
-Why it's said this way: two different silent h's.
-You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo ("son"), facere becomes hacer ("to do"). Hermano is not that, and the difference is worth getting right.
-Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago.
-The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:
-[a table of 2 rows, read aloud]
-word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.
-word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never.
-Same silent letter today; two completely different backstories, only one of which involves a sound at all.
+The word, taken apart: blanco.
+blanco comes from Germanic blank — "shining, gleaming." It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed.
+Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings.
+Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in "bright white."
+
+Why it's said this way: where albus went.
+Latin's white did not vanish. It stopped being the everyday word and survived in corners:
+[a table of 4 rows, read aloud]
+word: alba. meaning: dawn. the white inside: the sky going white.
+word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.
+word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.
+word: albino. meaning: albino. the white inside: white-skinned.
+That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "germānus" then "ermano" then "hermano" — the three stages]
+[your turn — say: the pairing — "negro from Latin, blanco from Germanic"]
 [pause 8 seconds for the answer]
-[your turn — say: the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was]
+[your turn — say: "el alba" — dawn — and hear the old Latin white inside it]
+[pause 8 seconds for the answer]
+[your turn — say: "blanco" then French "blanc" — the same loan, twice over]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)
+Where does blanco come from, and what did it mean? (Germanic blank, "shining" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba "dawn," álbum, albino — no longer the everyday colour word.)
+
+
+Lesson 3 of 4.
+rojo — the same family as red, by a different branch.
+
+Warm-up.
+[pause 2 seconds]
+So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess.
+
+The word, taken apart: rojo.
+rojo ("red") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one.
+Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink).
+So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "rojo"]
+[pause 8 seconds for the answer]
+[your turn — say: the cousins — "rojo, rouge, red", three branches, one root]
+[pause 8 seconds for the answer]
+[your turn — say: the three so far — "negro inherited, blanco borrowed, rojo cousin"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely.
+
+
+Lesson 4 of 4.
+azul — a stone from Afghanistan, in your everyday vocabulary.
+
+Warm-up.
+[pause 2 seconds]
+Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether.
+
+The word, taken apart: azul.
+azul ("blue") from Arabic لازورد (lāzaward), "lapis lazuli" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli.
+So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour.
+
+Why it's said this way: everyday here, poetic there.
+Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all.
+Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four — "negro, blanco, rojo, azul"]
+[pause 8 seconds for the answer]
+[your turn — say: sort them — "negro inherited, blanco Germanic, rojo cousin of red, azul Arabic"]
+[pause 8 seconds for the answer]
+[your turn — say: "azul" then English "azure" — the same lapis lazuli]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)

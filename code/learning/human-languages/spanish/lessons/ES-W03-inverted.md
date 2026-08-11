@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-W03-inverted
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 390
-chapter: 9
+chapter: 10
 type: writing
 headword: "¿ ¡"
 gloss: the inverted opening marks — an early cue for question or exclamation intonation

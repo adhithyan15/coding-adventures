@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-W01-tilde-diacritica
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 360
-chapter: 8
+chapter: 9
 type: writing
 headword: "el / él"
 gloss: the acute accent separates the article el from the pronoun él

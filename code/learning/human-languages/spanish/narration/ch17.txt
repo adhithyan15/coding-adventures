@@ -1,205 +1,211 @@
-Spanish, chapter 17: Ser and Estar --- Two Ways to Be.
+Spanish, chapter 17: Numbers, and How Old You Are.
 5 lessons. All 5 can be done entirely by ear.
 
 
 Lesson 1 of 5.
-ser — another way to say “to be”.
+uno, dos, tres, cuatro, cinco — counting to five.
 
 Warm-up.
 [pause 2 seconds]
-You already use estar for a current state or location. Spanish also has ser. This chapter adds one job at a time; today, learn the verb and the three singular forms that match the person frame you already know.
+Numbers are among the most reusable words in any language. Spanish keeps them close enough to Latin that English cousins can help you remember them. This lesson asks for only five: uno, dos, tres, cuatro, cinco.
 
 Sounds you'll need.
-vowel-e — ser begins with the clear vowel in mesa.
-r-tap — the final r is one light tap: SER.
+diphthong-ue — cuatro begins KWA-.
+r-tap — give tres and cuatro one light tap, not an English r.
 
-The word, taken apart.
-Modern ser grew from a historical merger. Latin esse meant “to be,” while sedēre meant “to sit.” The infinitive and the present forms do not all come down the same path, so the modern verb cannot be predicted from one neat stem.
-The esse family is still visible in English essence, essential, entity, present, and absent. That makes essence a useful memory hook for one major use of ser: identifying what someone or something is.
+The numbers, taken apart.
+[a table of 5 rows, read aloud]
+Spanish: uno (1). Latin source: ūnus. English memory hook: unit, unique.
+Spanish: dos (2). Latin source: duo. English memory hook: duo, dual.
+Spanish: tres (3). Latin source: trēs. English memory hook: trio, triple.
+Spanish: cuatro (4). Latin source: quattuor. English memory hook: quart, quarter.
+Spanish: cinco (5). Latin source: quīnque. English memory hook: quintet, quintuplet.
+The spellings changed, but the family resemblance remains. Cinco and quintet both descend from quīnque; Spanish changed the opening sound while English borrowed a more visibly Latin form.
 
-Grammar Lens: only three forms today.
-[a table of 3 rows, read aloud]
-person: yo. form: soy. a small identifying frame: Soy Ana. — “I am Ana.”
-person: tú. form: eres. a small identifying frame: Eres Ana. — “You are Ana.”
-person: él / ella / usted. form: es. a small identifying frame: Usted es Ana. — “You are Ana.”
-Say the set as soy, eres, es. These forms are irregular: do not try to remove -er and attach the regular endings from comer. A later lesson will build the plural-person frame.
+Grammar Lens: uno becomes un or una.
+When uno stands alone, it means “one.” Before a noun it shortens:
+un before a masculine noun: un café — one coffee / a coffee.
+una before a feminine noun: una noche — one night / a night.
+This shortening is called apocope: the end drops away. Spanish uses the same forms for “one” and “a/an”; context supplies the difference.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “ser — soy, eres, es”]
+[your turn — say: “uno, dos, tres, cuatro, cinco” — once up, once down]
 [pause 8 seconds for the answer]
-[your turn — say: “Soy Ana. Eres Ana. Usted es Ana.”]
+[your turn — say: “uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”]
 [pause 8 seconds for the answer]
-[your turn — say: “esse — essence — ser”]
+[your turn — say: “un café, una noche” — hear uno shorten]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
-Give the three learned singular forms of ser: yo, tú, then él/ella/usted.
+Write the Spanish numbers 1 through 5 in order.
 [question — say your answer, then pause 8 seconds]
-Complete the identification for formal you: Usted ___ Ana.
+Say 'one coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two Latin verbs fed ser? (Esse and sedēre.) Give the three forms learned today. (Soy, eres, es.) Why not predict them from the infinitive? (The verb is historically mixed and irregular.) Next: set ser beside estar using only identity and state frames you already have.
+Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) Which English word helps you remember cinco? (Quintet, through Latin quīnque.) What happens to uno before a noun? (It becomes un or una.) Next: six through ten.
 
 
 Lesson 2 of 5.
-ser vs estar — identity or current state?
+seis, siete, ocho, nueve, diez — and the calendar's old count.
 
 Warm-up.
 [pause 2 seconds]
-You now have two small sets: soy, eres, es and estás, está. Do not memorize a long rule list. Make one contrast: ser identifies; estar places someone in a current state or location.
+You can count to five. Add one small set and you reach ten: seis, siete, ocho, nueve, diez. Four English month names will help hold the last four in memory.
 
-Grammar Lens: the first contrast, from known material.
-[a table of 2 rows, read aloud]
-question: ¿Es usted Ana? — “Are you Ana?” what it asks: identity. verb: ser.
-question: ¿Está usted bien? — “Are you well?” what it asks: current state. verb: estar.
-Only the verb and the job change. The first question identifies the person; the second checks how that person is now. Both Ana, usted, and bien are already part of your course, so the contrast adds no hidden vocabulary.
+Sounds you'll need.
+diphthong-ie — siete begins SYE-.
+diphthong-ue — nueve begins NWE-.
 
-Grammar Lens: a memory hook, not a law.
-ser recalls Latin esse and English essence: use it here to say who someone is.
-estar comes from Latin stāre, “to stand,” the family behind state: use it for the state or location in which someone stands.
-“Permanent versus temporary” is only a rough beginner shortcut, not the rule. A location may last for centuries and still use estar; an identification may last one minute and still use ser. Ask instead: am I identifying, or am I giving a state or location?
+The numbers, taken apart.
+[a table of 5 rows, read aloud]
+Spanish: seis (6). Latin source: sex. English memory hook: sextet.
+Spanish: siete (7). Latin source: septem. English memory hook: September, septet.
+Spanish: ocho (8). Latin source: octō. English memory hook: October, octave.
+Spanish: nueve (9). Latin source: novem. English memory hook: November.
+Spanish: diez (10). Latin source: decem. English memory hook: December, decimal.
+Say the chain aloud: siete–September, ocho–October, nueve–November, diez–December. It is a memory path, not a second list to memorize.
+
+Why it's said this way: why September says “seven”.
+The month names preserve an old Roman count in which March was first: September through December occupied positions seven through ten. When January and February stood before March, those names shifted to positions nine through twelve but kept their old numbers.
+One tempting story is wrong: July and August were not new months inserted into the middle. The existing months Quintilis and Sextilis were later renamed for Julius Caesar and Augustus. The calendar moved; the numbered names stayed.
+Numbers above ten belong to a later chapter. For now, stop cleanly at diez.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “¿Es usted Ana?” — identity, ser]
+[your turn — say: count from uno through diez]
 [pause 8 seconds for the answer]
-[your turn — say: “¿Está usted bien?” — state, estar]
+[your turn — say: “siete/September, ocho/October, nueve/November, diez/December”]
 [pause 8 seconds for the answer]
-[your turn — say: “identify: ser; state or location: estar”]
-[pause 8 seconds for the answer]
-[repeat that twice]
-“¿Es usted Ana? ¿Está usted bien?”
+[question — say your answer, then pause 10 seconds]
+Write the Spanish numbers 6 through 10 in order.
 [question — say your answer, then pause 8 seconds]
-Choose es or está: ¿___ usted Ana?
-[question — say your answer, then pause 8 seconds]
-Choose es or está: ¿___ usted bien?
+Were July and August inserted into the Roman calendar or were older months renamed?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which verb identifies? (Ser.) Which gives a current state or location? (Estar.) Why is “permanent versus temporary” incomplete? (The choice follows the kind of claim, not its duration.) Next: use ser for one specific identity fact — origin.
+Give 6–10. (Seis, siete, ocho, nueve, diez.) Why does December carry the old word for ten? (The month names preserve a March-first count.) What happened to Quintilis and Sextilis? (They were renamed July and August.) Next: the verb tener, “to have.”
 
 
 Lesson 3 of 5.
-soy de… — saying where you are from.
+tener — “to have,” with two visible changes.
 
 Warm-up.
 [pause 2 seconds]
-You can identify yourself with Soy Ana. Add one short word and you can state another identity fact: Soy de…, “I am from…”.
+Regular comer gave you como, comes, come. The common verb tener, “to have,” belongs to the same -er family, but its three singular forms change in two places. Learn only those three today.
 
-The word, taken apart — de.
-de means “from” or “of.” It comes from Latin dē, “down from, away from.” English keeps that direction in depart and descend.
-You already learned that dónde grew from Latin de unde, “from where.” Spanish can put the still-living word de before dónde to ask explicitly about origin.
+Sounds you'll need.
+diphthong-ie — tienes begins TYE-.
+r-tap — one light tap at the end of tener.
 
-Grammar Lens: ser + de for origin.
-¿De dónde eres? — “Where are you from?” Soy de Madrid. — “I am from Madrid.”
-The place name Madrid already appeared with vivir. Here, the new piece is the frame around it. Use ser, because this sentence states origin; it does not say where someone is located now.
-Keep the two known questions separate:
-[a table of 2 rows, read aloud]
-question: ¿De dónde eres? asks about: origin — where you are from.
-question: ¿Dónde vives? asks about: residence — where you live.
+The word, taken apart.
+tener descends from Latin tenēre, “to hold or keep.” Having is, at root, holding. English borrowed the same root many times:
+tenant, tenure, tenacious — holding land, office, or position.
+contain, retain, maintain, sustain — holding together, back, in hand, or up.
+When you see -tain in English, think of Spanish tener.
+
+Grammar Lens: the three singular forms.
+[a table of 3 rows, read aloud]
+person: yo. regular comer: como. irregular tener: tengo.
+person: tú. regular comer: comes. irregular tener: tienes.
+person: él / ella / usted. regular comer: come. irregular tener: tiene.
+Two small changes do all the work:
+yo adds g: tengo, not teno.
+The other two singular forms change e becomes ie: tienes, tiene.
+Later chapters will expand both patterns. For now, hold only tengo, tienes, tiene — the same three-person frame you already use for regular verbs.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “¿De dónde eres?”]
+[your turn — say: “tener — tengo, tienes, tiene”]
 [pause 8 seconds for the answer]
-[your turn — say: “Soy de Madrid.”]
+[your turn — say: “tener / tenant / retain” — the shared idea is hold]
 [pause 8 seconds for the answer]
-[your turn — say: “de — depart — descend”: the shared direction is from]
+[your turn — say: compare “como, comes, come” with “tengo, tienes, tiene”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Ask one friend 'Where are you from?' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Answer 'I am from Madrid' in Spanish.
+[question — say your answer, then pause 10 seconds]
+Give the yo, tú, and él/ella forms of tener, in that order.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does de mean? (“From” or “of.”) Ask where one friend is from. (¿De dónde eres?) Answer with Madrid. (Soy de Madrid.) Next: reuse dónde and en to say where someone is located now.
+What did Latin tenēre mean? (“To hold.”) Give the three singular forms. (Tengo, tienes, tiene.) What are the two changes? (g appears in tengo; e becomes ie in tienes/tiene.) Next: use them to ask and answer about age.
 
 
 Lesson 4 of 5.
-está en… — saying where someone is.
+¿Cuántos años tienes? — asking age.
 
 Warm-up.
 [pause 2 seconds]
-In Chapter 7, ¿Dónde vives? — Vivo en Madrid asked about where someone lives. Now use the same dónde and en with estar to ask about a current location.
+You now have tengo, tienes, tiene and the numbers one through ten. Put them together and you can ask or answer age. Spanish frames age as something you have.
 
-The word, taken apart — en.
-en already means “in,” “on,” or “at.” It descends from Latin in and is a cognate of English in. No new preposition is needed; only the surrounding verb changes.
+The phrase, taken apart.
+¿Cuántos años tienes? “How old are you?” — literally, “How many years do you have?”
+cuántos means “how many.” Latin quantus, “how much,” also gives English quantity, quantum, quantify.
+años means “years.” Latin annus also gives annual and anniversary. Its doubled nn became Spanish ñ, exactly as your script lesson showed.
+tienes is the tú form of tener.
+Keep the marks visible: opening ¿, the accent in cuántos, and the letter ñ in años each carries information.
 
-Grammar Lens: dónde + estar, then estar + en.
-¿Dónde está usted? — “Where are you?” (formal) Usted está en Madrid. — “You are in Madrid.” Ana está en Madrid. — “Ana is in Madrid.”
-The form está is already familiar from ¿Cómo está usted? The phrase está en… simply gives that form a place. Location uses estar even when a place seems stable; the choice marks the kind of claim, not how long it lasts.
-Compare origin and location without adding any new form:
-[a table of 2 rows, read aloud]
-sentence: Ana es de Madrid. meaning: origin. verb: ser.
-sentence: Ana está en Madrid. meaning: location. verb: estar.
+Grammar Lens: Spanish “has” years.
+English says “I am ten years old.” Spanish says:
+— ¿Cuántos años tienes? — Tengo diez años.
+The reusable frame is Tengo + number + años. Use a number you already know: Tengo ocho años, Tengo nueve años, Tengo diez años. Larger numbers wait until their own lesson; the grammar does not change.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “¿Dónde está usted?”]
+[your turn — say: “¿Cuántos años tienes?”]
 [pause 8 seconds for the answer]
-[your turn — say: “Ana está en Madrid.”]
-[pause 8 seconds for the answer]
-[your turn — say: “en / in” — two cognates]
+[your turn — say: “Tengo ocho años. Tengo nueve años. Tengo diez años.”]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Ask formal you 'Where are you?' in Spanish.
+Ask one friend 'How old are you?' in Spanish.
 [question — say your answer, then pause 8 seconds]
-Say 'Ana is in Madrid' in Spanish.
+Answer 'I am eight years old' using the Spanish age frame.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which verb locates someone? (Estar.) What already-known word introduces the place? (En.) Ask formal “Where are you?” (¿Dónde está usted?) Next: combine identity, origin, state, and location without adding another word or verb form.
+What does the question literally ask? (“How many years do you have?”) Which verb carries age? (Tener.) How do cuántos and años connect to English? (Quantus becomes quantity; annus becomes annual.) Next: combine counting, tener, and age in one short exchange.
 
 
 Lesson 5 of 5.
-Practice — identity, origin, state, and location.
+Practice — counting, having, and age.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds nothing. Use ser for identity and origin; use estar for a current state or location.
+This checkpoint asks for three small moves: count to ten, choose the right singular form of tener, and use the age frame. Everything here has already appeared.
 
-Grammar Lens: retrieve the two small form sets.
-ser: soy, eres, es.
-estar in the questions used here: estás, está.
-Plural forms remain deliberately deferred.
+Grammar Lens: count and conjugate.
+Count: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.
+Change person: tengo, tienes, tiene.
+Remember the roots: quīnque helps with cinco; decem helps with diez; tenēre, “hold,” helps with tener.
+Keep the calendar correction: July and August were renamed, not inserted.
 
-The word, taken apart — four root hooks.
-ser: esse + sedēre.
-estar: stāre, “stand.”
-de: Latin dē, “from.”
-en: Latin in, English in.
+The exchange — use only what you know.
+— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Cuántos años tienes? — Tengo diez años. ¿Y tú? — Tengo nueve años.
+The exchange reuses the name question you already know, then adds exactly one new capability: age with tener.
 
-Grammar Lens: sort by the kind of claim.
-[a table of 4 rows, read aloud]
-prompt: ¿Es usted Ana? answer: ser. why: identity.
-prompt: ¿De dónde eres? answer: ser. why: origin.
-prompt: ¿Está usted bien? answer: estar. why: current state.
-prompt: ¿Dónde está Ana? answer: estar. why: location.
-
-The exchange — only known pieces.
-— Hola. ¿Es usted Ana? — Sí. Soy Ana. — ¿De dónde es usted? — Soy de Madrid. — ¿Dónde está Ana? — Está en Madrid. — ¿Está usted bien? — Bien, gracias.
+What you've built this chapter.
+uno through diez, with Latin and English hooks instead of an isolated list.
+un / una before a noun, where standalone uno shortens.
+tengo, tienes, tiene, the three singular forms of tener.
+¿Cuántos años tienes? — Tengo … años, with quantus/quantity and annus/annual showing where the words came from.
+Numbers above ten and the plural forms of tener remain deliberately deferred.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “soy, eres, es”]
+[your turn — say: count 1–10 up, then down]
 [pause 8 seconds for the answer]
-[your turn — say: the four questions, naming each job]
+[your turn — say: “tengo, tienes, tiene”]
 [pause 8 seconds for the answer]
-[your turn — say: the exchange once]
+[your turn — say: ask and answer age with a number from 1–10]
 [pause 8 seconds for the answer]
 [repeat that twice]
-“¿Es usted Ana? ¿Está usted bien?”
+“¿Cuántos años tienes? — Tengo nueve años.”
+[question — say your answer, then pause 15 seconds]
+Write the Spanish numbers 1 through 10 in order.
+[question — say your answer, then pause 10 seconds]
+Give the three learned singular forms of tener: yo, tú, then él/ella.
 [question — say your answer, then pause 8 seconds]
-Complete with es or está: ¿___ usted Ana?
-[question — say your answer, then pause 8 seconds]
-Say 'I am from Madrid' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Say 'Ana is in Madrid' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Complete with es or está: ¿___ usted bien?
+Answer ¿Cuántos años tienes? with nine years.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned forms of ser. (Soy, eres, es.) Which verb identifies and states origin? (Ser.) Which gives a state or location? (Estar.) Ask where one friend is from, then locate Ana in Madrid. Next: ir, “to go,” introduced in the same small-step frame.
+Count to ten. Give the three singular forms of tener. Ask “How old are you?” and answer with a number you learned. You can now move from a name exchange into one concrete personal detail. Next: the two Spanish ways to say “to be,” introduced one contrast at a time.

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-hasta-limits
 spine_node: SPINE-TAKE-LEAVE
 sequence: 440
-chapter: 10
+chapter: 11
 type: grammar
 headword: hasta aquí / hasta la noche
 gloss: hasta points to an endpoint in space or time

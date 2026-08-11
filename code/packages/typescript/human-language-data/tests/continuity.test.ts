@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 198, // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 199, // +1: HL-C96 splits ch7 and adds its payoff // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -793,7 +793,7 @@ describe("the real corpus", () => {
     // the lesson ids are stable slugs and deliberately do NOT renumber with it.
     const { lessons } = loadEverything();
     const chapter = lessons
-      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 15)
+      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 16)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
     expect(chapter).toEqual([

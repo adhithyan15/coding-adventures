@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-hasta
 spine_node: SPINE-TAKE-LEAVE
 sequence: 430
-chapter: 10
+chapter: 11
 type: word
 headword: hasta
 gloss: until / up to

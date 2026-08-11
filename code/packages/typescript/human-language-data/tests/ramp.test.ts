@@ -108,7 +108,7 @@ describe("corpus snapshot", () => {
     // pure speech and the script strand runs one lesson at a time from chapter 4, so
     // no Tamil chapter exceeds the budget. This is the number that most directly
     // measures "do not throw many things at the reader at once".
-    expect(report.summary.chapterViolations).toBe(21);
+    expect(report.summary.chapterViolations).toBe(20); // -1: HL-C96 splits ch7, the last Spanish chapter over budget -- Spanish is now clean
 
     // HALF THE CORPUS IS INVISIBLE HERE. 572 lessons declare no atoms, so they are
     // neither compliant nor violating — they are unmigrated. A track with few violations
@@ -133,7 +133,7 @@ describe("corpus snapshot", () => {
     // singular steps; its terminal checkpoint remains correctly atom-free.
     // Chapter 18 replaces nine legacy teaching lessons with eight measurable
     // singular steps; its terminal checkpoint remains correctly atom-free.
-    expect(report.summary.unmeasurableLessons).toBe(537);
+    expect(report.summary.unmeasurableLessons).toBe(538);
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight

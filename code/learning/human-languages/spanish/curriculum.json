@@ -169,6 +169,7 @@
         "ES-C04-estar",
         "ES-C04-estar-estado",
         "ES-C04-como-esta",
+        "ES-C04-repaso-como-esta",
         "ES-C04-como-estas-register",
         "ES-C04-regular",
         "ES-C04-y",
@@ -192,7 +193,8 @@
         "ES-EXT-011-SCRIPT",
         "ES-EXT-011-CONSOLIDATION",
         "ES-EXT-011-CONSOLIDATION-ESTAR",
-        "ES-EXT-011-CONSOLIDATION-ACENTO"
+        "ES-EXT-011-CONSOLIDATION-ACENTO",
+        "ES-EXT-011-CONSOLIDATION-COMOESTA"
       ]
     },
     {
@@ -2264,6 +2266,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C06-repaso-hablar"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-CONSOLIDATION-COMOESTA",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-repaso-como-esta"
       ]
     }
   ]

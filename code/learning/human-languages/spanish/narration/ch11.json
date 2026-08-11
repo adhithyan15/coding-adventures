@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 11,
-  "title": "Until When",
+  "title": "Goodbye",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7fac3b8afaa8e71d",
+  "sourceHash": "fnv1a64:b854200fe23a6e1e",
   "lessons": [
     {
-      "id": "ES-C05-hasta-luego",
-      "sequence": 450,
-      "title": "hasta luego — the everyday \"see you later\"",
-      "headword": "hasta luego",
-      "romanization": "hasta luego",
-      "gloss": "see you later (literally \"until later\")",
+      "id": "ES-C05-adios",
+      "sequence": 420,
+      "title": "adiós — \"goodbye,\" or \"to God\"",
+      "headword": "adiós",
+      "romanization": "adiós",
+      "gloss": "goodbye",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2abd6c5090b27a5",
+      "sourceHash": "fnv1a64:332c25c169b38d80",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is the goodbye you'll actually use most — friendly, casual, open-ended. hasta luego: \"until later.\" You already own hasta (\"until\"); today you add luego (\"later\"), and it has a very Latin backstory."
+              "text": "You can greet, introduce yourself, and ask how someone is. Time to leave gracefully. The final, plainest parting is adiós — and, like the English goodbye, it's a tiny prayer worn smooth."
             }
           ]
         },
@@ -46,505 +46,57 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ue — luego = LWEH-goh: the ue is a w-glide, lweh-."
-            },
-            {
-              "kind": "speech",
-              "text": "The whole phrase: AHS-tah LWEH-goh."
+              "text": "diphthong-io — the -iós is one glide, ee-OHS: ah-DYOHS, stress on the end (that's what the accent on ó marks — remember the acute-accent lesson)."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — the phrase",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "hasta luego = \"until later\" becomes \"see you later.\""
+              "text": "adiós is a + Dios — \"to God.\" It's the front half of an old blessing, a Dios te encomiendo, \"I commend you to God\" — said to someone setting off, when a journey was dangerous and you left them in God's keeping."
             },
             {
               "kind": "speech",
-              "text": "hasta = \"until\" (last lesson — Arabic ḥattā)."
-            },
-            {
-              "kind": "speech",
-              "text": "luego = \"later / then / soon,\" from Latin loco, \"at the place / at that point.\" The idea slid from place becomes point in time becomes \"then, next, soon.\" So its cousins in English are all about place: local, locus, location, locate, al-loc-ate. Spanish moved loco from where to when."
-            },
-            {
-              "kind": "speech",
-              "text": "A nice contrast: hasta luego fuses an Arabic word and a Latin word in three syllables — the two great layers of Spanish, shaking hands as you leave."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the \"hasta …\" family",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hasta + a time word is Spanish's whole toolkit of soft goodbyes. You'll build the other two this chapter:"
+              "text": "Every Romance sister kept the same farewell-prayer:"
             },
             {
               "kind": "table",
               "headers": [
-                "phrase",
-                "\"until …\"",
-                "when"
+                "language",
+                "goodbye",
+                "literally"
               ],
               "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "phrase: hasta luego. \"until …\": later. when: the default \"see you\".",
-                "phrase: hasta mañana. \"until …\": tomorrow. when: leaving for the day.",
-                "phrase: hasta pronto. \"until …\": soon. when: you expect to meet again shortly."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hasta luego\" — AHS-tah LWEH-goh",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hasta luego\" — *AHS-tah LWEH-goh*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"luego\" then English \"local, location\" — the loco \"place\" family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"luego\" then English \"local, location\" — the *loco* \"place\" family]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¡Adiós! … no — ¡hasta luego!\" — feel the difference: final vs. soon",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¡Adiós! … no — ¡hasta luego!\" — feel the difference: final vs. soon]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does hasta luego literally mean? (\"Until later.\") What did luego's Latin root loco first mean, and what English words keep it? (Place — local, location, locus.) Which two language layers meet in hasta luego? (Arabic hasta + Latin luego.) Next: hasta mañana."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C05-hasta-manana",
-      "sequence": 460,
-      "title": "hasta mañana — \"see you tomorrow\" (and the ñ returns)",
-      "headword": "hasta mañana",
-      "romanization": "hasta mañana",
-      "gloss": "see you tomorrow (literally \"until tomorrow\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:feba5a6cdbeee694",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Leaving for the day? hasta mañana — \"until tomorrow.\" It brings back a letter you studied in the writing lessons: the ñ. Here it is, living in a word you'll say every evening."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "enye-ny — mañana = mah-NYAH-nah: the ñ is the squished ny of \"canyon\" (your ñ writing lesson — the tilde is a tiny second n, remember). Three soft ah's: ma-ÑA-na."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — the phrase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hasta mañana = \"until tomorrow\" becomes \"see you tomorrow.\""
-            },
-            {
-              "kind": "speech",
-              "text": "hasta = \"until\" (Arabic ḥattā)."
-            },
-            {
-              "kind": "speech",
-              "text": "mañana = \"tomorrow\" — and \"morning.\" One word for both, from Latin (hōra) maneana, \"the early hour\" (from māne, \"in the morning\"). The logic: the next \"early hour\" you'll see is tomorrow morning becomes mañana came to mean both morning and tomorrow."
-            },
-            {
-              "kind": "speech",
-              "text": "The ñ, in the wild. Recall the writing lesson: ñ is a frozen nn — a scribe's shorthand for a doubled n. mañana comes from Latin maneana, whose n+ea palatalized (softened) into that single ñ sound. So the tilde is a little historical fossil sitting in the middle of \"tomorrow.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: same word, two meanings — context decides",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "mañana means \"morning\" or \"tomorrow\"; the sentence tells you which. Paired with hasta, it's always tomorrow: hasta mañana, \"until tomorrow.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"mañana\" — mah-NYAH-nah, squished ñ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"mañana\" — *mah-NYAH-nah*, squished *ñ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hasta mañana\" — until tomorrow",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hasta mañana\" — until tomorrow]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“mañana” once as “morning,” then once as “tomorrow” — context decides",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “mañana” once as “morning,” then once as “tomorrow” — context decides]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two meanings does mañana carry? (Morning; tomorrow.) With hasta, which one? (Tomorrow.) What sound is the ñ, and what is its tilde, historically? (The ny of \"canyon\"; a frozen doubled-n.) Next: hasta pronto."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C05-hasta-pronto",
-      "sequence": 470,
-      "title": "hasta pronto — \"see you soon\"",
-      "headword": "hasta pronto",
-      "romanization": "hasta pronto",
-      "gloss": "see you soon (literally \"until soon\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:4653edd986e9eb41",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The last of the \"hasta …\" trio: hasta pronto, \"until soon\" — for when you genuinely expect to meet again shortly. One new word, pronto, and it's hiding in plain sight in English."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hasta pronto = AHS-tah PRON-toh — a clean pr, a pure o."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — the phrase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hasta pronto = \"until soon\" becomes \"see you soon.\""
-            },
-            {
-              "kind": "speech",
-              "text": "hasta = \"until\" (Arabic ḥattā)."
-            },
-            {
-              "kind": "speech",
-              "text": "pronto = \"soon / quickly / ready,\" from Latin promptus, \"brought forth, ready at hand\" (from prōmere, \"to bring out\"). Something prompt is brought out without delay — so pronto slid to \"soon.\""
-            },
-            {
-              "kind": "speech",
-              "text": "You already know its English twin: prompt (on time; to bring out a response), plus prompter, promptly, and the computer prompt (the cursor \"ready\" for input). Italian borrowed pronto too — it's what Italians say when they pick up the phone (\"Pronto!\" = \"Ready!\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the \"hasta …\" trio, complete",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You now have Spanish's three soft goodbyes, sharpest to vaguest in time:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "phrase",
-                "until…",
-                "nuance"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "phrase: hasta pronto. until…: soon. nuance: you'll meet again shortly.",
-                "phrase: hasta luego. until…: later. nuance: the neutral default \"see you\".",
-                "phrase: hasta mañana. until…: tomorrow. nuance: you're parting for the day."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "…and adiós for the long or final goodbye."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hasta pronto\" — AHS-tah PRON-toh",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hasta pronto\" — *AHS-tah PRON-toh*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"pronto\" then English \"prompt, promptly\" — one family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"pronto\" then English \"prompt, promptly\" — one family]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the trio — hasta pronto / hasta luego / hasta mañana",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the trio — hasta pronto / hasta luego / hasta mañana]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does hasta pronto mean, and pronto's English twin? (\"Until soon\"; prompt.) What Latin word is it from, and its literal sense? (promptus, \"brought forth / ready.\") Order the three hasta goodbyes by time. (pronto becomes luego becomes mañana.) Next: put the whole farewell set together."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C05-practice",
-      "sequence": 480,
-      "title": "Practice — saying goodbye",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "closing a conversation — the full set of farewells",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e0f69d7317f4e4be",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "No new words. This chapter's farewells — adiós and the three hasta … goodbyes — now close a real conversation, and fold back into the whole arc you've built since hola."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: choosing the right goodbye",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The choice is about when you'll meet again:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "you're…",
-                "say"
-              ],
-              "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "you're…: parting for good / a long time. say: Adiós.",
-                "you're…: expecting to meet again shortly. say: Hasta pronto.",
-                "you're…: just \"see you\" (neutral default). say: Hasta luego.",
-                "you're…: leaving for the day. say: Hasta mañana."
+                "language: Spanish. goodbye: adiós. literally: \"to God\".",
+                "language: French. goodbye: adieu. literally: \"to God\" (à Dieu).",
+                "language: Italian. goodbye: addio. literally: \"to God\".",
+                "language: Portuguese. goodbye: adeus. literally: \"to God\"."
               ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "The exchange — start to finish",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Everything from Chapters 1–5, in one conversation:"
             },
             {
               "kind": "speech",
-              "text": "— ¡Hola! Buenos días. Me llamo Ana. ¿Cómo se llama usted? — Me llamo Luis. Mucho gusto. — ¿Cómo está usted? — Bien, gracias. ¿Y usted? — Bien. Hasta mañana, Luis. — Hasta mañana, Ana. ¡Adiós!"
+              "text": "And English is doing the exact same thing without telling you: goodbye is a crushed-down \"God be with ye.\" So adiós and goodbye are, at heart, the same sentence — a blessing for the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Dios (\"God\") from Latin Deus — the Deus of English deity, divine, adieu, and (via Greek Zeus, same root) the whole sky-god family."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built this chapter",
+          "type": "grammar",
+          "title": "Grammar Lens: adiós is a final goodbye",
           "segments": [
             {
               "kind": "speech",
-              "text": "adiós — the plain/final goodbye (\"to God\"; twin of goodbye)."
-            },
-            {
-              "kind": "speech",
-              "text": "hasta — \"until,\" Spain's everyday Arabic word ( from ḥattā)."
-            },
-            {
-              "kind": "speech",
-              "text": "hasta luego / mañana / pronto — see you later / tomorrow / soon, each an Arabic + Latin handshake."
+              "text": "adiós leans toward a longer parting — you won't see them soon, or it's the end of the day. For \"see you later / tomorrow,\" Spanish reaches for hasta …, which the rest of this chapter is about — and hasta has a surprising origin."
             }
           ]
         },
@@ -562,34 +114,388 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full conversation above, both voices — greeting to goodbye",
+              "instruction": "\"adiós\" — ah-DYOHS, stress the end",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full conversation above, both voices — greeting to goodbye]"
+              "source": "[YOU SAY: \"adiós\" — *ah-DYOHS*, stress the end]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pick the goodbye — for a friend you'll see tomorrow? (hasta mañana); for someone moving away? (adiós)",
+              "instruction": "adiós / adieu / addio / adeus — four \"to God\" farewells",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: pick the goodbye — for a friend you'll see tomorrow? (hasta mañana); for someone moving away? (adiós)]"
+              "source": "[YOU SAY: adiós / adieu / addio / adeus — four \"to God\" farewells]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "English \"goodbye\" = \"God be with ye\" — the same prayer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: English \"goodbye\" = \"God be with ye\" — the same prayer]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two words hide inside adiós? (a + Dios — \"to God.\") What English goodbye is built the same way? (Goodbye from \"God be with ye.\") Is adiós for a quick \"see you soon\"? (No — it's the longer/final parting; hasta … comes next.) Next: hasta, and a word Spain borrowed from Arabic."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C05-hasta",
+      "sequence": 430,
+      "title": "hasta — \"until,\" and Spain's Arabic centuries",
+      "headword": "hasta",
+      "romanization": "hasta",
+      "gloss": "until / up to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8609394bb2a99108",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish says \"see you later\" as hasta luego — literally \"until later.\" So the key word is hasta, \"until.\" And hasta carries the single most important fact about Spanish's history: for nearly 800 years, much of Spain spoke Arabic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "silent-h — Spanish h is always silent: hasta = AHS-tah (no breath on the h at all). Stress the front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta comes from Arabic ḥattā, “until, up to.” From 711 CE, Muslim armies ruled much of the Iberian Peninsula — al-Andalus — and Arabic was the language of government, science, and poetry there for centuries, until."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish absorbed roughly four thousand Arabic words in that time — more of its vocabulary than from any source except Latin itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Most of those loans are nouns, and you can spot a huge number by the frozen Arabic article al- (\"the\") fused onto the front:"
+            },
+            {
+              "kind": "speech",
+              "text": "almohada (pillow), alcázar (fortress), alcalde (mayor), alfombra (rug), aduana (customs), álgebra, alcohol."
+            },
+            {
+              "kind": "speech",
+              "text": "azúcar (sugar), aceite (oil), naranja (orange)."
+            },
+            {
+              "kind": "speech",
+              "text": "But hasta is rare and special: it is a function word — a preposition, part of the grammatical skeleton. Languages borrow nouns easily and grammar words almost never — so an Arabic preposition surviving in everyday Spanish shows how deep, how intimate, those centuries of contact were. (Its Latin rival ad \"to\"/usque \"up to\" simply lost.) You say a piece of al-Andalus every time you say goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hasta\" — AHS-tah, silent h",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hasta\" — *AHS-tah*, silent h]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hasta\" then Arabic ḥattā — the same word, 1,300 years apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hasta\" then Arabic *ḥattā* — the same word, 1,300 years apart]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What language is hasta from, and what does it mean? (Arabic ḥattā — \"until.\") Why is it remarkable that Spanish borrowed it? (It's a function word / preposition — languages almost never borrow those; it shows how deep the Arabic centuries went.) How do you spot many Arabic nouns in Spanish? (The frozen al- article: almohada, azúcar, álgebra.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C05-hasta-limits",
+      "sequence": 440,
+      "title": "hasta aquí / hasta la noche — point to the limit",
+      "headword": "hasta aquí / hasta la noche",
+      "romanization": "hasta aquí / hasta la noche",
+      "gloss": "hasta points to an endpoint in space or time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d35a91d2f080067b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know hasta means “until” or “up to.” Give that small word one spatial endpoint and one temporal endpoint, using only one new word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: endpoints in space and time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Aquí means here. Put it after hasta:"
+            },
+            {
+              "kind": "speech",
+              "text": "hasta aquí — up to here."
+            },
+            {
+              "kind": "speech",
+              "text": "For a time endpoint, reuse la noche, “the night,” from Chapter 2:"
+            },
+            {
+              "kind": "speech",
+              "text": "hasta la noche — until the night / until tonight."
+            },
+            {
+              "kind": "speech",
+              "text": "The same preposition points to a place or the end of a stretch of time. The next lessons will place new time words after it one at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“aquí” — here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “aquí” — here]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hasta aquí” — up to here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hasta aquí” — up to here]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hasta la noche” — until tonight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hasta la noche” — until tonight]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hasta point to? (An endpoint.) Give one spatial and one temporal example. (Hasta aquí; hasta la noche.) What is the only new lexical item? (Aquí, “here.”)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C05-repaso-adios",
+      "sequence": 445,
+      "title": "Leaving — putting it together",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "Leaving — putting the chapter together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:827b62458b599449",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One farewell that is final, and one word that opens all the others. Nothing new in this lesson — only what you already have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Adiós — meant, and a little final. Hasta — \"until,\" and it is waiting for what comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can close a conversation, and you have the word every softer goodbye is built from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it again, faster, and let it sound like speech rather than recital",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
             },
             {
               "kind": "repeat",
               "times": 2,
               "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the whole exchange, hola to adiós, without stopping."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -601,7 +507,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which goodbye for someone you won't see for a long time? (Adiós.) Which everyday word for \"until\" did Spanish take from Arabic? (hasta.) You can now open and close a conversation in Spanish. Next chapter: por favor and gracias' partner courtesies, then into everyday verbs."
+              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
             }
           ]
         }
