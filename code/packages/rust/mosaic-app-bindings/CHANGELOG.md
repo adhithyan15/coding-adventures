@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Resolve XAML's conventional `mosaic_app.dll` from `AppContext.BaseDirectory`
+  after the explicit environment override and before global lookup.
 - Resolve Qt's conventional Mosaic application library beside the native
   executable after the explicit environment override and before global lookup.
 - Resolve Compose's conventional Mosaic application library from the installed

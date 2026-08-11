@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - XAML Rust engine bundling
+
+- XAML project shells accept a selected target Rust DLL, install it as
+  `mosaic_app.dll`, and use the existing MSBuild native-library copy target to
+  place it beside the WinUI executable.
+- Strict XAML builds report `runtime.library-not-bundled` and stop before
+  application emission when no engine was selected.
+- Windows acceptance verifies the copied engine hash and runs the exact .NET
+  binding conformance from its output directory without `MOSAIC_APP_LIBRARY`.
+
 ## [Unreleased] - Qt Rust engine bundling
 
 - Qt project shells accept the selected target Rust engine, copy it beside the

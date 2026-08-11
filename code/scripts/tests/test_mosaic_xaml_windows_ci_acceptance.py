@@ -18,6 +18,13 @@ XAML_CONFORMANCE = (
     / "conformance"
     / "xaml"
 )
+XAML_PACKAGE = (
+    Path(__file__).resolve().parents[2]
+    / "packages"
+    / "rust"
+    / "mosaic-app-conformance"
+    / "package"
+)
 SPEC = importlib.util.spec_from_file_location("mosaic_xaml_windows_ci_acceptance", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -121,9 +128,18 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("TaskApp WinUI build did not produce TaskApp.exe", workflow)
         self.assertIn("mosaic-pkg-rating-controls --backend xaml", workflow)
         self.assertIn("--emit-project --profile native-complete", workflow)
+        self.assertIn("--runtime-library $library.Path", workflow)
         self.assertIn("mosaic-xaml-native-complete-rating-controls", workflow)
         self.assertIn("Native-complete XAML generation reported degradations", workflow)
         self.assertIn("dotnet build (Split-Path -Leaf $strictProject)", workflow)
+        self.assertIn("mosaic-xaml-bundled-conformance", workflow)
+        self.assertIn(
+            "pkg code/packages/rust/mosaic-app-conformance/package --backend xaml",
+            workflow,
+        )
+        self.assertIn("dotnet build (Split-Path -Leaf $bundledProject)", workflow)
+        self.assertIn("Get-FileHash $library.Path -Algorithm SHA256", workflow)
+        self.assertIn("mosaic_app.dll beside the executable", workflow)
         self.assertIn("mosaic-xaml-toolkit", workflow)
         self.assertIn("mosaic-pkg-toolkit --backend xaml", workflow)
         self.assertIn("dotnet build (Split-Path -Leaf $toolkitProject)", workflow)
@@ -135,6 +151,8 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance", workflow)
         self.assertIn("XamlRuntimeConformance.csproj", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("Remove-Item Env:MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("dotnet $harnessBinary", workflow)
         self.assertIn("--expect-missing-prop-failure", workflow)
         self.assertIn("--expect-required-failure", workflow)
 
@@ -149,6 +167,11 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertNotIn("Microsoft.WindowsAppSDK", project)
         self.assertIn("namespace Windows.UI;", color_stub)
         self.assertIn("Color FromArgb", color_stub)
+
+    def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
+        self.assertTrue((XAML_PACKAGE / "mosaic-package.toml").is_file())
+        for suffix in ("mil", "mll", "msl"):
+            self.assertTrue((XAML_PACKAGE / "src" / f"Counter.{suffix}").is_file())
 
 
 if __name__ == "__main__":

@@ -20,6 +20,9 @@ before that conventional fallback: `compose.application.resources.dir` plus
 Generated Qt applications likewise check `QCoreApplication::applicationDirPath()`
 for the conventional target filename before global lookup, so the CMake build and
 install trees can carry the selected Rust engine without an environment override.
+Generated XAML applications check `AppContext.BaseDirectory` for
+`mosaic_app.dll` before global lookup, matching the WinUI project's native DLL
+copy target.
 Linux CI compiles the exact Compose/JNA binding from a generated strict package,
 verifies the selected `mosaic-app-conformance` library was installed in that
 resource directory byte-for-byte, then exercises startup, semantic dispatch,
@@ -28,6 +31,9 @@ snapshot/restore, notification, buffer ownership, and teardown without
 The Qt lane performs the equivalent byte-for-byte install check, launches the
 generated QML application, and runs the full standard-binding conformance binary
 from the install directory with `MOSAIC_APP_LIBRARY` unset.
+The Windows lane verifies the selected engine copied beside the generated WinUI
+executable, then runs the exact .NET binding from that app-relative directory
+with the override removed.
 
 For SwiftUI, set `MOSAIC_APP_LIBRARY` to the application dylib path. Without an
 explicit path the loader first checks symbols linked into the process, then tries

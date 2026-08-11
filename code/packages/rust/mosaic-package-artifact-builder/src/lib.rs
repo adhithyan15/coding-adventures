@@ -562,11 +562,11 @@ fn validate_runtime_library_selection(
     let Some(path) = runtime_library else {
         return Ok(());
     };
-    if !matches!(opts.backend, Backend::Compose | Backend::Qt) {
+    if !matches!(opts.backend, Backend::Compose | Backend::Qt | Backend::Xaml) {
         return Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
             reason:
-                "runtime bundling is currently implemented only for the Compose and Qt backends"
+                "runtime bundling is currently implemented only for the Compose, Qt, and XAML backends"
                     .to_string(),
         });
     }
@@ -576,7 +576,13 @@ fn validate_runtime_library_selection(
             reason: "--runtime-library requires --emit-project".to_string(),
         });
     }
-    runtime_file_name(path)?;
+    let file_name = runtime_file_name(path)?;
+    if opts.backend == Backend::Xaml && file_name != "mosaic_app.dll" {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "the XAML backend requires a target cdylib ending in .dll".to_string(),
+        });
+    }
     if !path.is_file() {
         return Err(BuildError::InvalidRuntimeLibrary {
             path: path.to_path_buf(),
@@ -613,6 +619,19 @@ fn install_qt_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathB
     Ok(target)
 }
 
+fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    if runtime_file_name(source)? != "mosaic_app.dll" {
+        unreachable!("XAML runtime suffix was validated before emission");
+    }
+    let target = backend_dir.join("mosaic_app.dll");
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
 /// Analyze and build a package under an explicit completion profile.
 ///
 /// Unlike the legacy [`build_package`] entry point, this always writes a
@@ -629,9 +648,9 @@ pub fn build_package_with_profile(
 /// Analyze and build a package while bundling one target-specific Rust
 /// application engine into the generated native project.
 ///
-/// Compose and Qt are the supported packaging backends. The selected library
-/// must be a `.dylib`, `.so`, or `.dll`; its suffix chooses the target resource
-/// location and the emitted copy receives Mosaic's conventional runtime name.
+/// Compose, Qt, and XAML are the supported packaging backends. Compose and Qt
+/// accept a target `.dylib`, `.so`, or `.dll`; XAML requires a `.dll`. The
+/// emitted copy receives Mosaic's conventional runtime name.
 pub fn build_package_with_profile_and_runtime(
     opts: &BuildOptions,
     profile: BuildProfile,
@@ -726,7 +745,7 @@ pub fn analyze_package_degradations_with_runtime(
 
     if profile == BuildProfile::NativeComplete
         && opts.emit_project
-        && matches!(opts.backend, Backend::Compose | Backend::Qt)
+        && matches!(opts.backend, Backend::Compose | Backend::Qt | Backend::Xaml)
         && runtime_library.is_none()
     {
         degradations.push(Degradation {
@@ -746,6 +765,7 @@ pub fn analyze_package_degradations_with_runtime(
                 match opts.backend {
                     Backend::Compose => "Compose",
                     Backend::Qt => "Qt",
+                    Backend::Xaml => "XAML",
                     _ => unreachable!("runtime bundling degradation is native-backend scoped"),
                 }
             ),
@@ -1138,6 +1158,7 @@ fn build_package_inner(
         let target = match opts.backend {
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
+            Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
             _ => unreachable!("runtime library selection was validated before emission"),
         };
         artifacts.push(target);
@@ -1805,10 +1826,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             if let Some(proj) = r.project {
                 let runtime_binding =
                     mosaic_app_bindings::xaml_runtime_binding(&xaml_opts.namespace);
+                let runtime_distribution = if runtime_library.is_some() {
+                    "The selected target Rust engine is copied into the project as `mosaic_app.dll`. The generated MSBuild target copies it beside the WinUI executable, and the standard binding resolves it through `AppContext.BaseDirectory` before global lookup; no environment variable or global library install is required."
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the target DLL path, or place `mosaic_app.dll` beside the generated project. Strict WinUI builds should be regenerated with `--runtime-library <target cdylib>`."
+                };
                 let readme = format!(
                     "{}\nThe included standard .NET binding owns the Rust application handle, \
-                     event sequence, snapshots, returned buffers, and teardown.\n",
-                    proj.readme
+                     event sequence, snapshots, returned buffers, and teardown. {}\n",
+                    proj.readme, runtime_distribution
                 );
                 let flat: Vec<(String, &str)> = vec![
                     ("global.json".to_string(), &proj.global_json),
@@ -4384,7 +4410,17 @@ layout NativeEvents {
         .expect_err("SwiftUI runtime packaging is not implemented yet");
         assert!(backend_error
             .to_string()
-            .contains("currently implemented only for the Compose and Qt backends"));
+            .contains("currently implemented only for the Compose, Qt, and XAML backends"));
+
+        let xaml_suffix_error = build_package_with_profile_and_runtime(
+            &options(Backend::Xaml),
+            BuildProfile::Permissive,
+            Some(&dylib),
+        )
+        .expect_err("XAML cannot bundle a non-Windows target library");
+        assert!(xaml_suffix_error
+            .to_string()
+            .contains("XAML backend requires a target cdylib ending in .dll"));
     }
 
     #[test]
@@ -4506,8 +4542,10 @@ layout NativeEvents {
             "layout Card { Text [ root ] ( content : slot: label ) }\n",
         )
         .unwrap();
+        let runtime = pkg.path().join("mosaic_app_conformance.dll");
+        fs::write(&runtime, b"mosaic-xaml-test-runtime").unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let result = build_package_with_profile_and_runtime(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -4516,6 +4554,7 @@ layout NativeEvents {
                 theme: None,
             },
             BuildProfile::NativeComplete,
+            Some(&runtime),
         )
         .expect("native-complete XAML shell");
 
@@ -4541,11 +4580,53 @@ layout NativeEvents {
         assert!(host.contains("public static string ApplyRequiredProps("));
         assert!(host.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(host.contains("Path.Combine(AppContext.BaseDirectory, \"mosaic_app.dll\")"));
+
+        let project = fs::read_to_string(out.path().join("xaml/Card.csproj")).unwrap();
+        assert!(project.contains("CopyMosaicNativeHostLibraries"));
+        assert!(project.contains("$(MSBuildProjectDirectory)\\*.dll"));
+
+        let bundled = out.path().join("xaml/mosaic_app.dll");
+        assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-xaml-test-runtime");
+        assert!(result.artifacts.contains(&bundled));
 
         let readme = fs::read_to_string(out.path().join("xaml/README.md")).unwrap();
         assert!(readme
             .contains("This `native-complete` shell requires Mosaic's standard Rust application"));
         assert!(readme.contains("There is no reflection host or"));
+        assert!(readme.contains("copied into the project as `mosaic_app.dll`"));
+        assert!(readme.contains("no environment variable or global library install is required"));
+    }
+
+    #[test]
+    fn native_complete_xaml_project_reports_an_unbundled_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict XAML artifacts must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Xaml,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let report = fs::read_to_string(out.path().join("xaml/mosaic-degradations.json"))
+            .expect("strict degradation report");
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("native-complete XAML artifacts"));
+        assert!(!out.path().join("xaml/Card.csproj").exists());
     }
 
     #[test]

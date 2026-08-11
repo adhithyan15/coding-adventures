@@ -2,13 +2,14 @@
 
 ## Unreleased
 
-### Added - Compose and Qt native artifacts bundle their Rust engine
+### Added - Compose, Qt, and XAML native artifacts bundle their Rust engine
 
 Package mode accepts `--runtime-library <target cdylib>`. Compose copies the
 selected `.dylib`, `.so`, or `.dll` into platform resources; Qt copies it beside
-the native executable and into the CMake install tree. Their standard bindings
-resolve the app-relative engine, and `--profile native-complete --emit-project`
-rejects a Compose or Qt build that omits it.
+the native executable and into the CMake install tree; XAML copies the selected
+DLL beside the WinUI executable. Their standard bindings resolve the app-relative
+engine, and `--profile native-complete --emit-project` rejects a Compose, Qt, or
+XAML build that omits it.
 
 ### Fixed - Flutter project shells compile complete packages
 
@@ -78,7 +79,7 @@ props to generated QML names, and contains no optional-host event path.
 
 ### Changed - strict XAML shells require Rust
 
-`mosaic-compile pkg --backend xaml --emit-project --profile native-complete`
+`mosaic-compile pkg --backend xaml --emit-project --profile native-complete --runtime-library <target dll>`
 now emits a runtime-required WinUI application shell. It loads the standard
 .NET binding before activation, validates required MIL props, routes events
 through Rust, and contains no reflection-host or generated sample-value path.
