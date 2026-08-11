@@ -27,6 +27,7 @@ const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
+const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -469,6 +470,19 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Arabic independent ج draws its body first, then lifts once for the dot", () => {
+    expect(penLifts(ARABIC_JEEM)).toBe(1);
+    expect(ARABIC_JEEM.strokes).toHaveLength(2);
+    expect(ARABIC_JEEM.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const head = ARABIC_JEEM.strokes[0].segments[0].path;
+    const bowl = ARABIC_JEEM.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(
+      Math.min(...head.map((point) => point.y)),
+    );
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -611,6 +625,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ت", ARABIC_TAA.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
+    expect(verifiedLetterFont("ج", ARABIC_JEEM.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
   });
 
@@ -747,6 +764,20 @@ describe("handwriting ductus", () => {
       /Baa demonstration.*upper-right tip.*right-to-left.*turned-up left tip.*Taa demonstration opens.*complete bowl.*left dot.*00:00.45–00:00.70.*right dot.*00:00.75–00:01.00.*does not redraw.*rather than inferring.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
     );
     expect(src.url).not.toBe(DUCTUS["ت"].source.url);
+  });
+
+  it("Arabic independent ج traces its body-first order to the University of Oregon", () => {
+    const src = ARABIC_JEEM.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ج ح خ.*Jeem.*00:05–00:06.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /body first.*00:05.1–00:05.8.*upper head.*left-to-right.*turns downward.*curls back left.*rounded bowl.*without lifting.*lifts once.*dot below.*00:06.3–00:06.5.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic body-first provenance.*Urdu dot-first/i,
+    );
+    expect(src.url).not.toBe(URDU_JIM.source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

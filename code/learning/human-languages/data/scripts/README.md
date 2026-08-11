@@ -250,8 +250,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   three-frame learner path therefore cites the page's Baa demonstration for the
   independently shown bowl and the Taa clip for the two lifted dots instead of
   inferring a hidden body motion. Arabic-scoped provenance remains distinct from
-  Persian ت and the two-way-connector context stays explicit. The remaining
-  **192** prose part orders across seven scripts (`arabic` 18,
+  Persian ت and the two-way-connector context stays explicit. The page's next
+  link is labeled **ث**, but the underlying `taa.mp4` is another Taa lesson: its
+  first form has only two upper dots, so ث remains unverified instead of gaining
+  an invented third-dot order. The next viable **ج** video draws the short upper
+  head left-to-right, continues down and around the bowl without lifting, then
+  lifts once for the dot below. Its three-frame path preserves the lesson's
+  two-way-connector context, Arabic-scoped provenance, and the deliberate
+  contrast with Urdu's dot-first ج while following the isolated Noto Naskh
+  outline. The remaining **191** prose part orders across seven scripts (`arabic` 17,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

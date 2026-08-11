@@ -235,6 +235,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Arabic ت reuses that separately demonstrated bowl because its own clip opens
 // with the body already complete, then places the left and right upper dots as
 // separate strokes. Its scoped source remains distinct from Persian ت.
+// The linked Arabic ث asset is actually another ت lesson: it draws only two
+// upper dots, so it cannot support a three-dot path. The next viable source,
+// Arabic ج, draws the short head left-to-right, continues around the bowl, then
+// lifts once for its dot. That body-first order stays distinct from Urdu ج.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -479,6 +483,75 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ت"),
+  },
+  [ductusKey("arabic", "ج")]: {
+    script: "arabic",
+    glyph: "ج",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short upper head from left to right",
+            path: [
+              { x: 110, y: 315 },
+              { x: 150, y: 335 },
+              { x: 210, y: 340 },
+              { x: 280, y: 325 },
+              { x: 350, y: 305 },
+              { x: 420, y: 285 },
+              { x: 490, y: 270 },
+              { x: 540, y: 270 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot below",
+            path: [
+              { x: 415, y: -1 },
+              { x: 374, y: 38 },
+              { x: 330, y: -9 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ج"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

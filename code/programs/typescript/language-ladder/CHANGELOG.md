@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-jeem ductus (HL-C09AL)
+
+- Record that the page's linked Thaa asset actually writes another two-dot Taa,
+  leaving **ث** on its conventional fallback rather than inventing source data.
+- Reprioritize to **ج** and render its body-first motion as three frames: a short
+  left-to-right upper head, the continuous descent and rounded bowl, then one
+  lifted dot below.
+- Keep two-way-connector context, Noto Naskh geometry, and Arabic-scoped
+  provenance distinct from Urdu's dot-first Jeem path.
+
 ### Added — cited Arabic independent-taa ductus (HL-C09AJ)
 
 - Verify independent **ت** with the page's separately demonstrated Arabic bowl

@@ -288,7 +288,14 @@ so the learner path cites the page's separately demonstrated Baa body for that
 right-to-left sweep, then follows Taa's left and right upper dots as two
 individually lifted strokes. The evidence split, two-way-connector context, and
 Arabic-scoped provenance stay explicit while the path fits the same Noto Naskh
-outline independently of Persian ت. The runtime
+outline independently of Persian ت. The page's next link is labeled ث, but its
+video visibly writes another two-dot ت; the audit records that source mismatch
+and leaves ث on the conventional fallback. Arabic ج therefore becomes the next
+verified path: its dedicated clip draws the short upper head left-to-right,
+continues down and around the bowl in the same pen-down run, then lifts once for
+the dot below. The resulting three-frame filmstrip stays on the isolated Noto
+Naskh outline, keeps the lesson's two-way-connector context, and remains
+script-scoped separately from Urdu's dot-first ج. The runtime
 resolves each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
