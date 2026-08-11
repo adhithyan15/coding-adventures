@@ -122,7 +122,9 @@ block events. Sequence layout resolves those events into nested frames and
 branch dividers before existing PaintInstructions render them. Participant
 `create` and `destroy` statements lower into lifecycle events; layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Singular and JSON-map actor-menu links lower through semantic IR and
+markers. Nested message and statement activations retain stack order in semantic
+events and lower to depth-offset bars through backend-neutral Paint rectangles.
+Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON
 values through the same pipeline. DOM-referenced `details` element IDs also
 survive the pipeline as scene metadata; host-document resolution remains
