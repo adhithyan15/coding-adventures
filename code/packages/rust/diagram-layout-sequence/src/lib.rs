@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -176,8 +176,12 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
             } => {
                 auto_number_visible = *visible;
                 if *visible {
-                    message_number = start.unwrap_or(1.0);
-                    message_number_step = step.unwrap_or(1.0);
+                    if let Some(start) = start {
+                        message_number = *start;
+                    }
+                    if let Some(step) = step {
+                        message_number_step = *step;
+                    }
                 }
             }
             SequenceEvent::Message {
@@ -218,7 +222,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     number: auto_number_visible.then_some(message_number),
                 });
                 if auto_number_visible {
-                    message_number += message_number_step;
+                    message_number =
+                        ((message_number + message_number_step) * 100.0).round() / 100.0;
                 }
                 if *activate {
                     activation_starts
@@ -703,6 +708,67 @@ mod tests {
             })
             .collect();
         assert_eq!(numbers, vec![Some(1.0), None, Some(20.0), Some(25.0)]);
+    }
+
+    #[test]
+    fn resumes_autonumber_without_reset_and_rounds_each_increment() {
+        let message = |label: &str| SequenceEvent::Message {
+            from: "Alice".into(),
+            to: "Bob".into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
+        };
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: Some(0.1),
+                    step: Some(0.1),
+                },
+                message("One tenth"),
+                message("Two tenths"),
+                SequenceEvent::AutoNumber {
+                    visible: false,
+                    start: None,
+                    step: None,
+                },
+                message("Hidden"),
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: None,
+                    step: None,
+                },
+                message("Three tenths"),
+                message("Four tenths"),
+            ],
+        };
+        let numbers: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message { number, .. } => Some(*number),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(
+            numbers,
+            vec![Some(0.1), Some(0.2), None, Some(0.3), Some(0.4)]
+        );
     }
 
     #[test]

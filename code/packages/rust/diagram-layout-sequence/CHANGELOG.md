@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0 - 2026-08-11
+
+- Resume sequence autonumber counters after `off` and round each increment to Mermaid's two-decimal precision.
+
 ## 0.20.0 - 2026-08-11
 
 - Emit mirrored footer participants and terminate active lifelines at their header edge.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.34.0
+
+- Give start-only sequence `autonumber` statements their Mermaid 11.16.1 default increment of one.
+
 ## 0.33.0
 
 - Parse Mermaid 11.16.1 sequence headers and keywords case-insensitively.
