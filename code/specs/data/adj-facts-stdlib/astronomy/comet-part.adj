@@ -1,0 +1,57 @@
+% ============================================================================
+% comet-part — three named parts of a comet and what each actually is
+% (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A comet is not one solid lump: at its heart is a frozen nucleus, that
+% nucleus sheds gas and dust into a fuzzy coma around it, and as the comet
+% nears the Sun that gas and dust streams away into a bright tail. Recall
+% is a binding query:
+%
+%     ? comet_part(nucleus, $D)
+%       % solid_frozen_core_at_the_heart_of_the_comet
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `comet_part(part, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the description WITH its source, on the CPU, with zero model
+% calls, and abstains on a comet-related term that is not one of these
+% three. The query also runs BACKWARD — bind a description and recall the
+% part it names:
+%
+%     ? comet_part($P, fuzzy_cloud_of_gas_and_dust_around_the_nucleus)
+%       % coma
+%
+% The three comet parts, as a little truth table:
+%
+%     part      description                                                    quote (verbatim)
+%     --------  -------------------------------------------------------------  --------------------------------------------------------------------------------
+%     nucleus    solid_frozen_core_at_the_heart_of_the_comet                    "At the heart of every comet is a solid, frozen core called the nucleus."
+%     coma       fuzzy_cloud_of_gas_and_dust_around_the_nucleus                  "The gas and dust create a huge, fuzzy cloud around the nucleus called the coma."
+%     tail       streams_away_from_the_nucleus_pushed_by_sunlight_and_solar_particles   "As dust and gases stream away from the nucleus, sunlight and particles coming from the Sun push them into a bright tail that stretches away from the Sun for millions of miles."
+%
+% Provenance: quoted verbatim from NASA Space Place's "What Is a Comet?"
+% page, which introduces each of these three physical parts in its own
+% sentence before going on to further sub-divide the tail into a dust tail
+% and an ion tail. WebFetch-verified before writing (twice). `trust
+% authoritative` — NASA is a primary .gov source, the same tier the
+% sibling `moon-phases.adj`/`solar-eclipse-type.adj` (the other libraries
+% in this directory) already use for their NASA citations. A comet-related
+% term that is NOT one of these three — "short_period_comet", a real
+% classification the same page also names, but one that sorts comets by
+% ORBITAL PERIOD rather than by physical anatomy, a different axis from
+% nucleus/coma/tail — is deliberately NOT a row, so a recall ABSTAINS on
+% it rather than inventing a physical-part description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table comet_part {
+    columns part, description
+
+    row (nucleus, solid_frozen_core_at_the_heart_of_the_comet)
+    row (coma, fuzzy_cloud_of_gas_and_dust_around_the_nucleus)
+    row (tail, streams_away_from_the_nucleus_pushed_by_sunlight_and_solar_particles)
+
+    source "At the heart of every comet is a solid, frozen core called the nucleus."
+    locator "https://spaceplace.nasa.gov/comets/en/"
+    trust authoritative
+}

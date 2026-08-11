@@ -1,0 +1,14 @@
+% ============================================================================
+% comet-part.query.adj — worked recall over the comet-part library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this comet
+% part?" (direct) or "which part matches this description?" (reverse) —
+% it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+% ============================================================================
+
+import "comet-part.adj"
+
+? comet_part(nucleus, $D)                                              % expect solid_frozen_core_at_the_heart_of_the_comet (direct)
+? comet_part($P, fuzzy_cloud_of_gas_and_dust_around_the_nucleus)       % expect coma (reverse)
+? comet_part(short_period_comet, $D)                                    % expect abstain -- a real comet-related term the source covers, but not one of the three physical parts tabled here
