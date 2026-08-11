@@ -1392,7 +1392,7 @@ impl RuntimeSubscriptionQuery {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum WorkerStatus {
     Starting,
     Running,
@@ -1881,7 +1881,7 @@ impl RuntimeSupervisorSnapshot {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ScheduledDiscoveryWorker {
     pub worker_id: DiscoveryWorkerId,
     pub integration_id: IntegrationId,
@@ -4399,10 +4399,9 @@ pub struct SmartHomeRuntime {
 
 /// Durable, transport-neutral runtime state.
 ///
-/// Discovery scheduling and live subscriptions are intentionally omitted:
-/// they are process-local workers and consumers. Everything needed to rebuild
-/// normalized topology, state, history, pending pairing work, and desired
-/// state is retained.
+/// Live subscriptions remain process-local consumers. Everything needed to
+/// rebuild normalized topology, state, history, pending pairing work, desired
+/// state, and centrally owned discovery schedules is retained.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RuntimeDurableSnapshot {
     pub bridges: Vec<Bridge>,
@@ -4417,6 +4416,8 @@ pub struct RuntimeDurableSnapshot {
     pub pairing_sessions: Vec<RuntimePairingSession>,
     pub optimistic_states: Vec<StateSnapshot>,
     pub desired_states: Vec<DesiredEntityState>,
+    #[serde(default)]
+    pub discovery_workers: Vec<ScheduledDiscoveryWorker>,
 }
 
 impl SmartHomeRuntime {
@@ -4455,6 +4456,7 @@ impl SmartHomeRuntime {
             pairing_sessions: self.pairing_sessions.values().cloned().collect(),
             optimistic_states: self.optimistic_states.values().cloned().collect(),
             desired_states: self.desired_states.values().cloned().collect(),
+            discovery_workers: self.discovery_scheduler.workers.values().cloned().collect(),
         }
     }
 
@@ -4720,6 +4722,7 @@ impl SmartHomeRuntime {
             pairing_sessions,
             optimistic_states,
             desired_states,
+            discovery_workers,
         } = snapshot;
         let mut runtime = Self::new();
 
@@ -4762,6 +4765,9 @@ impl SmartHomeRuntime {
         }
         for desired_state in desired_states {
             runtime.upsert_desired_state(desired_state)?;
+        }
+        for worker in discovery_workers {
+            runtime.register_discovery_worker_schedule(worker)?;
         }
 
         Ok(runtime)
@@ -7454,6 +7460,23 @@ mod tests {
         .with_network_interface("en0")
         .with_network_interface("bridge0")
         .with_metadata("smart_home.discovery.service_type", "_hue._tcp.local")
+    }
+
+    #[test]
+    fn durable_snapshot_restores_discovery_worker_schedules() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker = hue_mdns_discovery_worker(1_100).with_retry_backoff(500, 2_000, 2);
+        runtime
+            .register_discovery_worker_schedule(worker.clone())
+            .unwrap();
+
+        let restored = SmartHomeRuntime::restore_durable_snapshot(runtime.durable_snapshot())
+            .expect("durable discovery schedule should restore");
+
+        assert_eq!(
+            restored.discovery_worker_schedule(&worker.worker_id),
+            Some(&worker)
+        );
     }
 
     fn device_runtime_event(event_id: &str, at_ms: u64) -> RuntimeEvent {

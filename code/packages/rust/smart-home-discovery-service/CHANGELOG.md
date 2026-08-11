@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Route schedule registration and supervised mDNS ticks through the shared
+  `smart-home-controller-runtime` authority with revision-guarded persistence.
+- Import legacy service-owned schedule records without overwriting central
+  state, while retaining service health and run-report journals separately.
 - Add persisted `udp_multicast` discovery-source parsing.
 
 ## 0.1.0

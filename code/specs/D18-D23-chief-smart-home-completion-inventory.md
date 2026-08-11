@@ -178,20 +178,26 @@ turning runtime into a Hue integration or process manager:
 
 ## Current Durable Discovery Service Slice
 
-This slice gives the supervised mDNS pass an actor-owned lifecycle and durable
-restart boundary:
+This slice gives the supervised mDNS pass an actor-owned lifecycle against the
+central durable runtime boundary:
 
-- `smart-home-discovery-service` owns the D23 runtime, mDNS executor,
-  report adapter, and repository-owned `StorageBackend` inside one actor state.
+- `smart-home-discovery-service` receives the shared
+  `smart-home-controller-runtime` owner and keeps only the mDNS executor,
+  report adapter, service-health journal, and run-report journal inside its
+  actor state.
 - Typed tick messages drive due runs sequentially, and the runtime still emits
   exactly the selected-interface IPv4/IPv6 requests through the injectable
   executor boundary.
-- Every tick persists worker cadence and retry pressure, a compact run journal,
-  and service health. Reopening against the same backend restores that state
-  before another network request can run.
+- Schedule registration and every tick mutate the central runtime through one
+  revision-guarded transaction. The central snapshot now retains worker
+  cadence and retry pressure, while the service backend retains compact run
+  journals and service health.
+- Reopening the central owner restores schedule state before another request
+  can run. Legacy service-owned schedules import only when absent, so the
+  central record wins conflicts and repeated startup does not churn revisions.
 - Local-folder restart tests prove successful cadence, named-interface binding,
-  failed-run backoff, service counters, and durable run audits survive process
-  replacement.
+  failed-run backoff, service counters, durable run audits, stale-owner CAS
+  rejection, and idempotent legacy import survive process replacement.
 
 ## Current Discovery Observability Slice
 
@@ -1800,22 +1806,21 @@ Synology Surveillance Station server without persisting session material:
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The central-composition backlog takes priority over adding another isolated
-integration or Chief read model:
+The reusable central owner and the discovery service's transactional migration
+are complete. The remaining central-composition backlog takes priority over
+adding another isolated integration or Chief read model:
 
-1. Land the reusable central controller owner and run the local Home Assistant
-   HTTP surface and automation scheduler through it.
-2. Migrate `smart-home-discovery-service` onto that owner, beginning with the
-   existing Hue mDNS path as the first supervised worker visible through the
-   same HTTP runtime.
-3. Migrate Hue pairing and then the remaining pairing/snapshot services so they
+1. Compose the existing Hue mDNS worker and discovery actor into the local
+   controller so discoveries are visible through the same Home Assistant HTTP
+   runtime.
+2. Migrate Hue pairing and then the remaining pairing/snapshot services so they
    transact against the same live revision instead of restoring private runtime
    copies.
-4. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
+3. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
    service adapter against the controller authority.
-5. Add provider-neutral model tool declarations/results, authenticated host
+4. Add provider-neutral model tool declarations/results, authenticated host
    tool dispatch, and production Chief daemon injection.
-6. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+5. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those
