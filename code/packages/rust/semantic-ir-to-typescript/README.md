@@ -85,6 +85,15 @@ The TypeScript backend accepts these SIR features:
   module never gains the dependency). `A * A` (matrix product) emits
   `__SirArray.matmul(A, A)`; APL's `+/A` (reduce) emits
   `__SirArray.reduce("Add", A)`.
+- `ConsoleIO` (SIR28) — `__sys_write__("stdout"|"stderr",
+  "none"|"per_value"|"once", unpackArrays, ...values)` emits
+  `__Sir.write(...)`, a plain pass-through (no compile-time literal
+  extraction, unlike the C/Go/Rust backends): the runtime branches on the
+  `stream`/`terminator` strings at call time, exactly like `print`/`puts`.
+  `write` generalizes `print`/`puts` — both still present, still used by
+  bare `"print"`/`"puts"` — into one function importable from
+  `@coding-adventures/sir-runtime-core`. Not yet emitted by any frontend —
+  see [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 It **rejects**:
 

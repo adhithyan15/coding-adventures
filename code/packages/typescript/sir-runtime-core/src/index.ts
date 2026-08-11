@@ -40,6 +40,7 @@ export {
   globalGetStatic,
   print,
   puts,
+  write,
   callBuiltin,
   builtinClosure,
   doubleSplatMerge,

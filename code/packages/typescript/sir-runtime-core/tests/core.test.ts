@@ -188,6 +188,96 @@ describe("puts (Ruby semantics)", () => {
   });
 });
 
+describe("write (SIR28 §2.1: __sys_write__, the console-output primitive)", () => {
+  // `print`/`puts` above are each ONE fixed newline/stream policy baked in.
+  // `write(stream, terminator, unpackArrays, ...values)` is the same
+  // underlying operation with that policy carried as explicit DATA instead
+  // — see the CHANGELOG entry and SIR28-syscall-primitives.md §2.1's table.
+  function capture(fn: () => void): string {
+    let out = "";
+    const spy = vi
+      .spyOn(process.stdout, "write")
+      .mockImplementation((chunk: string | Uint8Array): boolean => {
+        out += String(chunk);
+        return true;
+      });
+    try {
+      fn();
+    } finally {
+      spy.mockRestore();
+    }
+    return out;
+  }
+
+  function captureStderr(fn: () => void): string {
+    let out = "";
+    const spy = vi
+      .spyOn(process.stderr, "write")
+      .mockImplementation((chunk: string | Uint8Array): boolean => {
+        out += String(chunk);
+        return true;
+      });
+    try {
+      fn();
+    } finally {
+      spy.mockRestore();
+    }
+    return out;
+  }
+
+  it('"none" writes every value back-to-back with no newline (old `print`)', () => {
+    expect(capture(() => expect(sir.write("stdout", "none", false, "a", "b")).toBe(null))).toBe(
+      "ab",
+    );
+  });
+
+  it('"per_value" writes one newline per value (old `puts`)', () => {
+    expect(capture(() => sir.write("stdout", "per_value", false, 1, 2))).toBe("1\n2\n");
+  });
+
+  it('"per_value" with zero values writes a single blank line', () => {
+    expect(capture(() => sir.write("stdout", "per_value", false))).toBe("\n");
+  });
+
+  it('"per_value" with unpackArrays flattens a nested array, one leaf per line', () => {
+    expect(capture(() => sir.write("stdout", "per_value", true, [1, [2, 3], 4]))).toBe(
+      "1\n2\n3\n4\n",
+    );
+  });
+
+  it('"per_value" without unpackArrays displays the array as one value (toDisplay\'s array fallback: `String(v)`, no brackets)', () => {
+    expect(capture(() => sir.write("stdout", "per_value", false, [1, 2]))).toBe("1,2\n");
+  });
+
+  it('"once" space-joins every value with a single trailing newline (Python/JS console.log)', () => {
+    expect(capture(() => sir.write("stdout", "once", false, 1, 2))).toBe("1 2\n");
+  });
+
+  it('stream "stderr" writes to stderr, not stdout', () => {
+    let stdout = "";
+    expect(
+      captureStderr(() => {
+        stdout = capture(() => sir.write("stderr", "once", false, "oops"));
+      }),
+    ).toBe("oops\n");
+    expect(stdout).toBe("");
+  });
+
+  it('"per_value" with unpackArrays terminates on a self-referential array (CWE-674)', () => {
+    const a: unknown[] = [];
+    a.push(a);
+    expect(capture(() => sir.write("stdout", "per_value", true, a))).toBe("[...]\n");
+  });
+
+  it("routes through callBuiltin by name", () => {
+    expect(
+      capture(() =>
+        expect(sir.callBuiltin("__sys_write__", ["stdout", "once", false, "hi"])).toBe(null),
+      ),
+    ).toBe("hi\n");
+  });
+});
+
 describe("arithmetic", () => {
   it("variadic", () => {
     expect(sir.add(1, 2, 3)).toBe(6);
