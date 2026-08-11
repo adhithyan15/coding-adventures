@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate comma-bearing participant configuration aliases through Metal PNG rendering.
 - Render mirrored sequence footer participants with backend-neutral instructions.
 - Validate sequence hash comments and adjacent entities through native Metal PNG rendering.
 - Render grammar-backed sequence `actor` declarations as backend-neutral UML stick figures.

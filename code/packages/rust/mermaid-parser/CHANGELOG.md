@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.31.0
+
+- Preserve commas inside quoted sequence participant configuration aliases.
+
 ## 0.30.0
 
 - Accept Mermaid 11.16.1 sequence `#` comments without losing entity-coded text.
