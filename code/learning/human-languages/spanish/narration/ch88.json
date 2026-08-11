@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 88,
-  "title": "Ayudar — the Same Word as Aid",
+  "title": "Preguntar — Asking, and Sounding a Depth",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:35f2ffbfe667fe8b",
+  "sourceHash": "fnv1a64:6c3b074f35609a4d",
   "lessons": [
     {
-      "id": "ES-C35-ayudar",
-      "sequence": 1670,
-      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
-      "headword": "ayudar",
-      "romanization": "ayudar",
-      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
+      "id": "ES-C35-preguntar",
+      "sequence": 1660,
+      "title": "preguntar — \"to ask\", by sounding the water with a pole",
+      "headword": "preguntar",
+      "romanization": "preguntar",
+      "gloss": "to ask (a question) — and the reason English's one \"ask\" becomes two Spanish verbs",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dd52ce8cb9356fe",
+      "sourceHash": "fnv1a64:3d92806dd77e624b",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
+              "text": "English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half."
             }
           ]
         },
@@ -46,77 +46,63 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-a — a clean, open a: a-yoo-DAR."
+              "text": "pr-cluster — pre- is one crisp beat, preh, with a tapped r."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one tap at the end, not an English r."
+              "text": "g-hard — the g before u is hard, as in English gun: pre-goon-TAR."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: ayudar",
+          "title": "The word, taken apart: preguntar",
           "segments": [
             {
               "kind": "speech",
-              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
+              "text": "preguntar (\"to ask a question\") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, \"to inquire\". And percontārī was built on contus, \"a punting pole\": to percontor was to push a pole down through water and find out how deep it was."
             },
             {
               "kind": "speech",
-              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
+              "text": "Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe."
             },
             {
               "kind": "speech",
-              "text": "aide, and aide-de-camp, an officer who helps."
-            },
-            {
-              "kind": "speech",
-              "text": "adjutant — the officer whose whole job is assisting."
-            },
-            {
-              "kind": "speech",
-              "text": "adjuvant — a substance that helps another drug work."
-            },
-            {
-              "kind": "speech",
-              "text": "coadjutor — one who helps alongside."
-            },
-            {
-              "kind": "speech",
-              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
+              "text": "The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
+          "title": "Grammar Lens: one English \"ask\", two Spanish verbs",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing breaks; the endings are the ones you started with:"
+              "text": "Spanish sorts asking by what you are after:"
             },
             {
               "kind": "table",
               "headers": [
-                "person",
-                "form",
-                "meaning"
+                "what you want",
+                "verb",
+                "example"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
-                "person: yo. form: ayudo. meaning: I help.",
-                "person: tú. form: ayudas. meaning: you help.",
-                "person: nosotros. form: ayudamos. meaning: we help.",
-                "person: ellos/ustedes. form: ayudan. meaning: they help."
+                "what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.",
+                "what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee."
               ]
             },
             {
               "kind": "speech",
-              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
+              "text": "Ask for a coffee with preguntar and you have said \"I question a coffee\". The line is simple: a question takes preguntar, a request takes pedir."
+            },
+            {
+              "kind": "speech",
+              "text": "pedir from Latin petere, \"to make for, to aim at\" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later."
             }
           ]
         },
@@ -134,38 +120,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
+              "instruction": "\"pregunto, preguntas, pregunta, preguntamos, preguntan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
+              "source": "[YOU SAY: \"pregunto, preguntas, pregunta, preguntamos, preguntan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Me ayudas?\" — will you help me?",
+              "instruction": "\"Te pregunto la hora\" — I'm asking you the time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
+              "source": "[YOU SAY: \"Te pregunto la hora\" — I'm asking you the time]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
+              "instruction": "\"Pido un café\" then \"Tomo un café\" — I ask for one, I have one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
+              "source": "[YOU SAY: \"Pido un café\" then \"Tomo un café\" — I ask for one, I have one]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
+              "instruction": "\"pedir\" then English \"petition, appetite, compete\" — the aiming family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
+              "source": "[YOU SAY: \"pedir\" then English \"petition, appetite, compete\" — the aiming family]"
             }
           ]
         },
@@ -182,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
+              "text": "What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, \"to aim at\" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid."
             }
           ]
         }

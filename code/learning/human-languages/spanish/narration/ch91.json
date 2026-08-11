@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 91,
-  "title": "Synthesis --- What You Like, and Who Does the Liking",
+  "title": "Gustar — the Verb Built the Other Way Round",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a4517e35d2794e94",
+  "sourceHash": "fnv1a64:1acd29a1676386e9",
   "lessons": [
     {
-      "id": "ES-C35-sintesis-gustar",
-      "sequence": 1684,
-      "title": "Synthesis — what you like, and who is doing the liking",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
+      "id": "ES-C35-gustar",
+      "sequence": 1680,
+      "title": "gustar — the verb that runs backwards",
+      "headword": "gustar",
+      "romanization": "gustar",
+      "gloss": "to please — the verb English calls \"to like\", built the other way round",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6959b8a9d87e5b0",
+      "sourceHash": "fnv1a64:1ecd2390c56e73a8",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,103 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
+              "text": "Back in the introductions you learned mucho gusto — \"much pleasure\". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the sentence that will not let you be the subject",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
+              "text": "g-hard — a hard g before u: goos-TAR."
             },
             {
               "kind": "speech",
-              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
-            },
-            {
-              "kind": "speech",
-              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
-            },
-            {
-              "kind": "speech",
-              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
+              "text": "s-clear — a clean hissing s, never a z buzz."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart: gustar",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
+              "text": "gustar from Latin gustāre, \"to taste\". English kept the root and stayed close to the tongue:"
             },
             {
               "kind": "speech",
-              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
+              "text": "gusto — doing something with relish, that is, with a taste for it."
+            },
+            {
+              "kind": "speech",
+              "text": "gustatory — of the sense of taste."
+            },
+            {
+              "kind": "speech",
+              "text": "disgust — dis- \"away\" + taste: what you spit back out."
+            },
+            {
+              "kind": "speech",
+              "text": "degustation, a tasting menu; and through French, ragout."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means \"to please\"."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the thing you like is the subject",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
+              "text": "English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — \"the book is pleasing to me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything follows from that:"
+            },
+            {
+              "kind": "speech",
+              "text": "el libro is the subject, which is why the verb is gusta, third person."
+            },
+            {
+              "kind": "speech",
+              "text": "me is the person it happens to, not the one doing anything."
+            },
+            {
+              "kind": "speech",
+              "text": "So the verb agrees with the thing, never with you:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you mean",
+                "Spanish",
+                "why"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.",
+                "what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.",
+                "what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them)."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means \"I am pleasing\" — just not the one you were reaching for."
             }
           ]
         },
@@ -102,88 +149,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts",
+              "instruction": "\"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts]"
+              "source": "[YOU SAY: \"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
+              "instruction": "\"Te gusta tomar café\" — you like drinking coffee",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
+              "source": "[YOU SAY: \"Te gusta tomar café\" — you like drinking coffee]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until me gusta arrives without translating I like first."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-subject",
-              "prompt": "In me gusta el cafe, what is the subject?",
-              "assesses": [
-                "ES-GRAMMAR-GUSTAR-INVERSION-09"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "el cafe",
-                "the coffee",
-                "cafe",
-                "el café"
-              ],
-              "feedback": {
-                "correct": "Yes — the coffee does the pleasing.",
-                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-taste",
-              "prompt": "What did gustar originally mean?",
-              "assesses": [
-                "ES-ETYMON-GUSTAR-08"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Me gusta ayudar\" — I like helping",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "to taste",
-                "taste",
-                "tasting"
-              ],
-              "feedback": {
-                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
-                "incorrect": "To taste — from Latin gustare."
-              }
+              "source": "[YOU SAY: \"Me gusta ayudar\" — I like helping]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-joke",
-              "prompt": "Which phrase you learned long ago is built from this same word?",
-              "assesses": [
-                "ES-LEX-GUSTO",
-                "ES-LEX-GUSTAR-07"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "mucho gusto",
-                "gusto",
-                "much pleasure"
-              ],
-              "feedback": {
-                "correct": "Yes — mucho gusto has always meant much pleasure.",
-                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family]"
             }
           ]
         },
@@ -200,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
+              "text": "In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)"
             }
           ]
         }

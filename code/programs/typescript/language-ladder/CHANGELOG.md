@@ -18,6 +18,12 @@
   simpler handwritten variation and excluding later vowel marks from base ו.
 - Queue the series' Zayin/Heit lesson (`XTqG_1dsFSU`) next.
 
+### Changed — Spanish runs 1..103 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `ser` gained a plural chapter,
+  so old Spanish chapters 41–102 shifted to 42–103.
+- Eager bundle 486,164 / 500,000 bytes.
+
 ### Added — cited Hebrew Hei ductus (HL-C09BH)
 
 - Render **ה** in three evidence-aligned frames: join the left-to-right top bar

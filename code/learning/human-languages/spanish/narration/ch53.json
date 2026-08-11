@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 53,
-  "title": "Ver --- Seeing",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:151722bd9e37eac3",
+  "title": "The Imperfect --- What Used to Happen",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7ffc9bb56b459ceb",
   "lessons": [
     {
-      "id": "ES-C16-ver",
-      "sequence": 1122,
-      "title": "ver — learn the verb before its past",
-      "headword": "ver",
-      "romanization": "ver",
-      "gloss": "to see — veo, ves, ve",
+      "id": "ES-C16-imperfecto",
+      "sequence": 1110,
+      "title": "hablaba — let a past action stay open",
+      "headword": "hablaba",
+      "romanization": "hablaba",
+      "gloss": "the singular -ar imperfect — hablaba, hablabas, hablaba",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:918cdbb813d82f67",
+      "sourceHash": "fnv1a64:1919c0f7d946299c",
       "notice": null,
       "blocks": [
         {
@@ -35,43 +35,43 @@
             },
             {
               "kind": "speech",
-              "text": "Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver."
+              "text": "Hablé español presents speaking as a completed past event. A different past, the imperfect, can leave the action open: Hablaba español — “I was speaking Spanish” or “I used to speak Spanish.” The sentence does not say where the action ended."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: three present forms",
+          "title": "Grammar Lens: three familiar persons",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "present"
+                "open or habitual past"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present: veo.",
-                "person: tú. present: ves.",
-                "person: él / ella / usted. present: ve."
+                "person: yo. open or habitual past: hablaba.",
+                "person: tú. open or habitual past: hablabas.",
+                "person: él / ella / usted. open or habitual past: hablaba."
               ]
             },
             {
               "kind": "speech",
-              "text": "The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”"
+              "text": "Say hablaba, hablabas, hablaba. The first and third forms are identical; the surrounding conversation or an explicit person tells you who is speaking. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The ending, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson."
+              "text": "Spanish -aba continues the Latin imperfect family in -ābam. Historical sound change reshaped the complete Latin forms, but the b remains a useful audible bridge between -ābam and Spanish -aba."
             }
           ]
         },
@@ -89,85 +89,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ver — to see”",
+              "instruction": "“hablaba, hablabas, hablaba”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ver — to see”]"
+              "source": "[YOU SAY: “hablaba, hablabas, hablaba”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“veo, ves, ve”",
+              "instruction": "“Hablé español. Hablaba español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “veo, ves, ve”]"
+              "source": "[YOU SAY: “Hablé español. Hablaba español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ver comes through veer from vidēre”",
+              "instruction": "“-ābam and -aba share b”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ver comes through veer from vidēre”]"
+              "source": "[YOU SAY: “-ābam and -aba share b”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-ver-meaning",
-              "prompt": "What does Spanish ver mean?",
+              "id": "ES-C16-imperfecto-singular-forms",
+              "prompt": "Give the learned singular imperfect forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-VER"
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 5,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "to see",
-                "see"
+                "hablaba, hablabas, hablaba",
+                "hablaba hablabas hablaba",
+                "hablaba / hablabas / hablaba"
               ],
               "feedback": {
-                "correct": "Right: ver means 'to see'.",
-                "incorrect": "Ver is the infinitive 'to see'."
+                "correct": "Right: hablaba, hablabas, hablaba.",
+                "incorrect": "Keep habl- and retrieve -aba, -abas, -aba."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-ver-present-singular",
-              "prompt": "Give the learned present forms of ver: yo, tú, then él/ella/usted.",
+              "id": "ES-C16-imperfecto-hable-hablaba",
+              "prompt": "Which form leaves 'I spoke' open or habitual: hablé or hablaba?",
               "assesses": [
-                "ES-LEX-VER",
-                "ES-GRAMMAR-VER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "veo, ves, ve",
-                "veo ves ve",
-                "veo / ves / ve"
+                "hablaba"
               ],
               "feedback": {
-                "correct": "Right: veo, ves, ve.",
-                "incorrect": "Retrieve the short row: veo, ves, ve."
+                "correct": "Right: hablaba leaves the past action open or habitual.",
+                "incorrect": "Hablé presents a completed event; hablaba leaves it open or habitual."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-ver-history",
-              "prompt": "Which Latin verb stands behind Spanish ver: vidēre or īre?",
+              "id": "ES-C16-imperfecto-history",
+              "prompt": "Which consonant links Latin -ābam with Spanish -aba?",
               "assesses": [
-                "ES-ETYMON-VER-VIDERE",
-                "ES-LEX-VER"
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
               ],
               "responseSeconds": 6,
               "acceptedResponses": [
-                "vidēre",
-                "videre"
+                "b",
+                "the b",
+                "b sound"
               ],
               "feedback": {
-                "correct": "Right: ver continues Latin vidēre.",
-                "incorrect": "Choose the sight verb vidēre; īre is the source of ir."
+                "correct": "Right: the b remains audible in Spanish -aba.",
+                "incorrect": "Listen inside both endings: -ābam and -aba contain b."
               }
             }
           ]
@@ -185,7 +186,412 @@
             },
             {
               "kind": "speech",
-              "text": "What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past."
+              "text": "Give the three learned forms. (Hablaba, hablabas, hablaba.) What can the imperfect do? (Leave a past action ongoing or habitual.) Which Latin family stands behind -aba? (-ābam.) Next: build the same gentle frame with comer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C16-comer-imperfecto",
+      "sequence": 1114,
+      "title": "comía — hear both vowels",
+      "headword": "comía",
+      "romanization": "comía",
+      "gloss": "the singular -er imperfect — comía, comías, comía",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c912d8f9e78d7c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Comí presents eating as completed. Comía leaves it open or habitual: “I was eating” or “I used to eat.” One accent separates the two forms in writing and in sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -er row",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "open or habitual past"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. open or habitual past: comía.",
+                "person: tú. open or habitual past: comías.",
+                "person: él / ella / usted. open or habitual past: comía."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say comía, comías, comía. As with hablaba, the first and third forms match. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: co-mí-a",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The accent in -ía keeps i and a in separate syllables: co-mí-a, three beats. It appears in every form learned here. Compare final stress in comí with the middle stress and extra syllable in comía."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The ending, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The -er imperfect continues a Romance reshaping of Latin -ēbam material. Among the changes, an intervocalic b was lost; later Spanish spelling marks the stressed í that keeps i-a apart. This is a layered history, not a single instruction to delete one letter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comía, comías, comía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comía, comías, comía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Comí. Comía.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Comí. Comía.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“co-mí-a”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “co-mí-a”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-comer-imperfecto-singular-forms",
+              "prompt": "Give the learned singular imperfect forms of comer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "comía, comías, comía",
+                "comía comías comía",
+                "comía / comías / comía"
+              ],
+              "feedback": {
+                "correct": "Right: comía, comías, comía.",
+                "incorrect": "Keep com- and retrieve -ía, -ías, -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-comer-imperfecto-comi-comia",
+              "prompt": "Which form means 'I was eating': comí or comía?",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "comía"
+              ],
+              "feedback": {
+                "correct": "Right: comía leaves the eating in progress.",
+                "incorrect": "Comí is completed; comía is ongoing or habitual."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-comer-imperfecto-syllables",
+              "prompt": "Write comía with syllable breaks.",
+              "assesses": [
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-SOUND-WRITTEN-ACCENT"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "co-mí-a"
+              ],
+              "feedback": {
+                "correct": "Right: co-mí-a has three syllables.",
+                "incorrect": "The accented í stays separate from a: co-mí-a."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three learned forms. (Comía, comías, comía.) What does the accent do? (Keeps i and a apart.) Which Latin family lies behind the ending? (-ēbam, reshaped through Romance.) Next: test whether vivir can reuse this row."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C16-vivir-imperfecto",
+      "sequence": 1118,
+      "title": "vivía — reuse the complete -er row",
+      "headword": "vivía",
+      "romanization": "vivía",
+      "gloss": "the singular -ir imperfect — vivía, vivías, vivía",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:016e318abdb29068",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An earlier chapter let comer and vivir share one completed-past row. They converge again here. Replace com- in comía, comías, comía with viv-."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one row reused",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "comer",
+                "vivir"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. comer: comía. vivir: vivía.",
+                "person: tú. comer: comías. vivir: vivías.",
+                "person: él / ella / usted. comer: comía. vivir: vivía."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say vivía, vivías, vivía. -er and -ir share -ía, -ías, -ía. The accent still keeps i-a apart. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one known contrast",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Viví en Madrid. — presents living there as a completed stretch."
+            },
+            {
+              "kind": "speech",
+              "text": "Vivía en Madrid. — puts us inside that past stretch or treats it as background."
+            },
+            {
+              "kind": "speech",
+              "text": "Both are past. The speaker chooses how to frame the event."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The verb, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vivir continues Latin vīvere. Its infinitive belongs to the Spanish -ir class, but the imperfect has converged with -er. That shared row is a reliable fact about these learned forms, not a claim that the two conjugations are identical everywhere."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vivía, vivías, vivía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “vivía, vivías, vivía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comía and vivía share -ía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comía and vivía share -ía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Viví en Madrid. Vivía en Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Viví en Madrid. Vivía en Madrid.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-vivir-imperfecto-singular-forms",
+              "prompt": "Give the learned singular imperfect forms of vivir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "vivía, vivías, vivía",
+                "vivía vivías vivía",
+                "vivía / vivías / vivía"
+              ],
+              "feedback": {
+                "correct": "Right: vivía, vivías, vivía.",
+                "incorrect": "Keep viv- and reuse -ía, -ías, -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-vivir-imperfecto-shared-row",
+              "prompt": "Which two infinitive classes share the learned imperfect endings -ía, -ías, -ía?",
+              "assesses": [
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "-er and -ir",
+                "er and ir",
+                "-er / -ir",
+                "er ir"
+              ],
+              "feedback": {
+                "correct": "Right: -er and -ir share this imperfect row.",
+                "incorrect": "Compare comer and vivir: -er and -ir share the row."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-vivir-imperfecto-vivia-madrid",
+              "prompt": "Say 'I was living in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "vivía en madrid.",
+                "vivía en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Vivía en Madrid.",
+                "incorrect": "Use imperfect vivía, then known en Madrid."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three vivir forms. (Vivía, vivías, vivía.) Which class shares them? (-er.) What contrast can viví / vivía make? (Completed stretch versus an open or background past.) Next: learn ver before asking it to enter this tense."
             }
           ]
         }
