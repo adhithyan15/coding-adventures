@@ -31,6 +31,7 @@ const HEBREW_DALET = DUCTUS[ductusKey("hebrew", "ד")];
 const HEBREW_HEI = DUCTUS[ductusKey("hebrew", "ה")];
 const HEBREW_VAV = DUCTUS[ductusKey("hebrew", "ו")];
 const HEBREW_ZAYIN = DUCTUS[ductusKey("hebrew", "ז")];
+const HEBREW_HEIT = DUCTUS[ductusKey("hebrew", "ח")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -287,6 +288,20 @@ describe("handwriting ductus", () => {
     expect(head[0].x).toBeLessThan(head.at(-1)!.x);
     expect(stem[0]).toEqual(head.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+  });
+
+  it("Hebrew ח joins its top and right side before restarting the joined left leg", () => {
+    expect(HEBREW_HEIT.script).toBe("hebrew");
+    expect(penLifts(HEBREW_HEIT)).toBe(1);
+    expect(HEBREW_HEIT.strokes).toHaveLength(2);
+    expect(HEBREW_HEIT.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_HEIT.strokes[0].segments[0].path;
+    const down = HEBREW_HEIT.strokes[0].segments[1].path;
+    const joined = HEBREW_HEIT.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(down[0]).toEqual(top.at(-1));
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(joined[0].y).toBeGreaterThan(joined.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -919,6 +934,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ז", HEBREW_ZAYIN.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ח", HEBREW_HEIT.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1028,6 +1046,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /rounded handwritten Zayin.*one uninterrupted run.*00:44.0–00:45.4.*opening rises to the right.*curves down the right side.*around the base without lifting.*mirror image.*handwritten Gimel.*00:49.9–00:55.7.*facing directions.*01:00.1–01:05.0.*printed form.*angular.*not to write Zayin like Vav.*01:17.6–01:24.2.*left-to-right start.*continuous descent.*Noto Sans Hebrew/i,
+    );
+  });
+
+  it("Hebrew ח traces its printed gate before restarting the joined left leg", () => {
+    const src = HEBREW_HEIT.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=XTqG_1dsFSU");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Zayin and Heit.*02:44.6–02:46.3.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /rounded handwritten Heit.*02:35.7–02:36.9.*arched top.*right side.*one lift.*left leg.*top junction.*printed demonstration.*top bar left-to-right.*right side.*02:44.6–02:45.3.*lifts once.*joined left leg top-to-bottom.*02:45.6–02:46.3.*handwriting corners round.*02:39.0–02:41.6.*print version sharper.*02:47.9–02:52.5.*Noto Sans Hebrew.*rounded handwriting variation/i,
     );
   });
 

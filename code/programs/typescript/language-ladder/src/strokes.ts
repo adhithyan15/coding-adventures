@@ -702,6 +702,59 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ז"),
   },
+  // The printed Heit demonstration joins its left-to-right top bar to the
+  // right descent, then lifts once for the left leg. The source also preserves
+  // the same order with rounded corners in handwriting.
+  [ductusKey("hebrew", "ח")]: {
+    script: "hebrew",
+    glyph: "ח",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 75, y: 555 },
+              { x: 170, y: 555 },
+              { x: 280, y: 555 },
+              { x: 390, y: 555 },
+              { x: 480, y: 555 },
+              { x: 540, y: 540 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 540, y: 540 },
+              { x: 542, y: 480 },
+              { x: 542, y: 380 },
+              { x: 542, y: 270 },
+              { x: 542, y: 160 },
+              { x: 542, y: 55 },
+              { x: 542, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the joined left leg from top to bottom",
+            path: [
+              { x: 142, y: 555 },
+              { x: 142, y: 480 },
+              { x: 142, y: 380 },
+              { x: 142, y: 270 },
+              { x: 142, y: 160 },
+              { x: 142, y: 55 },
+              { x: 142, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ח"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

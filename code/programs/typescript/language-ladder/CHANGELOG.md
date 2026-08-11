@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Heit ductus (HL-C09BK)
+
+- Render **ח** in three evidence-aligned frames: draw the top bar left-to-right
+  and continue down the right side, then restart once for the joined left leg.
+- Keep the source's sharp printed two-stroke order explicit while preserving its
+  rounded handwritten alternative in the source variation note.
+- Queue the series' Tet/Yod lesson (`NBUtBPVKchk`) next.
+
 ### Added — cited Hebrew Zayin ductus (HL-C09BJ)
 
 - Render **ז** in two evidence-aligned frames: draw the short head left-to-right
