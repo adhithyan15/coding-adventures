@@ -290,8 +290,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   independent **ص** in two runs: close the oval clockwise and rise into its
   short shoulder at 00:01.1–00:02.4, then lift once and restart at the baseline
   junction for the trailing bowl at 00:02.6–00:03.3. Its three-frame path keeps
-  Saad's motion distinct from adjacent Seen and Shiin. The remaining **184**
-  prose part orders across seven scripts (`arabic` 10,
+  Saad's motion distinct from adjacent Seen and Shiin. The page's embedded Daad
+  lesson then verifies **ض** independently at 00:43.1–00:46.3: repeat those two
+  body runs, lift a second time, and place the upper dot last. Its four-frame
+  path records that three-stroke order while the directly linked short MOV's
+  audit-time HTTP 403 remains explicit. The remaining **183**
+  prose part orders across seven scripts (`arabic` 9,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

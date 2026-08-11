@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-daad ductus (HL-C09AT)
+
+- Render **ض** in four evidence-aligned frames: its clockwise oval, joined
+  shoulder, separately restarted trailing bowl, and separately placed upper dot.
+- Keep the embedded lesson's three pen-down runs, two lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Record the direct short MOV's audit-time 403 honestly, preserve the accessible
+  embedded primary evidence, and queue the source-backed **ع** lesson next.
 
 ### Changed — Spanish runs 1..59 (HL-C99)
 
