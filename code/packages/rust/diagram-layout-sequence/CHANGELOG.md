@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.27.0 - 2026-08-11
+
+- Keep explicit activation and deactivation statements on the current sequence event row instead of adding synthetic vertical gaps.
+
 ## 0.26.0 - 2026-08-11
 
 - Terminate sequence messages at active activation-bar edges, including the bar opened by a message suffix.

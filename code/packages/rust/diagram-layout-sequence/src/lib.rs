@@ -8,7 +8,7 @@ use diagram_ir::{
     SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.26.0";
+pub const VERSION: &str = "0.27.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -347,7 +347,6 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         y,
                     );
                 }
-                y += EVENT_H / 2.0;
             }
             SequenceEvent::ParticipantCreated { participant } => {
                 if matches!(
@@ -678,7 +677,7 @@ fn close_activation(
             participant: participant.to_string(),
             x: activation_x(center, depth),
             y1: start,
-            y2: y,
+            y2: y.max(start + 12.0),
         });
     }
 }
@@ -1087,6 +1086,46 @@ mod tests {
     }
 
     #[test]
+    fn activation_statements_do_not_consume_event_rows() {
+        let plain = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![message("Alice", "Bob", "request")],
+        };
+        let active = SequenceDiagram {
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Alice".into(),
+                    active: true,
+                },
+                message("Alice", "Bob", "request"),
+                SequenceEvent::Activation {
+                    participant: "Alice".into(),
+                    active: false,
+                },
+            ],
+            ..plain.clone()
+        };
+        let plain_layout = layout_sequence_diagram(&plain);
+        let active_layout = layout_sequence_diagram(&active);
+        let message_y = |layout: &LayoutedSequenceDiagram| {
+            layout.items.iter().find_map(|item| match item {
+                LayoutedSequenceItem::Message { y, .. } => Some(*y),
+                _ => None,
+            })
+        };
+
+        assert_eq!(message_y(&active_layout), message_y(&plain_layout));
+        assert_eq!(active_layout.height, plain_layout.height);
+    }
+
+    #[test]
     fn offsets_nested_activation_bars_by_stack_depth() {
         let diagram = SequenceDiagram {
             title: None,
@@ -1131,8 +1170,8 @@ mod tests {
             activations[1].0 - activations[0].0,
             NESTED_ACTIVATION_OFFSET
         );
-        assert!(activations[0].1 < activations[1].1);
-        assert!(activations[0].2 > activations[1].2);
+        assert_eq!(activations[0].1, activations[1].1);
+        assert_eq!(activations[0].2, activations[1].2);
     }
 
     #[test]
