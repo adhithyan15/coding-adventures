@@ -1,0 +1,15 @@
+% ============================================================================
+% conjunction-type.query.adj — worked recall over the conjunction-type
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% conjunction type do?" (direct) or "which type matches this
+% description?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "conjunction-type.adj"
+
+? conjunction_type(subordinating_conjunction, $D)                                    % expect joins_dependent_clauses_to_independent_clauses (direct)
+? conjunction_type($T, are_pairs_of_conjunctions_that_work_together)                  % expect correlative_conjunction (reverse)
+? conjunction_type(conjunctive_adverb, $D)                                            % expect abstain -- a real category the source covers, but it belongs to a different word class (an adverb) rather than being a fourth conjunction type
