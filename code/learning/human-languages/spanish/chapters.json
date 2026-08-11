@@ -1186,19 +1186,91 @@
     },
     {
       "chapter": 53,
-      "title": "Taking, Asking, Helping — and the Backwards Verb",
-      "label": "ch:spanish-backwards-verb",
-      "canDo": "I can say I take, ask and help in Spanish, and build a sentence with gustar the way Spanish actually builds it — with the thing liked as the subject.",
+      "title": "Tomar — Taking, and a Word With No Past",
+      "label": "ch:spanish-tomar",
+      "canDo": "I can say what I take, and explain why this everyday verb has no agreed origin.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-tomar",
+        "kind": "task",
+        "summary": "tomar, the honest gap — and coger, the verb Latin actually left.",
+        "assesses": [
+          "ES-LEX-TOMAR-01",
+          "ES-LEX-COGER-02"
+        ]
+      }
+    },
+    {
+      "chapter": 54,
+      "title": "Preguntar — Asking, and Sounding a Depth",
+      "label": "ch:spanish-preguntar",
+      "canDo": "I can ask a question with preguntar, and choose it over pedir.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-preguntar",
+        "kind": "task",
+        "summary": "percontari, to sound a depth with a pole; and why English's one ask becomes two Spanish verbs.",
+        "assesses": [
+          "ES-LEX-PREGUNTAR-03",
+          "ES-GRAMMAR-ASK-SPLIT-04"
+        ]
+      }
+    },
+    {
+      "chapter": 55,
+      "title": "Ayudar — the Same Word as Aid",
+      "label": "ch:spanish-ayudar",
+      "canDo": "I can say that I help, and hear English aid inside the Spanish word.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-ayudar",
+        "kind": "task",
+        "summary": "adiutare straight through to aid, and the -di- that also gave hodie -> hoy.",
+        "assesses": [
+          "ES-LEX-AYUDAR-05",
+          "ES-ETYMON-AYUDAR-06"
+        ]
+      }
+    },
+    {
+      "chapter": 56,
+      "title": "Review --- Three Verbs That Behave",
+      "label": "ch:spanish-review-ordinary-verbs",
+      "canDo": "I can use all three verbs and say what they have in common: the sentence is about the one doing it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-repaso-tres",
+        "kind": "dialogue",
+        "summary": "Three origins - tidy, reshaped, and genuinely unknown - and the shared shape about to be broken.",
+        "assesses": [
+          "ES-LEX-TOMAR-01",
+          "ES-LEX-PREGUNTAR-03",
+          "ES-LEX-AYUDAR-05",
+          "ES-ETYMON-AYUDAR-06"
+        ]
+      }
+    },
+    {
+      "chapter": 57,
+      "title": "Gustar — the Verb Built the Other Way Round",
+      "label": "ch:spanish-gustar",
+      "canDo": "I can build a gustar sentence the way Spanish builds it, with the thing liked as the subject.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C35-gustar",
         "kind": "task",
-        "summary": "Say tomar, preguntar and ayudar, then turn gustar around: me gusta el libro is the book pleasing me, so the verb agrees with the thing and the person moves into the little word in front.",
+        "summary": "me gusta el libro is the book pleasing me, so the verb agrees with the book.",
         "assesses": [
-          "ES-LEX-TOMAR-01",
-          "ES-LEX-AYUDAR-05",
           "ES-LEX-GUSTAR-07",
           "ES-ETYMON-GUSTAR-08",
           "ES-GRAMMAR-GUSTAR-INVERSION-09"
@@ -1206,7 +1278,26 @@
       }
     },
     {
-      "chapter": 54,
+      "chapter": 58,
+      "title": "Synthesis --- What You Like, and Who Does the Liking",
+      "label": "ch:spanish-synthesis-gustar",
+      "canDo": "I can say what I like without translating I like word by word, and hear mucho gusto as the same word.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-sintesis-gustar",
+        "kind": "dialogue",
+        "summary": "Liking started at the tongue; and the chapter-5 phrase turns out to be gustar's noun.",
+        "assesses": [
+          "ES-GRAMMAR-GUSTAR-INVERSION-09",
+          "ES-ETYMON-GUSTAR-08",
+          "ES-LEX-GUSTO"
+        ]
+      }
+    },
+    {
+      "chapter": 59,
       "title": "Hearing, Sleeping, Walking, Running",
       "label": "ch:spanish-hear-sleep-walk-run",
       "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
@@ -1236,7 +1327,7 @@
       }
     },
     {
-      "chapter": 55,
+      "chapter": 60,
       "title": "Opening, Closing, Sitting Down, Standing Up",
       "label": "ch:spanish-open-close-sit-stand",
       "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
@@ -1267,7 +1358,7 @@
       }
     },
     {
-      "chapter": 56,
+      "chapter": 61,
       "title": "Telling What Happened",
       "label": "ch:spanish-narrating",
       "canDo": "I can tell a short connected story about something that happened — ordering the events with luego, giving a reason with porque, and choosing the imperfect for the scene and the preterite for the events.",
@@ -1291,7 +1382,7 @@
       }
     },
     {
-      "chapter": 57,
+      "chapter": 62,
       "title": "Bringing, Getting, Playing, Meeting",
       "label": "ch:spanish-bring-get-play-meet",
       "canDo": "I can say I bring, get, play and meet in Spanish, and name what each verb does to its yo-form or its stem: traigo grows a hard g, consigo breaks e to i and drops a silent u, juego breaks u to ue alone in the language, and conozco keeps a cluster the other forms lost.",
@@ -1322,7 +1413,7 @@
       }
     },
     {
-      "chapter": 58,
+      "chapter": 63,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
       "canDo": "I can say I wait, answer and buy in Spanish — three verbs whose endings never surprise me — and I know that esperar alone carries wait, hope and expect, so context does the work English hands to three separate verbs.",
@@ -1357,7 +1448,7 @@
       }
     },
     {
-      "chapter": 59,
+      "chapter": 64,
       "title": "Saying Why",
       "label": "ch:spanish-giving-reasons",
       "canDo": "I can give a reason for what I think and what I plan — stating an opinion with creo que, running forward to its consequence with así que, and naming an obligation with debo.",

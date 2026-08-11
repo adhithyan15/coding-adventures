@@ -64,7 +64,11 @@ answer) and **"not"** (inside a sentence) — two different words. Spanish uses
   sentence first, so it waits until you have one. For now: ***no*** is how you
   decline, refuse, and disagree, which is most of what a beginner needs it for.
 
-<!-- the negator sense is taught in chapter 14, where the learner has a verb -->
+<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where
+     the learner has a verb to put it in front of. Named by lesson id, not by
+     chapter number: chapter numbers move on every split, and a stale number
+     here is invisible -- this comment said "chapter 14" through three renumbers
+     after the lesson had moved to chapter 20. -->
 
 
 ## Guided Practice

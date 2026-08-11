@@ -11,6 +11,12 @@
 - Record the direct short MOV's audit-time 403 honestly, preserve the accessible
   embedded primary evidence, and queue the source-backed **ع** lesson next.
 
+### Changed — Spanish runs 1..64 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 53 split into six, so
+  old Spanish chapters 54–59 shifted to 59–64.
+- Eager bundle 479,716 / 500,000 bytes.
+
 ### Changed — Spanish runs 1..59 (HL-C99)
 
 - Regenerate the `bookhashes` chapter-lesson pin: chapter 47's four mind-verbs

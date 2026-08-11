@@ -451,8 +451,15 @@ reader and still pay. One verb, one origin, one set of forms.
 
 **Measured 2026-08-10:** 12 of Spanish's 19 verb-teaching chapters break this —
 chapters 47, 48 and 52 each taught **four** verbs. That burn-down is HL-C99;
-its first slice split chapter 47 into six (one verb each, then a review and a
-synthesis chapter), leaving **11 of 22** verb chapters still crowded.
+its first two slices split chapters 47 and 53 into six apiece (one verb each,
+then a review and a synthesis chapter), leaving **10 of 22** verb chapters
+still crowded.
+
+> **Where a review chapter earns its keep.** In the chapter-53 split, `gustar`
+> sits *after* the review rather than beside the three ordinary verbs. The
+> review states the shared shape out loud — the sentence is about the one doing
+> it — so that the reverse-subject verb has something to break. A review
+> chapter is not only consolidation; it is where a contrast gets its setup.
 
 **Correction, same day.** An earlier revision of this section claimed `beber`,
 `preguntar` and `tomar` were "taught with no etymology at all." That was wrong.

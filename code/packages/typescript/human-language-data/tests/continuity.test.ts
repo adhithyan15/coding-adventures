@@ -485,7 +485,7 @@ describe("the real corpus", () => {
     // would put the prerequisite AFTER its dependent and fail the ordering rule). The
     // tie is carried by `reviews_of` instead, which does not count as a revisit.
     // Chapters 40 and 41 are planned to close this.
-    expect(report.summary.atomsNeverRevisited).toBe(459); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach
+    expect(report.summary.atomsNeverRevisited).toBe(456); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach
     expect(report.summary.neverRevisitedPercent).toBe(17);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -648,7 +648,7 @@ describe("the real corpus", () => {
     // READ-MUUNRU-02 gained a real revisit at the same time (0 -> 1, TA-W20 re-reads
     // மூன்று beside ஒன்று) and still misses R1, because TA-W20 is 4 lessons later and
     // R1 stops at 3.
-    expect(report.summary.missedByWindow.R1).toBe(863); // +2: HL-C98
+    expect(report.summary.missedByWindow.R1).toBe(859); // +2: HL-C98
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 208, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 210, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -782,7 +782,7 @@ describe("the real corpus", () => {
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
       atomsTaught: 394, // +3: HL-C98's per-cell atoms
-      atomsNeverRevisited: 50, // +2: HL-C98
+      atomsNeverRevisited: 47, // +2: HL-C98
     });
   });
 
