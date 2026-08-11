@@ -7762,7 +7762,13 @@ impl HtmlParser {
             if !self.current_parent_has_element_ancestor("button") {
                 self.close_open_element_if(|name| name == "p");
             }
-            self.close_open_heading_if_in_scope(None);
+            if self.current_element_name().is_some_and(is_heading_element) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "nested-heading-start-tag",
+                    format!("start tag `<{incoming_name}>` implied the end of the current heading"),
+                ));
+                self.open_elements.pop();
+            }
         } else if is_paragraph_boundary_element(incoming_name) {
             if incoming_name == "table" && self.quirks_mode {
                 return;
@@ -31035,7 +31041,7 @@ mod tests {
         .unwrap();
 
         let body = body(&document);
-        assert_eq!(body.children.len(), 7);
+        assert_eq!(body.children.len(), 6);
 
         let first_paragraph = element(&body.children[0]);
         assert_eq!(first_paragraph.name, "p");
@@ -31103,12 +31109,9 @@ mod tests {
 
         let first_heading = element(&body.children[5]);
         assert_eq!(first_heading.name, "h1");
-        assert_eq!(
-            element(&first_heading.children[0]).children,
-            vec![Node::text("Head")]
-        );
-
-        let second_heading = element(&body.children[6]);
+        let heading_span = element(&first_heading.children[0]);
+        assert_eq!(heading_span.children[0], Node::text("Head"));
+        let second_heading = element(&heading_span.children[1]);
         assert_eq!(second_heading.name, "h2");
         assert_eq!(second_heading.children, vec![Node::text("Next")]);
     }
@@ -32087,6 +32090,60 @@ mod tests {
         let third = element(&body.children[3]);
         assert_eq!(third.name, "h3");
         assert_eq!(third.children, vec![Node::text("Three")]);
+    }
+
+    #[test]
+    fn reports_heading_starts_that_replace_the_current_heading() {
+        for source in [
+            "<!doctype html><h1><h2>",
+            "<!doctype html><h1>one<h1>two",
+            "<!doctype html><table><tr><td><h1><h2>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "nested-heading-start-tag")
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("<h1><h2>", "div").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-heading-start-tag")
+                .count(),
+            1,
+        );
+    }
+
+    #[test]
+    fn heading_starts_do_not_close_a_non_current_heading() {
+        for source in [
+            "<!doctype html><h1><span><h2>x",
+            "<!doctype html><h1><b><h2>x",
+            "<!doctype html><h1><object><h2>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "nested-heading-start-tag"));
+
+            let first_heading = element(&body(&output.document).children[0]);
+            assert_eq!(first_heading.name, "h1", "source {source:?}");
+            let intermediary = element(&first_heading.children[0]);
+            assert_eq!(
+                element(&intermediary.children[0]).name,
+                "h2",
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]

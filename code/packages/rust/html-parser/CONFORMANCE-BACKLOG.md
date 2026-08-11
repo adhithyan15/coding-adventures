@@ -300,8 +300,12 @@ Prioritized work items:
    before preserving the existing implied closure, matching WPT `tests6.dat`
    and `tests20.dat`. First buttons in ordinary and real-cell contexts,
    already-closed buttons, marker-separated buttons, and synthetic button
-   fragment contexts remain quiet. Continue the fresh in-body scope and
-   recovery audit beyond active formatting.
+   fragment contexts remain quiet. A heading start tag now reports when its
+   current node is another heading before popping that heading, matching WPT
+   `tests1.dat`'s `<h1><h2>` rows. A non-current heading separated by an inline
+   or special element remains open, matching the current Standard and browser
+   behavior. Continue the fresh in-body scope and recovery audit beyond active
+   formatting.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
