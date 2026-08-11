@@ -12,6 +12,12 @@
 - Preserve Ayn independently of adjacent dotted Ghayn and queue the directly
   linked independent **ك** source next.
 
+### Changed — Spanish runs 1..72 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 21 split into four, so
+  old Spanish chapters 22–69 shifted to 25–72.
+- Eager bundle 481,152 / 500,000 bytes.
+
 ### Changed — Spanish runs 1..69 (HL-C99)
 
 - Regenerate the `bookhashes` chapter-lesson pin: chapter 62 split into six, so

@@ -331,6 +331,23 @@ pattern apiece for *comer*, *vivir*, *tener*, *hacer*, *estar*", chapter 18 open
 the subjunctive through a single asserted-versus-wanted contrast — and those are
 the best chapters in the corpus. This rule generalises what already works.
 
+### 5.2a What the one-cell rule counts
+
+> **The budget counts new *forms*, not new *slots*.**
+
+A cell whose written form is identical to one the learner already holds carries
+no new information, and splitting it across lessons is padding rather than
+gentleness.
+
+The case that forced this: Spanish's `-ir` present singular is *the same three
+endings* as `-er` — `-o`, `-es`, `-e`. Three distinct cells by slot; **one**
+fact by form. `ES-C07-vivir` therefore declares all three CONJ3 cells in a
+single lesson, and says so in the prose: the third family asks the reader to
+learn no new form at all.
+
+The inverse still binds. `-ar` → `-er` changes two of the three slots, so those
+two are genuinely new and were taught one lesson apiece (HL-C99d).
+
 ### 5.3 No table before its cells
 
 > **A paradigm table may appear only after every cell in it has been individually
@@ -451,9 +468,8 @@ reader and still pay. One verb, one origin, one set of forms.
 
 **Measured 2026-08-10:** 12 of Spanish's 19 verb-teaching chapters break this —
 chapters 47, 48 and 52 each taught **four** verbs. That burn-down is HL-C99;
-its first three slices split chapters 47, 53 and 62 into six apiece (one verb
-each, then a review and a synthesis chapter). **No Spanish chapter now teaches
-four verbs**; 9 of 22 remain crowded, none with more than three.
+its first four slices split chapters 47, 53, 62 and 21. **No Spanish chapter
+now teaches four verbs**; 8 of 22 remain crowded, none with more than three.
 
 > **Where a review chapter earns its keep.** In the chapter-53 split, `gustar`
 > sits *after* the review rather than beside the three ordinary verbs. The

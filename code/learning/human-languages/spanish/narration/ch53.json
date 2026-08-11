@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 53,
-  "title": "Tomar — Taking, and a Word With No Past",
+  "title": "Escribir — Writing Is Scratching",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d609c35a69ce10f",
+  "sourceHash": "fnv1a64:143bab4e788d3eba",
   "lessons": [
     {
-      "id": "ES-C35-tomar",
-      "sequence": 1650,
-      "title": "tomar — \"to take\", and nobody knows where it came from",
-      "headword": "tomar",
-      "romanization": "tomar",
-      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
+      "id": "ES-C34-escribir",
+      "sequence": 1640,
+      "title": "escribir — \"to write\", which once meant \"to scratch\"",
+      "headword": "escribir",
+      "romanization": "escribir",
+      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e0b8bfa2659f7df",
+      "sourceHash": "fnv1a64:932001a8a5e564df",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
+              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
             }
           ]
         },
@@ -46,45 +46,82 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one soft tap of the tongue: to-MAR."
+              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
             },
             {
               "kind": "speech",
-              "text": "vowel-o — a short, pure o, with no English glide toward ow."
+              "text": "b-soft — between vowels the b is soft, lips barely touching."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: tomar",
+          "title": "The word, taken apart: escribir",
           "segments": [
             {
               "kind": "speech",
-              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
+              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
             },
             {
               "kind": "speech",
-              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
+              "text": "The English family is huge, and every member still works with a pen:"
             },
             {
               "kind": "speech",
-              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
+              "text": "scribe, scribble, script, scripture."
+            },
+            {
+              "kind": "speech",
+              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
+            },
+            {
+              "kind": "speech",
+              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
+            },
+            {
+              "kind": "speech",
+              "text": "conscription — being written into an army."
+            },
+            {
+              "kind": "speech",
+              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
+          "type": "grammar",
+          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
+              "text": "Escribir is a plain -ir verb, the family vivir opened:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "ending"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: escribo. ending: -o.",
+                "person: tú. form: escribes. ending: -es.",
+                "person: él/ella/usted. form: escribe. ending: -e.",
+                "person: nosotros. form: escribimos. ending: -imos.",
+                "person: ellos/ustedes. form: escriben. ending: -en."
+              ]
             },
             {
               "kind": "speech",
-              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
+              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
+            },
+            {
+              "kind": "speech",
+              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
             }
           ]
         },
@@ -102,38 +139,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
+              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
+              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo un café\" — I'll have a coffee",
+              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
+              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
+              "instruction": "\"Pienso escribir\" — I mean to write",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
+              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
+              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
+              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
             }
           ]
         },
@@ -150,7 +187,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
+              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
             }
           ]
         }

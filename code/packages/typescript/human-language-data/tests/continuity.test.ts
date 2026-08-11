@@ -422,7 +422,7 @@ describe("the real corpus", () => {
     // not number the family; ch19's ஆகிறது is described the same way), so it practises
     // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
     // rather than re-teaching it.
-    expect(report.summary.atomsTaught).toBe(2670); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG
+    expect(report.summary.atomsTaught).toBe(2673); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(1827); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
+    expect(report.summary.missedByWindow.R2).toBe(1826); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 212, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 217, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -781,7 +781,7 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 394, // +3: HL-C98's per-cell atoms
+      atomsTaught: 397, // +3: HL-C98's per-cell atoms
       atomsNeverRevisited: 47, // +2: HL-C98
     });
   });
@@ -790,7 +790,9 @@ describe("the real corpus", () => {
     // The old map contradicted both the prose and `reviews_of`. HL-C65 makes the
     // dependency-safe order explicit, including the terminal practice lesson.
     // Chapter 7 -> 15 after HL-C94 split the four over-budget opening chapters;
-    // 17 -> 21 after HL-C98 gave the first paradigm one cell per chapter.
+    // 17 -> 21 after HL-C98 gave the first paradigm one cell per chapter. HL-C99d
+    // then split chapter 21 itself: it is now the `comer` chapter alone, one -er
+    // cell per lesson, and vivir/beber/que/donde moved into chapters 22-23.
     // The lesson ids are stable slugs and deliberately do NOT renumber with it.
     const { lessons } = loadEverything();
     const chapter = lessons
@@ -799,11 +801,10 @@ describe("the real corpus", () => {
       .map((lesson) => lesson.realization.lessonId);
     expect(chapter).toEqual([
       "ES-C07-comer",
-      "ES-C07-vivir",
-      "ES-C07-beber",
-      "ES-C07-que",
-      "ES-C07-donde",
-      "ES-C07-practice",
+      "ES-C07-como",
+      "ES-C07-comes",
+      "ES-C07-come",
+      "ES-C07-repaso-comer",
     ]);
   });
 

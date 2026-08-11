@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C09-practice
 spine_node: SPINE-ASK-LOCATION
 sequence: 870
-chapter: 23
+chapter: 26
 type: practice-mix
 headword: (practice)
 gloss: identify someone, state origin, check wellbeing, and give a location

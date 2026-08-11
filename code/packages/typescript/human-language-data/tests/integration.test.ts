@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(69); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(72); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -185,12 +185,24 @@ describe("real curriculum", () => {
       "ES-C06-repaso-hablar-polite",
       "ES-C06-repaso-hablar-self",
       "ES-C07-beber-coffee",
-      "ES-C07-comer-singular-forms",
+      "ES-C07-come-form",
+      "ES-C07-come-usted",
+      "ES-C07-comer-family",
+      "ES-C07-comes-form",
+      "ES-C07-comes-s",
+      "ES-C07-como-form",
+      "ES-C07-como-same",
       "ES-C07-donde-live-in-madrid",
       "ES-C07-practice-ask-what",
       "ES-C07-practice-live-in-madrid",
       "ES-C07-practice-yo-forms",
       "ES-C07-que-ask-drinking",
+      "ES-C07-repaso-comer-diff",
+      "ES-C07-repaso-comer-i",
+      "ES-C07-repaso-comer-you",
+      "ES-C07-sintesis-preguntar-families",
+      "ES-C07-sintesis-preguntar-what",
+      "ES-C07-sintesis-preguntar-where",
       "ES-C07-vivir-singular-forms",
       "ES-C08-cuantos-anos-ask",
       "ES-C08-cuantos-anos-eight",

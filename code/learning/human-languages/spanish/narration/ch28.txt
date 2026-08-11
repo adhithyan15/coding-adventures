@@ -1,133 +1,211 @@
-Spanish, chapter 28: The Preterite --- Your First Past Tense.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 28: Verbs That Break in the Middle --- the Stem Changers.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-fui — one past set shared by ser and ir.
-
-Warm-up.
-[pause 2 seconds]
-You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue.
-
-Grammar Lens: three singular forms, two verbs.
-[a table of 3 rows, read aloud]
-person: yo. completed past of ser or ir: fui.
-person: tú. completed past of ser or ir: fuiste.
-person: él / ella / usted. completed past of ser or ir: fue.
-Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:
-Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir.
-Fue Roberto. — “It was Roberto.” Identification points to ser.
-Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson.
-
-The form, taken apart.
-The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “fui, fuiste, fue”]
-[pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Fue Roberto — identification, so ser.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 8 seconds]
-Say 'I went to Madrid' in Spanish.
-[question — say your answer, then pause 6 seconds]
-In 'Fue Roberto', which verb does fue express?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past.
-
-
-Lesson 2 of 3.
-hablé — a regular singular past from a known verb.
+Lesson 1 of 5.
+querer — wanting with one familiar vowel change.
 
 Warm-up.
 [pause 2 seconds]
-You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló.
+You already say tienes and tiene, where the middle e opens into ie. Today, reuse that visible change in one useful verb and keep the same three-person frame you already own.
 
-Grammar Lens: present beside completed past.
+Sounds you'll need.
+diphthong-ie — begin quiero with one smooth kye- syllable.
+r-tap — end the infinitive querer with one light tap.
+
+The word, taken apart.
+querer means “to want.” With a person as its object, it can also express love, but wanting is the meaning used in this lesson.
+It descends from Latin quaerere, “to seek or ask.” English keeps the same searching idea in query, quest, inquire, and require. Wanting something begins as seeking it.
+
+Grammar Lens: only the three singular forms.
 [a table of 3 rows, read aloud]
-person: yo. present: hablo. completed past: hablé.
-person: tú. present: hablas. completed past: hablaste.
-person: él / ella / usted. present: habla. completed past: habló.
-Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:
-hablo becomes hablé changes the final vowel and moves stress to the end.
-hablas becomes hablaste adds the past ending -aste.
-habla becomes habló changes the final vowel and moves stress to the end.
-
-Grammar Lens: two accents, one natural stress pattern.
-The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past.
-Now reuse known words:
-Hablé español. — “I spoke Spanish.”
-¿Hablaste español? — “Did you speak Spanish?”
-Habló español. — “He, she, or you-formal spoke Spanish.”
-
-The endings, taken apart.
-The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending.
+person: yo. present of querer: quiero.
+person: tú. present of querer: quieres.
+person: él / ella / usted. present of querer: quiere.
+Say the small set as quiero, quieres, quiere. The e becomes ie that you saw in tienes, tiene is visible again. The plural persons are deliberately left for a later step.
+Place one known infinitive after the form of querer:
+Quiero hablar. — “I want to speak.”
+Quieres comer. — “You want to eat.”
+Quiere vivir. — “He, she, or formal you wants to live.”
+The second verb stays in its known infinitive form.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hablé, hablaste, habló”]
+[your turn — say: “querer — quiero, quieres, quiere”]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablo español. Hablé español.”]
+[your turn — say: “Quiero hablar”]
 [pause 8 seconds for the answer]
-[your turn — say: “hablé and habló carry written accents; hablaste does not”]
+[your turn — say: “quaerere — query — querer”]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
-Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.
+Give the learned singular present forms of querer: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Say 'I spoke Spanish' in Spanish.
-[question — say your answer, then pause 6 seconds]
-Which form means 'I spoke' as a completed event: hablo or hablé?
+Say 'I want to speak' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words.
+What does querer mean? (“To want.”) Give the three learned forms. (Quiero, quieres, quiere.) Which Latin verb and English cousin help explain it? (Quaerere, “seek”; query or quest.) Next: add the other singular vowel change with poder.
 
 
-Lesson 3 of 3.
-Practice — two singular ways to talk about a completed past.
+Lesson 2 of 5.
+poder — ability with the o becomes ue change.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart.
+Quiero hablar says what you want to do. Now change the first verb to say what you are able to do. The second verb will remain a known infinitive.
 
-Grammar Lens: the complete Chapter 14 frame.
-shared past of ser and ir: fui, fuiste, fue.
-regular past of hablar: hablé, hablaste, habló.
-context: Fui a Madrid expresses ir; Fue Roberto expresses ser.
-time contrast: Hablo español is present; Hablé español is completed past.
-spelling: hablé and habló show final stress with a written accent; hablaste needs none.
-Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons.
+Sounds you'll need.
+diphthong-ue — puedo begins pwe- with one smooth glide.
+r-tap — end poder with one light tap.
 
-The two histories, taken apart.
-The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy.
+The word, taken apart.
+poder means “to be able”; in a sentence it often translates as “can.” It descends through Latin potere from posse, “to be able.” English power, potent, potential, and possible belong to the same family. Ability is the power to do something.
+
+Grammar Lens: the three singular forms.
+[a table of 3 rows, read aloud]
+person: yo. present of poder: puedo.
+person: tú. present of poder: puedes.
+person: él / ella / usted. present of poder: puede.
+Say puedo, puedes, puede. In these three learned forms, the stem o opens into ue. Plural persons wait.
+Follow the form of poder with one unchanged infinitive:
+Puedo hablar. — “I can speak.”
+Puedes comer. — “You can eat.”
+Puede vivir. — “He, she, or formal you can live.”
+Compare Quiero hablar with Puedo hablar: only the first verb changes the meaning from want to ability.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “fui, fuiste, fue”]
+[your turn — say: “poder — puedo, puedes, puede”]
 [pause 8 seconds for the answer]
-[your turn — say: “hablé, hablaste, habló”]
+[your turn — say: “Puedo hablar”]
 [pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid. Fue Roberto.”]
+[your turn — say: “poder — power — possible”]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablo español. Hablé español.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the three learned forms shared by ser and ir.
-[question — say your answer, then pause 9 seconds]
-Give the three learned completed-past forms of hablar.
-[question — say your answer, then pause 7 seconds]
-Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?
 [question — say your answer, then pause 10 seconds]
-Give 'I speak Spanish' and then 'I spoke Spanish.'
-[question — say your answer, then pause 7 seconds]
-Which two of hablé, hablaste, habló carry written accents?
+Give the learned singular present forms of poder: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'You can eat' to one friend in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.
+What does poder mean? (“To be able; can.”) Give the three learned forms. (Puedo, puedes, puede.) What English word is its close cousin? (Power.) Next: compare only the singular forms you have actually learned.
+
+
+Lesson 3 of 5.
+e becomes ie and o becomes ue — compare the singular forms.
+
+Warm-up.
+[pause 2 seconds]
+You now own three small singular sets: tengo, tienes, tiene; quiero, quieres, quiere; and puedo, puedes, puede. Compare only those learned forms before extending the pattern later.
+
+The word, taken apart — why vowels opened.
+On the road from Latin to Spanish, many short e and o vowels opened when stressed: e becomes ie and o becomes ue. That history helps explain why a verb's stem can look different across its forms.
+It is a clue, not a machine that predicts every form. Learn each verb's small set, then use the shared history to organize what you remember.
+
+Grammar Lens: two changes, one learned frame.
+[a table of 3 rows, read aloud]
+person: yo. tener / querer, e becomes ie family: tengo / quiero. poder, o becomes ue: puedo.
+person: tú. tener / querer, e becomes ie family: tienes / quieres. poder, o becomes ue: puedes.
+person: él / ella / usted. tener / querer, e becomes ie family: tiene / quiere. poder, o becomes ue: puede.
+The comparison says exactly this:
+querer shows ie in all three forms learned here.
+poder shows ue in all three forms learned here.
+tener reminds you that a common verb may combine more than one change: tengo has its known g, while tienes and tiene show ie.
+No plural form and no new verb is part of today's generalization.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “quiero, quieres, quiere”]
+[pause 8 seconds for the answer]
+[your turn — say: “puedo, puedes, puede”]
+[pause 8 seconds for the answer]
+[your turn — say: “stressed e and o often opened to ie and ue”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned yo forms of querer and poder, in that order.
+[question — say your answer, then pause 10 seconds]
+Give the learned tú forms of tener, querer, and poder, in that order.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which change appears in querer? (e becomes ie.) In poder? (o becomes ue.) Why is the history useful but not a complete prediction rule? (It organizes learned forms, but individual verbs can combine or resist changes.) Next: one possessive that agrees with a known noun's gender.
+
+
+Lesson 4 of 5.
+nuestro, nuestra — “our” with singular gender agreement.
+
+Warm-up.
+[pause 2 seconds]
+You put mi, tu, or su before the known noun café. Now add “our” and let it match one contrast you learned much earlier: masculine día beside feminine noche.
+
+The word, taken apart.
+nuestro and nuestra mean “our.” They descend from Latin noster, also “our.” Paternoster means “Our Father,” and English nostrum originally meant “our thing.”
+The change from noster to nuestro also displays the historical o becomes ue opening you just used to organize poder.
+
+Grammar Lens: match singular gender.
+[a table of 2 rows, read aloud]
+known noun: el día, masculine. “our” phrase: nuestro día.
+known noun: la noche, feminine. “our” phrase: nuestra noche.
+Like mi, tu, and su, the new word goes before the noun. Unlike those earlier forms, it shows the noun's gender: nuestro before a masculine singular noun, nuestra before a feminine singular noun.
+Only these two singular forms belong to this lesson. Plural agreement and the separate word for “your” to a group wait.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “nuestro día”]
+[pause 8 seconds for the answer]
+[your turn — say: “nuestra noche”]
+[pause 8 seconds for the answer]
+[your turn — say: “noster — nuestro — Paternoster”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 7 seconds]
+Say 'our day' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'our night' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which form goes before masculine día? (Nuestro.) Before feminine noche? (Nuestra.) What Latin source explains the pair? (Noster, “our.”) Next: retrieve the whole chapter without adding a form.
+
+
+Lesson 5 of 5.
+Practice — wanting, ability, and our known nouns.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds nothing. Retrieve two three-form verbs, compare their two vowel changes, and choose nuestro or nuestra before one known singular noun.
+
+Grammar Lens: the complete small chapter frame.
+wanting: quiero, quieres, quiere plus a known infinitive.
+ability: puedo, puedes, puede plus a known infinitive.
+the contrast: e becomes ie in the learned querer set; o becomes ue in the learned poder set.
+singular “our”: nuestro día, nuestra noche.
+Plural persons and plural possessive agreement remain deferred.
+
+The words, taken apart — retrieve the history.
+querer continues Latin quaerere, “seek,” the family of query.
+poder continues the Latin ability family behind power and possible.
+stressed Latin e and o often opened into Spanish ie and ue.
+nuestro, nuestra continue Latin noster, “our.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “quiero hablar; puedo hablar”]
+[pause 8 seconds for the answer]
+[your turn — say: “quieres comer; puedes comer”]
+[pause 8 seconds for the answer]
+[your turn — say: “nuestro día; nuestra noche”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of querer: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of poder: yo, tú, then usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I want to speak' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Say 'You can eat' to one friend in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'our night' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) Chapter 12 can now build from this closed singular frontier.

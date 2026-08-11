@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1110
-chapter: 30
+chapter: 33
 type: grammar
 headword: hablaba
 gloss: the singular -ar imperfect — hablaba, hablabas, hablaba
