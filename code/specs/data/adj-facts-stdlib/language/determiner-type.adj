@@ -1,0 +1,61 @@
+% ============================================================================
+% determiner-type — three named categories of determiner and what each
+% actually does (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A determiner's JOB depends on WHICH kind it is -- some determiners mark a
+% noun as specific or nonspecific, some place a noun in space or time, and
+% some split a group into its individual parts. Recall is a binding query:
+%
+%     ? determiner_type(article, $D)
+%       % precedes_a_noun_and_identifies_it_as_specific_or_nonspecific
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `determiner_type(type, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a determiner-related term that is not one
+% of these three. The query also runs BACKWARD — bind a description and
+% recall the type it names:
+%
+%     ? determiner_type($T, refers_to_a_group_or_individual_parts_within_a_group)
+%       % distributive_determiner
+%
+% The three determiner types, as a little truth table:
+%
+%     type                        description                                                        quote (verbatim)
+%     --------------------------  ------------------------------------------------------------------  --------------------------------------------------------------------------------
+%     article                     precedes_a_noun_and_identifies_it_as_specific_or_nonspecific          "An article is a determiner that precedes a noun or noun phrase and identifies it as either specific or nonspecific."
+%     demonstrative_determiner    communicates_the_placement_of_a_noun_in_space_or_time                 "Demonstrative determiners, also known as demonstrative adjectives, communicate the placement of a noun in space or time."
+%     distributive_determiner     refers_to_a_group_or_individual_parts_within_a_group                  "Distributive determiners refer to a group or individual parts within a group."
+%
+% Provenance: quoted verbatim from Grammarly's "What Are Determiners?"
+% article, which introduces each of these three categories in its own
+% complete sentence before moving on to worked examples. WebFetch-verified
+% before writing (twice — the second pass specifically re-confirmed all
+% three sentences were complete, with no truncation or additional clauses
+% following them). `trust consensus` — Grammarly is a reputable secondary
+% reference, the same tier the sibling `noun-type.adj`/`verb-type.adj`/
+% `pronoun-type.adj`/`preposition-type.adj`/`conjunction-type.adj` (the
+% other libraries in this directory) already use for their Grammarly
+% citations. A determiner category that is NOT one of these three —
+% "possessive_determiner", a real category the same page also names, but
+% one whose own defining sentence bundles TWO separate facts (that it is
+% the possessive form of a personal pronoun, AND that it can appear before
+% a noun) plus a full inline list of examples (my, your, his, her, its,
+% our, their, whose), rather than one clean single-fact sentence like the
+% three tabled here — is deliberately NOT a row, so a recall ABSTAINS on
+% it rather than inventing a description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table determiner_type {
+    columns type, description
+
+    row (article, precedes_a_noun_and_identifies_it_as_specific_or_nonspecific)
+    row (demonstrative_determiner, communicates_the_placement_of_a_noun_in_space_or_time)
+    row (distributive_determiner, refers_to_a_group_or_individual_parts_within_a_group)
+
+    source "An article is a determiner that precedes a noun or noun phrase and identifies it as either specific or nonspecific."
+    locator "https://www.grammarly.com/blog/grammar/determiners/"
+    trust consensus
+}

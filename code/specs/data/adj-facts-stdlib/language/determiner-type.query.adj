@@ -1,0 +1,15 @@
+% ============================================================================
+% determiner-type.query.adj — worked recall over the determiner-type
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% determiner type do?" (direct) or "which type matches this description?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "determiner-type.adj"
+
+? determiner_type(distributive_determiner, $D)                                              % expect refers_to_a_group_or_individual_parts_within_a_group (direct)
+? determiner_type($T, communicates_the_placement_of_a_noun_in_space_or_time)                % expect demonstrative_determiner (reverse)
+? determiner_type(possessive_determiner, $D)                                                 % expect abstain -- a real category the source covers, but its sentence bundles two facts plus an inline example list, not one of the three clean single-fact types tabled here
