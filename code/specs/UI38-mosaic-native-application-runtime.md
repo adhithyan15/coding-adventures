@@ -372,7 +372,12 @@ unblocks multiple downstream targets; never count source generation as completio
       Compose Desktop's native `dragAndDropSource`/`dragAndDropTarget`
       modifiers with an instance-scoped keyboard target registry, RTL-aware
       navigation, live-region state, accepted-only outcomes, and one shared
-      drop payload path. Compose TaskApp now has only its table-semantics gap.
+      drop payload path.
+    - [x] Remove Compose's final table-semantics degradation by annotating the
+      canonical dynamic UI31/Grid shape with native collection dimensions,
+      heading metadata, and row/column coordinates. The complete
+      package-expanded TaskApp now passes Compose's strict profile, Kotlin
+      compilation, and native desktop distribution packaging in CI.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

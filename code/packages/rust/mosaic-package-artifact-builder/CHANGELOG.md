@@ -69,6 +69,16 @@
 - Qt, SwiftUI, and XAML retain the stable `interaction.drag-drop-inert`
   degradation until their native implementations land.
 
+## [Unreleased] - Compose native table capability
+
+- Native-complete analysis recognizes the canonical UI31/Grid shape as a
+  semantic Compose collection now that the emitter publishes table dimensions,
+  heading metadata, and per-cell row/column coordinates.
+- Unsupported or structurally ambiguous Compose HostTable trees retain the
+  stable `accessibility.table-semantics-missing` degradation.
+- The complete package-expanded TaskApp is now a zero-degradation strict
+  Compose build and is packaged as a native desktop application in CI.
+
 ## [Unreleased] - Flutter native table capability
 
 - Native-complete analysis recognizes the canonical UI31/Grid shape as a

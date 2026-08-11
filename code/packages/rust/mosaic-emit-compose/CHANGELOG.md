@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Canonical dynamic `HostTable`/UI31 Grid layouts now expose Compose's native
+  collection semantics: total row/column counts on the table, heading metadata
+  on header cells, and stable row/column coordinates on every body cell.
+  Unsupported table shapes keep their visual fallback and remain explicit
+  native-complete degradations.
 - `HostDraggable` and `HostDropTarget` now lower to Compose Desktop's native
   drag source/target modifiers. Generated components add an instance-scoped
   target registry, kind filtering, disabled-state enforcement, pointer
