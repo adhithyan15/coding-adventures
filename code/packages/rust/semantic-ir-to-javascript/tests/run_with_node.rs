@@ -1534,7 +1534,7 @@ fn runtime_rejects_constructor_gadget() {
         manifest: FeatureManifest::from_features(&[
             Feature::ConsoleIO,
             Feature::Strings,
-                        Feature::DynamicTyping,
+            Feature::DynamicTyping,
         ]),
         imports: vec![],
         exports: vec![],
