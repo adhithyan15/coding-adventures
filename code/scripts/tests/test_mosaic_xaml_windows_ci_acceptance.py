@@ -152,7 +152,10 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("XamlRuntimeConformance.csproj", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
         self.assertIn("Remove-Item Env:MOSAIC_APP_LIBRARY", workflow)
-        self.assertIn("dotnet $harnessBinary", workflow)
+        self.assertIn("-Filter 'XamlRuntimeConformance.dll'", workflow)
+        self.assertIn("did not produce XamlRuntimeConformance.dll", workflow)
+        self.assertIn("dotnet $harnessBinary.FullName", workflow)
+        self.assertNotIn("bin/Release/net9.0/XamlRuntimeConformance.dll", workflow)
         self.assertIn("--expect-missing-prop-failure", workflow)
         self.assertIn("--expect-required-failure", workflow)
 

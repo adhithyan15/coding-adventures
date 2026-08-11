@@ -1300,21 +1300,28 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML conformance build failed with exit code $LASTEXITCODE"
           }
-          $harnessBinary = Join-Path $harness 'bin/Release/net9.0/XamlRuntimeConformance.dll'
-          Copy-Item $library.Path (Join-Path (Split-Path -Parent $harnessBinary) 'mosaic_app.dll')
+          $harnessBinary = Get-ChildItem `
+            -Path (Join-Path $harness 'bin') `
+            -Filter 'XamlRuntimeConformance.dll' `
+            -Recurse `
+            -File | Select-Object -First 1
+          if ($null -eq $harnessBinary) {
+            throw 'Mosaic XAML conformance build did not produce XamlRuntimeConformance.dll'
+          }
+          Copy-Item $library.Path (Join-Path $harnessBinary.DirectoryName 'mosaic_app.dll')
           Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
-          dotnet $harnessBinary
+          dotnet $harnessBinary.FullName
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
           }
 
-          dotnet $harnessBinary --expect-missing-prop-failure
+          dotnet $harnessBinary.FullName --expect-missing-prop-failure
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML required-prop failure check failed with exit code $LASTEXITCODE"
           }
 
           $env:MOSAIC_APP_LIBRARY = Join-Path $env:RUNNER_TEMP 'missing-mosaic-app.dll'
-          dotnet $harnessBinary --expect-required-failure
+          dotnet $harnessBinary.FullName --expect-required-failure
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML required-runtime failure check failed with exit code $LASTEXITCODE"
           }
