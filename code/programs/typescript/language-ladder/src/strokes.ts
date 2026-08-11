@@ -268,6 +268,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The next source page's Arabic ع clip begins at the upper-right tip, shapes the
 // open head, and flows directly down and around the lower bowl without lifting.
 // Its independent form stays distinct from the adjacent dotted Ghayn lesson.
+// The next page's Arabic ك clip descends the main upright and turns left along
+// the baseline without lifting, then restarts once for the inner arm. Its
+// Arabic identity stays distinct from the separately sourced Urdu ک glyph.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -1104,6 +1107,63 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ع"),
+  },
+  [ductusKey("arabic", "ك")]: {
+    script: "arabic",
+    glyph: "ك",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the main upright",
+            path: [
+              { x: 430, y: 630 },
+              { x: 435, y: 550 },
+              { x: 440, y: 450 },
+              { x: 450, y: 350 },
+              { x: 465, y: 250 },
+              { x: 475, y: 150 },
+              { x: 470, y: 80 },
+            ],
+          },
+          {
+            label: "turn left along the baseline without lifting",
+            path: [
+              { x: 470, y: 80 },
+              { x: 410, y: 52 },
+              { x: 320, y: 40 },
+              { x: 220, y: 38 },
+              { x: 120, y: 42 },
+              { x: 45, y: 58 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the inner arm from upper right down-left",
+            path: [
+              { x: 255, y: 385 },
+              { x: 235, y: 375 },
+              { x: 215, y: 360 },
+              { x: 195, y: 340 },
+              { x: 185, y: 320 },
+              { x: 185, y: 305 },
+              { x: 215, y: 295 },
+              { x: 245, y: 292 },
+              { x: 275, y: 285 },
+              { x: 282, y: 273 },
+              { x: 270, y: 258 },
+              { x: 250, y: 240 },
+              { x: 225, y: 222 },
+              { x: 180, y: 207 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ك"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

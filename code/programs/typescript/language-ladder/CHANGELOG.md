@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-kaf ductus (HL-C09AV)
+
+- Render **ك** in three evidence-aligned frames: descend the main upright, turn
+  left along the baseline without lifting, then restart once for the inner arm.
+- Keep the directly linked MOV's two pen-down runs, one lift, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Kaf independently of Urdu **ک**'s different Unicode glyph and
+  provenance, and queue the same page's directly linked independent **ل** source.
 
 ### Added — cited Arabic independent-ayn ductus (HL-C09AU)
 

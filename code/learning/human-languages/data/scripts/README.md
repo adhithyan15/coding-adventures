@@ -298,8 +298,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   `ayn.mov` verifies independent **ع** in one run at 00:03.1–00:04.0: shape the
   open head from the upper-right tip, then continue down and around the lower
   bowl without lifting. Its two-frame path preserves zero lifts independently
-  of adjacent Ghayn. The remaining **182**
-  prose part orders across seven scripts (`arabic` 8,
+  of adjacent Ghayn. The `Alphabet ي ك ل` page's directly linked `kaf.mov`
+  then verifies independent **ك** in two runs at 00:11.8–00:13.4: descend the
+  main upright and turn left along the baseline without lifting, then lift once
+  and draw the inner arm from upper right down-left. Its three-frame path keeps
+  Arabic Kaf distinct from Urdu **ک**'s different Unicode glyph and provenance.
+  The remaining **181**
+  prose part orders across seven scripts (`arabic` 7,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
