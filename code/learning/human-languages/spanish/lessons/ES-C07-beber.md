@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-beber
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 600
-chapter: 16
+chapter: 17
 type: word
 headword: beber
 gloss: to drink (another -er verb — cementing the pattern)

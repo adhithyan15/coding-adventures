@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C10-ir
 spine_node: SPINE-ASK-LOCATION
 sequence: 880
-chapter: 19
+chapter: 20
 type: word
 headword: ir
 gloss: to go — with the three singular present forms voy, vas, and va

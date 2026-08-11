@@ -189,8 +189,8 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(2719); // +2: vos-latin slug and ES-ETYMON-VOS-03
-    expect(l.summary.underspent).toBe(2624); // -1: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far
+    expect(l.summary.roots).toBe(2722); // +5: vos-latin slug and ES-ETYMON-VOS-03
+    expect(l.summary.underspent).toBe(2627); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far
     expect(l.summary.neverSpent).toBe(1802); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent
     expect(l.summary.underspentPercent).toBe(97);
 
@@ -201,7 +201,7 @@ describe("the committed corpus", () => {
       return acc;
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
-    expect(byNamespace).toEqual({ roots: 1967, "etymon-atom": 752 });
+    expect(byNamespace).toEqual({ roots: 1968, "etymon-atom": 754 });
   });
 
   it("pins Spanish, the pilot track", () => {
@@ -210,8 +210,8 @@ describe("the committed corpus", () => {
       minReuse,
     );
     expect(l.summary).toMatchObject({
-      roots: 305, // +2: vos-latin and ES-ETYMON-VOS-03
-      underspent: 290,
+      roots: 308, // +2: vos-latin and ES-ETYMON-VOS-03
+      underspent: 293,
       neverSpent: 185,
       underspentPercent: 95,
     });

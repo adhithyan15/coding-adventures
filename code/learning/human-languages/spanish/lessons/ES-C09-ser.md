@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C09-ser
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 830
-chapter: 18
+chapter: 19
 type: word
 headword: ser
 gloss: to be — the verb used here to identify someone or say what someone is

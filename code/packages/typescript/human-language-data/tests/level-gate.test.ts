@@ -71,11 +71,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // was the first version of this module committing the very error it exists to
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
-    expect(vocab.shortfall).toBe(253); // -1: ES-C03-vos is one more pre-A1 headword
+    expect(vocab.shortfall).toBe(251); // -2 more: the repair kit adds two pre-A1 headwords
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
-    expect(spanish.vocabulary).toBe(131); // +1: vos
+    expect(spanish.vocabulary).toBe(133); // +2 more: the repair kit
     expect(vocab.shortfall).toBeGreaterThan(LEVEL_VOCABULARY["pre-A1"] - spanish.vocabulary);
   });
 
@@ -143,8 +143,8 @@ describe("etymology is a hook, not a skill", () => {
     // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Chapter 10 revisits
     // another older atom and lowers the shortfall again. Its etymon atoms sit above
     // pre-A1, so this level-specific waiver count correctly stays unchanged.
-    expect(reinforcement.shortfall).toBe(39); // -8: payoffs plus si/no arriving at chapter 6
-    expect(reinforcement.detail).toContain("38 etymology hook(s) waived"); // +1: ES-ETYMON-VOS-03
+    expect(reinforcement.shortfall).toBe(40);
+    expect(reinforcement.detail).toContain("40 etymology hook(s) waived"); // +2: the repair kit's two etymons
   });
 
   it("leaves continuity's own numbers alone", () => {

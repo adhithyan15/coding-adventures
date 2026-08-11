@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-repaso-hablar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 525
-chapter: 14
+chapter: 15
 type: practice-mix
 headword: (practice)
 gloss: Your first verb — putting the chapter together
