@@ -99,6 +99,7 @@ pub fn from_pipeline(
     let part_styles = build_part_style_map(style);
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
+    let uses_icon = layout_contains_tag(&layout.root, "Icon");
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -142,6 +143,14 @@ pub fn from_pipeline(
     .unwrap();
     writeln!(out, "import androidx.compose.material.Button").unwrap();
     writeln!(out, "import androidx.compose.material.Checkbox").unwrap();
+    if uses_icon {
+        writeln!(
+            out,
+            "import androidx.compose.material.CircularProgressIndicator"
+        )
+        .unwrap();
+        writeln!(out, "import androidx.compose.material.LocalContentColor").unwrap();
+    }
     writeln!(out, "import androidx.compose.material.RadioButton").unwrap();
     writeln!(out, "import androidx.compose.material.Surface").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
@@ -178,7 +187,10 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
-    if uses_host_link || uses_host_dialog {
+    if uses_icon {
+        writeln!(out, "import androidx.compose.ui.unit.TextUnit").unwrap();
+    }
+    if uses_host_link || uses_host_dialog || uses_icon {
         writeln!(out, "import androidx.compose.material.MaterialTheme").unwrap();
     }
     if uses_host_link {
@@ -219,6 +231,10 @@ pub fn from_pipeline(
 
     if uses_host_link {
         out.push_str(&emit_host_link_helper());
+        writeln!(out).unwrap();
+    }
+    if uses_icon {
+        out.push_str(&emit_icon_helper());
         writeln!(out).unwrap();
     }
 
@@ -294,6 +310,52 @@ private fun _mosaicHostLink(
         modifier = modifier,
         style = textStyle,
     )
+}
+"#
+    .to_string()
+}
+
+/// Emit the shared native icon vocabulary used by generated Compose layouts.
+///
+/// The dependency-free glyph table follows the kernel contract's native-font
+/// model and works in every generated Compose project without an external icon
+/// artifact. Semantic `spinner` content becomes a real indeterminate progress
+/// control instead of a static character. Unknown names retain a visible
+/// diamond fallback while preserving the authored accessibility description.
+fn emit_icon_helper() -> String {
+    r#"private fun _mosaicIconGlyph(name: String): String = when (
+    name.trim().lowercase().replace("_", "-")
+) {
+    "add", "plus" -> "+"
+    "close", "dismiss", "x" -> "×"
+    "home" -> "⌂"
+    "refresh", "reload" -> "↻"
+    "settings", "gear" -> "⚙"
+    "star", "favorite" -> "★"
+    else -> "◇"
+}
+
+@Composable
+private fun _mosaicIcon(
+    glyph: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    tint: Color? = null,
+    fontSize: TextUnit = 24.sp,
+) {
+    if (glyph.trim().equals("spinner", ignoreCase = true)) {
+        CircularProgressIndicator(
+            modifier = modifier.semantics { contentDescription = description },
+            color = tint ?: MaterialTheme.colors.primary,
+        )
+    } else {
+        Text(
+            text = _mosaicIconGlyph(glyph),
+            modifier = modifier.semantics { contentDescription = description },
+            color = tint ?: LocalContentColor.current,
+            fontSize = fontSize,
+        )
+    }
 }
 "#
     .to_string()
@@ -1372,6 +1434,7 @@ fn emit_compose_tree(
             ))
         }
         "Text" => emit_text(node, depth, text_ctx),
+        "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
         // `Input` is the pre-UI29 spelling retained for capabilities such as
         // multiline editing that were not present on the first HostInput
@@ -2073,6 +2136,65 @@ fn find_keyword_prop(node: &LayoutNode, prop_name: &str) -> Option<String> {
         }
         None
     })
+}
+
+fn emit_icon_compose(
+    node: &LayoutNode,
+    depth: usize,
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|text| text.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+
+    let glyph = match text_prop_expr(node, "glyph")? {
+        Some(value) => value,
+        None => match text_prop_expr(node, "source")? {
+            Some(value) => value,
+            None => text_prop_expr(node, "name")?.unwrap_or_else(|| "\"star\"".to_string()),
+        },
+    };
+    let description = match text_prop_expr(node, "aria-label")? {
+        Some(value) => value,
+        None => match text_prop_expr(node, "content-description")? {
+            Some(value) => value,
+            None => match find_prop_value(node, "glyph")
+                .or_else(|| find_prop_value(node, "source"))
+                .or_else(|| find_prop_value(node, "name"))
+            {
+                Some(LayoutPropValue::String(value)) if value.eq_ignore_ascii_case("spinner") => {
+                    "\"Loading\"".to_string()
+                }
+                Some(LayoutPropValue::String(value)) => {
+                    format!("\"{}\"", escape_kotlin_string(value))
+                }
+                _ => glyph.clone(),
+            },
+        },
+    };
+
+    let mut modifier =
+        host_control_modifier_expr(node, style.as_ref()).unwrap_or_else(|| "Modifier".to_string());
+    if let Some(size) = style.as_ref().and_then(|style| style.font_size.as_deref()) {
+        write!(modifier, ".width(({size}).dp).height(({size}).dp)").unwrap();
+    }
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_mosaicIcon(").unwrap();
+    writeln!(out, "{inner}glyph = {glyph},").unwrap();
+    writeln!(out, "{inner}description = {description},").unwrap();
+    writeln!(out, "{inner}modifier = {modifier},").unwrap();
+    if let Some(tint) = style.as_ref().and_then(|style| style.text_color.as_deref()) {
+        writeln!(out, "{inner}tint = {tint},").unwrap();
+    }
+    if let Some(size) = style.as_ref().and_then(|style| style.font_size.as_deref()) {
+        writeln!(out, "{inner}fontSize = ({size}).sp,").unwrap();
+    }
+    writeln!(out, "{pad})").unwrap();
+    Ok(out)
 }
 
 fn emit_text(
@@ -3057,6 +3179,11 @@ fn text_prop_expr(node: &LayoutNode, name: &str) -> Result<Option<String>, Pipel
         Some(LayoutPropValue::String(s)) => Ok(Some(format!("\"{}\"", escape_kotlin_string(s)))),
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(camel))
+        }
+        Some(LayoutPropValue::Keyword(binding)) => {
+            let camel = to_camel_case_first_lower(binding);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
             Ok(Some(camel))
         }
@@ -4334,6 +4461,98 @@ mod tests {
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = suspendLabel)"));
+    }
+
+    #[test]
+    fn spinner_icon_uses_native_progress_with_style_and_accessible_default() {
+        let m = component("Spinner", vec![], vec![]);
+        let l = layout(
+            "Spinner",
+            styled_node(
+                "Icon",
+                "spinner-glyph",
+                vec![LayoutProp {
+                    name: "glyph".into(),
+                    value: LayoutPropValue::String("spinner".into()),
+                }],
+                vec![],
+            ),
+        );
+        let s = style_def(
+            "Spinner",
+            vec![part(
+                "spinner-glyph",
+                vec![sprop("color", "#0d6efd"), sprop("font-size", "24")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+
+        assert!(out.contains("import androidx.compose.material.CircularProgressIndicator"));
+        assert!(out.contains("if (glyph.trim().equals(\"spinner\", ignoreCase = true))"));
+        assert!(out.contains("modifier = modifier.semantics { contentDescription = description }"));
+        assert!(out.contains("glyph = \"spinner\","));
+        assert!(out.contains("description = \"Loading\","));
+        assert!(out.contains(
+            "modifier = Modifier.testTag(\"spinner-glyph\").width((24).dp).height((24).dp),"
+        ));
+        assert!(out.contains("tint = Color(0xFF0D6EFD),"));
+        assert!(out.contains("fontSize = (24).sp,"));
+    }
+
+    #[test]
+    fn icon_maps_common_literal_to_dependency_free_native_glyph() {
+        let m = component("SettingsIcon", vec![], vec![]);
+        let l = layout(
+            "SettingsIcon",
+            node(
+                "Icon",
+                vec![LayoutProp {
+                    name: "glyph".into(),
+                    value: LayoutPropValue::String("settings".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("SettingsIcon"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("import androidx.compose.material.LocalContentColor"));
+        assert!(out.contains("\"settings\", \"gear\" -> \"⚙\""));
+        assert!(out.contains("glyph = \"settings\","));
+        assert!(out.contains("description = \"settings\","));
+    }
+
+    #[test]
+    fn icon_accepts_runtime_glyph_and_accessibility_label_slots() {
+        let m = component(
+            "DynamicIcon",
+            vec![
+                slot("glyph", SlotType::Text, true),
+                slot("label", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = layout(
+            "DynamicIcon",
+            node(
+                "Icon",
+                vec![
+                    slot_prop("glyph", "glyph"),
+                    slot_prop("aria-label", "label"),
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("DynamicIcon"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("glyph = glyph,"));
+        assert!(out.contains("description = label,"));
+        assert!(out.contains("text = _mosaicIconGlyph(glyph)"));
+        assert!(out.contains("modifier = modifier.semantics { contentDescription = description }"));
     }
 
     #[test]

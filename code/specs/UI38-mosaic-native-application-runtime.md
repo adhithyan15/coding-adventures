@@ -403,8 +403,13 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Lower `HostDialog` to native modal `Dialog` and non-modal `Popup`
     overlays, including dismissal policy, lifecycle dispatch, semantic title,
     and nested toolkit content.
-  - [ ] Lower `Icon`; after Modal compiles, Compose next rejects Spinner's
-    primitive instead of completing the toolkit package.
+  - [x] Lower `Icon` through the native font-glyph stack, with semantic
+    `spinner` mapped to an accessible `CircularProgressIndicator`; all 23
+    toolkit components now emit for Compose.
+  - [ ] Make the Compose package project type-check every emitted component,
+    not only the first copied entry component. A manual whole-toolkit compile
+    now exposes Accordion passing `List<String>` to `Text(String)` as the next
+    concrete Kotlin typing blocker.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 
