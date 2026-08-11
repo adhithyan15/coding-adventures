@@ -2146,9 +2146,9 @@ impl Compiler {
 
     /// ALGOL 60's report leaves input/output in implementation-defined
     /// procedures; this LANG-FULL AL4 foothold recognises undeclared statement
-    /// calls named `print` or `output` and lowers literal string arguments to
-    /// the shared E4 stdout primitive. A user-declared procedure of the same
-    /// name still wins, matching the standard-function override policy.
+    /// calls named `print` or `output` and lowers string or integer arguments to
+    /// the shared stdout primitives. A user-declared procedure of the same name
+    /// still wins, matching the standard-function override policy.
     fn try_emit_standard_output_stmt(
         &mut self,
         name: &str,
@@ -2185,24 +2185,16 @@ impl Compiler {
 
             if let Some(var_name) = expr_variable_name(actual) {
                 let binding = self.require_var(&var_name)?;
-                if binding.ty != ScalarType::String {
-                    return Err(CompileError::Type(format!(
-                        "standard output procedure {name:?} cannot print {} variable {var_name:?}",
-                        binding.ty.name()
-                    )));
-                }
-                if !binding.is_global && !self.initialized_string_slots.contains(&binding.slot) {
+                if binding.ty == ScalarType::String
+                    && !binding.is_global
+                    && !self.initialized_string_slots.contains(&binding.slot)
+                {
                     return Err(CompileError::Unsupported(format!(
                         "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
                 }
                 let value = self.read_scalar(binding);
-                self.emit(IIRInstr::new(
-                    "print_str",
-                    None,
-                    vec![Operand::Var(value.slot)],
-                    "void",
-                ));
+                self.emit_standard_output_value(name, value)?;
                 continue;
             }
 
@@ -2212,23 +2204,44 @@ impl Compiler {
             // sound on every backend because the E4-dyn foothold proved
             // `print_str` of a runtime string on all seven columns, so — unlike
             // the literal/variable fast paths above — no literal-backing is
-            // required. A non-string result is a type error.
+            // required. Integer expressions use the shared numeric stdout
+            // builtin; other result types remain explicit type errors.
             let value = self.emit_expr(actual)?;
-            if value.ty != ScalarType::String {
-                return Err(CompileError::Type(format!(
-                    "standard output procedure {name:?} cannot print a {} value",
-                    value.ty.name()
-                )));
-            }
-            self.emit(IIRInstr::new(
+            self.emit_standard_output_value(name, value)?;
+        }
+
+        Ok(true)
+    }
+
+    fn emit_standard_output_value(
+        &mut self,
+        name: &str,
+        value: ExprValue,
+    ) -> Result<(), CompileError> {
+        match value.ty {
+            ScalarType::String => self.emit(IIRInstr::new(
                 "print_str",
                 None,
                 vec![Operand::Var(value.slot)],
                 "void",
-            ));
+            )),
+            ScalarType::Integer => self.emit(IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("print_i64".to_string()),
+                    Operand::Var(value.slot),
+                ],
+                "void",
+            )),
+            ScalarType::Real | ScalarType::Boolean => {
+                return Err(CompileError::Type(format!(
+                    "standard output procedure {name:?} cannot print a {} value",
+                    value.ty.name()
+                )))
+            }
         }
-
-        Ok(true)
+        Ok(())
     }
 
     /// Materialize ALGOL call-by-value semantics for an array actual.
@@ -6668,16 +6681,26 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_numeric_argument_rejects_as_wrong_type() {
-        // `print` is a string-output procedure; a numeric argument is a type
-        // error. Since E4d-AL added a general string-expression path, `print(42)`
-        // now evaluates the argument and rejects it by *type* (a clearer message)
-        // rather than by the old literal-only shape check.
-        let err = compile_source("begin print(42) end", "test")
-            .expect_err("numeric print is a type error for the string-output procedure");
+    fn al4_print_integer_expression_lowers_to_shared_stdout_builtin() {
+        let module = compile_source("begin integer n; n := 40; print(n + 2) end", "test")
+            .expect("integer output compiles");
+        let main = module.get_function("main").expect("has main");
         assert!(
-            format!("{err:?}").contains("cannot print a integer value"),
-            "expected an integer-type rejection, got: {err:?}"
+            main.instructions.iter().any(|instr| {
+                instr.op == "call_builtin"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "print_i64")
+            }),
+            "integer output should reuse the cross-backend print_i64 builtin"
+        );
+    }
+
+    #[test]
+    fn al4_print_real_argument_rejects_as_wrong_type() {
+        let err = compile_source("begin print(4.2) end", "test")
+            .expect_err("real output is not implemented by the integer foothold");
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "expected a real-type rejection, got: {err:?}"
         );
     }
 
