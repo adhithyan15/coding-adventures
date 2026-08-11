@@ -135,6 +135,14 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("installed_harness", workflow)
         self.assertIn("--expect-missing-prop-failure", workflow)
         self.assertIn("--expect-required-failure", workflow)
+        self.assertIn("mosaic-qt-taskapp", workflow)
+        self.assertIn(
+            "pkg code/programs/mosaic/task-app --backend qt", workflow
+        )
+        self.assertIn('"accessibility.table-semantics-missing"', workflow)
+        self.assertIn('"runtime.sample-fallback"', workflow)
+        self.assertIn('cmake --build "$taskapp_output/qt/build"', workflow)
+        self.assertIn('QT_QPA_PLATFORM=offscreen timeout 5s "$taskapp_output/qt/build/TaskApp"', workflow)
         self.assertIn("mosaic-qt-toolkit", workflow)
         self.assertIn(
             "pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt",

@@ -1039,6 +1039,18 @@ jobs:
             env -u MOSAIC_APP_LIBRARY "$installed_harness" --expect-missing-prop-failure
           )
 
+          taskapp_output="$RUNNER_TEMP/mosaic-qt-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project
+          jq -e '.nativeComplete == false and ([.degradations[].code] | sort) == ["accessibility.table-semantics-missing", "runtime.sample-fallback"]' "$taskapp_output/qt/mosaic-degradations.json"
+          cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$taskapp_output/qt/build" --config Release --parallel
+          taskapp_log="$RUNNER_TEMP/mosaic-qt-taskapp-launch.log"
+          set +e
+          QT_QPA_PLATFORM=offscreen timeout 5s "$taskapp_output/qt/build/TaskApp" >"$taskapp_log" 2>&1
+          taskapp_status=$?
+          set -e
+          test "$taskapp_status" -eq 124
+
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
           cmake -S "$toolkit_output/qt" -B "$toolkit_output/qt/build" -DCMAKE_BUILD_TYPE=Release
