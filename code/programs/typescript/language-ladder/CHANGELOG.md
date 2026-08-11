@@ -10,6 +10,11 @@
   the printed form's two runs explicit.
 - Queue the adjacent Tav demonstration as the final Hebrew inventory entry.
 
+### Changed — Spanish runs 1..135 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five double-object chapters
+  inserted at 76; chapters after them shift by five.
+
 ### Added — cited Hebrew Resh ductus (HL-C09BW)
 
 - Render **ר** in two evidence-aligned frames: draw the top bar left-to-right,

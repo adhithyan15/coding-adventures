@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 124,
-  "title": "Conseguir --- Getting Is Following Until You Have It",
+  "title": "Synthesis --- What You Like, and Who Does the Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e934cf3105de0126",
+  "sourceHash": "fnv1a64:3a34a179f73fe4b8",
   "lessons": [
     {
-      "id": "ES-C39-conseguir",
-      "sequence": 1930,
-      "title": "conseguir — \"to get\", by following a thing until you have it",
-      "headword": "conseguir",
-      "romanization": "conseguir",
-      "gloss": "to get, to obtain — getting as following a thing until you have it",
+      "id": "ES-C35-sintesis-gustar",
+      "sequence": 1814,
+      "title": "Synthesis — what you like, and who is doing the liking",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fcfc8907badcd17",
+      "sourceHash": "fnv1a64:aa05b36287d58624",
       "notice": null,
       "blocks": [
         {
@@ -35,72 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "Traigo carries a thing that is already yours. Coger grabs what is in front of you. This verb is for the getting that took some work."
+              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence that will not let you be the subject",
           "segments": [
             {
               "kind": "speech",
-              "text": "g-hard — the gu in conseguir is one hard g; the u is silent."
+              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
             },
             {
               "kind": "speech",
-              "text": "s-clear — a clean hissing s: con-se-GEER."
+              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: conseguir",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "conseguir (\"to get, to obtain, to manage to\") from Latin cōnsequī: com- (\"along with\") + sequī, \"to follow\". You got a thing by following it until it was yours."
+              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
             },
             {
               "kind": "speech",
-              "text": "Sequī is one of Latin's great English suppliers: sequence, sequel, consequence, subsequent, consecutive; second, from secundus, \"the one following\"; execute and prosecute; obsequious, following someone about; and through French, pursue, ensue and suit."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish also keeps the formal partner obtener from obtinēre, \"to hold onto\" — English obtain. It behaves exactly like tener, so its yo-form is obtengo. Conseguir is the everyday one."
+              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the third crack, and a silent u that leaves",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: consigo.",
-                "person: tú. form: consigues.",
-                "person: él/ella/usted. form: consigue.",
-                "person: nosotros. form: conseguimos.",
-                "person: ellos/ustedes. form: consiguen."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "You have met dormir breaking o becomes ue and pido quietly breaking e becomes i. Here is that third pattern in full: stress on the stem turns e into i, and conseguimos stays plain because the stress moved to the ending."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the spelling. Spanish writes gu only to keep a g hard in front of e and i. Once the e becomes i, there is nothing in front to guard against, so the u has no job and goes: consigo, not consiguo. Two changes, one form, and only one of them is a sound."
+              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
             }
           ]
         },
@@ -118,29 +102,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"consigo, consigues, consigue, conseguimos, consiguen\"",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"consigo, consigues, consigue, conseguimos, consiguen\"]"
+              "source": "[YOU SAY: the exchange above, both parts]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Traigo el café\" then \"Consigo el café\" — carried, then obtained",
+              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Traigo el café\" then \"Consigo el café\" — carried, then obtained]"
+              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sequī, sequence, second\" then \"conseguir\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until me gusta arrives without translating I like first."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-subject",
+              "prompt": "In me gusta el cafe, what is the subject?",
+              "assesses": [
+                "ES-GRAMMAR-GUSTAR-INVERSION-09"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "el cafe",
+                "the coffee",
+                "cafe",
+                "el café"
+              ],
+              "feedback": {
+                "correct": "Yes — the coffee does the pleasing.",
+                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-taste",
+              "prompt": "What did gustar originally mean?",
+              "assesses": [
+                "ES-ETYMON-GUSTAR-08"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sequī, sequence, second\" then \"conseguir\"]"
+              "acceptedResponses": [
+                "to taste",
+                "taste",
+                "tasting"
+              ],
+              "feedback": {
+                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
+                "incorrect": "To taste — from Latin gustare."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-joke",
+              "prompt": "Which phrase you learned long ago is built from this same word?",
+              "assesses": [
+                "ES-LEX-GUSTO",
+                "ES-LEX-GUSTAR-07"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "mucho gusto",
+                "gusto",
+                "much pleasure"
+              ],
+              "feedback": {
+                "correct": "Yes — mucho gusto has always meant much pleasure.",
+                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
+              }
             }
           ]
         },
@@ -157,7 +200,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did sequī mean, and name two English words from it. (To follow; sequence, second, consequence, pursue.) Why is it consigo and not consiguo? (The u only guards a hard g before e and i.) Name the three stem cracks you now have, with a verb for each. (Cerrar e becomes ie, dormir o becomes ue, conseguir e becomes i.) And which Latin verb is behind traer? (Trahere.)"
+              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-quiero-que
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1290
-chapter: 88
+sequence: 1310
+chapter: 93
 type: grammar
 headword: Hablas español · Quiero que hables español
 gloss: an asserted event beside a wanted, not-yet-real event

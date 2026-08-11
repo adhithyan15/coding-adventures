@@ -610,7 +610,7 @@ describe("the whole corpus", () => {
     // the Latin core-verb chapter (chapter 37, eight verb lessons) added one more.
     // 497 -> 513: vocabulary wave 4 (marathi/punjabi/sanskrit/urdu), 16 new chapters.
     // +1: Tamil chapter 39.
-    expect(chapters).toHaveLength(603);
+    expect(chapters).toHaveLength(608);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

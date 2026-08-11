@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(130); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(135); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -586,6 +586,22 @@ describe("real curriculum", () => {
       "ES-C46-sintesis-dar-y-decir-person",
       "ES-C46-sintesis-dar-y-decir-plural",
       "ES-C46-sintesis-dar-y-decir-what",
+      "ES-C47-me-lo-meal",
+      "ES-C47-me-lo-order",
+      "ES-C47-me-lo-say",
+      "ES-C47-por-que-se-old",
+      "ES-C47-por-que-se-two",
+      "ES-C47-por-que-se-why",
+      "ES-C47-repaso-dobles-new",
+      "ES-C47-repaso-dobles-two",
+      "ES-C47-repaso-dobles-us",
+      "ES-C47-se-lo-ambiguous",
+      "ES-C47-se-lo-say",
+      "ES-C47-se-lo-when",
+      "ES-C47-sintesis-dos-a-la-vez-cost",
+      "ES-C47-sintesis-dos-a-la-vez-count",
+      "ES-C47-sintesis-dos-a-la-vez-her",
+      "ES-C47-sintesis-dos-a-la-vez-you",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

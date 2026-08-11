@@ -913,6 +913,66 @@
       "after": []
     },
     {
+      "id": "ES-PATH-003-DOUBLE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C47-me-lo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-DOUBLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-SE-LO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C47-se-lo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-SE-LO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-GELO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C47-por-que-se"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-GELO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-REVIEW-DBL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C47-repaso-dobles"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-REVIEW-DBL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-SYNTH-DBL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C47-sintesis-dos-a-la-vez"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-SYNTH-DBL"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-038-SER-IR-PRETERITE-CH14",
       "spine_node": "SPINE-TALK-ABOUT-PAST",
       "lessons": [
@@ -1469,6 +1529,11 @@
         "ES-PATH-003-WHICH",
         "ES-PATH-003-REVIEW-IO",
         "ES-PATH-003-SYNTH-IO",
+        "ES-PATH-003-DOUBLE",
+        "ES-PATH-003-SE-LO",
+        "ES-PATH-003-GELO",
+        "ES-PATH-003-REVIEW-DBL",
+        "ES-PATH-003-SYNTH-DBL",
         "ES-PATH-020",
         "ES-PATH-027"
       ],
@@ -3141,6 +3206,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C46-sintesis-dar-y-decir"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-DOUBLE",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C47-me-lo"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-SE-LO",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C47-se-lo"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-GELO",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C47-por-que-se"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-REVIEW-DBL",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C47-repaso-dobles"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-SYNTH-DBL",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C47-sintesis-dos-a-la-vez"
       ]
     }
   ]

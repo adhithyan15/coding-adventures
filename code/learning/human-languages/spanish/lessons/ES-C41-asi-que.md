@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C41-asi-que
 spine_node: SPINE-GIVE-REASONS
-sequence: 2000
-chapter: 130
+sequence: 2020
+chapter: 135
 type: phrase
 headword: así que
 gloss: thus, in that way — and with que after it, "so"; built on the same sīc that gave you sí

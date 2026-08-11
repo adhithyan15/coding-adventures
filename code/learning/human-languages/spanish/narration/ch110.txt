@@ -1,47 +1,61 @@
-Spanish, chapter 110: Leer — Reading Is Gathering.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 110: Dog and Cat.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-leer — "to read", and before that, "to gather".
+Lesson 1 of 2.
+gato — the word that travelled with the animal.
 
 Warm-up.
 [pause 2 seconds]
-Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two.
+Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented.
 
-Sounds you'll need.
-hiatus-ee — leer is two syllables, le-ER, never one long English ee.
-leo is likewise two beats, LE-o.
-
-The word, taken apart: leer.
-leer ("to read") from Latin legere, "to gather, to pick out, to choose" — and only afterwards "to read". A reader picks letters out of a row the way a farmhand picks olives off a branch.
-That gathering root runs through an enormous amount of English:
-legible, legend ("things to be read"), lecture, lectern, and worn right down, lesson.
-built with prefixes: collect (col- "together"), select (se- "apart"), elect (e- "out"), intellect (inter- "between" — choosing between things).
-diligent and elegant, both of which meant "picking carefully".
-One honest limit: Greek légein ("to speak, to gather") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys.
-
-Grammar Lens: a plain -er verb, with a mouthful.
-Nothing irregular happens. Drop -er, add the ordinary endings:
-[a table of 5 rows, read aloud]
-person: yo. form: leo. said: LE-o.
-person: tú. form: lees. said: LE-es.
-person: él/ella/usted. form: lee. said: LE-e.
-person: nosotros. form: leemos. said: le-E-mos.
-person: ellos/ustedes. form: leen. said: LE-en.
-Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right.
+The word, taken apart: gato.
+gato ("cat") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline.
+Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, "cat").
+So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "leer" — le-ER, two beats]
+[your turn — say: "el gato" — the cat]
 [pause 8 seconds for the answer]
-[your turn — say: "Leo un libro" — I read a book]
+[your turn — say: the trail — "kadis, cattus, gato"]
 [pause 8 seconds for the answer]
-[your turn — say: "No entiendo" then "Leo, pero no entiendo" — I read, but I don't understand]
-[pause 8 seconds for the answer]
-[your turn — say: "leer" then English "legible, collect, select, elect"]
+[your turn — say: the word it replaced — "fēlēs," now only in "feline"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did legere mean before it meant "to read"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy.
+What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all.
+
+
+Lesson 2 of 2.
+perro — the word nobody can explain.
+
+Warm-up.
+[pause 2 seconds]
+Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from.
+
+The word, taken apart: perro.
+perro ("dog"). Roll the rr: PEH-rro.
+The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin.
+
+Why it's said this way: an honestly open question.
+Three serious proposals, none confirmed:
+[a table of 3 rows, read aloud]
+proposal: onomatopoeia — a growl, or a shepherd's call "perr, perr". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.
+proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.
+proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose.
+Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that "we don't know" is a real answer in etymology, not a gap in your notes.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "el perro, el gato" — dog and cat]
+[pause 8 seconds for the answer]
+[your turn — say: "can" — the archaic word perro replaced, from Latin canis]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — "gato, traced to Egypt; perro, unsolved"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)

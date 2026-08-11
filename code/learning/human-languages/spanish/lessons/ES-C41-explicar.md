@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C41-explicar
 spine_node: SPINE-GIVE-REASONS
-sequence: 2020
-chapter: 130
+sequence: 2040
+chapter: 135
 type: word
 headword: explicar
 gloss: to explain — literally to unfold, and the verb that names what this whole chapter has been building

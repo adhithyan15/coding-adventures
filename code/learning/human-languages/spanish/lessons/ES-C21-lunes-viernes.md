@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C21-lunes-viernes
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1430
-chapter: 94
+sequence: 1450
+chapter: 99
 type: word
 headword: lunes, martes, miércoles, jueves, viernes
 gloss: the weekdays (Monday–Friday) — worn-down planet-god names
