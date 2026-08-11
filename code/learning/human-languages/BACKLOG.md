@@ -300,7 +300,7 @@ Spanish's 188 lessons contain **one** distinct culture atom, **zero** mentions o
 | HL-C83 | Complete (#10503) | Build the Root Ledger over the existing etymology references (HL10 §6.2). | `root-ledger.ts` counts **payoffs, not mentions** — an introduction scores zero — across both namespaces (1,966 `roots:` slugs + 751 `*-ETYMON-*` atoms). First measurement: **2,717 roots, 2,624 spent fewer than three times (97%), 1,807 never spent at all.** Spanish: 303 / 290 / 190. This is the burn-down list HL-C88's friends layer needs, since a root with recorded payoffs already knows which later words it predicts. |
 | HL-C84 | Complete (#10507) | Enforce the info-dump gate (HL10 §7.3), report-only. | `info-dump.ts` measures rule statements and paradigm tables. **The prose is fine — 17 rule statements across 1,694 lessons.** The dumps are in tables: **70 lessons carry a paradigm-shaped table, 18 of them a full grid** (`FR-C05-parler`, `GE-C05-wohnen`, `ES-C17-practice` each present a complete six-person conjugation at once). Flags shape, not size — 470 tables have ≥3 rows and most are fine. Burn-down is HL-C92. |
 | HL-C85 | Queued | Absorb the existing 188 Spanish lessons into the rebuilt spine (HL10 §13). | Zero forward references and zero dead-end atoms in Spanish; the learner can say *no* and *I am*; nothing is deleted. |
-| HL-C86 | Queued — **Chapter 1 drafted as a sample in HL10 Appendix A** | Author pre-A1 to its full 30 chapters / ~180 lessons. | HL09 §3.1 satisfied at pre-A1; ≥95% of lessons `voice`; every chapter drivable from its first lesson, with an intro, an etymological thread, and a culture note. |
+| HL-C86 | Queued — **Chapter 1 drafted as a sample in HL10 Appendix A; opens on `hola` per the usefulness rule** | Author pre-A1 to its full 30 chapters / ~180 lessons. | HL09 §3.1 satisfied at pre-A1; ≥95% of lessons `voice`; every chapter drivable from its first lesson, with an intro, an etymological thread, and a culture note. |
 | HL-C87 | Queued | Per-atom mastery and voice mode in Language Ladder (HL10 §10.1–10.2). | The app schedules from atom strength rather than lesson completion; a full chapter is completable hands-free. |
 | HL-C90 | Complete (#PENDING) | Neutralize control characters in every corpus-derived string the gap report writes to stdout. | A node id or finding message containing an ESC sequence currently rewrites its own line in a terminal, so a crafted id can hide the very defect line a reviewer is reading to judge whether the data is sound. Package-wide, not local: `report.ts` interpolates `finding.message` exactly as `strands.ts` interpolates `nodeId`. Strip `/[\x00-\x08\x0b-\x1f\x7f]/g` in the shared render helpers, with a fixture proving a crafted id cannot erase a line. |
 | HL-C88 | Queued | Build the **friends** layer (HL10 §6.7): English cognates, the eight systematic suffix correspondences, hidden friends via the sound laws, and generated cousin panels from `concept_tag`. | Every lesson may carry at most one friend; friends never count toward the ≤3 atom budget; the cousin panel is generated from the 1,131 `concept_tag` lessons rather than hand-typed (closes the authoring half of HL-C48); every asserted friend has a defensible etymology or is taught as a false friend. |
@@ -320,6 +320,15 @@ Spanish's 188 lessons contain **one** distinct culture atom, **zero** mentions o
    deferred generation targets, listed in HL10 §11.1 so they are visibly
    postponed rather than forgotten. No lesson may assume which edition it appears
    in. This puts a ~50× scale requirement on the book pipeline (214 pages today).
+
+**A fourth directive, 2026-08-10, and it governs more than one lesson:** *the
+book has to be useful from page 1; when deciding between etymology and
+usefulness, always choose usefulness.* Etymology never decides WHICH word is
+taught or when — it decides how the word already chosen is explained, and
+`rootLedgerMinReuse` culls roots, never headwords. This **reverses** the earlier
+decision to open the course on `gracias`: it opens on `hola`, per HL10 §6.3. The
+reversal was already required by HL10 §9's own selection order (function first,
+frequency second, cognate leverage third), which the `gracias` choice broke.
 
 A third directive, same day, added the **friends** system and the
 **dummy-friendly** requirement: introduce relatives from other languages so the

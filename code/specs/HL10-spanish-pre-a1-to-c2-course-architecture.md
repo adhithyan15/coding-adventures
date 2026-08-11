@@ -471,25 +471,73 @@ The ledger is also a **generator**: given the ledger and the lesson positions, t
 tooling can emit the list of roots whose payoff windows are open, which is what
 lets a 5,000-lesson course stay coherent without a human holding it in their head.
 
-### 6.3 The first word of the course
+### 6.3 Usefulness outranks etymology
 
-HL09 §4.2 names a real defect: `ES-C01-hola` spends its whole "taken apart"
-section explaining that *hola*'s origin is unsettled and that the resemblance to
-English *hello* is a false friend. True, honest — and a poor opening, because the
-course's signature move is not demonstrated until lesson 2.
+**Owner directive, 2026-08-10, and it governs more than the first word:**
 
-**Decision: the course opens on `gracias`.**
+> The book has to be useful from page 1. When deciding between etymology and
+> usefulness, always choose usefulness.
 
-- *gracias* ← Latin *grātia* ("favour, kindness, pleasingness"), which yields
-  English *grace*, *gracious*, *gratitude*, *gratis*, *gratuity*, *congratulate*,
-  *ingratiate*, and Spanish *gracioso*, *agradecer*, *agrado*, *desgraciado*.
-- Eight payoffs in the ledger before the learner has said a second word.
-- Pedagogically sound: you can thank someone before you can greet them, and
-  *gracias* is the single highest-utility word in the language for a beginner.
-- *hola* arrives at lesson 3, with its dead-end etymology stated briefly — which
-  now reads as an honest exception rather than as the course's opening move.
+The etymology is this curriculum's signature. It is not its purpose. A reader
+opens page 1 to be able to *say* something, not to admire a root.
 
-This is a small change that fixes the first impression of a 10,000-page book.
+So the rule is a division of labour, not a ranking of interest:
+
+- **Etymology never decides which word is taught, or when.** It decides how the
+  word already chosen gets explained. §9's selection order is the authority on
+  *which* — function first, frequency second, cognate leverage only third.
+- **`rootLedgerMinReuse` culls roots, never headwords.** A root that pays off
+  fewer than three times is cut or moved. The *word* stays if the word is useful.
+- **A word with no honest etymology is still taught if it is the useful one.**
+  Say the origin is unsettled, briefly, and move on.
+
+#### The first word, and a decision reversed
+
+An earlier draft of this spec opened the course on `gracias`, on the strength of
+HL09 §4.2 — "a word whose etymology is a dead end should not be the first word
+taught" — because *grātia* yields *grace*, *gratitude*, *gratis* and
+*congratulate*, demonstrating the method in lesson one.
+
+**That was wrong, and it is reversed here. The course opens on `hola`.**
+
+Three reasons, in order of weight:
+
+1. **A greeting is what actually happens first.** Teaching thanks before hello
+   inverts the shape of a human encounter. That every course on earth opens with
+   *hello* is not blind convention.
+2. **`hola` is the gentler first step.** Its difficulty is a silent letter.
+   `gracias` opens on the *seseo*/*distinción* split — GRA-thias against
+   GRA-sias — so it would confront the learner with a regional fork in lesson 1.
+3. **The dead end is load-bearing.** `ES-C01-hola` does not merely admit that the
+   origin is unsettled. It refuses the *hello* resemblance as a false friend and
+   says why: *"a fake one is worse than none — it teaches a connection your brain
+   then has to unlearn."* For a course whose whole method is family resemblance,
+   opening by refusing a fake one establishes that the method has integrity,
+   before the learner meets seven hundred real ones.
+
+The lesson also carries the silent `h` — a rule true of *every* Spanish `h` the
+learner will ever meet — two pure vowels, the register note on when *not* to say
+*hola*, and inverted punctuation. HL09 characterised it by one section; read
+whole, it is a strong opening.
+
+`gracias` becomes lesson 2. *grātia* arrives one lesson later, which costs
+nothing.
+
+#### The general lesson, which is not about Spanish
+
+The reversed decision was already forbidden by this spec's own §9: **function
+first, frequency second, cognate leverage third.** `hola` wins on function, and
+both words are top-frequency; promoting cognate leverage above both broke the
+ordering. The rule existed and was not applied.
+
+Two failures worth naming, because they will recur across 4,950 lessons:
+
+- **Inheriting a prior judgement instead of reading the artifact.** HL09's verdict
+  on `ES-C01-hola` was taken at face value; the file was not opened. A summary of
+  a lesson is not the lesson.
+- **Optimising the opening to demonstrate the method.** That is author-centric —
+  it serves the book's argument about itself rather than the reader's first five
+  minutes.
 
 ### 6.4 The four layers of Spanish, and when each opens
 
@@ -1272,15 +1320,16 @@ decision, not a mechanical one.
 
 | rule | where to look |
 |---|---|
-| The course opens on `gracias`, not `hola` (§6.3) | Lesson 1 |
+| Usefulness outranks etymology, so a greeting opens (§6.3) | Lesson 1 |
 | One friend per lesson, English-anchored (§6.7) | every lesson's *taken apart* |
+| An honest dead end, stated briefly and put to work (§6.3) | Lesson 1 |
 | ≤3 new atoms (§2.2) | `introduces.knowledge` |
 | **Zero** grammar cells at pre-A1 (§5.4 rung 1) | no lesson declares `teaches_cells` |
 | No metalanguage before §7.5 introduces it | no lesson says *verb*, *noun*, *phrase* |
 | Warm-up closes R1 by construction (§8.1) | every lesson after the first |
 | Voice-first, chapter drivable from lesson 1 (§8.3) | no table, no sight cue, anywhere |
 | Variety declared, never `general` (§4.3) | frontmatter `variety:` |
-| Culture is a strand, not decoration (§7.1) | Lessons 3 and 5 |
+| Culture is a strand, not decoration (§7.1) | Lessons 1 and 5 |
 | The payoff uses only what was taught (§9) | Lesson 6 |
 
 ### The chapter's shape
@@ -1291,73 +1340,133 @@ not to recite five words.
 
 ---
 
-#### Lesson 1 — `ES-C01-gracias`
+#### Lesson 1 — `ES-C01-hola`
 
 ```yaml
 schema_version: 2
-id: ES-C01-gracias
-spine_node: SPINE-COURTESY-THANK
+id: ES-C01-hola
+spine_node: SPINE-MEET-GREET
 strand: FUNCTION
 sequence: 10
 chapter: 1
 type: vocabulary
-headword: gracias
-gloss: thank you
+headword: hola
+gloss: hello
 prerequisites: []
-sounds: [vowel-a, stress-penultimate, seseo-c]
-roots: [latin-gratia]
-etymology_hook: "gracias comes from Latin gratia, the same root inside English grace, gratitude and gratis"
+sounds: [silent-h, vowel-o, vowel-a]
+roots: []
+etymology_hook: "hola's origin is genuinely unsettled, and the resemblance to English hello is a false friend"
 duration:
   max_seconds: 240
 requires:
   knowledge: []
 introduces:
-  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+  knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT, ES-REGISTER-HOLA-INFORMAL]
 practises:
-  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+  knowledge: [ES-LEX-HOLA, ES-SOUND-H-SILENT]
 skills: [listening, speaking]
 modes: [interpersonal]
 strands: [meaning-input, meaning-output]
-register: neutral
+register: informal
 variety: american-neutral
 ```
 
-**Teach.** Your first Spanish word is **gracias**. It means *thank you*.
+**Teach.** Your first Spanish word is **hola**. It means *hello*.
 
-Say it in two beats: **GRA-thias** in most of Spain, **GRA-sias** across Latin
-America and southern Spain. Both are correct. Both are heard everywhere. You are
-learning the second, and you will understand the first.
+Say it **OH-la**. The **h** makes no sound at all.
 
-**The word, taken apart.** *Gracias* comes from the Latin word **grātia** —
-kindness freely given, a favour nobody owed you.
+That is not a quirk of this one word. Every **h** in Spanish is silent — written,
+never spoken — and you will meet hundreds of them without ever hearing one.
+
+The two vowels are pure: **OH**, **AH**. They do not slide the way English vowels
+do. Hold each one steady and stop.
+
+**The word, taken apart.** Here the honest answer is that nobody knows.
+
+*Hola* is an old hailing call, and that is as far as the evidence firmly goes.
+You will see it confidently traced to English *hello*, or to Arabic *wallāh*, or
+to a shout across water. Treat all of those as folk etymology: plausible, not
+established.
+
+The resemblance to English **hello** is a **false friend**. English *hello* grew
+out of a Germanic hailing root — *hail*, *holler* — a different family entirely.
+The two words look alike by coincidence.
+
+> Why say so this firmly, in the first lesson? Because almost everything that
+> follows is built on real family resemblance between Spanish and English, and
+> a *fake* one is worse than none — it teaches a connection your brain then has
+> to unlearn. Enjoy *hola*. Do not file it beside *hello*.
+
+**When not to say it.** *Hola* is informal — the *hi* you would use with a
+friend, a child, a shopkeeper you know. It carries no time of day and no
+deference, which is exactly why, meeting someone for the first time or in a
+formal setting, Spanish reaches past it. Those words are coming.
+
+**Wrap-up.** How do you greet someone? *(Hola.)* What does the **h** sound like?
+*(Nothing at all.)* Is *hola* a safe thing to say to your new boss? *(Not
+really — something else is coming for that.)*
+
+> **Why this word first.** Usefulness outranks etymology (§6.3). A greeting is
+> what actually happens first in an encounter, its only difficulty is a silent
+> letter, and the honest refusal of a false friend sets the standard of evidence
+> for the seven hundred real ones ahead.
+
+---
+
+#### Lesson 2 — `ES-C01-gracias`
+
+```yaml
+id: ES-C01-gracias
+spine_node: SPINE-COURTESY-THANK
+sequence: 20
+type: vocabulary
+headword: gracias
+gloss: thank you
+prerequisites: [ES-C01-hola]
+sounds: [vowel-a, stress-penultimate, seseo-c]
+roots: [latin-gratia]
+etymology_hook: "gracias comes from Latin gratia, the same root inside English grace, gratitude and gratis"
+requires:
+  knowledge: [ES-LEX-HOLA]
+introduces:
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA]
+practises:
+  knowledge: [ES-LEX-GRACIAS, ES-ETYMON-GRATIA, ES-LEX-HOLA]
+variety: american-neutral
+```
+
+**Warm-up.** *(retrieval, closes R1 for lesson 1)* Greet someone. *(Hola.)* Say
+it once, out loud, and let the **h** stay silent.
+
+**Teach.** **Gracias** means *thank you*.
+
+Say it in two beats: **GRA-sias** across Latin America and southern Spain,
+**GRA-thias** in most of Spain. Both are correct, both are heard. You are
+learning the first, and you will understand the second.
+
+**The word, taken apart.** *Gracias* comes from Latin **grātia** — kindness
+freely given, a favour nobody owed you.
 
 You already own a piece of that word. English took **grātia** too, and kept it in
-**grace**, in **gratitude**, in **gratis** — something given for free — and in
+**grace**, in **gratitude**, in **gratis** (given for free), and in
 **congratulate**. When you say *gracias*, you are saying a word English also
 kept, just worn down differently by eight hundred years of Spanish mouths.
 
-That is not a coincidence you have to memorise. It is the first of many.
+That is not a coincidence to memorise. It is the first of many — and, unlike
+*hola* and *hello*, it is real.
 
 **Guided practice.** Say **gracias** three times. Say it to someone who hands you
 something. Say it to a stranger who holds a door.
 
-**Wrap-up.** What is *thank you* in Spanish? *(Gracias.)* What English word hides
-the same root? *(Grace — or gratitude, or gratis.)*
+**Wrap-up.** What is *thank you*? *(Gracias.)* Which English word hides the same
+root? *(Grace — or gratitude, or gratis.)*
 
-> **Why this word first.** *Gracias* is the highest-value word a beginner can
-> hold: you can thank someone before you can greet them, before you can name
-> yourself, before you can say anything else at all. It also carries eight
-> English relatives, so the course's central move is demonstrated in lesson one
-> rather than promised for later.
-
----
-
-#### Lesson 2 — `ES-C01-de-nada`
+#### Lesson 3 — `ES-C01-de-nada`
 
 ```yaml
 id: ES-C01-de-nada
 spine_node: SPINE-COURTESY-THANK
-sequence: 20
+sequence: 30
 type: vocabulary
 headword: de nada
 gloss: you're welcome
@@ -1397,12 +1506,12 @@ mean? *(Of nothing.)*
 
 ---
 
-#### Lesson 3 — `ES-C01-por-favor`
+#### Lesson 4 — `ES-C01-por-favor`
 
 ```yaml
 id: ES-C01-por-favor
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 30
+sequence: 40
 headword: por favor
 gloss: please
 prerequisites: [ES-C01-gracias]
@@ -1433,53 +1542,6 @@ thanks. One comes before you get the thing; the other comes after.
 
 **Wrap-up.** Which word asks, and which thanks? *(Por favor asks. Gracias
 thanks.)*
-
----
-
-#### Lesson 4 — `ES-C01-hola`
-
-```yaml
-id: ES-C01-hola
-spine_node: SPINE-MEET-GREET
-sequence: 40
-headword: hola
-gloss: hello
-prerequisites: [ES-C01-gracias]
-sounds: [silent-h, vowel-o]
-roots: []
-etymology_hook: "hola's origin is genuinely unsettled — and the resemblance to English hello is a false friend"
-requires:
-  knowledge: [ES-LEX-GRACIAS]
-introduces:
-  knowledge: [ES-LEX-HOLA, ES-SOUND-SILENT-H]
-practises:
-  knowledge: [ES-LEX-HOLA, ES-LEX-GRACIAS, ES-LEX-POR-FAVOR]
-variety: american-neutral
-```
-
-**Warm-up.** Two words so far. The one that asks? *(Por favor.)* The one that
-thanks? *(Gracias.)*
-
-**Teach.** **Hola** is *hello*. It is said **OH-la** — the **h** is silent.
-
-Spanish does that with every **h**. It is written and never spoken. You will meet
-it again and again, and it will never once make a sound.
-
-**The word, taken apart.** Here the honest answer is that nobody is sure. *Hola*
-may come from an old call to get someone's attention; the record is thin.
-
-And the resemblance to English **hello** is a false friend — the two look alike
-and are not related. English *hello* grew out of *hallo*, a shout used to hail
-someone across a distance. The likeness is a coincidence.
-
-Most Spanish words have a traceable family, and you will meet those families
-constantly. This one does not, and saying so is better than inventing a story.
-
-**Guided practice.** Say **hola**. Now silence the *h* deliberately: not
-"HO-la" — **OH-la**.
-
-**Wrap-up.** How do you greet someone? *(Hola.)* What does the *h* sound like?
-*(Nothing at all.)*
 
 ---
 
@@ -1536,13 +1598,13 @@ spine_node: SPINE-COURTESY-THANK
 sequence: 60
 type: practice-mix
 headword: (none — this lesson introduces nothing)
-prerequisites: [ES-C01-gracias, ES-C01-de-nada, ES-C01-por-favor, ES-C01-hola, ES-C01-adios]
+prerequisites: [ES-C01-hola, ES-C01-gracias, ES-C01-de-nada, ES-C01-por-favor, ES-C01-adios]
 requires:
-  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR, ES-LEX-HOLA, ES-LEX-ADIOS]
+  knowledge: [ES-LEX-HOLA, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR, ES-LEX-ADIOS]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR, ES-LEX-HOLA, ES-LEX-ADIOS, ES-ETYMON-GRATIA]
+  knowledge: [ES-LEX-HOLA, ES-LEX-GRACIAS, ES-LEX-DE-NADA, ES-LEX-POR-FAVOR, ES-LEX-ADIOS, ES-ETYMON-GRATIA]
 variety: american-neutral
 ```
 
@@ -1567,8 +1629,9 @@ the entire polite frame a stranger expects, you already have.
 a door for you and you walk through. Say the right word. *(Gracias.)* They
 answer. What do they say? *(De nada.)*
 
-**Wrap-up.** Which word did you learn first, and what English words share its
-root? *(Gracias — grace, gratitude, gratis.)*
+**Wrap-up.** Which word did you learn first? *(Hola — and its **h** is silent.)*
+Which word's root you already owned in English? *(Gracias — grace, gratitude,
+gratis.)*
 
 ### What this chapter deliberately does not do
 
@@ -1582,5 +1645,6 @@ root? *(Gracias — grace, gratitude, gratis.)*
   from Chapter 26 — which is exactly the reach-sideways failure HL09 §4.1
   diagnosed.
 - **No apology for the language.** Nothing is called easy, simple, or obvious.
-- **No invented etymology.** Lesson 4 says outright that nobody knows where *hola*
-  comes from, and that its likeness to *hello* is a coincidence.
+- **No invented etymology.** Lesson 1 says outright that nobody knows where *hola*
+  comes from, and that its likeness to *hello* is a coincidence — and puts that
+  refusal to work as the standard of evidence for every real friend that follows.
