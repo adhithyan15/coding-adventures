@@ -59,7 +59,8 @@ pub use mutation::{
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
-    open_active_vault, recover_pending_publication, ItemHistoryViewV1, UnlockedVaultV1,
+    open_active_vault, recover_pending_publication, AuditedLoginEditPreparationV1,
+    ItemHistoryViewV1, LoginEditInputV1, LoginEditPreparationV1, UnlockedVaultV1,
     DEFAULT_ITEM_HISTORY_LIMIT, MAX_ITEM_HISTORY_LIMIT,
 };
 pub use repository::{
