@@ -285,9 +285,12 @@ Prioritized work items:
    stack nodes nearest the furthest block, counts intervening non-formatting
    nodes, and preserves active formatting opened below that block. This covers
    the deep `adoption01.dat` formatting shape with follow-on text while keeping
-   the three-node boundary and existing table reconstruction conforming.
-   Continue the fresh algorithm audit across the remaining bookmark-placement
-   and active-formatting replacement branches.
+   the three-node boundary and existing table reconstruction conforming. Nested
+   div recovery now also remaps the repaired open stack through each formatting
+   clone inserted before the selected descendant, so follow-on text and
+   formatting remain at the innermost div in document, table-cell, and fragment
+   contexts. Continue the fresh algorithm audit across the remaining bookmark
+   placement and active-formatting-list replacement branches.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
