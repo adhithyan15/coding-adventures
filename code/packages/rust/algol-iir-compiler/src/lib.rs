@@ -6042,6 +6042,27 @@ fn literal_integral_real_exponent(node: &GrammarASTNode) -> Option<i32> {
     Some(value as i32)
 }
 
+fn literal_nonnegative_integral_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let exponent_value = |node: &GrammarASTNode| {
+        literal_nonneg_integer_exponent(node).or_else(|| {
+            let value = literal_integral_real_exponent(node)?;
+            (value >= 0).then_some(value as u32)
+        })
+    };
+    let mut value = exponent_value(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = exponent_value(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
+}
+
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "STRING_LIT" {
@@ -6121,7 +6142,7 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
             }
         }
         let (base, exponents) = operands.split_first()?;
-        let exponent = literal_nonneg_integer_power_chain(exponents)
+        let exponent = literal_nonnegative_integral_power_chain(exponents)
             .map(|value| value as i32)
             .or_else(|| {
                 if exponents.len() == 1 {
@@ -7260,6 +7281,30 @@ mod tests {
             .collect();
         assert_eq!(literals, vec!["8", "0.125"]);
         assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integral_exponent_chain() {
+        let module = compile_source("begin print(2.0 ^ 3.0 ^ 2.0, 2.0 ^ 3 ^ 2.0) end", "test")
+            .expect("static integral exponent chains compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["512", "512"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integral_exponent_chain_rejects_unbounded_result() {
+        let err = compile_source("begin print(2.0 ^ 4.0 ^ 4.0) end", "test")
+            .expect_err("an oversized computed exponent must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

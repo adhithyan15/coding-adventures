@@ -186,7 +186,9 @@ leaf remain explicit type errors. Real literal bases also accept the existing
 capped nonnegative integer-literal exponent chains or one explicitly signed
 integer literal in `-64..=64`. A single real-literal exponent is also accepted
 when its value is exactly integral and within that cap; other exponent shapes
-still require runtime real formatting.
+still require runtime real formatting. Nonnegative right-associated exponent
+chains may mix integer and exactly integral real literals when every computed
+exponent remains within the same cap.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
