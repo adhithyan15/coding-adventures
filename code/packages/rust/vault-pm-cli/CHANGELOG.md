@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed idempotent authenticated `audit enable`, installing the one durable
+  `AuditEpochStart` migration event before any active-epoch command can run.
 - Route `item edit ITEM` through an opaque application-owned preparation so
   active-epoch precondition, prompt, entropy, and document-validation failures
   become durable before their CLI errors, while success stays one atomic

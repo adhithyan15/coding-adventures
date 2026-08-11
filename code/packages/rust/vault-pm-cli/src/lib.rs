@@ -42,7 +42,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -257,6 +257,7 @@ enum Command {
     Status {
         json: bool,
     },
+    AuditEnable,
     AuditVerify,
     Doctor {
         unlock: bool,
@@ -303,12 +304,18 @@ where
         "--help" | "-h" | "help" if values.len() == 1 => Ok(Command::Help),
         "init" => parse_init(&values[1..]),
         "status" => parse_status(&values[1..]),
-        "audit" if values.get(1).map(String::as_str) == Some("verify") && values.len() == 2 => {
-            Ok(Command::AuditVerify)
-        }
+        "audit" => parse_audit(&values[1..]),
         "doctor" => parse_doctor(&values[1..]),
         "item" => parse_item(&values[1..]),
         "history" => parse_history(&values[1..]),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_audit(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action] if action == "enable" => Ok(Command::AuditEnable),
+        [action] if action == "verify" => Ok(Command::AuditVerify),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -389,6 +396,7 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
     match command {
         Command::Init { vault, storage } => init(host, prepared.paths(), &writer, vault, storage),
         Command::Status { json } => status(prepared.paths(), &writer, json),
+        Command::AuditEnable => audit_enable(host, prepared.paths(), &writer),
         Command::AuditVerify => audit_verify(host, prepared.paths(), &writer),
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
         Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
@@ -993,6 +1001,29 @@ fn status(
     Ok(render_status_label(label, json))
 }
 
+fn audit_enable(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    if access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        access.lock();
+        return Ok(CliOutput::success("Audit: already enabled.\n"));
+    }
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    access
+        .into_unlocked()
+        .map_err(map_application)?
+        .activate_audit_epoch(wall_time_ms, randomness, &application_store)
+        .map_err(map_application)?;
+    Ok(CliOutput::success("Audit: enabled.\n"))
+}
+
 fn audit_verify(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -1521,6 +1552,7 @@ mod tests {
             vec!["doctor", "extra"],
             vec!["doctor", "--unlock", "extra"],
             vec!["audit"],
+            vec!["audit", "enable", "extra"],
             vec!["audit", "verify", "extra"],
             vec!["item", "add", "login", "--password", "secret"],
             vec!["item", "edit", "not-an-item-id"],
@@ -1538,6 +1570,31 @@ mod tests {
             assert_eq!(output.stderr(), "vault-pm: invalid command\n");
         }
         assert!(!root.0.join("config").exists());
+    }
+
+    #[test]
+    fn audit_enable_installs_one_durable_epoch_and_is_idempotent() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audit migration passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let enable_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let enabled = run(["audit", "enable"], &enable_host);
+        assert_eq!(enabled.exit_code(), ExitCode::Success, "{enabled:?}");
+        assert_eq!(enabled.stdout(), "Audit: enabled.\n");
+
+        let repeated_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let repeated = run(["audit", "enable"], &repeated_host);
+        assert_eq!(repeated.exit_code(), ExitCode::Success, "{repeated:?}");
+        assert_eq!(repeated.stdout(), "Audit: already enabled.\n");
+
+        let verify_host = TestHost::new(paths, [passphrase]);
+        let verified = run(["audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+        assert!(verified.stdout().contains("commits=2"), "{verified:?}");
+        assert!(verified.stdout().contains("audit_events=1"), "{verified:?}");
     }
 
     #[test]

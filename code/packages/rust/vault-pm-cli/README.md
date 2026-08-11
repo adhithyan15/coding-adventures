@@ -2,8 +2,8 @@
 
 This crate is the first real composition layer for the local-first password
 manager. It owns strict parsing, stable exit classes, redacted rendering, and
-the bounded `init`, locked `status`/`doctor`, authenticated `audit verify`, and
-opt-in full `doctor --unlock` workflows. It now also owns the first usable item
+the bounded `init`, locked `status`/`doctor`, authenticated `audit enable` and
+`audit verify`, and opt-in full `doctor --unlock` workflows. It now also owns the first usable item
 vertical: authenticated login creation plus durable redacted list/show. The
 same one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
@@ -27,7 +27,7 @@ publishing the configuration that makes the random locator discoverable. A
 restart with a prepared journal collects the existing passphrase and resumes
 the exact journal without generating new identities or ciphertext.
 
-Status and plain doctor do not prompt or unlock. `audit verify` and
+Status and plain doctor do not prompt or unlock. `audit enable`, `audit verify`, and
 `doctor --unlock` collect the existing passphrase through the controlling
 terminal, open the storage-neutral repository for one read-only action, and
 synchronously drop the live session before rendering. Their projections contain
@@ -35,6 +35,14 @@ only closed labels or aggregate verification counts, including the number of
 fully authenticated encrypted operation events (zero for pre-audit vaults),
 with no paths, locators, providers, identities, or cryptographic details. No command accepts a
 passphrase through argv, stdin, environment, configuration, or URL.
+
+`audit enable` is the explicit one-time boundary between a vault's declared
+unlogged historical prefix and its signed operation-event epoch. It consumes
+the unlocked session through the existing crash-resumable audit-only journal
+and returns only after the successful `AuditEpochStart` event and next owner
+state are durable. Repeating the command is a no-write success. Once enabled,
+the epoch cannot be disabled or silently bypassed by an authenticated item or
+verification command.
 
 When an audit epoch already exists, `audit verify`, `doctor --unlock`, `item
 list`, `item show`, and `history list` consume the unlocked session through the
