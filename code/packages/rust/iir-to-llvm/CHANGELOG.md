@@ -1,5 +1,55 @@
 # Changelog — iir-to-llvm
 
+## 0.52.0 - 2026-08-11 - array_set write barrier (AOT00-T8 follow-up)
+
+- **`array_set` now also emits a call to `@__twig_gc_write_barrier(i64 parent, i64
+  child)`**, right after the element store — mirrors `field_store`'s 0.50.0 fix and
+  closes the last unbarriered GC-tracked store site in this backend
+  (`aarch64-backend`/`x86_64-backend` already had `array_set` barrier coverage; this
+  brings the LLVM backend to parity).
+- **`parent` is recovered as the array's true GC-payload base, NOT the IIR-level
+  handle.** `lower_alloc_array` returns `handle = raw_payload + 8` — it skips the
+  array's own 8-byte length-prefix header so element access indexes cleanly from it.
+  But `write_barrier`'s own contract trusts its `parent` argument unconditionally
+  (`parent - HEADER_SIZE`, and `HEADER_SIZE` is 32, not 8) — passing `handle` itself
+  would read 24 bytes into the array's own payload as if it were the `FlatHeader`,
+  corrupting the remembered set on garbage bits instead of the real generation flag.
+  Fixed by computing `getelementptr i8, ptr handle, i64 -8` + `ptrtoint` (the same
+  arithmetic `emit_bounds_check`/`lower_array_len` already perform to read the length
+  header) and passing that as `parent` instead. This is the same class of
+  interior-pointer hazard the `aarch64-backend`/`x86_64-backend` siblings
+  independently found and fixed for their register-based lowering, arising here from
+  `alloc_array`'s handle-layout choice rather than register clobbering.
+- **`child` is converted to `i64` for the call regardless of the array's element
+  type.** `i64` elements pass through as-is; `i1`/`i8`/`i16`/`i32` zero-extend;
+  `float`/`double` bitcast to same-width integers (zero-extended to `i64` for
+  `float`) — a bit-reinterpretation, never a numeric conversion, since the barrier
+  only ever inspects the pattern as a potential heap address and never as a value.
+- 4 new unit tests in `test_backend.rs`: barrier declared + fires with the correct
+  base (not the raw handle); two `array_set`s each get their own call, not
+  deduplicated; a `double`-element `array_set` bitcasts before the call.
+- **A real-execution differential was attempted and NOT shipped.** Mirroring
+  `field_store`'s own working `lang-aot/tests/llvm_gc_write_barrier.rs`, an
+  `array_set` analogue was built, then confirmed vacuous via a `TEMP-REVERT-CHECK`:
+  it passed identically with the barrier fully present, fully absent, and — critically
+  — even against the pre-existing, unfixed `array_set` (no barrier-adjacent code at
+  all). Root cause: unlike `field_store`'s straight-line lowering, `array_set` emits
+  `emit_bounds_check`'s conditional branch, which this unoptimized (`-O0`, no `opt`
+  passes ever run on this hand-built IR) codegen path spills to a stack slot rather
+  than a register — a stack slot nothing later reuses keeps its stale bit pattern for
+  the rest of the frame, conservatively rediscovering the array (a directly
+  root-reachable old object is traced regardless of the write barrier — see
+  `AOT00-T9-moving-minor-collector.md` §3). See lessons.md for the full investigation.
+  Evidence instead: the unit tests above (which did catch the base-recovery bug
+  during development), `field_store`'s own working differential (proves the barrier
+  *mechanism* end-to-end where it demonstrably matters), and `gc-core`'s generic,
+  already-reviewed `write_barrier` tests.
+- Verification: `cargo build`/`test` clean (`iir-to-llvm` 118 tests, up from 114);
+  `cargo clippy --all-targets` clean; downstream consumers `lang-aot`/
+  `algol-iir-compiler` test suites unaffected (the one `lang-aot` matrix failure
+  observed locally reproduces identically on unmodified `main` — pre-existing, not
+  caused by this change).
+
 ## 0.51.0 - 2026-08-10 - security-review hardening for the AOT00-T8 test seams
 
 - **New `gc_set_auto_minor` `call_builtin`** (→ `@__twig_gc_set_auto_minor(i64)`,

@@ -768,11 +768,12 @@ pub fn lower_iir_to_llvm(
     let mut used_input_str = false;
     let mut used_alloc_bytes = false;
     let mut used_gc_alloc = false;
-    // AOT00-T8 follow-up: `field_store` needs the generational write barrier
-    // (`@__twig_gc_write_barrier`) so a real minor collection can eventually be
-    // turned on for LLVM output — see `lower_field_store`'s doc for why the call
-    // is unconditional (no pointer/non-pointer discrimination needed).
-    let mut used_field_store = false;
+    // AOT00-T8 follow-up: `field_store` and `array_set` both need the
+    // generational write barrier (`@__twig_gc_write_barrier`) so a real minor
+    // collection can eventually be turned on for LLVM output — see
+    // `lower_field_store`/`lower_array_set`'s own docs for why the call is
+    // unconditional (no pointer/non-pointer discrimination needed).
+    let mut used_write_barrier = false;
     // Twig GC completion round: `call_builtin "gc_live_bytes"` (a diagnostic,
     // mirroring aarch64/x86_64-backend's identically-named builtin) lowers to
     // `@__twig_gc_live_bytes()` from the shared `gc-core-capi` archive.
@@ -827,8 +828,8 @@ pub fn lower_iir_to_llvm(
             if i.op == "alloc" {
                 used_gc_alloc = true;
             }
-            if i.op == "field_store" {
-                used_field_store = true;
+            if i.op == "field_store" || i.op == "array_set" {
+                used_write_barrier = true;
             }
             if i.op == "print_str" {
                 used_print_str = true;
@@ -922,7 +923,7 @@ pub fn lower_iir_to_llvm(
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
         || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
-        || used_gc_live_bytes || used_field_store || used_gc_set_auto_minor
+        || used_gc_live_bytes || used_write_barrier || used_gc_set_auto_minor
         || used_gc_collect_minor_precise || used_gc_kind_of {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
@@ -969,14 +970,15 @@ pub fn lower_iir_to_llvm(
             // backend. `i64 __twig_gc_alloc(i64 n_bytes)` returns a heap pointer.
             out.push_str("declare i64 @__twig_gc_alloc(i64)\n");
         }
-        if used_field_store {
+        if used_write_barrier {
             // AOT00-T8 follow-up: the generational write barrier. `void
             // __twig_gc_write_barrier(i64 parent, i64 child)` records `parent`
-            // (the field_store target) in the remembered set when it's already
-            // OLD, so a later minor collection rescans it for young objects it
-            // may now reference — the pointers a young-only cycle would
-            // otherwise never see. See `lower_field_store` for why every store
-            // calls it unconditionally, not just reference-typed ones.
+            // (the field_store/array_set target) in the remembered set when
+            // it's already OLD, so a later minor collection rescans it for
+            // young objects it may now reference — the pointers a young-only
+            // cycle would otherwise never see. See `lower_field_store` and
+            // `lower_array_set` for why every store calls it unconditionally,
+            // not just reference-typed ones.
             out.push_str("declare void @__twig_gc_write_barrier(i64, i64)\n");
         }
         if used_gc_live_bytes {
@@ -3168,6 +3170,38 @@ fn lower_array_get(
 }
 
 /// Lower `array_set handle, idx, val : T` (no dest) — bounds-checked element store.
+///
+/// **AOT00-T8 follow-up:** every store also calls the generational write
+/// barrier (`@__twig_gc_write_barrier(i64 parent, i64 child)`), unconditionally
+/// — mirrors `lower_field_store`'s identical fix and its full soundness
+/// argument (the barrier never dereferences `child`, only inspects `parent`'s
+/// generation, so a non-reference element is a harmless over-approximation;
+/// this op has no static information distinguishing a reference element array
+/// from a scalar one worth special-casing).
+///
+/// **`parent` must be the array's true GC-payload base, NOT `handle`.**
+/// `lower_alloc_array` returns `handle = raw_payload + 8` as the IIR-level
+/// array handle — it skips past the array's own 8-byte length-prefix header
+/// so every element access indexes cleanly from it (see that function and
+/// `emit_bounds_check`, which reads the length back at `handle - 8`). But
+/// `write_barrier`'s own contract trusts its `parent` argument unconditionally
+/// (it computes `parent - HEADER_SIZE` with no validation that `parent` is
+/// actually the address `__twig_alloc_bytes` returned) — `HEADER_SIZE` is 32,
+/// not 8, so passing `handle` itself here would read 24 bytes into the
+/// object's own payload as if it were the `FlatHeader`, corrupting the
+/// remembered set on garbage bits instead of the real generation flag (the
+/// same interior-pointer hazard the aarch64/x86_64 siblings' own `array_set`
+/// fix independently discovered and fixed for their register-based lowering).
+/// `handle - 8` recovers the true base — the identical arithmetic
+/// `emit_bounds_check` already performs to read the length header, just
+/// ptrtoint'd back to `i64` for the call.
+///
+/// `child` must be an `i64` for the call regardless of the array's element
+/// type: `i64` elements pass through as-is; narrower integers (`i1`/`i8`/
+/// `i16`/`i32`) zero-extend; `float`/`double` bitcast to same-width integers
+/// (zero-extended to `i64` for `float`) — a bit-reinterpretation, never a
+/// numeric conversion, since the barrier only inspects the pattern as a
+/// potential heap address and never as a value.
 fn lower_array_set(
     instr: &IIRInstr,
     state: &mut FnState,
@@ -3201,6 +3235,39 @@ fn lower_array_set(
     let ep = state.fresh("aep");
     out.push_str(&format!("  {ep} = getelementptr {elem_ty}, ptr {handle}, i64 {idx}\n"));
     out.push_str(&format!("  store {elem_ty} {val}, ptr {ep}\n"));
+    let barrier_child = match elem_ty {
+        "i64" => val,
+        "double" => {
+            let h = state.fresh("aebc");
+            out.push_str(&format!("  {h} = bitcast double {val} to i64\n"));
+            h
+        }
+        "float" => {
+            let hb = state.fresh("aebf");
+            out.push_str(&format!("  {hb} = bitcast float {val} to i32\n"));
+            let hz = state.fresh("aebz");
+            out.push_str(&format!("  {hz} = zext i32 {hb} to i64\n"));
+            hz
+        }
+        _ => {
+            let h = state.fresh("aebz");
+            out.push_str(&format!("  {h} = zext {elem_ty} {val} to i64\n"));
+            h
+        }
+    };
+    // `handle` is `raw_payload + 8` (past the array's own length header, see
+    // `lower_alloc_array`) — NOT the GC object's true base. Recover the base
+    // the identical way `emit_bounds_check`/`lower_array_len` already do
+    // (`handle - 8`), then ptrtoint it for the barrier's `i64 parent`. See
+    // this function's own doc comment for why passing `handle` itself here
+    // would be unsound.
+    let base_ptr = state.fresh("awbbase");
+    out.push_str(&format!("  {base_ptr} = getelementptr i8, ptr {handle}, i64 -8\n"));
+    let parent = state.fresh("awbparent");
+    out.push_str(&format!("  {parent} = ptrtoint ptr {base_ptr} to i64\n"));
+    out.push_str(&format!(
+        "  call void @__twig_gc_write_barrier(i64 {parent}, i64 {barrier_child})\n"
+    ));
     Ok(())
 }
 
