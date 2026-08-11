@@ -1471,8 +1471,10 @@ changelog, focused build, and downstream validation.
               access boundaries over the shared publish-before-release path,
               including selected-revision binding, `NotFound`, invalid input,
               conflict, and repository-failure outcomes.
-9b-2c-5b-2b. extend that boundary across application verify, diagnose, and
-              portable export operations.
+9b-2c-5b-2b. completed application verify, diagnose, and encrypted portable
+              export boundaries over the shared publish-before-release path,
+              including verification failures and invalid export-input
+              attempts.
 9b-2c-5b-2c. close secret disclosure and exact current-revision capability
               access, including succeeded, denied, and failed outcomes without
               exposing a secret or mutation capability before publication.
