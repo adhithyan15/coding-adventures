@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.44.0
+
+- Blank leading YAML front matter before sequence grammar parsing while preserving source line positions.
+
 ## 0.43.0
 
 - Preprocess Mermaid directives before sequence grammar parsing and apply the global `wrap` directive to default-wrapped semantic labels.
