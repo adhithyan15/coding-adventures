@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed - Compose emits native icons and progress
+
+The Compose backend now lowers dependency-free icon glyphs with native font
+rendering, authored accessibility labels, and MSL styling. The toolkit's
+semantic `spinner` glyph becomes an indeterminate `CircularProgressIndicator`,
+so the complete 23-component toolkit package emits instead of stopping at
+Spinner.
+
 ### Changed - Compose emits native dialogs
 
 The Compose backend now lowers `HostDialog` to native `Dialog` or non-modal

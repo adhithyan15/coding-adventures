@@ -65,6 +65,7 @@ wants the strict-Flux store/dispatcher contract.
 | Row          | `Row { ... }`                             |
 | Column       | `Column { ... }`                          |
 | Text         | `Text(text = ...)`                        |
+| Icon         | native font glyph / progress indicator    |
 | Spacer       | `Spacer(modifier = Modifier.weight(1f))`  |
 | HostInput    | `BasicTextField(value, onValueChange...)` |
 | Input        | multiline-capable `BasicTextField`        |
@@ -86,6 +87,6 @@ their own `MaterialTheme` for platform-level theming.
 
 ## Tests
 
-`cargo test -p mosaic-emit-compose` runs 48 focused emitter tests. The
+`cargo test -p mosaic-emit-compose` runs 51 focused emitter tests. The
 package-expanded TaskApp is also exercised as a real Compose Desktop project:
 Kotlin compilation, native macOS distribution packaging, and process launch.
