@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-waw ductus (HL-C09AZ)
+
+- Render **و** in two evidence-aligned frames: close the small head loop from
+  its lower-right junction, then continue down and left through the tail without
+  lifting.
+- Keep the directly linked MOV's one pen-down run, zero lifts, one-way-connector
+  context, and consonant/long-vowel roles explicit while fitting Noto Naskh.
+- Preserve Arabic Waw independently of the existing Persian record for the same
+  Unicode glyph, and queue source recovery for independent Arabic **م** next.
+
 ### Added — cited Arabic independent-heh ductus (HL-C09AY)
 
 - Render **ه** in three evidence-aligned frames: close the lower counter, thread

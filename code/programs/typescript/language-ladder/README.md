@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and all seventeen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, and ي —
+and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -361,6 +361,12 @@ into the upper-right counter, then sweeps left along the baseline without
 lifting. The three-frame filmstrip preserves that one-stroke, zero-lift order,
 fits the compact handwriting to the wider isolated Noto Naskh outline, and keeps
 Arabic provenance separate from Persian **ه** for the same Unicode glyph.
+The same page's directly linked `waw.mov` verifies independent **و** at
+00:45.7–00:46.9: sweep left from the lower-right junction to close the small
+head loop, then continue down and left through the tail without lifting. The
+two-frame filmstrip preserves that one-stroke, zero-lift order, Waw's
+one-way-connector and w/long-ū roles, and Arabic provenance distinct from
+Persian **و** for the same Unicode glyph.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
