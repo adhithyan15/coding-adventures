@@ -835,7 +835,9 @@ backend immediately) come before the enabler-dependent items.
   inside a switch list likewise retain stable declaration-time identities,
   including forward references to switches declared later in the same block.
   A statement may carry multiple labels; each is pre-registered in the block
-  and emitted at the same IIR instruction position.
+  and emitted at the same IIR instruction position. Boundary-checked dummy
+  statements are explicit no-ops, covering empty blocks and branches, empty
+  loop bodies, consecutive or trailing separators, and labeled empty statements.
 - ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
   0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
   an `own` scalar to a module **global** (the E6 substrate), keyed by its unique

@@ -3049,6 +3049,7 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("unlabeled_stmt has no child".into()))?;
         match child.rule_name.as_str() {
             "assign_stmt" => self.emit_assignment(child),
+            "dummy_stmt" => Ok(()),
             "goto_stmt" => self.emit_goto(child),
             "compound_stmt" => self.emit_compound(child),
             "for_stmt" => self.emit_for(child),
@@ -8506,6 +8507,15 @@ mod tests {
                    first: second: if phase = 0 then \
                      begin phase := 1; goto second end \
                    else result := 42 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn dummy_statements_are_no_ops_at_statement_boundaries() {
+        let src = "begin integer result, i; ; result := 40;; \
+                   if false then else result := result + 1; \
+                   for i := 1 step 1 until 3 do ; \
+                   empty: ; result := result + 1; end";
         assert_eq!(run_i64(src), 42);
     }
 

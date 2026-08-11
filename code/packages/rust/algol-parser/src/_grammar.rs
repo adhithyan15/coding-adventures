@@ -229,8 +229,8 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             // Narrowly synchronized with the source grammar's repeated label
-            // prefixes. Dummy statements and the surrounding broader grammar
-            // drift remain separate frontend work.
+            // prefixes and boundary-checked dummy statements. The surrounding
+            // broader grammar drift remains separate frontend work.
             name: r#"statement"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::Sequence { elements: vec![
@@ -266,6 +266,7 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"unlabeled_stmt"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
                 GrammarElement::RuleReference { name: r#"assign_stmt"#.to_string() },
+                GrammarElement::RuleReference { name: r#"dummy_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"goto_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"proc_stmt"#.to_string() },
                 GrammarElement::RuleReference { name: r#"compound_stmt"#.to_string() },
@@ -273,6 +274,15 @@ pub fn parser_grammar() -> ParserGrammar {
                 GrammarElement::RuleReference { name: r#"for_stmt"#.to_string() },
             ] },
             line_number: 144,
+        },
+        GrammarRule {
+            name: r#"dummy_stmt"#.to_string(),
+            body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::PositiveLookahead { element: Box::new(GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() }) },
+                GrammarElement::PositiveLookahead { element: Box::new(GrammarElement::Literal { value: r#"end"#.to_string() }) },
+                GrammarElement::PositiveLookahead { element: Box::new(GrammarElement::Literal { value: r#"else"#.to_string() }) },
+            ] },
+            line_number: 175,
         },
         GrammarRule {
             name: r#"cond_stmt"#.to_string(),
