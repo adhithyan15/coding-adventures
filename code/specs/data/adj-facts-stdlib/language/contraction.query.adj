@@ -1,0 +1,20 @@
+% ============================================================================
+% contraction.query.adj — a worked recall over the contraction library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% contraction stand for?": it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `contraction` rows and returns the
+% expansion + the table's own source/locator/trust. A contraction the
+% table does not carry abstains honestly — the engine never invents an
+% expansion.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli contraction.query.adj
+% ============================================================================
+
+import "contraction.adj"
+
+? contraction(dont, $Expansion)     % expect do_not
+? contraction($Word, will_not)      % expect wont
+? contraction(shouldnt, $Expansion) % expect abstain -- no expansion is shipped for this contraction
