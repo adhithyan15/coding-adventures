@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C35-preguntar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1810
-chapter: 125
+sequence: 1830
+chapter: 131
 type: word
 headword: preguntar
 gloss: to ask (a question) — and the reason English's one "ask" becomes two Spanish verbs

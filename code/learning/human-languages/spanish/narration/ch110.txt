@@ -1,41 +1,63 @@
-Spanish, chapter 110: The Months.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 110: Days of the Week.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 1.
-los meses — the calendar's gods and Caesars.
+Lesson 1 of 2.
+lunes to viernes — the planets of the week, worn down.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters.
+The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
 
-The months, taken apart.
-[a table of 12 rows, read aloud]
-Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.
-Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.
-Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!
-Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, "to open" (buds opening).
-Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.
-Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.
-Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, "the 5th [month]" — renamed for Julius Caesar after his death.
-Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, "the 6th [month]" — renamed for the emperor Augustus.
-Spanish: septiembre. from Latin: september. who / what: "7th" (septem).
-Spanish: octubre. from Latin: octōber. who / what: "8th" (octō).
-Spanish: noviembre. from Latin: november. who / what: "9th" (novem).
-Spanish: diciembre. from Latin: december. who / what: "10th" (decem).
-Two payoffs land at once:
-marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other.
-The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named "7th." Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally "5th" and "6th" — renamed in their honor after the fact. The names stuck; the months themselves were never new.
+The words, taken apart: the planet weekdays.
+Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
+There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
+Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the twelve — "enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre"]
+[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
 [pause 8 seconds for the answer]
-[your turn — say: the tie-back — "marzo / martes — both Mars, the war-god"]
+[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
 [pause 8 seconds for the answer]
-[your turn — say: "septiembre = 7, diciembre = 10" — the old March-start year]
+[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for "ten"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis ("5th"/"6th"), simply renamed in their honor.)
+Recall the weekday family:
+What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
+Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
+What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
+Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
+
+
+Lesson 2 of 2.
+sábado and domingo — the week's religious edge.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
+
+The two days, taken apart.
+There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
+Two different rewrites:
+sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
+domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
+[pause 8 seconds for the answer]
+[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
+[pause 8 seconds for the answer]
+[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)

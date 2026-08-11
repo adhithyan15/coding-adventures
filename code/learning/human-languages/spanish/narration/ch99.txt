@@ -1,98 +1,43 @@
-Spanish, chapter 99: The Subjunctive, Regular.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 99: Synthesis --- Two Shores, Two Answers.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-hable, hables, hable — the singular -ar row.
-
-Warm-up.
-[pause 2 seconds]
-You already used hables for one friend. Today add only the other two singular slots:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: hable.
-person: tú. present subjunctive: hables.
-person: él / ella / usted. present subjunctive: hable.
-Plural forms wait. Say the small row: hable, hables, hable.
-
-Grammar Lens: the yo stem, then a vowel swap.
-Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
-
-The name, taken apart.
-Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
-
-Guided Practice.
-[pause 1 second]
-Build each answer only from the learned singular row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which present form gives the stem for regular hable: hablo or habla?
-[question — say your answer, then pause 7 seconds]
-What joining idea sits inside the Latin source of subjuntivo?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
-
-
-Lesson 2 of 3.
-coma, comas, coma — let -er cross to a.
+Lesson 1 of 1.
+Synthesis — two shores, two answers.
 
 Warm-up.
 [pause 2 seconds]
-Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: coma.
-person: tú. present subjunctive: comas.
-person: él / ella / usted. present subjunctive: coma.
-Say only the singular row: coma, comas, coma.
+You can now say "I spoke" two ways: hablé and he hablado. The obvious question is which one to use, and it has an unusual answer.
 
-Grammar Lens: meaning before machinery.
-Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
+Grammar Lens: what the perfect is for.
+Start with the part everybody agrees on. The perfect reaches into now:
+He comido. — I have eaten. (so I am not hungry) Comí. — I ate. (a finished event, back there).
+The preterite puts an event in the past and leaves it there. The perfect drags it forward and makes it matter now — the tense is telling your listener what to do with the information, not when it happened. English agrees: I have eaten and I ate are not interchangeable for you either.
+
+Why it's said this way.
+Now the part nobody agrees on, and it is worth having straight before you are corrected by two people who contradict each other.
+For something that happened today, Spain and most of Latin America choose differently:
+Hoy he hablado con Ana. — Spain. Hoy hablé con Ana. — most of Latin America.
+Same day, same conversation, both entirely correct. Spain uses the perfect for anything inside the current stretch of time; much of Latin America uses the preterite and saves the perfect for things whose relevance is still open.
+Third split in this book decided by geography rather than meaning, after vosotros and os. There is no version of Spanish that is the real one, and no choice here that will make you wrong.
+A default, if you want one: the Latin American pattern is understood everywhere and is what most learners meet first, so leaning on the preterite for finished events is a safe habit. In Spain you will hear the perfect constantly and pick it up in a week.
 
 Guided Practice.
 [pause 1 second]
-Keep comer inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which form belongs after quiero que for one friend: comes or comas?
+[your turn — say: "He comido" then "Comí" — one reaches into now, one does not]
+[pause 8 seconds for the answer]
+[your turn — say: "Hoy he hablado con Ana" then "Hoy hablé con Ana" — two shores]
+[pause 8 seconds for the answer]
+[repeat that twice]
 [question — say your answer, then pause 8 seconds]
-Say 'I want you to eat' to one friend.
+Say I have eaten, meaning you are not hungry now.
+[question — say your answer, then pause 14 seconds]
+For something that happened today, which tense would a speaker in Madrid pick, and one in Mexico City?
+[question — say your answer, then pause 12 seconds]
+Two speakers correct you in opposite directions. Which of them is right?
+[question — say your answer, then pause 10 seconds]
+Say we have spoken Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
-
-
-Lesson 3 of 3.
-viva, vivas, viva — -ir joins -er.
-
-Warm-up.
-[pause 2 seconds]
-Start from vivo, remove -o, then add the same a endings you just used with comer:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: viva.
-person: tú. present subjunctive: vivas.
-person: él / ella / usted. present subjunctive: viva.
-Regular -er and -ir match in this singular row:
-comer: coma, comas, coma.
-vivir: viva, vivas, viva.
-Plural differences wait.
-
-Grammar Lens: meaning in a known frame.
-Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
-
-Guided Practice.
-[pause 1 second]
-Keep vivir inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Which two regular verb families share -a, -as, -a here?
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to live in Madrid' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)
+What does the perfect do that the preterite does not? (Reaches into now.) And for something that happened today? (Spain says he hablado; much of Latin America says hablé — and both are right.)

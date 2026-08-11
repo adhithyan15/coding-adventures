@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 113,
-  "title": "The Weather",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:25b10a6102dc7e25",
+  "title": "Head and Hand",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:ca9866a6177f9aa8",
   "lessons": [
     {
-      "id": "ES-C30-el-tiempo",
-      "sequence": 1650,
-      "title": "el tiempo — one word doing two jobs",
-      "headword": "el tiempo",
-      "romanization": "el tiempo",
-      "gloss": "the one noun that covers both \"time\" and \"weather\" — because Latin tempus already did",
+      "id": "ES-C24-cabeza",
+      "sequence": 1580,
+      "title": "la cabeza — \"the head\"",
+      "headword": "la cabeza",
+      "romanization": "la cabeza",
+      "gloss": "the head — Spanish KEPT Latin's real word, unlike French, which replaced it with slang for \"pot\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c08a5eeabcbbcab",
+      "sourceHash": "fnv1a64:c7a455d90cf82192",
       "notice": null,
       "blocks": [
         {
@@ -35,31 +35,60 @@
             },
             {
               "kind": "speech",
-              "text": "Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking \"what time does it make?\" — because tiempo does not split \"time\" from \"weather\" the way English does."
+              "text": "Spanish's word for \"head\" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: el tiempo",
+          "type": "input",
+          "title": "You'll want to know: la cabeza",
           "segments": [
             {
               "kind": "speech",
-              "text": "el tiempo = both \"time\" and \"weather\" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed."
-            },
-            {
-              "kind": "speech",
-              "text": "English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed."
-            },
-            {
-              "kind": "speech",
-              "text": "How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is \"I have no time,\" ¿qué tiempo hace? is \"what's the weather like?\""
+              "text": "la cabeza — the head. Feminine, so la."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: caput",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's word for \"head\" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: captain. literally: the \"head\" of a ship/unit.",
+                "English: capital. literally: the \"head\" city, or \"head\" sum of money.",
+                "English: decapitate. literally: to remove the head.",
+                "English: capitulate. literally: to arrange under \"headings\" — hence, to yield."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: French made a different choice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French had the exact same Latin word available — and dropped it. French tête (\"head\") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say \"noggin\" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -72,34 +101,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el tiempo\" — time, or weather, depending on context",
+              "instruction": "\"la cabeza\" — the head",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el tiempo\" — time, or weather, depending on context]"
+              "source": "[YOU SAY: \"la cabeza\" — the head]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿qué tiempo hace?\" — what's the weather like?",
+              "instruction": "\"me duele la cabeza\" — \"my head hurts\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿qué tiempo hace?\" — what's the weather like?]"
+              "source": "[YOU SAY: \"me duele la cabeza\" — \"my head hurts\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tiempo\" then English \"tempo, temporal\" — the tempus family",
+              "instruction": "the English family — \"captain, capital, decapitate\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tiempo\" then English \"tempo, temporal\" — the *tempus* family]"
+              "source": "[YOU SAY: the English family — \"captain, capital, decapitate\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — Spanish kept caput; French swapped it for a pot joke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — Spanish kept caput; French swapped it for a pot joke]"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -111,26 +149,26 @@
             },
             {
               "kind": "speech",
-              "text": "What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only \"time.\") Next: how to actually answer ¿qué tiempo hace?"
+              "text": "Say \"the head.\" (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, \"pot\" — soldiers' slang for the skull that took over completely.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C30-hace-calor",
-      "sequence": 1660,
-      "title": "hace calor, hace frío, hace sol — the weather Spanish makes",
-      "headword": "hace calor, hace frío, hace sol",
-      "romanization": "hace calor, hace frío, hace sol",
-      "gloss": "the three weather words Spanish reports with hacer — \"it makes heat,\" \"it makes cold,\" \"it makes sun\"",
+      "id": "ES-C24-mano",
+      "sequence": 1590,
+      "title": "la mano — \"the hand\"",
+      "headword": "la mano",
+      "romanization": "la mano",
+      "gloss": "the hand — feminine despite ending in -o, Spanish's most famous gender exception",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50453d1a3a44847d",
+      "sourceHash": "fnv1a64:57c6663ae29e41b3",
       "notice": null,
       "blocks": [
         {
@@ -146,178 +184,53 @@
             },
             {
               "kind": "speech",
-              "text": "You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, \"to make.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: calor, frío, sol",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "calor from Latin calor, \"heat, warmth\" becomes English calorie, caloric, cauldron."
-            },
-            {
-              "kind": "speech",
-              "text": "frío from Latin frigidus, \"cold\" (the middle syllable syncopated away) becomes English frigid, refrigerate."
-            },
-            {
-              "kind": "speech",
-              "text": "sol from Latin sol, \"sun,\" unchanged becomes English solar, solstice, parasol."
-            },
-            {
-              "kind": "speech",
-              "text": "Here is the part worth noticing: all three are nouns, not adjectives. Calor is \"heat,\" not \"hot.\" That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one."
-            },
-            {
-              "kind": "speech",
-              "text": "hace calor — \"it's hot,\" literally \"it makes heat\" hace frío — \"it's cold,\" literally \"it makes cold\" hace sol — \"it's sunny,\" literally \"it makes sun\"."
-            },
-            {
-              "kind": "speech",
-              "text": "French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into \"it is hot\" with an adjective."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hace calor. hace frío. hace sol.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hace calor. hace frío. hace sol.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the literal reading — \"it makes heat, it makes cold, it makes sun\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the literal reading — \"it makes heat, it makes cold, it makes sun\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"calor\" then English \"calorie\"; \"frío\" then \"refrigerate\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"calor\" then English \"calorie\"; \"frío\" then \"refrigerate\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"it's hot,\" \"it's cold,\" \"it's sunny.\" (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a \"to be\" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C30-llueve",
-      "sequence": 1670,
-      "title": "llueve — the one weather word that will not join hacer",
-      "headword": "llueve",
-      "romanization": "llueve",
-      "gloss": "rain refuses the hacer pattern and brings its own verb — and its ll- is the sound change you already met in llamar",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:702d01f3c5d0c96e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own."
+              "text": "You've been trusting \"-o words are masculine, -a words are feminine\" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: rain brings its own verb",
+          "title": "Grammar Lens: la mano and its gender",
           "segments": [
             {
               "kind": "speech",
-              "text": "llueve = \"it's raining.\" Not hace lluvia, not \"it makes rain\" — just llueve, a single word that is a complete sentence."
+              "text": "la mano — the hand. Feminine, despite ending in -o."
             },
             {
               "kind": "speech",
-              "text": "It comes from llover, \"to rain,\" and llover is impersonal: it has no subject at all, not even a \"it\" you could point to. Compare the two shapes side by side:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "pattern",
-                "example",
-                "what carries the weather"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).",
-                "pattern: dedicated verb. example: llueve. what carries the weather: the verb itself."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "English does exactly the same split, which makes it easy to feel: you say \"it is hot\" with an adjective, but \"it rains\" with a verb built for the job. Spanish just draws the line in the same place."
+              "text": "Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus (\"hand\") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus \"fruit,\" exercitus \"army,\" senātus \"senate\"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus \"house\" and anus \"old woman\"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: llover",
+          "title": "The word, taken apart: manus",
           "segments": [
             {
               "kind": "speech",
-              "text": "llover from Latin pluere, \"to rain.\" Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, \"key\") and llama ( from flamma, \"flame\"). Latin's cl-, fl- and pl- clusters all became Spanish ll-."
+              "text": "Mano comes from Latin manus, \"hand\" — and that root is buried inside an enormous number of English words:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "English: manual. literally: done by hand.",
+                "English: manufacture. literally: made by hand (manus + facere, \"to make\").",
+                "English: manuscript. literally: written by hand (manus + scrībere).",
+                "English: maintain. literally: hold in the hand (manū tenēre).",
+                "English: manage. literally: to handle."
+              ]
             },
             {
               "kind": "speech",
-              "text": "So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame."
+              "text": "Manufacture is worth pausing on: it literally means \"made by hand\" — and today it names precisely the opposite."
             }
           ]
         },
@@ -335,29 +248,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿qué tiempo hace?\" then \"hace calor. hace frío. hace sol.\"",
+              "instruction": "\"la mano\" — feminine, despite the -o",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿qué tiempo hace?\" then \"hace calor. hace frío. hace sol.\"]"
+              "source": "[YOU SAY: \"la mano\" — feminine, despite the -o]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"llueve\" — one word, a whole sentence, no hacer",
+              "instruction": "\"me duele la mano\" — \"my hand hurts\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"llueve\" — one word, a whole sentence, no *hacer*]"
+              "source": "[YOU SAY: \"me duele la mano\" — \"my hand hurts\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"llamar, llave, llama, llover\" — four Latin clusters, one Spanish ll-",
+              "instruction": "the family — \"manual, manufacture, maintain — all a hand\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"llamar, llave, llama, llover\" — four Latin clusters, one Spanish *ll-*]"
+              "source": "[YOU SAY: the family — \"manual, manufacture, maintain — all a hand\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the irony — \"manufacture = made by hand\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the irony — \"manufacture = made by hand\"]"
             }
           ]
         },
@@ -374,7 +296,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)"
+              "text": "Say \"the hand,\" and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)"
             }
           ]
         }

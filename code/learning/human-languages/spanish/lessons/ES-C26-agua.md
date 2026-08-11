@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C26-agua
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1590
-chapter: 109
+sequence: 1610
+chapter: 115
 type: word
 headword: el agua
 gloss: water — a word that barely changed from Latin, and takes el without ever stopping being feminine

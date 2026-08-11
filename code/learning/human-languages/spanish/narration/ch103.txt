@@ -1,62 +1,43 @@
-Spanish, chapter 103: Lo Siento.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 103: Synthesis --- Promising, and Supposing.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-lo siento — "I'm sorry," i.e. "I feel it".
-
-Warm-up.
-[pause 2 seconds]
-You already know por favor, "please." The next courtesy phrase is lo siento. Spanish does not say "I am sorry" as an adjective; it says something closer to "I feel this."
-
-The phrase, taken apart.
-lo = "it" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for "the whole business, unnamed."
-siento = "I feel," from sentir, "to feel," from Latin sentīre. That root gave English a whole family: sentiment, sense, consent ("feel together"), resent ("feel back at"), and sentence (originally an opinion, something felt).
-So lo siento is literally "I feel it." You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, "I feel it a lot," works both for stepping on someone's foot and for hearing that their father died.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "siento" — I feel — then "lo siento," I feel it / I'm sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "lo siento mucho" — I'm so sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "siento" then English "sentiment, sense, consent"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does lo siento literally mean? ("I feel it" — siento, "I feel," from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter "it.") Next: Spanish's other word for sorry, and when it is the right one.
-
-
-Lesson 2 of 2.
-perdón — the sorry that asks for something back.
+Lesson 1 of 1.
+Synthesis — promising, and supposing.
 
 Warm-up.
 [pause 2 seconds]
-Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person.
+Nothing new in this chapter. Say hablaré, then hablaría.
 
-The word, taken apart.
-perdón ("pardon"), from the verb perdonar — Latin per- ("thoroughly") + dōnāre ("to give"). Literally: "to give completely."
-That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect ("thoroughly made") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it.
+Grammar Lens: the two endings are one word, twice.
+Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you.
+Both are the verb haber — Latin habēre, "to have" — glued onto the back of the infinitive. Romance speakers stopped saying "I have to speak" as two words and fused it into one:
+hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak.
+That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments.
 
-Why it's said this way: which one to reach for.
-The two are not interchangeable, and the difference follows straight from the etymologies:
-[a table of 3 rows, read aloud]
-literally. lo siento: "I feel it". perdón: "give [it] completely".
-points at. lo siento: your feeling. perdón: their forgiveness.
-use for. lo siento: regret, sympathy. perdón: fault, or getting past someone.
-So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English "excuse me"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward "I'm sorry that happened," including things that are nobody's fault at all.
-Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off.
+What you've built.
+And the meaning follows from the grammar rather than being extra to it.
+Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical.
+Promise from the present. Suppose from the past.
+English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía.
+
+The exchange.
+— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien.
+One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "perdón" — pardon / excuse me]
+[your turn — say: hablaré then hablaría, and hear a promise turn into a guess]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "lo siento" for regret, "perdón" for fault]
-[pause 8 seconds for the answer]
-[your turn — say: "perdón" then English "donate, condone" — the dōnāre root]
-[pause 8 seconds for the answer]
+[repeat that twice]
+Until the choice is about what you mean, not which ending it was.
+[question — say your answer, then pause 8 seconds]
+You are committing to it. I will speak: which form?
+[question — say your answer, then pause 8 seconds]
+Now you are only supposing. I would speak: which form?
+[question — say your answer, then pause 10 seconds]
+What single word is glued onto the infinitive in BOTH tenses?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do the two halves of perdonar mean? (Per-, "thoroughly," plus dōnāre, "to give" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — "I feel it.")
+What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)

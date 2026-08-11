@@ -1,92 +1,115 @@
-Spanish, chapter 100: The Subjunctive Built From the Yo Form.
+Spanish, chapter 100: The Future --- Saying What Will Happen.
 3 lessons. All 3 can be done entirely by ear.
 
 
 Lesson 1 of 3.
-quiera, quieras, quiera — keep the change you know.
+hablaré — keep the infinitive, add the future.
 
 Warm-up.
 [pause 2 seconds]
-Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: quiera.
-person: tú. present subjunctive: quieras.
-person: él / ella / usted. present subjunctive: quiera.
-Say only this bounded singular row: quiera, quieras, quiera.
+Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object.
 
-Grammar Lens: one known verb, one inherited stem.
-You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
+Grammar Lens: three familiar persons.
+Keep the whole infinitive hablar, then add one ending:
+[a table of 3 rows, read aloud]
+person: yo. simple future: hablaré.
+person: tú. simple future: hablarás.
+person: él / ella / usted. simple future: hablará.
+Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait.
+
+The weld, taken apart.
+Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré.
+That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment.
 
 Guided Practice.
 [pause 1 second]
-Carry only the known quier- stem into this row.
+[your turn — say: “hablaré, hablarás, hablará”]
+[pause 8 seconds for the answer]
+[your turn — say: “Voy a hablar español. Hablaré español.”]
+[pause 8 seconds for the answer]
+[your turn — say: “infinitive plus historical habēre material”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem quier-?
+Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 7 seconds]
-Complete 'Quiero que ___ hablar español' for one friend.
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which Latin verb meaning 'to have' contributed material to the Romance future endings?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
+Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer.
 
 
 Lesson 2 of 3.
-pueda, puedas, pueda — one more known stem change.
+comeré — the same endings keep -er.
 
 Warm-up.
 [pause 2 seconds]
-Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: pueda.
-person: tú. present subjunctive: puedas.
-person: él / ella / usted. present subjunctive: pueda.
-Say pueda, puedas, pueda. No other poder forms enter today.
+You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”
 
-Grammar Lens: use it immediately.
-Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
+Grammar Lens: the singular -er row.
+[a table of 3 rows, read aloud]
+person: yo. simple future: comeré.
+person: tú. simple future: comerás.
+person: él / ella / usted. simple future: comerá.
+Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait.
+
+The ending, taken apart.
+The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set.
 
 Guided Practice.
 [pause 1 second]
-Carry only the known pued- stem into this row.
+[your turn — say: “comeré, comerás, comerá”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hablaré. Comeré.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Beberé café.”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem pued-?
-[question — say your answer, then pause 10 seconds]
-Say 'I want you to be able to speak Spanish' to one friend.
+Give the learned singular future forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Use the learned -er future pattern to say 'I will drink coffee' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which endings do hablaré and comeré share across the learned singular row?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
+Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more.
 
 
 Lesson 3 of 3.
-haga, hagas, haga — hago lends its stem.
+viviré — one future row for three verb families.
 
 Warm-up.
 [pause 2 seconds]
-The known present yo form is hago. Remove -o and keep hag-:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: haga.
-person: tú. present subjunctive: hagas.
-person: él / ella / usted. present subjunctive: haga.
-Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
+Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré.
 
-Grammar Lens: spend the new form.
-Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
+Grammar Lens: the singular -ir row.
+[a table of 3 rows, read aloud]
+person: yo. simple future: viviré.
+person: tú. simple future: vivirás.
+person: él / ella / usted. simple future: vivirá.
+Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait.
+
+Grammar Lens: meaning with known words.
+Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new.
 
 Guided Practice.
 [pause 1 second]
-Carry only the known hag- stem into this row.
+[your turn — say: “viviré, vivirás, vivirá”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viviré en Madrid.”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem hag-?
+Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I will live in Madrid' in Spanish.
 [question — say your answer, then pause 9 seconds]
-Say 'I want you to make coffee' to one friend.
+Give the future yo forms of hablar, comer, and vivir, in that order.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)
+Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”

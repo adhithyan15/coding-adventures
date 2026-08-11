@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 122,
-  "title": "Review --- Four Verbs of the Mind",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:72290efad58318f2",
+  "title": "Green and Yellow",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fb39db0d1be35490",
   "lessons": [
     {
-      "id": "ES-C34-repaso-mente",
-      "sequence": 1793,
-      "title": "Review — four verbs of the mind",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
+      "id": "ES-C33-verde",
+      "sequence": 1760,
+      "title": "verde — the colour named after being alive",
+      "headword": "verde",
+      "romanization": "verde",
+      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:877c867c48c244bb",
+      "sourceHash": "fnv1a64:944f0aa3329c4e99",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
+              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart: verde",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the thing none of the four chapters could show you on its own."
+              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
             },
             {
               "kind": "speech",
-              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
+              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
             },
             {
               "kind": "speech",
-              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
-            },
-            {
-              "kind": "speech",
-              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
-            },
-            {
-              "kind": "speech",
-              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
-            },
-            {
-              "kind": "speech",
-              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
-            },
-            {
-              "kind": "speech",
-              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
-            },
-            {
-              "kind": "speech",
-              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
+              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,87 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four verbs in order — to read, to think, to understand, to write",
+              "instruction": "\"verde\" — green",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
+              "source": "[YOU SAY: \"verde\" — green]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "for each one, the body word underneath it",
+              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: for each one, the body word underneath it]"
+              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-weigh",
-              "prompt": "Which of the four verbs originally meant to weigh?",
-              "assesses": [
-                "ES-ETYMON-PENSAR-02"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "pensar",
-                "pensar (to think)",
-                "think"
-              ],
-              "feedback": {
-                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
-                "incorrect": "pensar, from pensare, to weigh."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-gather",
-              "prompt": "Which one meant to gather or pick out?",
-              "assesses": [
-                "ES-ETYMON-LEER-06"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "leer",
-                "leer (to read)",
-                "read"
-              ],
-              "feedback": {
-                "correct": "Yes — legere, the root inside collect, select and intellect.",
-                "incorrect": "leer, from legere, to gather."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-scratch",
-              "prompt": "And which one meant to scratch?",
-              "assesses": [
-                "ES-ETYMON-ESCRIBIR-08"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "escribir",
-                "escribir (to write)",
-                "write"
-              ],
-              "feedback": {
-                "correct": "Yes — scribere. Writing was scratching a surface.",
-                "incorrect": "escribir, from scribere, to scratch."
-              }
+              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +111,118 @@
             },
             {
               "kind": "speech",
-              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
+              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C33-amarillo",
+      "sequence": 1770,
+      "title": "amarillo — the colour that started as a taste",
+      "headword": "amarillo",
+      "romanization": "amarillo",
+      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a30087f0bc2e9e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: amarillo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
+            },
+            {
+              "kind": "speech",
+              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde, amarillo\" — green and yellow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
             }
           ]
         }

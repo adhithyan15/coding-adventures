@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-practice
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1318
-chapter: 96
+sequence: 1338
+chapter: 102
 type: practice-mix
 headword: (practice)
 gloss: a singular checkpoint for the simple future and conditional

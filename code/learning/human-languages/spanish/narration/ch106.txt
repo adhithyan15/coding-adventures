@@ -1,97 +1,92 @@
-Spanish, chapter 106: Parents and Siblings.
+Spanish, chapter 106: The Subjunctive Built From the Yo Form.
 3 lessons. All 3 can be done entirely by ear.
 
 
 Lesson 1 of 3.
-el padre, la madre — among the oldest words there are.
+quiera, quieras, quiera — keep the change you know.
 
 Warm-up.
 [pause 2 seconds]
-"Father" and "mother" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother.
+Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: quiera.
+person: tú. present subjunctive: quieras.
+person: él / ella / usted. present subjunctive: quiera.
+Say only this bounded singular row: quiera, quieras, quiera.
 
-The words, taken apart: padre and madre.
-el padre ("father") from Latin pater from PIE ph₂tḗr.
-la madre ("mother") from Latin māter from PIE méh₂tēr.
-
-Why it's said this way: the English sound-law.
-Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:
-[a table of 2 rows, read aloud]
-PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.
-PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother.
-So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their "of a parent" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, "the stuff a tree-mother produces," gives Spanish materia and, separately, matriz — "womb" — via Latin mātrix.)
+Grammar Lens: one known verb, one inherited stem.
+You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el padre, la madre"]
-[pause 8 seconds for the answer]
-[your turn — say: the sound-law — "padre keeps p; father shifts to f — same word"]
-[pause 8 seconds for the answer]
-[your turn — say: "padre becomes paternal; madre becomes maternal"]
-[pause 8 seconds for the answer]
+Carry only the known quier- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem quier-?
+[question — say your answer, then pause 7 seconds]
+Complete 'Quiero que ___ hablar español' for one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "father" and "mother" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)
+Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
 
 
 Lesson 2 of 3.
-el hermano, la hermana — brother and sister, from a different word entirely.
+pueda, puedas, pueda — one more known stem change.
 
 Warm-up.
 [pause 2 seconds]
-You might expect Spanish "brother" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds.
+Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: pueda.
+person: tú. present subjunctive: puedas.
+person: él / ella / usted. present subjunctive: pueda.
+Say pueda, puedas, pueda. No other poder forms enter today.
 
-The words, taken apart: hermano and hermana.
-Classical Latin could say frāter germānus, literally "a brother of the same stock/blood" — distinguishing a full brother from a half-brother, or from a "brother" in some looser sense.
-Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:
-el hermano ("brother") from Latin germānus.
-la hermana ("sister") from Latin germāna.
-So Spanish's everyday word for brother is, grammatically, a leftover adjective.
-
-Why it's said this way: where germanus comes from.
-Germānus traces back to germen, "sprout, bud, seed" — the same root that gives English germ, germinate, and germane (originally "closely related," from the same seed, before it loosened into just "relevant").
-So calling someone your hermano is, at the etymological root, calling them "sprung from the same seed." (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)
+Grammar Lens: use it immediately.
+Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el hermano, la hermana" — brother, sister]
-[pause 8 seconds for the answer]
-[your turn — say: the root chain — "germen, seed" becomes "germānus, of the same seed" becomes "hermano"]
-[pause 8 seconds for the answer]
-[your turn — say: "hermano" then English "germinate, germane"]
-[pause 8 seconds for the answer]
+Carry only the known pued- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem pued-?
+[question — say your answer, then pause 10 seconds]
+Say 'I want you to be able to speak Spanish' to one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does Spanish hermano come from Latin frāter? (No — from germānus, "of the same stock/seed," an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is.
+Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
 
 
 Lesson 3 of 3.
-the h in hermano — a letter that was never spoken.
+haga, hagas, haga — hago lends its stem.
 
 Warm-up.
 [pause 2 seconds]
-Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one.
+The known present yo form is hago. Remove -o and keep hag-:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: haga.
+person: tú. present subjunctive: hagas.
+person: él / ella / usted. present subjunctive: haga.
+Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
 
-You'll want to know first.
-el hermano, la hermana — the words and the germen root.
-
-Why it's said this way: two different silent h's.
-You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo ("son"), facere becomes hacer ("to do"). Hermano is not that, and the difference is worth getting right.
-Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago.
-The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:
-[a table of 2 rows, read aloud]
-word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.
-word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never.
-Same silent letter today; two completely different backstories, only one of which involves a sound at all.
+Grammar Lens: spend the new form.
+Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "germānus" then "ermano" then "hermano" — the three stages]
-[pause 8 seconds for the answer]
-[your turn — say: the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was]
-[pause 8 seconds for the answer]
+Carry only the known hag- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem hag-?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to make coffee' to one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)
+Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)

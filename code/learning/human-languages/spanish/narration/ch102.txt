@@ -1,45 +1,99 @@
-Spanish, chapter 102: Synthesis --- Claiming, and Not Claiming.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 102: One Stem, Two Tenses.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
-Synthesis — claiming, and not claiming.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 2.
+haré, tendré, podré — three stems, two ending sets.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say hablas, then hables.
+Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional.
 
-Grammar Lens: what the second one is actually doing.
-Those two forms are not two tenses. They are two stances.
-Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so.
-In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert.
-That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table.
-Indicative: this is so. Subjunctive: I am not saying this is so.
+Grammar Lens: hacer becomes har-.
+[a table of 3 rows, read aloud]
+person: yo. future: haré. conditional: haría.
+person: tú. future: harás. conditional: harías.
+person: él / ella / usted. future: hará. conditional: haría.
+Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”
 
-The exchange.
-— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho.
-Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright.
+Grammar Lens: tener becomes tendr-.
+[a table of 3 rows, read aloud]
+person: yo. future: tendré. conditional: tendría.
+person: tú. future: tendrás. conditional: tendrías.
+person: él / ella / usted. future: tendrá. conditional: tendría.
+The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb.
 
-What you've built.
-Ojalá deserves a last look, because it explains itself.
-It is Arabic — wa-šā' allāh, "and may God will it" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names.
-And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert.
+Grammar Lens: poder becomes podr-.
+[a table of 3 rows, read aloud]
+person: yo. future: podré. conditional: podría.
+person: tú. future: podrás. conditional: podrías.
+person: él / ella / usted. future: podrá. conditional: podría.
+Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”
+These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the three-line exchange, and name the stance of each line]
+[your turn — say: “haré, haría”]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until choosing the mood feels like choosing what you mean.
+[your turn — say: “tendré, tendría”]
+[pause 8 seconds for the answer]
+[your turn — say: “podré, podría”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
 [question — say your answer, then pause 8 seconds]
-You are stating a fact about a friend: you speak Spanish. Hablas or hables?
-[question — say your answer, then pause 8 seconds]
-Now you only wish it were so. Which form follows ojala?
+Give the future and conditional yo forms of tener, in that order.
 [question — say your answer, then pause 10 seconds]
-What did ojala originally mean, and in which language?
+Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)
+Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter.
+
+
+Lesson 2 of 2.
+Practice — one infinitive frame, two futures of thought.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”
+
+Grammar Lens: the regular frame.
+There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped.
+All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait.
+
+Grammar Lens: three learned stems.
+There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped.
+The stems change; the ending sets do not. Other irregular stems remain outside this chapter.
+
+The ending, taken apart.
+Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “haré/haría, tendré/tendría, podré/podría”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the future yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the conditional yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 7 seconds]
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I would live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Give the learned stems for hacer, tener, and poder, in that order.
+[question — say your answer, then pause 7 seconds]
+Which Latin 'have' verb contributed material to both Romance constructions?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary.

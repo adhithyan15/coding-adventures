@@ -1164,6 +1164,78 @@
       "after": []
     },
     {
+      "id": "ES-PATH-040-PARTICIPLE",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C49-participio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-PARTICIPLE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-PERFECT-1",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C49-he-hablado"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-PERFECT-1"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-PERFECT-ALL",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C49-haber-completo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-PERFECT-ALL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-PART-IRREG",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C49-participios-irregulares"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-PART-IRREG"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-REVIEW-PERF",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C49-repaso-perfecto"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-REVIEW-PERF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-040-SYNTH-PERF",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C49-sintesis-dos-orillas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-040-SYNTH-PERF"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-041",
       "spine_node": "SPINE-TALK-ABOUT-FUTURE",
       "lessons": [
@@ -1678,7 +1750,13 @@
         "ES-PATH-040-CUANDO",
         "ES-PATH-040-STATE-VERBS",
         "ES-PATH-040-REVIEW-PASTS",
-        "ES-PATH-040-SYNTH-STORY"
+        "ES-PATH-040-SYNTH-STORY",
+        "ES-PATH-040-PARTICIPLE",
+        "ES-PATH-040-PERFECT-1",
+        "ES-PATH-040-PERFECT-ALL",
+        "ES-PATH-040-PART-IRREG",
+        "ES-PATH-040-REVIEW-PERF",
+        "ES-PATH-040-SYNTH-PERF"
       ],
       "omits": [
         "VERB-PAST"
@@ -3381,6 +3459,72 @@
       "prerequisites": [],
       "lessons": [
         "ES-C48-sintesis-una-historia"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-PARTICIPLE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C49-participio"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-PERFECT-1",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C49-he-hablado"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-PERFECT-ALL",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C49-haber-completo"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-PART-IRREG",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C49-participios-irregulares"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-REVIEW-PERF",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C49-repaso-perfecto"
+      ]
+    },
+    {
+      "id": "ES-EXT-040-SYNTH-PERF",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C49-sintesis-dos-orillas"
       ]
     }
   ]

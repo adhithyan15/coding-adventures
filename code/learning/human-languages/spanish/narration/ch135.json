@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 135,
-  "title": "Jugar --- Playing Was Joking",
+  "title": "Synthesis --- What You Like, and Who Does the Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:536dd3154459568b",
+  "sourceHash": "fnv1a64:5ae95c4ad0395ffd",
   "lessons": [
     {
-      "id": "ES-C39-jugar",
-      "sequence": 1980,
-      "title": "jugar — \"to play\", and the only verb of its kind",
-      "headword": "jugar",
-      "romanization": "jugar",
-      "gloss": "to play — from Latin's word for joking, and the only verb in the language that breaks u to ue",
+      "id": "ES-C35-sintesis-gustar",
+      "sequence": 1854,
+      "title": "Synthesis — what you like, and who is doing the liking",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d66a7cec81290b1",
+      "sourceHash": "fnv1a64:51cadc5eaa81ac96",
       "notice": null,
       "blocks": [
         {
@@ -35,88 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Consigo cracked its e to i. Here is a verb that cracks a vowel no other verb in Spanish cracks — and it started life as a joke."
+              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence that will not let you be the subject",
           "segments": [
             {
               "kind": "speech",
-              "text": "j-jota — the j is scraped at the back of the throat: khoo-GAR."
+              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
             },
             {
               "kind": "speech",
-              "text": "diphthong-ue — juego is three beats, KHWE-go."
+              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: jugar",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "jugar (\"to play\") from Latin iocārī, \"to joke, to jest\", built on the noun iocus, \"a joke\". Playing and joking were one word, and Spanish kept the joking one for both."
+              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
             },
             {
               "kind": "speech",
-              "text": "English holds iocus in several shapes: joke; through French jocular; juggler, from ioculātor, an entertainer; and jeopardy, from Old French jeu parti, \"an evenly divided game\" — a position so balanced that either side might lose. The Spanish family stays close: el juego, a game; el juguete, a toy."
+              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the play-verb Spanish let go",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's ordinary word for playing was lūdere, and Spanish dropped it exactly as it dropped claudere for shutting doors. English kept the whole family instead: illusion, allude, elude, delude, collude, prelude, interlude, ludicrous."
-            },
-            {
-              "kind": "speech",
-              "text": "Claudere and lūdere tell one story: the large English family belongs to the Latin verb Spanish walked away from."
+              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
             }
           ]
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: the fourth crack, with one member",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: juego.",
-                "person: tú. form: juegas.",
-                "person: él/ella/usted. form: juega.",
-                "person: nosotros. form: jugamos.",
-                "person: ellos/ustedes. form: juegan."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Dormir breaks o becomes ue. Jugar breaks u becomes ue, and it is the only verb in Spanish that does: the o of iocārī had already slid irregularly to u, so the crack landed on a vowel no other verb offers. Jugamos stays plain, because the stress moves to the ending."
-            },
-            {
-              "kind": "speech",
-              "text": "One more habit: Spanish plays at a thing rather than simply playing it. El fútbol is football, and you say juego al fútbol, with a + el fused into al. With a companion rather than a game it is con: juego con el perro, I play with the dog."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -129,43 +102,93 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"juego, juegas, juega, jugamos, juegan\"",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"juego, juegas, juega, jugamos, juegan\"]"
+              "source": "[YOU SAY: the exchange above, both parts]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Juego con el perro\"",
+              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Juego con el perro\"]"
+              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"duermo\" then \"juego\" — o to ue, then u to ue",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"duermo\" then \"juego\" — o to ue, then u to ue]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"iocus, joke, jocular, juggler\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Until me gusta arrives without translating I like first."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-subject",
+              "prompt": "In me gusta el cafe, what is the subject?",
+              "assesses": [
+                "ES-GRAMMAR-GUSTAR-INVERSION-09"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "el cafe",
+                "the coffee",
+                "cafe",
+                "el café"
+              ],
+              "feedback": {
+                "correct": "Yes — the coffee does the pleasing.",
+                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-taste",
+              "prompt": "What did gustar originally mean?",
+              "assesses": [
+                "ES-ETYMON-GUSTAR-08"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"iocus, joke, jocular, juggler\"]"
+              "acceptedResponses": [
+                "to taste",
+                "taste",
+                "tasting"
+              ],
+              "feedback": {
+                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
+                "incorrect": "To taste — from Latin gustare."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-sintesis-gustar-joke",
+              "prompt": "Which phrase you learned long ago is built from this same word?",
+              "assesses": [
+                "ES-LEX-GUSTO",
+                "ES-LEX-GUSTAR-07"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "mucho gusto",
+                "gusto",
+                "much pleasure"
+              ],
+              "feedback": {
+                "correct": "Yes — mucho gusto has always meant much pleasure.",
+                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
+              }
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +200,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did iocārī mean, and which English words carry it? (To joke; joke, jocular, juggler, jeopardy.) What is unusual about juego among Spanish verbs? (U becomes ue, and no other verb does it.) Which two Latin verbs did Spanish drop while English kept their families? (Claudere and lūdere.) And which vowel does conseguir break? (E to i.)"
+              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
             }
           ]
         }

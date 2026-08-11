@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 118,
-  "title": "Pensar — Thinking Is Weighing",
+  "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:346392d2a6c759c2",
+  "sourceHash": "fnv1a64:9ff4fac3a0801925",
   "lessons": [
     {
-      "id": "ES-C34-pensar",
-      "sequence": 1760,
-      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
-      "headword": "pensar",
-      "romanization": "pensar",
-      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
+      "id": "ES-C29-la-hora",
+      "sequence": 1660,
+      "title": "la hora — Spanish's barely-changed Latin hour",
+      "headword": "la hora",
+      "romanization": "la hora",
+      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bffdb102fc3d7e3a",
+      "sourceHash": "fnv1a64:edba6539d07ef120",
       "notice": null,
       "blocks": [
         {
@@ -35,102 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
+              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: hora",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
+              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
             },
             {
-              "kind": "speech",
-              "text": "The s is always a clear hissing s, never an English z buzz."
+              "kind": "table",
+              "headers": [
+                "language",
+                "word",
+                "what happened"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
+                "language: French. word: heure. what happened: inherited, but worn down further.",
+                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
+                "language: English. word: hour. what happened: inherited via French, silent h."
+              ]
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: pensar",
+          "type": "grammar",
+          "title": "Grammar Lens: Son las and telling time",
           "segments": [
             {
               "kind": "speech",
-              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
+              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
             },
             {
               "kind": "speech",
-              "text": "English kept the whole family, and most of it still smells of money and scales:"
+              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
             },
             {
               "kind": "speech",
-              "text": "pensive — turning something over on the balance."
-            },
-            {
-              "kind": "speech",
-              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
-            },
-            {
-              "kind": "speech",
-              "text": "expense, dispense, pension — payments were literally weighed out."
-            },
-            {
-              "kind": "speech",
-              "text": "peso — a coin whose name simply means \"a weight\"."
-            },
-            {
-              "kind": "speech",
-              "text": "pansy — from French pensée, \"a thought\"."
-            },
-            {
-              "kind": "speech",
-              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
+              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the same endings, a broken stem",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "stem"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: pienso. stem: broken.",
-                "person: tú. form: piensas. stem: broken.",
-                "person: él/ella/usted. form: piensa. stem: broken.",
-                "person: nosotros. form: pensamos. stem: plain.",
-                "person: ellos/ustedes. form: piensan. stem: broken."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -143,34 +99,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
+              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
+              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso en ti\" — I am thinking of you",
+              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
+              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
+              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
+              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +138,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
+              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
             }
           ]
         }

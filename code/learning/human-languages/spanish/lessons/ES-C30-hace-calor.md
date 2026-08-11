@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C30-hace-calor
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1660
-chapter: 113
+sequence: 1680
+chapter: 119
 type: phrase
 headword: hace calor, hace frío, hace sol
 gloss: the three weather words Spanish reports with hacer — "it makes heat," "it makes cold," "it makes sun"

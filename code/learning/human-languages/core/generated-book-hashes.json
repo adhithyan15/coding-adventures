@@ -4189,466 +4189,520 @@
     {
       "language": "spanish",
       "chapter": 94,
-      "sourceHash": "fnv1a64:4b3f0eae83aa4a0c",
+      "sourceHash": "fnv1a64:818d73d2a4defc96",
+      "lessonIds": [
+        "ES-C49-participio"
+      ],
+      "tex": "spanish/book/chapters/ch94-participle.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 95,
+      "sourceHash": "fnv1a64:3ad21ce2351b503d",
+      "lessonIds": [
+        "ES-C49-he-hablado"
+      ],
+      "tex": "spanish/book/chapters/ch95-perfect-first-person.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 96,
+      "sourceHash": "fnv1a64:16d9b6d94145b322",
+      "lessonIds": [
+        "ES-C49-haber-completo"
+      ],
+      "tex": "spanish/book/chapters/ch96-perfect-complete.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 97,
+      "sourceHash": "fnv1a64:59a56171211951af",
+      "lessonIds": [
+        "ES-C49-participios-irregulares"
+      ],
+      "tex": "spanish/book/chapters/ch97-irregular-participles.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 98,
+      "sourceHash": "fnv1a64:3cc3c2f63bb340b0",
+      "lessonIds": [
+        "ES-C49-repaso-perfecto"
+      ],
+      "tex": "spanish/book/chapters/ch98-review-perfect.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 99,
+      "sourceHash": "fnv1a64:5a6a02a2c18750c3",
+      "lessonIds": [
+        "ES-C49-sintesis-dos-orillas"
+      ],
+      "tex": "spanish/book/chapters/ch99-synthesis-perfect.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 100,
+      "sourceHash": "fnv1a64:3a3fbfa34d139520",
       "lessonIds": [
         "ES-C17-futuro",
         "ES-C17-comer-futuro",
         "ES-C17-vivir-futuro"
       ],
-      "tex": "spanish/book/chapters/ch94-futuro.tex"
+      "tex": "spanish/book/chapters/ch100-futuro.tex"
     },
     {
       "language": "spanish",
-      "chapter": 95,
-      "sourceHash": "fnv1a64:a9be3f44b4c76f35",
+      "chapter": 101,
+      "sourceHash": "fnv1a64:9b44ab9860be8bdf",
       "lessonIds": [
         "ES-C17-condicional",
         "ES-C17-comer-condicional",
         "ES-C17-vivir-condicional"
       ],
-      "tex": "spanish/book/chapters/ch95-condicional.tex"
+      "tex": "spanish/book/chapters/ch101-condicional.tex"
     },
     {
       "language": "spanish",
-      "chapter": 96,
-      "sourceHash": "fnv1a64:feb789873e4ee5e6",
+      "chapter": 102,
+      "sourceHash": "fnv1a64:6e5f2a524d0cc6c9",
       "lessonIds": [
         "ES-C17-irregulares",
         "ES-C17-practice"
       ],
-      "tex": "spanish/book/chapters/ch96-future-conditional-stems.tex"
+      "tex": "spanish/book/chapters/ch102-future-conditional-stems.tex"
     },
     {
       "language": "spanish",
-      "chapter": 97,
-      "sourceHash": "fnv1a64:a33bc5956be21914",
+      "chapter": 103,
+      "sourceHash": "fnv1a64:ba2276812b8b6600",
       "lessonIds": [
         "ES-C17-sintesis-futuro-condicional"
       ],
-      "tex": "spanish/book/chapters/ch97-synthesis-future-conditional.tex"
+      "tex": "spanish/book/chapters/ch103-synthesis-future-conditional.tex"
     },
     {
       "language": "spanish",
-      "chapter": 98,
-      "sourceHash": "fnv1a64:09cff2bddab965b9",
+      "chapter": 104,
+      "sourceHash": "fnv1a64:4f1943bd4c035f32",
       "lessonIds": [
         "ES-C18-quiero-que"
       ],
-      "tex": "spanish/book/chapters/ch98-quiero-que.tex"
+      "tex": "spanish/book/chapters/ch104-quiero-que.tex"
     },
     {
       "language": "spanish",
-      "chapter": 99,
-      "sourceHash": "fnv1a64:17aef3b1bc6f037e",
+      "chapter": 105,
+      "sourceHash": "fnv1a64:aa37cfd86593bf91",
       "lessonIds": [
         "ES-C18-subjuntivo",
         "ES-C18-comer-subjuntivo",
         "ES-C18-vivir-subjuntivo"
       ],
-      "tex": "spanish/book/chapters/ch99-subjuntivo-regular.tex"
+      "tex": "spanish/book/chapters/ch105-subjuntivo-regular.tex"
     },
     {
       "language": "spanish",
-      "chapter": 100,
-      "sourceHash": "fnv1a64:2bd0fef42ddefde9",
+      "chapter": 106,
+      "sourceHash": "fnv1a64:4daa59dd94139e7d",
       "lessonIds": [
         "ES-C18-querer-subjuntivo",
         "ES-C18-poder-subjuntivo",
         "ES-C18-hacer-subjuntivo"
       ],
-      "tex": "spanish/book/chapters/ch100-subjuntivo-yo-stem.tex"
+      "tex": "spanish/book/chapters/ch106-subjuntivo-yo-stem.tex"
     },
     {
       "language": "spanish",
-      "chapter": 101,
-      "sourceHash": "fnv1a64:bc83d78d1aab0481",
+      "chapter": 107,
+      "sourceHash": "fnv1a64:e3b8bcbe473d131d",
       "lessonIds": [
         "ES-C18-ojala",
         "ES-C18-practice"
       ],
-      "tex": "spanish/book/chapters/ch101-ojala.tex"
+      "tex": "spanish/book/chapters/ch107-ojala.tex"
     },
     {
       "language": "spanish",
-      "chapter": 102,
-      "sourceHash": "fnv1a64:d7b772bc7c7d6a7f",
+      "chapter": 108,
+      "sourceHash": "fnv1a64:e44df3712cf33f63",
       "lessonIds": [
         "ES-C18-sintesis-subjuntivo"
       ],
-      "tex": "spanish/book/chapters/ch102-synthesis-subjuntivo.tex"
+      "tex": "spanish/book/chapters/ch108-synthesis-subjuntivo.tex"
     },
     {
       "language": "spanish",
-      "chapter": 103,
-      "sourceHash": "fnv1a64:5a791a8cdee55f9f",
+      "chapter": 109,
+      "sourceHash": "fnv1a64:aba06701cfaadf04",
       "lessonIds": [
         "ES-C20-lo-siento",
         "ES-C20-perdon"
       ],
-      "tex": "spanish/book/chapters/ch103-lo-siento.tex"
+      "tex": "spanish/book/chapters/ch109-lo-siento.tex"
     },
     {
       "language": "spanish",
-      "chapter": 104,
-      "sourceHash": "fnv1a64:6f6f2e503e228719",
+      "chapter": 110,
+      "sourceHash": "fnv1a64:164129d9b42bc3b0",
       "lessonIds": [
         "ES-C21-lunes-viernes",
         "ES-C21-sabado-domingo"
       ],
-      "tex": "spanish/book/chapters/ch104-days-of-the-week.tex"
+      "tex": "spanish/book/chapters/ch110-days-of-the-week.tex"
     },
     {
       "language": "spanish",
-      "chapter": 105,
-      "sourceHash": "fnv1a64:9bb5843bdf03e4ed",
+      "chapter": 111,
+      "sourceHash": "fnv1a64:2889528742df4473",
       "lessonIds": [
         "ES-C22-negro-blanco",
         "ES-C22-blanco-germanico",
         "ES-C22-rojo",
         "ES-C22-azul"
       ],
-      "tex": "spanish/book/chapters/ch105-black-white-red-blue.tex"
+      "tex": "spanish/book/chapters/ch111-black-white-red-blue.tex"
     },
     {
       "language": "spanish",
-      "chapter": 106,
-      "sourceHash": "fnv1a64:7b00c7dcd6ba3b06",
+      "chapter": 112,
+      "sourceHash": "fnv1a64:f12d42116ef9bfd4",
       "lessonIds": [
         "ES-C23-padre-madre",
         "ES-C23-hermano-hermana",
         "ES-C23-hermano-hache"
       ],
-      "tex": "spanish/book/chapters/ch106-family.tex"
+      "tex": "spanish/book/chapters/ch112-family.tex"
     },
     {
       "language": "spanish",
-      "chapter": 107,
-      "sourceHash": "fnv1a64:6d174eba384c9f21",
+      "chapter": 113,
+      "sourceHash": "fnv1a64:fa0e6c3c148248a4",
       "lessonIds": [
         "ES-C24-cabeza",
         "ES-C24-mano"
       ],
-      "tex": "spanish/book/chapters/ch107-head-and-hand.tex"
+      "tex": "spanish/book/chapters/ch113-head-and-hand.tex"
     },
     {
       "language": "spanish",
-      "chapter": 108,
-      "sourceHash": "fnv1a64:f0aded7ab9a02571",
+      "chapter": 114,
+      "sourceHash": "fnv1a64:38a12b6ec5d48c98",
       "lessonIds": [
         "ES-C25-las-estaciones"
       ],
-      "tex": "spanish/book/chapters/ch108-seasons.tex"
+      "tex": "spanish/book/chapters/ch114-seasons.tex"
     },
     {
       "language": "spanish",
-      "chapter": 109,
-      "sourceHash": "fnv1a64:50eac6dadf15a431",
+      "chapter": 115,
+      "sourceHash": "fnv1a64:727cdf2909143e5c",
       "lessonIds": [
         "ES-C26-agua",
         "ES-C26-vino",
         "ES-C26-pan"
       ],
-      "tex": "spanish/book/chapters/ch109-water-wine-bread.tex"
+      "tex": "spanish/book/chapters/ch115-water-wine-bread.tex"
     },
     {
       "language": "spanish",
-      "chapter": 110,
-      "sourceHash": "fnv1a64:f51d4c7dcc5b0101",
+      "chapter": 116,
+      "sourceHash": "fnv1a64:2df45b357cdcd09d",
       "lessonIds": [
         "ES-C27-los-meses"
       ],
-      "tex": "spanish/book/chapters/ch110-months.tex"
+      "tex": "spanish/book/chapters/ch116-months.tex"
     },
     {
       "language": "spanish",
-      "chapter": 111,
-      "sourceHash": "fnv1a64:4b0bba14061192ee",
+      "chapter": 117,
+      "sourceHash": "fnv1a64:5eacd9e68d3e4268",
       "lessonIds": [
         "ES-C28-mediodia-medianoche"
       ],
-      "tex": "spanish/book/chapters/ch111-noon-midnight.tex"
+      "tex": "spanish/book/chapters/ch117-noon-midnight.tex"
     },
     {
       "language": "spanish",
-      "chapter": 112,
-      "sourceHash": "fnv1a64:f34a866502afa66e",
+      "chapter": 118,
+      "sourceHash": "fnv1a64:3a58b7c92b3cf70d",
       "lessonIds": [
         "ES-C29-la-hora"
       ],
-      "tex": "spanish/book/chapters/ch112-telling-time.tex"
+      "tex": "spanish/book/chapters/ch118-telling-time.tex"
     },
     {
       "language": "spanish",
-      "chapter": 113,
-      "sourceHash": "fnv1a64:9f69046adda06903",
+      "chapter": 119,
+      "sourceHash": "fnv1a64:622295c384ed7c76",
       "lessonIds": [
         "ES-C30-el-tiempo",
         "ES-C30-hace-calor",
         "ES-C30-llueve"
       ],
-      "tex": "spanish/book/chapters/ch113-weather.tex"
+      "tex": "spanish/book/chapters/ch119-weather.tex"
     },
     {
       "language": "spanish",
-      "chapter": 114,
-      "sourceHash": "fnv1a64:7b0c8e648586402d",
+      "chapter": 120,
+      "sourceHash": "fnv1a64:97c72786f2025e09",
       "lessonIds": [
         "ES-C31-once-quince",
         "ES-C31-dieciseis-diecinueve",
         "ES-C31-teens-latinos",
         "ES-C31-veinte"
       ],
-      "tex": "spanish/book/chapters/ch114-numbers-11-20.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 115,
-      "sourceHash": "fnv1a64:e60bdeeade7d41fb",
-      "lessonIds": [
-        "ES-C32-gato",
-        "ES-C32-perro"
-      ],
-      "tex": "spanish/book/chapters/ch115-dog-and-cat.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 116,
-      "sourceHash": "fnv1a64:ee143413688b8b88",
-      "lessonIds": [
-        "ES-C33-verde",
-        "ES-C33-amarillo"
-      ],
-      "tex": "spanish/book/chapters/ch116-green-and-yellow.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 117,
-      "sourceHash": "fnv1a64:cce971d557af0748",
-      "lessonIds": [
-        "ES-C40-sintesis-describir"
-      ],
-      "tex": "spanish/book/chapters/ch117-synthesis-describing.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 118,
-      "sourceHash": "fnv1a64:3303d80a90aa0f44",
-      "lessonIds": [
-        "ES-C34-pensar"
-      ],
-      "tex": "spanish/book/chapters/ch118-pensar.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 119,
-      "sourceHash": "fnv1a64:68dfd5d8da396a24",
-      "lessonIds": [
-        "ES-C34-entender"
-      ],
-      "tex": "spanish/book/chapters/ch119-entender.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 120,
-      "sourceHash": "fnv1a64:d7b7f18beb6606e8",
-      "lessonIds": [
-        "ES-C34-leer"
-      ],
-      "tex": "spanish/book/chapters/ch120-leer.tex"
+      "tex": "spanish/book/chapters/ch120-numbers-11-20.tex"
     },
     {
       "language": "spanish",
       "chapter": 121,
-      "sourceHash": "fnv1a64:acd89ea1480b3861",
+      "sourceHash": "fnv1a64:e9b2632baae17426",
       "lessonIds": [
-        "ES-C34-escribir"
+        "ES-C32-gato",
+        "ES-C32-perro"
       ],
-      "tex": "spanish/book/chapters/ch121-escribir.tex"
+      "tex": "spanish/book/chapters/ch121-dog-and-cat.tex"
     },
     {
       "language": "spanish",
       "chapter": 122,
-      "sourceHash": "fnv1a64:97b16c54a7931b15",
+      "sourceHash": "fnv1a64:53e240d803c7d777",
       "lessonIds": [
-        "ES-C34-repaso-mente"
+        "ES-C33-verde",
+        "ES-C33-amarillo"
       ],
-      "tex": "spanish/book/chapters/ch122-review-verbs-of-mind.tex"
+      "tex": "spanish/book/chapters/ch122-green-and-yellow.tex"
     },
     {
       "language": "spanish",
       "chapter": 123,
-      "sourceHash": "fnv1a64:ae64213001063e6e",
+      "sourceHash": "fnv1a64:732307ad014342a4",
       "lessonIds": [
-        "ES-C34-sintesis-mente"
+        "ES-C40-sintesis-describir"
       ],
-      "tex": "spanish/book/chapters/ch123-synthesis-verbs-of-mind.tex"
+      "tex": "spanish/book/chapters/ch123-synthesis-describing.tex"
     },
     {
       "language": "spanish",
       "chapter": 124,
-      "sourceHash": "fnv1a64:c51b88db5ce4b7b8",
+      "sourceHash": "fnv1a64:3a85b4c255996366",
       "lessonIds": [
-        "ES-C35-tomar"
+        "ES-C34-pensar"
       ],
-      "tex": "spanish/book/chapters/ch124-tomar.tex"
+      "tex": "spanish/book/chapters/ch124-pensar.tex"
     },
     {
       "language": "spanish",
       "chapter": 125,
-      "sourceHash": "fnv1a64:3feb6f729b035d8e",
+      "sourceHash": "fnv1a64:c3b33030860d8852",
       "lessonIds": [
-        "ES-C35-preguntar"
+        "ES-C34-entender"
       ],
-      "tex": "spanish/book/chapters/ch125-preguntar.tex"
+      "tex": "spanish/book/chapters/ch125-entender.tex"
     },
     {
       "language": "spanish",
       "chapter": 126,
-      "sourceHash": "fnv1a64:fbc9c766acc65371",
+      "sourceHash": "fnv1a64:619078688c41b518",
       "lessonIds": [
-        "ES-C35-ayudar"
+        "ES-C34-leer"
       ],
-      "tex": "spanish/book/chapters/ch126-ayudar.tex"
+      "tex": "spanish/book/chapters/ch126-leer.tex"
     },
     {
       "language": "spanish",
       "chapter": 127,
-      "sourceHash": "fnv1a64:6c1ea57d061993c9",
+      "sourceHash": "fnv1a64:a595520f67d90206",
       "lessonIds": [
-        "ES-C35-repaso-tres"
+        "ES-C34-escribir"
       ],
-      "tex": "spanish/book/chapters/ch127-review-ordinary-verbs.tex"
+      "tex": "spanish/book/chapters/ch127-escribir.tex"
     },
     {
       "language": "spanish",
       "chapter": 128,
-      "sourceHash": "fnv1a64:9e3c31f8b3842bd7",
+      "sourceHash": "fnv1a64:7f3d97c9beeba3c3",
       "lessonIds": [
-        "ES-C35-gustar"
+        "ES-C34-repaso-mente"
       ],
-      "tex": "spanish/book/chapters/ch128-gustar.tex"
+      "tex": "spanish/book/chapters/ch128-review-verbs-of-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 129,
-      "sourceHash": "fnv1a64:5ca36071968824a5",
+      "sourceHash": "fnv1a64:e9b857dd7b9af374",
       "lessonIds": [
-        "ES-C35-sintesis-gustar"
+        "ES-C34-sintesis-mente"
       ],
-      "tex": "spanish/book/chapters/ch129-synthesis-gustar.tex"
+      "tex": "spanish/book/chapters/ch129-synthesis-verbs-of-mind.tex"
     },
     {
       "language": "spanish",
       "chapter": 130,
-      "sourceHash": "fnv1a64:e2af2b53566b2e0e",
+      "sourceHash": "fnv1a64:6926e111347626db",
+      "lessonIds": [
+        "ES-C35-tomar"
+      ],
+      "tex": "spanish/book/chapters/ch130-tomar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 131,
+      "sourceHash": "fnv1a64:9fe8f1135527e5c1",
+      "lessonIds": [
+        "ES-C35-preguntar"
+      ],
+      "tex": "spanish/book/chapters/ch131-preguntar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 132,
+      "sourceHash": "fnv1a64:11ea0621c8422e9a",
+      "lessonIds": [
+        "ES-C35-ayudar"
+      ],
+      "tex": "spanish/book/chapters/ch132-ayudar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 133,
+      "sourceHash": "fnv1a64:448a5d8c77a7003e",
+      "lessonIds": [
+        "ES-C35-repaso-tres"
+      ],
+      "tex": "spanish/book/chapters/ch133-review-ordinary-verbs.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 134,
+      "sourceHash": "fnv1a64:82c812e1d931b327",
+      "lessonIds": [
+        "ES-C35-gustar"
+      ],
+      "tex": "spanish/book/chapters/ch134-gustar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 135,
+      "sourceHash": "fnv1a64:2e3530e6763f8877",
+      "lessonIds": [
+        "ES-C35-sintesis-gustar"
+      ],
+      "tex": "spanish/book/chapters/ch135-synthesis-gustar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 136,
+      "sourceHash": "fnv1a64:cbebb6f6b82eb90f",
       "lessonIds": [
         "ES-C36-oir",
         "ES-C36-dormir",
         "ES-C36-caminar",
         "ES-C36-correr"
       ],
-      "tex": "spanish/book/chapters/ch130-hear-sleep-walk-run.tex"
+      "tex": "spanish/book/chapters/ch136-hear-sleep-walk-run.tex"
     },
     {
       "language": "spanish",
-      "chapter": 131,
-      "sourceHash": "fnv1a64:5d86344099c36514",
+      "chapter": 137,
+      "sourceHash": "fnv1a64:c10c84eacc6d31b9",
       "lessonIds": [
         "ES-C37-abrir",
         "ES-C37-cerrar",
         "ES-C37-sentarse",
         "ES-C37-levantarse"
       ],
-      "tex": "spanish/book/chapters/ch131-open-close-sit-stand.tex"
+      "tex": "spanish/book/chapters/ch137-open-close-sit-stand.tex"
     },
     {
       "language": "spanish",
-      "chapter": 132,
-      "sourceHash": "fnv1a64:e840d76b9d4c6e29",
+      "chapter": 138,
+      "sourceHash": "fnv1a64:0f1269782da1986e",
       "lessonIds": [
         "ES-C38-luego",
         "ES-C38-porque",
         "ES-C38-imperfecto",
         "ES-C38-contar"
       ],
-      "tex": "spanish/book/chapters/ch132-narrating.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 133,
-      "sourceHash": "fnv1a64:fab415a687ed54b9",
-      "lessonIds": [
-        "ES-C39-traer"
-      ],
-      "tex": "spanish/book/chapters/ch133-traer.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 134,
-      "sourceHash": "fnv1a64:38e96d160c69cc18",
-      "lessonIds": [
-        "ES-C39-conseguir"
-      ],
-      "tex": "spanish/book/chapters/ch134-conseguir.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 135,
-      "sourceHash": "fnv1a64:5f78c48deefe2d0d",
-      "lessonIds": [
-        "ES-C39-jugar"
-      ],
-      "tex": "spanish/book/chapters/ch135-jugar.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 136,
-      "sourceHash": "fnv1a64:cb9869ce562a6ded",
-      "lessonIds": [
-        "ES-C39-conocer"
-      ],
-      "tex": "spanish/book/chapters/ch136-conocer.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 137,
-      "sourceHash": "fnv1a64:87d5d996c2bda810",
-      "lessonIds": [
-        "ES-C39-repaso-cambios"
-      ],
-      "tex": "spanish/book/chapters/ch137-review-stem-changes.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 138,
-      "sourceHash": "fnv1a64:39e488d1c7c035fd",
-      "lessonIds": [
-        "ES-C39-sintesis-elegir"
-      ],
-      "tex": "spanish/book/chapters/ch138-synthesis-verb-splits.tex"
+      "tex": "spanish/book/chapters/ch138-narrating.tex"
     },
     {
       "language": "spanish",
       "chapter": 139,
-      "sourceHash": "fnv1a64:7cc1354916148550",
+      "sourceHash": "fnv1a64:0ac298b44922a05f",
+      "lessonIds": [
+        "ES-C39-traer"
+      ],
+      "tex": "spanish/book/chapters/ch139-traer.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 140,
+      "sourceHash": "fnv1a64:ef5c0246050643f0",
+      "lessonIds": [
+        "ES-C39-conseguir"
+      ],
+      "tex": "spanish/book/chapters/ch140-conseguir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 141,
+      "sourceHash": "fnv1a64:65a4e5a5530bdc4d",
+      "lessonIds": [
+        "ES-C39-jugar"
+      ],
+      "tex": "spanish/book/chapters/ch141-jugar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 142,
+      "sourceHash": "fnv1a64:056b746e197e6597",
+      "lessonIds": [
+        "ES-C39-conocer"
+      ],
+      "tex": "spanish/book/chapters/ch142-conocer.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 143,
+      "sourceHash": "fnv1a64:2bd0e9ea95e2821e",
+      "lessonIds": [
+        "ES-C39-repaso-cambios"
+      ],
+      "tex": "spanish/book/chapters/ch143-review-stem-changes.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 144,
+      "sourceHash": "fnv1a64:ad67da0f2a98f0bd",
+      "lessonIds": [
+        "ES-C39-sintesis-elegir"
+      ],
+      "tex": "spanish/book/chapters/ch144-synthesis-verb-splits.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 145,
+      "sourceHash": "fnv1a64:fb8ff03b70646b54",
       "lessonIds": [
         "ES-C40-esperar",
         "ES-C40-contestar",
         "ES-C40-comprar"
       ],
-      "tex": "spanish/book/chapters/ch139-wait-answer-buy.tex"
+      "tex": "spanish/book/chapters/ch145-wait-answer-buy.tex"
     },
     {
       "language": "spanish",
-      "chapter": 140,
-      "sourceHash": "fnv1a64:2759ecadb8f0d905",
+      "chapter": 146,
+      "sourceHash": "fnv1a64:e1e9bfad50b6c4f5",
       "lessonIds": [
         "ES-C41-creer",
         "ES-C41-asi-que",
         "ES-C41-deber",
         "ES-C41-explicar"
       ],
-      "tex": "spanish/book/chapters/ch140-giving-reasons.tex"
+      "tex": "spanish/book/chapters/ch146-giving-reasons.tex"
     },
     {
       "language": "tamil",

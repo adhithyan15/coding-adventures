@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 108,
-  "title": "The Seasons",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:38025a0884fde2f3",
+  "title": "Synthesis --- Claiming, and Not Claiming",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:141229b49437dfb1",
   "lessons": [
     {
-      "id": "ES-C25-las-estaciones",
-      "sequence": 1580,
-      "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
-      "headword": "la primavera, el verano, el otoño, el invierno",
-      "romanization": "la primavera, el verano, el otoño, el invierno",
-      "gloss": "the four seasons — three straightforward, and one whose MEANING quietly shifted from \"spring\" to \"summer\"",
+      "id": "ES-C18-sintesis-subjuntivo",
+      "sequence": 1386,
+      "title": "Synthesis — claiming, and not claiming",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the mood tells your listener whether you are claiming it is true",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:37ef3d10b9ac5854",
-      "notice": null,
+      "sourceHash": "fnv1a64:ad34f52f248f9876",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,46 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another."
+              "text": "Nothing new in this chapter. Say hablas, then hables."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: three straightforward seasons",
+          "type": "grammar",
+          "title": "Grammar Lens: what the second one is actually doing",
           "segments": [
             {
               "kind": "speech",
-              "text": "la primavera (\"spring\") from Latin prīma vēra, literally \"first spring\" (vēr, \"spring,\" + prīma, \"first\"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)"
+              "text": "Those two forms are not two tenses. They are two stances."
             },
             {
               "kind": "speech",
-              "text": "el otoño (\"autumn\") from Latin autumnus — the same root behind French automne and English autumn itself."
+              "text": "Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so."
             },
             {
               "kind": "speech",
-              "text": "el invierno (\"winter\") from Latin hībernum (tempus), \"the wintry [season]\" — the same root as French hiver and English hibernate, \"to spend the winter.\""
+              "text": "In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "Indicative: this is so. Subjunctive: I am not saying this is so."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: verano",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "You might expect verano (\"summer\") to come from Latin aestas, \"heat\" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), \"of spring\" — built on the very same vēr, \"spring,\" behind primavera."
+              "text": "— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho."
             },
             {
               "kind": "speech",
-              "text": "So how did a word meaning \"spring-ish\" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera (\"first spring\") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a \"vernal\" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, \"spring,\" ended up naming two different seasons."
+              "text": "Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ojalá deserves a last look, because it explains itself."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Arabic — wa-šā' allāh, \"and may God will it\" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names."
+            },
+            {
+              "kind": "speech",
+              "text": "And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -87,43 +121,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera, verano, otoño, invierno\" — the four seasons",
+              "instruction": "the three-line exchange, and name the stance of each line",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera, verano, otoño, invierno\" — the four seasons]"
+              "source": "[YOU SAY: the three-line exchange, and name the stance of each line]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"primavera = prima vera, first spring\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera = prima vera, first spring\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"]"
+              "kind": "speech",
+              "text": "Until choosing the mood feels like choosing what you mean."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"invierno hibernate\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-sintesis-subjuntivo-assert",
+              "prompt": "You are stating a fact about a friend: you speak Spanish. Hablas or hables?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"invierno ~ hibernate\"]"
+              "acceptedResponses": [
+                "hablas",
+                "hablas - indicative"
+              ],
+              "feedback": {
+                "correct": "Yes — you put a fact on the table.",
+                "incorrect": "hablas. The indicative asserts."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-sintesis-subjuntivo-wish",
+              "prompt": "Now you only wish it were so. Which form follows ojala?",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hables",
+                "hables - subjunctive",
+                "ojala hables"
+              ],
+              "feedback": {
+                "correct": "Yes — nothing is being claimed.",
+                "incorrect": "hables. A wish asserts nothing."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-sintesis-subjuntivo-ojala",
+              "prompt": "What did ojala originally mean, and in which language?",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "may god will it, in arabic",
+                "arabic, may god will it",
+                "and may god will it",
+                "wa sha allah"
+              ],
+              "feedback": {
+                "correct": "Right — and that is exactly why it cannot take the asserting mood.",
+                "incorrect": "Arabic wa-sha' allah, 'and may God will it'."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -135,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does primavera literally mean? (\"First spring\" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, \"of spring,\" the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)"
+              "text": "What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)"
             }
           ]
         }

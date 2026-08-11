@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C39-sintesis-elegir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1996
-chapter: 138
+sequence: 2016
+chapter: 144
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — three places where English hands you one word and Spanish makes you choose

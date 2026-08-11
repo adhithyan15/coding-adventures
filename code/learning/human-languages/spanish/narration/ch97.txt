@@ -1,43 +1,49 @@
-Spanish, chapter 97: Synthesis --- Promising, and Supposing.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 97: Hecho, Dicho, Visto, Puesto.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Synthesis — promising, and supposing.
+hecho, dicho, visto, puesto — four participles that refused the ending — and they are the four verbs you would have guessed.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say hablaré, then hablaría.
+By the rule, the participle of hacer should be hacido. Say it. Now be told that nobody has ever said it.
 
-Grammar Lens: the two endings are one word, twice.
-Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you.
-Both are the verb haber — Latin habēre, "to have" — glued onto the back of the infinitive. Romance speakers stopped saying "I have to speak" as two words and fused it into one:
-hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak.
-That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments.
+Grammar Lens: four, and you could have guessed which.
+[a table of 4 rows, read aloud]
+verb: hacer. participle: hecho. in use: he hecho — I have done.
+verb: decir. participle: dicho. in use: he dicho — I have said.
+verb: ver. participle: visto. in use: he visto — I have seen.
+verb: poner. participle: puesto. in use: he puesto — I have put.
+Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular.
+You already know this in English. Go/went, see/saw, do/did, put/put — and nobody struggles with them, because you meet them a hundred times a day. The same will happen here.
 
-What you've built.
-And the meaning follows from the grammar rather than being extra to it.
-Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical.
-Promise from the present. Suppose from the past.
-English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía.
-
-The exchange.
-— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien.
-One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word.
+The word, taken apart.
+These four are not broken. They are older than the rule.
+hecho from Latin factum — the thing done. English fact is that same word: a fact is literally a thing that has been done.
+dicho from Latin dictum — the thing said. English keeps dictum whole, and dictation, verdict ("a true saying"), contradict.
+visto from Latin vīsum — the thing seen. English vision, visible.
+puesto from Latin positum — the thing placed. English position, deposit, compose.
+Latin already had participles for these verbs, and Spanish inherited them intact instead of rebuilding them from the stem. The regular -ado / -ido forms are the newer machinery; these four are what was there before it.
+So an irregular participle is not a form that went wrong. It is a form that was never replaced.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: hablaré then hablaría, and hear a promise turn into a guess]
+[your turn — say: "hecho, dicho, visto, puesto"]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the choice is about what you mean, not which ending it was.
-[question — say your answer, then pause 8 seconds]
-You are committing to it. I will speak: which form?
-[question — say your answer, then pause 8 seconds]
-Now you are only supposing. I would speak: which form?
+[your turn — say: each with English beside it — "hecho / fact", "dicho / dictum", "visto / vision", "puesto / position"]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 12 seconds]
+Give the participles of hacer, decir, ver and poner.
 [question — say your answer, then pause 10 seconds]
-What single word is glued onto the infinitive in BOTH tenses?
+Which everyday English noun is the same word as hecho?
+[question — say your answer, then pause 12 seconds]
+Why are these four irregular rather than some other four?
+[question — say your answer, then pause 10 seconds]
+Say we have seen it, using the participle of ver.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)
+The four? (Hecho, dicho, visto, puesto.) Are they broken forms? (No — they are older than the rule, inherited whole from Latin.) Next: all of it together.
