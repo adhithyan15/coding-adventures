@@ -10,6 +10,12 @@
   its visibly different rounded cursive Gimel as a handwriting variation.
 - Queue the same lesson's one-curve Dalet demonstration next.
 
+### Changed — Spanish runs 1..93 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: a synthesis chapter now closes
+  the fourteen-chapter vocabulary run, so old chapters 70–92 shifted to 71–93.
+- Eager bundle 483,296 / 500,000 bytes.
+
 ### Added — cited Hebrew Bet ductus (HL-C09BE)
 
 - Render **ב** in three evidence-aligned frames: draw the top bar into the right
