@@ -100,6 +100,8 @@ const URDU_HE = ductusFor("ہ", "urdu-nastaliq")!;
 const urduHeOutline = naskhOutline("ہ");
 const URDU_YE = ductusFor("ی", "urdu-nastaliq")!;
 const urduYeOutline = naskhOutline("ی");
+const URDU_BARI_YE = ductusFor("ے", "urdu-nastaliq")!;
+const urduBariYeOutline = naskhOutline("ے");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -167,6 +169,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ں", "urdu-nastaliq")?.glyph).toBe("ں");
     expect(ductusFor("ہ", "urdu-nastaliq")?.glyph).toBe("ہ");
     expect(ductusFor("ی", "urdu-nastaliq")?.glyph).toBe("ی");
+    expect(ductusFor("ے", "urdu-nastaliq")?.glyph).toBe("ے");
   });
 
   it("keeps the shared Persian and Urdu ا independently addressable", () => {
@@ -1047,6 +1050,35 @@ describe("Urdu ی — its independent S and bowl are one unbroken stroke", () =>
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_YE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu ے — its broad bowl folds backward in one unbroken stroke", () => {
+  const steps = ductusSteps(URDU_BARI_YE);
+  const strip = ductusFilmstrip(URDU_BARI_YE, urduBariYeOutline);
+
+  it("shows the sourced upper sweep, curl, and lower fold with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend from the upper right and sweep left across the broad bowl",
+      "curl back underneath at the far left without lifting",
+      "continue right along the lower fold without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the Noto Naskh outline and finishes the complete sourced fold", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduBariYeOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_BARI_YE.strokes[0], 1),
     );
   });
 });

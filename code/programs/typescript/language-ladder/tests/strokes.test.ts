@@ -36,6 +36,7 @@ const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
 const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
+const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -420,6 +421,22 @@ describe("handwriting ductus", () => {
     expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(-200);
     expect(bowl.at(-1)!.x).toBeLessThan(bowl[0].x);
     expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
+  });
+
+  it("Urdu independent ے folds its broad bowl back underneath without lifting", () => {
+    expect(URDU_BARI_YE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_BARI_YE)).toBe(0);
+    expect(URDU_BARI_YE.strokes).toHaveLength(1);
+    expect(URDU_BARI_YE.strokes[0].segments).toHaveLength(3);
+    const upper = URDU_BARI_YE.strokes[0].segments[0].path;
+    const curl = URDU_BARI_YE.strokes[0].segments[1].path;
+    const lower = URDU_BARI_YE.strokes[0].segments[2].path;
+    expect(upper.at(-1)).toEqual(curl[0]);
+    expect(curl.at(-1)).toEqual(lower[0]);
+    expect(upper[0].y).toBeGreaterThan(upper.at(-1)!.y);
+    expect(upper.at(-1)!.x).toBeLessThan(upper[0].x);
+    expect(Math.min(...curl.map((point) => point.x))).toBeLessThan(upper.at(-1)!.x);
+    expect(lower.at(-1)!.x).toBeGreaterThan(lower[0].x);
   });
 
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
