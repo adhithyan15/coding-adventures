@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 83,
-  "title": "Preguntar — Asking, and Sounding a Depth",
+  "title": "Escribir — Writing Is Scratching",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fd6f628dc132e574",
+  "sourceHash": "fnv1a64:3c530e698d86e978",
   "lessons": [
     {
-      "id": "ES-C35-preguntar",
-      "sequence": 1660,
-      "title": "preguntar — \"to ask\", by sounding the water with a pole",
-      "headword": "preguntar",
-      "romanization": "preguntar",
-      "gloss": "to ask (a question) — and the reason English's one \"ask\" becomes two Spanish verbs",
+      "id": "ES-C34-escribir",
+      "sequence": 1640,
+      "title": "escribir — \"to write\", which once meant \"to scratch\"",
+      "headword": "escribir",
+      "romanization": "escribir",
+      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd2cd01e1ccb34ee",
+      "sourceHash": "fnv1a64:c0c2e3584e7d10d4",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half."
+              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
             }
           ]
         },
@@ -46,63 +46,82 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pr-cluster — pre- is one crisp beat, preh, with a tapped r."
+              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g before u is hard, as in English gun: pre-goon-TAR."
+              "text": "b-soft — between vowels the b is soft, lips barely touching."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: preguntar",
+          "title": "The word, taken apart: escribir",
           "segments": [
             {
               "kind": "speech",
-              "text": "preguntar (\"to ask a question\") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, \"to inquire\". And percontārī was built on contus, \"a punting pole\": to percontor was to push a pole down through water and find out how deep it was."
+              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
             },
             {
               "kind": "speech",
-              "text": "Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe."
+              "text": "The English family is huge, and every member still works with a pen:"
             },
             {
               "kind": "speech",
-              "text": "The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta."
+              "text": "scribe, scribble, script, scripture."
+            },
+            {
+              "kind": "speech",
+              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
+            },
+            {
+              "kind": "speech",
+              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
+            },
+            {
+              "kind": "speech",
+              "text": "conscription — being written into an army."
+            },
+            {
+              "kind": "speech",
+              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one English \"ask\", two Spanish verbs",
+          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish sorts asking by what you are after:"
+              "text": "Escribir is a plain -ir verb, the family vivir opened:"
             },
             {
               "kind": "table",
               "headers": [
-                "what you want",
-                "verb",
-                "example"
+                "person",
+                "form",
+                "ending"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 5,
               "utterances": [
-                "what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.",
-                "what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee."
+                "person: yo. form: escribo. ending: -o.",
+                "person: tú. form: escribes. ending: -es.",
+                "person: él/ella/usted. form: escribe. ending: -e.",
+                "person: nosotros. form: escribimos. ending: -imos.",
+                "person: ellos/ustedes. form: escriben. ending: -en."
               ]
             },
             {
               "kind": "speech",
-              "text": "Ask for a coffee with preguntar and you have said \"I question a coffee\". The line is simple: a question takes preguntar, a request takes pedir."
+              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
             },
             {
               "kind": "speech",
-              "text": "pedir from Latin petere, \"to make for, to aim at\" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later."
+              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
             }
           ]
         },
@@ -120,38 +139,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pregunto, preguntas, pregunta, preguntamos, preguntan\"",
+              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pregunto, preguntas, pregunta, preguntamos, preguntan\"]"
+              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto la hora\" — I'm asking you the time",
+              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto la hora\" — I'm asking you the time]"
+              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pido un café\" then \"Tomo un café\" — I ask for one, I have one",
+              "instruction": "\"Pienso escribir\" — I mean to write",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pido un café\" then \"Tomo un café\" — I ask for one, I have one]"
+              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pedir\" then English \"petition, appetite, compete\" — the aiming family",
+              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pedir\" then English \"petition, appetite, compete\" — the aiming family]"
+              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
             }
           ]
         },
@@ -168,7 +187,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, \"to aim at\" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid."
+              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
             }
           ]
         }

@@ -1,44 +1,48 @@
-Spanish, chapter 95: Review --- All Four Stem Changes.
+Spanish, chapter 95: Traer --- Bringing, and Latin for Dragging.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — the four stem changes, all of them.
+traer — "to bring", and the direction baked into it.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met.
+Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open.
 
-What you've built.
-Something finished in the last two chapters and it is worth stopping for.
-Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:
-[a table of 4 rows, read aloud]
-the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.
-the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.
-the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.
-the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego.
-This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise.
+Sounds you'll need.
+r-tap — one flick of the tongue: tra-ER, two beats.
+g-hard — the g of traigo is hard, as in English go.
 
-Grammar Lens: the pattern with one member.
-The fourth row is strange, and worth knowing precisely.
-u becomes ue happens in exactly one verb in the entire language: jugar.
-Not "mostly one." One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more.
+The word, taken apart: traer.
+traer ("to bring") from Latin trahere, "to drag, to pull". Bringing started out as hauling.
+Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something "dragged away" from anything particular.
+Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, "to draw forth", and retreat from retrahere, "to draw back".
+
+Grammar Lens: the hard g, for the second time.
+[a table of 5 rows, read aloud]
+person: yo. form: traigo.
+person: tú. form: traes.
+person: él/ella/usted. form: trae.
+person: nosotros. form: traemos.
+person: ellos/ustedes. form: traen.
+Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself.
+
+Why it's said this way: here, or away.
+English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not.
+Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying.
+And llevar from Latin levāre, "to raise" — the verb already behind levantarse. To carry a load was first to lift it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: one verb from each of the four rows]
+[your turn — say: "traigo, traes, trae, traemos, traen"]
 [pause 8 seconds for the answer]
-[your turn — say: the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue]
+[your turn — say: "Traigo el pan" then "Llevo el pan" — here, then away]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until naming the pattern is faster than working it out.
-[question — say your answer, then pause 8 seconds]
-How many stem-change patterns does Spanish have in total?
-[question — say your answer, then pause 10 seconds]
-Which pattern belongs to exactly one verb, and which verb?
-[question — say your answer, then pause 8 seconds]
-Which change does conseguir make?
+[your turn — say: "oigo" then "traigo" — the same hard g]
+[pause 8 seconds for the answer]
+[your turn — say: "traer" then English "tractor, attract, abstract"]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose.
+Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C33-verde
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1590
-chapter: 74
+chapter: 78
 type: word
 headword: verde
 gloss: green — from a verb meaning "to flourish," and a cousin of verdant but not of English green

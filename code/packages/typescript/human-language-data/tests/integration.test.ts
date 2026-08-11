@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(98); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(102); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -196,6 +196,14 @@ describe("real curriculum", () => {
       "ES-C07-beber-coffee",
       "ES-C07-come-form",
       "ES-C07-come-usted",
+      "ES-C07-comeis-vivis-count",
+      "ES-C07-comeis-vivis-eat",
+      "ES-C07-comeis-vivis-live",
+      "ES-C07-comemos-form",
+      "ES-C07-comemos-part",
+      "ES-C07-comen-viven-eat",
+      "ES-C07-comen-viven-live",
+      "ES-C07-comen-viven-where",
       "ES-C07-comer-family",
       "ES-C07-comes-form",
       "ES-C07-comes-s",
@@ -220,12 +228,17 @@ describe("real curriculum", () => {
       "ES-C07-repaso-presente-completo-count",
       "ES-C07-repaso-presente-completo-they",
       "ES-C07-repaso-presente-completo-we",
+      "ES-C07-repaso-tres-familias-diff",
+      "ES-C07-repaso-tres-familias-live",
+      "ES-C07-repaso-tres-familias-yo",
       "ES-C07-sintesis-dos-continentes-bogota",
       "ES-C07-sintesis-dos-continentes-madrid",
       "ES-C07-sintesis-dos-continentes-which",
       "ES-C07-sintesis-preguntar-families",
       "ES-C07-sintesis-preguntar-what",
       "ES-C07-sintesis-preguntar-where",
+      "ES-C07-vivimos-contrast",
+      "ES-C07-vivimos-form",
       "ES-C07-vivir-singular-forms",
       "ES-C08-cuantos-anos-ask",
       "ES-C08-cuantos-anos-eight",

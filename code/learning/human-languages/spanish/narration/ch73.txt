@@ -1,61 +1,34 @@
-Spanish, chapter 73: Dog and Cat.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 73: Noon and Midnight.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-gato — the word that travelled with the animal.
+Lesson 1 of 1.
+mediodía, medianoche — noon and midnight, spelled out in full.
 
 Warm-up.
 [pause 2 seconds]
-Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented.
+Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does.
 
-The word, taken apart: gato.
-gato ("cat") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline.
-Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, "cat").
-So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it.
+The two words, taken apart.
+[a table of 2 rows, read aloud]
+Spanish: mediodía. from Latin: medius diēs. literally: "mid-day" (medio "middle" + día "day").
+Spanish: medianoche. from Latin: media nox. literally: "mid-night" (media "middle" + noche "night").
+Both halves are fully alive, ordinary Spanish words on their own: medio/media ("middle" — cousin of English medium, mid, middle) and día/noche ("day/night," words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for "night" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for "day" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept "night" transparent and lost "day," while Spanish kept both.
+They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:
+Es mediodía. — "It is noon." Es medianoche. — "It is midnight."
+(Fun aside: English noon comes from Latin nōna hōra, "the ninth hour" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el gato" — the cat]
+[your turn — say: "mediodía" (noon), "medianoche" (midnight)]
 [pause 8 seconds for the answer]
-[your turn — say: the trail — "kadis, cattus, gato"]
+[your turn — say: break them — "medio + día", "media + noche" — both halves still ordinary words]
 [pause 8 seconds for the answer]
-[your turn — say: the word it replaced — "fēlēs," now only in "feline"]
+[your turn — say: "Es mediodía. Es medianoche." — they stand in for the hour]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — French kept "night" (nuit) but wore "day" down to a fossil (-di)]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all.
-
-
-Lesson 2 of 2.
-perro — the word nobody can explain.
-
-Warm-up.
-[pause 2 seconds]
-Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from.
-
-The word, taken apart: perro.
-perro ("dog"). Roll the rr: PEH-rro.
-The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin.
-
-Why it's said this way: an honestly open question.
-Three serious proposals, none confirmed:
-[a table of 3 rows, read aloud]
-proposal: onomatopoeia — a growl, or a shepherd's call "perr, perr". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.
-proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.
-proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose.
-Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that "we don't know" is a real answer in etymology, not a gap in your notes.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el perro, el gato" — dog and cat]
-[pause 8 seconds for the answer]
-[your turn — say: "can" — the archaic word perro replaced, from Latin canis]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — "gato, traced to Egypt; perro, unsolved"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)
+What do mediodía and medianoche literally mean, and from what Latin? ("Mid-day" from medius diēs; "mid-night" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media "middle," día/noche "day/night.") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for "day" is actually jour.) How do you say "it is noon"? (Es mediodía.)

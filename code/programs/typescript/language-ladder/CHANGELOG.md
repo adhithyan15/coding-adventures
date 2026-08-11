@@ -10,6 +10,14 @@
   its curved handwritten alternative.
 - Queue the series' dedicated Vav/Hirik/Shuruk lesson next.
 
+### Changed — Spanish runs 1..102, and a sentinel that kept rotting (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the `-er`/`-ir` plurals added
+  four chapters, so old Spanish chapters 34–98 shifted to 38–102.
+- The "no such chapter" sentinel moves 99 → 9999. It had already moved 42 → 99
+  for the same reason; 9999 cannot become a real chapter.
+- Eager bundle 485,353 / 500,000 bytes.
+
 ### Added — cited Hebrew Dalet ductus (HL-C09BG)
 
 - Render **ד** in two evidence-aligned frames: draw the top bar left-to-right,
