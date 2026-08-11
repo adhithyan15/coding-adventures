@@ -520,3 +520,11 @@ fn test_goto_program() {
     assert_program_root(&ast);
     assert!(find_rule(&ast, "goto_stmt"), "Expected goto_stmt");
 }
+
+#[test]
+fn test_multiple_labels_on_one_statement() {
+    let ast = parse_algol("begin first: second: halt end");
+    assert_program_root(&ast);
+    assert_eq!(count_rule(&ast, "label"), 2);
+    assert!(find_rule(&ast, "proc_stmt"), "Expected labeled procedure statement");
+}
