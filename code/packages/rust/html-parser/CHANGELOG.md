@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Generic start tags handled by the in-table "anything else" path, including
+  paragraph-boundary elements, `br`, `p`, and `plaintext`, now report the
+  required parse error before retaining their foster-parented DOM placement.
 - `select` start tags processed directly in table structure now report the
   required general parse error before retaining their existing foster-parented
   DOM placement. Selects outside tables and inside cells remain quiet.
