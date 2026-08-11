@@ -264,7 +264,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   restarts near its top at 00:00.32. The second run sweeps down-right and around
   the dotless bowl through 00:00.82. Its three-frame path therefore preserves a
   source-specific stem-first order instead of copying Jeem's body-first motion.
-  The remaining **190** prose part orders across seven scripts (`arabic` 16,
+  The page's `kha.mov` then verifies a different order for **خ**: draw the short
+  upper head left-to-right and continue around the bowl in one run from
+  00:02.8–00:03.9, then lift once for the upper dot at 00:04.2–00:04.4. Its
+  three-frame path follows Khaa's own body-first evidence rather than assuming
+  either Jeem's lower dot or Haa's restarted stem. The remaining **189** prose
+  part orders across seven scripts (`arabic` 15,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
