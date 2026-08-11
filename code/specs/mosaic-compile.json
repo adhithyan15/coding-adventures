@@ -148,7 +148,7 @@
         {
           "id": "runtime-library",
           "long": "runtime-library",
-          "description": "Target Rust application cdylib to bundle into the generated native project. Compose supports .dylib, .so, and .dll in this release; requires --emit-project and is mandatory for a native-complete Compose artifact.",
+          "description": "Target Rust application cdylib to bundle into the generated native project. Compose and Qt support .dylib, .so, and .dll in this release; requires --emit-project and is mandatory for their native-complete artifacts.",
           "type": "string",
           "required": false
         }

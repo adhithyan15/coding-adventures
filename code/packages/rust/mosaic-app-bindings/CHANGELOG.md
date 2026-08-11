@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Resolve Qt's conventional Mosaic application library beside the native
+  executable after the explicit environment override and before global lookup.
 - Resolve Compose's conventional Mosaic application library from the installed
   native-distribution resources after explicit property/environment overrides
   and before falling back to a global library name.

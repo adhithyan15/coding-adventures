@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] - Qt Rust engine bundling
+
+- Qt project shells accept the selected target Rust engine, copy it beside the
+  built executable, and include it in the CMake install tree under Mosaic's
+  conventional runtime filename.
+- Strict Qt installable builds report `runtime.library-not-bundled` and stop
+  before application emission when no engine was selected.
+- Linux acceptance verifies the installed library bytes, launches the generated
+  native QML app, and runs the exact Qt binding conformance from the install
+  directory without `MOSAIC_APP_LIBRARY`.
+
 ## [Unreleased] - Compose Rust engine bundling
 
 - Add a target-library-aware profiled build API. Compose project shells copy a
