@@ -100,29 +100,16 @@ export function globalGetStatic(name: string): Val {
 
 // --- Printing --------------------------------------------------------------
 
-/** Print the SIR display form of `v` followed by a newline. */
-export function print(v: Val): null {
-  // eslint-disable-next-line no-console
-  console.log(toDisplay(v));
-  return null;
-}
-
 /**
- * Emit a single `puts` argument, honouring Ruby's per-value rules.
+ * Emit a single `per_value` argument under `__sys_write__` (SIR28 §2.1),
+ * honouring Ruby `puts`'s per-value rules.
  *
  * Ruby `puts` is deceptively subtle. For one argument:
  * - **Array** → recurse over the *elements*, one per line, flattening
  *   nesting (`puts [1, [2, 3]]` → `1\n2\n3\n`). An **empty** array writes
  *   nothing here (the top-level `puts []` still emits one newline — see
- *   {@link puts}).
- * - **nil** → a blank line (`nil.to_s` is `""`, then the newline).
- * - **anything else** → its display string then a newline, *unless* the
- *   string already ends in `"\n"`, in which case Ruby does not add a second
- *   (`puts "x\n"` → `x\n`, not `x\n\n`).
- *
- * We write via `process.stdout.write` rather than `console.log` because
- * `console.log` unconditionally appends its own newline, which would defeat
- * the trailing-newline suppression rule.
+ *   {@link write}).
+ * - **anything else** → its display string then a newline.
  *
  * **Cycle safety.** An array is a shared, mutable reference, so a program can
  * build a *cyclic* array (`a = []; a << a`). The element-per-line flatten
@@ -135,79 +122,6 @@ export function print(v: Val): null {
  * `[...]` and terminates. An array removed from `seen` on exit still flattens
  * in full via a sibling path — only a true self-cycle is short-circuited, so
  * non-cyclic output is unchanged (`puts [1, [2, 3]]` still prints `1\n2\n3\n`).
- */
-function putsOne(v: Val, seen: Set<unknown>): void {
-  if (Array.isArray(v)) {
-    if (seen.has(v)) {
-      process.stdout.write("[...]\n");
-      return;
-    }
-    seen.add(v);
-    for (const item of v) {
-      putsOne(item, seen);
-    }
-    seen.delete(v);
-    return;
-  }
-  if (v === null) {
-    process.stdout.write("\n");
-    return;
-  }
-  const text = toDisplay(v);
-  // Suppress the added newline when the rendered text already ends in one,
-  // so `puts "x\n"` and `puts "x"` produce identical output.
-  process.stdout.write(text.endsWith("\n") ? text : text + "\n");
-}
-
-/**
- * Ruby `puts`: write each argument on its own line (see {@link putsOne}).
- *
- * - `puts()` (no args) → a single newline.
- * - `puts(x)` → `x` on its own line (arrays flattened element-per-line; a
- *   value already ending in `"\n"` is not double-spaced; `nil` is a blank
- *   line).
- * - `puts(a, b)` → each argument handled independently, in order.
- * - `puts([])` → a single newline: Ruby prints a blank line when an argument
- *   flattens to nothing, which is why the no-arg and empty-array cases
- *   converge on one newline.
- */
-export function puts(...args: Val[]): null {
-  if (args.length === 0) {
-    process.stdout.write("\n");
-    return null;
-  }
-  const seen = new Set<unknown>();
-  for (const a of args) {
-    if (Array.isArray(a) && a.length === 0) {
-      // Empty array as an argument still writes one newline.
-      process.stdout.write("\n");
-    } else {
-      putsOne(a, seen);
-    }
-  }
-  return null;
-}
-
-/**
- * `__sys_write__` (SIR28 §2.1): the console-output primitive {@link print}/
- * {@link puts} above generalize into.
- *
- * Where those hard-code ONE newline policy each, this is the SAME operation
- * parameterized by policy flags carried as DATA — the root cause SIR28
- * exists to fix: real Ruby's `print` never newline-terminates, TypeScript's
- * own `console.log` always does, but both used to lower to the identical
- * `BuiltinCall("print", ...)` this backend had no way to tell apart.
- *
- * `terminator`: `"none"` ({@link print}'s behavior) | `"per_value"`
- * ({@link puts}'s array-unpacking behavior, honouring `unpackArrays`) |
- * `"once"` (TypeScript's native `console.log(a, b)` — space-join every
- * value, one trailing newline). Deliberately does NOT replicate
- * {@link puts}'s trailing-newline-suppression nuance above (`puts "x\n"`
- * prints `x\n`, not `x\n\n`) — that's a pre-existing divergence from the
- * C/Go/Rust/Python/JS backends' own `puts`, orthogonal to and not fixed by
- * SIR28; `"per_value"` here always appends exactly one newline per value,
- * matching SIR28 §2.1's table and every other backend's `__sys_write__`
- * faithfully.
  */
 function writeOne(
   out: NodeJS.WriteStream,
@@ -230,6 +144,29 @@ function writeOne(
   out.write(toDisplay(v) + "\n");
 }
 
+/**
+ * `__sys_write__` (SIR28 §2.1): the general console-output primitive every
+ * frontend lowers `print`/`puts`/`console.log`/etc. to.
+ *
+ * It generalizes what used to be several backend-hardcoded newline policies
+ * into ONE operation parameterized by policy flags carried as DATA — the
+ * root cause SIR28 exists to fix: real Ruby's `print` never
+ * newline-terminates, TypeScript's own `console.log` always does, but
+ * before SIR28 both lowered to the identical `BuiltinCall("print", ...)`
+ * this backend had no way to tell apart.
+ *
+ * `terminator`: `"none"` (write each value back to back, no newline —
+ * matches Ruby's `print`) | `"per_value"` (one newline per value,
+ * honouring `unpackArrays` — matches Ruby's `puts`) | `"once"`
+ * (TypeScript's native `console.log(a, b)` — space-join every value, one
+ * trailing newline). Deliberately does NOT replicate Ruby `puts`'s
+ * trailing-newline-suppression nuance (`puts "x\n"` prints `x\n`, not
+ * `x\n\n`) — that's a pre-existing, orthogonal divergence between
+ * backends' own historical `puts` implementations that SIR28 does not fix
+ * or replicate; `"per_value"` here always appends exactly one newline per
+ * value, matching SIR28 §2.1's table and every other backend's
+ * `__sys_write__` faithfully.
+ */
 export function write(
   stream: string,
   terminator: string,
@@ -287,8 +224,6 @@ const builtins: Record<string, (...args: Val[]) => Val> = Object.assign(Object.c
   "pair?": (v: Val) => isPair(v!),
   "number?": (v: Val) => isNumber(v!),
   "symbol?": (v: Val) => isSymbol(v!),
-  print: (v: Val) => print(v!),
-  puts: (...args: Val[]) => puts(...args),
   __sys_write__: (...args: Val[]) =>
     write(args[0] as string, args[1] as string, args[2] as boolean, ...args.slice(3)),
 });

@@ -132,8 +132,17 @@ const SIR_ARITH_STUB: &str = r##"const __Sir = (() => {
     }
     return acc;
   };
-  const print = (v) => { console.log(toDisplay(v)); return null; };
-  return { add, mul, shiftLeft, toDisplay, print };
+  const write = (stream, terminator, unpackArrays, ...values) => {
+    if (terminator === "once") {
+      console.log(values.map((v) => toDisplay(v)).join(" "));
+      return null;
+    }
+    // Every case this stub's tests exercise uses "once" (SIR28 §2.1's
+    // Python/JS `console.log`-shaped terminator) — the other two
+    // terminators aren't needed here, so this stub stays minimal.
+    throw new Error(`SIR_ARITH_STUB.write: unsupported terminator "${terminator}"`);
+  };
+  return { add, mul, shiftLeft, toDisplay, write };
 })();
 "##;
 
@@ -180,8 +189,13 @@ fn binop(name: &str, args: Vec<Expr>) -> Expr {
 fn print(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "once".into(), span: sp() },
+                Expr::BoolLit { value: false, span: sp() },
+                expr,
+            ],
             effects: EffectSet::PURE,
             span: sp(),
         },
@@ -205,6 +219,7 @@ fn print_module(exprs: Vec<Expr>) -> Module {
     Module {
         name: "polyops".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Strings,
             Feature::Sequences,
             Feature::DynamicTyping,

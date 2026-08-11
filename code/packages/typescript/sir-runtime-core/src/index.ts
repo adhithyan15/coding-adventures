@@ -10,7 +10,7 @@
  *     import * as _sir from "@coding-adventures/sir-runtime-core";
  *     _sir.truthy(x);     // SIR truthiness: only false / nil are falsy
  *     _sir.cons(a, b);    // cons pairs
- *     _sir.print(v);      // SIR display + newline
+ *     _sir.write("stdout", "once", false, v);  // SIR28 console output
  *
  * It implements **SIR** semantics (not any one source language's), so a
  * Ruby frontend today and a JavaScript or Python frontend tomorrow all
@@ -38,8 +38,6 @@ export {
   globalSet,
   globalGet,
   globalGetStatic,
-  print,
-  puts,
   write,
   callBuiltin,
   builtinClosure,

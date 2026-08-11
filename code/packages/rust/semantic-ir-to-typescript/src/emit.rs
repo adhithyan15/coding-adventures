@@ -2408,17 +2408,14 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "pair?" => "__SirPairs.isPair",
         "number?" => "__Sir.isNumber",
         "symbol?" => "__Sir.isSymbol",
-        "print" => "__Sir.print",
-        // `puts` is variadic in the runtime (`puts(...args)`), so a direct
-        // `__Sir.puts(a, b)` forwards every argument (Ruby `puts a, b`).
-        "puts" => "__Sir.puts",
-        // SIR28 §2: the console-output primitive `print`/`puts` generalize
-        // into. `args = [StrLit(stream), StrLit(terminator),
+        // SIR28 §2: the console-output primitive every frontend now emits
+        // in place of the old bare `print`/`puts` (SIR28 §7 removed the
+        // dead bare-name path). `args = [StrLit(stream), StrLit(terminator),
         // BoolLit(unpack_arrays), ...values]`, already validated by
         // `semantic-ir`'s validator (SIR28 §3.1) against a closed set. A
         // plain pass-through (no special literal extraction, unlike the
         // C/Go/Rust backends) is correct: the runtime branches on the
-        // stream/terminator strings at call time, exactly like `print`/`puts`.
+        // stream/terminator strings at call time.
         "__sys_write__" => "__Sir.write",
         "global_set" => "__Sir.globalSet",
         "global_get" => "__Sir.globalGet",
