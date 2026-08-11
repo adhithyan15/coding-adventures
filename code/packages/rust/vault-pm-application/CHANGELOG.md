@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.33.0] - 2026-08-10
+
+### Added
+
+- Extend complete unlocked audit verification through the durable encrypted
+  operation-event head and report the verified event count without identities.
+
+### Security
+
+- Decrypt every linked event, verify its certified-device signature, and bind
+  its vault, device counter, exact basis heads, commit timestamp, event-object
+  membership, selected revision, and mutation result to reachable signed
+  commits.
+- Reject cycles, gaps, skipped durable heads, wrong signers, wrong basis heads,
+  missing results, and non-genesis chain roots. Pre-audit vaults remain
+  backward-compatible and explicitly report zero verified events.
+
 ## [0.32.0] - 2026-08-10
 
 ### Added

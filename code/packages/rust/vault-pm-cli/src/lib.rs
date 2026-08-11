@@ -965,12 +965,13 @@ fn doctor(
 
 fn render_audit(report: AuditVerificationV1) -> CliOutput {
     CliOutput::success(format!(
-        "Audit: verified (announcements={} commits={} catalogs={} revisions={} items={})\n",
+        "Audit: verified (announcements={} commits={} catalogs={} revisions={} items={} audit_events={})\n",
         report.announcement_count(),
         report.commit_count(),
         report.catalog_count(),
         report.revision_count(),
         report.item_count(),
+        report.audit_event_count(),
     ))
 }
 
@@ -1463,7 +1464,7 @@ mod tests {
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
         assert_eq!(
             audit.stdout(),
-            "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0)\n"
+            "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=0)\n"
         );
         assert!(audit.stderr().is_empty());
 

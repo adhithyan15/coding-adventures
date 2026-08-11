@@ -79,12 +79,13 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (audit_status, audit_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "verify"],
-        b"Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0)",
+        b"Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=0)",
     );
     assert!(audit_status.success(), "audit failed: {audit_transcript}");
     assert!(audit_transcript.contains("Vault passphrase: "));
-    assert!(audit_transcript
-        .contains("Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0)"));
+    assert!(audit_transcript.contains(
+        "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=0)"
+    ));
     assert_transcript_excludes_secrets(&audit_transcript);
 
     let (doctor_status, doctor_transcript) =

@@ -31,8 +31,9 @@ Status and plain doctor do not prompt or unlock. `audit verify` and
 `doctor --unlock` collect the existing passphrase through the controlling
 terminal, open the storage-neutral repository for one read-only action, and
 synchronously drop the live session before rendering. Their projections contain
-only closed labels or aggregate verification counts, with no paths, locators,
-providers, identities, or cryptographic details. No command accepts a
+only closed labels or aggregate verification counts, including the number of
+fully authenticated encrypted operation events (zero for pre-audit vaults),
+with no paths, locators, providers, identities, or cryptographic details. No command accepts a
 passphrase through argv, stdin, environment, configuration, or URL.
 
 `item add login` unlocks once, collects bounded fields from the controlling
