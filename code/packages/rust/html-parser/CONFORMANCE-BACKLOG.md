@@ -178,13 +178,19 @@ Prioritized work items:
    `colgroup` and `col` endings retain the same diagnostic, while `template`
    closure, ordinary in-body recovery, real column groups, foreign content,
    and synthetic template fragment contexts remain on their existing paths.
-   The next evidence-backed template table-state boundary is a table-section
-   start after a template-owned row or cell: WPT `template.dat` declares errors
-   for both `<template><tr></tr><tbody>` and
-   `<template><td></td><tbody>`, while the parser's specialized recovery branch
-   currently ignores those starts silently. Audit that family and its normal
-   table, nested-template, and synthetic fragment controls before moving to
-   adoption agency.
+   Table-section, caption, and column-group starts rejected after a
+   template-owned row or cell now report the template table-mode parse error
+   while remaining ignored, matching WPT `template.dat`'s
+   `<template><tr></tr><tbody>`, `<template><td></td><tbody>`, caption, and
+   column-group evidence. Real tables, valid template table-section sequences,
+   nested templates, foreign content, and synthetic template fragments remain
+   on their existing diagnostic paths. The next evidence-backed adjacent
+   boundary is a `table` end tag after a template-owned row or cell: WPT
+   `template.dat` declares errors for both `<template><tr></tr></table>` and
+   `<template><td></td></table>`, while the parser currently closes no matching
+   table and returns silently. Audit that shared end-tag boundary and its real
+   table, nested-template, foreign-content, and fragment controls before moving
+   to adoption agency.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
