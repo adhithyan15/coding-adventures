@@ -36,7 +36,8 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package_with_profile, compose_component_with_model, Backend, BuildOptions, BuildProfile,
+    build_package_with_profile_and_runtime, compose_component_with_model, Backend, BuildOptions,
+    BuildProfile,
 };
 use mosaic_vm::MosaicVM;
 
@@ -1313,6 +1314,11 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         process::exit(1);
     });
 
+    let runtime_library = flags
+        .get("runtime-library")
+        .and_then(|value| value.as_str())
+        .map(PathBuf::from);
+
     // Theme selector for style (`.msl`) resolution — the style analogue of
     // the layout `--variant` flag. `--theme light` makes the builder read
     // each component's `<Component>.light.msl` (with fallback to the bare
@@ -1360,7 +1366,7 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         theme: theme.map(|s| s.to_string()),
     };
 
-    match build_package_with_profile(&opts, profile) {
+    match build_package_with_profile_and_runtime(&opts, profile, runtime_library.as_deref()) {
         Ok(result) => {
             for path in &result.artifacts {
                 eprintln!("Written: {}", path.display());

@@ -373,6 +373,9 @@ pub enum BuildError {
         degradation_count: usize,
         report_path: PathBuf,
     },
+    /// A requested Rust application library cannot be bundled into the
+    /// selected project shell.
+    InvalidRuntimeLibrary { path: PathBuf, reason: String },
     /// A read/write/mkdir call failed. The string is `io::Error::to_string()`
     /// because we don't want to leak `std::io::Error`'s `Send`-only quirks
     /// into our public API.
@@ -416,6 +419,11 @@ impl std::fmt::Display for BuildError {
                 f,
                 "backend {backend:?} is not native-complete: {degradation_count} degradation(s); report: {}",
                 report_path.display()
+            ),
+            BuildError::InvalidRuntimeLibrary { path, reason } => write!(
+                f,
+                "invalid Rust application runtime library '{}': {reason}",
+                path.display()
             ),
             BuildError::UnsafeName { kind, name, reason } => write!(
                 f,
@@ -519,6 +527,70 @@ pub fn compose_component_with_model(
 // Public entry point
 // ===========================================================================
 
+fn compose_runtime_destination(path: &Path) -> Result<(&'static str, &'static str), BuildError> {
+    let extension = path
+        .extension()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    match extension.as_str() {
+        "dylib" => Ok(("macos", "libmosaic_app.dylib")),
+        "so" => Ok(("linux", "libmosaic_app.so")),
+        "dll" => Ok(("windows", "mosaic_app.dll")),
+        _ => Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "expected a target cdylib ending in .dylib, .so, or .dll".to_string(),
+        }),
+    }
+}
+
+fn validate_runtime_library_selection(
+    opts: &BuildOptions,
+    runtime_library: Option<&Path>,
+) -> Result<(), BuildError> {
+    let Some(path) = runtime_library else {
+        return Ok(());
+    };
+    if opts.backend != Backend::Compose {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "runtime bundling is currently implemented only for the Compose backend"
+                .to_string(),
+        });
+    }
+    if !opts.emit_project {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "--runtime-library requires --emit-project".to_string(),
+        });
+    }
+    compose_runtime_destination(path)?;
+    if !path.is_file() {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "selected path is not a readable regular file".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn install_compose_runtime_library(
+    source: &Path,
+    backend_dir: &Path,
+) -> Result<PathBuf, BuildError> {
+    let (platform, file_name) = compose_runtime_destination(source)?;
+    let target = backend_dir
+        .join("app-resources")
+        .join(platform)
+        .join(file_name);
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
 /// Analyze and build a package under an explicit completion profile.
 ///
 /// Unlike the legacy [`build_package`] entry point, this always writes a
@@ -529,7 +601,22 @@ pub fn build_package_with_profile(
     opts: &BuildOptions,
     profile: BuildProfile,
 ) -> Result<BuildResult, BuildError> {
-    let report = analyze_package_degradations(opts, profile)?;
+    build_package_with_profile_and_runtime(opts, profile, None)
+}
+
+/// Analyze and build a package while bundling one target-specific Rust
+/// application engine into the generated native project.
+///
+/// Compose is the first supported packaging backend. The selected library must
+/// be a `.dylib`, `.so`, or `.dll`; its suffix chooses the target resource
+/// directory and the emitted copy receives Mosaic's conventional runtime name.
+pub fn build_package_with_profile_and_runtime(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+) -> Result<BuildResult, BuildError> {
+    validate_runtime_library_selection(opts, runtime_library)?;
+    let report = analyze_package_degradations_with_runtime(opts, profile, runtime_library)?;
     let backend_dir = opts.output_root.join(opts.backend.dir_name());
     let report_path = backend_dir.join("mosaic-degradations.json");
 
@@ -543,7 +630,7 @@ pub fn build_package_with_profile(
         });
     }
 
-    let mut result = build_package_inner(opts, Some(profile))?;
+    let mut result = build_package_inner(opts, Some(profile), runtime_library)?;
     write_degradation_report(&report_path, &report)?;
     result.artifacts.push(report_path);
     Ok(result)
@@ -554,6 +641,17 @@ pub fn analyze_package_degradations(
     opts: &BuildOptions,
     profile: BuildProfile,
 ) -> Result<DegradationReport, BuildError> {
+    analyze_package_degradations_with_runtime(opts, profile, None)
+}
+
+/// Return the deterministic capability report for a build with an explicitly
+/// selected target Rust application library.
+pub fn analyze_package_degradations_with_runtime(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+) -> Result<DegradationReport, BuildError> {
+    validate_runtime_library_selection(opts, runtime_library)?;
     let manifest_path = opts.package_root.join("mosaic-package.toml");
     let manifest = parse_manifest(&manifest_path)?;
     validate_package_name(&manifest.package.name)?;
@@ -600,6 +698,28 @@ pub fn analyze_package_degradations(
             layout_path: "$project".to_string(),
             primitive: None,
             reason: "generated project shells still allow deterministic sample props when the Rust runtime is unavailable"
+                .to_string(),
+        });
+    }
+
+    if profile == BuildProfile::NativeComplete
+        && opts.emit_project
+        && opts.backend == Backend::Compose
+        && runtime_library.is_none()
+    {
+        degradations.push(Degradation {
+            code: "runtime.library-not-bundled".to_string(),
+            backend: opts.backend.dir_name().to_string(),
+            component: manifest
+                .components
+                .exports
+                .first()
+                .cloned()
+                .unwrap_or_else(|| "*".to_string()),
+            variant: None,
+            layout_path: "$project".to_string(),
+            primitive: None,
+            reason: "native-complete Compose artifacts must bundle the selected Rust application engine; pass --runtime-library <target cdylib>"
                 .to_string(),
         });
     }
@@ -828,12 +948,13 @@ fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
 ///   build into a stable dist directory and treat a half-written tree as
 ///   the same outcome as a successful rebuild that subsequently failed.
 pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
-    build_package_inner(opts, None)
+    build_package_inner(opts, None, None)
 }
 
 fn build_package_inner(
     opts: &BuildOptions,
     profile: Option<BuildProfile>,
+    runtime_library: Option<&Path>,
 ) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
@@ -969,6 +1090,7 @@ fn build_package_inner(
                 package_search_paths: &package_search_paths,
                 theme: opts.theme.as_deref(),
                 profile,
+                runtime_library,
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -980,6 +1102,16 @@ fn build_package_inner(
     let host_asset_artifacts =
         install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
     artifacts.extend(host_asset_artifacts);
+
+    // The explicitly selected engine is the final write to its conventional
+    // destination. A package-owned generic host asset cannot silently replace
+    // the runtime the caller chose at the packaging boundary.
+    if opts.backend == Backend::Compose {
+        if let Some(source) = runtime_library {
+            let target = install_compose_runtime_library(source, &backend_dir)?;
+            artifacts.push(target);
+        }
+    }
 
     Ok(BuildResult {
         artifacts,
@@ -1191,6 +1323,7 @@ struct ProjectShellOptions<'a> {
     package_search_paths: &'a [PathBuf],
     theme: Option<&'a str>,
     profile: Option<BuildProfile>,
+    runtime_library: Option<&'a Path>,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -1204,6 +1337,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         package_search_paths,
         theme,
         profile,
+        runtime_library,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -1440,6 +1574,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Compose => {
             let require_runtime = profile == Some(BuildProfile::NativeComplete);
+            let bundle_runtime = runtime_library.is_some();
             let flat: [(&str, String); 3] = [
                 (
                     "settings.gradle.kts",
@@ -1447,11 +1582,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 ),
                 (
                     "build.gradle.kts",
-                    build_compose_build_gradle_kts(package_name),
+                    build_compose_build_gradle_kts(package_name, bundle_runtime),
                 ),
                 (
                     "README.md",
-                    build_compose_readme(package_name, component, require_runtime),
+                    build_compose_readme(package_name, component, require_runtime, bundle_runtime),
                 ),
             ];
             for (rel, body) in flat {
@@ -1728,8 +1863,13 @@ fn build_compose_settings_gradle_kts(package_name: &str) -> String {
     )
 }
 
-fn build_compose_build_gradle_kts(package_name: &str) -> String {
+fn build_compose_build_gradle_kts(package_name: &str, bundle_runtime: bool) -> String {
     let app_id = compose_gradle_application_id(package_name);
+    let app_resources = if bundle_runtime {
+        "            appResourcesRootDir.set(project.layout.projectDirectory.dir(\"app-resources\"))\n"
+    } else {
+        ""
+    };
     format!(
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
@@ -1756,6 +1896,7 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
             "            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)\n",
             "            packageName = \"{app_id}\"\n",
             "            packageVersion = \"{package_version}\"\n",
+            "{app_resources}",
             "        }}\n",
             "    }}\n",
             "}}\n",
@@ -1766,6 +1907,7 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
         serialization_json_version = COMPOSE_SERIALIZATION_JSON_VERSION,
         app_id = escape_kotlin_string(&app_id),
         package_version = COMPOSE_DESKTOP_PACKAGE_VERSION,
+        app_resources = app_resources,
     )
 }
 
@@ -2194,7 +2336,12 @@ fn escape_kotlin_string(s: &str) -> String {
     out
 }
 
-fn build_compose_readme(package_name: &str, component: &str, require_runtime: bool) -> String {
+fn build_compose_readme(
+    package_name: &str,
+    component: &str,
+    require_runtime: bool,
+    bundle_runtime: bool,
+) -> String {
     let app_id = compose_gradle_application_id(package_name);
     let runtime_policy = if require_runtime {
         "This `native-complete` shell requires the standard Rust runtime at startup. It does not load a package-owned reflection host or mount the component with sample props. The component is mounted only after the runtime returns its first props envelope."
@@ -2206,11 +2353,17 @@ fn build_compose_readme(package_name: &str, component: &str, require_runtime: bo
     } else {
         "Desktop app entrypoint that mounts the component with Rust runtime props or permissive sample values."
     };
+    let runtime_distribution = if bundle_runtime {
+        "The selected target Rust engine is copied under `app-resources/<platform>/` and Compose installs it beside the application resources. The standard binding resolves that installed file through `compose.application.resources.dir`; no environment variable or global library install is required."
+    } else {
+        "No Rust engine was bundled. For development, set the `mosaic.app.library` JVM property or `MOSAIC_APP_LIBRARY`; strict distributable builds should be regenerated with `--runtime-library <target cdylib>`."
+    };
     format!(
         "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n\
 # {component} - Compose Desktop shell\n\n\
 Auto-generated by `mosaic-compile pkg --backend compose --emit-project`.\n\n\
 The top-level `{component}.kt` remains the reusable Mosaic library artifact. The nested `src/main/kotlin/` copy plus Gradle files form a runnable Compose Desktop app. The generated `MosaicRuntimeHost.kt` standard binding loads the Rust application library through JNA and round-trips props and semantic events without application-owned host code. {runtime_policy}\n\n\
+{runtime_distribution}\n\n\
 ## Prerequisites\n\n\
 - JDK 21 or newer.\n\
 - Gradle 8.7 or newer.\n\n\
@@ -2232,6 +2385,7 @@ gradle packageDistributionForCurrentOS\n\
 | `src/main/kotlin/Main.kt` | {main_purpose} |\n\
 | `src/main/kotlin/{component}.kt` | Source-set copy of the generated component so Gradle can compile it without file moves. |\n\n\
 | `src/main/kotlin/MosaicRuntimeHost.kt` | Standard JNA binding that owns the Rust runtime handle, buffers, startup context, and event sequence. |\n\n\
+| `app-resources/<platform>/` | Target Rust engine copied into the native distribution when `--runtime-library` is supplied. |\n\n\
 Gradle native package name: `{app_id}`.\n"
     )
 }
@@ -4044,8 +4198,10 @@ layout NativeEvents {
             "layout Card { Text [ root ] ( content : slot: label ) }\n",
         )
         .unwrap();
+        let runtime = pkg.path().join("libmosaic_app_conformance.dylib");
+        fs::write(&runtime, b"mosaic-test-runtime").unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let result = build_package_with_profile_and_runtime(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -4054,6 +4210,7 @@ layout NativeEvents {
                 theme: None,
             },
             BuildProfile::NativeComplete,
+            Some(&runtime),
         )
         .expect("native-complete Compose shell");
 
@@ -4081,7 +4238,87 @@ layout NativeEvents {
 
         let readme = fs::read_to_string(out.path().join("compose/README.md")).unwrap();
         assert!(readme.contains("This `native-complete` shell requires the standard Rust runtime"));
+        assert!(readme.contains("no environment variable or global library install is required"));
         assert!(!readme.contains("future `native-complete` profile"));
+
+        let gradle = fs::read_to_string(out.path().join("compose/build.gradle.kts")).unwrap();
+        assert!(gradle.contains(
+            "appResourcesRootDir.set(project.layout.projectDirectory.dir(\"app-resources\"))"
+        ));
+        let bundled = out
+            .path()
+            .join("compose/app-resources/macos/libmosaic_app.dylib");
+        assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-test-runtime");
+        assert!(result.artifacts.contains(&bundled));
+    }
+
+    #[test]
+    fn native_complete_compose_project_reports_an_unbundled_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict Compose distributions must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Compose,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let report = fs::read_to_string(out.path().join("compose/mosaic-degradations.json"))
+            .expect("strict degradation report");
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("--runtime-library <target cdylib>"));
+        assert!(!out.path().join("compose/build.gradle.kts").exists());
+    }
+
+    #[test]
+    fn runtime_library_selection_rejects_wrong_backend_or_suffix() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let runtime = pkg.path().join("mosaic-runtime.a");
+        fs::write(&runtime, b"not-a-cdylib").unwrap();
+        let options = |backend| BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: true,
+            theme: None,
+        };
+
+        let suffix_error = build_package_with_profile_and_runtime(
+            &options(Backend::Compose),
+            BuildProfile::Permissive,
+            Some(&runtime),
+        )
+        .expect_err("static archives cannot be bundled as the runtime");
+        assert!(matches!(
+            suffix_error,
+            BuildError::InvalidRuntimeLibrary { .. }
+        ));
+
+        let dylib = pkg.path().join("libmosaic_app.dylib");
+        fs::write(&dylib, b"runtime").unwrap();
+        let backend_error = build_package_with_profile_and_runtime(
+            &options(Backend::SwiftUI),
+            BuildProfile::Permissive,
+            Some(&dylib),
+        )
+        .expect_err("the first packaging slice is Compose-only");
+        assert!(backend_error
+            .to_string()
+            .contains("currently implemented only for the Compose backend"));
     }
 
     #[test]

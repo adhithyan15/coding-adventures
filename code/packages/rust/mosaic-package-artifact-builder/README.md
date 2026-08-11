@@ -92,7 +92,11 @@ owns the Rust application handle, buffer lifecycle, startup context, event
 sequence, and JSON updates; applications no longer need to rebuild that FFI
 adapter. Permissive builds try the binding before the legacy optional host hook
 and retain sample props for previews. `native-complete` builds require the
-binding and runtime-provided props before mounting the component.
+binding and runtime-provided props before mounting the component. Use
+`build_package_with_profile_and_runtime` with a target `.dylib`, `.so`, or `.dll`
+to copy the selected Rust engine into Compose's platform-specific application
+resources under its conventional `mosaic_app` filename. A strict Compose
+project build without that selection reports `runtime.library-not-bundled`.
 Every exported Compose component is mirrored into the generated Gradle source
 set, so `gradle compileKotlin` type-checks the complete package even though the
 shell mounts the manifest's first export as its entry component.

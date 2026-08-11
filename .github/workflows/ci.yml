@@ -1113,9 +1113,12 @@ jobs:
       - name: Round-trip Rust engine through standard Compose binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           set -euo pipefail
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+
           output="$RUNNER_TEMP/mosaic-compose-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project
           jq -e '
@@ -1124,21 +1127,28 @@ jobs:
             ([.degradations[] | select(.code == "runtime.sample-fallback")] | length) == 1
           ' "$output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$output/compose" compileKotlin
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+
+          bundled_output="$RUNNER_TEMP/mosaic-compose-bundled-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend compose --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$bundled_output/compose" compileKotlin createDistributable
+          installed_runtime="$(find "$bundled_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
+          test -n "$installed_runtime"
+          cmp "$runtime_library" "$installed_runtime"
 
           harness="$RUNNER_TEMP/mosaic-compose-runtime-conformance"
           cp -R code/packages/rust/mosaic-app-bindings/conformance/compose "$harness"
-          cp "$output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$harness/src/main/kotlin/MosaicRuntimeHost.kt"
+          cp "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$harness/src/main/kotlin/MosaicRuntimeHost.kt"
 
-          export MOSAIC_APP_LIBRARY="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
-          gradle --no-daemon --stacktrace -p "$harness" run
+          unset MOSAIC_APP_LIBRARY
+          JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" gradle --no-daemon --stacktrace -p "$harness" run
 
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
           gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin
 
           strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
 

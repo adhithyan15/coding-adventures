@@ -18,6 +18,13 @@ COMPOSE_CONFORMANCE = (
     / "conformance"
     / "compose"
 )
+COMPOSE_PACKAGE = (
+    Path(__file__).resolve().parents[2]
+    / "packages"
+    / "rust"
+    / "mosaic-app-conformance"
+    / "package"
+)
 SPEC = importlib.util.spec_from_file_location(
     "mosaic_compose_runtime_ci_acceptance", SCRIPT
 )
@@ -113,21 +120,27 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Compose binding", workflow)
         self.assertIn("needs_mosaic_compose_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("timeout-minutes: 15", workflow)
         self.assertIn("--backend compose --output \"$output\" --emit-project", workflow)
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
-        self.assertIn("compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow)
-        self.assertIn("gradle --no-daemon --stacktrace -p \"$harness\" run", workflow)
+        self.assertIn(
+            "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow
+        )
+        self.assertIn("--runtime-library \"$runtime_library\"", workflow)
+        self.assertIn("compileKotlin createDistributable", workflow)
+        self.assertIn("*/resources/libmosaic_app.so", workflow)
+        self.assertIn("cmp \"$runtime_library\" \"$installed_runtime\"", workflow)
+        self.assertIn("unset MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("-Dcompose.application.resources.dir", workflow)
         self.assertIn("mosaic-pkg-rating-controls", workflow)
         self.assertIn("--profile native-complete", workflow)
         self.assertIn(
             "gradle --no-daemon --stacktrace -p \"$strict_output/compose\" compileKotlin",
             workflow,
         )
-        self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         source = COMPOSE_CONFORMANCE / "src" / "main" / "kotlin"
@@ -136,6 +149,11 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         gradle = (COMPOSE_CONFORMANCE / "build.gradle.kts").read_text(encoding="utf-8")
         self.assertIn("net.java.dev.jna:jna:5.19.1", gradle)
         self.assertIn("kotlinx-serialization-json:1.11.0", gradle)
+
+    def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
+        self.assertTrue((COMPOSE_PACKAGE / "mosaic-package.toml").is_file())
+        for suffix in ("mil", "mll", "msl"):
+            self.assertTrue((COMPOSE_PACKAGE / "src" / f"Counter.{suffix}").is_file())
 
 
 if __name__ == "__main__":

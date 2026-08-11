@@ -156,6 +156,11 @@ mod tests {
         let source = compose_jna_binding();
         assert!(source.contains("System.getProperty(\"mosaic.app.library\")"));
         assert!(source.contains("System.getenv(\"MOSAIC_APP_LIBRARY\")"));
+        assert!(source.contains("System.getProperty(\"compose.application.resources.dir\")"));
+        assert!(source.contains("?: bundledMosaicLibrary()"));
+        assert!(source.contains("\"libmosaic_app.dylib\""));
+        assert!(source.contains("\"mosaic_app.dll\""));
+        assert!(source.contains("\"libmosaic_app.so\""));
         assert!(source.contains("Locale.getDefault().toLanguageTag()"));
         assert!(source.contains("put(\"textScale\", 1.0)"));
         assert!(source.contains("-> \"apple\""));

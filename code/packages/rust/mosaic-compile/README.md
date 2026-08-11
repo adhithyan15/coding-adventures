@@ -90,7 +90,7 @@ Package mode compiles a Mosaic package directory that contains
 files:
 
 ```text
-mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete]
+mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--runtime-library <CDYLIB>]
 
 BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 ```
@@ -98,6 +98,12 @@ BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 `--emit-project` asks the package builder to write the selected backend's
 runnable shell next to the component artifacts, such as a WinUI/XAML project or
 a Qt/CMake project.
+
+For Compose distributions, `--runtime-library` selects an already-built target
+Rust application `.dylib`, `.so`, or `.dll`. Mosaic copies it into the generated
+project's native application resources and the standard binding resolves it
+relative to the installed app. The option requires `--emit-project`; strict
+Compose project builds require it.
 
 Package mode defaults to `--profile permissive`, which emits the package plus a
 machine-readable `<backend>/mosaic-degradations.json`. Use

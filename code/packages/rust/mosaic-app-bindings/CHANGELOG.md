@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resolve Compose's conventional Mosaic application library from the installed
+  native-distribution resources after explicit property/environment overrides
+  and before falling back to a global library name.
 - Add direct required-runtime and required-prop APIs to the standard Qt binding.
   Strict shells now reject missing Rust libraries and incomplete prop envelopes,
   while consistently mapping MIL slot names onto generated QML properties.

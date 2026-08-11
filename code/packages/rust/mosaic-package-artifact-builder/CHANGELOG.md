@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased] - Compose Rust engine bundling
+
+- Add a target-library-aware profiled build API. Compose project shells copy a
+  selected `.dylib`, `.so`, or `.dll` into the platform-specific application
+  resources under Mosaic's conventional runtime filename.
+- Strict Compose distributable builds now report
+  `runtime.library-not-bundled` and stop before application emission when no
+  engine was selected.
+- Native packaging acceptance composes the shared Rust engine with a real
+  Mosaic package, verifies the installed library bytes, and exercises the
+  app-relative loader without `MOSAIC_APP_LIBRARY`.
+
 ## [Unreleased] - Compose native drag capability
 
 - Native-complete analysis no longer reports Compose `HostDraggable` and
