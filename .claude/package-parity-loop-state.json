@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10521,
+  "active_pr": 10564,
   "last_inventory": {
-    "revision": "fc8be1789c6b5f0d6aa360f0ffc05de23d74689d",
+    "revision": "dda47210d3041d7ee3f63b66da9c9766e664bd2d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1298,
@@ -416,13 +416,16 @@
     {
       "id": "build-file-lua-json-value-transitive-closure",
       "title": "Close the Lua JSON value parser prerequisites",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-file-standalone-integrity-lua", "build-file-lua-parser-lexer-transitive-closure"],
       "branch": "codex/lua-json-value-transitive-closure",
       "pr_number": 10521,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10521",
       "pr_opened_at": "2026-08-11T00:43:10Z",
       "implementation_revision": "ddeafb9752194b716045cfca7856f58df239d10e",
+      "merged_at": "2026-08-11T03:38:26Z",
+      "merge_revision": "3add9a1b954d495a0038c59ebc215aee996c6bc6",
+      "merge_notes": "External review merged PR #10521 after every required check reached a terminal green state; this item legally transitioned from pr-open to merged and no parity PR remains active.",
       "selection_revision": "5415ba120d1a25eb11302909eee1addeb8f1e0fe",
       "selection_notes": "Selected after external merge of PR #10317 and the collision-checked ownership refresh. Both prerequisites are merged; this one-package Unix/Windows closure is the smallest audited unblocked successor, while data-store remains clock-blocked and the new Vault application chain remains dependency-blocked.",
       "validation_notes": "Fresh isolated generic and Windows LuaRocks homes each installed the exact eight-rock chain with dependency fetching disabled, passed 91 json_value tests, and passed the source-path-free installed runtime smoke. Source suites pass 43 json_lexer, 44 json_parser, 91 json_value, and 107 downstream json_serializer cases; neutral-directory installed json_value and json_serializer smokes pass. LuaCov reports 96.55% lexer, 90.32% parser, and 85.41% value production coverage. Changed Lua files pass luacheck; Python build-tool passes 353 tests at 85.19%; Lua build-tool passes 61 cases; Go build-tool test, vet, module verification, and trimpath build pass. Reporter and taxonomy tests pass 17 tests and 676 subtests. The collision report remains at 1,298 identities, 4,454 slots, zero collisions, and zero unknown buckets. All 258 Lua BUILD files validate; the full 4,862-package audit retains the exact unrelated 17 Perl, Python, and Swift diagnostics with zero Lua findings.",
@@ -456,11 +459,18 @@
     {
       "id": "build-tool-python-ecosystem-scoped-alias-resolution",
       "title": "Scope Python build-tool dependency aliases by ecosystem",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered while independently checking the Lua closure graph. Python build-tool resolution constructs one global alias map for every ecosystem, so later Python, Perl, Haskell, and other package aliases overwrite Lua rock aliases; on the 4,829-package repository snapshot, 251 of 258 canonical Lua rock names resolve to a non-Lua identity. Define language-neutral collision fixtures, preserve intentional explicitly qualified cross-language edges, scope ordinary manifest aliases to their owning ecosystem, and compare complete real-lane graphs with the canonical Go oracle in a separate build-tool tranche."
+      "branch": "codex/python-ecosystem-scoped-alias-resolution",
+      "pr_number": 10564,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10564",
+      "pr_opened_at": "2026-08-11T04:24:44Z",
+      "implementation_revision": "0935487257e5b6d16acdc66a6c8468408828c62b",
+      "selection_revision": "e45fc12d4517084705ccbf4ecad26d314bbab56d",
+      "selection_notes": "Selected after external merge of PR #10521 and the collision-clean identity-neutral inventory refresh. The global alias table is a high-severity dependency-confusion boundary that can route an edge to another ecosystem and schedule the wrong local shell BUILD; this pure, dependency-free repair also makes later language-filter expansion safe.",
+      "validation_notes": "The new 58th language-neutral resolution case is consumed by Python and Go and proves same-spelled Lua, Perl, Python, and Haskell aliases stay ecosystem-local while one exact qualified BUILD edge crosses lanes. Python passes its real BUILD_windows front door and 357 tests at 87%+ coverage; focused Ruff, MyPy, and Bandit checks pass. The full Ruff command retains the exact pre-existing 86-diagnostic baseline, full MyPy retains six unrelated diagnostics, and full Bandit retains eight low plus one existing shell-execution finding without any resolver finding. Go passes all tests, vet, module verification, and trimpath build. The 58-case/235-file corpus passes 17 schema and 42 runner tests. A full 4,864-package Python plan contains 7,212 edges and exactly two cross-language edges, both exact checked-in BUILD declarations. All 258 Lua identities and all 384 canonicalized Lua edges match the Go oracle. The latest schema-3 inventory remains 1,298 identities, 4,454 slots, 848 singletons, 11,872 singleton gaps, 652 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10564 opened after the fully validated implementation commit was pushed. GitHub reports the PR open, non-draft, and mergeable; this state-only follow-up records the sole active parity PR without changing implementation behavior.",
+      "notes": "Discovered while independently checking the Lua closure graph. Python build-tool resolution constructs one global alias map for every ecosystem, so later Python, Perl, Haskell, and other package aliases overwrite Lua rock aliases; on the audited repository snapshot, 251 of 258 canonical Lua rock names resolve to a non-Lua identity. Define language-neutral adversarial collision fixtures, preserve explicitly qualified cross-language BUILD edges and within-ecosystem library-over-program priority, scope ordinary manifest aliases to their owning ecosystem, prove wrong BUILD files are never selected, and compare complete real-lane graphs with the canonical Go oracle."
     },
     {
       "id": "typescript-starlark-interpreter-strict-build",
@@ -914,12 +924,12 @@
     },
     {
       "id": "build-tool-python-haskell-language-filter",
-      "title": "Expose Haskell in the Python build-tool language filter",
+      "title": "Expose Haskell, Java, and Kotlin in Python build-tool filtering",
       "status": "pending",
-      "depends_on": ["build-tool-lua-rockspec-encoding"],
+      "depends_on": ["build-tool-lua-rockspec-encoding", "build-tool-python-ecosystem-scoped-alias-resolution"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered while validating the full Python build-tool scan. ALL_LANGUAGES and the resolver include Haskell, but argparse omits it from --language choices, so users cannot select the established Haskell lane even though all-language mode discovers it. Add the focused CLI contract and regression test in a separate build-tool parity slice."
+      "notes": "Discovered while validating the full Python build-tool scan. Haskell resolver branches exist but discovery omits the lane, while Java and Kotlin are discoverable and resolvable but absent from ALL_LANGUAGES and argparse choices. Add the focused discovery, filter, and dry-run contract in a separate slice only after ecosystem-scoped aliases make default all-language resolution safe."
     },
     {
       "id": "build-tool-python-plan-atomic-overwrite-windows",
@@ -2467,7 +2477,7 @@
       "id": "vault-pm-format-portable-conformance",
       "title": "Fixture and port the Vault password-manager format",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["canonical-cbor-established-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-checked 5e1304f064 inventory after merged PR #10260 added Rust vault-pm-format as the sole new identity. The package has an empty capability manifest and deliberately owns no storage, clock, entropy, key derivation, encryption, or signature authority. Define language-neutral fixtures and established-lane implementations for strict V1 bootstrap, device-certificate, commit, announcement, AEAD-envelope, recovery-wrap, and object-frame codecs; canonical CBOR field ordering and rejection; domain-separated identifiers and signing preimages; exact version and suite gates; duplicate, unknown, truncation, overflow, and trailing-byte failures; and explicit collection and ciphertext bounds. Reuse the pure canonical-CBOR and SHA-256 behavior contracts as language-neutral prerequisites. Key derivation, encryption, signing, secret custody, persistence, and synchronization remain injected native consumers."
@@ -2581,7 +2591,7 @@
       "id": "vault-records-portable-conformance",
       "title": "Fixture and port canonical Vault record envelopes",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["canonical-cbor-established-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Newly surfaced while classifying merged PR #10285's redaction hardening of the existing empty-capability Rust vault-records singleton. Define language-neutral fixtures and established-lane implementations for canonical typed record envelopes, exact content-type and version handling, opaque forward compatibility, strict bounded decoding, deterministic canonical-CBOR encoding, value-redacted summaries and diagnostic formatting, secret-field zeroization hooks, and stable attacker-input-free failures. Encryption, storage, credential custody, and host rendering remain outside this pure record contract."
@@ -2703,6 +2713,24 @@
       "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10318 added Rust smart-home-zoneminder-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, ZoneMinder transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
     },
     {
+      "id": "canonical-cbor-language-neutral-conformance",
+      "title": "Define language-neutral canonical CBOR conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while auditing the Vault password-manager dependency graph after PR #10521 merged. CBR01 defines deterministic RFC 8949 length-first canonical CBOR, but no closed language-neutral fixture owns exact encodings, rejection classes, stable payload-blind errors, or depth and length bounds. Rust is the only established lane implementation; emerging C and C++ provide independent references. Specify and cross-check the neutral contract before any established-lane parity claim."
+    },
+    {
+      "id": "canonical-cbor-established-lane-parity",
+      "title": "Port canonical CBOR across established lanes",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR behavior contract in the fourteen established lanes that currently lack it. This pure foundation directly unblocks both vault-pm-format and vault-records, which feed the wider Vault application and CLI dependency chain."
+    },
+    {
       "id": "vault-pm-application-portable-conformance",
       "title": "Fixture and port the Vault password-manager application core",
       "status": "pending",
@@ -2778,6 +2806,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered during the post-#10264 security audit of the pending Lua HyperLogLog build closure. in_memory_data_store_engine defaults directly to os.time() while its capability manifest is empty, and the facade claims no clock access; tests mask both the missing HyperLogLog rock and the ambient clock through source-path injection. Make time fully caller-injected or declare a truthful structured clock boundary, add deterministic time and neutral installed-runtime fixtures, and only then unblock the standalone HyperLogLog closure. Network, filesystem, process, and credential authority remain absent."
+    },
+    {
+      "id": "in-memory-data-store-engine-clock-authority-cross-lane-truthfulness",
+      "title": "Make data-store clock authority truthful across established lanes",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints", "lua-in-memory-data-store-engine-clock-authority-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#10521 cross-language security audit. C#, F#, Go, Haskell, Java, Kotlin, Perl, Python, and TypeScript data-store engines, plus affected facades, read ambient wall time while their capability profiles are empty, legacy, or absent; Rust alone truthfully declares time authority. Define a shared deterministic TTL, EXPIREAT, PTTL, lazy-expiry, reset, and provider-consistency fixture and move portable implementations to caller-injected clocks rather than autonomously adding signed time authority. Preserve the separately truthful Rust boundary and close provenance gaps in installed-runtime recipes before cross-lane parity claims."
     }
   ]
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-10
+
+- Added an adversarial ecosystem-scoped alias-resolution case. Same-spelled
+  Lua, Perl, Python, and Haskell packages must resolve locally, while one exact
+  qualified BUILD dependency preserves an intentional cross-language edge.
+
 ## 2026-08-08
 
 - Added the process-free `lua_windows_sibling_parity` validation check and an

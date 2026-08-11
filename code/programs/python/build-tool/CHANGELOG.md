@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2026-08-10
+
+### Fixed
+
+- **Ecosystem-scoped dependency aliases**: dependency manifests now resolve
+  against one alias table per language, preventing a same-spelled package in a
+  different ecosystem from redirecting a local dependency edge or selecting
+  the wrong BUILD commands.
+- **Qualified cross-language BUILD edges**: exact `# build-tool: deps=` package
+  identities remain supported without reopening ordinary cross-ecosystem alias
+  matching. Duplicate, unknown, and self references are ignored deterministically.
+- **Shared adversarial conformance**: Python and Go consume the same 58th
+  language-neutral case covering Lua, Perl, Python, Haskell, and a deliberate
+  qualified cross-language bridge.
+
 ## [0.3.1] - 2026-08-02
 
 ### Fixed

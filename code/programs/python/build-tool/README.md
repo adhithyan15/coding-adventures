@@ -46,6 +46,18 @@ Lua rockspec metadata is decoded as strict UTF-8. Invalid text fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic rather than using a host locale or
 silently replacing bytes.
 
+Ordinary dependency aliases are resolved only inside the package's ecosystem.
+For example, the same `coding-adventures-shared` name in Lua, Perl, Python, and
+Haskell maps to four distinct package identities. A legacy BUILD file may name
+an intentional cross-language dependency only with its exact qualified identity:
+
+```text
+# build-tool: deps=lua/shared
+```
+
+Unknown, unqualified, and self-referential comment entries are ignored. Library
+packages retain priority over same-named programs within one ecosystem.
+
 ## Installation
 
 ```bash

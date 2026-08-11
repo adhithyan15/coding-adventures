@@ -699,7 +699,44 @@ def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[st
 # ---------------------------------------------------------------------------
 
 
-def _build_known_names(packages: list[Package]) -> dict[str, str]:
+_BUILD_TOOL_DEPS_RE = re.compile(
+    r"(?m)^[ \t]*#\s*build-tool:\s*deps\s*=\s*(.+)$"
+)
+
+
+def _parse_build_tool_deps(
+    package: Package, known_package_names: set[str]
+) -> list[str]:
+    """Read exact qualified cross-ecosystem dependencies from BUILD comments."""
+    if not package.build_content:
+        return []
+
+    dependencies: set[str] = set()
+    for match in _BUILD_TOOL_DEPS_RE.finditer(package.build_content):
+        for raw in re.split(r"[,\t ]+", match.group(1)):
+            dependency = raw.strip()
+            if (
+                dependency
+                and dependency != package.name
+                and dependency in known_package_names
+            ):
+                dependencies.add(dependency)
+    return sorted(dependencies)
+
+
+def _dependency_scope(language: str) -> str:
+    """Return the ecosystem scope used for ordinary manifest aliases."""
+    return language
+
+
+def _in_dependency_scope(package_language: str, scope: str) -> bool:
+    """Whether a package may contribute aliases to one resolver scope."""
+    return package_language == scope
+
+
+def _build_known_names_for_language(
+    packages: list[Package], language: str
+) -> dict[str, str]:
     """Build a mapping from ecosystem-specific dependency names to package names.
 
     For Python:     "coding-adventures-logic-gates" -> "python/logic-gates"
@@ -714,19 +751,24 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
     resolving the dep to itself and creating a self-loop.
     """
     known: dict[str, str] = {}
+    known_paths: dict[str, Path] = {}
+    scope = _dependency_scope(language)
 
     def _set_known(key: str, value: str, pkg_path: Path) -> None:
         """Insert key→value, letting library packages overwrite programs."""
         if key not in known:
             known[key] = value
+            known_paths[key] = pkg_path
             return
-        # Key already set. Allow overwrite only if the current pkg is a
-        # library (not a program) — i.e., when the existing entry came from
-        # a program and we now have the definitive library entry.
-        if "/programs/" not in str(pkg_path).replace("\\", "/"):
+        existing_is_program = "/programs/" in str(known_paths[key]).replace("\\", "/")
+        current_is_program = "/programs/" in str(pkg_path).replace("\\", "/")
+        if existing_is_program and not current_is_program:
             known[key] = value
+            known_paths[key] = pkg_path
 
     for pkg in packages:
+        if not _in_dependency_scope(pkg.language, scope):
+            continue
         if pkg.language == "python":
             # Convert package dir name to pypi name: "logic-gates" -> "coding-adventures-logic-gates"
             pypi_name = f"coding-adventures-{pkg.path.name}".lower()
@@ -814,6 +856,22 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
     return known
 
 
+def _build_known_names(packages: list[Package]) -> dict[str, str]:
+    """Build the legacy unscoped alias view used by mapping unit tests.
+
+    Dependency resolution does not consume this view. It builds one table per
+    ecosystem so same-spelled aliases from another language cannot redirect an
+    edge.
+    """
+    known: dict[str, str] = {}
+    for language in dict.fromkeys(package.language for package in packages):
+        for alias, package_name in _build_known_names_for_language(
+            packages, language
+        ).items():
+            known.setdefault(alias, package_name)
+    return known
+
+
 def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
     """Parse package metadata to discover dependencies and build a graph.
 
@@ -835,11 +893,17 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
     for pkg in packages:
         graph.add_node(pkg.name)
 
-    # Build the name-mapping table (single global map for cross-language deps).
-    known_names = _build_known_names(packages)
+    # Ordinary manifest aliases are ecosystem-local. Exact qualified BUILD
+    # comments are the portable escape hatch for intentional cross-lane edges.
+    known_names_by_language = {
+        language: _build_known_names_for_language(packages, language)
+        for language in dict.fromkeys(pkg.language for pkg in packages)
+    }
+    known_package_names = {pkg.name for pkg in packages}
 
     # Parse dependencies for each package.
     for pkg in packages:
+        known_names = known_names_by_language[pkg.language]
         if pkg.language == "python":
             deps = _parse_python_deps(pkg, known_names)
         elif pkg.language == "ruby":
@@ -865,7 +929,9 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
         else:
             deps = []
 
-        for dep_name in deps:
+        deps.extend(_parse_build_tool_deps(pkg, known_package_names))
+
+        for dep_name in sorted(set(deps)):
             # Edge direction: dep -> pkg means "dep must be built before pkg".
             # This makes independent_groups() produce the correct build order:
             # nodes with zero in-degree (no dependencies) come first.

@@ -139,8 +139,9 @@ func materializeResolutionFixture(
 	return root, packages
 }
 
-func TestLuaResolutionConformanceFixtures(t *testing.T) {
+func TestSharedResolutionConformanceFixtures(t *testing.T) {
 	for _, name := range []string{
+		"resolution-ecosystem-scoped-aliases.json",
 		"resolution-build-deps-comment.json",
 		"resolution-lua-utf8.json",
 		"resolution-lua-invalid-utf8.json",
