@@ -857,7 +857,8 @@ backend immediately) come before the enabler-dependent items.
   the string path. A local real scalar assigned one of those static expressions
   can now print its canonical value along a straight-line path on all seven
   columns. Straight-line copies preserve independent snapshots across later
-  source reassignment; labels, branches, loops, gotos, calls, dynamic
+  source reassignment, and tracked locals may feed the bounded finite
+  arithmetic and exact standard-function evaluator; labels, branches, loops, gotos, calls, dynamic
   reassignment, and captured globals invalidate the tracked value. General computed/runtime
   `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.

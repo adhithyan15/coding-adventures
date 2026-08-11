@@ -185,7 +185,9 @@ divisors, non-finite results, and conditionals with a non-static leaf remain
 explicit type errors. A local real scalar assigned one of these finite static
 expressions can also print its canonical decimal value while execution remains
 straight-line. Copies between tracked real locals preserve independent value
-snapshots even if the source is later reassigned. Labels, branches, loops,
+snapshots even if the source is later reassigned, and tracked locals may feed
+the same bounded finite arithmetic and exact standard-function evaluator.
+Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
 Real literal bases also accept the existing
 capped nonnegative integer-literal exponent chains or one explicitly signed
