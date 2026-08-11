@@ -730,7 +730,9 @@ impl Compiler {
         if let Some(array_decl) = first_direct_node(node, "array_decl") {
             return self.emit_array_decl(array_decl, false);
         }
-        let Some(type_decl) = first_direct_node(node, "type_decl") else {
+        let scalar_decl = first_direct_node(node, "own_decl")
+            .or_else(|| first_direct_node(node, "type_decl"));
+        let Some(type_decl) = scalar_decl else {
             let construct = direct_nodes(node)
                 .first()
                 .map(|n| n.rule_name.as_str())
@@ -747,7 +749,8 @@ impl Compiler {
 
         // LANG-FULL AL6: a leading `own` token gives these variables static
         // lifetime — they become module globals that persist across calls.
-        let is_own = direct_tokens(type_decl).iter().any(|t| t.value == "own");
+        let is_own = type_decl.rule_name == "own_decl"
+            || direct_tokens(type_decl).iter().any(|t| t.value == "own");
 
         for name in direct_tokens(ident_list)
             .into_iter()
@@ -3426,21 +3429,21 @@ impl Compiler {
     /// goto lowers to a chain every backend already runs.
     fn emit_desig_jump(&mut self, desig: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(desig);
-        // desig_expr = "if" bool_expr "then" simple_desig "else" desig_expr
+        // desig_expr = "if" bool_expr "then" desig_expr "else" desig_expr
         //            | simple_desig
         if direct_tokens(desig).iter().any(|t| t.value == "if") {
             let cond_node = first_direct_node(desig, "bool_expr").ok_or_else(|| {
                 CompileError::Malformed("conditional designator missing condition".into())
             })?;
-            let then_node = first_direct_node(desig, "simple_desig").ok_or_else(|| {
-                CompileError::Malformed("conditional designator missing then target".into())
-            })?;
-            let else_node = direct_nodes(desig)
+            let branches: Vec<&GrammarASTNode> = direct_nodes(desig)
                 .into_iter()
-                .find(|n| n.rule_name == "desig_expr")
-                .ok_or_else(|| {
-                    CompileError::Malformed("conditional designator missing else target".into())
-                })?;
+                .filter(|child| child.rule_name == "desig_expr")
+                .collect();
+            if branches.len() != 2 {
+                return Err(CompileError::Malformed(
+                    "conditional designator should have two targets".into(),
+                ));
+            }
             let cond = self.emit_expr(cond_node)?;
             if cond.ty != ScalarType::Boolean {
                 return Err(CompileError::Type(
@@ -3455,7 +3458,7 @@ impl Compiler {
                 vec![Operand::Var(cond.slot), Operand::Var(else_label.clone())],
                 "void",
             ));
-            self.emit_simple_desig_jump(then_node)?;
+            self.emit_desig_jump(branches[0])?;
             self.emit(IIRInstr::new(
                 "jmp",
                 None,
@@ -3463,7 +3466,7 @@ impl Compiler {
                 "void",
             ));
             self.emit_label(&else_label);
-            self.emit_desig_jump(else_node)?;
+            self.emit_desig_jump(branches[1])?;
             self.emit_label(&end_label);
             Ok(())
         } else {
@@ -4127,37 +4130,47 @@ impl Compiler {
 
     fn emit_conditional_expr(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         match node.rule_name.as_str() {
+            "expression" => {
+                let cond_node = first_direct_node(node, "bool_expr").ok_or_else(|| {
+                    CompileError::Malformed("conditional expression missing condition".into())
+                })?;
+                let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+                    .into_iter()
+                    .filter(|child| child.rule_name == "expression")
+                    .collect();
+                if branches.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "conditional expression should have two branches".into(),
+                    ));
+                }
+                self.emit_conditional_branches(cond_node, branches[0], branches[1])
+            }
             "arith_expr" => {
                 let cond_node = first_direct_node(node, "bool_expr").ok_or_else(|| {
                     CompileError::Malformed("arithmetic conditional missing condition".into())
                 })?;
-                let then_node = first_direct_node(node, "simple_arith").ok_or_else(|| {
-                    CompileError::Malformed("arithmetic conditional missing then branch".into())
-                })?;
-                let else_node = direct_nodes(node)
+                let branches: Vec<&GrammarASTNode> = direct_nodes(node)
                     .into_iter()
-                    .find(|n| n.rule_name == "arith_expr")
-                    .ok_or_else(|| {
-                        CompileError::Malformed(
-                            "arithmetic conditional missing else branch".into(),
-                        )
-                    })?;
-                self.emit_conditional_branches(cond_node, then_node, else_node)
+                    .filter(|child| child.rule_name == "arith_expr")
+                    .collect();
+                if branches.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "arithmetic conditional should have two branches".into(),
+                    ));
+                }
+                self.emit_conditional_branches(cond_node, branches[0], branches[1])
             }
             "bool_expr" => {
                 let bool_nodes: Vec<&GrammarASTNode> = direct_nodes(node)
                     .into_iter()
                     .filter(|n| n.rule_name == "bool_expr")
                     .collect();
-                if bool_nodes.len() != 2 {
+                if bool_nodes.len() != 3 {
                     return Err(CompileError::Malformed(
-                        "boolean conditional should have condition and else bool_expr".into(),
+                        "boolean conditional should have condition and two branches".into(),
                     ));
                 }
-                let then_node = first_direct_node(node, "simple_bool").ok_or_else(|| {
-                    CompileError::Malformed("boolean conditional missing then branch".into())
-                })?;
-                self.emit_conditional_branches(bool_nodes[0], then_node, bool_nodes[1])
+                self.emit_conditional_branches(bool_nodes[0], bool_nodes[1], bool_nodes[2])
             }
             other => Err(CompileError::Unsupported(format!(
                 "conditional expressions in {other}"
@@ -6087,6 +6100,23 @@ mod tests {
     #[test]
     fn compiles_and_runs_boolean_conditional_expression() {
         let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_nested_then_conditional_expression() {
+        let src = "begin boolean outer, inner; integer result; \
+                   outer := true; inner := false; \
+                   result := if outer then if inner then 1 else 42 else 0 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_nested_then_conditional_designator() {
+        let src = "begin boolean outer, inner; integer result; \
+                   outer := true; inner := false; \
+                   goto if outer then if inner then bad else good else bad; \
+                   bad: result := 0; goto done; good: result := 42; done: end";
         assert_eq!(run_i64(src), 42);
     }
 

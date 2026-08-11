@@ -177,6 +177,14 @@ fn test_own_array_declaration() {
     assert!(find_rule(&ast, "array_segment"), "Expected array bounds");
 }
 
+/// Scalar `own` declarations use the canonical grammar's dedicated node.
+#[test]
+fn test_own_scalar_declaration() {
+    let ast = parse_algol("begin own integer counter; counter := 1 end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "own_decl"), "Expected canonical 'own_decl'");
+}
+
 /// Multiple declarations in one block.
 #[test]
 fn test_multiple_declarations() {
@@ -219,6 +227,20 @@ fn test_arithmetic_assignment() {
         || find_rule(&ast, "simple_arith")
         || find_rule(&ast, "term");
     assert!(has_arith, "Expected arithmetic expression rules in AST");
+}
+
+/// Conditional expressions recurse through both branches in the source grammar.
+#[test]
+fn test_nested_conditional_expression_branches() {
+    let ast = parse_algol(
+        "begin integer result; boolean outer, inner; \
+         result := if outer then if inner then 1 else 42 else if inner then 2 else 3 end",
+    );
+    assert_program_root(&ast);
+    assert!(
+        count_rule(&ast, "expression") >= 7,
+        "Expected recursively nested canonical expression nodes"
+    );
 }
 
 /// Assignment with subtraction and division.

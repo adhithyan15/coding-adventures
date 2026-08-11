@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-08-11
+
+### Changed
+
+- **Canonical grammar resynchronization.** The checked-in Rust grammar artifact
+  is regenerated from `code/grammars/algol/algol60.grammar`. This retires the
+  accumulated hand patches and imports the source grammar's dedicated
+  `own_decl`, optional empty formal lists, report-style separator forms, and
+  fully recursive conditional expression and designational branches.
+
 ## [0.7.0] - 2026-08-11
 
 ### Added
@@ -33,7 +43,7 @@ All notable changes to this project will be documented in this file.
 - **Multiple labels per statement.** The checked-in Rust grammar artifact now
   accepts repeated `label:` prefixes before ordinary and conditional statements,
   matching that bounded portion of the source ALGOL grammar. Dummy statements
-  and the remaining grammar drift stay separate follow-up work.
+  and the remaining grammar drift stayed separate until the 0.8.0 resync.
 
 ## [0.3.2] - 2026-07-31
 
@@ -52,8 +62,8 @@ All notable changes to this project will be documented in this file.
 - **`own_array_decl` parser support.** The checked-in Rust grammar artifact now
   recognizes `own [type] array ...`, including typed declarations such as
   `own integer array memo[4:5]`. This is a narrow synchronization with the
-  source grammar: full regeneration remains intentionally deferred because it
-  would import unrelated grammar shapes the current frontend does not support.
+  source grammar: full regeneration was intentionally deferred until 0.8.0
+  because it would have imported grammar shapes the frontend did not yet support.
 
 ## [0.3.0] - 2026-07-14
 
@@ -90,8 +100,8 @@ the binding floor — and wired it into `create_algol_parser` via
   input at the measured real-nesting boundary still parses while one
   level past it doesn't, and the cap trips before the native stack would
   overflow even on a default-stack thread.
-- Incidentally discovered (not fixed here — a pre-existing, unrelated
-  bug, flagged separately): the checked-in `src/_grammar.rs` is stale
+- Incidentally discovered (subsequently fixed in 0.8.0): the checked-in
+  `src/_grammar.rs` was stale
   relative to `code/grammars/algol/algol60.grammar`. The `.grammar`
   source documents an if/then/else conditional-expression form on the
   unified `expression` rule, and broader (both-branches) recursion on
@@ -117,11 +127,10 @@ No change to behaviour for any input that nests below the cap.
 - The optional was added to **both** `code/grammars/algol.grammar` and the
   compiled `src/_grammar.rs` (surgically, for the `type_decl` rule only). A
   full `grammar-tools compile-grammar` regen was deliberately **not** run: the
-  checked-in `algol.grammar` has drifted ahead of the compiled grammar in
+  checked-in `algol.grammar` had drifted ahead of the compiled grammar in
   unrelated rules (`for_stmt` loop targets, optional `actual_params`, labels)
   that the IIR frontend does not yet support, so regenerating wholesale would
-  pull those in and break parsing. Resyncing the full grammar is tracked as
-  separate follow-up work.
+  pull those in and break parsing. The full resync was completed in 0.8.0.
 
 ## [0.1.0] - 2026-04-06
 
