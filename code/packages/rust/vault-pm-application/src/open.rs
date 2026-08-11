@@ -1010,17 +1010,18 @@ fn map_repository(error: ApplicationRepositoryError) -> ApplicationError {
 mod tests {
     use super::*;
     use crate::{
-        complete_generation_zero, encode_item_revision, encode_signed_commit,
-        prepare_generation_zero, seal_object, CatalogV1, GenerationZeroPolicyV1,
-        GenerationZeroRandomness, ObjectKind, ObjectRandomness, PublicationJournalV1,
-        V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
-        GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+        complete_generation_zero, decode_signed_audit_event, encode_item_revision,
+        encode_signed_commit, prepare_generation_zero, seal_object, CatalogV1,
+        GenerationZeroPolicyV1, GenerationZeroRandomness, ObjectKind, ObjectRandomness,
+        PublicationJournalV1, V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES,
+        DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
         RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_canonical_cbor::{
         decode as decode_cbor, encode as encode_cbor, CborValue,
     };
     use coding_adventures_ed25519::{generate_keypair, sign};
+    use coding_adventures_vault_pm_audit::AuditActionV1;
     use coding_adventures_vault_pm_domain::{
         ContentType, ItemDocument, ItemState, LwwRegister, ObservedSet, OperationId,
         RedactedRecordView, Tombstone,
@@ -2420,7 +2421,7 @@ mod tests {
         )
         .unwrap();
         let import_random_byte_count = crate::portable_import_random_bytes(&opened).unwrap();
-        assert_eq!(import_random_byte_count, 2 * 16 + 5 * 80);
+        assert_eq!(import_random_byte_count, 2 * 16 + 6 * 80 + 32);
         assert_eq!(
             crate::PortableImportRandomnessV1::new(
                 vec![0x91; import_random_byte_count - 1],
@@ -2569,8 +2570,8 @@ mod tests {
             crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
         )
         .unwrap();
-        assert_eq!(crate::portable_import_random_bytes(&opened), Ok(160));
-        let randomness = crate::PortableImportRandomnessV1::new(vec![0xa3; 160], &opened).unwrap();
+        assert_eq!(crate::portable_import_random_bytes(&opened), Ok(272));
+        let randomness = crate::PortableImportRandomnessV1::new(vec![0xa3; 272], &opened).unwrap();
         let source_compare_calls = source_local.3.load(Ordering::SeqCst);
         assert_eq!(
             source_session
@@ -2620,7 +2621,7 @@ mod tests {
             crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
         )
         .unwrap();
-        let randomness = crate::PortableImportRandomnessV1::new(vec![0xa5; 160], &opened).unwrap();
+        let randomness = crate::PortableImportRandomnessV1::new(vec![0xa5; 272], &opened).unwrap();
         let target_compare_calls = target_local.3.load(Ordering::SeqCst);
         assert_eq!(
             target_session
@@ -4128,6 +4129,89 @@ mod tests {
         assert_eq!(commit.catalog_root(), active.catalog_root());
         assert_eq!(commit.added_objects().len(), 2);
         assert_eq!(commit.wall_time_ms(), 301);
+    }
+
+    #[test]
+    fn active_audit_item_create_is_signed_encrypted_and_atomic_with_the_commit() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let mut session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let prior_heads = session.local_pins().clone();
+        let previous_event = ObjectId::new([0xee; 32]);
+        let exact_prior = LocalVaultStateV1::Active(session.active.clone())
+            .encode()
+            .unwrap();
+        session.active = session
+            .active
+            .clone()
+            .with_audit_event_head(previous_event)
+            .unwrap();
+        let exact_audited = LocalVaultStateV1::Active(session.active.clone())
+            .encode()
+            .unwrap();
+        local
+            .compare_exchange(locator, Some(&exact_prior), &exact_audited)
+            .unwrap();
+        let (device_public, _) = generate_keypair(session._local_secret.device_signing_seed());
+        let randomness = add_item_randomness(0x42);
+        let item_id = randomness.item_id();
+        let active = session
+            .add_item(
+                new_login_document(item_id, "Audited portal", "audited-secret"),
+                302,
+                randomness,
+                &local,
+            )
+            .unwrap();
+        let audit_head = active.audit_event_head().unwrap();
+        assert_ne!(audit_head, previous_event);
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let head = *reopened.open_report().heads().iter().next().unwrap();
+        let commit = reopened._repository.read_commit(head).unwrap();
+        assert_eq!(commit.added_objects().len(), 3);
+        assert!(commit.added_objects().contains(&audit_head));
+        let audit_object = reopened._repository.read_object(audit_head).unwrap();
+        let plaintext = open_object(
+            &reopened._keys,
+            ObjectKind::AuditEvent,
+            audit_object.frame(),
+        )
+        .unwrap();
+        let event = decode_signed_audit_event(&plaintext).unwrap();
+        event.verify(&device_public).unwrap();
+        assert_eq!(event.event().action(), AuditActionV1::ItemCreate);
+        assert_eq!(event.event().item_id(), Some(item_id));
+        assert_eq!(event.event().selected_revision(), None);
+        assert_eq!(event.event().previous_event(), Some(previous_event));
+        assert_eq!(
+            event.event().basis_heads(),
+            prior_heads.iter().copied().collect::<Vec<_>>()
+        );
+        assert_eq!(event.event().device_counter(), 2);
+        assert_eq!(event.event().timestamp_ms(), 302);
+        assert_eq!(
+            event.event().result_revision().unwrap().as_bytes(),
+            commit
+                .added_objects()
+                .iter()
+                .find(|id| **id != audit_head && **id != commit.catalog_root())
+                .unwrap()
+                .as_bytes()
+        );
     }
 
     #[test]

@@ -7,10 +7,12 @@ identity, selected/result revision, prior per-device audit event, observed
 repository heads, outcome, and advisory time.
 
 Events use a closed canonical V1 encoding and are signed by the acting device.
-The crate reads no clock or entropy and performs no persistence. The application
-layer will seal events at rest and publish them atomically with the commit that
+The crate reads no clock or entropy and performs no persistence. Application
+layers can seal events at rest and publish them atomically with the commit that
 contains the operation, allowing filesystem, Google Drive, WebDAV, S3, and
-future stores to remain opaque byte stores.
+future stores to remain opaque byte stores. Conflict choice and authored
+conflict merge are distinct actions so a merge never invents one selected
+parent.
 
 The event contains no title, username, URL, query text, password, notes body,
 TOTP seed, attachment name, provider identity, path, or arbitrary detail field.

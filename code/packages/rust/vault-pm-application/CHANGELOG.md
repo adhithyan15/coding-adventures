@@ -2,6 +2,26 @@
 
 All notable changes to this package are documented here.
 
+## [0.32.0] - 2026-08-10
+
+### Added
+
+- Add encrypted, device-signed audit events to item create, update, delete,
+  restore, conflict resolution/merge, and portable-import publications whenever
+  the durable audit epoch is active.
+- Reserve an independent 32-byte trace ID and encrypted-event randomness in
+  every mutation entropy container so hosts cannot silently omit audit entropy.
+
+### Security
+
+- Bind each successful mutation event to the same device counter, exact parent
+  heads, affected item, selected revision where applicable, resulting revision,
+  prior per-device event, and advisory time as its repository commit.
+- Publish the event in the same crash-resumable journal and advance the durable
+  audit head only with the mutation commit. Pre-audit vault behavior remains
+  compatible, and public activation stays deferred until access paths also fail
+  closed.
+
 ## [0.31.0] - 2026-08-10
 
 ### Added

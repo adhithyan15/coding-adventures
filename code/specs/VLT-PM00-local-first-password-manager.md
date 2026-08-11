@@ -1450,9 +1450,14 @@ changelog, focused build, and downstream validation.
 9b-2c-3. completed backward-compatible owner-private audit-event head state and
          crash-resumable journal advancement that cannot silently skip an event
          after activation.
-9b-2c-4. explicit pre-audit-vault migration epoch, atomic mutation-event
-         publication, and complete signature, basis-head, per-device-link, and
-         edit/result verification.
+9b-2c-4a. completed atomic encrypted mutation-event publication for item create,
+          update, delete, restore, conflict choice/merge, and portable import
+          after activation, including exact trace, basis-head, prior-event,
+          selected/result revision, counter, and write-ahead journal binding.
+9b-2c-4b. complete repository verification of audit signatures, basis heads,
+          per-device links, mutation action/resource shape, and edit results.
+9b-2c-4c. explicit pre-audit-vault migration epoch, exposed only once every
+          edit and access path can advance the chain or fail closed.
 9b-2c-5. fail-closed access-event publication plus redacted audit list/show.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
