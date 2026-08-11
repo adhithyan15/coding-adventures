@@ -4348,6 +4348,16 @@ enum DocumentTailMode {
     AfterHtml,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum TemplateInsertionMode {
+    Template,
+    Body,
+    Table,
+    ColumnGroup,
+    TableBody,
+    Row,
+}
+
 impl DocumentTailMode {
     fn diagnostic_code(self) -> &'static str {
         match self {
@@ -4384,6 +4394,7 @@ pub struct HtmlParser {
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
     document_tail_mode: DocumentTailMode,
+    template_insertion_modes: Vec<TemplateInsertionMode>,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
@@ -4408,6 +4419,7 @@ impl Default for HtmlParser {
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
             document_tail_mode: DocumentTailMode::InBody,
+            template_insertion_modes: Vec::new(),
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4462,6 +4474,7 @@ impl HtmlParser {
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
             document_tail_mode: DocumentTailMode::InBody,
+            template_insertion_modes: Vec::new(),
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
@@ -4488,6 +4501,10 @@ impl HtmlParser {
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
             document_tail_mode: DocumentTailMode::InBody,
+            template_insertion_modes: (context_element == "template")
+                .then_some(TemplateInsertionMode::Template)
+                .into_iter()
+                .collect(),
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
@@ -4985,6 +5002,8 @@ impl HtmlParser {
             return;
         }
 
+        self.update_template_insertion_mode_for_start_tag(&name, in_foreign_content);
+
         if !in_foreign_content
             && !self.is_fragment
             && self.explicit_head_end_seen
@@ -5191,11 +5210,11 @@ impl HtmlParser {
         if !in_foreign_content
             && self.has_open_element("template")
             && !self.has_open_element("table")
+            && self.current_template_insertion_mode() == Some(TemplateInsertionMode::Body)
             && name == "tr"
             && self.current_element_is("template")
             && !self.current_has_child_element("tr")
             && !self.current_has_child_element("thead")
-            && self.current_has_non_whitespace_child()
         {
             return;
         }
@@ -5670,6 +5689,10 @@ impl HtmlParser {
         if !acknowledges_self_closing && !html_void_element {
             if let Some(path) = inserted_path {
                 self.open_elements.push(path);
+                if namespace.is_none() && name == "template" {
+                    self.template_insertion_modes
+                        .push(TemplateInsertionMode::Template);
+                }
             }
         }
         if namespace.is_none()
@@ -7982,12 +8005,42 @@ impl HtmlParser {
                 ));
             }
             self.open_elements.truncate(index);
+            self.template_insertion_modes.pop();
         } else {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-template-end-tag",
                 "end tag `</template>` was ignored because no HTML template element was open",
             ));
         }
+    }
+
+    fn update_template_insertion_mode_for_start_tag(
+        &mut self,
+        name: &str,
+        in_foreign_content: bool,
+    ) {
+        if in_foreign_content
+            || self.current_template_insertion_mode() != Some(TemplateInsertionMode::Template)
+        {
+            return;
+        }
+
+        let next_mode = match name {
+            "base" | "basefont" | "bgsound" | "link" | "meta" | "noframes" | "script" | "style"
+            | "template" | "title" => return,
+            "caption" | "colgroup" | "tbody" | "tfoot" | "thead" => TemplateInsertionMode::Table,
+            "col" => TemplateInsertionMode::ColumnGroup,
+            "tr" => TemplateInsertionMode::TableBody,
+            "td" | "th" => TemplateInsertionMode::Row,
+            _ => TemplateInsertionMode::Body,
+        };
+        if let Some(mode) = self.template_insertion_modes.last_mut() {
+            *mode = next_mode;
+        }
+    }
+
+    fn current_template_insertion_mode(&self) -> Option<TemplateInsertionMode> {
+        self.template_insertion_modes.last().copied()
     }
 
     fn close_open_ruby_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
@@ -34675,6 +34728,84 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-row-start-tag-in-template-body" }));
+    }
+
+    #[test]
+    fn retains_template_row_transition_after_text_content() {
+        let output =
+            parse_html_with_diagnostics("<!doctype html><template>x<tr><td>y</td></tr></template>")
+                .unwrap();
+        assert!(output.parser_diagnostics.is_empty());
+        let template = find_first_element_in_nodes(&output.document.children, "template")
+            .expect("source should contain a template");
+        assert!(matches!(&template.children[0], Node::Text(text) if text.data == "x"));
+        let row = element(&template.children[1]);
+        assert_eq!(row.name, "tr");
+        let cell = element(&row.children[0]);
+        assert_eq!(cell.name, "td");
+        assert_eq!(cell.children, vec![Node::text("y")]);
+
+        let nested = parse_html_with_diagnostics(
+            "<!doctype html><template>x<template>z<tr><td>y</td></tr></template></template>",
+        )
+        .unwrap();
+        assert!(nested.parser_diagnostics.is_empty());
+        let outer = find_first_element_in_nodes(&nested.document.children, "template")
+            .expect("source should contain an outer template");
+        let inner = find_first_element_in_nodes(&outer.children, "template")
+            .expect("source should contain an inner template");
+        assert!(matches!(&inner.children[0], Node::Text(text) if text.data == "z"));
+        assert_eq!(element(&inner.children[1]).name, "tr");
+
+        let comment = parse_html_with_diagnostics(
+            "<!doctype html><template><!--marker--><tr><td>y</td></tr></template>",
+        )
+        .unwrap();
+        assert!(comment.parser_diagnostics.is_empty());
+        let template = find_first_element_in_nodes(&comment.document.children, "template")
+            .expect("source should contain a template");
+        assert_eq!(element(&template.children[1]).name, "tr");
+
+        let whitespace = parse_html_with_diagnostics(
+            "<!doctype html><template> \n<tr><td>y</td></tr></template>",
+        )
+        .unwrap();
+        assert!(whitespace.parser_diagnostics.is_empty());
+        let template = find_first_element_in_nodes(&whitespace.document.children, "template")
+            .expect("source should contain a template");
+        assert!(matches!(&template.children[0], Node::Text(text) if text.data == " \n"));
+        assert_eq!(element(&template.children[1]).name, "tr");
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("x<tr><td>y</td></tr>", "template")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.is_empty());
+
+        for source in [
+            "<!doctype html><template><tr><td>y</td></tr></template>",
+            "<!doctype html><svg><template>x<tr><td>y</td></tr></template></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-row-start-tag-in-template-body"
+            }));
+        }
+
+        let rejected =
+            parse_html_with_diagnostics("<!doctype html><template><div><tr></div></template>")
+                .unwrap();
+        assert!(rejected
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| { diagnostic.code == "unexpected-row-start-tag-in-template-body" }));
+
+        let restored_outer_mode = parse_html_with_diagnostics(
+            "<!doctype html><body><template></div><div>Foo</div><template></template><tr></tr></template>",
+        )
+        .unwrap();
+        let outer = find_first_element_in_nodes(&restored_outer_mode.document.children, "template")
+            .expect("source should contain an outer template");
+        assert!(find_first_element_in_nodes(&outer.children, "tr").is_none());
     }
 
     #[test]
