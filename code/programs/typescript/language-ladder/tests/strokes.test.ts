@@ -38,6 +38,7 @@ const HEBREW_KAF = DUCTUS[ductusKey("hebrew", "כ")];
 const HEBREW_LAMED = DUCTUS[ductusKey("hebrew", "ל")];
 const HEBREW_MEM = DUCTUS[ductusKey("hebrew", "מ")];
 const HEBREW_NUN = DUCTUS[ductusKey("hebrew", "נ")];
+const HEBREW_SAMEKH = DUCTUS[ductusKey("hebrew", "ס")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -407,6 +408,24 @@ describe("handwriting ductus", () => {
     expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
     expect(base[0]).toEqual(side.at(-1));
     expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew ס closes its printed loop clockwise without lifting", () => {
+    expect(HEBREW_SAMEKH.script).toBe("hebrew");
+    expect(penLifts(HEBREW_SAMEKH)).toBe(0);
+    expect(HEBREW_SAMEKH.strokes).toHaveLength(1);
+    expect(HEBREW_SAMEKH.strokes[0].segments).toHaveLength(4);
+    const [top, right, base, left] = HEBREW_SAMEKH.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(right[0]).toEqual(top.at(-1));
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(base[0]).toEqual(right.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(left[0]).toEqual(base.at(-1));
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(left.at(-1)).toEqual(top[0]);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1060,6 +1079,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("נ", HEBREW_NUN.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ס", HEBREW_SAMEKH.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1246,6 +1268,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Nun.*one continuous run.*02:04.1–02:04.6.*top head.*left-to-right.*right side.*left along the base.*without lifting.*cursive Nun.*purple.*rounder, wider hook.*02:05.2–02:05.8.*without lifting.*previously queued.*Hebrew Letters - NUN.*3gYCaDgB-Nk.*religious exposition.*not used.*Noto Sans Hebrew.*handwritten variation/i,
+    );
+  });
+
+  it("Hebrew ס traces one printed clockwise loop and records the round cursive form", () => {
+    const src = HEBREW_SAMEKH.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:19.5–02:20.8.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Samekh.*one continuous clockwise run.*02:19.5–02:20.8.*flat top.*left-to-right.*right side.*left along the base.*left side.*close.*without lifting.*cursive Samekh.*purple.*rounder oval.*02:23.8–02:24.7.*one uninterrupted loop.*Noto Sans Hebrew.*cursive variation/i,
     );
   });
 
