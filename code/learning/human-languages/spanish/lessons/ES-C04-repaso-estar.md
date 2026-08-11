@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-repaso-estar
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 345
-chapter: 7
+chapter: 8
 type: practice-mix
 headword: (practice)
 gloss: Asking how someone is — putting the chapter together

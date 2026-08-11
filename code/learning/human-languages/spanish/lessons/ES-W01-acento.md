@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-W01-acento
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 350
-chapter: 8
+chapter: 9
 type: writing
 headword: "á é í ó ú"
 gloss: the acute accent as a visible exception to Spanish's default stress rules

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-W02-enye
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 370
-chapter: 9
+chapter: 10
 type: writing
 headword: "ñ"
 gloss: the letter eñe — a tiny second n riding on the first

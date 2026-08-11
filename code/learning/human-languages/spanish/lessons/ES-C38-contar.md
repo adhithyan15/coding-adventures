@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C38-contar
 spine_node: SPINE-NARRATE-EVENTS
 sequence: 1800
-chapter: 45
+chapter: 46
 type: word
 headword: contar
 gloss: to tell a story — and also to count, because in Spanish, as once in English, a story is something you reckon up

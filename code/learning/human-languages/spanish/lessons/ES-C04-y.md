@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-y
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 340
-chapter: 7
+chapter: 8
 type: word
 headword: y / ¿y tú?
 gloss: and / and you? — a tiny connector that hands the conversation back

@@ -1,95 +1,34 @@
-Spanish, chapter 33: Water, Wine, and Bread.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 33: The Seasons.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-el agua — water, and an article that is not what it looks like.
+Lesson 1 of 1.
+la primavera, el verano, el otoño, el invierno — three plain, one surprising.
 
 Warm-up.
 [pause 2 seconds]
-One of the least changed words in Spanish, carrying one of its most misunderstood rules. The "masculine" article on this feminine noun is not a mistake and not an exception to gender.
+Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another.
 
-The word, taken apart: agua.
-agua ("water") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare "eau," just the sound "oh." Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed.
-English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung.
+The words, taken apart: three straightforward seasons.
+la primavera ("spring") from Latin prīma vēra, literally "first spring" (vēr, "spring," + prīma, "first"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)
+el otoño ("autumn") from Latin autumnus — the same root behind French automne and English autumn itself.
+el invierno ("winter") from Latin hībernum (tempus), "the wintry [season]" — the same root as French hiver and English hibernate, "to spend the winter."
 
-Grammar Lens: el agua's article and gender.
-Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, "the cold water," keeps the feminine adjective ending, and the plural is las aguas, never los aguas.
-The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick "an apple" over "a apple."
-[a table of 3 rows, read aloud]
-the water. singular: el agua. plural: las aguas.
-the eagle. singular: el águila. plural: las águilas.
-the axe. singular: el hacha. plural: las hachas.
-Only the article changes. The noun's gender never moves.
+Why it's said this way: verano.
+You might expect verano ("summer") to come from Latin aestas, "heat" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), "of spring" — built on the very same vēr, "spring," behind primavera.
+So how did a word meaning "spring-ish" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera ("first spring") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a "vernal" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, "spring," ended up naming two different seasons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el agua" — water, feminine, but takes el]
+[your turn — say: "primavera, verano, otoño, invierno" — the four seasons]
 [pause 8 seconds for the answer]
-[your turn — say: the proof — "el agua fría" and "las aguas"]
+[your turn — say: "primavera = prima vera, first spring"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "agua" barely changed; French's "eau" wore all the way down]
+[your turn — say: the surprise — "verano ALSO comes from vēr, 'spring' — but its meaning moved to summer"]
+[pause 8 seconds for the answer]
+[your turn — say: "invierno hibernate"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to "eau.")
-
-
-Lesson 2 of 3.
-el vino — one word, three separate arrivals in English.
-
-Warm-up.
-[pause 2 seconds]
-The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that.
-
-The word, taken apart: vino.
-vino ("wine") from Latin vīnum — which held its shape well, as French's vin did too.
-English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:
-[a table of 3 rows, read aloud]
-English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.
-English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, "sour wine").
-English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard.
-So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el agua, el vino" — the two drinks]
-[pause 8 seconds for the answer]
-[your turn — say: "vino" then English "wine, vine, vinegar" — one root, three roads]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)
-
-
-Lesson 3 of 3.
-el pan — bread, and the friend who shares it.
-
-Warm-up.
-[pause 2 seconds]
-Spanish's word for bread hides the same lovely word-story you'd find in English's "companion" — except Spanish kept both halves, the bread and the friendship.
-
-The word, taken apart: pan.
-el pan ("bread") from Latin pānis. Masculine: el pan.
-
-Why it's said this way: bread and friendship.
-The Latin root pān- ("bread") gives Spanish its own word for a close friend:
-compañero / compañera ("companion, friend, partner") from com- ("with").
-pānis — literally "one you share bread with." Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too.
-panadería ("bakery") and panadero ("baker") — both transparently built on pan.
-So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el pan" — bread]
-[pause 8 seconds for the answer]
-[your turn — say: "compañero" — literally, one you share bread with]
-[pause 8 seconds for the answer]
-[your turn — say: "panadería, panadero" — bakery, baker]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "bread" with its article. (El pan.) What does compañero literally mean, and what's it built from? ("One you share bread with" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)
+What does primavera literally mean? ("First spring" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, "of spring," the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)

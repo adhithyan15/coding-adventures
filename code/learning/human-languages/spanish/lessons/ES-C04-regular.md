@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-regular
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 330
-chapter: 7
+chapter: 8
 type: word
 headword: regular
 gloss: so-so / not great (also "más o menos")

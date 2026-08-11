@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(48);
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(49);
     expect(
       books.books
         .find((book) => book.language === "persian")

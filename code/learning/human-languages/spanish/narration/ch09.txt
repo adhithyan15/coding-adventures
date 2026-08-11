@@ -1,164 +1,88 @@
-Spanish, chapter 9: Enye and the Upside-Down Marks.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 9: The Written Accent.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-ñ — the letter that remembers a doubled n.
+Lesson 1 of 3.
+á é í ó ú — the acute accent, and the two jobs it does.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — how to write it until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — shape and stroke until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-ñ is the one letter English does not have — and it has the best origin story in the alphabet. That wavy hat (, a tilde) is not decoration. It is a tiny second n, written on top to save space. Once you know that, you know both how to write it and why it sounds as it does.
+You've been reading accented words since your very first noun — día, cómo, está, más. Time to make that little stroke make sense. Spanish uses one mark to write exceptional stress — the acute accent, ´, leaning right — and it does two jobs in the words you know. Learn the stress job now; the next lesson adds its grammar-label job.
 
-Sounds you'll need.
-ñ = the ny in "canyon" or "onion" — one squished sound, tongue flat against the roof of the mouth. English canyon is, in fact, Spanish cañón with the ñ spelled out as ny. Say "onion," freeze on the middle: that is ñ.
+Script — shape and stroke.
+A short stroke rising left-to-right, sitting on top of a vowel: á é í ó ú. (On the í, it replaces the dot.) One clean up-stroke — the opposite lean from the French grave accent à. Spanish never uses grave or circumflex; if it leans the wrong way, it isn't Spanish.
 
-Script — how to write it.
-Write a normal n, then a small wavy floating above it. Two strokes, one letter.
-Careful: ñ is its own letter, not "n with an accent." año ("year") and ano (a rather different word) are completely different words — the tilde is not an optional flourish, it is a distinct letter of the alphabet, with its own slot in the dictionary.
-
-Why it's said this way: the scribe's shortcut.
-That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke: write the letter once, and put a little mark above meaning "…and one more of these." A bar over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn.
-Spanish is full of words where a Latin -nn- did exactly this:
-Latin annus ("year") becomes anno becomes año. (That same annus gives English annual, anniversary, bi-ennial.)
-Latin canna ("reed") becomes caña; Latin domina becomes donna becomes doña.
-So the tilde on ñ is a frozen abbreviation — a thousand-year-old note saying "there used to be two n's here." You are writing a scribe's shortcut.
+Grammar Lens: the mark records exceptional stress.
+Spanish stress is regular, so most words need no mark. The default:
+word ends in a vowel, -n, or -s becomes stress the second-to-last syllable (ho-la, lla-mo, gus-to).
+word ends in any other consonant becomes stress the last syllable (us-ted, re-gu-lar, es-tar).
+The accent appears only when a word breaks that rule — it marks the exception. está ends in a vowel, so the rule wants ES-ta; the accent overrides it to es-TÁ. cómo ends in a vowel (rule wants co-MO) but is stressed CÓ-mo, so it gets the mark. The accent is a spoken stress you can see — it never changes the vowel's sound, only which syllable you hit.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "año" — AH-nyo, one squished ny; then English "annual"]
+[your turn — say: “hola, llamo, gusto” — second-to-last stress]
 [pause 8 seconds for the answer]
-[your turn — say: the doubled-n words — "año, caña, doña"]
+[your turn — say: “usted, regular, estar” — final stress]
+[pause 8 seconds for the answer]
+[your turn — say: "está, cómo" — the accent overrides the default]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the tilde on ñ, really? (A tiny second n — a scribe's shorthand for a doubled nn.) What Latin word gives año, and what English words share it? (Annus becomes annual, anniversary.) Is ñ a separate letter or an accented n? (A separate letter.) Next: the two everyday words you will be writing it in.
+How many accent marks does Spanish have, and which way does it lean? (One — the acute, ´, rising left-to-right.) Its two jobs? (Mark irregular stress; the next step covers its look-alike job.) When does a word ending in a vowel, -n, or -s need an accent? (When its stress breaks the second-to-last default.)
 
 
-Lesson 2 of 5.
-mañana, español — the ñ in the words you are about to need.
+Lesson 2 of 3.
+el or él? — the accent as a meaning label.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two forms until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-You can write ñ and you can say it. Two of the next words in this book carry it, and both are worth a minute on their own — because neither of them got its ñ from a doubled n.
+You know el as the article “the.” Add one acute accent and the same two letters do a different job.
 
-You'll want to know first.
-ñ — the letter, the sound, and the scribe's shorthand.
-
-Script — the two forms.
-mañana — "tomorrow," and also "morning." ma-NYA-na: the ñ is in the middle, and it is the stressed syllable.
-español — "Spanish." es-pa-NYOL: the ñ is at the end, right before the -ol.
-Now the honest footnote. The scribe's doubled nn is one road to ñ, the one you met with año. These two words took a different road: Latin's -ni- before a vowel. Mañana traces back through maneana to māne ("morning" — the root of English matinée); español comes from Hispaniolus, built on Hispania. In both, a ni sequence squeezed together into the same single palatal sound.
-So ñ is where two separate Latin sequences ended up — -nn- and -ni-. One letter, one sound, two histories.
+Grammar Lens: one mark, two grammatical jobs.
+The tilde diacrítica separates words that otherwise look alike:
+[a table of 1 row, read aloud]
+no accent: el = the. with accent: él = he.
+The two words are pronounced alike. Here the accent does not move stress; it labels meaning and grammar. Other pairs will arrive only when you know both words, so this lesson asks you to hold one contrast, not memorize a list.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "año, mañana, español" — the ñ in three positions]
+[your turn — say: “el” — the]
 [pause 8 seconds for the answer]
-[your turn — say: the two roads — "año, from -nn-" then "mañana, from -ni-"]
+[your turn — say: “él” — he]
 [pause 8 seconds for the answer]
+[once you have stopped driving — write: el / él, adding the meaning-label accent only to the pronoun]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does the ñ sit in mañana, and where in español? (Middle; end.) Did those two get their ñ from a doubled n? (No — from Latin -ni- before a vowel, a second road to the same letter.) What was the first road? (-nn-, the scribe's shorthand, as in año.)
+What is the accent's second job? (Separate look-alike words.) Which means “the”? (El, no accent.) Which means “he”? (Él, with the accent.) Does this mark change their stress? (No — it labels the job.)
 
 
-Lesson 3 of 5.
-¿ ¡ — the marks that open a question.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two opening marks until you have stopped, and I will say so again when we reach it.
+Lesson 3 of 3.
+The written accent — putting it together.
 
 Warm-up.
 [pause 2 seconds]
-You've been writing them since ¿cómo está usted? Spanish is the one major language that puts an upside-down question or exclamation mark at the start of the sentence, as well as the normal one at the end. It looks exotic; the reason is purely practical.
-
-Script — the two opening marks.
-¿ …? wraps a question: ¿Cómo estás?
-¡ …! wraps an exclamation: ¡Hola! ¡Gracias!
-The opening mark is just the closing mark flipped 180° — turned upside down and left-right. To write ¿, draw a normal? and rotate it half a turn: the hook ends up at the bottom, the dot on top.
-
-Why it's said this way — the opening mark is an early cue.
-English lets you read most of a sentence before the final? reveals it was a question — fine, because English usually flags a question early with word order ("Are you…", "Do you…"). Spanish often doesn't reorder words: Tienes hambre. ("You're hungry.") and ¿Tienes hambre? ("Are you hungry?") are the same words — only punctuation and the spoken rising tone tell them apart.
-So the Spanish Royal Academy, in 1754, made the opening ¿ official: it warns the reader "a question is starting — read this with rising intonation from the very first word." It's a melody cue placed before the melody, the exact same instinct as the written accent marking stress you can't otherwise see. For a language read aloud, it's genuinely useful.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: read "¿Cómo estás?" — start the rising question melody from the very first word, the way the ¿ tells you to]
-[pause 8 seconds for the answer]
-[your turn — say: "¡Hola!" — the ¡ warns you to begin with exclamation energy]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Why does Spanish open a question with ¿? (Because word order often doesn't change, so the reader needs an early warning to use question intonation.) How do you write it? (A normal? rotated 180°.) Does it always sit at the sentence's start? (The next step places it around a question inside a larger sentence.)
-
-
-Lesson 4 of 5.
-Where does ¿ begin? — bracket the spoken span.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — bracket the spoken span and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-You can open a whole question with ¿. Now place that mark inside a larger sentence, exactly where the questioning voice begins.
-
-Script — bracket the spoken span.
-The opening mark goes where the question begins, even if the sentence started earlier:
-Roberto, ¿cómo estás?
-The name Roberto is outside the question. The marks bracket the words that need question intonation. The same principle works for an exclamation:
-Roberto, ¡buenos días!
-This is why the opening mark is more than decoration. It tells the reader exactly where to begin and end a change in spoken melody.
-
-Guided Practice.
-[pause 1 second]
-[once you have stopped driving — write: “María, ¿cómo estás?”]
-[once you have stopped driving — write: “María, ¡buenos días!”]
-[your turn — say: begin the new melody at ¿ or ¡, not at the first capital]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-In Roberto, ¿cómo estás?, is Roberto inside the question? (No.) Where does the inverted mark go? (At the start of the question or exclamation span.) What does that placement tell a reader? (Where to change the spoken melody.)
-[question — say your answer, then pause 8 seconds]
-In 'Roberto, ¿cómo estás?', is Roberto inside the question?
-
-
-Lesson 5 of 5.
-Practice — "how are you?", start to finish.
-
-Warm-up.
-[pause 2 seconds]
-No new words. This chapter's atoms — gracias, de nada, estar, ¿cómo está?, regular — now assemble into a real exchange, run formally and informally until the register swap is automatic. It picks up right where the Chapter 3 introduction left off.
+Two lessons on one small mark that changes both sound and meaning. Nothing new in this lesson — only what you already have.
 
 The exchange.
-Formal (a stranger, an elder, a customer):
-— Buenos días. ¿Cómo está usted? — Bien, gracias. ¿Y usted? — Más o menos. — [reply to a thanks, later in the chat] De nada.
-Informal (a friend, a peer) — only the verb + pronoun change:
-— ¡Hola! ¿Cómo estás? — Regular. ¿Y tú? — Bien, gracias.
-The glue pattern you just secured is ¿y usted? / ¿y tú? — “and you?” It bounces the question back without repeating the whole sentence.
+está is not esta. él is not el.
 
-What you've built this chapter.
-gracias — thank you ( from grātia, "grace").
-de nada — you're welcome ( from "of a born-thing" becomes "of nothing").
-estar — the state/location be-verb ( from stāre, “to stand”).
-¿cómo está usted? / ¿cómo estás? — how are you, formal / informal.
-bien / regular / más o menos — well / so-so / more-or-less.
+What you've built.
+You can hear where the stress falls and see why the mark is there.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the full formal exchange, both voices]
+[your turn — say: the whole exchange, both parts, without stopping]
 [pause 8 seconds for the answer]
-[your turn — say: the same exchange informally — catch está becomes estás, usted becomes tú]
-[pause 8 seconds for the answer]
-[your turn — say: chain Chapter 3 + 4 — introduce yourself and ask how they are: "Me llamo … ¿Cómo está usted?"]
+[your turn — say: it again, faster, and let it sound like speech rather than recital]
 [pause 8 seconds for the answer]
 [repeat that twice]
-Run the formal exchange, greeting to answer, without stopping.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which be-verb carries "how are you?" and why? (estar — current state.) Two words swap between formal and informal — which? (está becomes estás, and usted becomes tú.) What does de nada literally say? ("Of nothing.") And if the person answering you says vos instead of tú — do you switch? (No. You understand it and keep saying tú.) Next chapter: farewells — hasta luego, hasta mañana, adiós.
+Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose.

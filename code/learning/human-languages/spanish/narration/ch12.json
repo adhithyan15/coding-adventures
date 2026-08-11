@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 12,
-  "title": "A Coffee, Please",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e30fae0025584e62",
+  "title": "Until When",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:2dea932e09773246",
   "lessons": [
     {
-      "id": "ES-C06-cafe",
-      "sequence": 490,
-      "title": "café — coffee, and a place to drink it",
-      "headword": "café",
-      "romanization": "café",
-      "gloss": "coffee / a café — one useful noun before the polite request that follows",
+      "id": "ES-C05-hasta-luego",
+      "sequence": 450,
+      "title": "hasta luego — the everyday \"see you later\"",
+      "headword": "hasta luego",
+      "romanization": "hasta luego",
+      "gloss": "see you later (literally \"until later\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9eb0739ec75fd6d",
+      "sourceHash": "fnv1a64:4e13eb6ce0194920",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before you can make a polite request, you need one small thing to request. Café gives you a useful noun and lets the written accent do a job you already understand."
+              "text": "This is the goodbye you'll actually use most — friendly, casual, open-ended. hasta luego: \"until later.\" You already own hasta (\"until\"); today you add luego (\"later\"), and it has a very Latin backstory."
             }
           ]
         },
@@ -46,133 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say ca-FÉ. A vowel-final word would normally stress the second-to-last syllable, so the acute accent records the unexpected final stress."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish café came through Italian caffè and Turkish kahve from Arabic qahwah. English coffee reached the same travelling word by a different European route. The drink and the word both crossed languages."
+              "text": "diphthong-ue — luego = LWEH-goh: the ue is a w-glide, lweh-."
             },
             {
               "kind": "speech",
-              "text": "The route from Arabic qahwah through Turkish kahve and Italian caffè to Spanish café."
-            },
-            {
-              "kind": "speech",
-              "text": "Café can name the drink or the place, just as English coffee and café divide those jobs. It is masculine: el café."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“café” — final stress",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “café” — final stress]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“el café”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “el café”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the route — “qahwah becomes kahve becomes caffè becomes café”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the route — “qahwah → kahve → caffè → café”]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does the stress fall? (On the final é.) Why is the accent written? (It overrides the usual vowel-final stress.) What route carried the word into Spanish? (Arabic qahwah becomes Turkish kahve becomes Italian caffè becomes Spanish café.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-por-favor",
-      "sequence": 500,
-      "title": "por favor — \"please,\" i.e. \"for a favour\"",
-      "headword": "por favor",
-      "romanization": "por favor",
-      "gloss": "please (literally \"for [a] favour\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d47031cca0467365",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can already thank (gracias) and reply (de nada). The third courtesy completes the set: por favor, \"please\" — literally \"for [a] favour.\" You're asking someone to do you a kindness."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "r-tap — one soft tapped r in por and favor."
-            },
-            {
-              "kind": "speech",
-              "text": "v-b — Spanish v and b sound identical (a soft b): favor ≈ fah-BOR. (So favor and English favour look alike and the v even sounds like the b you'd hear in \"harbour.\")"
+              "text": "The whole phrase: AHS-tah LWEH-goh."
             }
           ]
         },
@@ -183,38 +61,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "por = \"for / through / by,\" from Latin prō (\"for, on behalf of\") — the same pro- in English pronoun, propose, protect."
+              "text": "hasta luego = \"until later\" becomes \"see you later.\""
             },
             {
               "kind": "speech",
-              "text": "favor = \"a favour, goodwill,\" from Latin favēre, \"to be favourable to, to support.\" It's the very word English borrowed: favour, favorite, favorable, favouritism."
+              "text": "hasta = \"until\" (last lesson — Arabic ḥattā)."
             },
             {
               "kind": "speech",
-              "text": "So por favor literally says “for a favour” — [do this] as a kindness to me. English favour, favorite, and favorable keep the same Latin family visible without asking you to learn another language's formula."
+              "text": "luego = \"later / then / soon,\" from Latin loco, \"at the place / at that point.\" The idea slid from place becomes point in time becomes \"then, next, soon.\" So its cousins in English are all about place: local, locus, location, locate, al-loc-ate. Spanish moved loco from where to when."
+            },
+            {
+              "kind": "speech",
+              "text": "A nice contrast: hasta luego fuses an Arabic word and a Latin word in three syllables — the two great layers of Spanish, shaking hands as you leave."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the courtesy set is complete",
+          "title": "Grammar Lens: the \"hasta …\" family",
           "segments": [
             {
               "kind": "speech",
-              "text": "You now hold the three pillars of politeness:"
+              "text": "hasta + a time word is Spanish's whole toolkit of soft goodbyes. You'll build the other two this chapter:"
             },
             {
-              "kind": "speech",
-              "text": "por favor — please (asking)."
-            },
-            {
-              "kind": "speech",
-              "text": "gracias — thank you (receiving)."
-            },
-            {
-              "kind": "speech",
-              "text": "de nada — you're welcome (replying)."
+              "kind": "table",
+              "headers": [
+                "phrase",
+                "\"until …\"",
+                "when"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "phrase: hasta luego. \"until …\": later. when: the default \"see you\".",
+                "phrase: hasta mañana. \"until …\": tomorrow. when: leaving for the day.",
+                "phrase: hasta pronto. \"until …\": soon. when: you expect to meet again shortly."
+              ]
             }
           ]
         },
@@ -232,29 +117,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"por favor\" — por fah-BOR, soft v/b",
+              "instruction": "\"hasta luego\" — AHS-tah LWEH-goh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"por favor\" — *por fah-BOR*, soft *v/b*]"
+              "source": "[YOU SAY: \"hasta luego\" — *AHS-tah LWEH-goh*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Café, por favor\" — \"Coffee, please\"",
+              "instruction": "\"luego\" then English \"local, location\" — the loco \"place\" family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Café, por favor\" — \"Coffee, please\"]"
+              "source": "[YOU SAY: \"luego\" then English \"local, location\" — the *loco* \"place\" family]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"favor\" then English \"favour, favorite\" — one family",
+              "instruction": "\"¡Adiós! … no — ¡hasta luego!\" — feel the difference: final vs. soon",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"favor\" then English \"favour, favorite\" — one family]"
+              "source": "[YOU SAY: \"¡Adiós! … no — ¡hasta luego!\" — feel the difference: final vs. soon]"
             }
           ]
         },
@@ -271,26 +156,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does por favor literally mean? (\"For a favour.\") What Latin verb is favor from, and its English cousins? (favēre — favour, favorite, favorable.) Which three-word courtesy loop do you now own? (Por favor becomes gracias becomes de nada.) Next: your first regular verb — hablar, “to speak.”"
+              "text": "What does hasta luego literally mean? (\"Until later.\") What did luego's Latin root loco first mean, and what English words keep it? (Place — local, location, locus.) Which two language layers meet in hasta luego? (Arabic hasta + Latin luego.) Next: hasta mañana."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C06-repaso-cafe",
-      "sequence": 505,
-      "title": "Ordering — putting it together",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "Ordering — putting the chapter together",
+      "id": "ES-C05-hasta-manana",
+      "sequence": 460,
+      "title": "hasta mañana — \"see you tomorrow\" (and the ñ returns)",
+      "headword": "hasta mañana",
+      "romanization": "hasta mañana",
+      "gloss": "see you tomorrow (literally \"until tomorrow\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19ce611150bd43ab",
+      "sourceHash": "fnv1a64:d1c897591de13d07",
       "notice": null,
       "blocks": [
         {
@@ -306,34 +191,57 @@
             },
             {
               "kind": "speech",
-              "text": "Your first transaction: a thing you want, and the word that makes it a request. Nothing new in this lesson — only what you already have."
+              "text": "Leaving for the day? hasta mañana — \"until tomorrow.\" It brings back a letter you studied in the writing lessons: the ñ. Here it is, living in a word you'll say every evening."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "— Un café, por favor. — Gracias."
+              "text": "enye-ny — mañana = mah-NYAH-nah: the ñ is the squished ny of \"canyon\" (your ñ writing lesson — the tilde is a tiny second n, remember). Three soft ah's: ma-ÑA-na."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart — the phrase",
           "segments": [
             {
               "kind": "speech",
-              "text": "You can ask for something and stay polite doing it."
+              "text": "hasta mañana = \"until tomorrow\" becomes \"see you tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "hasta = \"until\" (Arabic ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "mañana = \"tomorrow\" — and \"morning.\" One word for both, from Latin (hōra) maneana, \"the early hour\" (from māne, \"in the morning\"). The logic: the next \"early hour\" you'll see is tomorrow morning becomes mañana came to mean both morning and tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "The ñ, in the wild. Recall the writing lesson: ñ is a frozen nn — a scribe's shorthand for a doubled n. mañana comes from Latin maneana, whose n+ea palatalized (softened) into that single ñ sound. So the tilde is a little historical fossil sitting in the middle of \"tomorrow.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: same word, two meanings — context decides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mañana means \"morning\" or \"tomorrow\"; the sentence tells you which. Paired with hasta, it's always tomorrow: hasta mañana, \"until tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -346,30 +254,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole exchange, both parts, without stopping",
+              "instruction": "\"mañana\" — mah-NYAH-nah, squished ñ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
+              "source": "[YOU SAY: \"mañana\" — *mah-NYAH-nah*, squished *ñ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, faster, and let it sound like speech rather than recital",
+              "instruction": "\"hasta mañana\" — until tomorrow",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
+              "source": "[YOU SAY: \"hasta mañana\" — until tomorrow]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“mañana” once as “morning,” then once as “tomorrow” — context decides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “mañana” once as “morning,” then once as “tomorrow” — context decides]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -381,7 +293,315 @@
             },
             {
               "kind": "speech",
-              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
+              "text": "What two meanings does mañana carry? (Morning; tomorrow.) With hasta, which one? (Tomorrow.) What sound is the ñ, and what is its tilde, historically? (The ny of \"canyon\"; a frozen doubled-n.) Next: hasta pronto."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C05-hasta-pronto",
+      "sequence": 470,
+      "title": "hasta pronto — \"see you soon\"",
+      "headword": "hasta pronto",
+      "romanization": "hasta pronto",
+      "gloss": "see you soon (literally \"until soon\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15727db42b173c2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last of the \"hasta …\" trio: hasta pronto, \"until soon\" — for when you genuinely expect to meet again shortly. One new word, pronto, and it's hiding in plain sight in English."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta pronto = AHS-tah PRON-toh — a clean pr, a pure o."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the phrase",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta pronto = \"until soon\" becomes \"see you soon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "hasta = \"until\" (Arabic ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "pronto = \"soon / quickly / ready,\" from Latin promptus, \"brought forth, ready at hand\" (from prōmere, \"to bring out\"). Something prompt is brought out without delay — so pronto slid to \"soon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already know its English twin: prompt (on time; to bring out a response), plus prompter, promptly, and the computer prompt (the cursor \"ready\" for input). Italian borrowed pronto too — it's what Italians say when they pick up the phone (\"Pronto!\" = \"Ready!\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the \"hasta …\" trio, complete",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now have Spanish's three soft goodbyes, sharpest to vaguest in time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "phrase",
+                "until…",
+                "nuance"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "phrase: hasta pronto. until…: soon. nuance: you'll meet again shortly.",
+                "phrase: hasta luego. until…: later. nuance: the neutral default \"see you\".",
+                "phrase: hasta mañana. until…: tomorrow. nuance: you're parting for the day."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "…and adiós for the long or final goodbye."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hasta pronto\" — AHS-tah PRON-toh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hasta pronto\" — *AHS-tah PRON-toh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pronto\" then English \"prompt, promptly\" — one family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pronto\" then English \"prompt, promptly\" — one family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trio — hasta pronto / hasta luego / hasta mañana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trio — hasta pronto / hasta luego / hasta mañana]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hasta pronto mean, and pronto's English twin? (\"Until soon\"; prompt.) What Latin word is it from, and its literal sense? (promptus, \"brought forth / ready.\") Order the three hasta goodbyes by time. (pronto becomes luego becomes mañana.) Next: put the whole farewell set together."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C05-practice",
+      "sequence": 480,
+      "title": "Practice — saying goodbye",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "closing a conversation — the full set of farewells",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc40de6656881321",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. This chapter's farewells — adiós and the three hasta … goodbyes — now close a real conversation, and fold back into the whole arc you've built since hola."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: choosing the right goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The choice is about when you'll meet again:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you're…",
+                "say"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "you're…: parting for good / a long time. say: Adiós.",
+                "you're…: expecting to meet again shortly. say: Hasta pronto.",
+                "you're…: just \"see you\" (neutral default). say: Hasta luego.",
+                "you're…: leaving for the day. say: Hasta mañana."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange — start to finish",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything from Chapters 1–5, in one conversation:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¡Hola! Buenos días. Me llamo Ana. ¿Cómo se llama usted? — Me llamo Luis. Mucho gusto. — ¿Cómo está usted? — Bien, gracias. ¿Y usted? — Bien. Hasta mañana, Luis. — Hasta mañana, Ana. ¡Adiós!"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "adiós — the plain/final goodbye (\"to God\"; twin of goodbye)."
+            },
+            {
+              "kind": "speech",
+              "text": "hasta — \"until,\" Spain's everyday Arabic word ( from ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "hasta luego / mañana / pronto — see you later / tomorrow / soon, each an Arabic + Latin handshake."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full conversation above, both voices — greeting to goodbye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full conversation above, both voices — greeting to goodbye]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pick the goodbye — for a friend you'll see tomorrow? (hasta mañana); for someone moving away? (adiós)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pick the goodbye — for a friend you'll see tomorrow? (hasta mañana); for someone moving away? (adiós)]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the whole exchange, hola to adiós, without stopping."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which goodbye for someone you won't see for a long time? (Adiós.) Which everyday word for \"until\" did Spanish take from Arabic? (hasta.) You can now open and close a conversation in Spanish. Next chapter: por favor and gracias' partner courtesies, then into everyday verbs."
             }
           ]
         }

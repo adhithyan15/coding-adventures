@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-hasta-manana
 spine_node: SPINE-TAKE-LEAVE
 sequence: 460
-chapter: 11
+chapter: 12
 type: phrase
 headword: hasta mañana
 gloss: see you tomorrow (literally "until tomorrow")

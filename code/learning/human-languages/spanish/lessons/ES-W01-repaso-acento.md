@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-W01-repaso-acento
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 365
-chapter: 8
+chapter: 9
 type: practice-mix
 headword: (practice)
 gloss: The written accent — putting the chapter together
