@@ -292,8 +292,16 @@ Prioritized work items:
    contexts. Mixed active/non-active wrapper recovery now carries that same
    remapping through nested divs, preserving the furthest block and current
    node when a non-formatting wrapper separates retained formatting entries.
-   Continue the fresh algorithm audit across the remaining bookmark placement
-   and active-formatting-list replacement branches.
+   Bookmark placement and active-formatting replacement were re-audited with
+   follow-on formatting starts, ends, markers, same-name entries,
+   non-formatting separators, and nested blocks across 256 generated
+   current-browser differentials without another uncovered boundary. Repeated
+   `button` starts now report when an authored HTML button is in button scope
+   before preserving the existing implied closure, matching WPT `tests6.dat`
+   and `tests20.dat`. First buttons in ordinary and real-cell contexts,
+   already-closed buttons, marker-separated buttons, and synthetic button
+   fragment contexts remain quiet. Continue the fresh in-body scope and
+   recovery audit beyond active formatting.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
