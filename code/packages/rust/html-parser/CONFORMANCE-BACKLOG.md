@@ -247,8 +247,13 @@ Prioritized work items:
    without changing their now-conforming DOM output. Matching open formatting
    elements that are not current now report before existing DOM repair, as do
    matching end tags whose formatting element was displaced from the open stack
-   before reconstruction inside a paragraph boundary. Continue the fresh
-   algorithm audit across the remaining active-formatting-list branches.
+   before reconstruction inside a paragraph boundary. Adoption-agency end tags
+   reprocessed from foreign content now report both the foreign mismatch and
+   non-current formatting errors while preserving the conforming foreign DOM,
+   matching WPT `adoption01.dat`'s `<a><svg><tr><input></a>` evidence. Continue
+   the fresh algorithm audit across the remaining active-formatting-list
+   branches, including foreign end tags with no matching HTML formatting
+   ancestor.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
