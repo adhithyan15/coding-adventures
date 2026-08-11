@@ -1,5 +1,8 @@
 # Changelog
 
+- Add an exact-revision combined snapshot write for long-lived controller
+  owners that must reject external revision drift instead of adopting it.
+
 ## Unreleased
 
 - Add D23-authorized, revision-guarded pairing completion that persists a

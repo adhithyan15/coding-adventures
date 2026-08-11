@@ -1,18 +1,17 @@
 use embeddable_http_server::HttpServerOptions;
-use smart_home_automation_runtime::{AutomationTriggerInput, SmartHomeAutomationRuntime};
+use smart_home_automation_runtime::AutomationTriggerInput;
+use smart_home_controller_runtime::SmartHomeControllerRuntime;
 use smart_home_dashboard_core::parse_dashboard_manifest;
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
-use smart_home_runtime::SmartHomeRuntime;
-use smart_home_runtime_store::SmartHomeRuntimeStore;
 use std::env;
 use std::error::Error;
 use std::fs;
 use std::io;
 use std::net::SocketAddr;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::thread;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use storage_local_folder::LocalFolderStorageBackend;
@@ -47,61 +46,19 @@ fn main() -> Result<(), Box<dyn Error>> {
         return Ok(());
     };
 
-    let store = Arc::new(SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(
-        &config.data_dir,
-    )));
-    let restored = store.load()?;
-    let (runtime, automation_definitions, automation_state, restored_at_ms) = match restored {
-        Some(restored) => (
-            restored.runtime,
-            restored.automation_definitions,
-            restored.automation_state,
-            Some(restored.saved_at_ms),
-        ),
-        None => (SmartHomeRuntime::new(), Vec::new(), None, None),
-    };
-    let automation_runtime = Arc::new(Mutex::new(SmartHomeAutomationRuntime::restore(
-        &automation_definitions,
-        automation_state.as_ref(),
-    )?));
-    let shared_runtime = Arc::new(Mutex::new(runtime));
-
-    let persistence_store = Arc::clone(&store);
-    let persistence_automations = Arc::clone(&automation_runtime);
-    let automation_persistence_store = Arc::clone(&store);
+    let controller =
+        SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(&config.data_dir))?;
+    let restored_at_ms = controller.restored_at_ms();
+    let shared_runtime = controller.runtime_handle();
+    let automation_runtime = controller.automation_runtime_handle();
     let mut runtime = SmartHomePlatformHttpRuntime::from_shared_runtime(
         Arc::clone(&shared_runtime),
         SmartHomePlatformHttpConfig::new("Codex Home"),
     )
     .with_clock(unix_time_ms)
     .with_automation_runtime(Arc::clone(&automation_runtime))
-    .with_mutation_persistence(move |runtime, saved_at_ms| {
-        let automations = persistence_automations
-            .lock()
-            .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
-        let definitions = automations
-            .durable_definitions()
-            .map_err(|error| error.to_string())?;
-        let state = automations
-            .snapshot_json()
-            .map_err(|error| error.to_string())?;
-        persistence_store
-            .save_with_automation_state(runtime, &definitions, Some(state), saved_at_ms)
-            .map(|_| ())
-            .map_err(|error| error.to_string())
-    })
-    .with_automation_persistence(move |runtime, automations, saved_at_ms| {
-        let definitions = automations
-            .durable_definitions()
-            .map_err(|error| error.to_string())?;
-        let state = automations
-            .snapshot_json()
-            .map_err(|error| error.to_string())?;
-        automation_persistence_store
-            .save_with_automation_state(runtime, &definitions, Some(state), saved_at_ms)
-            .map(|_| ())
-            .map_err(|error| error.to_string())
-    })
+    .with_mutation_persistence(controller.runtime_persistence_adapter())
+    .with_automation_persistence(controller.automation_persistence_adapter())
     .grant_local_full_access("smart-home-local-controller", unix_time_ms());
 
     if let Some(path) = config.dashboard_manifest.as_ref() {
@@ -118,20 +75,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         runtime = runtime.with_dashboard_manifest(manifest);
     }
 
-    {
-        let runtime = shared_runtime.lock().map_err(|_| {
-            io::Error::other("smart-home runtime mutex was poisoned during startup")
-        })?;
-        let automations = automation_runtime.lock().map_err(|_| {
-            io::Error::other("automation runtime mutex was poisoned during startup")
-        })?;
-        store.save_with_automation_state(
-            &runtime,
-            &automations.durable_definitions()?,
-            Some(automations.snapshot_json()?),
-            unix_time_ms(),
-        )?;
-    }
+    controller.save_snapshot(unix_time_ms())?;
 
     let automation_count = automation_runtime
         .lock()
@@ -293,9 +237,89 @@ fn launch_guide(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use smart_home_automation_runtime::{
+        AutomationAction, AutomationAuditOutcome, AutomationDefinition, AutomationTrigger,
+    };
+    use smart_home_core::{CommandType, EntityId, Value};
 
     fn test_default_dir() -> PathBuf {
         PathBuf::from("/tmp/smart-home-controller-test")
+    }
+
+    fn temporary_data_dir(name: &str) -> PathBuf {
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("test clock should be after unix epoch")
+            .as_nanos();
+        env::temp_dir().join(format!(
+            "smart-home-local-controller-{}-{name}-{nanos}",
+            std::process::id()
+        ))
+    }
+
+    #[test]
+    fn central_controller_adapters_share_and_restore_automation_state() {
+        let data_dir = temporary_data_dir("central-owner");
+        let controller =
+            SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(&data_dir))
+                .expect("central controller should start");
+        let runtime = SmartHomePlatformHttpRuntime::from_shared_runtime(
+            controller.runtime_handle(),
+            SmartHomePlatformHttpConfig::new("Test Home"),
+        )
+        .with_now_ms(1_000)
+        .with_automation_runtime(controller.automation_runtime_handle())
+        .with_mutation_persistence(controller.runtime_persistence_adapter())
+        .with_automation_persistence(controller.automation_persistence_adapter())
+        .grant_local_full_access("controller-test", 900);
+        controller
+            .save_snapshot(900)
+            .expect("startup state should persist");
+
+        runtime
+            .upsert_automation_definition(AutomationDefinition {
+                automation_id: "central-schedule".to_string(),
+                enabled: true,
+                trigger: AutomationTrigger::Schedule {
+                    every_ms: 1_000,
+                    offset_ms: 0,
+                },
+                conditions: Vec::new(),
+                actions: vec![AutomationAction::Command {
+                    entity_id: EntityId::trusted("missing-entity"),
+                    command_type: CommandType::TurnOn,
+                    arguments: Value::Null,
+                    timeout_ms: None,
+                }],
+            })
+            .expect("HTTP adapter should update the central automation owner");
+        let report = runtime
+            .evaluate_automations(AutomationTriggerInput::Schedule, false)
+            .expect("schedule worker should use the central owner");
+        assert_eq!(report.records.len(), 1);
+        assert_eq!(report.records[0].outcome, AutomationAuditOutcome::Failed);
+        assert_eq!(
+            controller
+                .automation_runtime_handle()
+                .lock()
+                .expect("automation state")
+                .snapshot()
+                .audit_records
+                .len(),
+            1
+        );
+        drop(runtime);
+        drop(controller);
+
+        let restored =
+            SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(&data_dir))
+                .expect("central state should restore");
+        let automations = restored.automation_runtime_handle();
+        let automations = automations.lock().expect("restored automation state");
+        assert_eq!(automations.definitions().count(), 1);
+        assert_eq!(automations.snapshot().audit_records.len(), 1);
+
+        fs::remove_dir_all(data_dir).expect("temporary controller data should be removable");
     }
 
     #[test]

@@ -193,6 +193,54 @@ impl<B: StorageBackend> SmartHomeRuntimeStore<B> {
         Ok(self.backend.put(input)?.revision)
     }
 
+    /// Persist one complete runtime envelope only at the caller-owned revision.
+    ///
+    /// `None` requires the record to be absent. A concrete revision requires
+    /// exact compare-and-swap ownership. Unlike [`Self::save_with_automation_state`],
+    /// this method never adopts a newer revision observed during the call, so a
+    /// long-lived controller cannot overwrite state committed by another owner.
+    pub fn save_with_automation_state_at_revision(
+        &self,
+        runtime: &SmartHomeRuntime,
+        automation_definitions: &[DurableAutomationDefinition],
+        automation_state: Option<serde_json::Value>,
+        saved_at_ms: u64,
+        expected_revision: Option<&Revision>,
+    ) -> Result<Revision, RuntimeStoreError> {
+        validate_automation_definitions(automation_definitions)?;
+        if automation_state
+            .as_ref()
+            .is_some_and(|state| !state.is_object())
+        {
+            return Err(RuntimeStoreError::Validation {
+                field: "automation_state",
+                message: "must be a JSON object".to_string(),
+            });
+        }
+        self.backend.initialize()?;
+        let envelope = RuntimeStoreEnvelope {
+            schema_version: SCHEMA_VERSION,
+            saved_at_ms,
+            runtime: runtime.durable_snapshot(),
+            automation_definitions: automation_definitions.to_vec(),
+            automation_state,
+        };
+        let body = serde_json::to_vec(&envelope)
+            .map_err(|error| RuntimeStoreError::Encode(error.to_string()))?;
+        let input = StoragePutInput::new(
+            self.namespace.clone(),
+            self.key.clone(),
+            CONTENT_TYPE,
+            StorageMetadata::Object(Default::default()),
+            body,
+        )?;
+        let input = match expected_revision {
+            Some(revision) => input.with_if_revision(Some(revision.clone())),
+            None => input.with_if_absent(),
+        };
+        Ok(self.backend.put(input)?.revision)
+    }
+
     /// Migrates a live runtime and its durable snapshot as one revision-guarded
     /// operation.
     ///

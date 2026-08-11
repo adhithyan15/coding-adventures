@@ -214,10 +214,12 @@ cargo run -p smart-home-platform-http --bin smart-home-local-controller -- \
 `SMART_HOME_DASHBOARD_MANIFEST` supplies the applied migration artifact or raw
 native manifest when `--dashboard-manifest` is omitted. Invalid and dry-run
 artifacts are rejected before the controller binds.
-The controller loads the latest `smart-home-runtime-store` snapshot before it
-binds, restores automation definitions, consumed trigger occurrences, and
-automation audit, uses wall-clock request timestamps, and saves the local API
-capability grant. A local worker evaluates schedule triggers every 500 ms.
+The controller restores one `smart-home-controller-runtime` authority before it
+binds. That authority owns the normalized runtime, automation definitions,
+consumed trigger occurrences, automation audit, durable store revision, and
+shared HTTP adapter handles. The process uses wall-clock request timestamps,
+saves the local API capability grant, and evaluates schedule triggers every
+500 ms against the same owned runtime.
 Accepted desired-state, service, automation-definition, and automation-execution
 mutations are persisted synchronously before the API returns success. A failed
 write restores the exact pre-request runtime and automation engine and returns

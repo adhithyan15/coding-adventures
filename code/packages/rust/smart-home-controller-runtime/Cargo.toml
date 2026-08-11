@@ -1,0 +1,16 @@
+[package]
+name = "smart-home-controller-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Central durable owner for the smart-home runtime and automation engine"
+license = "MIT"
+
+[dependencies]
+smart-home-automation-runtime = { path = "../smart-home-automation-runtime" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+storage-local-folder = { path = "../storage-local-folder" }
