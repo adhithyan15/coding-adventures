@@ -2,9 +2,12 @@
 
 The host-neutral VLT-PM05 application core for the local-first password
 manager. The current slices define lossless canonical persistence for local
-device secrets, item revisions, and catalog snapshots, plus domain-separated
-V1 encrypted object framing and an authority-anchored repository verifier for
-the single authorized Phase 1A device. It also defines the exact canonical
+device secrets, item revisions, catalog snapshots, and signed VLT-PM15
+operation events, plus domain-separated V1 encrypted object framing and an
+authority-anchored repository verifier for the single authorized Phase 1A
+device. Audit events use their own authenticated object-kind domain; durable
+publication, chain verification, and CLI enforcement remain later slices. It
+also defines the exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
 byte-oriented bootstrap/local-state store contracts.
