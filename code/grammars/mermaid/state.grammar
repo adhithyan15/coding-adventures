@@ -1,10 +1,12 @@
-# @version 9
+# @version 10
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
 body = { terminator | statement } ;
-statement = direction_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
+statement = accessibility_stmt | direction_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
 
+accessibility_stmt = ACC_TITLE text | ACC_DESCR text | ACC_DESCR_START NEWLINE multiline_accessibility_text RBRACE ;
+multiline_accessibility_text = text { NEWLINE text } { NEWLINE } ;
 direction_stmt = "direction" DIRECTION ;
 state_stmt = "state" ( state_ref ( CHOICE | FORK_JOIN ) | STRING "as" state_ref | state_ref [ COLON text ] ) ;
 description_stmt = state_ref COLON text ;

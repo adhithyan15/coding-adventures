@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.32.0";
+pub const VERSION: &str = "0.33.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.32.0");
+        assert_eq!(VERSION, "0.33.0");
     }
 
     #[test]
@@ -319,6 +319,22 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.type_ == TokenType::String && token.value == "Floating"));
+    }
+
+    #[test]
+    fn tokenizes_state_accessibility_metadata() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\naccTitle: State lifecycle\naccDescr: Ready to running\naccDescr {\nMultiline description\n}\n",
+        );
+        for name in ["ACC_TITLE", "ACC_DESCR", "ACC_DESCR_START"] {
+            assert!(
+                tokens
+                    .iter()
+                    .any(|token| token.type_name.as_deref() == Some(name)),
+                "missing {name} token"
+            );
+        }
+        assert!(tokens.iter().any(|token| token.value == "}"));
     }
 
     #[test]

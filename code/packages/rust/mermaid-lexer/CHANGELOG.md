@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.33.0
+
+- Tokenize state accessibility titles and single-line or multiline descriptions.
+
 ## 0.32.0
 
 - Tokenize multiline state note terminators and floating-note strings.

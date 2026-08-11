@@ -156,7 +156,7 @@ mod apple {
     #[test]
     fn render_mermaid_state_to_png() {
         let graph = parse_state_diagram(
-            "stateDiagram-v2\ndirection LR\nReady: Awaiting work\nstate Decision <<choice>>\nstate WorkFork <<fork>>\nstate WorkJoin [[join]]\nstyle Ready fill:#dbeafe,stroke:#1d4ed8,color:#1e3a8a,stroke-width:3px\nclassDef active fill:#dcfce7,stroke:#166534,color:#14532d\nclass Auditing active\n[*] --> Ready\nReady --> Decision: inspect\nDecision --> WorkFork: start\nWorkFork --> Running:::active\nWorkFork --> Auditing\nnote right of Running\nNative Metal note\nSecond shaped line\nend note\nnote \"Detached reminder\" as Reminder\nRunning --> WorkJoin\nAuditing --> WorkJoin\nWorkJoin --> [*]: stop\nDecision --> Ready: wait\n",
+            "stateDiagram-v2\naccTitle: Native state lifecycle\naccDescr {\nState flow rendered through Metal\nwith native accessibility metadata\n}\ndirection LR\nReady: Awaiting work\nstate Decision <<choice>>\nstate WorkFork <<fork>>\nstate WorkJoin [[join]]\nstyle Ready fill:#dbeafe,stroke:#1d4ed8,color:#1e3a8a,stroke-width:3px\nclassDef active fill:#dcfce7,stroke:#166534,color:#14532d\nclass Auditing active\n[*] --> Ready\nReady --> Decision: inspect\nDecision --> WorkFork: start\nWorkFork --> Running:::active\nWorkFork --> Auditing\nnote right of Running\nNative Metal note\nSecond shaped line\nend note\nnote \"Detached reminder\" as Reminder\nRunning --> WorkJoin\nAuditing --> WorkJoin\nWorkJoin --> [*]: stop\nDecision --> Ready: wait\n",
         )
         .expect("Mermaid state parse failed");
         let layout = layout_graph_diagram(&graph, None, None);
@@ -186,6 +186,9 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native state lifecycle");
+        assert!(metadata["accessibility.description"].contains("rendered through Metal"));
     }
 
     #[test]

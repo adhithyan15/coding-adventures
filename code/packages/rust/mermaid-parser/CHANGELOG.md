@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.54.0
+
+- Preserve state accessibility titles and descriptions in graph semantic IR.
+
 ## 0.53.0
 
 - Parse multiline attached notes and quoted floating notes into graph note IR.

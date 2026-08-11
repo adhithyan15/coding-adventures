@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.26.0
+
+- Preserve graph-family accessibility titles and descriptions through semantic and layout IR.
+
 ## 0.25.0
 
 - Add backend-neutral note nodes and note-association edges for annotated diagrams.
