@@ -1,42 +1,49 @@
-Spanish, chapter 57: Preguntar — Asking, and Sounding a Depth.
+Spanish, chapter 57: Escribir — Writing Is Scratching.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-preguntar — "to ask", by sounding the water with a pole.
+escribir — "to write", which once meant "to scratch".
 
 Warm-up.
 [pause 2 seconds]
-English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half.
+Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax.
 
 Sounds you'll need.
-pr-cluster — pre- is one crisp beat, preh, with a tapped r.
-g-hard — the g before u is hard, as in English gun: pre-goon-TAR.
+st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR.
+b-soft — between vowels the b is soft, lips barely touching.
 
-The word, taken apart: preguntar.
-preguntar ("to ask a question") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, "to inquire". And percontārī was built on contus, "a punting pole": to percontor was to push a pole down through water and find out how deep it was.
-Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe.
-The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta.
+The word, taken apart: escribir.
+escribir ("to write") from Latin scrībere, whose first sense was "to scratch, to incise". Writing was cutting a line into wax or stone before it was ever ink on paper.
+The English family is huge, and every member still works with a pen:
+scribe, scribble, script, scripture.
+describe (de- "down") and description; prescribe (prae- "before") and prescription; subscribe (sub- "under" — you signed at the bottom); inscription; transcript; postscript.
+manuscript — manus "hand" + scriptum: written by hand.
+conscription — being written into an army.
+The Spanish past participle is escrito ("written"), which is English script wearing different clothes.
 
-Grammar Lens: one English "ask", two Spanish verbs.
-Spanish sorts asking by what you are after:
-[a table of 2 rows, read aloud]
-what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.
-what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee.
-Ask for a coffee with preguntar and you have said "I question a coffee". The line is simple: a question takes preguntar, a request takes pedir.
-pedir from Latin petere, "to make for, to aim at" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later.
+Grammar Lens: an -ir verb, and a productive spelling rule.
+Escribir is a plain -ir verb, the family vivir opened:
+[a table of 5 rows, read aloud]
+person: yo. form: escribo. ending: -o.
+person: tú. form: escribes. ending: -es.
+person: él/ella/usted. form: escribe. ending: -e.
+person: nosotros. form: escribimos. ending: -imos.
+person: ellos/ustedes. form: escriben. ending: -en.
+That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain.
+Now you can state a plan out loud: Pienso escribir — "I mean to write."
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "pregunto, preguntas, pregunta, preguntamos, preguntan"]
+[your turn — say: "escribo, escribes, escribe, escribimos, escriben"]
 [pause 8 seconds for the answer]
-[your turn — say: "Te pregunto la hora" — I'm asking you the time]
+[your turn — say: "Leo y escribo español" — I read and write Spanish]
 [pause 8 seconds for the answer]
-[your turn — say: "Pido un café" then "Tomo un café" — I ask for one, I have one]
+[your turn — say: "Pienso escribir" — I mean to write]
 [pause 8 seconds for the answer]
-[your turn — say: "pedir" then English "petition, appetite, compete" — the aiming family]
+[your turn — say: "escribir" then English "scribe, describe, manuscript" — the scratching family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, "to aim at" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid.
+What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say "I read and write Spanish". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards.

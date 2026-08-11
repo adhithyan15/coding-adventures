@@ -20,6 +20,12 @@
 - Preserve Arabic Kaf independently of Urdu **ک**'s different Unicode glyph and
   provenance, and queue the same page's directly linked independent **ل** source.
 
+### Changed — Spanish runs 1..76 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 30 split into five, so
+  old Spanish chapters 31–72 shifted to 35–76.
+- Eager bundle 481,588 / 500,000 bytes.
+
 ### Added — cited Arabic independent-ayn ductus (HL-C09AU)
 
 - Render **ع** in two evidence-aligned frames: shape its open head from the

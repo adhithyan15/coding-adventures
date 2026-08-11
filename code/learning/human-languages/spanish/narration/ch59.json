@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 59,
-  "title": "Review --- Three Verbs That Behave",
+  "title": "Synthesis --- What You Understand, and What You Don't",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d8925e1f951f3d44",
+  "sourceHash": "fnv1a64:ffeff1528756454a",
   "lessons": [
     {
-      "id": "ES-C35-repaso-tres",
-      "sequence": 1674,
-      "title": "Review — three verbs that behave",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — three ordinary verbs, and what \"ordinary\" is about to mean",
+      "id": "ES-C34-sintesis-mente",
+      "sequence": 1646,
+      "title": "Synthesis — what you understand, and what you don't",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the sentence you have been saying since chapter 14, finally taken apart",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fea583e75b861c4",
+      "sourceHash": "fnv1a64:7439bc04cb5943cb",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,77 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Name the three verbs of the last three chapters: to take, to ask, to help."
+              "text": "Say the sentence you learned in chapter 14, the one that rescues a conversation. (No entiendo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the formula was a verb all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "All three work the way you expect, and it is worth naming that out loud before the next chapter, where one does not."
+              "text": "You have been saying no entiendo since chapter 14, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
             },
             {
               "kind": "speech",
-              "text": "In each of them, you are the one doing it. You take. You ask. You help. The person doing the verb is the person the sentence is about — exactly as in English, and exactly as in every verb you have met since hablo."
+              "text": "It has parts now. Entiendo is entender, and entender is Latin intendere, \"to stretch toward.\" Which means the sentence you have been using to admit defeat has never actually said I failed. It says:"
             },
             {
               "kind": "speech",
-              "text": "Hold on to that. It is about to be worth money."
+              "text": "I am not managing to stretch that far."
+            },
+            {
+              "kind": "speech",
+              "text": "That was true the whole time. You just could not see it yet."
+            },
+            {
+              "kind": "speech",
+              "text": "And the moment a formula has parts, it turns. No entiendo stops being the only thing you can say and becomes one option among several."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three origins, three very different kinds of story:"
+              "text": "Chapter 14, all you could do:"
             },
             {
               "kind": "speech",
-              "text": "ayudar is the tidy one. Latin adiūtāre becomes English aid. Same word, two roads, and you can still hear it."
+              "text": "— No entiendo. Más despacio, por favor."
             },
             {
               "kind": "speech",
-              "text": "preguntar is the reshaped one — percontārī, to sound a depth with a pole. Asking as measuring how deep something goes."
+              "text": "Now, the same moment, with the parts working:"
             },
             {
               "kind": "speech",
-              "text": "tomar is the honest gap. It has no agreed origin at all. The verb Latin actually handed down for \"take\" was coger, and coger turned coarse across much of Latin America — so an everyday word had to come from somewhere, and nobody is sure where."
+              "text": "— Perdón — leo un poco, pero no entiendo. — Más despacio, por favor. Ahora entiendo. Gracias."
             },
             {
               "kind": "speech",
-              "text": "Not every word has a clean story. A course that pretended otherwise would be inventing them."
+              "text": "Same trouble. But the second speaker is no longer only failing — they are reporting which part works and which does not. That is the difference between a distress signal and a conversation."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four verbs is not four words. It is the ability to say where you are in a language: what you take in, what you work on, what lands, what you can produce."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,11 +118,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three verbs, then one sentence with each",
+              "instruction": "the chapter 14 version — the distress signal on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three verbs, then one sentence with each]"
+              "source": "[YOU SAY: the chapter 14 version — the distress signal on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the version above, where you say what does work before what doesn't",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the version above, where you say what *does* work before what doesn't]"
             },
             {
               "kind": "repeat",
@@ -111,67 +139,53 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-aid",
-              "prompt": "Which of the three is the same word as English aid?",
-              "assesses": [
-                "ES-ETYMON-AYUDAR-06"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "ayudar",
-                "ayudar (to help)",
-                "help"
-              ],
-              "feedback": {
-                "correct": "Yes — adiutare, straight through to aid.",
-                "incorrect": "ayudar, from adiutare."
-              }
+              "kind": "speech",
+              "text": "Run the second one until it sounds like a person, not a repair kit."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C35-repaso-tres-nostory",
-              "prompt": "Which of the three has no agreed etymology at all?",
+              "id": "ES-C34-sintesis-mente-literal",
+              "prompt": "What does no entiendo literally say, given intendere?",
               "assesses": [
-                "ES-LEX-TOMAR-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tomar",
-                "tomar (to take)",
-                "take"
-              ],
-              "feedback": {
-                "correct": "Yes — nobody is sure. That is an honest answer, not a missing one.",
-                "incorrect": "tomar. Its origin is genuinely unsettled."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-who",
-              "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
-              "assesses": [
-                "ES-LEX-PREGUNTAR-03"
+                "ES-ETYMON-ENTENDER-04",
+                "ES-LEX-NO-ENTIENDO-01"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the one doing it",
-                "the doer",
-                "the person doing it",
-                "the subject does it"
+                "i am not stretching that far",
+                "i am not reaching that far",
+                "not stretching toward it",
+                "i cannot stretch that far"
               ],
               "feedback": {
-                "correct": "Right. Remember that for the next chapter.",
-                "incorrect": "The one doing it — which is about to stop being true."
+                "correct": "Yes — not a confession of failure, a report of reach.",
+                "incorrect": "Intendere is to stretch toward: I am not managing to stretch that far."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-now",
+              "prompt": "How do you say I understand now, once it slows down?",
+              "assesses": [
+                "ES-LEX-ENTENDER-03"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ahora entiendo",
+                "entiendo",
+                "entiendo ahora"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Ahora entiendo — now I understand."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -183,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which one has no settled origin? (Tomar.) In all three, who is the sentence about? (The one doing it.) Next chapter: a verb where that stops being true."
+              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say in chapter 14? (Not just that you are lost — which part is lost.)"
             }
           ]
         }

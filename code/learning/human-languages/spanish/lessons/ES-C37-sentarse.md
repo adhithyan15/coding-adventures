@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C37-sentarse
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1750
-chapter: 63
+chapter: 67
 type: word
 headword: sentarse
 gloss: to sit down — literally "to seat oneself", the reflexive that lands the action back on you

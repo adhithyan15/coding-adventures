@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 54,
-  "title": "Review --- Four Verbs of the Mind",
+  "title": "Pensar — Thinking Is Weighing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8aa816fe08082563",
+  "sourceHash": "fnv1a64:d7ea15921e9f9d81",
   "lessons": [
     {
-      "id": "ES-C34-repaso-mente",
-      "sequence": 1643,
-      "title": "Review — four verbs of the mind",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
+      "id": "ES-C34-pensar",
+      "sequence": 1610,
+      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
+      "headword": "pensar",
+      "romanization": "pensar",
+      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a5680a8c562d285",
+      "sourceHash": "fnv1a64:0fba029b178ed5c7",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,102 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
+              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the thing none of the four chapters could show you on its own."
+              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
             },
             {
               "kind": "speech",
-              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
-            },
-            {
-              "kind": "speech",
-              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
-            },
-            {
-              "kind": "speech",
-              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
-            },
-            {
-              "kind": "speech",
-              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
-            },
-            {
-              "kind": "speech",
-              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
-            },
-            {
-              "kind": "speech",
-              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
-            },
-            {
-              "kind": "speech",
-              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
+              "text": "The s is always a clear hissing s, never an English z buzz."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart: pensar",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
+              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the whole family, and most of it still smells of money and scales:"
+            },
+            {
+              "kind": "speech",
+              "text": "pensive — turning something over on the balance."
+            },
+            {
+              "kind": "speech",
+              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
+            },
+            {
+              "kind": "speech",
+              "text": "expense, dispense, pension — payments were literally weighed out."
+            },
+            {
+              "kind": "speech",
+              "text": "peso — a coin whose name simply means \"a weight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "pansy — from French pensée, \"a thought\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the same endings, a broken stem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "stem"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: pienso. stem: broken.",
+                "person: tú. form: piensas. stem: broken.",
+                "person: él/ella/usted. form: piensa. stem: broken.",
+                "person: nosotros. form: pensamos. stem: plain.",
+                "person: ellos/ustedes. form: piensan. stem: broken."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
+            },
+            {
+              "kind": "speech",
+              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,87 +143,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four verbs in order — to read, to think, to understand, to write",
+              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
+              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "for each one, the body word underneath it",
+              "instruction": "\"Pienso en ti\" — I am thinking of you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: for each one, the body word underneath it]"
+              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-weigh",
-              "prompt": "Which of the four verbs originally meant to weigh?",
-              "assesses": [
-                "ES-ETYMON-PENSAR-02"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "pensar",
-                "pensar (to think)",
-                "think"
-              ],
-              "feedback": {
-                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
-                "incorrect": "pensar, from pensare, to weigh."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-gather",
-              "prompt": "Which one meant to gather or pick out?",
-              "assesses": [
-                "ES-ETYMON-LEER-06"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "leer",
-                "leer (to read)",
-                "read"
-              ],
-              "feedback": {
-                "correct": "Yes — legere, the root inside collect, select and intellect.",
-                "incorrect": "leer, from legere, to gather."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-scratch",
-              "prompt": "And which one meant to scratch?",
-              "assesses": [
-                "ES-ETYMON-ESCRIBIR-08"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "escribir",
-                "escribir (to write)",
-                "write"
-              ],
-              "feedback": {
-                "correct": "Yes — scribere. Writing was scratching a surface.",
-                "incorrect": "escribir, from scribere, to scratch."
-              }
+              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
+              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
             }
           ]
         }
