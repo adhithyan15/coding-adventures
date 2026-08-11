@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Replace the actor's private runtime/store ownership with the shared central
+  controller authority for coherent reads, exact-revision pairing commits,
+  restart recovery, and immediate shared-state publication.
+- Prove central visibility and stale-request rejection before LAN, Vault, or
+  journal activity when another controller transaction advances the revision.
+
 ## 0.2.0
 
 - Require the exact D23 principal and expected durable runtime revision in

@@ -1821,19 +1821,39 @@ Synology Surveillance Station server without persisting session material:
   interrupted-commit recovery, exact replacement cleanup, and cleanup-drift
   refusal.
 
+## Current Hue Pairing Central Ownership Slice
+
+This slice moves the completed Hue pairing executor onto the same durable
+authority as discovery, automations, and the Home Assistant-compatible local
+controller:
+
+- `smart-home-controller-runtime` exposes coherent combined snapshots,
+  exact-revision transactions, and D23 pairing completion while retaining its
+  clone-persist-publish failure boundary.
+- `smart-home-pairing-transaction` now targets a runtime-authority contract.
+  Existing store-backed services retain their behavior while Hue pairing uses
+  the central controller for recovery and commit.
+- `smart-home-hue-pairing-service` no longer restores or replaces a private
+  runtime copy. Authorization and stale-revision checks still precede LAN,
+  Vault, and journal activity, and committed opaque credential references are
+  immediately visible to every shared controller consumer.
+- Tests prove central commit visibility, stale-request rejection after an
+  intervening central transaction, restart recovery, exact rollback and
+  replacement cleanup, and secret-free durable state.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The reusable central owner, discovery service transaction migration, and
-production Hue mDNS composition are complete. The remaining
+The reusable central owner, discovery service transaction migration,
+production Hue mDNS composition, and Hue pairing migration are complete. The
+remaining
 central-composition backlog takes priority over adding another isolated
 integration or Chief read model:
 
-1. Migrate Hue pairing and then the remaining pairing/snapshot services so they
-   transact against the same live revision instead of restoring private runtime
-   copies.
+1. Migrate the remaining pairing/snapshot services so they transact against the
+   same live revision instead of restoring private runtime copies.
 2. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
    service adapter against the controller authority.
 3. Add provider-neutral model tool declarations/results, authenticated host
