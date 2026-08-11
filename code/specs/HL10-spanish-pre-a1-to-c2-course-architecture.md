@@ -417,6 +417,32 @@ The full ordering is a DAG; this is its spine, with the stage each rung complete
 
 **≈1,270 grammar-strand lessons.** Every one of them ≤5 minutes, one new cell.
 
+### 5.4a What the corpus actually holds, measured
+
+Audited 2026-08-11, after HL-C104 found the indefinite article missing from 91
+chapters. **11 of the 28 rungs above are entirely absent from Spanish.**
+
+The largest is rung 10, and it is worth stating plainly because it changes what
+this book currently is:
+
+> **The course is singular-only.** 44 verb-paradigm atoms are marked SINGULAR.
+> Exactly two are marked PLURAL, and both are *adjective* agreement, not verbs.
+> No plural verb form appears as a headword anywhere. A reader who finishes all
+> 93 chapters holds five tenses and a mood — and cannot say *we speak*.
+
+Every lesson has been honest about this; each gloss says "singular". That
+honesty is precisely why it stayed invisible for so long: nothing was ever
+claimed that was not delivered, so no gate could fire.
+
+**Absent:** 1 (*hay*), **10 (present plural)**, 13, 14, 15, 20, 23, 24, 26, 27,
+28. **Present:** 2–9, 11, 12, 16–19, 21, 22, 25.
+
+Rung 10 comes before the rest, because 13, 14, 15, 20, 23, 24 and 27 all assume
+plural forms exist. The shape is already established by HL-C94..C104: one cell
+per lesson, `-er`/`-ir` shared where they genuinely share (§5.2a), a review
+chapter when the paradigm closes, and a synthesis where the choice becomes
+communicative.
+
 ### 5.5 Polysemy is not vocabulary
 
 `maxNewSensesPerLesson: 1`. Spanish's high-frequency verbs are polysemous monsters
