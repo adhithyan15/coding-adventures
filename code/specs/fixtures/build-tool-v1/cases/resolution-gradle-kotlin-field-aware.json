@@ -19,7 +19,7 @@
       },
       {
         "path": "code/packages/kotlin/alpha/settings.gradle.kts",
-        "content_utf8": "rootProject.name = \"alpha\"\nincludeBuild(\"../beta-helper\")\n/* includeBuild(\"../gamma\") */\nval example = \"includeBuild(\\\"../gamma\\\")\"\ninclude(\"../gamma\")\nincludeBuild(\"/tmp/gamma\")\nincludeBuild(\"../../java/gamma\")\n"
+        "content_utf8": "rootProject.name = \"alpha\"\nincludeBuild(\"../beta-helper\")\nincludeBuild(\"../beta-helper\")\n/* outer /* includeBuild(\"../gamma\") */ includeBuild(\"../gamma\") */\nval example = \"includeBuild(\\\"../gamma\\\")\"\ninclude(\"../gamma\")\nincludeBuild(\"/tmp/gamma\")\nincludeBuild(\"../${target}\")\nincludeBuild(\"../../java/gamma\")\n"
       },
       {
         "path": "code/packages/kotlin/alpha/build.gradle.kts",

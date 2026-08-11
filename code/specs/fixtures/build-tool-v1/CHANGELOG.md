@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-11
+
+- Strengthened the Haskell field-aware case with plain directory and declared
+  Cabal aliases plus fail-closed ambiguous root manifests.
+- Strengthened the Java and Kotlin Gradle cases with duplicate declarations,
+  nested block comments, interpolated unknown paths, and multiline real calls.
+
 ## 2026-08-10
 
 - Added an adversarial ecosystem-scoped alias-resolution case. Same-spelled

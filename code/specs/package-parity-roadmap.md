@@ -2982,6 +2982,47 @@ owner. Open PR #10608 overlaps only that downstream application integration,
 while open #10605 and #10607 overlap the already blocked HTML and GC owners.
 None overlaps canonical CBOR.
 
+## Post-#10612 Refresh and Python Resolver Selection
+
+External review merged ready-for-review PR #10612 at
+`431a8fcc829724507cc50f707ec9b7c0f8c39824` after all required checks passed.
+The late collision-checked `44dc4b563ef` refresh covers 15 established lanes,
+1,300 normalized implementation identities, and 4,456 established slots. It
+reports 173 high-consensus identities with 269 missing slots, 850 singletons
+with 11,900 missing singleton slots, 654 Rust singletons, zero canonical
+collisions, and zero unknown buckets.
+
+The range from the original `96f58be046bb` selection base through this late
+refresh contains only identity-neutral HTML, Mermaid, Mosaic, ALGOL, ADJ, and
+human-language changes. None overlaps the resolver or shared fixture paths.
+
+The sole topology addition since the prior inventory is the Rust
+`smart-home-frigate-snapshot-host` from merged PR #10602. It directly composes
+Human Approval, Vault and sealed-secret reads, wall time, OS entropy,
+reviewed-address-pinned TCP/TLS, credential and cookie custody, snapshot I/O,
+logout, and cleanup without `required_capabilities.json`. A blocked native
+authority owner now tracks that review; the package is not an all-language
+port. Deterministic installed-identity, approval ordering, request and envelope
+construction, response bounds, cleanup, and stable errors remain assigned to
+the camera-media portable core.
+
+The canonical-CBOR umbrella became dependency-ready, but a fourteen-language
+change is not one reviewable implementation unit. The state graph now treats
+that item as a blocked completion umbrella over selectable per-lane children,
+pairing only the shared .NET and JVM toolchains. This preserves the Vault
+dependency chain without forcing one oversized parity PR.
+
+The loop selected `build-tool-python-haskell-gradle-field-aware-resolution`.
+It is a bounded, standard-library-only repair of an affected-plan trust
+boundary: Python previously scanned whole Cabal files, registered only legacy
+prefixed Haskell names, and line-matched Gradle settings. The tranche consumes
+the shared Haskell, Java, and Kotlin fixtures, accepts only one root Cabal
+manifest and its `build-depends` fields, registers directory and declared Cabal
+aliases, and lexically matches real multiline `includeBuild` calls against
+same-lane discovered roots without opening referenced targets. The downstream
+Python language-filter owner remains pending until exact Python-versus-Go graph
+equality is proven.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

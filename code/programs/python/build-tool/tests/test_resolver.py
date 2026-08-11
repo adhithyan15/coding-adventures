@@ -432,6 +432,108 @@ class TestResolveDependencies:
         assert groups[2] == ["python/pkg-a"]
 
 
+class TestFieldAwareHaskellAndGradleResolution:
+    """Consume the shared Cabal and Gradle resolution contracts."""
+
+    @staticmethod
+    def _materialize_case(
+        tmp_path: Path, fixture_name: str
+    ) -> tuple[dict, list[Package]]:
+        case = json.loads(
+            (CONFORMANCE_CASES / fixture_name).read_text(encoding="utf-8")
+        )
+        for member in case["workspace"]["files"]:
+            path = tmp_path / member["path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(member["content_utf8"], encoding="utf-8")
+
+        packages = []
+        for build_file in sorted(tmp_path.glob("code/*/*/*/BUILD")):
+            relative = build_file.relative_to(tmp_path)
+            family = relative.parts[1]
+            language = relative.parts[2]
+            package_dir = build_file.parent
+            name = f"{language}/{package_dir.name}"
+            if family == "programs":
+                name = f"{language}/programs/{package_dir.name}"
+            packages.append(
+                Package(
+                    name=name,
+                    path=package_dir,
+                    language=language,
+                    build_content=build_file.read_text(encoding="utf-8"),
+                )
+            )
+        return case, packages
+
+    @pytest.mark.parametrize(
+        "fixture_name",
+        [
+            "resolution-haskell-field-aware.json",
+            "resolution-gradle-java-field-aware.json",
+            "resolution-gradle-kotlin-field-aware.json",
+        ],
+    )
+    def test_shared_resolution_fixture(self, tmp_path, fixture_name):
+        case, packages = self._materialize_case(tmp_path, fixture_name)
+
+        graph = resolve_dependencies(packages)
+
+        assert set(graph.edges()) == {
+            tuple(edge) for edge in case["expected"]["result"]["edges"]
+        }
+
+    @pytest.mark.parametrize(
+        ("fixture_name", "changed", "unexpected"),
+        [
+            (
+                "resolution-haskell-field-aware.json",
+                "haskell/gamma",
+                "haskell/alpha",
+            ),
+            (
+                "resolution-gradle-java-field-aware.json",
+                "java/gamma",
+                "java/alpha",
+            ),
+            (
+                "resolution-gradle-kotlin-field-aware.json",
+                "kotlin/gamma",
+                "kotlin/alpha",
+            ),
+        ],
+    )
+    def test_comment_and_string_examples_do_not_expand_affected_closure(
+        self, tmp_path, fixture_name, changed, unexpected
+    ):
+        _, packages = self._materialize_case(tmp_path, fixture_name)
+
+        graph = resolve_dependencies(packages)
+
+        assert unexpected not in graph.affected_nodes({changed})
+
+    def test_gradle_self_and_interpolation_paths_do_not_create_edges(
+        self, tmp_path
+    ):
+        alpha = tmp_path / "alpha"
+        interpolated = tmp_path / "${target}"
+        alpha.mkdir()
+        interpolated.mkdir()
+        (alpha / "settings.gradle.kts").write_text(
+            'includeBuild(".")\nincludeBuild("../${target}")\n', encoding="utf-8"
+        )
+        packages = [
+            Package(name="java/alpha", path=alpha, language="java"),
+            Package(
+                name="java/interpolated", path=interpolated, language="java"
+            ),
+        ]
+
+        graph = resolve_dependencies(packages)
+
+        assert graph.edges() == []
+
+
 class TestEcosystemScopedAliases:
     """Consume the language-neutral same-name collision contract."""
 

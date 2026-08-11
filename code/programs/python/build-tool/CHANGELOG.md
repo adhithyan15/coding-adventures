@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] - 2026-08-11
+
+### Fixed
+
+- **Field-aware Cabal resolution**: exactly one root manifest contributes
+  dependencies, and only `build-depends` fields are scanned. Directory,
+  legacy-prefixed, and declared package names resolve inside the Haskell scope.
+- **Lexical Gradle composite resolution**: multiline `includeBuild` calls are
+  parsed outside nested comments and unrelated strings, normalized without
+  opening targets, and matched only to discovered Java or Kotlin roots.
+- **Shared adversarial conformance**: Python now consumes the strengthened
+  Haskell, Java, and Kotlin fixtures, including wrong-BUILD affected-closure
+  assertions; the Go oracle consumes the same fixture revisions.
+
 ## [0.3.2] - 2026-08-10
 
 ### Fixed
