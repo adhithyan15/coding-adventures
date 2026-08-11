@@ -5778,10 +5778,24 @@ impl HtmlParser {
             }
         }
 
-        if self.has_open_element("template")
+        if self.first_authored_open_template_index().is_some()
             && !self.has_open_element("table")
             && self.current_last_child_element_is("col")
         {
+            if !is_html_whitespace_text(&text) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-character-in-template-column-group",
+                    "non-whitespace character data was ignored at a template column-group boundary",
+                ));
+            }
+            let text = text
+                .chars()
+                .filter(|character| is_html_whitespace(*character))
+                .collect::<String>();
+            if text.is_empty() {
+                return;
+            }
+            self.append_text_to_current(text);
             return;
         }
 
@@ -34252,6 +34266,47 @@ mod tests {
                 output.parser_diagnostics
             );
         }
+    }
+
+    #[test]
+    fn reports_non_whitespace_text_rejected_at_a_template_column_group_boundary() {
+        let source = "<!doctype html><template><col> \tHello\n</template>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-character-in-template-column-group",
+                "non-whitespace character data was ignored at a template column-group boundary",
+            )]
+        );
+
+        let control = parse_html("<!doctype html><template><col> \t\n</template>").unwrap();
+        assert_eq!(output.document, control);
+
+        for source in [
+            "<!doctype html><template><col> \t\n</template>",
+            "<!doctype html><div>Hello</div>",
+            "<!doctype html><table><colgroup><col>Hello</colgroup></table>",
+            "<!doctype html><table><tr><td>Hello</td></tr></table>",
+            "<!doctype html><template><col><col></template>",
+            "<!doctype html><template><col><template>Hello</template></template>",
+            "<!doctype html><svg><template><col></col>Hello</template></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-character-in-template-column-group"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<col>Hello", "template").unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-character-in-template-column-group"
+        }));
     }
 
     #[test]

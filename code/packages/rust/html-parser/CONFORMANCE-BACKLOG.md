@@ -160,8 +160,18 @@ Prioritized work items:
    `template.dat`'s `<template><col><div>` and `<template><col><colgroup>`
    evidence while leaving additional columns, nested templates, columns
    outside templates, and ordinary `colgroup` recovery on their existing
-   paths. The closely related non-whitespace character-token branch after a
-   template-owned `col` remains the leading template audit candidate.
+   paths. Non-whitespace character data rejected after a template-owned `col`
+   now reports the same in-column-group boundary error while remaining ignored,
+   matching WPT `template.dat`'s `<template><col>Hello` evidence. ASCII
+   whitespace is retained, while ordinary content, real column groups and
+   cells, nested templates, foreign template-named elements, and synthetic
+   template fragment contexts keep their existing diagnostic behavior.
+   The next evidence-backed template boundary is a `colgroup` end tag after a
+   template-owned `col`: WPT `template.dat`'s
+   `<template><col></colgroup>` row declares the in-column-group parse error,
+   while the parser currently ignores the unmatched end tag silently. Audit
+   that specialized branch and its real-column-group, foreign, and synthetic
+   fragment controls before moving to adoption agency.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
