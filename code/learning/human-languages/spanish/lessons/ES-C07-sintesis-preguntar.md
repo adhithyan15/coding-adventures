@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-sintesis-preguntar
 spine_node: SPINE-ASK-LOCATION
 sequence: 660
-chapter: 26
+chapter: 27
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — three verb families and two question words become a conversation

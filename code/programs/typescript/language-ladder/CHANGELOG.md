@@ -21,6 +21,11 @@
 - Preserve Arabic Lam independently of the existing Persian and Urdu records
   for the same Unicode glyph, and queue the page's directly linked **ي** source.
 
+### Changed — Spanish runs 1..79 (HL-C101)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `espanol` and the first built
+  sentence moved ahead of the `-ar` synthesis chapter.
+
 ### Changed — Spanish runs 1..78 (HL-C99)
 
 - Regenerate the `bookhashes` chapter-lesson pin: `trabajar` and `estudiar` took

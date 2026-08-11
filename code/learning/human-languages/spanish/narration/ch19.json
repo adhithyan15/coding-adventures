@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 19,
-  "title": "Synthesis --- The Same Conversation, Twice",
+  "title": "Trabajar --- Work, and the Torture Device Behind It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2329ef269025fd49",
+  "sourceHash": "fnv1a64:c25f079e9545be92",
   "lessons": [
     {
-      "id": "ES-C06-repaso-hablar",
+      "id": "ES-C06-trabajar",
       "sequence": 526,
-      "title": "Synthesis — the same conversation, twice",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — one conversation, held twice, where the only thing that changes is who you are talking to",
+      "title": "trabajar — \"to work,\" and it once meant torture",
+      "headword": "trabajar",
+      "romanization": "trabajar",
+      "gloss": "to work (a second -ar verb — same pattern)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e4068898f6743a0",
+      "sourceHash": "fnv1a64:a57a2a8c311d131a",
       "notice": null,
       "blocks": [
         {
@@ -35,48 +35,79 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter either. This one is for using what you have — because knowing three endings is not the same as choosing the right one while a real person waits for you to finish."
+              "text": "A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: what the ending is really saying",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "You are going to hold one short conversation twice — once with someone your own age, once with someone you want to show respect to. The words barely change. What changes is one letter on the end of one verb."
+              "text": "j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR."
             },
             {
               "kind": "speech",
-              "text": "That letter is the whole message. Hablas says I am at ease with you. Habla says I am being careful with you. English would need a change of tone, or a \"sir.\" Spanish does it with an -s."
+              "text": "r-tap, b-soft — tapped r, soft b."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange — with a friend",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¡Hola! Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Hablas? — Sí, hablo. ¡Gracias!"
+              "text": "trabajar comes from Vulgar Latin tripaliāre, \"to torture\" — from tripalium, a Roman instrument of torture made of three stakes (tri- \"three\" + pālus \"stake,\" the root of English pale and impale)."
+            },
+            {
+              "kind": "speech",
+              "text": "The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:"
+            },
+            {
+              "kind": "speech",
+              "text": "travail — painful, laborious effort (and the pains of childbirth)."
+            },
+            {
+              "kind": "speech",
+              "text": "travel — yes: journeying was once such an ordeal that \"travail\" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured."
+            },
+            {
+              "kind": "speech",
+              "text": "So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange, again — being polite",
+          "type": "grammar",
+          "title": "Grammar Lens: same -ar template",
           "segments": [
             {
               "kind": "speech",
-              "text": "— Buenos días. Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Habla usted? — Sí, hablo. Gracias."
+              "text": "Drop -ar, add the ending — identical to hablar:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: I (ending carries the subject). form: trabajo. meaning: I work.",
+                "person: tú. form: trabajas. meaning: you work.",
+                "person: usted. form: trabaja. meaning: you (formal) work."
+              ]
             },
             {
               "kind": "speech",
-              "text": "One letter. Hablas became habla, and the whole exchange changed its temperature. Your own line — hablo — never moved, because you are still you in both conversations."
+              "text": "Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb."
             }
           ]
         },
@@ -94,85 +125,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "version one, both parts, start to finish",
+              "instruction": "\"trabajar\" — tra-ba-HAR, raspy j",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: version one, both parts, start to finish]"
+              "source": "[YOU SAY: \"trabajar\" — *tra-ba-HAR*, raspy *j*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "version two — and catch the single letter that moved",
+              "instruction": "\"trabajo, trabajas, trabaja\" — same endings as hablo/hablas/habla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: version two — and catch the single letter that moved]"
+              "source": "[YOU SAY: \"trabajo, trabajas, trabaja\" — same endings as *hablo/hablas/habla*]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run whichever version is harder."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C06-repaso-hablar-friend",
-              "prompt": "You are talking to someone your own age. Which form: hablas or habla?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2SG"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"trabajar\" becomes travail becomes travel — torture became a journey",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablas",
-                "tu hablas"
-              ],
-              "feedback": {
-                "correct": "Yes — hablas is the warm one.",
-                "incorrect": "With a friend or a peer, hablas."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C06-repaso-hablar-polite",
-              "prompt": "You are speaking to someone you want to show respect to. Which form?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-3SG",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "habla",
-                "habla usted"
-              ],
-              "feedback": {
-                "correct": "Yes — habla, the usted form.",
-                "incorrect": "Usted takes the he/she form: habla."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C06-repaso-hablar-self",
-              "prompt": "In BOTH conversations, how do you say I speak?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1SG"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hablo",
-                "the same, hablo",
-                "hablo both times"
-              ],
-              "feedback": {
-                "correct": "Right — your own form never changes. Only the one aimed at them does.",
-                "incorrect": "hablo, both times. You are still you."
-              }
+              "source": "[YOU SAY: \"trabajar\" → travail → travel — torture became a journey]"
             }
           ]
         },
@@ -189,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the only thing that changed between the two conversations? (One letter — hablas becomes habla.) Why did hablo stay the same? (Because it is about you, and you did not change.) What does choosing habla over hablas actually tell the other person? (That you are being respectful — the grammar is carrying the manners.)"
+              "text": "What did trabajar originally mean, and from what device? (\"To torture,\" from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say \"I work\"? (Trabajo — same -o ending.) Next: estudiar, \"to study.\""
             }
           ]
         }

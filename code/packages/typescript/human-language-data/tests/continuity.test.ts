@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(1825); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
+    expect(report.summary.missedByWindow.R2).toBe(1824); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -793,11 +793,12 @@ describe("the real corpus", () => {
     // 17 -> 21 after HL-C98 gave the first paradigm one cell per chapter. HL-C99d
     // then split chapter 21 itself: it is now the `comer` chapter alone, one -er
     // cell per lesson, and vivir/beber/que/donde moved into their own chapters.
-    // 21 -> 23 after HL-C99f gave trabajar and estudiar a chapter each.
+    // 21 -> 23 after HL-C99f gave trabajar and estudiar a chapter each, then
+    // 23 -> 24 after HL-C101 moved espanol ahead of the -ar synthesis chapter.
     // The lesson ids are stable slugs and deliberately do NOT renumber with it.
     const { lessons } = loadEverything();
     const chapter = lessons
-      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 23)
+      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 24)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
     expect(chapter).toEqual([

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C08-tener
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 800
-chapter: 27
+chapter: 28
 type: word
 headword: tener
 gloss: to have — a common verb with two visible changes

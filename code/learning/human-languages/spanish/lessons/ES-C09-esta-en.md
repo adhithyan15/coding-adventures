@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C09-esta-en
 spine_node: SPINE-ASK-LOCATION
 sequence: 860
-chapter: 28
+chapter: 29
 type: phrase
 headword: está en…
 gloss: is in or at… — locate someone with estar and the already-known en

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 45,
-  "title": "Parents and Siblings",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2e9c081c863adff3",
+  "title": "Black, White, Red, and Blue",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:843ca320046606b6",
   "lessons": [
     {
-      "id": "ES-C23-padre-madre",
-      "sequence": 1380,
-      "title": "el padre, la madre — among the oldest words there are",
-      "headword": "el padre, la madre",
-      "romanization": "el padre, la madre",
-      "gloss": "father and mother — among the oldest reconstructible words in the whole family",
+      "id": "ES-C22-negro-blanco",
+      "sequence": 1340,
+      "title": "negro, blanco — two colours, and one of their histories",
+      "headword": "negro, blanco",
+      "romanization": "negro, blanco",
+      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6563dea12823327f",
+      "sourceHash": "fnv1a64:171cd11953cdae99",
       "notice": null,
       "blocks": [
         {
@@ -35,51 +35,37 @@
             },
             {
               "kind": "speech",
-              "text": "\"Father\" and \"mother\" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother."
+              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: padre and madre",
+          "title": "The words, taken apart: negro",
           "segments": [
             {
               "kind": "speech",
-              "text": "el padre (\"father\") from Latin pater from PIE ph₂tḗr."
+              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
             },
             {
               "kind": "speech",
-              "text": "la madre (\"mother\") from Latin māter from PIE méh₂tēr."
+              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the English sound-law",
+          "type": "input",
+          "title": "The two words in use",
           "segments": [
             {
               "kind": "speech",
-              "text": "Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "PIE ancestor",
-                "Latin becomes Spanish",
-                "Germanic becomes English"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.",
-                "PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother."
-              ]
+              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
             },
             {
               "kind": "speech",
-              "text": "So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their \"of a parent\" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, \"the stuff a tree-mother produces,\" gives Spanish materia and, separately, matriz — \"womb\" — via Latin mātrix.)"
+              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
             }
           ]
         },
@@ -97,29 +83,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el padre, la madre\"",
+              "instruction": "\"negro, blanco\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el padre, la madre\"]"
+              "source": "[YOU SAY: \"negro, blanco\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the sound-law — \"padre keeps p; father shifts to f — same word\"",
+              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the sound-law — \"padre keeps p; father shifts to f — same word\"]"
+              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"padre becomes paternal; madre becomes maternal\"",
+              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"padre → paternal; madre → maternal\"]"
+              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
             }
           ]
         },
@@ -136,26 +122,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)"
+              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C23-hermano-hermana",
-      "sequence": 1390,
-      "title": "el hermano, la hermana — brother and sister, from a different word entirely",
-      "headword": "el hermano, la hermana",
-      "romanization": "el hermano, la hermana",
-      "gloss": "brother and sister — NOT from frater/soror, but from an adjective meaning \"of the same seed\"",
+      "id": "ES-C22-blanco-germanico",
+      "sequence": 1350,
+      "title": "blanco — the colour Spanish did not inherit",
+      "headword": "blanco ← *blank",
+      "romanization": "blanco ← *blank",
+      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb444232144155c4",
+      "sourceHash": "fnv1a64:cae64a7981092270",
       "notice": null,
       "blocks": [
         {
@@ -171,141 +157,7 @@
             },
             {
               "kind": "speech",
-              "text": "You might expect Spanish \"brother\" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: hermano and hermana",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Classical Latin could say frāter germānus, literally \"a brother of the same stock/blood\" — distinguishing a full brother from a half-brother, or from a \"brother\" in some looser sense."
-            },
-            {
-              "kind": "speech",
-              "text": "Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:"
-            },
-            {
-              "kind": "speech",
-              "text": "el hermano (\"brother\") from Latin germānus."
-            },
-            {
-              "kind": "speech",
-              "text": "la hermana (\"sister\") from Latin germāna."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's everyday word for brother is, grammatically, a leftover adjective."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where germanus comes from",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Germānus traces back to germen, \"sprout, bud, seed\" — the same root that gives English germ, germinate, and germane (originally \"closely related,\" from the same seed, before it loosened into just \"relevant\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So calling someone your hermano is, at the etymological root, calling them \"sprung from the same seed.\" (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el hermano, la hermana\" — brother, sister",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el hermano, la hermana\" — brother, sister]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root chain — \"germen, seed\" becomes \"germānus, of the same seed\" becomes \"hermano\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root chain — \"germen, seed\" → \"germānus, of the same seed\" → \"hermano\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hermano\" then English \"germinate, germane\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hermano\" then English \"germinate, germane\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does Spanish hermano come from Latin frāter? (No — from germānus, \"of the same stock/seed,\" an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C23-hermano-hache",
-      "sequence": 1400,
-      "title": "the h in hermano — a letter that was never spoken",
-      "headword": "hermano ← *ermano*",
-      "romanization": "hermano ← *ermano*",
-      "gloss": "the h on hermano is not the h on hijo — one was spoken for centuries, the other never was",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8d2c0435814943eb",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one."
+              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
             }
           ]
         },
@@ -316,44 +168,290 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "el hermano, la hermana — the words and the germen root."
+              "text": "negro, blanco — the two colour words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: blanco",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
+            },
+            {
+              "kind": "speech",
+              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
+            },
+            {
+              "kind": "speech",
+              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: where albus went",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "meaning",
+                "the white inside"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "word: alba. meaning: dawn. the white inside: the sky going white.",
+                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
+                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
+                "word: albino. meaning: albino. the white inside: white-skinned."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C22-rojo",
+      "sequence": 1360,
+      "title": "rojo — the same family as red, by a different branch",
+      "headword": "rojo",
+      "romanization": "rojo",
+      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:124c8a83910609d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: rojo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
+            },
+            {
+              "kind": "speech",
+              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
+            },
+            {
+              "kind": "speech",
+              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rojo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rojo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C22-azul",
+      "sequence": 1370,
+      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
+      "headword": "azul",
+      "romanization": "azul",
+      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a798b7fe4e7ec9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: azul",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: two different silent h's",
+          "title": "Why it's said this way: everyday here, poetic there",
           "segments": [
             {
               "kind": "speech",
-              "text": "You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo (\"son\"), facere becomes hacer (\"to do\"). Hermano is not that, and the difference is worth getting right."
+              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
             },
             {
               "kind": "speech",
-              "text": "Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago."
-            },
-            {
-              "kind": "speech",
-              "text": "The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "what happened to the sound",
-                "was the h ever spoken?"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.",
-                "word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Same silent letter today; two completely different backstories, only one of which involves a sound at all."
+              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
             }
           ]
         },
@@ -371,20 +469,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"germānus\" then \"ermano\" then \"hermano\" — the three stages",
+              "instruction": "all four — \"negro, blanco, rojo, azul\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"germānus\" then \"ermano\" then \"hermano\" — the three stages]"
+              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was",
+              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the honest distinction — hijo/hacer's *h* was once truly spoken; hermano's *h* never was]"
+              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
             }
           ]
         },
@@ -401,7 +508,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)"
+              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
             }
           ]
         }

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C09-soy-de
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 850
-chapter: 28
+chapter: 29
 type: phrase
 headword: soy de…
 gloss: I am from… — use ser with de to state origin

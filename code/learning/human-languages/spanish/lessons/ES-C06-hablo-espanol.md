@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C06-hablo-espanol
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 560
-chapter: 22
+sequence: 532
+chapter: 21
 type: phrase
 headword: Hablo español
 gloss: your first sentence built from parts — and the rule that languages take no article
