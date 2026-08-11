@@ -1252,6 +1252,61 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("צ"),
   },
+  // Printed Qof keeps the top and slanted right body in one run, then lifts
+  // once for the separate descending stem. Its cursive counterpart rounds the
+  // same idea into one continuous hooked descent.
+  [ductusKey("hebrew", "ק")]: {
+    script: "hebrew",
+    glyph: "ק",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 85, y: 555 },
+              { x: 180, y: 555 },
+              { x: 280, y: 555 },
+              { x: 380, y: 555 },
+              { x: 470, y: 555 },
+              { x: 560, y: 555 },
+            ],
+          },
+          {
+            label: "turn down-left through the right body without lifting",
+            path: [
+              { x: 560, y: 555 },
+              { x: 545, y: 520 },
+              { x: 520, y: 460 },
+              { x: 500, y: 400 },
+              { x: 480, y: 335 },
+              { x: 455, y: 260 },
+              { x: 430, y: 180 },
+              { x: 405, y: 100 },
+              { x: 375, y: 10 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the separate inner-left stem below the line",
+            path: [
+              { x: 140, y: 360 },
+              { x: 140, y: 275 },
+              { x: 140, y: 180 },
+              { x: 140, y: 80 },
+              { x: 140, y: -20 },
+              { x: 140, y: -105 },
+              { x: 140, y: -180 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ק"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

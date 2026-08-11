@@ -397,10 +397,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   into the middle. Its three-frame Noto Sans Hebrew path preserves the adjacent
   purple cursive form's compact one-run shape. The source demonstrates final
   Tsadi **ץ** next; because it is already represented by `צ.forms.final`, the
-  later Qof demonstration is the next counted entry.
-  The remaining **159** prose
+  later Qof demonstration is the next counted entry. Printed **ק** then draws
+  its top bar left-to-right and turns down-left through the right body in one
+  run, lifts once, and descends the separate inner-left stem below the writing
+  line. Its three-frame Noto Sans Hebrew path preserves the adjacent purple
+  cursive form's one-run hooked descent. The adjacent Resh demonstration is the
+  next counted entry.
+  The remaining **158** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 4,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 3,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

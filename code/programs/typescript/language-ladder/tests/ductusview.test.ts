@@ -115,6 +115,8 @@ const HEBREW_PE = ductusFor("פ", "hebrew")!;
 const hebrewPeOutline = hebrewOutline("פ");
 const HEBREW_TSADI = ductusFor("צ", "hebrew")!;
 const hebrewTsadiOutline = hebrewOutline("צ");
+const HEBREW_QOF = ductusFor("ק", "hebrew")!;
+const hebrewQofOutline = hebrewOutline("ק");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1313,6 +1315,37 @@ describe("Hebrew צ — a joined diagonal and base followed by a lifted arm", ()
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_TSADI.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ק — a joined top and right body followed by a lifted stem", () => {
+  const steps = ductusSteps(HEBREW_QOF);
+  const strip = ductusFilmstrip(HEBREW_QOF, hebrewQofOutline);
+
+  it("keeps the top joined to the right body before the separate descender", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "turn down-left through the right body without lifting",
+      "lift, then descend the separate inner-left stem below the line",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the first run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewQofOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_QOF.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_QOF.strokes[1], 1),
     );
   });
 });
