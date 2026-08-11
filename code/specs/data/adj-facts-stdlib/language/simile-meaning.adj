@@ -1,0 +1,63 @@
+% ============================================================================
+% simile-meaning — common English similes and what they actually mean
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A simile compares one thing to another using "like" or "as" — "as brave
+% as a lion" doesn't literally describe a lion, it describes courage.
+% Recall is a binding query:
+%
+%     ? simile_meaning(as_brave_as_a_lion, $M)
+%       % extremely_courageous
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `simile_meaning(simile, meaning)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the meaning WITH its source, on the CPU, with zero model calls,
+% and abstains on any simile not one of these three source-cited examples.
+% The query also runs BACKWARD — bind a meaning and recall which simile
+% carries it:
+%
+%     ? simile_meaning($S, free_or_unrestricted)
+%       % as_free_as_a_bird
+%
+% DESIGN NOTE — why `simile` is an apostrophe/punctuation-free
+% underscore-joined atom label rather than the punctuated phrase: ADJ atom
+% labels cannot contain spaces or punctuation, so this table uses the same
+% underscore-joined atom-style-label discipline `idiom-meaning.adj` already
+% established for multi-word phrases — `as_brave_as_a_lion` stands for "as
+% brave as a lion." The header prose below quotes the ORIGINAL phrasing, so
+% the mapping remains independently checkable against the cited page.
+%
+% Provenance: quoted verbatim from Grammarly's "Simile: Definition and
+% Examples" article's "Common simile examples" table, which pairs each
+% simile with its meaning directly:
+%
+%     simile (this table's atom label)   meaning                 simile phrase (verbatim)
+%     ----------------------------------  ----------------------  ---------------------------
+%     as_brave_as_a_lion                  extremely_courageous    "As brave as a lion"
+%     like_a_needle_in_a_haystack         very_difficult_to_find  "Like a needle in a haystack"
+%     as_free_as_a_bird                   free_or_unrestricted    "As free as a bird"
+%
+% WebFetch-verified before writing. `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources and the same
+% source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
+% `contraction.adj`/`possessive-noun.adj`. A simile not one of these
+% three — e.g. `as_busy_as_a_bee`, a real, well-known simile, but not one
+% of this source's own cited table rows — is deliberately NOT a row, so a
+% recall ABSTAINS on it rather than inventing a meaning. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table simile_meaning {
+    columns simile, meaning
+
+    row (as_brave_as_a_lion, extremely_courageous)
+    row (like_a_needle_in_a_haystack, very_difficult_to_find)
+    row (as_free_as_a_bird, free_or_unrestricted)
+
+    source "As brave as a lion"
+    locator "https://www.grammarly.com/blog/rhetorical-devices/simile/"
+    trust consensus
+}
