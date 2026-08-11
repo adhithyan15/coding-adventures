@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.45.0";
+pub const VERSION: &str = "0.46.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1095,13 +1095,27 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             };
             upsert_state_node(&mut nodes, &mut node_indices, id, label);
         } else {
-            let from = take_state_endpoint(
-                &mut cursor,
-                true,
-                &mut pseudo_index,
-                &mut nodes,
-                &mut node_indices,
-            )?;
+            let from = if token_name(cursor.current()) == "EDGE_STATE" {
+                take_state_endpoint(
+                    &mut cursor,
+                    true,
+                    &mut pseudo_index,
+                    &mut nodes,
+                    &mut node_indices,
+                )?
+            } else {
+                let id = take_state_ref(&mut cursor)?;
+                if cursor.consume_if("COLON").is_some() {
+                    let label = take_state_text(&mut cursor);
+                    upsert_state_node(&mut nodes, &mut node_indices, id, label);
+                    cursor.skip_terminators();
+                    continue;
+                }
+                if !node_indices.contains_key(&id) {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+                }
+                id
+            };
             cursor
                 .consume_if("ARROW")
                 .ok_or_else(|| token_error(cursor.current(), "expected state transition arrow"))?;
@@ -3747,7 +3761,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn state_parses_graph_compatible_core() {
         let diagram = parse_state_diagram(
-            "stateDiagram-v2\ndirection LR\nstate \"Still waiting\" as Still\n[*] --> Still\nStill --> Moving: begin motion\nMoving --> [*]: stop\n",
+            "stateDiagram-v2\ndirection LR\nstate \"Still waiting\" as Still\n[*] --> Still\nStill --> Moving: begin motion\nMoving: In motion\nMoving --> [*]: stop\n",
         )
         .expect("state core should parse");
 
@@ -3767,6 +3781,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(
             diagram.edges[1].label.as_ref().unwrap().text,
             "begin motion"
+        );
+        assert_eq!(
+            diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == "Moving")
+                .unwrap()
+                .label
+                .text,
+            "In motion"
         );
         assert_eq!(
             diagram
@@ -4557,7 +4581,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.45.0");
+        assert_eq!(crate::VERSION, "0.46.0");
     }
 
     #[test]

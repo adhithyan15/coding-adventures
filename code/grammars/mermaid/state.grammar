@@ -1,12 +1,13 @@
-# @version 1
+# @version 2
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
 body = { terminator | statement } ;
-statement = direction_stmt | state_stmt | transition_stmt ;
+statement = direction_stmt | state_stmt | description_stmt | transition_stmt ;
 
 direction_stmt = "direction" DIRECTION ;
 state_stmt = "state" ( STRING "as" state_ref | state_ref [ COLON text ] ) ;
+description_stmt = state_ref COLON text ;
 transition_stmt = endpoint ARROW endpoint [ COLON text ] ;
 
 endpoint = EDGE_STATE | state_ref ;

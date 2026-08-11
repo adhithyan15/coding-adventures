@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.46.0
+
+- Parse Mermaid state description statements without a leading `state` keyword and carry their labels through graph IR.
+
 ## 0.45.0
 
 - Parse an initial grammar-backed Mermaid 11.16.1 state-diagram slice into graph IR for native layout and Paint lowering.
