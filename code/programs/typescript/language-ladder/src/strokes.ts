@@ -271,6 +271,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The next page's Arabic ك clip descends the main upright and turns left along
 // the baseline without lifting, then restarts once for the inner arm. Its
 // Arabic identity stays distinct from the separately sourced Urdu ک glyph.
+// The same page's Arabic ل clip keeps the tall upright and leftward base bowl
+// in one pen-down run. Its scoped source remains distinct from the Persian and
+// Urdu records even though all three share the same Unicode glyph and outline.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -1164,6 +1167,40 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ك"),
+  },
+  [ductusKey("arabic", "ل")]: {
+    script: "arabic",
+    glyph: "ل",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the tall upright",
+            path: [
+              { x: 458, y: 640 },
+              { x: 445, y: 500 },
+              { x: 440, y: 420 },
+              { x: 450, y: 240 },
+              { x: 475, y: 80 },
+              { x: 510, y: -20 },
+            ],
+          },
+          {
+            label: "continue left through the base bowl without lifting",
+            path: [
+              { x: 510, y: -20 },
+              { x: 465, y: -120 },
+              { x: 350, y: -205 },
+              { x: 205, y: -215 },
+              { x: 105, y: -135 },
+              { x: 90, y: -75 },
+              { x: 100, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ل"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

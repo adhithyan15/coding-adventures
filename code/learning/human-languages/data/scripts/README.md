@@ -303,8 +303,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   main upright and turn left along the baseline without lifting, then lift once
   and draw the inner arm from upper right down-left. Its three-frame path keeps
   Arabic Kaf distinct from Urdu **ک**'s different Unicode glyph and provenance.
-  The remaining **181**
-  prose part orders across seven scripts (`arabic` 7,
+  The same page's directly linked `lam.mov` verifies independent **ل** in one
+  run at 00:01.9–00:02.4: descend the tall upright, turn left through the base
+  bowl, and rise at its outer edge without lifting. Its two-frame path keeps
+  Arabic Lam distinct from the Persian and Urdu records for the same Unicode
+  glyph. The remaining **180**
+  prose part orders across seven scripts (`arabic` 6,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
