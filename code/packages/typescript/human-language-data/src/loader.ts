@@ -24,6 +24,7 @@ import type {
   Taxonomy,
   TrackChapters,
   GrammarSlotInventory,
+  MetalanguageInventory,
   TrackGrammarCells,
 } from "./types.js";
 
@@ -49,6 +50,13 @@ export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumS
   return JSON.parse(
     readFileSync(join(root, "core", "spine.json"), "utf8"),
   ) as CurriculumSpine;
+}
+
+/** HL10 section 7.5: the metalanguage ramp -- the words for talking about language. */
+export function loadMetalanguage(root = defaultCurriculumRoot()): MetalanguageInventory {
+  return JSON.parse(
+    readFileSync(join(root, "core", "metalanguage.json"), "utf8"),
+  ) as MetalanguageInventory;
 }
 
 /** HL10 section 5.1: the universal grammar-slot inventory, generated and committed. */

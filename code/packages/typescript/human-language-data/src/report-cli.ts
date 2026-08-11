@@ -5,6 +5,7 @@ import {
   loadChapterPolicy,
   loadEverything,
   loadGrammarSlots,
+  loadMetalanguage,
   loadTrackChapters,
   loadTrackGrammarCells,
 } from "./loader.js";
@@ -14,6 +15,7 @@ import { renderStrandSummary, summarizeStrands } from "./strands.js";
 import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
 import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
 import { measureInfoDump, renderInfoDump } from "./info-dump.js";
+import { measureMetalanguage, renderMetalanguage } from "./metalanguage.js";
 
 interface ReportOptions {
   root?: string;
@@ -90,8 +92,12 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
   // out to be fine; the dumps live in paradigm tables.
   const infoDump = measureInfoDump(lessons, policy.maxRuleStatementsPerLesson ?? 1);
 
+  // HL10 §7.5. The hidden prerequisite: a book that says "the first-person
+  // singular present indicative" has spent six technical terms on one form.
+  const metalanguage = measureMetalanguage(lessons, loadMetalanguage(options.root));
+
   const json = `${JSON.stringify(
-    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary },
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary },
     null,
     2,
   )}\n`;
@@ -104,6 +110,8 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     renderRootLedger(rootLedger).join("\n"),
     "",
     renderInfoDump(infoDump).join("\n"),
+    "",
+    renderMetalanguage(metalanguage).join("\n"),
     "",
   ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);
