@@ -8,7 +8,7 @@ use diagram_ir::{
     SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.27.0";
+pub const VERSION: &str = "0.28.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -708,7 +708,7 @@ fn activation_endpoint(
     } else if center > other {
         activation_x(center, 0)
     } else {
-        center
+        activation_x(center, depth) + ACTIVATION_W
     }
 }
 
@@ -1260,6 +1260,48 @@ mod tests {
         });
 
         assert_eq!(bob_x.unwrap() - to_x.unwrap(), ACTIVATION_W / 2.0 - 1.0);
+    }
+
+    #[test]
+    fn active_self_messages_anchor_to_the_outer_activation_edge() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Worker")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Worker".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Worker".into(),
+                    active: true,
+                },
+                message("Worker", "Worker", "check"),
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let lifeline_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Lifeline { x, .. } => Some(*x),
+            _ => None,
+        });
+        let message_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Message { from_x, to_x, .. } => {
+                assert_eq!(from_x, to_x);
+                Some(*from_x)
+            }
+            _ => None,
+        });
+
+        assert_eq!(
+            message_x.unwrap() - lifeline_x.unwrap(),
+            ACTIVATION_W / 2.0 + NESTED_ACTIVATION_OFFSET
+        );
     }
 
     #[test]
