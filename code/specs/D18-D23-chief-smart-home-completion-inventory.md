@@ -372,9 +372,16 @@ keeps the raw credential out of model-visible values, reports, and durable
 audit rows. Executable tests cover approved and approval-denied jobs plus
 one-shot, revoked, malformed, and unknown lease behavior.
 
-These items are Chief of Staff architecture, not smart-home platform work:
-
-- No remaining items within the D18 Chief architecture completion boundary.
+These packages complete many Chief of Staff primitives, but they do not yet
+complete the production composition boundary. The runnable Chief daemon owns
+host lifecycle and the encrypted Level 1 data plane, while the Home
+Assistant-compatible controller, discovery services, pairing services, and
+Chief smart-home tool bridge still create or restore separate D23 runtime
+instances. The production host data plane also has no provider-neutral tool
+call operation. Closing D18 therefore requires one durable D23 mutation owner,
+migration of supervised smart-home services onto that owner, a thread-safe
+Chief tool adapter, authenticated host tool dispatch, and one executable Chief
+to D23 end-to-end path.
 
 ## Current Durable Runtime Persistence Slice
 
@@ -414,6 +421,26 @@ controller instead of another fixture wrapper:
 - Executable tests prove an HTTP desired-state mutation is queryable after a
   fresh store instance and prove failed persistence leaves no in-memory
   mutation behind.
+
+## Current Central Controller Ownership Slice
+
+This slice replaces the local controller's hand-assembled runtime, automation,
+storage, and scheduler ownership with one reusable durable coordinator:
+
+- `smart-home-controller-runtime` restores `SmartHomeRuntime`,
+  `SmartHomeAutomationRuntime`, and `SmartHomeRuntimeStore` as one authority.
+- Serialized transactions clone the live runtime pair, persist the complete
+  candidate before publishing it, and preserve the exact prior live state when
+  mutation or compare-and-swap persistence fails.
+- The coordinator exposes shared runtime handles only as adapter boundaries for
+  the existing Home Assistant HTTP surface and future supervised discovery,
+  pairing, and Chief tool services.
+- The production local controller uses the coordinator for startup restore,
+  synchronous HTTP persistence, startup snapshots, and scheduled automation
+  evaluation instead of independently assembling those responsibilities.
+- Restart, failed-persistence, and concurrent-mutation tests prove one durable
+  owner survives process recreation, does not publish rejected candidates, and
+  does not lose serialized updates.
 
 ## Current Automation Runtime Slice
 
@@ -1772,6 +1799,27 @@ Synology Surveillance Station server without persisting session material:
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
+
+The central-composition backlog takes priority over adding another isolated
+integration or Chief read model:
+
+1. Land the reusable central controller owner and run the local Home Assistant
+   HTTP surface and automation scheduler through it.
+2. Migrate `smart-home-discovery-service` onto that owner, beginning with the
+   existing Hue mDNS path as the first supervised worker visible through the
+   same HTTP runtime.
+3. Migrate Hue pairing and then the remaining pairing/snapshot services so they
+   transact against the same live revision instead of restoring private runtime
+   copies.
+4. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
+   service adapter against the controller authority.
+5. Add provider-neutral model tool declarations/results, authenticated host
+   tool dispatch, and production Chief daemon injection.
+6. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+   including durable audit/state and Home Assistant API readback.
+
+The protocol- and vendor-specific backlog below remains valid after those
+central ownership steps:
 
 No additional camera snapshot slice is currently executable without a concrete
 authentication prerequisite. Blue Iris documents `/image/{camera}` and secure
