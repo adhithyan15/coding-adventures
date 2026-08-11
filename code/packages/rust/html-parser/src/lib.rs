@@ -7040,6 +7040,20 @@ impl HtmlParser {
             ));
             return;
         }
+        if name == "caption"
+            && self.first_authored_open_template_index().is_some()
+            && self.current_namespace().is_none()
+            && self.current_element_is("template")
+            && !self.has_open_element("table")
+            && (self.current_last_child_element_is("td")
+                || self.current_last_child_element_is("th"))
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-caption-end-tag-in-template-row",
+                "end tag `</caption>` was ignored at a template row boundary",
+            ));
+            return;
+        }
         if matches!(name, "head" | "frameset")
             && self.first_authored_open_template_index().is_some()
             && self.current_namespace().is_none()
@@ -34678,6 +34692,69 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-row-end-tag-in-template-table-mode"
         }));
+    }
+
+    #[test]
+    fn reports_caption_end_tags_rejected_after_template_owned_cells() {
+        for source in [
+            "<!doctype html><template><td></td></caption></template>",
+            "<!doctype html><template><th></th></caption></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-caption-end-tag-in-template-row",
+                    "end tag `</caption>` was ignored at a template row boundary",
+                )],
+                "source {source:?}"
+            );
+            assert_eq!(
+                output.document,
+                parse_html(&source.replace("</caption>", "")).unwrap(),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><template><td></td><caption></caption><td></td></template>",
+            "<!doctype html><template><td></td><colgroup></caption><td></td></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-caption-end-tag-in-template-row"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><caption>x</caption></table>",
+            "<!doctype html><template><caption>x</caption></template>",
+            "<!doctype html><template><td></td><template></caption></template></template>",
+            "<!doctype html><svg><template><td></td></caption></template></svg>",
+            "<!doctype html><div></caption></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-caption-end-tag-in-template-row"
+            }));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<td></td></caption>", "template")
+                .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-caption-end-tag-in-template-row" }));
     }
 
     #[test]

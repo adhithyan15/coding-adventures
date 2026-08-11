@@ -221,6 +221,11 @@ Prioritized work items:
    parse error while preserving ignored-token DOM behavior. Direct and nested
    authored templates are covered; real head/frameset closure, real tables,
    ordinary stray endings, foreign content, and synthetic template fragments
+   remain on their existing paths. A `caption` end tag rejected after a
+   template-owned cell now reports the in-row parse error while remaining
+   ignored, matching WPT `template.dat`'s template cell/caption and
+   cell/column-group sequences. Matching real captions, nested templates,
+   foreign content, ordinary stray endings, and synthetic template fragments
    remain on their existing paths. Continue auditing the remaining template
    state boundaries. A `tr`
    start after non-whitespace template text now follows the still-active
@@ -233,9 +238,9 @@ Prioritized work items:
    ignored `<body>` token also no longer marks an explicit body start and
    incorrectly disables a later valid frameset. Ordinary document-shell starts,
    nested templates, foreign template-named elements, and synthetic template
-   fragment contexts remain on their existing paths. Continue with the adjacent
-   authored-template shell end-tag and remaining template-state branches, then
-   move to adoption agency only after that audit is exhausted.
+   fragment contexts remain on their existing paths. Continue with the
+   remaining template-state branches, then move to adoption agency only after
+   that audit is exhausted.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
