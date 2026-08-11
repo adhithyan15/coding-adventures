@@ -1211,6 +1211,21 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — procedures obey block scope like scalar, label, and switch
+    // declarations. The nested `choose` resolves to its stable sibling while
+    // the call after that block resolves to the restored outer procedure.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure choose; choose := 20; \
+               result := choose(); \
+               begin integer procedure choose; choose := 1; \
+                     result := result + choose() end; \
+               result := result + choose() + 1 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a real array element may be the controlled variable of a
     // for clause. Integer bounds widen to f64, and the typed array path carries
     // each value while the loop's add and comparisons stay at f64 width.
@@ -6311,6 +6326,36 @@ fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but zero-argument procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_procedure_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure choose; choose := 20")
+                && program.src.contains("integer procedure choose; choose := 1")
+        })
+        .expect("the ALGOL procedure-shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but procedure-shadowing execution did not complete"
             );
             continue;
         };

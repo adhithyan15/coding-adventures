@@ -381,6 +381,14 @@ struct Compiler {
     /// compiled at each direct call site so their reads can re-evaluate the
     /// caller's actual expression.
     proc_decls: HashMap<String, GrammarASTNode>,
+    /// Source procedure name -> stable sibling-function identity for the
+    /// nearest lexical block. Stable identities let a nested declaration
+    /// shadow an outer procedure without retargeting stored signatures or
+    /// direct formal-procedure bindings.
+    proc_names: HashMap<String, String>,
+    /// Procedure names declared in each lexical block. The stack distinguishes
+    /// legal nested shadowing from duplicate declarations in one block.
+    proc_scope_names: Vec<HashSet<String>>,
     /// Active call-by-name formal substitutions while lowering one specialised
     /// procedure body.
     by_name_bindings: HashMap<String, ByNameBinding>,
@@ -451,6 +459,8 @@ impl Default for Compiler {
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
             proc_decls: HashMap::new(),
+            proc_names: HashMap::new(),
+            proc_scope_names: vec![HashSet::new()],
             by_name_bindings: HashMap::new(),
             procedure_bindings: HashMap::new(),
             suspended_by_name: HashSet::new(),
@@ -550,10 +560,12 @@ impl Compiler {
         let saved_switches = (!is_root).then(|| self.switches.clone());
         let saved_switch_names = (!is_root).then(|| self.switch_names.clone());
         let saved_labels = (!is_root).then(|| self.labels.clone());
+        let saved_proc_names = (!is_root).then(|| self.proc_names.clone());
         if !is_root {
             self.push_scope();
             self.switch_scope_names.push(HashSet::new());
             self.label_scope_names.push(HashSet::new());
+            self.proc_scope_names.push(HashSet::new());
         }
 
         // Labels have block scope and may be referenced before their textual
@@ -618,6 +630,8 @@ impl Compiler {
                 saved_switch_names.expect("nested block saves switch name bindings");
             self.label_scope_names.pop();
             self.labels = saved_labels.expect("nested block saves label bindings");
+            self.proc_scope_names.pop();
+            self.proc_names = saved_proc_names.expect("nested block saves procedure bindings");
         }
         Ok(())
     }
@@ -658,7 +672,10 @@ impl Compiler {
                 .find(|token| token.effective_type_name() == "NAME")
                 .map(|token| token.value.clone())
                 .ok_or_else(|| CompileError::Malformed("procedure_decl missing name".into()))?;
-            let sig = self.proc_sigs.get(&name).ok_or_else(|| {
+            let stable_name = self.proc_names.get(&name).ok_or_else(|| {
+                CompileError::Malformed(format!("procedure {name:?} was not registered"))
+            })?;
+            let sig = self.proc_sigs.get(stable_name).ok_or_else(|| {
                 CompileError::Malformed(format!("procedure {name:?} was not registered"))
             })?;
             if sig.params.iter().any(|param| {
@@ -671,7 +688,12 @@ impl Compiler {
                 // expression or procedure target is known.
                 return Ok(());
             }
-            let func = self.compile_procedure(proc_decl)?;
+            let func = self.compile_procedure_with_bindings(
+                proc_decl,
+                Some(stable_name.clone()),
+                HashMap::new(),
+                HashMap::new(),
+            )?;
             self.functions.push(func);
             return Ok(());
         }
@@ -1362,19 +1384,29 @@ impl Compiler {
     /// before the body is lowered (forward references and recursion).
     fn register_proc_sig(&mut self, proc_decl: &GrammarASTNode) -> Result<(), CompileError> {
         let (name, params, ret) = self.procedure_parts(proc_decl)?;
-        if self.proc_sigs.contains_key(&name) {
+        let current_scope = self
+            .proc_scope_names
+            .last_mut()
+            .expect("compiler always has a procedure scope");
+        if !current_scope.insert(name.clone()) {
             return Err(CompileError::Type(format!(
                 "duplicate declaration for procedure {name:?}"
             )));
         }
+        let stable_name = if self.proc_sigs.contains_key(&name) {
+            self.fresh_label(&format!("procedure_{name}"))
+        } else {
+            name.clone()
+        };
         self.proc_sigs.insert(
-            name.clone(),
+            stable_name.clone(),
             ProcSig {
                 params,
                 ret,
             },
         );
-        self.proc_decls.insert(name, proc_decl.clone());
+        self.proc_decls.insert(stable_name.clone(), proc_decl.clone());
+        self.proc_names.insert(name, stable_name);
         Ok(())
     }
 
@@ -1392,15 +1424,9 @@ impl Compiler {
     /// the procedure's root scope (slot == bare name == `IIRFunction` param),
     /// and so is the procedure's own name, which the body assigns to and we
     /// `ret` at the end.
-    fn compile_procedure(
-        &mut self,
-        proc_decl: &GrammarASTNode,
-    ) -> Result<IIRFunction, CompileError> {
-        self.compile_procedure_with_bindings(proc_decl, None, HashMap::new(), HashMap::new())
-    }
-
-    /// Lower a procedure body, optionally as a call-site-specialised sibling
-    /// whose name formals are backed by caller expressions.
+    /// `specialised_name` is either the declaration's stable lexical identity
+    /// or a call-site-specialised sibling whose name formals are backed by
+    /// caller expressions.
     fn compile_procedure_with_bindings(
         &mut self,
         proc_decl: &GrammarASTNode,
@@ -1796,11 +1822,7 @@ impl Compiler {
         // A formal procedure binding captures a direct source target. Standard
         // output procedures have no declared signature, so reuse their
         // statement-only lowering after resolving that target.
-        let target_source_name = self
-            .procedure_bindings
-            .get(&name)
-            .map(|binding| binding.source_name.clone())
-            .unwrap_or_else(|| name.clone());
+        let target_source_name = self.resolve_procedure_identity(&name);
         if self.try_emit_standard_output_stmt(&target_source_name, node)? {
             return Ok(());
         }
@@ -1914,11 +1936,7 @@ impl Compiler {
         // A formal procedure shadows any source procedure with the same
         // spelling. Its enclosing sibling already captured a direct source
         // target, so the ordinary call path can use that target's signature.
-        let target_source_name = self
-            .procedure_bindings
-            .get(&name)
-            .map(|binding| binding.source_name.clone())
-            .unwrap_or_else(|| name.clone());
+        let target_source_name = self.resolve_procedure_identity(&name);
 
         // ALGOL 60 §3.2.4 *standard functions* (`abs`, `sign`, `entier`, …) are
         // built into the language, not user-declared procedures, so they have no
@@ -2274,9 +2292,9 @@ impl Compiler {
         if let Some(binding) = self.procedure_bindings.get(&actual_name) {
             return Ok(binding.clone());
         }
-        if self.proc_sigs.contains_key(&actual_name) {
+        if let Some(stable_name) = self.proc_names.get(&actual_name) {
             return Ok(ProcedureBinding {
-                source_name: actual_name,
+                source_name: stable_name.clone(),
             });
         }
         if is_supported_standard_function(&actual_name)
@@ -2289,6 +2307,14 @@ impl Compiler {
         Err(CompileError::Type(format!(
             "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, supported standard function, or standard output procedure, got {actual_name:?}"
         )))
+    }
+
+    fn resolve_procedure_identity(&self, name: &str) -> String {
+        self.procedure_bindings
+            .get(name)
+            .map(|binding| binding.source_name.clone())
+            .or_else(|| self.proc_names.get(name).cloned())
+            .unwrap_or_else(|| name.to_string())
     }
 
     /// Freeze one name actual in its caller's lexical environment before a
@@ -6919,6 +6945,37 @@ mod tests {
         assert_eq!(calls.len(), 1, "store calls answer once");
         assert_eq!(calls[0].srcs.len(), 1, "zero-argument call has only callee");
         assert!(matches!(calls[0].srcs.first(), Some(Operand::Var(name)) if name == "answer"));
+    }
+
+    #[test]
+    fn nested_block_procedure_shadows_and_restores_outer_binding() {
+        let src = "begin integer result; \
+                   integer procedure choose; choose := 20; \
+                   result := choose(); \
+                   begin integer procedure choose; choose := 1; \
+                         result := result + choose() end; \
+                   result := result + choose() + 1 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "procedure_shadowing").expect("compiles");
+        assert!(module.get_function("choose").is_some());
+        assert!(module
+            .functions
+            .iter()
+            .any(|function| function.name.starts_with("__algol_procedure_choose_")));
+    }
+
+    #[test]
+    fn duplicate_procedure_in_same_block_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure pick; pick := 1; \
+                   integer procedure pick; pick := 2; pick() end",
+            "duplicate_procedure",
+        )
+        .expect_err("same-block procedure declarations must remain unique");
+        assert!(err
+            .to_string()
+            .contains("duplicate declaration for procedure"));
     }
 
     #[test]
