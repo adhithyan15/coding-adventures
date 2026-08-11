@@ -25,6 +25,7 @@ const load = (name: string) => {
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
+const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -229,6 +230,20 @@ describe("handwriting ductus", () => {
     expect(main[0].y).toBeGreaterThan(main.at(-1)!.y);
     expect(opposing[0].x).toBeGreaterThan(opposing.at(-1)!.x);
     expect(opposing[0].y).toBeGreaterThan(opposing.at(-1)!.y);
+  });
+
+  it("Hebrew ב joins its top and right side before the lifted baseline", () => {
+    expect(HEBREW_BET.script).toBe("hebrew");
+    expect(penLifts(HEBREW_BET)).toBe(1);
+    expect(HEBREW_BET.strokes).toHaveLength(2);
+    expect(HEBREW_BET.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_BET.strokes[0].segments[0].path;
+    const down = HEBREW_BET.strokes[0].segments[1].path;
+    const base = HEBREW_BET.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(down[0]).toEqual(top.at(-1));
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(base[0].x).toBeLessThan(base.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -843,6 +858,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ב", HEBREW_BET.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -888,6 +906,15 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hebrew Writing #1.*Alef and Beit.*01:33.0–01:35.8.*HebrewPod101/i);
     expect(src.variation).toMatch(
       /printed block Alef.*two handwritten variants.*descending main diagonal.*01:33.0–01:34.25.*lifts once.*opposing diagonal.*upper right.*crossing.*01:34.5–01:35.8.*styles vary.*X-like.*Noto Sans Hebrew.*two-stroke/i,
+    );
+  });
+
+  it("Hebrew ב traces its block-style body separately from the optional dagesh", () => {
+    const src = HEBREW_BET.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=JBVpQzvrJ4w");
+    expect(src.citation).toMatch(/Hebrew Writing #1.*Alef and Beit.*02:25.8–02:27.7.*HebrewPod101/i);
+    expect(src.variation).toMatch(
+      /two handwritten Bet styles.*second.*block-style.*top bar left-to-right.*right side.*without lifting.*02:25.8–02:26.7.*lifts once.*baseline left-to-right.*02:26.9–02:27.7.*dagesh.*02:27.9–02:28.2.*not part of the base ב glyph.*one-lift body.*Noto Sans Hebrew/i,
     );
   });
 

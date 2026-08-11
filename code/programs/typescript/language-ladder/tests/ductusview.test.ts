@@ -81,6 +81,8 @@ const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
+const HEBREW_BET = ductusFor("ב", "hebrew")!;
+const hebrewBetOutline = hebrewOutline("ב");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -768,6 +770,37 @@ describe("Hebrew א — two crossed handwritten runs fitted to the block outline
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_ALEF.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ב — its top and right side precede the lifted baseline", () => {
+  const steps = ductusSteps(HEBREW_BET);
+  const strip = ductusFilmstrip(HEBREW_BET, hebrewBetOutline);
+
+  it("shows the sourced three movements across two strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the right side without lifting",
+      "lift, then draw the baseline from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("keeps the joined top-and-right stroke over the Noto Sans Hebrew outline", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewBetOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_BET.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_BET.strokes[1], 1),
     );
   });
 });

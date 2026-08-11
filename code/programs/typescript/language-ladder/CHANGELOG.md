@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Bet ductus (HL-C09BE)
+
+- Render **ב** in three evidence-aligned frames: draw the top bar into the right
+  descent without lifting, then restart once for the left-to-right baseline.
+- Keep the optional dagesh outside base U+05D1's one-lift count while fitting
+  the source's block-style handwriting to the vendored Noto Sans Hebrew outline.
+- Queue the series' dedicated Gimel/Dalet lesson as the next source-recovery
+  tranche.
+
 ### Added — cited Hebrew Alef ductus (HL-C09BD)
 
 - Render **א** in three evidence-aligned frames: draw the main descending
