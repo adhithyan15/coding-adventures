@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- EOF reached while table structure or foster parenting remains active now
+  reports the dedicated in-table parse error instead of the broader unclosed
+  elements diagnostic.
 - `center` end tags processed while table foster parenting is active now
   report the required in-table parse error while preserving non-current end-tag
   recovery and DOM placement.
