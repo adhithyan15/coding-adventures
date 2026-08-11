@@ -401,12 +401,16 @@ struct Compiler {
     /// reuse a sibling whose captured binding map matches exactly. Changed
     /// scalar expressions still need an environment-aware thunk ABI.
     compiling_by_name_procedures: HashMap<String, Vec<InFlightByNameSpecialization>>,
-    /// Switch name → its ordered designational expressions. A `goto s[i]`
-    /// evaluates the selected expression at run time, which permits both
-    /// conditional and nested switch-list elements.
+    /// Stable switch identity -> its ordered designational expressions. A
+    /// `goto s[i]` evaluates the selected expression at run time, which permits
+    /// both conditional and nested switch-list elements.
     switches: HashMap<String, Vec<GrammarASTNode>>,
-    /// Switch names declared in each lexical block. `switches` is the flattened
-    /// nearest-binding view; this stack distinguishes legal inner shadowing
+    /// Source switch name -> stable identity for the nearest lexical block.
+    /// Pre-registration preserves forward references and lets stored switch
+    /// lists retain their declaration-time bindings across later shadowing.
+    switch_names: HashMap<String, String>,
+    /// Switch names declared in each lexical block. `switch_names` is the
+    /// flattened nearest-binding view; this stack distinguishes legal shadowing
     /// from a duplicate declaration in the same block.
     switch_scope_names: Vec<HashSet<String>>,
     /// Switches being expanded into the current linear dispatch chain. The
@@ -454,6 +458,7 @@ impl Default for Compiler {
             by_name_capture_counter: 0,
             compiling_by_name_procedures: HashMap::new(),
             switches: HashMap::new(),
+            switch_names: HashMap::new(),
             switch_scope_names: vec![HashSet::new()],
             resolving_switches: HashSet::new(),
             switch_expansion_steps: 0,
@@ -543,6 +548,7 @@ impl Compiler {
         self.set_loc(node);
 
         let saved_switches = (!is_root).then(|| self.switches.clone());
+        let saved_switch_names = (!is_root).then(|| self.switch_names.clone());
         let saved_labels = (!is_root).then(|| self.labels.clone());
         if !is_root {
             self.push_scope();
@@ -554,6 +560,7 @@ impl Compiler {
         // declaration, including from a switch list. Register every label in
         // this block while deliberately stopping at nested block boundaries.
         self.register_block_labels(node)?;
+        self.register_block_switch_names(node)?;
 
         // Pass 0 — register every procedure's signature *before* lowering any
         // body.  ALGOL allows a call to appear ahead of the textual
@@ -607,6 +614,8 @@ impl Compiler {
             self.pop_scope();
             self.switch_scope_names.pop();
             self.switches = saved_switches.expect("nested block saves switch bindings");
+            self.switch_names =
+                saved_switch_names.expect("nested block saves switch name bindings");
             self.label_scope_names.pop();
             self.labels = saved_labels.expect("nested block saves label bindings");
         }
@@ -1415,6 +1424,7 @@ impl Compiler {
         let saved_label_scope_names =
             std::mem::replace(&mut self.label_scope_names, vec![HashSet::new()]);
         let saved_switches = std::mem::take(&mut self.switches);
+        let saved_switch_names = std::mem::take(&mut self.switch_names);
         let saved_switch_scope_names =
             std::mem::replace(&mut self.switch_scope_names, vec![HashSet::new()]);
         let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
@@ -1653,6 +1663,7 @@ impl Compiler {
         self.labels = saved_labels;
         self.label_scope_names = saved_label_scope_names;
         self.switches = saved_switches;
+        self.switch_names = saved_switch_names;
         self.switch_scope_names = saved_switch_scope_names;
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
@@ -3422,16 +3433,24 @@ impl Compiler {
         let tokens = direct_tokens(simple);
         // simple_desig = NAME LBRACKET arith_expr RBRACKET   (switch subscript)
         if tokens.iter().any(|t| t.effective_type_name() == "LBRACKET") {
-            let name = tokens
+            let source_name = tokens
                 .iter()
                 .find(|t| t.effective_type_name() == "NAME")
                 .map(|t| t.value.clone())
                 .ok_or_else(|| CompileError::Malformed("switch subscript missing name".into()))?;
+            let name = if source_name.starts_with("__algol_switch_") {
+                source_name.clone()
+            } else {
+                self.switch_names
+                    .get(&source_name)
+                    .cloned()
+                    .unwrap_or_else(|| source_name.clone())
+            };
             let index_node = first_direct_node(simple, "arith_expr").ok_or_else(|| {
                 CompileError::Malformed("switch subscript missing index".into())
             })?;
             let targets = self.switches.get(&name).cloned().ok_or_else(|| {
-                CompileError::Type(format!("goto uses undeclared switch {name:?}"))
+                CompileError::Type(format!("goto uses undeclared switch {source_name:?}"))
             })?;
             let index = self.emit_expr(index_node)?;
             if index.ty != ScalarType::Integer {
@@ -3452,7 +3471,7 @@ impl Compiler {
             }
             if !self.resolving_switches.insert(name.clone()) {
                 return Err(CompileError::Type(format!(
-                    "cyclic switch-list element involving {name:?}"
+                    "cyclic switch-list element involving {source_name:?}"
                 )));
             }
             let result = (|| {
@@ -3519,11 +3538,16 @@ impl Compiler {
     /// run-time conditional and nested-switch semantics.
     fn register_switch(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        let name = direct_tokens(node)
+        let source_name = direct_tokens(node)
             .into_iter()
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("switch_decl missing name".into()))?;
+        let name = self.switch_names.get(&source_name).cloned().ok_or_else(|| {
+            CompileError::Malformed(format!(
+                "switch {source_name:?} was not registered in its block"
+            ))
+        })?;
         let switch_list = first_direct_node(node, "switch_list")
             .ok_or_else(|| CompileError::Malformed("switch_decl missing switch_list".into()))?;
 
@@ -3535,19 +3559,42 @@ impl Compiler {
         if targets.is_empty() {
             return Err(CompileError::Malformed("switch has no targets".into()));
         }
-        let current_scope = self
-            .switch_scope_names
-            .last_mut()
-            .expect("compiler always has a switch scope");
-        if !current_scope.insert(name.clone()) {
-            return Err(CompileError::Type(format!(
-                "duplicate declaration for switch {name:?}"
-            )));
-        }
         for target in &mut targets {
             bind_designator_labels(target, &self.labels);
+            bind_designator_switches(target, &self.switch_names);
         }
         self.switches.insert(name, targets);
+        Ok(())
+    }
+
+    fn register_block_switch_names(
+        &mut self,
+        block: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        for declaration in direct_nodes(block)
+            .into_iter()
+            .filter(|node| node.rule_name == "declaration")
+        {
+            let Some(switch_decl) = first_direct_node(declaration, "switch_decl") else {
+                continue;
+            };
+            let source_name = direct_tokens(switch_decl)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+                .ok_or_else(|| CompileError::Malformed("switch_decl missing name".into()))?;
+            let current_scope = self
+                .switch_scope_names
+                .last_mut()
+                .expect("compiler always has a switch scope");
+            if !current_scope.insert(source_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate declaration for switch {source_name:?}"
+                )));
+            }
+            let stable_name = self.fresh_label("switch_binding");
+            self.switch_names.insert(source_name, stable_name);
+        }
         Ok(())
     }
 
@@ -5366,6 +5413,32 @@ fn bind_designator_labels(node: &mut GrammarASTNode, labels: &HashMap<String, St
     for child in &mut node.children {
         if let ASTNodeOrToken::Node(node) = child {
             bind_designator_labels(node, labels);
+        }
+    }
+}
+
+/// Freeze nested switch references in a stored designator to the stable switch
+/// identity visible where the containing switch was declared.
+fn bind_designator_switches(node: &mut GrammarASTNode, switches: &HashMap<String, String>) {
+    if node.rule_name == "simple_desig"
+        && node.children.iter().any(|child| {
+            matches!(child, ASTNodeOrToken::Token(token) if token.effective_type_name() == "LBRACKET")
+        })
+    {
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Token(token) = child {
+                if token.effective_type_name() == "NAME" {
+                    if let Some(stable_name) = switches.get(&token.value) {
+                        token.value = stable_name.clone();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    for child in &mut node.children {
+        if let ASTNodeOrToken::Node(node) = child {
+            bind_designator_switches(node, switches);
         }
     }
 }
@@ -8411,6 +8484,17 @@ mod tests {
                    begin integer marker; marker := 0; goto s[1]; \
                          target: result := 1 + marker; goto done end; \
                    target: result := 42; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_switch_binding_is_frozen_at_declaration() {
+        let src = "begin integer result; switch root := leaf[1]; \
+                   switch leaf := outertarget; \
+                   begin integer marker; switch leaf := innertarget; \
+                         marker := 0; goto root[1]; \
+                         innertarget: result := 1 + marker; goto done end; \
+                   outertarget: result := 42; done: end";
         assert_eq!(run_i64(src), 42);
     }
 
