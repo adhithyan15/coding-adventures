@@ -1033,6 +1033,7 @@ impl Compiler {
                     vec![Operand::Var(span), Operand::Var(one)],
                     "i64",
                 ));
+                self.emit_positive_array_extent_guard(&size);
                 lower_slots.push(lower.slot);
                 size_slots.push(size);
             }
@@ -1049,14 +1050,7 @@ impl Compiler {
                 // stride[d] = size[d+1] * running  (running starts as 1 = None)
                 let s_next = &size_slots[d + 1];
                 let stride_d = if let Some(prev) = running {
-                    let prod = self.fresh_temp();
-                    self.emit(IIRInstr::new(
-                        "mul",
-                        Some(prod.clone()),
-                        vec![Operand::Var(s_next.clone()), Operand::Var(prev)],
-                        "i64",
-                    ));
-                    prod
+                    self.emit_checked_array_extent_product(s_next, &prev)
                 } else {
                     // stride = size[d+1] * 1 = size[d+1]
                     s_next.clone()
@@ -1073,14 +1067,7 @@ impl Compiler {
                 let stride_0 = stride_slots[0]
                     .clone()
                     .expect("non-last dimension always has a stride slot");
-                let total = self.fresh_temp();
-                self.emit(IIRInstr::new(
-                    "mul",
-                    Some(total.clone()),
-                    vec![Operand::Var(size_slots[0].clone()), Operand::Var(stride_0)],
-                    "i64",
-                ));
-                total
+                self.emit_checked_array_extent_product(&size_slots[0], &stride_0)
             };
 
             // Build the per-dimension descriptor.
@@ -1155,6 +1142,87 @@ impl Compiler {
             }
         }
         Ok(())
+    }
+
+    /// Require a run-time array extent to be positive. This catches reversed
+    /// bounds and `upper - lower + 1` overflow before stride arithmetic or an
+    /// allocation can consume the invalid value.
+    fn emit_positive_array_extent_guard(&mut self, size: &str) {
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let positive = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_gt",
+            Some(positive.clone()),
+            vec![Operand::Var(size.to_string()), Operand::Var(zero)],
+            "i64",
+        ));
+        self.emit_guard_or_array_trap(positive, "array_extent_valid");
+    }
+
+    /// Multiply two already-positive extents and reject signed `i64` overflow.
+    /// Dividing the wrapped product by either positive factor can equal the
+    /// other factor only when the multiplication was representable.
+    fn emit_checked_array_extent_product(&mut self, lhs: &str, rhs: &str) -> String {
+        let product = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "mul",
+            Some(product.clone()),
+            vec![Operand::Var(lhs.to_string()), Operand::Var(rhs.to_string())],
+            "i64",
+        ));
+        let recovered = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "div",
+            Some(recovered.clone()),
+            vec![Operand::Var(product.clone()), Operand::Var(rhs.to_string())],
+            "i64",
+        ));
+        let exact = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_eq",
+            Some(exact.clone()),
+            vec![Operand::Var(recovered), Operand::Var(lhs.to_string())],
+            "i64",
+        ));
+        self.emit_guard_or_array_trap(exact, "array_extent_product_valid");
+        product
+    }
+
+    /// Branch to a portable fail-closed path when `condition` is false. IIR has
+    /// no generic trap instruction, so the invalid arm deliberately reads index
+    /// zero from a zero-length array and reuses every backend's bounds trap.
+    fn emit_guard_or_array_trap(&mut self, condition: String, valid_stem: &str) {
+        let invalid_label = self.fresh_label("array_declaration_invalid");
+        let valid_label = self.fresh_label(valid_stem);
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(condition), Operand::Var(invalid_label.clone())],
+            "void",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(valid_label.clone())],
+            "void",
+        ));
+        self.emit_label(&invalid_label);
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let trap_array = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "alloc_array",
+            Some(trap_array.clone()),
+            vec![Operand::Var(zero.clone())],
+            "array<i64>",
+        ));
+        let ignored = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_get",
+            Some(ignored),
+            vec![Operand::Var(trap_array), Operand::Var(zero)],
+            "i64",
+        ));
+        self.emit_label(&valid_label);
     }
 
     /// Resolve a subscripted `variable` node `A[i]` (or `A[i, j]`, etc.) to
@@ -9692,6 +9760,51 @@ mod tests {
                    M[0-2, 0] := 40; M[0-1, 1] := 2; \
                    result := M[0-2, 0] + M[0-1, 1] end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn reversed_array_bounds_trap_before_allocation() {
+        let err = execute_source(
+            "begin integer lower, upper; lower := 2; upper := 1; \
+             begin integer array A[lower:upper]; integer result; result := 42 end end",
+            "test",
+        )
+        .expect_err("a reversed run-time bound must trap");
+        assert!(matches!(err, CompileError::Runtime(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn overflowing_array_extent_emits_fail_closed_guard() {
+        let module = compile_source(
+            "begin integer array A[0:9223372036854775807]; integer result; \
+             result := 42 end",
+            "test",
+        )
+        .expect("overflowing extent still lowers to a guarded run-time path");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions
+                .iter()
+                .any(|instr| instr.op == "cmp_gt" && instr.type_hint == "i64"),
+            "the wrapped extent must be required to remain positive"
+        );
+    }
+
+    #[test]
+    fn multidimensional_product_emits_overflow_guard() {
+        let module = compile_source(
+            "begin integer array A[1:3037000500, 1:3037000500]; integer result; \
+             result := 42 end",
+            "test",
+        )
+        .expect("overflowing product still lowers to a guarded run-time path");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions
+                .windows(2)
+                .any(|pair| pair[0].op == "div" && pair[1].op == "cmp_eq"),
+            "the row-major product must be divided back and compared"
+        );
     }
 
     /// Wrong number of subscripts for a 2-D array is a type error.
