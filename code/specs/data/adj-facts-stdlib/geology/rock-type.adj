@@ -1,0 +1,59 @@
+% ============================================================================
+% rock-type — each of the three basic rock types and the process by which it
+% forms (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% A TWELFTH science slice, and a genuinely new axis from the already-shipped
+% `geology/earth-layers.adj` (Earth's internal layers -> physical state) and
+% `geology/mineral-hardness.adj` (Mohs reference mineral -> hardness number)
+% — this table names the three basic classes geologists sort ALL rocks into,
+% and HOW each class forms:
+% `rock_type(rock, formation_process)`. Recall is a binding query:
+%
+%     ? rock_type(igneous, $Process)   % crystallized_molten_rock
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `rock_type(rock, formation_process)`, so the lookup above is the ordinary
+% SLD binding query — the engine returns the formation process WITH its
+% source, on the CPU, with zero model calls, and abstains on a word not one
+% of the three the cited pages name (e.g. "coal", "marble" — real rocks, but
+% not one of the three ROCK-TYPE classes this table indexes). The query also
+% runs BACKWARD — bind a formation process and recall the rock type it
+% describes:
+%
+%     ? rock_type($R, heat_and_pressure_transformation)   % metamorphic
+%
+% UNLIKE `earth-layers.adj` (four rows sharing ONE USGS publication), this
+% table's three rows each have a DIFFERENT USGS FAQ page — the ADJ table
+% grammar carries only ONE table-level `source`/`locator`/`trust` block, so
+% per this stdlib's established discipline (`ocean-observing-instruments.adj`,
+% `fable-moral.adj`), the table's own citation is the PRIMARY/first-listed
+% source below, and each OTHER row's own distinct citation is documented here
+% in prose:
+%
+%     rock          formation_process                    source page                                      quote
+%     -----------   ----------------------------------   ----------------------------------------------   -----------------------------------------------------------------------------
+%     igneous       crystallized_molten_rock              usgs.gov/faqs/what-are-igneous-rocks              "Igneous rocks (from the Latin word for fire) form when hot, molten rock crystallizes and solidifies."
+%     sedimentary   deposited_weathered_material           usgs.gov/faqs/what-are-sedimentary-rocks          "Sedimentary rocks are formed from pre-existing rocks or pieces of once-living organisms."
+%     metamorphic   heat_and_pressure_transformation       usgs.gov/faqs/what-are-metamorphic-rocks          "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors."
+%
+% All three citations WebFetch-verified before writing. `trust authoritative`
+% for all three — every row's own source page is a primary U.S. government
+% (USGS, .gov) source, the same tier `earth-layers.adj`'s and
+% `mineral-hardness.adj`'s USGS/NPS sources earned. A rock not one of these
+% three classes — "coal", "marble", "granite" (a specific igneous rock, not
+% the class itself) — has no row, so a recall on it ABSTAINS rather than
+% inventing a formation process. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table rock_type {
+    columns rock, formation_process
+
+    row (igneous, crystallized_molten_rock)
+    row (sedimentary, deposited_weathered_material)
+    row (metamorphic, heat_and_pressure_transformation)
+
+    source "Igneous rocks (from the Latin word for fire) form when hot, molten rock crystallizes and solidifies."
+    locator "https://www.usgs.gov/faqs/what-are-igneous-rocks"
+    trust authoritative
+}
