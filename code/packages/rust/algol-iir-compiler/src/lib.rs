@@ -2322,7 +2322,8 @@ impl Compiler {
     /// Evaluate deterministic real standard-function calls inside the static
     /// arithmetic tree. User declarations still shadow the built-ins, and
     /// `sqrt` is accepted only when the host operation round-trips exactly to
-    /// its finite literal-only operand.
+    /// its finite literal-only operand. Transcendental functions are limited
+    /// to canonical inputs whose Report-defined result is exactly zero or one.
     fn static_standard_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
         if node.rule_name != "proc_call" {
             return None;
@@ -2347,6 +2348,9 @@ impl Compiler {
                 let root = operand.sqrt();
                 (root * root == operand).then_some(root)?
             }
+            "sin" | "arctan" if operand == 0.0 => 0.0,
+            "cos" | "exp" if operand == 0.0 => 1.0,
+            "ln" if operand == 1.0 => 0.0,
             _ => return None,
         };
         value.is_finite().then_some(value)
@@ -7468,6 +7472,46 @@ mod tests {
         )
         .expect_err("a conditional user-defined abs result still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_canonical_static_real_standard_functions() {
+        let module = compile_source(
+            "begin print(sin(0.0), cos(0.0), ln(1.0), exp(0.0), arctan(0.0)) end",
+            "test",
+        )
+        .expect("canonical static real standard functions compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0", "1", "0", "1", "0"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(
+                instr.op.as_str(),
+                "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" | "f64_atan"
+            )
+        }));
+    }
+
+    #[test]
+    fn al4_print_noncanonical_static_real_standard_functions_still_reject() {
+        for source in [
+            "begin print(sin(1.0)) end",
+            "begin print(cos(1.0)) end",
+            "begin print(ln(2.0)) end",
+            "begin print(exp(1.0)) end",
+            "begin print(arctan(1.0)) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("noncanonical transcendental output requires runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
