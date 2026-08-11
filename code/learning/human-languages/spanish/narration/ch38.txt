@@ -96,7 +96,7 @@ Warm-up.
 [pause 2 seconds]
 This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart.
 
-Grammar Lens: the complete Chapter 14 frame.
+Grammar Lens: the complete frame for this chapter.
 shared past of ser and ir: fui, fuiste, fue.
 regular past of hablar: hablé, hablaste, habló.
 context: Fui a Madrid expresses ir; Fue Roberto expresses ser.
@@ -130,4 +130,4 @@ Which two of hablé, hablaste, habló carry written accents?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.
+Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.

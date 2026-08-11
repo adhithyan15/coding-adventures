@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Hacer, Decir, and the -go Verb Club",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fdb57f08606b9b39",
+  "sourceHash": "fnv1a64:04723ef9c8a3fd3a",
   "lessons": [
     {
       "id": "ES-C12-hacer",
@@ -624,7 +624,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:556f71fc1d442f26",
+      "sourceHash": "fnv1a64:50996b7bed17d3da",
       "notice": null,
       "blocks": [
         {
@@ -860,7 +860,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) Chapter 13 may now introduce its own verbs one at a time."
+              "text": "Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) The next chapter may now introduce its own verbs one at a time."
             }
           ]
         }

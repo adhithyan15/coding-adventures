@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Going, and the Future You Can Already Say",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0670cc7afd70ef25",
+  "sourceHash": "fnv1a64:5d24ae9bdcde4fac",
   "lessons": [
     {
       "id": "ES-C10-ir",
@@ -573,7 +573,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcb76c22f31c09fa",
+      "sourceHash": "fnv1a64:d652b730646069de",
       "notice": null,
       "blocks": [
         {
@@ -780,7 +780,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier."
+              "text": "Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) The next chapter can now extend the grammar from this small, closed frontier."
             }
           ]
         }

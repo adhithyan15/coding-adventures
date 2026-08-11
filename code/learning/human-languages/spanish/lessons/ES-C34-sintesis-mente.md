@@ -33,13 +33,13 @@ reviews_of: [ES-C34-repaso-mente, ES-C34-entender, ES-R01-no-entiendo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-ENTIENDO-01] -->
 
-[PAUSE 2s] Say the sentence you learned in chapter 14, the one that rescues a
+[PAUSE 2s] Say the sentence you learned in the repair kit, the one that rescues a
 conversation. (*No entiendo.*)
 
 ## Grammar Lens: the formula was a verb all along
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-ENTIENDO-01, ES-LEX-ENTENDER-03, ES-ETYMON-ENTENDER-04] -->
 
-You have been saying **no entiendo** since chapter 14, and until four chapters
+You have been saying **no entiendo** since the repair kit, and until four chapters
 ago it was a single frozen block — two sounds that meant *I'm lost*, with no
 moving parts.
 
@@ -57,7 +57,7 @@ only thing you can say and becomes one option among several.
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-ENTIENDO-01, ES-LEX-MAS-DESPACIO-01, ES-LEX-LEER-05, ES-LEX-POR-FAVOR, ES-LEX-GRACIAS] -->
 
-Chapter 14, all you could do:
+Back in the repair kit, all you could do:
 
 > — No entiendo. Más despacio, por favor.
 
@@ -84,7 +84,7 @@ language: what you take in, what you work on, what lands, what you can produce.
 
 [PAUSE 1s]
 
-- [YOU SAY: the chapter 14 version — the distress signal on its own]
+- [YOU SAY: the repair-kit version — the distress signal on its own]
 - [YOU SAY: the version above, where you say what *does* work before what doesn't]
 
 [REPEAT x2] Run the second one until it sounds like a person, not a repair kit.
@@ -94,5 +94,5 @@ language: what you take in, what you work on, what lands, what you can produce.
 
 [PAUSE 3s] Which verb was hiding inside *no entiendo*? (*Entender*.) What did
 it physically mean? (**To stretch toward**.) What can you say now that you
-could not say in chapter 14? (Not just that you are lost — **which part** is
+could not say back then? (Not just that you are lost — **which part** is
 lost.)

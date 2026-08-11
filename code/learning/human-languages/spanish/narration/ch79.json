@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Saying Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:27d949b3fb8ed49d",
+  "sourceHash": "fnv1a64:eed5dce6c62732df",
   "lessons": [
     {
       "id": "ES-C41-creer",
@@ -586,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:658b04cd3fcfdcf0",
+      "sourceHash": "fnv1a64:5b50a88c8bb21448",
       "notice": null,
       "blocks": [
         {
@@ -661,7 +661,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Explicar is regular — it takes the plain -ar endings of hablar, with no stem change at all: explico, explicas, explica, explicamos, explican. (Contar, back in chapter 38, breaks its o to ue; this one does not, and there is nothing to remember.)"
+              "text": "Explicar is regular — it takes the plain -ar endings of hablar, with no stem change at all: explico, explicas, explica, explicamos, explican. (Contar, which you met earlier, breaks its o to ue; this one does not, and there is nothing to remember.)"
             },
             {
               "kind": "speech",

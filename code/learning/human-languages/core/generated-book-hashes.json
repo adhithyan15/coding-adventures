@@ -3317,7 +3317,7 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:a6704926060c01de",
+      "sourceHash": "fnv1a64:b1b9b4c912793b0f",
       "lessonIds": [
         "ES-C19-si",
         "ES-C19-no",
@@ -3330,7 +3330,7 @@
     {
       "language": "spanish",
       "chapter": 7,
-      "sourceHash": "fnv1a64:146ef064cf8f3d1e",
+      "sourceHash": "fnv1a64:4dda02be4b54cfc5",
       "lessonIds": [
         "ES-C04-estar",
         "ES-C04-estar-estado",
@@ -3342,7 +3342,7 @@
     {
       "language": "spanish",
       "chapter": 8,
-      "sourceHash": "fnv1a64:e0f4eedfc0bb6d71",
+      "sourceHash": "fnv1a64:51295931c886ea80",
       "lessonIds": [
         "ES-C04-como-estas-register",
         "ES-C04-regular",
@@ -3365,7 +3365,7 @@
     {
       "language": "spanish",
       "chapter": 10,
-      "sourceHash": "fnv1a64:a76d08071af62184",
+      "sourceHash": "fnv1a64:f1570dd6e0654201",
       "lessonIds": [
         "ES-W02-enye",
         "ES-W02-enye-formas",
@@ -3378,7 +3378,7 @@
     {
       "language": "spanish",
       "chapter": 11,
-      "sourceHash": "fnv1a64:6e63b6074eec3b46",
+      "sourceHash": "fnv1a64:3e186619261f2548",
       "lessonIds": [
         "ES-C05-adios",
         "ES-C05-hasta",
@@ -3564,7 +3564,7 @@
     {
       "language": "spanish",
       "chapter": 29,
-      "sourceHash": "fnv1a64:7deb9381d5597593",
+      "sourceHash": "fnv1a64:68c2346bdd3e14cb",
       "lessonIds": [
         "ES-C09-ser",
         "ES-C09-ser-vs-estar",
@@ -3577,7 +3577,7 @@
     {
       "language": "spanish",
       "chapter": 30,
-      "sourceHash": "fnv1a64:b3fb79324af5b4ac",
+      "sourceHash": "fnv1a64:bb01ace8196368ee",
       "lessonIds": [
         "ES-C10-ir",
         "ES-C10-ir-a-futuro",
@@ -3589,7 +3589,7 @@
     {
       "language": "spanish",
       "chapter": 31,
-      "sourceHash": "fnv1a64:f3bbf978e6d6ac7d",
+      "sourceHash": "fnv1a64:7280d68ca170132a",
       "lessonIds": [
         "ES-C11-querer",
         "ES-C11-poder",
@@ -3602,7 +3602,7 @@
     {
       "language": "spanish",
       "chapter": 32,
-      "sourceHash": "fnv1a64:a832f3dae3605c0f",
+      "sourceHash": "fnv1a64:1f5093562bf18465",
       "lessonIds": [
         "ES-C12-hacer",
         "ES-C12-decir",
@@ -3641,7 +3641,7 @@
     {
       "language": "spanish",
       "chapter": 36,
-      "sourceHash": "fnv1a64:d0b1f9af3bcfea08",
+      "sourceHash": "fnv1a64:ba84cc3cbe2194a8",
       "lessonIds": [
         "ES-C13-repaso-yo-go",
         "ES-C13-practice"
@@ -3660,7 +3660,7 @@
     {
       "language": "spanish",
       "chapter": 38,
-      "sourceHash": "fnv1a64:5b18dcddc21b0a78",
+      "sourceHash": "fnv1a64:362d23894d96e05b",
       "lessonIds": [
         "ES-C14-ser-ir-preterite",
         "ES-C14-hablar-preterite",
@@ -3671,7 +3671,7 @@
     {
       "language": "spanish",
       "chapter": 39,
-      "sourceHash": "fnv1a64:dd63489fdc76c9d2",
+      "sourceHash": "fnv1a64:f7515d49438d0331",
       "lessonIds": [
         "ES-C15-comer-preterite",
         "ES-C15-comer-vivir-preterite",
@@ -3685,7 +3685,7 @@
     {
       "language": "spanish",
       "chapter": 40,
-      "sourceHash": "fnv1a64:0203d7d1742169df",
+      "sourceHash": "fnv1a64:9b9fcca63029b256",
       "lessonIds": [
         "ES-C16-imperfecto",
         "ES-C16-comer-imperfecto",
@@ -3701,7 +3701,7 @@
     {
       "language": "spanish",
       "chapter": 41,
-      "sourceHash": "fnv1a64:0a118fa1e9d1c208",
+      "sourceHash": "fnv1a64:4d8c3de0581863b7",
       "lessonIds": [
         "ES-C17-futuro",
         "ES-C17-comer-futuro",
@@ -3777,7 +3777,7 @@
     {
       "language": "spanish",
       "chapter": 47,
-      "sourceHash": "fnv1a64:470c1db6904f0049",
+      "sourceHash": "fnv1a64:ba6bc6b7ad89e93f",
       "lessonIds": [
         "ES-C24-cabeza",
         "ES-C24-mano"
@@ -3886,7 +3886,7 @@
     {
       "language": "spanish",
       "chapter": 58,
-      "sourceHash": "fnv1a64:1e610acfc140bf7f",
+      "sourceHash": "fnv1a64:e6c6ff0348126a69",
       "lessonIds": [
         "ES-C34-entender"
       ],
@@ -3922,7 +3922,7 @@
     {
       "language": "spanish",
       "chapter": 62,
-      "sourceHash": "fnv1a64:57a9964f3a7b981b",
+      "sourceHash": "fnv1a64:34caeb8e1c9dde97",
       "lessonIds": [
         "ES-C34-sintesis-mente"
       ],
@@ -3976,7 +3976,7 @@
     {
       "language": "spanish",
       "chapter": 68,
-      "sourceHash": "fnv1a64:c28804415e9deba2",
+      "sourceHash": "fnv1a64:dbdf9774f72b2295",
       "lessonIds": [
         "ES-C35-sintesis-gustar"
       ],
@@ -4086,7 +4086,7 @@
     {
       "language": "spanish",
       "chapter": 79,
-      "sourceHash": "fnv1a64:ec86b87ab3aba2f6",
+      "sourceHash": "fnv1a64:833fdc865f173a8e",
       "lessonIds": [
         "ES-C41-creer",
         "ES-C41-asi-que",

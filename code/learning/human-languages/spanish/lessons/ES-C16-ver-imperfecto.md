@@ -74,4 +74,4 @@ one letter.”
 
 [PAUSE 3s] Give the three learned forms. (*Veía, veías, veía.*) Which vowel
 stays before **-ía**? (**e**.) Which earlier form displays it? (**Veer**.) Next:
-retrieve every Chapter 16 row and make a few bounded contrasts.
+retrieve every row of this chapter and make a few bounded contrasts.

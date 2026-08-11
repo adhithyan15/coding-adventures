@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Verbs That Break in the Middle --- the Stem Changers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2313769ea9daf091",
+  "sourceHash": "fnv1a64:b0bb1915de7e5eba",
   "lessons": [
     {
       "id": "ES-C11-querer",
@@ -796,7 +796,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d42ec93a0571daa4",
+      "sourceHash": "fnv1a64:1b801b9c6e5f8650",
       "notice": null,
       "blocks": [
         {
@@ -1019,7 +1019,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) Chapter 12 can now build from this closed singular frontier."
+              "text": "Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) The next chapter can now build from this closed singular frontier."
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Synthesis --- What You Understand, and What You Don't",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e33254dbb3ffc3a",
+  "sourceHash": "fnv1a64:08aa109c0ecaf086",
   "lessons": [
     {
       "id": "ES-C34-sintesis-mente",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03a61f2148f98ead",
+      "sourceHash": "fnv1a64:fb4fb8df6d755635",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the sentence you learned in chapter 14, the one that rescues a conversation. (No entiendo.)"
+              "text": "Say the sentence you learned in the repair kit, the one that rescues a conversation. (No entiendo.)"
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You have been saying no entiendo since chapter 14, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
+              "text": "You have been saying no entiendo since the repair kit, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
             },
             {
               "kind": "speech",
@@ -73,7 +73,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 14, all you could do:"
+              "text": "Back in the repair kit, all you could do:"
             },
             {
               "kind": "speech",
@@ -118,11 +118,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the chapter 14 version — the distress signal on its own",
+              "instruction": "the repair-kit version — the distress signal on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the chapter 14 version — the distress signal on its own]"
+              "source": "[YOU SAY: the repair-kit version — the distress signal on its own]"
             },
             {
               "kind": "prompt",
@@ -197,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say in chapter 14? (Not just that you are lost — which part is lost.)"
+              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say back then? (Not just that you are lost — which part is lost.)"
             }
           ]
         }

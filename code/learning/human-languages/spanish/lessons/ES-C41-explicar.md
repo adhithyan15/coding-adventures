@@ -68,7 +68,7 @@ and Spanish keeps it in the plainest verb of the set.
 
 *Explicar* is regular — it takes the plain *-ar* endings of *hablar*, with no
 stem change at all: **explico**, **explicas**, **explica**, **explicamos**,
-**explican**. (*Contar*, back in chapter 38, breaks its *o* to *ue*; this one does
+**explican**. (*Contar*, which you met earlier, breaks its *o* to *ue*; this one does
 not, and there is nothing to remember.)
 
 Here is a whole explanation, with every piece something this book has taught:

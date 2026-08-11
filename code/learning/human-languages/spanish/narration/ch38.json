@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Preterite --- Your First Past Tense",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ade5980932a35e99",
+  "sourceHash": "fnv1a64:28f5ad20fb6f4add",
   "lessons": [
     {
       "id": "ES-C14-ser-ir-preterite",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11c185457ba12709",
+      "sourceHash": "fnv1a64:7ee52848d1c91d7d",
       "notice": null,
       "blocks": [
         {
@@ -468,7 +468,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete Chapter 14 frame",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
@@ -674,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
+              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
             }
           ]
         }

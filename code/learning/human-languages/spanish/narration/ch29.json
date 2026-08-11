@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Ser and Estar --- Two Ways to Be",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4346de6e95fb8340",
+  "sourceHash": "fnv1a64:4f7ac3681005b332",
   "lessons": [
     {
       "id": "ES-C09-ser",
@@ -578,7 +578,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3ef44cb556b9c5b",
+      "sourceHash": "fnv1a64:c1a08368f12bfd85",
       "notice": null,
       "blocks": [
         {
@@ -594,7 +594,7 @@
             },
             {
               "kind": "speech",
-              "text": "In Chapter 7, ¿Dónde vives? — Vivo en Madrid asked about where someone lives. Now use the same dónde and en with estar to ask about a current location."
+              "text": "You have already asked ¿Dónde vives? — Vivo en Madrid about where someone lives. Now use the same dónde and en with estar to ask about a current location."
             }
           ]
         },

@@ -72,5 +72,5 @@ Plural person forms of *ir* and possessives before plural nouns remain deferred.
 
 [PAUSE 3s] Give the singular *ir* set. (*Voy, vas, va.*) Build “You are going
 to eat” for one friend. (*Vas a comer.*) Say “my coffee” and formal “your
-coffee.” (*Mi café; su café.*) Chapter 11 can now extend the grammar from this
+coffee.” (*Mi café; su café.*) The next chapter can now extend the grammar from this
 small, closed frontier.

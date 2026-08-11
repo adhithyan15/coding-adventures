@@ -35,7 +35,7 @@ reviews_of: [ES-C14-ser-ir-preterite, ES-C14-hablar-preterite, ES-C13-practice]
 [PAUSE 2s] This checkpoint adds nothing. Retrieve the shared singular set and
 the regular **hablar** set, then use context and spelling to keep them apart.
 
-## Grammar Lens: the complete Chapter 14 frame
+## Grammar Lens: the complete frame for this chapter
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-FUI-SER-IR, ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-LEX-A, ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL] -->
 
 - shared past of **ser** and **ir**: **fui · fuiste · fue**.
@@ -76,5 +76,5 @@ first-conjugation perfect material, reshaped by sound change and analogy.
 [PAUSE 3s] Give both singular sets. (*Fui, fuiste, fue; hablé, hablaste,
 habló.*) How does context separate **ser** from **ir**? (A destination points to
 going; identification points to being.) Which regular forms carry written
-accents? (*Hablé* and *habló*.) Chapter 15 can add another past family without
+accents? (*Hablé* and *habló*.) The next chapter can add another past family without
 borrowing plural forms or unseen vocabulary from this checkpoint.
