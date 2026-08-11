@@ -111,6 +111,8 @@ arrows, open/filled/cross/point arrowheads, bidirectional messages, notes,
 activation/deactivation, titles, and automatic numbering. It lowers through
 `diagram-layout-sequence` to existing path, rectangle, dashed-stroke, and glyph
 PaintInstructions and is exercised by a Mermaid-to-Metal-to-PNG fixture.
+Grammar-backed `actor` declarations retain their semantic kind through layout
+and lower to backend-neutral ellipse/path instructions for UML stick figures.
 
 Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
 `par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic

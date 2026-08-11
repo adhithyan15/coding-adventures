@@ -4,10 +4,10 @@ use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
-    SequenceEvent, SequenceNotePlacement, SequenceTextWrap,
+    SequenceEvent, SequenceNotePlacement, SequenceParticipantKind, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -94,7 +94,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         .collect();
     let header_height = participant_labels
         .iter()
-        .map(|label| HEADER_H + 16.0 * (line_count(label) as f64 - 1.0))
+        .zip(&diagram.participants)
+        .map(|(label, participant)| participant_header_height(&participant.kind, line_count(label)))
         .fold(HEADER_H, f64::max);
     let width = lane_widths.iter().sum::<f64>() + MARGIN * 2.0;
     let created_participants: HashSet<&str> = diagram
@@ -266,8 +267,10 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         .position(|item| item.id == *participant)
                         .unwrap_or(0);
                     let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
-                    let created_header_height = HEADER_H
-                        + 16.0 * (line_count(&participant_labels[lane_index]) as f64 - 1.0);
+                    let created_header_height = participant_header_height(
+                        &definition.kind,
+                        line_count(&participant_labels[lane_index]),
+                    );
                     items.push(LayoutedSequenceItem::ParticipantBox {
                         id: definition.id.clone(),
                         label: participant_labels[lane_index].clone(),
@@ -483,6 +486,15 @@ fn line_count(text: &str) -> usize {
     text.lines().count().max(1)
 }
 
+fn participant_header_height(kind: &SequenceParticipantKind, lines: usize) -> f64 {
+    let base = if kind == &SequenceParticipantKind::Actor {
+        64.0
+    } else {
+        HEADER_H
+    };
+    base + 16.0 * (lines.max(1) as f64 - 1.0)
+}
+
 fn wrap_sequence_line(line: &str, max_chars: usize) -> Vec<String> {
     let mut lines = Vec::new();
     let mut current = String::new();
@@ -696,6 +708,33 @@ mod tests {
         assert!(boxes[0].1 > 16.0);
         assert_eq!(boxes[0].2, boxes[1].2);
         assert!(boxes[0].2 > HEADER_H);
+    }
+
+    #[test]
+    fn actor_headers_reserve_symbol_geometry() {
+        let mut actor = participant("Alice");
+        actor.kind = SequenceParticipantKind::Actor;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![actor, participant("Service")],
+            participant_groups: vec![],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let heights: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox { height, .. } => Some(*height),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(heights, vec![64.0, 64.0]);
     }
 
     #[test]
