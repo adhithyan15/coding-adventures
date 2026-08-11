@@ -123,8 +123,8 @@ and glyph instructions. Named `classDef` declarations and comma-delimited
 `class` assignments resolve the same properties into graph IR, including
 assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
-start/end pseudostates. Styling inside composite states remains a compatibility
-gap until composite state structure is represented in semantic IR.
+start/end pseudostates. Inline and named styles can target composite groups and
+survive resolved layout style into backend-neutral Paint rectangles and labels.
 Single-line and `end note` multiline `note left of`/`note right of` statements
 lower to semantic note nodes and note-association edges. Quoted `note ... as`
 statements lower to standalone note nodes. Graph layout reserves line-aware note
@@ -139,6 +139,8 @@ resolved node bounds as backend-neutral hit-test metadata.
 Nested `state Name { ... }` composites preserve parent/child containment in
 graph-group semantic IR. Graph layout computes padded nested bounds, while
 Paint lowering draws group outlines and shaped labels behind member geometry.
+Quoted `state "Label" as Id { ... }` composites preserve distinct semantic IDs
+and display labels through the same pipeline.
 
 ### Sequence Native Slice
 

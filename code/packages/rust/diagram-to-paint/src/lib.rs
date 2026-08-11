@@ -369,10 +369,10 @@ where
             y: group.y,
             width: group.width,
             height: group.height,
-            fill: Some("#f8fafc".into()),
-            stroke: Some("#64748b".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(8.0),
+            fill: Some(group.style.fill.clone()),
+            stroke: Some(group.style.stroke.clone()),
+            stroke_width: Some(group.style.stroke_width),
+            corner_radius: Some(group.style.corner_radius),
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
@@ -415,7 +415,7 @@ where
             group.width - 24.0,
             label_size * 1.2,
             label_font.clone(),
-            css_to_color("#334155"),
+            css_to_color(&group.style.text_color),
         ));
     }
 
@@ -3316,6 +3316,14 @@ mod tests {
             y: 8.0,
             width: 340.0,
             height: 100.0,
+            style: ResolvedDiagramStyle {
+                fill: "#fef3c7".into(),
+                stroke: "#b45309".into(),
+                stroke_width: 3.0,
+                text_color: "#78350f".into(),
+                font_size: 14.0,
+                corner_radius: 8.0,
+            },
         });
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -3324,7 +3332,11 @@ mod tests {
         let scene = diagram_to_paint(&layout, &opts);
 
         assert!(scene.instructions.iter().any(|instruction| {
-            matches!(instruction, PaintInstruction::Rect(rect) if rect.width == 340.0)
+            matches!(instruction, PaintInstruction::Rect(rect)
+                if rect.width == 340.0
+                    && rect.fill.as_deref() == Some("#fef3c7")
+                    && rect.stroke.as_deref() == Some("#b45309")
+                    && rect.stroke_width == Some(3.0))
         }));
     }
 

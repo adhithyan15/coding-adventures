@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.57.0
+
+- Parse quoted composite-state aliases and apply inline or named styles to graph groups.
+
 ## 0.56.0
 
 - Parse nested composite states into graph-group semantic IR.
