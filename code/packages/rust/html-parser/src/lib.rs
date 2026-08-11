@@ -7441,7 +7441,9 @@ impl HtmlParser {
             {
                 return;
             }
-            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_div(index) {
+            if is_formatting_element(name)
+                && self.adopt_formatting_end_tag_across_div(index, true)
+            {
                 return;
             }
             if is_formatting_element(name)
@@ -7999,7 +8001,7 @@ impl HtmlParser {
 
         self.adopt_formatting_end_tag_across_paragraph(index)
             || self.adopt_formatting_end_tag_across_nested_paragraph(index)
-            || self.adopt_formatting_end_tag_across_div(index)
+            || self.adopt_formatting_end_tag_across_div(index, false)
     }
 
     fn adopt_b_end_tag_across_cite_div(&mut self) -> bool {
@@ -8519,7 +8521,11 @@ impl HtmlParser {
         true
     }
 
-    fn adopt_formatting_end_tag_across_div(&mut self, formatting_index: usize) -> bool {
+    fn adopt_formatting_end_tag_across_div(
+        &mut self,
+        formatting_index: usize,
+        report_repeated_iteration: bool,
+    ) -> bool {
         let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
             return false;
         };
@@ -8681,6 +8687,14 @@ impl HtmlParser {
         } else if !pending_formatting_reconstruction.is_empty() {
             self.pending_formatting_reconstruction =
                 trim_formatting_reconstruction_noah_ark(pending_formatting_reconstruction);
+        }
+        if report_repeated_iteration {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-non-current-formatting-end-tag",
+                format!(
+                    "end tag `</{formatting_name}>` triggered adoption-agency recovery before its formatting element was current"
+                ),
+            ));
         }
         true
     }
@@ -34358,6 +34372,79 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-non-current-formatting-end-tag" }));
+    }
+
+    #[test]
+    fn reports_each_non_current_iteration_of_div_adoption_recovery() {
+        let output = parse_html_with_diagnostics("<!doctype html><a><div><p></a>").unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-non-current-formatting-end-tag"
+                })
+                .count(),
+            2
+        );
+
+        let document_body = body(&output.document);
+        assert_eq!(document_body.children.len(), 2);
+        assert_eq!(element(&document_body.children[0]).name, "a");
+        let div = element(&document_body.children[1]);
+        assert_eq!(div.name, "div");
+        assert_eq!(element(&div.children[0]).name, "a");
+        let paragraph = element(&div.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(element(&paragraph.children[0]).name, "a");
+
+        let table_cell =
+            parse_html_with_diagnostics("<!doctype html><table><td><a><div><p></a>").unwrap();
+        assert_eq!(
+            table_cell
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-non-current-formatting-end-tag"
+                })
+                .count(),
+            2
+        );
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<a><div><p></a>", "div").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-non-current-formatting-end-tag"
+                })
+                .count(),
+            2
+        );
+
+        for (source, expected_count) in [
+            ("<!doctype html><b>1<i>2<p>3</b>4", 1),
+            ("<!doctype html><a><object><div></a>", 1),
+            ("<!doctype html><a><p></a>", 0),
+            ("<!doctype html></a>", 0),
+            ("<!doctype html><table><a><div><p></a>", 0),
+            ("<!doctype html><font><table></font></table></font>", 0),
+        ] {
+            let control = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                control
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-non-current-formatting-end-tag"
+                    })
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]

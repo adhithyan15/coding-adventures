@@ -257,15 +257,21 @@ Prioritized work items:
    covering both `tests1.dat` adoption-agency-1.2 shapes. Adoption-agency end tags
    reprocessed from foreign content now report both the foreign mismatch and
    non-current formatting errors while preserving the conforming foreign DOM,
-   matching WPT `adoption01.dat`'s `<a><svg><tr><input></a>` evidence. Continue
-   Repeated HTML anchor start tags now report before the existing adoption
+   matching WPT `adoption01.dat`'s `<a><svg><tr><input></a>` evidence. Repeated
+   HTML anchor start tags now report before the existing adoption
    recovery and preserve both anchors required by WPT `adoption02.dat`'s
    `<a><div><style></style><address><a>` row. Repeated anchors reprocessed
    through table foster parenting now additionally report both the repeated
    start and out-of-table-scope adoption errors declared by `tests1.dat` and
-   `template.dat`, while preserving the existing fostered DOM. Continue the
+   `template.dat`, while preserving the existing fostered DOM. Div-based
+   adoption recovery now reports the non-current formatting error for each
+   outer-loop iteration represented by the parser's combined repair, matching
+   the two same-token `adoption-agency-1.3` declarations in WPT `tests8.dat`
+   and `tests19.dat` while preserving document, table-cell, and fragment DOM
+   output. Continue the
    fresh algorithm audit across the remaining active-formatting-list branches,
-   including foreign end tags with no matching HTML formatting ancestor.
+   especially formatting scope exits, marker boundaries, and the inner-loop
+   node replacement limit.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
