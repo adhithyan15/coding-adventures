@@ -214,8 +214,15 @@ Prioritized work items:
    descendant and after the template becomes current again. Valid direct
    template table transitions, real tables, nested templates, foreign content,
    ordinary outside-table handling, and synthetic template fragments remain on
-   their existing paths. Continue with the distinct in-body `frame` and `head`
-   starts and adjacent template-state branches. A `tr`
+   their existing paths. The distinct in-body `frame` and `head` starts were
+   re-audited and already emit their required parse errors while remaining
+   ignored through the existing general frame/head recovery. The adjacent
+   authored-template `head` and `frameset` end tags now report their in-body
+   parse error while preserving ignored-token DOM behavior. Direct and nested
+   authored templates are covered; real head/frameset closure, real tables,
+   ordinary stray endings, foreign content, and synthetic template fragments
+   remain on their existing paths. Continue auditing the remaining template
+   state boundaries. A `tr`
    start after non-whitespace template text now follows the still-active
    template insertion mode into the table-body row transition instead of being
    silently discarded, preserving the authored text before the row. Whitespace,
