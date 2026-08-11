@@ -569,7 +569,7 @@ describe("the real corpus", () => {
     // measure the distance against and stayed silent. Naming a teacher is what made
     // the existing early use visible. It also argues ஒரு belongs earlier than 39,
     // which the runway did not allow.
-    expect(report.summary.forwardReferences).toBe(423); // -1: HL-C98 removes a forward reference
+    expect(report.summary.forwardReferences).toBe(418); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the

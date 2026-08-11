@@ -246,12 +246,33 @@ function ownHeadwordTokens(lesson: ParsedLesson): string[] {
  * `son` and `me` as forward references. The list is small and deliberately so:
  * the length rule below does most of the work, and a denylist that grows without
  * bound is a sign the matching rule is wrong.
+ *
+ * HOW TO EXTEND IT, IF YOU MUST
+ *
+ * By census, never by guesswork. Run the detector, take the reports that matched
+ * in PLAIN prose only (an emphasised match is the corpus marking target language,
+ * so it is not English), and read each one in place. In the sweep that added the
+ * last three, 18 reports qualified and only 3 were actually English -- so a list
+ * built from a plausible-looking wordlist would have suppressed 15 real defects.
+ *
+ * The tempting alternative -- applying this guard to the plain path only, and
+ * trusting emphasis to mean "target language" -- was tried and is wrong. Authors
+ * emphasise English for stress too ("**no** glide, no drift"), which reported
+ * `no` from seven lessons. Both paths keep the guard.
  */
 const ENGLISH_COLLISIONS = new Set([
   "a", "an", "as", "at", "be", "but", "can", "do", "eat", "el", "en", "es", "fin",
   "for", "go", "he", "in", "is", "it", "la", "led", "me", "no", "of", "on", "once",
   "or", "past", "pie", "roman", "san", "sea", "sin", "so", "son", "some", "tag",
   "tan", "the", "three", "to", "us", "van", "was", "we", "y", "you",
+  // Added by census, not by guesswork (HL-C103). The three below were the ONLY
+  // English homographs among the 18 plain-prose-only reports in a full corpus
+  // sweep -- the other 15 were genuine target-language forward references and
+  // must keep reporting:
+  //   comes   "*comer* comes from Latin *comedere*" -> the Spanish tu-form
+  //   hand    "in the old German (Fraktur) hand"    -> German Hand
+  //   regular "Regular stress: TAR-de"              -> Spanish regular, "so-so"
+  "comes", "hand", "regular",
 ]);
 
 /**

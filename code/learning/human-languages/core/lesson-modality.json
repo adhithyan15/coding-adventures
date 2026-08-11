@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1fa698f447063448",
+  "sourceHash": "fnv1a64:8bdd46d4a18aa00d",
   "summary": {
     "totalLessons": 1723,
     "voice": 1144,
@@ -34823,7 +34823,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0cb22e77df9d93d4"
+      "sourceHash": "fnv1a64:e755b9f265587bb2"
     },
     {
       "id": "ES-C08-numeros-1-5",

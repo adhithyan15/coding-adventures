@@ -70,7 +70,7 @@ You put **¿qué?** or **¿dónde?** in front of a verb you already had.
 
 <!-- hl-activity: {"id":"ES-C07-sintesis-preguntar-what","kind":"text","assesses":["ES-LEX-QUE","ES-GRAMMAR-ER-PRESENT-SINGULAR"],"prompt":"Ask a friend what they eat.","answer":"que comes","accepted":["¿que comes?","qué comes","que comes tu"],"feedback":{"correct":"Yes — the question word, then the tu form.","incorrect":"Que comes. The question word goes in front of the form you already have."},"response_seconds":10} -->
 <!-- hl-activity: {"id":"ES-C07-sintesis-preguntar-where","kind":"text","assesses":["ES-LEX-DONDE","ES-GRAMMAR-IR-PRESENT-SINGULAR"],"prompt":"Ask a friend where they live.","answer":"donde vives","accepted":["¿donde vives?","dónde vives"],"feedback":{"correct":"Yes.","incorrect":"Donde vives."},"response_seconds":10} -->
-<!-- hl-activity: {"id":"ES-C07-sintesis-preguntar-families","kind":"text","assesses":["ES-GRAMMAR-AR-PRESENT-SINGULAR","ES-GRAMMAR-IR-PRESENT-SINGULAR"],"prompt":"How many verb families do you now hold in the singular?","answer":"three","accepted":["3","tres","all three"],"feedback":{"correct":"All three — and that covers every regular verb.","incorrect":"Three: -ar, -er and -ir."},"response_seconds":8} -->
+<!-- hl-activity: {"id":"ES-C07-sintesis-preguntar-families","kind":"text","assesses":["ES-GRAMMAR-AR-PRESENT-SINGULAR","ES-GRAMMAR-IR-PRESENT-SINGULAR"],"prompt":"How many verb families do you now hold in the singular?","answer":"three","accepted":["3","all three"],"feedback":{"correct":"All three — and that covers every regular verb.","incorrect":"Three: -ar, -er and -ir."},"response_seconds":8} -->
 
 [PAUSE 1s]
 
