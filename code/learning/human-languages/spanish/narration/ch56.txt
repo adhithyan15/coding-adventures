@@ -1,97 +1,63 @@
-Spanish, chapter 56: Parents and Siblings.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 56: Days of the Week.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
-el padre, la madre — among the oldest words there are.
+Lesson 1 of 2.
+lunes to viernes — the planets of the week, worn down.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-"Father" and "mother" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother.
+The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
 
-The words, taken apart: padre and madre.
-el padre ("father") from Latin pater from PIE ph₂tḗr.
-la madre ("mother") from Latin māter from PIE méh₂tēr.
-
-Why it's said this way: the English sound-law.
-Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:
-[a table of 2 rows, read aloud]
-PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.
-PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother.
-So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their "of a parent" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, "the stuff a tree-mother produces," gives Spanish materia and, separately, matriz — "womb" — via Latin mātrix.)
+The words, taken apart: the planet weekdays.
+Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
+There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
+Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el padre, la madre"]
+[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
 [pause 8 seconds for the answer]
-[your turn — say: the sound-law — "padre keeps p; father shifts to f — same word"]
+[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
 [pause 8 seconds for the answer]
-[your turn — say: "padre becomes paternal; madre becomes maternal"]
+[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "father" and "mother" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)
+Recall the weekday family:
+What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
+Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
+What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
+Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
 
 
-Lesson 2 of 3.
-el hermano, la hermana — brother and sister, from a different word entirely.
+Lesson 2 of 2.
+sábado and domingo — the week's religious edge.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-You might expect Spanish "brother" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds.
+Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
 
-The words, taken apart: hermano and hermana.
-Classical Latin could say frāter germānus, literally "a brother of the same stock/blood" — distinguishing a full brother from a half-brother, or from a "brother" in some looser sense.
-Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:
-el hermano ("brother") from Latin germānus.
-la hermana ("sister") from Latin germāna.
-So Spanish's everyday word for brother is, grammatically, a leftover adjective.
-
-Why it's said this way: where germanus comes from.
-Germānus traces back to germen, "sprout, bud, seed" — the same root that gives English germ, germinate, and germane (originally "closely related," from the same seed, before it loosened into just "relevant").
-So calling someone your hermano is, at the etymological root, calling them "sprung from the same seed." (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)
+The two days, taken apart.
+There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
+Two different rewrites:
+sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
+domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el hermano, la hermana" — brother, sister]
+[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
 [pause 8 seconds for the answer]
-[your turn — say: the root chain — "germen, seed" becomes "germānus, of the same seed" becomes "hermano"]
+[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
 [pause 8 seconds for the answer]
-[your turn — say: "hermano" then English "germinate, germane"]
+[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does Spanish hermano come from Latin frāter? (No — from germānus, "of the same stock/seed," an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is.
-
-
-Lesson 3 of 3.
-the h in hermano — a letter that was never spoken.
-
-Warm-up.
-[pause 2 seconds]
-Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one.
-
-You'll want to know first.
-el hermano, la hermana — the words and the germen root.
-
-Why it's said this way: two different silent h's.
-You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo ("son"), facere becomes hacer ("to do"). Hermano is not that, and the difference is worth getting right.
-Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago.
-The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:
-[a table of 2 rows, read aloud]
-word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.
-word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never.
-Same silent letter today; two completely different backstories, only one of which involves a sound at all.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "germānus" then "ermano" then "hermano" — the three stages]
-[pause 8 seconds for the answer]
-[your turn — say: the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)
+Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)

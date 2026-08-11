@@ -1,61 +1,90 @@
-Spanish, chapter 65: Dog and Cat.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 65: The Weather.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-gato — the word that travelled with the animal.
+Lesson 1 of 3.
+el tiempo — one word doing two jobs.
 
 Warm-up.
 [pause 2 seconds]
-Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented.
+Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking "what time does it make?" — because tiempo does not split "time" from "weather" the way English does.
 
-The word, taken apart: gato.
-gato ("cat") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline.
-Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, "cat").
-So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it.
+The word, taken apart: el tiempo.
+el tiempo = both "time" and "weather" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed.
+English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed.
+How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is "I have no time," ¿qué tiempo hace? is "what's the weather like?"
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el gato" — the cat]
+[your turn — say: "el tiempo" — time, or weather, depending on context]
 [pause 8 seconds for the answer]
-[your turn — say: the trail — "kadis, cattus, gato"]
+[your turn — say: "¿qué tiempo hace?" — what's the weather like?]
 [pause 8 seconds for the answer]
-[your turn — say: the word it replaced — "fēlēs," now only in "feline"]
+[your turn — say: "tiempo" then English "tempo, temporal" — the tempus family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all.
+What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only "time.") Next: how to actually answer ¿qué tiempo hace?
 
 
-Lesson 2 of 2.
-perro — the word nobody can explain.
+Lesson 2 of 3.
+hace calor, hace frío, hace sol — the weather Spanish makes.
 
 Warm-up.
 [pause 2 seconds]
-Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from.
+You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, "to make."
 
-The word, taken apart: perro.
-perro ("dog"). Roll the rr: PEH-rro.
-The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin.
-
-Why it's said this way: an honestly open question.
-Three serious proposals, none confirmed:
-[a table of 3 rows, read aloud]
-proposal: onomatopoeia — a growl, or a shepherd's call "perr, perr". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.
-proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.
-proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose.
-Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that "we don't know" is a real answer in etymology, not a gap in your notes.
+The words, taken apart: calor, frío, sol.
+calor from Latin calor, "heat, warmth" becomes English calorie, caloric, cauldron.
+frío from Latin frigidus, "cold" (the middle syllable syncopated away) becomes English frigid, refrigerate.
+sol from Latin sol, "sun," unchanged becomes English solar, solstice, parasol.
+Here is the part worth noticing: all three are nouns, not adjectives. Calor is "heat," not "hot." That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one.
+hace calor — "it's hot," literally "it makes heat" hace frío — "it's cold," literally "it makes cold" hace sol — "it's sunny," literally "it makes sun".
+French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into "it is hot" with an adjective.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el perro, el gato" — dog and cat]
+[your turn — say: "hace calor. hace frío. hace sol."]
 [pause 8 seconds for the answer]
-[your turn — say: "can" — the archaic word perro replaced, from Latin canis]
+[your turn — say: the literal reading — "it makes heat, it makes cold, it makes sun"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "gato, traced to Egypt; perro, unsolved"]
+[your turn — say: "calor" then English "calorie"; "frío" then "refrigerate"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)
+Say "it's hot," "it's cold," "it's sunny." (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a "to be" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)
+
+
+Lesson 3 of 3.
+llueve — the one weather word that will not join hacer.
+
+Warm-up.
+[pause 2 seconds]
+Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own.
+
+Grammar Lens: rain brings its own verb.
+llueve = "it's raining." Not hace lluvia, not "it makes rain" — just llueve, a single word that is a complete sentence.
+It comes from llover, "to rain," and llover is impersonal: it has no subject at all, not even a "it" you could point to. Compare the two shapes side by side:
+[a table of 2 rows, read aloud]
+pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).
+pattern: dedicated verb. example: llueve. what carries the weather: the verb itself.
+English does exactly the same split, which makes it easy to feel: you say "it is hot" with an adjective, but "it rains" with a verb built for the job. Spanish just draws the line in the same place.
+
+The word, taken apart: llover.
+llover from Latin pluere, "to rain." Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, "key") and llama ( from flamma, "flame"). Latin's cl-, fl- and pl- clusters all became Spanish ll-.
+So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿qué tiempo hace?" then "hace calor. hace frío. hace sol."]
+[pause 8 seconds for the answer]
+[your turn — say: "llueve" — one word, a whole sentence, no hacer]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "llamar, llave, llama, llover" — four Latin clusters, one Spanish ll-]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)

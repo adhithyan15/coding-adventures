@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 69,
-  "title": "Leer — Reading Is Gathering",
+  "title": "Pensar — Thinking Is Weighing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2ffce74a18404370",
+  "sourceHash": "fnv1a64:c33bbdd29d28f911",
   "lessons": [
     {
-      "id": "ES-C34-leer",
-      "sequence": 1630,
-      "title": "leer — \"to read\", and before that, \"to gather\"",
-      "headword": "leer",
-      "romanization": "leer",
-      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
+      "id": "ES-C34-pensar",
+      "sequence": 1610,
+      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
+      "headword": "pensar",
+      "romanization": "pensar",
+      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d360d1362957550",
+      "sourceHash": "fnv1a64:7e0d0ddb2b2e2d7b",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
+              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
             }
           ]
         },
@@ -46,74 +46,86 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
+              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
             },
             {
               "kind": "speech",
-              "text": "leo is likewise two beats, LE-o."
+              "text": "The s is always a clear hissing s, never an English z buzz."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: leer",
+          "title": "The word, taken apart: pensar",
           "segments": [
             {
               "kind": "speech",
-              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
+              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
             },
             {
               "kind": "speech",
-              "text": "That gathering root runs through an enormous amount of English:"
+              "text": "English kept the whole family, and most of it still smells of money and scales:"
             },
             {
               "kind": "speech",
-              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
+              "text": "pensive — turning something over on the balance."
             },
             {
               "kind": "speech",
-              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
+              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
             },
             {
               "kind": "speech",
-              "text": "diligent and elegant, both of which meant \"picking carefully\"."
+              "text": "expense, dispense, pension — payments were literally weighed out."
             },
             {
               "kind": "speech",
-              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
+              "text": "peso — a coin whose name simply means \"a weight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "pansy — from French pensée, \"a thought\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a plain -er verb, with a mouthful",
+          "title": "Grammar Lens: the same endings, a broken stem",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
+              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
             },
             {
               "kind": "table",
               "headers": [
                 "person",
                 "form",
-                "said"
+                "stem"
               ],
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: leo. said: LE-o.",
-                "person: tú. form: lees. said: LE-es.",
-                "person: él/ella/usted. form: lee. said: LE-e.",
-                "person: nosotros. form: leemos. said: le-E-mos.",
-                "person: ellos/ustedes. form: leen. said: LE-en."
+                "person: yo. form: pienso. stem: broken.",
+                "person: tú. form: piensas. stem: broken.",
+                "person: él/ella/usted. form: piensa. stem: broken.",
+                "person: nosotros. form: pensamos. stem: plain.",
+                "person: ellos/ustedes. form: piensan. stem: broken."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
+              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
+            },
+            {
+              "kind": "speech",
+              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
             }
           ]
         },
@@ -131,38 +143,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"leer\" — le-ER, two beats",
+              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
+              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Leo un libro\" — I read a book",
+              "instruction": "\"Pienso en ti\" — I am thinking of you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
+              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
+              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
+              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
             }
           ]
         },
@@ -179,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
+              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
             }
           ]
         }

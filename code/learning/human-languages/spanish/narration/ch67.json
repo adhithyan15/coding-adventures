@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 67,
-  "title": "Pensar — Thinking Is Weighing",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c5885356affad418",
+  "title": "Dog and Cat",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8614955840c95744",
   "lessons": [
     {
-      "id": "ES-C34-pensar",
-      "sequence": 1610,
-      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
-      "headword": "pensar",
-      "romanization": "pensar",
-      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
+      "id": "ES-C32-gato",
+      "sequence": 1570,
+      "title": "gato — the word that travelled with the animal",
+      "headword": "gato",
+      "romanization": "gato",
+      "gloss": "cat — a word that travelled out of Africa with the animal, pushing Latin's own fēlēs aside",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecf652b7b3d99f35",
+      "sourceHash": "fnv1a64:99d8861cfe00fa57",
       "notice": null,
       "blocks": [
         {
@@ -35,102 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
+              "text": "Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: gato",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
+              "text": "gato (\"cat\") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline."
             },
             {
               "kind": "speech",
-              "text": "The s is always a clear hissing s, never an English z buzz."
+              "text": "Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, \"cat\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: pensar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
-            },
-            {
-              "kind": "speech",
-              "text": "English kept the whole family, and most of it still smells of money and scales:"
-            },
-            {
-              "kind": "speech",
-              "text": "pensive — turning something over on the balance."
-            },
-            {
-              "kind": "speech",
-              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
-            },
-            {
-              "kind": "speech",
-              "text": "expense, dispense, pension — payments were literally weighed out."
-            },
-            {
-              "kind": "speech",
-              "text": "peso — a coin whose name simply means \"a weight\"."
-            },
-            {
-              "kind": "speech",
-              "text": "pansy — from French pensée, \"a thought\"."
-            },
-            {
-              "kind": "speech",
-              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the same endings, a broken stem",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "stem"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: pienso. stem: broken.",
-                "person: tú. form: piensas. stem: broken.",
-                "person: él/ella/usted. form: piensa. stem: broken.",
-                "person: nosotros. form: pensamos. stem: plain.",
-                "person: ellos/ustedes. form: piensan. stem: broken."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -143,34 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
+              "instruction": "\"el gato\" — the cat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
+              "source": "[YOU SAY: \"el gato\" — the cat]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso en ti\" — I am thinking of you",
+              "instruction": "the trail — \"kadis, cattus, gato\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
+              "source": "[YOU SAY: the trail — \"kadis, cattus, gato\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
+              "instruction": "the word it replaced — \"fēlēs,\" now only in \"feline\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
+              "source": "[YOU SAY: the word it replaced — \"fēlēs,\" now only in \"feline\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +111,144 @@
             },
             {
               "kind": "speech",
-              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
+              "text": "What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C32-perro",
+      "sequence": 1580,
+      "title": "perro — the word nobody can explain",
+      "headword": "perro",
+      "romanization": "perro",
+      "gloss": "dog — a genuinely unsolved etymology, and the Latin word it pushed out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3f4ba432be7ad2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: perro",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perro (\"dog\"). Roll the rr: PEH-rro."
+            },
+            {
+              "kind": "speech",
+              "text": "The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: an honestly open question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three serious proposals, none confirmed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "proposal",
+                "the case for it",
+                "the problem"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "proposal: onomatopoeia — a growl, or a shepherd's call \"perr, perr\". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.",
+                "proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.",
+                "proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that \"we don't know\" is a real answer in etymology, not a gap in your notes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el perro, el gato\" — dog and cat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el perro, el gato\" — dog and cat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"can\" — the archaic word perro replaced, from Latin canis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"can\" — the archaic word *perro* replaced, from Latin *canis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"gato, traced to Egypt; perro, unsolved\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"gato, traced to Egypt; perro, unsolved\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)"
             }
           ]
         }

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C40-contestar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1860
-chapter: 88
+chapter: 90
 type: word
 headword: contestar
 gloss: to answer — a Roman courtroom word that English turned into a fight and Spanish turned into a reply

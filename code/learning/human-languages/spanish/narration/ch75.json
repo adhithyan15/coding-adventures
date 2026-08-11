@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 75,
-  "title": "Ayudar — the Same Word as Aid",
+  "title": "Tomar — Taking, and a Word With No Past",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:84e4bc46d1f8dc06",
+  "sourceHash": "fnv1a64:9f11bd634e0da5f8",
   "lessons": [
     {
-      "id": "ES-C35-ayudar",
-      "sequence": 1670,
-      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
-      "headword": "ayudar",
-      "romanization": "ayudar",
-      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
+      "id": "ES-C35-tomar",
+      "sequence": 1650,
+      "title": "tomar — \"to take\", and nobody knows where it came from",
+      "headword": "tomar",
+      "romanization": "tomar",
+      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb0546dedadb6d7a",
+      "sourceHash": "fnv1a64:a42bd6382766b227",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
+              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
             }
           ]
         },
@@ -46,77 +46,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-a — a clean, open a: a-yoo-DAR."
+              "text": "r-tap — one soft tap of the tongue: to-MAR."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one tap at the end, not an English r."
+              "text": "vowel-o — a short, pure o, with no English glide toward ow."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: ayudar",
+          "title": "The word, taken apart: tomar",
           "segments": [
             {
               "kind": "speech",
-              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
+              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
             },
             {
               "kind": "speech",
-              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
+              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
             },
             {
               "kind": "speech",
-              "text": "aide, and aide-de-camp, an officer who helps."
-            },
-            {
-              "kind": "speech",
-              "text": "adjutant — the officer whose whole job is assisting."
-            },
-            {
-              "kind": "speech",
-              "text": "adjuvant — a substance that helps another drug work."
-            },
-            {
-              "kind": "speech",
-              "text": "coadjutor — one who helps alongside."
-            },
-            {
-              "kind": "speech",
-              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
+              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing breaks; the endings are the ones you started with:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "person: yo. form: ayudo. meaning: I help.",
-                "person: tú. form: ayudas. meaning: you help.",
-                "person: nosotros. form: ayudamos. meaning: we help.",
-                "person: ellos/ustedes. form: ayudan. meaning: they help."
-              ]
+              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
             },
             {
               "kind": "speech",
-              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
+              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
             }
           ]
         },
@@ -134,38 +102,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
+              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
+              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Me ayudas?\" — will you help me?",
+              "instruction": "\"Tomo un café\" — I'll have a coffee",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
+              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
+              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
+              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
+              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
+              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
             }
           ]
         },
@@ -182,7 +150,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
+              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
             }
           ]
         }

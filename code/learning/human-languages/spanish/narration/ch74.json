@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 74,
-  "title": "Preguntar — Asking, and Sounding a Depth",
+  "title": "Synthesis --- What You Understand, and What You Don't",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:73fb3ac859313f79",
+  "sourceHash": "fnv1a64:6bd43bcc5880874e",
   "lessons": [
     {
-      "id": "ES-C35-preguntar",
-      "sequence": 1660,
-      "title": "preguntar — \"to ask\", by sounding the water with a pole",
-      "headword": "preguntar",
-      "romanization": "preguntar",
-      "gloss": "to ask (a question) — and the reason English's one \"ask\" becomes two Spanish verbs",
+      "id": "ES-C34-sintesis-mente",
+      "sequence": 1646,
+      "title": "Synthesis — what you understand, and what you don't",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the sentence you have been saying since chapter 14, finally taken apart",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:109038672a75c6e8",
+      "sourceHash": "fnv1a64:0e2bbf281a8266d6",
       "notice": null,
       "blocks": [
         {
@@ -35,74 +35,72 @@
             },
             {
               "kind": "speech",
-              "text": "English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half."
+              "text": "Say the sentence you learned in the repair kit, the one that rescues a conversation. (No entiendo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the formula was a verb all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "pr-cluster — pre- is one crisp beat, preh, with a tapped r."
+              "text": "You have been saying no entiendo since the repair kit, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g before u is hard, as in English gun: pre-goon-TAR."
+              "text": "It has parts now. Entiendo is entender, and entender is Latin intendere, \"to stretch toward.\" Which means the sentence you have been using to admit defeat has never actually said I failed. It says:"
+            },
+            {
+              "kind": "speech",
+              "text": "I am not managing to stretch that far."
+            },
+            {
+              "kind": "speech",
+              "text": "That was true the whole time. You just could not see it yet."
+            },
+            {
+              "kind": "speech",
+              "text": "And the moment a formula has parts, it turns. No entiendo stops being the only thing you can say and becomes one option among several."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: preguntar",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "preguntar (\"to ask a question\") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, \"to inquire\". And percontārī was built on contus, \"a punting pole\": to percontor was to push a pole down through water and find out how deep it was."
+              "text": "Back in the repair kit, all you could do:"
             },
             {
               "kind": "speech",
-              "text": "Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe."
+              "text": "— No entiendo. Más despacio, por favor."
             },
             {
               "kind": "speech",
-              "text": "The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta."
+              "text": "Now, the same moment, with the parts working:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Perdón — leo un poco, pero no entiendo. — Más despacio, por favor. Ahora entiendo. Gracias."
+            },
+            {
+              "kind": "speech",
+              "text": "Same trouble. But the second speaker is no longer only failing — they are reporting which part works and which does not. That is the difference between a distress signal and a conversation."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one English \"ask\", two Spanish verbs",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish sorts asking by what you are after:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what you want",
-                "verb",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.",
-                "what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Ask for a coffee with preguntar and you have said \"I question a coffee\". The line is simple: a question takes preguntar, a request takes pedir."
-            },
-            {
-              "kind": "speech",
-              "text": "pedir from Latin petere, \"to make for, to aim at\" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later."
+              "text": "Four verbs is not four words. It is the ability to say where you are in a language: what you take in, what you work on, what lands, what you can produce."
             }
           ]
         },
@@ -120,38 +118,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pregunto, preguntas, pregunta, preguntamos, preguntan\"",
+              "instruction": "the repair-kit version — the distress signal on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pregunto, preguntas, pregunta, preguntamos, preguntan\"]"
+              "source": "[YOU SAY: the repair-kit version — the distress signal on its own]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto la hora\" — I'm asking you the time",
+              "instruction": "the version above, where you say what does work before what doesn't",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto la hora\" — I'm asking you the time]"
+              "source": "[YOU SAY: the version above, where you say what *does* work before what doesn't]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Pido un café\" then \"Tomo un café\" — I ask for one, I have one",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pido un café\" then \"Tomo un café\" — I ask for one, I have one]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"pedir\" then English \"petition, appetite, compete\" — the aiming family",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Run the second one until it sounds like a person, not a repair kit."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-literal",
+              "prompt": "What does no entiendo literally say, given intendere?",
+              "assesses": [
+                "ES-ETYMON-ENTENDER-04",
+                "ES-LEX-NO-ENTIENDO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "i am not stretching that far",
+                "i am not reaching that far",
+                "not stretching toward it",
+                "i cannot stretch that far"
+              ],
+              "feedback": {
+                "correct": "Yes — not a confession of failure, a report of reach.",
+                "incorrect": "Intendere is to stretch toward: I am not managing to stretch that far."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-now",
+              "prompt": "How do you say I understand now, once it slows down?",
+              "assesses": [
+                "ES-LEX-ENTENDER-03"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pedir\" then English \"petition, appetite, compete\" — the aiming family]"
+              "acceptedResponses": [
+                "ahora entiendo",
+                "entiendo",
+                "entiendo ahora"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Ahora entiendo — now I understand."
+              }
             }
           ]
         },
@@ -168,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, \"to aim at\" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid."
+              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say back then? (Not just that you are lost — which part is lost.)"
             }
           ]
         }

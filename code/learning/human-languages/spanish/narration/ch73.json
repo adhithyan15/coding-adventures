@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 73,
-  "title": "Tomar — Taking, and a Word With No Past",
+  "title": "Review --- Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:52c71b4dc962d91d",
+  "sourceHash": "fnv1a64:6dcecdb8c1a5762c",
   "lessons": [
     {
-      "id": "ES-C35-tomar",
-      "sequence": 1650,
-      "title": "tomar — \"to take\", and nobody knows where it came from",
-      "headword": "tomar",
-      "romanization": "tomar",
-      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
+      "id": "ES-C34-repaso-mente",
+      "sequence": 1643,
+      "title": "Review — four verbs of the mind",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80be0f4e539b5db5",
+      "sourceHash": "fnv1a64:0d4c92352b5eaaf6",
       "notice": null,
       "blocks": [
         {
@@ -35,61 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
+              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one soft tap of the tongue: to-MAR."
+              "text": "Here is the thing none of the four chapters could show you on its own."
             },
             {
               "kind": "speech",
-              "text": "vowel-o — a short, pure o, with no English glide toward ow."
+              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
+            },
+            {
+              "kind": "speech",
+              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
+            },
+            {
+              "kind": "speech",
+              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
+            },
+            {
+              "kind": "speech",
+              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
+            },
+            {
+              "kind": "speech",
+              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
+            },
+            {
+              "kind": "speech",
+              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
+            },
+            {
+              "kind": "speech",
+              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: tomar",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
-            },
-            {
-              "kind": "speech",
-              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
-            },
-            {
-              "kind": "speech",
-              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
+              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
-            },
-            {
-              "kind": "speech",
-              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,43 +103,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
+              "instruction": "the four verbs in order — to read, to think, to understand, to write",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
+              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo un café\" — I'll have a coffee",
+              "instruction": "for each one, the body word underneath it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
+              "source": "[YOU SAY: for each one, the body word underneath it]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-weigh",
+              "prompt": "Which of the four verbs originally meant to weigh?",
+              "assesses": [
+                "ES-ETYMON-PENSAR-02"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
+              "acceptedResponses": [
+                "pensar",
+                "pensar (to think)",
+                "think"
+              ],
+              "feedback": {
+                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
+                "incorrect": "pensar, from pensare, to weigh."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-gather",
+              "prompt": "Which one meant to gather or pick out?",
+              "assesses": [
+                "ES-ETYMON-LEER-06"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "leer",
+                "leer (to read)",
+                "read"
+              ],
+              "feedback": {
+                "correct": "Yes — legere, the root inside collect, select and intellect.",
+                "incorrect": "leer, from legere, to gather."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-scratch",
+              "prompt": "And which one meant to scratch?",
+              "assesses": [
+                "ES-ETYMON-ESCRIBIR-08"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "escribir",
+                "escribir (to write)",
+                "write"
+              ],
+              "feedback": {
+                "correct": "Yes — scribere. Writing was scratching a surface.",
+                "incorrect": "escribir, from scribere, to scratch."
+              }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
+              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 78,
-  "title": "Synthesis --- What You Like, and Who Does the Liking",
+  "title": "Review --- Three Verbs That Behave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a195ccac093a8d67",
+  "sourceHash": "fnv1a64:3e0192225b133197",
   "lessons": [
     {
-      "id": "ES-C35-sintesis-gustar",
-      "sequence": 1684,
-      "title": "Synthesis — what you like, and who is doing the liking",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — saying what you like, in a language that refuses to let you own it",
+      "id": "ES-C35-repaso-tres",
+      "sequence": 1674,
+      "title": "Review — three verbs that behave",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — three ordinary verbs, and what \"ordinary\" is about to mean",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6e7b24539d38355",
+      "sourceHash": "fnv1a64:8899f4ef176c04b1",
       "notice": null,
       "blocks": [
         {
@@ -35,61 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I like coffee\" in Spanish. Then answer this: in that sentence, which word is the subject?"
+              "text": "Nothing new here. Name the three verbs of the last three chapters: to take, to ask, to help."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the sentence that will not let you be the subject",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Me gusta el café. The coffee is the subject. The coffee does the pleasing. You are the one it happens to."
-            },
-            {
-              "kind": "speech",
-              "text": "English puts you in charge: I like coffee — I am the subject, the coffee just sits there. Spanish reverses it."
-            },
-            {
-              "kind": "speech",
-              "text": "Two chapters ago, all three verbs were about the one doing it. That is why this chapter had to sit next to them."
-            },
-            {
-              "kind": "speech",
-              "text": "Translate I like word by word and you build a sentence Spanish does not have — which is why this is a chapter about saying an idea, not a word."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— ¿Te gusta el café? — Sí, me gusta mucho. ¿Y a ti? — A mí también. Mucho gusto."
-            },
-            {
-              "kind": "speech",
-              "text": "That last line is a joke you can now get. Mucho gusto — the phrase you learned long ago for \"pleased to meet you\" — is the same word. It has always meant much pleasure. You have been saying gustar's noun since your third conversation in this book."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gustar is Latin gustāre, to taste — English gusto, disgust. Liking, in Spanish, started at the tongue."
+              "text": "All three work the way you expect, and it is worth naming that out loud before the next chapter, where one does not."
+            },
+            {
+              "kind": "speech",
+              "text": "In each of them, you are the one doing it. You take. You ask. You help. The person doing the verb is the person the sentence is about — exactly as in English, and exactly as in every verb you have met since hablo."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold on to that. It is about to be worth money."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three origins, three very different kinds of story:"
+            },
+            {
+              "kind": "speech",
+              "text": "ayudar is the tidy one. Latin adiūtāre becomes English aid. Same word, two roads, and you can still hear it."
+            },
+            {
+              "kind": "speech",
+              "text": "preguntar is the reshaped one — percontārī, to sound a depth with a pole. Asking as measuring how deep something goes."
+            },
+            {
+              "kind": "speech",
+              "text": "tomar is the honest gap. It has no agreed origin at all. The verb Latin actually handed down for \"take\" was coger, and coger turned coarse across much of Latin America — so an everyday word had to come from somewhere, and nobody is sure where."
+            },
+            {
+              "kind": "speech",
+              "text": "Not every word has a clean story. A course that pretended otherwise would be inventing them."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,20 +99,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts",
+              "instruction": "the three verbs, then one sentence with each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "it again, and as you say me gusta, notice that you are not the subject",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: it again, and as you say *me gusta*, notice that you are **not** the subject]"
+              "source": "[YOU SAY: the three verbs, then one sentence with each]"
             },
             {
               "kind": "repeat",
@@ -123,72 +111,67 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "speech",
-              "text": "Until me gusta arrives without translating I like first."
-            },
-            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C35-sintesis-gustar-subject",
-              "prompt": "In me gusta el cafe, what is the subject?",
+              "id": "ES-C35-repaso-tres-aid",
+              "prompt": "Which of the three is the same word as English aid?",
               "assesses": [
-                "ES-GRAMMAR-GUSTAR-INVERSION-09"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "el cafe",
-                "the coffee",
-                "cafe",
-                "el café"
-              ],
-              "feedback": {
-                "correct": "Yes — the coffee does the pleasing.",
-                "incorrect": "El cafe. It is the one doing the pleasing; you receive it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-sintesis-gustar-taste",
-              "prompt": "What did gustar originally mean?",
-              "assesses": [
-                "ES-ETYMON-GUSTAR-08"
+                "ES-ETYMON-AYUDAR-06"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "to taste",
-                "taste",
-                "tasting"
+                "ayudar",
+                "ayudar (to help)",
+                "help"
               ],
               "feedback": {
-                "correct": "Yes — gustare, and English kept it in gusto and disgust.",
-                "incorrect": "To taste — from Latin gustare."
+                "correct": "Yes — adiutare, straight through to aid.",
+                "incorrect": "ayudar, from adiutare."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C35-sintesis-gustar-joke",
-              "prompt": "Which phrase you learned long ago is built from this same word?",
+              "id": "ES-C35-repaso-tres-nostory",
+              "prompt": "Which of the three has no agreed etymology at all?",
               "assesses": [
-                "ES-LEX-GUSTO",
-                "ES-LEX-GUSTAR-07"
+                "ES-LEX-TOMAR-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tomar",
+                "tomar (to take)",
+                "take"
+              ],
+              "feedback": {
+                "correct": "Yes — nobody is sure. That is an honest answer, not a missing one.",
+                "incorrect": "tomar. Its origin is genuinely unsettled."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C35-repaso-tres-who",
+              "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
+              "assesses": [
+                "ES-LEX-PREGUNTAR-03"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "mucho gusto",
-                "gusto",
-                "much pleasure"
+                "the one doing it",
+                "the doer",
+                "the person doing it",
+                "the subject does it"
               ],
               "feedback": {
-                "correct": "Yes — mucho gusto has always meant much pleasure.",
-                "incorrect": "Mucho gusto — you have been saying gustar's noun since your third conversation."
+                "correct": "Right. Remember that for the next chapter.",
+                "incorrect": "The one doing it — which is about to stop being true."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -200,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "Who is the subject of me gusta el café? (El café.) What did gustar mean first? (To taste.) And what has mucho gusto meant all along? (Much pleasure — the same word.)"
+              "text": "Which one has no settled origin? (Tomar.) In all three, who is the sentence about? (The one doing it.) Next chapter: a verb where that stops being true."
             }
           ]
         }
