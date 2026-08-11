@@ -428,6 +428,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("人"),
   },
+  // The compressed person radical keeps the source dataset's two-run order:
+  // a long left-falling stroke, then a separately started vertical. Its Noto
+  // Sans SC fit follows the glyph's narrow left-side proportions rather than
+  // mechanically squeezing the full 人 path.
+  [ductusKey("chinese", "亻")]: {
+    script: "chinese",
+    glyph: "亻",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left-falling piě stroke from upper right to lower left",
+            path: [
+              { x: 440, y: 820 },
+              { x: 430, y: 790 },
+              { x: 415, y: 755 },
+              { x: 395, y: 720 },
+              { x: 375, y: 680 },
+              { x: 350, y: 640 },
+              { x: 325, y: 600 },
+              { x: 295, y: 560 },
+              { x: 265, y: 520 },
+              { x: 230, y: 475 },
+              { x: 195, y: 435 },
+              { x: 160, y: 395 },
+              { x: 125, y: 360 },
+              { x: 95, y: 330 },
+              { x: 75, y: 305 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the vertical shù stroke from the junction to the baseline",
+            path: [
+              { x: 310, y: 590 },
+              { x: 310, y: 550 },
+              { x: 310, y: 500 },
+              { x: 310, y: 440 },
+              { x: 310, y: 370 },
+              { x: 310, y: 295 },
+              { x: 310, y: 220 },
+              { x: 310, y: 140 },
+              { x: 310, y: 60 },
+              { x: 310, y: -50 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("亻"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
