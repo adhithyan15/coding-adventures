@@ -31,6 +31,7 @@ const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
+const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -527,6 +528,17 @@ describe("handwriting ductus", () => {
     expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
   });
 
+  it("Arabic independent ر descends and sweeps left without lifting", () => {
+    expect(penLifts(ARABIC_RAA)).toBe(0);
+    expect(ARABIC_RAA.strokes).toHaveLength(1);
+    expect(ARABIC_RAA.strokes[0].segments).toHaveLength(2);
+    const descent = ARABIC_RAA.strokes[0].segments[0].path;
+    const curve = ARABIC_RAA.strokes[0].segments[1].path;
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent.at(-1)).toEqual(curve[0]);
+    expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -679,6 +691,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("د", ARABIC_DAAL.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ر", ARABIC_RAA.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -873,6 +888,20 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /one continuous pen-down run.*00:07.0–00:07.6.*upper tip.*diagonally down and right.*curved shoulder.*turns left.*baseline.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*contextual form/i,
     );
+  });
+
+  it("Arabic independent ر traces its unbroken curve to the University of Oregon", () => {
+    const src = ARABIC_RAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/chapter-1/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: د ذ ر.*Raa.*00:08.8–00:09.3.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*00:08.8–00:09.3.*upper tip.*descends through the short stroke.*sweeps left.*lower curve.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*Urdu ر source.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(URDU_RE.source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-raa ductus (HL-C09AP)
+
+- Render **ر** in two evidence-aligned frames: the upper-tip descent through its
+  short stroke, then the connected sweep left through the lower curve.
+- Keep the source's single pen-down run, zero lifts, and one-way-connector
+  context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic provenance independently of Urdu **ر**, with the next
+  measured Arabic **س** queued from its page's directly linked MOV source.
+
 ### Added — cited Arabic independent-daal ductus (HL-C09AO)
 
 - Render **د** in two evidence-aligned frames: the upper-tip descent through its
