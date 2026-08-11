@@ -7328,6 +7328,18 @@ impl HtmlParser {
                 && self.current_element_is(name)
                 && self.current_formatting_contains_closed_paragraph(name) =>
             {
+                if self
+                    .pending_formatting_reconstruction
+                    .iter()
+                    .any(|(candidate, _)| candidate == name)
+                {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-formatting-end-tag-without-open-element",
+                        format!(
+                            "end tag `</{name}>` triggered adoption-agency recovery after its formatting element left the open stack"
+                        ),
+                    ));
+                }
                 self.remove_pending_formatting_reconstruction(name);
             }
             name if is_heading_element(name) => {
@@ -34383,6 +34395,64 @@ mod tests {
             "<!doctype html><div><b></div><div>reconstructed</b>",
             "<!doctype html><b><p><i>text</b>tail</p>",
             "<!doctype html><font><table></font></table></font>",
+        ] {
+            let control = parse_html_with_diagnostics(source).unwrap();
+            assert!(control.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-formatting-end-tag-without-open-element"
+            }));
+        }
+    }
+
+    #[test]
+    fn reports_displaced_last_active_formatting_before_older_open_match() {
+        let already_covered =
+            parse_html_with_diagnostics("<!doctype html><p id=a><b><p id=b></b>TEST").unwrap();
+        assert!(already_covered.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-formatting-end-tag-without-open-element"
+        }));
+
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><b id=a><p><b id=b></p></b>TEST",
+        )
+        .unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-non-current-end-tag",
+                    "end tag `</p>` was seen before its open element was current",
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-formatting-end-tag-without-open-element",
+                    "end tag `</b>` triggered adoption-agency recovery after its formatting element left the open stack",
+                ),
+                ParserDiagnostic::new(
+                    "eof-with-unclosed-elements",
+                    "end of file was reached with disallowed open elements",
+                ),
+            ]
+        );
+
+        let outer_bold = element(&body(&output.document).children[0]);
+        assert_eq!(outer_bold.name, "b");
+        assert_eq!(outer_bold.attribute("id"), Some("a"));
+        assert_eq!(outer_bold.children.len(), 2);
+        assert_eq!(element(&outer_bold.children[0]).name, "p");
+        assert_eq!(outer_bold.children[1], Node::text("TEST"));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<b id=a><p><b id=b></p></b>TEST",
+            "div",
+        )
+        .unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-formatting-end-tag-without-open-element"
+        }));
+
+        for source in [
+            "<!doctype html><div><b></div><div>reconstructed</b>",
+            "<!doctype html></b>",
+            "<!doctype html><b><table><b></b></table>",
         ] {
             let control = parse_html_with_diagnostics(source).unwrap();
             assert!(control.parser_diagnostics.iter().all(|diagnostic| {
