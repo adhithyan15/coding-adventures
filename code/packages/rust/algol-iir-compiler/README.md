@@ -189,6 +189,11 @@ when its value is exactly integral and within that cap; other exponent shapes
 still require runtime real formatting. Nonnegative right-associated exponent
 chains may mix integer and exactly integral real literals when every computed
 exponent remains within the same cap.
+Direct calls to the non-overridden standard `abs` function over finite
+literal-only real arithmetic also use the static string path. `sqrt` does so
+when its nonnegative operand has an exactly round-tripping root; inexact roots,
+invalid domains, runtime operands, and user overrides still require runtime
+real formatting.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use

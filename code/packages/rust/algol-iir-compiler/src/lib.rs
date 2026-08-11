@@ -2227,7 +2227,10 @@ impl Compiler {
         &mut self,
         node: &GrammarASTNode,
     ) -> Result<bool, CompileError> {
-        if let Some(text) = expr_static_real_output_text(node) {
+        if let Some(text) = self
+            .static_standard_real_output_text(node)
+            .or_else(|| expr_static_real_output_text(node))
+        {
             self.emit_standard_output_literal(&text);
             return Ok(true);
         }
@@ -2273,6 +2276,43 @@ impl Compiler {
         }
         self.emit_label(&end_label);
         Ok(true)
+    }
+
+    /// Evaluate the small deterministic subset of real standard-function
+    /// calls that can use the formatter-free output path. User declarations
+    /// still shadow the built-ins, and `sqrt` is accepted only when the host
+    /// operation round-trips exactly to its finite literal-only operand.
+    fn static_standard_real_output_text(&self, node: &GrammarASTNode) -> Option<String> {
+        if node.rule_name != "proc_call" {
+            let seq = pieces(node);
+            return match seq.as_slice() {
+                [Piece::Node(child)] => self.static_standard_real_output_text(child),
+                _ => None,
+            };
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        let operand = expr_static_real_arithmetic_value(actuals[0])?;
+        let value = match target_name.as_str() {
+            "abs" => operand.abs(),
+            "sqrt" if operand >= 0.0 => {
+                let root = operand.sqrt();
+                (root * root == operand).then_some(root)?
+            }
+            _ => return None,
+        };
+        value.is_finite().then(|| value.to_string())
     }
 
     fn emit_standard_output_value(
@@ -7304,6 +7344,47 @@ mod tests {
     fn al4_print_static_real_integral_exponent_chain_rejects_unbounded_result() {
         let err = compile_source("begin print(2.0 ^ 4.0 ^ 4.0) end", "test")
             .expect_err("an oversized computed exponent must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_standard_functions() {
+        let module = compile_source(
+            "begin print(abs(2.0 - 6.25), sqrt(2.25)) end",
+            "test",
+        )
+        .expect("deterministic static real standard functions compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "1.5"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "f64_sqrt" | "cmp_lt" | "fsub")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_sqrt_rejects_inexact_and_invalid_operands() {
+        for source in ["begin print(sqrt(2.0)) end", "begin print(sqrt(-1.0)) end"] {
+            let err = compile_source(source, "test")
+                .expect_err("non-exact static sqrt must require runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_print_static_standard_function_respects_user_override() {
+        let err = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0)) end",
+            "test",
+        )
+        .expect_err("a user-defined abs result still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

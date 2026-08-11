@@ -1484,6 +1484,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("512512"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — deterministic real standard-function calls over static
+    // operands bypass runtime f64 formatting. Exact sqrt keeps this path
+    // independent of backend math-library formatting behavior.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(abs(2.0 - 6.25), sqrt(2.25)) end",
+        expect: Expect::Stdout("4.251.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
     // E4-dyn *frontend* feature: a `string procedure` returns a runtime string.
     // Here the result is chosen by control flow inside the body
@@ -6285,6 +6295,37 @@ fn algol_static_integral_exponent_chain_output_runs_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static integral exponent-chain output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_standard_function_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(abs(2.0 - 6.25), sqrt(2.25))")
+        })
+        .expect("the static real standard-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real standard-function output did not complete"
             );
             continue;
         };
