@@ -1,0 +1,15 @@
+% ============================================================================
+% frog-life-cycle.query.adj — worked recall over the frog life-cycle
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what position is this
+% stage in the life cycle?" (direct) or "which stage comes first/second/
+% etc.?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "frog-life-cycle.adj"
+
+? frog_life_stage(tadpole, $N)   % expect 2 (direct: what position is the tadpole stage?)
+? frog_life_stage($S, 1)         % expect egg (reverse: which stage comes first?)
+? frog_life_stage(adult, $N)     % expect abstain -- "adult" is not one of the three tabled stage names
