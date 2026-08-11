@@ -2132,6 +2132,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.3to5.space_rock_stage",
+      "title": "Recall which stage a rocky object is in as it travels from space to the ground",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/astronomy/space-rock-stage.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

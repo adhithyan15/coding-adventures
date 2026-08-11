@@ -1,0 +1,15 @@
+% ============================================================================
+% space-rock-stage.query.adj — worked recall over the space-rock-stage
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this stage
+% called?" (direct) or "which stage matches this description?" (reverse) —
+% it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries.
+% ============================================================================
+
+import "space-rock-stage.adj"
+
+? space_rock_stage(meteor, $D)                                                       % expect called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere (direct)
+? space_rock_stage($S, still_a_rock_in_space)                                        % expect meteoroid (reverse)
+? space_rock_stage(asteroid, $D)                                                      % expect abstain -- a real object the source mentions, but never defines in a sentence of its own on this page
