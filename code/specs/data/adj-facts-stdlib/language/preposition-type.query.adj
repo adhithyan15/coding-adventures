@@ -1,0 +1,15 @@
+% ============================================================================
+% preposition-type.query.adj — worked recall over the preposition-type
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% preposition type show?" (direct) or "which type matches this
+% description?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "preposition-type.adj"
+
+? preposition_type(preposition_of_time, $D)                                          % expect shows_when_something_happened_or_will_happen (direct)
+? preposition_type($T, shows_how_something_is_moving_or_which_way_its_going)         % expect preposition_of_direction (reverse)
+? preposition_type(preposition_of_manner_cause_or_purpose, $D)                        % expect abstain -- a real category the source covers, but one that bundles three distinct functions rather than one of these three clean single-concept types

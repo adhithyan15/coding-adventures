@@ -1,0 +1,61 @@
+% ============================================================================
+% preposition-type — three named categories of preposition and what each
+% actually shows (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A preposition's JOB depends on WHICH relationship it points out -- some
+% prepositions locate something in space, some place it in time, and some
+% trace a path it is moving along. Recall is a binding query:
+%
+%     ? preposition_type(preposition_of_time, $D)
+%       % shows_when_something_happened_or_will_happen
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `preposition_type(type, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a preposition-category term that is not one
+% of these three. The query also runs BACKWARD — bind a description and
+% recall the type it names:
+%
+%     ? preposition_type($T, shows_how_something_is_moving_or_which_way_its_going)
+%       % preposition_of_direction
+%
+% The three preposition types, as a little truth table:
+%
+%     type                       description                                                   quote (verbatim)
+%     -------------------------  ------------------------------------------------------------  --------------------------------------------------------------------------------
+%     preposition_of_place       shows_where_something_is_or_where_something_happened            "Prepositions of place show where something is or where something happened."
+%     preposition_of_time        shows_when_something_happened_or_will_happen                     "Prepositions of time show when something happened or will happen (and sometimes its duration)."
+%     preposition_of_direction   shows_how_something_is_moving_or_which_way_its_going              "Prepositions of direction or movement show how something is moving or which way it's going."
+%
+% Provenance: quoted verbatim from Grammarly's "Prepositions: Definition,
+% Types, and Examples" article, "Types of prepositions" section, which
+% introduces each of these three categories in its own complete sentence
+% before moving on to worked examples. WebFetch-verified before writing
+% (twice — the second pass specifically re-checked whether the
+% direction/movement sentence was complete on its own or ran on into the
+% following worked example, since a first-pass fetch can misjudge where a
+% source sentence actually ends). `trust consensus` — Grammarly is a
+% reputable secondary reference, the same tier the sibling
+% `noun-type.adj`/`verb-type.adj`/`pronoun-type.adj` (the other libraries in
+% this directory) already use for their Grammarly citations. A preposition
+% category that is NOT one of these three — "preposition_of_manner_cause_or_purpose",
+% a real category the same page also names, but one that bundles THREE
+% distinct functions (manner OR cause OR purpose) under a single label
+% rather than one clean, single-concept category like the three tabled
+% here — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a description. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table preposition_type {
+    columns type, description
+
+    row (preposition_of_place, shows_where_something_is_or_where_something_happened)
+    row (preposition_of_time, shows_when_something_happened_or_will_happen)
+    row (preposition_of_direction, shows_how_something_is_moving_or_which_way_its_going)
+
+    source "Prepositions of place show where something is or where something happened."
+    locator "https://www.grammarly.com/blog/parts-of-speech/prepositions/"
+    trust consensus
+}
