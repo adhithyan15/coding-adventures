@@ -1,5 +1,35 @@
 # Changelog — iir-to-llvm
 
+## 0.53.0 - 2026-08-11 - records/unions join the movable GC kind (AOT00-T1y)
+
+- **`alloc`'s default/16-byte shape now allocates under `@__twig_gc_alloc_pair()`**,
+  the same movable, precisely-traced `{0,8}` kind `aarch64-backend`/`x86_64-backend`
+  already use for every record/union/cons/closure constructor cell — instead of the
+  conservative, kind-0, pinned `@__twig_gc_alloc(i64 16)`. Closes the one item
+  `AOT00-T1w-llvm-gc-completion.md` §5 explicitly scoped out ("a per-kind precise
+  interior trace for LLVM's `alloc`'d objects — same kind-0/conservative boundary
+  `AOT00-T1v` draws for `vm-core`"). Any *other* explicit `alloc` size still falls
+  back to `@__twig_gc_alloc(size)` unchanged — its field layout isn't the known
+  `{0,8}` pair shape, so a precise ref-map would be unsound.
+- **No write-barrier, `field_store`, or `field_load` changes needed.** `field_store`
+  already calls `@__twig_gc_write_barrier` unconditionally on every store,
+  independent of which allocator produced the object; both field ops already treat
+  a field as a raw word at `ptr + idx*8`, which is exactly the pair kind's layout.
+- Two independent `used_gc_alloc*` flags now gate the two allocator declares
+  separately (`used_gc_alloc_pair` for the pair shape, `used_gc_alloc` — unchanged
+  meaning — for any other size), so a Twig-only module (which only ever emits the
+  default/16-byte shape) declares and links `@__twig_gc_alloc_pair` exclusively and
+  never references `@__twig_gc_alloc` at all.
+- 5 new/updated unit tests in `test_backend.rs`: default-size alloc calls the pair
+  allocator and declares it exactly once (superseding the old test that asserted the
+  kind-0 call); an explicit `16` operand takes the identical branch; a non-pair
+  explicit size (e.g. `24`) is unchanged and still calls the conservative allocator;
+  a module mixing both shapes declares both externs exactly once each with no
+  cross-contamination.
+- See `code/specs/AOT00-T1y-llvm-records-movable-kind.md` for the full design and
+  soundness argument (why `register_kind`'s boxed mode is sound here, unlike
+  `vm-core`'s NaN-boxed fields, which needed `AOT00-T10`'s new tagged mode instead).
+
 ## 0.52.0 - 2026-08-11 - array_set write barrier (AOT00-T8 follow-up)
 
 - **`array_set` now also emits a call to `@__twig_gc_write_barrier(i64 parent, i64

@@ -768,6 +768,10 @@ pub fn lower_iir_to_llvm(
     let mut used_input_str = false;
     let mut used_alloc_bytes = false;
     let mut used_gc_alloc = false;
+    // AOT00-T1y: set when any `alloc` takes the default/16-byte pair shape
+    // (movable `__twig_gc_alloc_pair`), distinct from `used_gc_alloc` (the
+    // conservative, kind-0 `__twig_gc_alloc` fallback for any other size).
+    let mut used_gc_alloc_pair = false;
     // AOT00-T8 follow-up: `field_store` and `array_set` both need the
     // generational write barrier (`@__twig_gc_write_barrier`) so a real minor
     // collection can eventually be turned on for LLVM output — see
@@ -826,7 +830,21 @@ pub fn lower_iir_to_llvm(
                 used_alloc_bytes = true;
             }
             if i.op == "alloc" {
-                used_gc_alloc = true;
+                // AOT00-T1y: the default/16-byte pair shape (every Twig
+                // record/union/cons/closure allocation site) is movable via
+                // `__twig_gc_alloc_pair`, mirroring `aarch64-backend`/
+                // `x86_64-backend`'s identical branch. Any other explicit
+                // size keeps the conservative, kind-0 `__twig_gc_alloc` path
+                // — its field layout is unknown here, so a precise ref-map
+                // would be unsound.
+                let explicit_size: Option<i64> = match i.srcs.first() {
+                    Some(Operand::Int(n)) if *n > 0 => Some(*n),
+                    _ => None,
+                };
+                match explicit_size {
+                    None | Some(16) => used_gc_alloc_pair = true,
+                    Some(_) => used_gc_alloc = true,
+                }
             }
             if i.op == "field_store" || i.op == "array_set" {
                 used_write_barrier = true;
@@ -923,7 +941,7 @@ pub fn lower_iir_to_llvm(
     }
     if used_alloc_bytes || used_arrays || used_conversions || used_str_index || used_putchar || used_getchar
         || used_input_i64 || used_input_str || used_str_concat || used_str_eq || used_str_cmp || used_gc_alloc
-        || used_gc_live_bytes || used_write_barrier || used_gc_set_auto_minor
+        || used_gc_alloc_pair || used_gc_live_bytes || used_write_barrier || used_gc_set_auto_minor
         || used_gc_collect_minor_precise || used_gc_kind_of {
         out.push('\n');
         if used_alloc_bytes || used_arrays {
@@ -969,6 +987,14 @@ pub fn lower_iir_to_llvm(
             // E6d-6-LLVM: the GC allocator (twig_gc.c), shared with the native
             // backend. `i64 __twig_gc_alloc(i64 n_bytes)` returns a heap pointer.
             out.push_str("declare i64 @__twig_gc_alloc(i64)\n");
+        }
+        if used_gc_alloc_pair {
+            // AOT00-T1y: `gc-core-capi::__twig_gc_alloc_pair` (twig_compat.rs)
+            // — the same movable, precisely-traced `{0,8}` allocator
+            // `aarch64-backend`/`x86_64-backend` already use for every
+            // record/union/cons/closure cell. No arguments; the pair shape
+            // is fixed. `i64 __twig_gc_alloc_pair()` returns a heap pointer.
+            out.push_str("declare i64 @__twig_gc_alloc_pair()\n");
         }
         if used_write_barrier {
             // AOT00-T8 follow-up: the generational write barrier. `void
@@ -2669,20 +2695,36 @@ fn lower_alloc_bytes(
 // accessors read fields with `field_load`; `match` on a union tests the tag with
 // `is_null`/`=`. The native backend (LANG77) already runs these directly; these
 // four arms give LLVM the same word-granular heap model so records/unions/`match`
-// run on the LLVM column too. A heap object is a `__twig_gc_alloc`'d block; the
-// object handle and every field are raw 64-bit words (tagged `DynValue`s), so a
-// field is at byte offset `idx*8` — one `getelementptr i64, ptr, i64 <idx>`.
+// run on the LLVM column too. The object handle and every field are raw 64-bit
+// words (tagged `DynValue`s), so a field is at byte offset `idx*8` — one
+// `getelementptr i64, ptr, i64 <idx>`.
+//
+// **(AOT00-T1y)** The default/16-byte shape — every record/union/cons/closure
+// constructor site — is allocated under `__twig_gc_alloc_pair`'s MOVABLE,
+// precisely-traced `{0,8}` kind, the same primitive `aarch64-backend`/
+// `x86_64-backend` already use; only a non-default explicit size still falls
+// back to `__twig_gc_alloc`'s conservative, kind-0, pinned path (its field
+// layout is unknown here, so a precise ref-map would be unsound).
 
 /// `alloc [<size>] -> dest` — GC-allocate a heap object; dest is the i64 handle.
 /// `srcs[0]`, when present, is the compile-time payload size in bytes; default 16
-/// (a 2-word `LispyPair`), matching the native backend.
+/// (a 2-word `LispyPair`), matching the native backend. **(AOT00-T1y)** The
+/// default/16-byte case is movable (`__twig_gc_alloc_pair`); any other explicit
+/// size falls back to the conservative `__twig_gc_alloc(size)`.
 fn lower_alloc(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "alloc", state.fn_name)?.to_string();
-    let size: i64 = match instr.srcs.first() {
-        Some(Operand::Int(n)) if *n > 0 => *n,
-        _ => 16,
+    let explicit_size: Option<i64> = match instr.srcs.first() {
+        Some(Operand::Int(n)) if *n > 0 => Some(*n),
+        _ => None,
     };
-    out.push_str(&format!("  %{dest} = call i64 @__twig_gc_alloc(i64 {size})\n"));
+    match explicit_size {
+        None | Some(16) => {
+            out.push_str(&format!("  %{dest} = call i64 @__twig_gc_alloc_pair()\n"));
+        }
+        Some(size) => {
+            out.push_str(&format!("  %{dest} = call i64 @__twig_gc_alloc(i64 {size})\n"));
+        }
+    }
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
