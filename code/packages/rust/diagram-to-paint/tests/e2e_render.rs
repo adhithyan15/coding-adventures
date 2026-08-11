@@ -374,6 +374,10 @@ mod apple {
             name: "role".into(),
             value_json: "\"administrator\"".into(),
         });
+        diagram.participants[0].properties.push(SequenceProperty {
+            name: "icon".into(),
+            value_json: "\"@clock\"".into(),
+        });
         diagram.participants[0].details_reference = Some("user-details".into());
         let layout = layout_sequence_diagram(&diagram);
 
@@ -471,6 +475,11 @@ mod apple {
             instruction,
             paint_instructions::PaintInstruction::Ellipse(ellipse)
                 if ellipse.rx == 5.0 && ellipse.ry == 5.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            paint_instructions::PaintInstruction::Ellipse(ellipse)
+                if ellipse.rx == 7.0 && ellipse.ry == 7.0
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

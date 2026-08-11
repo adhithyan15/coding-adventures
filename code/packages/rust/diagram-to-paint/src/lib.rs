@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.31.0";
+pub const VERSION: &str = "0.32.0";
 
 use std::collections::HashMap;
 
@@ -36,7 +36,7 @@ use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    TaskStatus, TextAlign as GeoTextAlign,
+    SequenceProperty, TaskStatus, TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -1528,6 +1528,14 @@ where
                         *y + height / 2.0,
                     ));
                 }
+                let embedded_icon = sequence_embedded_icon_name(properties);
+                if let Some(icon) = embedded_icon {
+                    instructions.extend(sequence_embedded_icon(
+                        icon,
+                        *x + *width - 17.0,
+                        *y + 16.0,
+                    ));
+                }
                 text_children.push(text_node_no_wrap(
                     label,
                     *x + if specialized { 44.0 } else { 8.0 },
@@ -1536,7 +1544,9 @@ where
                     } else {
                         *y + 11.0
                     },
-                    *width - if specialized { 50.0 } else { 16.0 },
+                    *width
+                        - if specialized { 50.0 } else { 16.0 }
+                        - if embedded_icon.is_some() { 20.0 } else { 0.0 },
                     (*label_height + 4.0).min(*height - 12.0),
                     label_font.clone(),
                     text_color,
@@ -1803,6 +1813,89 @@ fn sequence_participant_icon(
             stroke_dash_offset: None,
         })],
         SequenceParticipantKind::Participant | SequenceParticipantKind::Actor => vec![],
+    }
+}
+
+fn sequence_embedded_icon_name(properties: &[SequenceProperty]) -> Option<&str> {
+    properties
+        .iter()
+        .find(|property| property.name == "icon")
+        .and_then(|property| {
+            property
+                .value_json
+                .strip_prefix('"')
+                .and_then(|value| value.strip_suffix('"'))
+        })
+        .and_then(|value| value.strip_prefix('@'))
+        .filter(|value| matches!(*value, "clock" | "computer"))
+}
+
+fn sequence_embedded_icon(name: &str, cx: f64, cy: f64) -> Vec<PaintInstruction> {
+    let path = |commands| {
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands,
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#475569".into()),
+            stroke_width: Some(1.25),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })
+    };
+    match name {
+        "clock" => vec![
+            PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx,
+                cy,
+                rx: 7.0,
+                ry: 7.0,
+                fill: Some("#ffffff".into()),
+                stroke: Some("#475569".into()),
+                stroke_width: Some(1.25),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            path(vec![
+                PathCommand::MoveTo { x: cx, y: cy - 4.0 },
+                PathCommand::LineTo { x: cx, y: cy },
+                PathCommand::LineTo {
+                    x: cx + 3.0,
+                    y: cy + 2.0,
+                },
+            ]),
+        ],
+        "computer" => vec![
+            PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: cx - 8.0,
+                y: cy - 6.0,
+                width: 16.0,
+                height: 11.0,
+                fill: Some("#ffffff".into()),
+                stroke: Some("#475569".into()),
+                stroke_width: Some(1.25),
+                corner_radius: Some(1.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            path(vec![
+                PathCommand::MoveTo { x: cx, y: cy + 5.0 },
+                PathCommand::LineTo { x: cx, y: cy + 8.0 },
+                PathCommand::MoveTo {
+                    x: cx - 5.0,
+                    y: cy + 8.0,
+                },
+                PathCommand::LineTo {
+                    x: cx + 5.0,
+                    y: cy + 8.0,
+                },
+            ]),
+        ],
+        _ => vec![],
     }
 }
 
@@ -2755,7 +2848,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.31.0");
+        assert_eq!(crate::VERSION, "0.32.0");
     }
 
     #[test]
@@ -2782,6 +2875,27 @@ mod tests {
             unreachable!();
         };
         assert_eq!(path.commands.len(), 8);
+    }
+
+    #[test]
+    fn sequence_embedded_property_icons_emit_backend_neutral_geometry() {
+        let properties = vec![SequenceProperty {
+            name: "icon".into(),
+            value_json: "\"@clock\"".into(),
+        }];
+        assert_eq!(sequence_embedded_icon_name(&properties), Some("clock"));
+
+        let clock = sequence_embedded_icon("clock", 20.0, 20.0);
+        assert!(matches!(
+            clock.as_slice(),
+            [PaintInstruction::Ellipse(_), PaintInstruction::Path(_)]
+        ));
+
+        let computer = sequence_embedded_icon("computer", 20.0, 20.0);
+        assert!(matches!(
+            computer.as_slice(),
+            [PaintInstruction::Rect(_), PaintInstruction::Path(_)]
+        ));
     }
 
     #[test]
