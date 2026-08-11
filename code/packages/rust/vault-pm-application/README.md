@@ -15,8 +15,12 @@ durable event head back to its explicit genesis and authenticates every event
 against its signed repository commit. A dedicated audit-only journal can now
 advance that event head and device counter while reusing only the exact active
 catalog root; ambiguous provider success retains and replays the exact pending
-bytes. Audit activation, access enforcement, and redacted audit history
-rendering remain later slices. It also defines the
+bytes. A first session-consuming audited access boundary now publishes an
+`ItemList` success or post-authentication failure before releasing the redacted
+list or closed operation error; publication failure releases neither and leaves
+the exact pending journal recoverable. Remaining access methods, CLI adoption,
+audit activation, and redacted audit history rendering remain later slices. It
+also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and

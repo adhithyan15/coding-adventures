@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+mod access;
 mod audit;
 mod codec;
 mod crypto;
@@ -23,6 +24,7 @@ mod state;
 mod status;
 mod verifier;
 
+pub use access::AuditedAccessResultV1;
 pub use audit::AuditVerificationV1;
 pub use codec::{
     decode_device_certificate, decode_item_revision, decode_signed_audit_event,
@@ -50,10 +52,11 @@ pub use initialize::{
 };
 pub use lifecycle::{LockedVaultV1, VaultAccessV1};
 pub use mutation::{
-    portable_import_random_bytes, AddItemRandomnessV1, DeleteItemRandomnessV1,
-    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
-    REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    portable_import_random_bytes, AddItemRandomnessV1, AuditedAccessRandomnessV1,
+    DeleteItemRandomnessV1, PortableImportRandomnessV1, ReplaceItemRandomnessV1,
+    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
     open_active_vault, recover_pending_publication, ItemHistoryViewV1, UnlockedVaultV1,

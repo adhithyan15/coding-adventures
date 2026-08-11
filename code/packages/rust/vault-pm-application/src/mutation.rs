@@ -21,8 +21,10 @@ const ITEM_ID_BYTES: usize = 16;
 const TRACE_ID_BYTES: usize = 32;
 const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
 const AUDIT_RANDOM_BYTES: usize = TRACE_ID_BYTES + OBJECT_RANDOM_BYTES;
+/// Exact caller-filled CSPRNG bytes consumed by one audit-only access commit.
+pub const AUDITED_ACCESS_RANDOM_BYTES: usize = TRACE_ID_BYTES + 2 * OBJECT_RANDOM_BYTES;
 #[cfg(test)]
-pub(crate) const AUDIT_ONLY_TEST_RANDOM_BYTES: usize = TRACE_ID_BYTES + 2 * OBJECT_RANDOM_BYTES;
+pub(crate) const AUDIT_ONLY_TEST_RANDOM_BYTES: usize = AUDITED_ACCESS_RANDOM_BYTES;
 
 /// Exact caller-filled CSPRNG bytes consumed by one add-item mutation.
 pub const ADD_ITEM_RANDOM_BYTES: usize =
@@ -35,6 +37,37 @@ pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RAND
 pub const RESTORE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one conflict-resolution mutation.
 pub const RESOLVE_ITEM_CONFLICT_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
+
+/// Owned wipe-on-drop entropy for one access trace, encrypted audit event, and
+/// audit-only repository commit.
+pub struct AuditedAccessRandomnessV1 {
+    bytes: [u8; AUDITED_ACCESS_RANDOM_BYTES],
+}
+
+impl AuditedAccessRandomnessV1 {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; AUDITED_ACCESS_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for AuditedAccessRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for AuditedAccessRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for AuditedAccessRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AuditedAccessRandomnessV1(<redacted>)")
+    }
+}
 
 /// Return the exact caller-CSPRNG byte count required to import one opened
 /// portable snapshot.
@@ -917,7 +950,7 @@ pub(crate) fn activate_audit_epoch_for_test(
     if active.audit_event_head().is_some() {
         return Err(ApplicationError::InvalidInput);
     }
-    publish_audit_only_event_for_test(
+    publish_audit_only_event_inner(
         active,
         keys,
         local_secret,
@@ -929,7 +962,49 @@ pub(crate) fn activate_audit_epoch_for_test(
         wall_time_ms,
         event_basis_override,
         event_signing_seed_override,
-        randomness,
+        &randomness,
+        local_state_store,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn publish_audited_access(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    action: AuditActionV1,
+    outcome: AuditOutcomeV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    randomness: AuditedAccessRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if active.audit_event_head().is_none()
+        || action.is_item_mutation()
+        || matches!(
+            action,
+            AuditActionV1::AuditEpochStart
+                | AuditActionV1::VaultInitialize
+                | AuditActionV1::PortableImport
+        )
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        action,
+        outcome,
+        item_id,
+        selected_revision,
+        wall_time_ms,
+        None,
+        None,
+        &randomness.bytes,
         local_state_store,
     )
 }
@@ -951,15 +1026,48 @@ pub(crate) fn publish_audit_only_event_for_test(
     randomness: [u8; AUDIT_ONLY_TEST_RANDOM_BYTES],
     local_state_store: &dyn LocalStateStore,
 ) -> Result<ActiveStateV1, ApplicationError> {
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        action,
+        outcome,
+        item_id,
+        selected_revision,
+        wall_time_ms,
+        event_basis_override,
+        event_signing_seed_override,
+        &randomness,
+        local_state_store,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn publish_audit_only_event_inner(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    action: AuditActionV1,
+    outcome: AuditOutcomeV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    event_basis_override: Option<Vec<ObjectId>>,
+    event_signing_seed_override: Option<[u8; 32]>,
+    randomness: &[u8; AUDITED_ACCESS_RANDOM_BYTES],
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
     let device_counter = active
         .last_device_counter()
         .checked_add(1)
         .ok_or(ApplicationError::BoundExceeded)?;
     let mut offset = 0;
-    let trace_id = OperationId::new(take_slice(&randomness, &mut offset));
-    let audit_randomness = take_object_randomness_slice(&randomness, &mut offset);
-    let commit_randomness = take_object_randomness_slice(&randomness, &mut offset);
-    debug_assert_eq!(offset, AUDIT_ONLY_TEST_RANDOM_BYTES);
+    let trace_id = OperationId::new(take_slice(randomness, &mut offset));
+    let audit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let commit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    debug_assert_eq!(offset, AUDITED_ACCESS_RANDOM_BYTES);
 
     let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
     parents.sort_unstable();
@@ -1325,6 +1433,20 @@ fn map_local_state_store(error: LocalStateStoreError) -> ApplicationError {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn audited_access_randomness_redacts_and_zeroizes() {
+        let mut randomness = AuditedAccessRandomnessV1::new([0x96; AUDITED_ACCESS_RANDOM_BYTES]);
+
+        assert_eq!(
+            format!("{randomness:?}"),
+            "AuditedAccessRandomnessV1(<redacted>)"
+        );
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0x96));
+
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+    }
 
     #[test]
     fn add_item_randomness_redacts_and_zeroizes() {
