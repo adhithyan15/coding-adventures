@@ -268,8 +268,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   upper head left-to-right and continue around the bowl in one run from
   00:02.8–00:03.9, then lift once for the upper dot at 00:04.2–00:04.4. Its
   three-frame path follows Khaa's own body-first evidence rather than assuming
-  either Jeem's lower dot or Haa's restarted stem. The remaining **189** prose
-  part orders across seven scripts (`arabic` 15,
+  either Jeem's lower dot or Haa's restarted stem. The next alphabet page's
+  `letter-daal-2.mp4` verifies independent **د** at 00:07.0–00:07.6: begin at
+  the upper tip, descend down-right through the curved shoulder, then turn left
+  along the baseline without lifting. Its two-frame path preserves that
+  zero-lift motion, one-way-connector context, and Arabic-scoped provenance.
+  The remaining **188** prose part orders across seven scripts (`arabic` 14,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

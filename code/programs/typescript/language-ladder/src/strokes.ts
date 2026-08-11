@@ -245,6 +245,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The same page's Arabic خ clip returns to a body-first order: the short head
 // flows directly around the bowl, then one lift precedes the upper dot. That
 // order comes from Khaa's own clip rather than being copied from ج or ح.
+// The next page's Arabic د clip starts at the independent form's upper tip,
+// descends down-right through its curved shoulder, and turns left along the
+// baseline in the same pen-down run. Its one-way-connector context stays
+// explicit, but the path does not infer motion from a contextual form.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -698,6 +702,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("خ"),
+  },
+  [ductusKey("arabic", "د")]: {
+    script: "arabic",
+    glyph: "د",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend diagonally down and right through the curved shoulder",
+            path: [
+              { x: 270, y: 350 },
+              { x: 260, y: 325 },
+              { x: 260, y: 300 },
+              { x: 270, y: 275 },
+              { x: 285, y: 245 },
+              { x: 300, y: 215 },
+              { x: 318, y: 185 },
+              { x: 333, y: 155 },
+              { x: 343, y: 130 },
+              { x: 345, y: 110 },
+              { x: 342, y: 100 },
+            ],
+          },
+          {
+            label: "turn left along the baseline without lifting",
+            path: [
+              { x: 342, y: 100 },
+              { x: 320, y: 90 },
+              { x: 290, y: 75 },
+              { x: 250, y: 60 },
+              { x: 210, y: 50 },
+              { x: 170, y: 40 },
+              { x: 130, y: 40 },
+              { x: 90, y: 50 },
+              { x: 60, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("د"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

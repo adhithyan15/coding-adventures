@@ -88,6 +88,8 @@ const ARABIC_HAA = ductusFor("ح", "arabic")!;
 const arabicHaaOutline = naskhOutline("ح");
 const ARABIC_KHAA = ductusFor("خ", "arabic")!;
 const arabicKhaaOutline = naskhOutline("خ");
+const ARABIC_DAAL = ductusFor("د", "arabic")!;
+const arabicDaalOutline = naskhOutline("د");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -899,6 +901,33 @@ describe("Arabic خ — a body-first hook-and-upper-dot filmstrip", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_KHAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic د — an unbroken shoulder-and-baseline filmstrip", () => {
+  const steps = ductusSteps(ARABIC_DAAL);
+  const strip = ductusFilmstrip(ARABIC_DAAL, arabicDaalOutline);
+
+  it("keeps the sourced descent and leftward baseline turn in one stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "begin at the upper tip and descend diagonally down and right through the curved shoulder",
+      "turn left along the baseline without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicDaalOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_DAAL.strokes[0], 1),
     );
   });
 });
