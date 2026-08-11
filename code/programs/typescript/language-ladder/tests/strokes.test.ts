@@ -37,6 +37,7 @@ const HEBREW_YOD = DUCTUS[ductusKey("hebrew", "י")];
 const HEBREW_KAF = DUCTUS[ductusKey("hebrew", "כ")];
 const HEBREW_LAMED = DUCTUS[ductusKey("hebrew", "ל")];
 const HEBREW_MEM = DUCTUS[ductusKey("hebrew", "מ")];
+const HEBREW_NUN = DUCTUS[ductusKey("hebrew", "נ")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -388,6 +389,21 @@ describe("handwriting ductus", () => {
     expect(inner[0].y).toBeGreaterThan(inner.at(-1)!.y);
     expect(upper[0].x).toBeLessThan(upper.at(-1)!.x);
     expect(side[0]).toEqual(upper.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew נ joins its top head, right descent, and leftward base", () => {
+    expect(HEBREW_NUN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_NUN)).toBe(0);
+    expect(HEBREW_NUN.strokes).toHaveLength(1);
+    expect(HEBREW_NUN.strokes[0].segments).toHaveLength(3);
+    const head = HEBREW_NUN.strokes[0].segments[0].path;
+    const side = HEBREW_NUN.strokes[0].segments[1].path;
+    const base = HEBREW_NUN.strokes[0].segments[2].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(side[0]).toEqual(head.at(-1));
     expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
     expect(base[0]).toEqual(side.at(-1));
     expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
@@ -1041,6 +1057,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("מ", HEBREW_MEM.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("נ", HEBREW_NUN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1216,6 +1235,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /handwritten Mem.*N-like cursive zigzag.*03:02.8–03:05.3.*printed demonstration.*detached left part.*lower tip.*corner.*down-right.*short inner leg.*lifts once.*angular right body.*climb diagonally right.*upper shoulder.*down the right side.*left along the base.*03:07.7–03:10.6.*open at the bottom-left.*Noto Sans Hebrew.*handwritten variation/i,
+    );
+  });
+
+  it("Hebrew נ traces the printed hook in one continuous run", () => {
+    const src = HEBREW_NUN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:04.1–02:04.6.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Nun.*one continuous run.*02:04.1–02:04.6.*top head.*left-to-right.*right side.*left along the base.*without lifting.*cursive Nun.*purple.*rounder, wider hook.*02:05.2–02:05.8.*without lifting.*previously queued.*Hebrew Letters - NUN.*3gYCaDgB-Nk.*religious exposition.*not used.*Noto Sans Hebrew.*handwritten variation/i,
     );
   });
 

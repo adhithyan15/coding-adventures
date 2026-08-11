@@ -433,6 +433,10 @@ The same lesson adds a five-frame printed **מ** filmstrip: its detached angled
 left part comes first, then one lift precedes the joined upper shoulder, right
 descent, and leftward base. The source's earlier handwriting
 compresses Mem into a narrow N-like zigzag, which remains explicit in the citation.
+Aural Writing's full-alphabet demonstration adds a three-frame printed **נ**
+filmstrip: its small head travels left-to-right, continues down the right side,
+and turns left along the base without lifting. The adjacent purple cursive Nun
+rounds that hook, while the citation records why an expository video was rejected.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Nun ductus (HL-C09BQ)
+
+- Replace the queued expository Nun video with Aural Writing's auditable
+  print/cursive source.
+- Render **נ** in three evidence-aligned frames: draw the small head, continue
+  down the right side, and turn left along the base without lifting.
+- Preserve the rounder purple cursive hook and queue Samekh from the same source.
+
 ### Added — cited Hebrew Mem ductus (HL-C09BP)
 
 - Render **מ** in five evidence-aligned frames: draw the detached angled left

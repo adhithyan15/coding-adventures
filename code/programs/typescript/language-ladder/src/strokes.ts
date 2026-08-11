@@ -996,6 +996,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("מ"),
   },
+  // Printed Nun joins its small head, right descent, and leftward base in one
+  // run. The source's immediately adjacent cursive form rounds the same hook.
+  [ductusKey("hebrew", "נ")]: {
+    script: "hebrew",
+    glyph: "נ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short top head from left to right",
+            path: [
+              { x: 105, y: 555 },
+              { x: 155, y: 555 },
+              { x: 210, y: 540 },
+              { x: 255, y: 500 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 255, y: 500 },
+              { x: 260, y: 400 },
+              { x: 260, y: 280 },
+              { x: 260, y: 160 },
+              { x: 240, y: 80 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting",
+            path: [
+              { x: 240, y: 80 },
+              { x: 190, y: 55 },
+              { x: 120, y: 40 },
+              { x: 60, y: 40 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("נ"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
