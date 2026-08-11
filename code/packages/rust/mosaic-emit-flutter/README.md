@@ -144,8 +144,13 @@ See `CHANGELOG.md` for the full feature matrix. The headline:
   are wired with a passing test each.
 - ✅ HostTable and For/If/Else lower to native Flutter widget trees; Mosaic
   truthiness is normalized for Dart boolean positions.
-- 🚧 Rich dialog behavior, native drag/drop, and multi-field payload synthesis
-  from a single text-input callback remain follow-up work.
+- ✅ HostDraggable and HostDropTarget lower to Flutter's native
+  `Draggable`/`DragTarget` widgets with touch/pointer input, Space/Enter grab and
+  drop, arrow-key target movement, Escape cancellation, screen-reader
+  announcements, disabled/accepted-kind filtering, and the complete lifecycle
+  event payloads.
+- 🚧 Rich dialog behavior and multi-field payload synthesis from a single
+  text-input callback remain follow-up work.
 
 ## Versioning
 

@@ -1079,6 +1079,17 @@ jobs:
             flutter build linux --debug
           )
 
+          drag_output="$RUNNER_TEMP/mosaic-flutter-drag-board"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/drag-board --backend flutter --output "$drag_output" --emit-project
+          (
+            cd "$drag_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_drag_board .
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/drag-board-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            dart analyze lib/DragBoard.dart test/widget_test.dart
+            flutter test test/widget_test.dart
+          )
+
       - name: Round-trip Rust engine through standard Compose binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash

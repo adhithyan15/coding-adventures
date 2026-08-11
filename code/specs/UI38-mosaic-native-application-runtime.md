@@ -322,7 +322,14 @@ unblocks multiple downstream targets; never count source generation as completio
     - [ ] Define a serializable native-view reference contract for `node` and
       component slots; Flutter's JSON runtime cannot currently materialize a
       Dart `Widget` value for those otherwise typed composition seams.
+    - [ ] Apply UI35 `accepts` kind filtering to the existing React and HTML
+      interaction lowerings; both predate that enforcement and currently accept
+      every drag kind even when a target authors a filter.
   - [ ] Remove every reported TaskApp degradation on all five native backends.
+    - [x] Remove Flutter's four inert drag/drop reports by lowering UI35 to
+      native `Draggable`/`DragTarget` widgets with equivalent keyboard and
+      screen-reader operation. Flutter TaskApp now retains only the separate
+      table-semantics degradation.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

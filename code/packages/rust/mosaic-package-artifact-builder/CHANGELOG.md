@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased] - Flutter native drag capability
+
+- Native-complete analysis no longer reports Flutter `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native
+  pointer/touch, keyboard, acceptance, lifecycle, and accessibility behavior.
+- Compose, Qt, SwiftUI, and XAML retain the stable
+  `interaction.drag-drop-inert` degradation until their native implementations
+  land.
+
 ## [Unreleased] - ignored native dialog and link contract inventory
 
 - Native-complete analysis now rejects XAML dialogs whose open state still

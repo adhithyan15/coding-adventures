@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-flutter-drag-board"
+version = "0.1.0"
+description = "UI35 Flutter pointer, keyboard, and semantics acceptance fixture"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["DragBoard"]
+
+[dependencies]
+
+[kernel]
+version = "1"
