@@ -1,0 +1,15 @@
+% ============================================================================
+% past-tense-ed-sound.query.adj — worked recall over the past-tense-ed-sound
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how is this word's -ed
+% ending pronounced?" (direct) or "which example word has this -ed sound?"
+% (reverse) — it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries.
+% ============================================================================
+
+import "past-tense-ed-sound.adj"
+
+? past_tense_ed_sound(walked, $Sound)        % expect t_sound (direct)
+? past_tense_ed_sound($W, id_sound)          % expect wanted (reverse)
+? past_tense_ed_sound(played, $Sound)        % expect abstain -- played is /d/-sounded too, but not one of the three tabled example words

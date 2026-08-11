@@ -1,0 +1,60 @@
+% ============================================================================
+% past-tense-ed-sound — regular past-tense verbs whose final -ed ending is
+% pronounced with a different SOUND depending on the sound before it
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The ELEVENTH literacy sub-skill library in this loop's sweep, and a
+% genuinely new phonics pattern beyond CCSS RF.K.2's five parts and the
+% spelling/whole-text/vocabulary slices already shipped: the regular -ed
+% past-tense suffix is spelled the SAME way every time, but PRONOUNCED one
+% of three different ways depending on the final sound of the base verb.
+% Recall is a binding query:
+%
+%     ? past_tense_ed_sound(walked, $Sound)
+%       % t_sound
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `past_tense_ed_sound(word, sound)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the sound WITH its source, on the CPU, with zero model calls,
+% and abstains on any past-tense word not one of these three source-cited
+% examples. The query also runs BACKWARD — bind a sound and recall which
+% example word carries it:
+%
+%     ? past_tense_ed_sound($W, id_sound)
+%       % wanted
+%
+% Provenance: quoted verbatim from 7ESL's "Pronunciation of ED: Past Tense
+% Pronunciation for Regular Verbs" article, which states the three voicing
+% rules and gives worked base-verb → past-tense examples for each:
+%
+%     word      sound      rule (verbatim)                                                          example (verbatim)
+%     -------   --------   -----------------------------------------------------------------------  -------------------
+%     walked    t_sound    "Final -ed is pronounced /t/ after all voiceless sounds."                 "Walk → Walked"
+%     lived     d_sound    "Final -ed is pronounced /d/ after voiced sounds."                         "Live → Lived"
+%     wanted    id_sound   "Final -ed is pronounced /id/ after 'T', and 'D' sounds. The sound /id/    "Want → Wanted"
+%                          adds a whole syllable to a word."
+%
+% WebFetch-verified before writing. `trust consensus` — a general
+% ESL-learning site, not a primary government or research-institution
+% source, the same tier this stdlib already reserves for its other
+% non-.gov language sources (e.g. Wikipedia's Greek-alphabet and
+% Morse-code entries). A past-tense word not one of these three — e.g.
+% `played` (also pronounced with the /d/ sound, but not one of the three
+% example words this source's own worked examples name) — is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a sound.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table past_tense_ed_sound {
+    columns word, sound
+
+    row (walked, t_sound)
+    row (lived, d_sound)
+    row (wanted, id_sound)
+
+    source "Final -ed is pronounced /t/ after all voiceless sounds."
+    locator "https://7esl.com/pronunciation-of-ed/"
+    trust consensus
+}
