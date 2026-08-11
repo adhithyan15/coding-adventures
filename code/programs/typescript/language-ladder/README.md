@@ -282,7 +282,13 @@ two-frame video demonstration: its shallow bowl sweeps continuously from the
 upper-right tip to the turned-up left tip, then one lift precedes the dot below.
 The two-way-connector context stays explicit, while script-aware lookup keeps
 its Arabic source separate from Persian ب and both learner paths stay on the
-same vendored Noto Naskh outline. The runtime
+same vendored Noto Naskh outline. Arabic ت then adds a three-frame path from the
+book's dedicated ب/ت/ث page. Its Taa clip opens with the bowl already complete,
+so the learner path cites the page's separately demonstrated Baa body for that
+right-to-left sweep, then follows Taa's left and right upper dots as two
+individually lifted strokes. The evidence split, two-way-connector context, and
+Arabic-scoped provenance stay explicit while the path fits the same Noto Naskh
+outline independently of Persian ت. The runtime
 resolves each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

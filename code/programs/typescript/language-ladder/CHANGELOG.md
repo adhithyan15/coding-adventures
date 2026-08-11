@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-taa ductus (HL-C09AJ)
+
+- Verify independent **ت** with the page's separately demonstrated Arabic bowl
+  followed by left and right upper dots as two individually lifted strokes.
+- Keep the evidence split explicit because the Taa clip opens on the completed
+  body, while preserving two-way-connector context and Arabic-scoped provenance.
+- Render a real three-frame filmstrip whose source, prose, Noto Naskh geometry,
+  two-lift summary, and distinct identity agree without inheriting Persian ت.
+
 ### Added — cited Arabic independent-baa ductus (HL-C09AI)
 
 - Verify independent **ب** from the University of Oregon's adjacent video as a
