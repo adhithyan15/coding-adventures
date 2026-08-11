@@ -95,12 +95,15 @@ and retain sample props for previews. `native-complete` builds require the
 binding and runtime-provided props before mounting the component. Use
 `build_package_with_profile_and_runtime` with a target `.dylib`, `.so`, or `.dll`
 to copy the selected Rust engine into Compose's platform-specific application
-resources, Qt's CMake install tree, SwiftUI's SwiftPM resource bundle, or XAML's
-WinUI output directory under its conventional `mosaic_app` filename. The Compose
-and SwiftUI bindings resolve their installed resources, while the Qt and XAML
-bindings resolve the engine beside the installed executable before global
-lookup. A strict Compose, Qt, SwiftUI, or XAML project build without that
-selection reports `runtime.library-not-bundled`.
+resources, Flutter's bundled Dart code assets, Qt's CMake install tree, SwiftUI's
+SwiftPM resource bundle, or XAML's WinUI output directory under its conventional
+`mosaic_app` filename. Flutter emits `hook/build.dart` so the Flutter toolchain
+packages and resolves the selected target library without application-specific
+runner edits. The Compose and SwiftUI bindings resolve their installed
+resources, while the Qt and XAML bindings resolve the engine beside the
+installed executable before global lookup. A strict project build on any of the
+five native backends without that selection reports
+`runtime.library-not-bundled`.
 Every exported Compose component is mirrored into the generated Gradle source
 set, so `gradle compileKotlin` type-checks the complete package even though the
 shell mounts the manifest's first export as its entry component.

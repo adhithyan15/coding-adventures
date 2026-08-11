@@ -54,14 +54,18 @@ Windows CI compiles the exact generated binding with the shared
 `mosaic-app-conformance` DLL and verifies real startup, prop projection,
 semantic dispatch, revision application, buffer ownership, and teardown.
 
-For Flutter, set `MOSAIC_APP_LIBRARY` to the application library path. Without
-an explicit path the host checks symbols linked into the process, then the
-platform's conventional `mosaic_app` dynamic-library names.
+Generated Flutter distributions register the selected application library as a
+bundled Dart code asset. `@Native` resolves the packaged framework or dynamic
+library without platform-specific paths; `MOSAIC_APP_LIBRARY` remains an
+explicit development override. Unbundled permissive projects still check
+symbols linked into the process and the platform's conventional `mosaic_app`
+dynamic-library names.
 Strict generated shells call `MosaicHost.loadRequired()` so a missing Rust
 library fails at startup rather than silently entering preview mode.
-Linux CI runs the exact binding from a complete generated TaskApp project with
-the shared `mosaic-app-conformance` library, verifying startup, semantic
-dispatch, snapshot/restore, notification, buffer ownership, and teardown.
+Linux CI packages the shared `mosaic-app-conformance` library into a complete
+generated app, verifies the installed code asset, and runs the exact binding
+without `MOSAIC_APP_LIBRARY`, covering startup, semantic dispatch,
+snapshot/restore, notification, buffer ownership, and teardown.
 
 For Qt/QML, set `MOSAIC_APP_LIBRARY` to the application library path or package
 it under the platform's conventional `mosaic_app` name. The generated QObject

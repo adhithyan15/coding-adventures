@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resolve Flutter's selected Rust engine through Dart's bundled code-asset
+  contract after the explicit environment override, so generated native apps
+  need no platform-specific loader path or global library installation.
 - Resolve SwiftUI's selected Rust engine from its SwiftPM `Runtime` resource
   bundle after the explicit environment override, so generated apps need no
   global dylib installation.

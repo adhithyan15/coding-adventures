@@ -90,10 +90,25 @@ pub fn xaml_runtime_binding(namespace: &str) -> String {
 
 /// Generate the standard Flutter/Dart FFI host binding.
 pub fn flutter_runtime_binding() -> String {
-    include_str!("../templates/flutter/mosaic_host.dart").replace(
-        "__MOSAIC_PROTOCOL_VERSION__",
-        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
-    )
+    flutter_runtime_binding_source(false)
+}
+
+/// Generate the standard Flutter/Dart FFI host binding for a project whose
+/// selected Rust engine is registered as a bundled Dart code asset.
+pub fn flutter_runtime_binding_with_bundled_asset() -> String {
+    flutter_runtime_binding_source(true)
+}
+
+fn flutter_runtime_binding_source(bundle_runtime: bool) -> String {
+    include_str!("../templates/flutter/mosaic_host.dart")
+        .replace(
+            "__MOSAIC_PROTOCOL_VERSION__",
+            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        )
+        .replace(
+            "__MOSAIC_BUNDLED_RUNTIME__",
+            if bundle_runtime { "true" } else { "false" },
+        )
 }
 
 /// Add the small allocation helper used by Dart's native FFI to a generated
@@ -104,6 +119,19 @@ pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
         "dependencies:\n  ffi: '>=2.1.0 <3.0.0'\n",
         1,
     )
+}
+
+/// Add stable Dart build-hook dependencies and SDK floors to a Flutter
+/// project that bundles a selected precompiled Rust code asset.
+pub fn flutter_pubspec_with_bundled_runtime(pubspec_yaml: &str) -> String {
+    flutter_pubspec_with_runtime_binding(pubspec_yaml)
+        .replace("sdk: '>=3.5.0 <4.0.0'", "sdk: '>=3.10.0 <4.0.0'")
+        .replace("flutter: '>=3.32.0 <4.0.0'", "flutter: '>=3.38.0 <4.0.0'")
+        .replacen(
+            "dependencies:\n",
+            "dependencies:\n  code_assets: '>=1.0.0 <2.0.0'\n  hooks: '>=1.0.0 <3.0.0'\n",
+            1,
+        )
 }
 
 /// Files that expose the fixed Mosaic application C ABI as a QML host object.
@@ -351,6 +379,24 @@ mod tests {
         assert!(source.contains("const MosaicHost()"));
         assert!(source.contains("static MosaicHost loadRequired()"));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(source.contains("static const bool _hasBundledRuntime = false;"));
+        assert!(!source.contains("__MOSAIC_BUNDLED_RUNTIME__"));
+    }
+
+    #[test]
+    fn flutter_binding_can_resolve_a_bundled_code_asset() {
+        let source = flutter_runtime_binding_with_bundled_asset();
+        assert!(source.contains("@Native<_CreateNative>(symbol: 'mosaic_app_create')"));
+        assert!(source.contains("static const bool _hasBundledRuntime = true;"));
+        assert!(source.contains("if (_hasBundledRuntime) return _MosaicRuntime.bundled();"));
+        let environment = source.find("MOSAIC_APP_LIBRARY").unwrap();
+        let bundled = source
+            .find("if (_hasBundledRuntime) return _MosaicRuntime.bundled();")
+            .unwrap();
+        assert!(
+            environment < bundled,
+            "the explicit development override wins"
+        );
     }
 
     #[test]
@@ -375,6 +421,18 @@ mod tests {
             flutter_pubspec_with_runtime_binding("dependencies:\n  flutter:\n    sdk: flutter\n");
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
         assert!(pubspec.contains("flutter:\n    sdk: flutter"));
+    }
+
+    #[test]
+    fn flutter_pubspec_installs_stable_code_asset_support() {
+        let pubspec = flutter_pubspec_with_bundled_runtime(
+            "environment:\n  sdk: '>=3.5.0 <4.0.0'\n  flutter: '>=3.32.0 <4.0.0'\ndependencies:\n  flutter:\n    sdk: flutter\n",
+        );
+        assert!(pubspec.contains("sdk: '>=3.10.0 <4.0.0'"));
+        assert!(pubspec.contains("flutter: '>=3.38.0 <4.0.0'"));
+        assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
+        assert!(pubspec.contains("hooks: '>=1.0.0 <3.0.0'"));
+        assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
     }
 
     #[test]
