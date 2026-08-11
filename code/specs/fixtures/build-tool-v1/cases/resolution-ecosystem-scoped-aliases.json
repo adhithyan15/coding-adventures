@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "id": "resolution/ecosystem-scoped-aliases",
+  "domain": "resolution",
+  "summary": "Same-spelled package aliases stay inside their ecosystem while exact qualified BUILD dependencies may cross ecosystems.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "resolution"
+  ],
+  "workspace": {
+    "files": [
+      {
+        "path": "code/packages/haskell/shared/BUILD",
+        "content_utf8": "echo haskell shared\n"
+      },
+      {
+        "path": "code/packages/haskell/shared/shared.cabal",
+        "content_utf8": "cabal-version: 3.0\nname: coding-adventures-shared\nversion: 0.1.0\n"
+      },
+      {
+        "path": "code/packages/haskell/consumer/BUILD",
+        "content_utf8": "echo haskell consumer\n"
+      },
+      {
+        "path": "code/packages/haskell/consumer/consumer.cabal",
+        "content_utf8": "cabal-version: 3.0\nname: coding-adventures-consumer\nversion: 0.1.0\nlibrary\n  exposed-modules: Consumer\n  build-depends: base >=4.14, coding-adventures-shared ==0.1.*\n"
+      },
+      {
+        "path": "code/packages/lua/shared/BUILD",
+        "content_utf8": "echo lua shared\n"
+      },
+      {
+        "path": "code/packages/lua/shared/coding-adventures-shared-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-shared\"\nversion = \"0.1.0-1\"\ndependencies = { \"lua >= 5.4\" }\n"
+      },
+      {
+        "path": "code/packages/lua/consumer/BUILD",
+        "content_utf8": "echo lua consumer\n"
+      },
+      {
+        "path": "code/packages/lua/consumer/coding-adventures-consumer-0.1.0-1.rockspec",
+        "content_utf8": "package = \"coding-adventures-consumer\"\nversion = \"0.1.0-1\"\ndependencies = { \"lua >= 5.4\", \"coding-adventures-shared >= 0.1.0\" }\n"
+      },
+      {
+        "path": "code/packages/perl/shared/BUILD",
+        "content_utf8": "echo perl shared\n"
+      },
+      {
+        "path": "code/packages/perl/shared/cpanfile",
+        "content_utf8": "requires 'perl', '5.020';\n"
+      },
+      {
+        "path": "code/packages/perl/consumer/BUILD",
+        "content_utf8": "echo perl consumer\n"
+      },
+      {
+        "path": "code/packages/perl/consumer/cpanfile",
+        "content_utf8": "requires 'coding-adventures-shared', '0.1.0';\n"
+      },
+      {
+        "path": "code/packages/python/shared/BUILD",
+        "content_utf8": "echo python shared\n"
+      },
+      {
+        "path": "code/packages/python/shared/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-shared\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/python/consumer/BUILD",
+        "content_utf8": "echo python consumer\n"
+      },
+      {
+        "path": "code/packages/python/consumer/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-consumer\"\nversion = \"0.1.0\"\ndependencies = [\"coding-adventures-shared>=0.1.0\"]\n"
+      },
+      {
+        "path": "code/packages/python/bridge/BUILD",
+        "content_utf8": "# build-tool: deps=lua/shared\necho python bridge\n"
+      },
+      {
+        "path": "code/packages/python/bridge/pyproject.toml",
+        "content_utf8": "[project]\nname = \"coding-adventures-bridge\"\nversion = \"0.1.0\"\n"
+      }
+    ]
+  },
+  "input": {
+    "operation": "resolution",
+    "options": {
+      "code_root": "code",
+      "language": "all"
+    },
+    "arguments": [],
+    "environment": {},
+    "changed_paths": []
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "resolution/ecosystem-scoped-aliases",
+    "domain": "resolution",
+    "outcome": "ok",
+    "result": {
+      "edges": [
+        [
+          "haskell/shared",
+          "haskell/consumer"
+        ],
+        [
+          "lua/shared",
+          "lua/consumer"
+        ],
+        [
+          "lua/shared",
+          "python/bridge"
+        ],
+        [
+          "perl/shared",
+          "perl/consumer"
+        ],
+        [
+          "python/shared",
+          "python/consumer"
+        ]
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 5000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 256,
+    "cpu_time_ms": 5000
+  }
+}

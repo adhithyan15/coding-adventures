@@ -1358,6 +1358,31 @@ Language Ladder surfaces, add no package directory, and do not overlap this Lua
 tranche or change its leverage ranking. The collision-checked counts and twelve
 new-owner classification therefore remain exact at the newer revision.
 
+PR #10521 merged externally as `3add9a1b954d` on August 10 after all required
+checks reached terminal green. The mandatory post-merge refresh at
+`dda47210d304` is identity-neutral and keeps the schema-3 inventory exact at
+1,298 established identities, 4,454 package slots, 848 singletons, 11,872
+singleton gaps, 652 Rust singletons, zero canonical collisions, and zero
+unknown buckets. The dependency audit adds two previously implicit foundations:
+language-neutral canonical-CBOR conformance followed by fourteen-lane parity,
+which now block both Vault format and Vault records, and a cross-lane
+data-store clock-truthfulness owner because nine additional engines and several
+facades repeat the Lua ambient-clock mismatch.
+
+The leverage and security pass selects
+`build-tool-python-ecosystem-scoped-alias-resolution` as the sole in-progress
+item. Python currently merges every ecosystem's aliases into one table, so a
+same-spelled package in another lane can redirect a dependency edge and cause
+the wrong local shell `BUILD` to enter a plan; the audited repository already
+misbinds 251 of 258 canonical Lua rock aliases. This pure repair defines a
+language-neutral adversarial collision fixture, scopes ordinary aliases by
+ecosystem, preserves only exact qualified cross-language `BUILD` edges and
+within-ecosystem library-over-program precedence, and compares real-lane graphs
+with the Go oracle. Haskell discovery and Haskell/Java/Kotlin filter exposure
+remain dependent on this repair so default all-language resolution cannot widen
+over the known trust-boundary defect. Canonical CBOR remains the highest-leverage
+portable-package foundation queued after this build-tool prerequisite.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
