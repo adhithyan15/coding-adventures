@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.29.0
+
+- Preserve ordered sequence `autonumber`, `autonumber off`, and counter-reset statements.
+
 ## 0.28.0
 
 - Preserve `wrap:` and `nowrap:` directives on sequence participant-box labels.

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate ordered sequence autonumber toggles and resets through PaintScene and Metal PNG.
 - Shape resolved multiline sequence participant-box labels without backend soft rewrapping.
 - Shape resolved multiline sequence participant aliases without backend soft rewrapping.
 - Shape resolved multiline sequence control labels without backend soft rewrapping.

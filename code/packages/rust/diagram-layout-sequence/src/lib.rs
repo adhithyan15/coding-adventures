@@ -7,7 +7,7 @@ use diagram_ir::{
     SequenceEvent, SequenceNotePlacement, SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -144,11 +144,40 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     let event_start = header_y + header_height + 36.0;
     let mut y = event_start;
     let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
-    let mut message_number = diagram.auto_number_start;
+    let has_auto_number_events = diagram
+        .events
+        .iter()
+        .any(|event| matches!(event, SequenceEvent::AutoNumber { .. }));
+    let mut auto_number_visible = if has_auto_number_events {
+        false
+    } else {
+        diagram.auto_number
+    };
+    let mut message_number = if has_auto_number_events {
+        1.0
+    } else {
+        diagram.auto_number_start
+    };
+    let mut message_number_step = if has_auto_number_events {
+        1.0
+    } else {
+        diagram.auto_number_step
+    };
     let mut block_stack: Vec<BlockFrameState> = Vec::new();
 
     for event in &diagram.events {
         match event {
+            SequenceEvent::AutoNumber {
+                visible,
+                start,
+                step,
+            } => {
+                auto_number_visible = *visible;
+                if *visible {
+                    message_number = start.unwrap_or(1.0);
+                    message_number_step = step.unwrap_or(1.0);
+                }
+            }
             SequenceEvent::Message {
                 from,
                 to,
@@ -184,9 +213,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     arrowhead: arrowhead.clone(),
                     bidirectional: *bidirectional,
                     central_connection: central_connection.clone(),
-                    number: diagram.auto_number.then_some(message_number),
+                    number: auto_number_visible.then_some(message_number),
                 });
-                message_number += diagram.auto_number_step;
+                if auto_number_visible {
+                    message_number += message_number_step;
+                }
                 if *activate {
                     activation_starts
                         .entry(to.clone())
@@ -561,6 +592,62 @@ mod tests {
                 ..
             }
         )));
+    }
+
+    #[test]
+    fn applies_ordered_autonumber_toggles_and_resets() {
+        let message = |label: &str| SequenceEvent::Message {
+            from: "Alice".into(),
+            to: "Bob".into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
+        };
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: true,
+            auto_number_start: 20.0,
+            auto_number_step: 5.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: None,
+                    step: None,
+                },
+                message("One"),
+                SequenceEvent::AutoNumber {
+                    visible: false,
+                    start: None,
+                    step: None,
+                },
+                message("Hidden"),
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: Some(20.0),
+                    step: Some(5.0),
+                },
+                message("Twenty"),
+                message("Twenty-five"),
+            ],
+        };
+        let numbers: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message { number, .. } => Some(*number),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(numbers, vec![Some(1.0), None, Some(20.0), Some(25.0)]);
     }
 
     #[test]

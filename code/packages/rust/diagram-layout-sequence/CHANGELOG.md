@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.0 - 2026-08-11
+
+- Apply ordered sequence autonumber visibility changes and counter resets during layout.
+
 ## 0.17.0 - 2026-08-11
 
 - Resolve wrapped participant-box labels into deterministic group header geometry.
