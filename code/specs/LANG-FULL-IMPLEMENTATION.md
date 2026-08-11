@@ -826,7 +826,9 @@ backend immediately) come before the enabler-dependent items.
   elements retain their full designator until the selected `goto`: a conditional
   branch and a nested switch subscript execute at that time, so both see current
   variables. A cyclic switch graph is rejected before it can recursively expand
-  the IIR dispatch chain. Switch declarations are block-scope-shadowable: a
+  the IIR dispatch chain. A `goto` may also use the report-style two-word spelling
+  `go to`; both spellings share the same label, switch, and conditional designator
+  lowering. Switch declarations are block-scope-shadowable: a
   nested declaration resolves as the nearest binding and the outer switch is
   restored when that block exits. Labels use the same lexical rule: each block
   assigns stable internal targets before lowering, so nested labels may shadow

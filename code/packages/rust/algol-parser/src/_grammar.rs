@@ -330,9 +330,16 @@ pub fn parser_grammar() -> ParserGrammar {
         },
         GrammarRule {
             name: r#"goto_stmt"#.to_string(),
-            body: GrammarElement::Sequence { elements: vec![
-                GrammarElement::Literal { value: r#"goto"#.to_string() },
-                GrammarElement::RuleReference { name: r#"desig_expr"#.to_string() },
+            body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"goto"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"desig_expr"#.to_string() },
+                ] },
+                GrammarElement::Sequence { elements: vec![
+                    GrammarElement::Literal { value: r#"go"#.to_string() },
+                    GrammarElement::Literal { value: r#"to"#.to_string() },
+                    GrammarElement::RuleReference { name: r#"desig_expr"#.to_string() },
+                ] },
             ] },
             line_number: 166,
         },
