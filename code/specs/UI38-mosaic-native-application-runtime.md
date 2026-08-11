@@ -397,8 +397,11 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.
 - [ ] Ship `mosaic-std-services` and umbrella `mosaic-std` manifests.
 - [ ] Make the existing `mosaic-pkg-toolkit` compile across all five native
-  backends as a migration baseline; Compose currently rejects `HostLink` in
-  shared navigation components such as Breadcrumb.
+  backends as a migration baseline.
+  - [x] Lower `HostLink` to native Compose annotated links, including internal
+    routing dispatch and indexed toolkit navigation payloads.
+  - [ ] Lower `HostDialog`; after links compile, Compose next rejects Modal's
+    native dialog primitive.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

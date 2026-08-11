@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostLink` now lowers to Compose's native annotated-text link API. External
+  links open through the platform `UriHandler`; internal links retain link
+  semantics while dispatching Mosaic events, including item/index payloads
+  inside `For`. Generated links receive theme-aware visible styling and need no
+  application-owned URL adapter.
 - `Stack` now lowers to Compose's `Box` — the layering container it already
   uses for the `Box` primitive itself, since Compose's `Box` natively stacks
   its children. Found while wiring `task-app`'s icon assets (progress ring,

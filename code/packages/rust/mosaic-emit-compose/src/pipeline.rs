@@ -15,6 +15,7 @@ pub enum PipelineEmitError {
     UnknownPrimitive(String),
     UnsafeSlotName(String),
     UnsafeEmitName(String),
+    UnsupportedHostLink(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -26,6 +27,9 @@ impl std::fmt::Display for PipelineEmitError {
             ),
             Self::UnsafeSlotName(n) => write!(f, "unsafe slot name '{n}' (post conversion)"),
             Self::UnsafeEmitName(n) => write!(f, "unsafe emit name '{n}' (post conversion)"),
+            Self::UnsupportedHostLink(reason) => {
+                write!(f, "unsupported Compose HostLink contract: {reason}")
+            }
         }
     }
 }
@@ -89,6 +93,7 @@ pub fn from_pipeline(
     // no-op path, where every Modifier-chain lookup returns nothing and
     // emission proceeds identically to a styleless pipeline.
     let part_styles = build_part_style_map(style);
+    let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -162,6 +167,16 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
+    if uses_host_link {
+        writeln!(out, "import androidx.compose.material.MaterialTheme").unwrap();
+        writeln!(out, "import androidx.compose.ui.platform.LocalUriHandler").unwrap();
+        writeln!(out, "import androidx.compose.ui.text.LinkAnnotation").unwrap();
+        writeln!(out, "import androidx.compose.ui.text.SpanStyle").unwrap();
+        writeln!(out, "import androidx.compose.ui.text.TextLinkStyles").unwrap();
+        writeln!(out, "import androidx.compose.ui.text.buildAnnotatedString").unwrap();
+        writeln!(out, "import androidx.compose.ui.text.withLink").unwrap();
+        writeln!(out, "import androidx.compose.ui.text.style.TextDecoration").unwrap();
+    }
     writeln!(out).unwrap();
 
     // Mosaic conditions use value truthiness, while Kotlin requires a
@@ -183,6 +198,11 @@ pub fn from_pipeline(
     writeln!(out, "}}").unwrap();
     writeln!(out).unwrap();
 
+    if uses_host_link {
+        out.push_str(&emit_host_link_helper());
+        writeln!(out).unwrap();
+    }
+
     out.push_str(&emit_event_sealed_class(&name, &component.emits)?);
     writeln!(out).unwrap();
     out.push_str(&emit_composable_function(
@@ -197,6 +217,67 @@ pub fn from_pipeline(
         output: out,
         component_name: name,
     })
+}
+
+fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
+    node.tag == tag
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_tag(child, tag))
+}
+
+/// Emit the shared Compose link primitive used by every generated component.
+///
+/// `LinkAnnotation.Url` delegates external navigation to Compose's platform
+/// `UriHandler`. `LinkAnnotation.Clickable` keeps internal navigation inside
+/// Mosaic dispatch while retaining text-link semantics for focus, keyboard
+/// activation, and assistive technology. Keeping the URI handler inside this
+/// composable also avoids application-owned glue and duplicate local names when
+/// several links share one generated layout scope.
+fn emit_host_link_helper() -> String {
+    r#"@Composable
+private fun _mosaicHostLink(
+    href: String,
+    label: String,
+    external: Boolean,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = TextStyle.Default,
+    onActivate: (() -> Unit)? = null,
+) {
+    val uriHandler = LocalUriHandler.current
+    val linkColor = if (textStyle.color == Color.Unspecified) {
+        MaterialTheme.colors.primary
+    } else {
+        textStyle.color
+    }
+    val linkStyles = TextLinkStyles(
+        style = SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline),
+    )
+    val link = if (external) {
+        if (onActivate == null) {
+            LinkAnnotation.Url(url = href, styles = linkStyles)
+        } else {
+            LinkAnnotation.Url(url = href, styles = linkStyles) { annotation ->
+                onActivate()
+                uriHandler.openUri((annotation as LinkAnnotation.Url).url)
+            }
+        }
+    } else {
+        LinkAnnotation.Clickable(tag = href, styles = linkStyles) {
+            onActivate?.invoke()
+        }
+    }
+    Text(
+        text = buildAnnotatedString {
+            withLink(link) { append(label) }
+        },
+        modifier = modifier,
+        style = textStyle,
+    )
+}
+"#
+    .to_string()
 }
 
 // =====================================================================
@@ -1292,6 +1373,15 @@ fn emit_compose_tree(
             emit_host_checkbox(node, depth, component_name, emits, part_styles, text_ctx)
         }
         "HostRadio" => emit_host_radio(node, depth, component_name, emits, part_styles, text_ctx),
+        "HostLink" => emit_host_link(
+            node,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            text_ctx,
+            for_payload,
+        ),
         "HostNumberInput" => {
             emit_host_number_input(node, depth, component_name, emits, part_styles, text_ctx)
         }
@@ -2211,6 +2301,151 @@ fn host_button_single_payload_expr(
         }
         EmitPayloadType::Number => scope.index.map(str::to_string),
         EmitPayloadType::Bool => None,
+    }
+}
+
+/// Lower `HostLink` to Compose's native annotated-text link API.
+///
+/// External links use `LinkAnnotation.Url`, which opens through the platform
+/// `UriHandler`. Internal links use `LinkAnnotation.Clickable` and dispatch the
+/// declared Mosaic event without opening a browser. Both shapes retain native
+/// link semantics instead of presenting navigation as a button.
+#[allow(clippy::too_many_arguments)]
+fn emit_host_link(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    if !node.children.is_empty() && find_prop_value(node, "label").is_none() {
+        return Err(PipelineEmitError::UnsupportedHostLink(
+            "child composables require a serializable inline-content contract; use label for now"
+                .to_string(),
+        ));
+    }
+
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|text| text.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let inherited_text = text_ctx.cloned().unwrap_or_default();
+    let link_text = match &style {
+        Some(style) => cell_text_style(&inherited_text, style),
+        None => inherited_text,
+    };
+
+    let href = host_link_text_prop_expr(node, "href")?.unwrap_or_else(|| "\"\"".to_string());
+    let label = host_link_text_prop_expr(node, "label")?.unwrap_or_else(|| href.clone());
+    let external = bool_prop_expr(node, "external", "true")?;
+    let on_activate = host_link_on_activate(node, component_name, emits, for_payload, &href)?;
+    let modifier =
+        host_control_modifier_expr(node, style.as_ref()).unwrap_or_else(|| "Modifier".to_string());
+    let text_style = link_text
+        .text_style_expr()
+        .unwrap_or_else(|| "TextStyle.Default".to_string());
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_mosaicHostLink(").unwrap();
+    writeln!(out, "{inner}href = {href},").unwrap();
+    writeln!(out, "{inner}label = {label},").unwrap();
+    writeln!(out, "{inner}external = {external},").unwrap();
+    writeln!(out, "{inner}modifier = {modifier},").unwrap();
+    writeln!(out, "{inner}textStyle = {text_style},").unwrap();
+    if let Some(dispatch) = on_activate {
+        writeln!(out, "{inner}onActivate = {{ {dispatch} }},").unwrap();
+    }
+    writeln!(out, "{pad})").unwrap();
+    Ok(out)
+}
+
+fn host_link_text_prop_expr(
+    node: &LayoutNode,
+    name: &str,
+) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, name) {
+        Some(LayoutPropValue::String(value)) => {
+            Ok(Some(format!("\"{}\"", escape_kotlin_string(value))))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let identifier = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&identifier).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(identifier))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(Some(expression.clone())),
+        _ => Ok(None),
+    }
+}
+
+fn host_link_on_activate(
+    node: &LayoutNode,
+    component_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+    href: &str,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, "onActivate") else {
+        return Ok(None);
+    };
+    let case = pascalize(&strip_on_prefix(emit_name));
+    validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+    let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(Some(format!("dispatch({component_name}Event.{case})")));
+    };
+    if emit.params.is_empty() {
+        return Ok(Some(format!("dispatch({component_name}Event.{case})")));
+    }
+
+    let args = emit
+        .params
+        .iter()
+        .map(|param| host_link_payload_expr(param, for_payload, href))
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Some(format!(
+        "dispatch({component_name}Event.{case}({}))",
+        args.join(", ")
+    )))
+}
+
+fn host_link_payload_expr(
+    param: &mosmodel_compiler::EmitParam,
+    for_payload: Option<ForPayloadScope<'_>>,
+    href: &str,
+) -> Result<String, PipelineEmitError> {
+    let field = to_camel_case_first_lower(&param.name);
+    validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+    if field == "href" {
+        return match param.r#type {
+            EmitPayloadType::Text | EmitPayloadType::Color => Ok(href.to_string()),
+            _ => Err(PipelineEmitError::UnsupportedHostLink(format!(
+                "event field '{}' must be text-compatible to receive href",
+                param.name
+            ))),
+        };
+    }
+
+    match &param.r#type {
+        EmitPayloadType::Number => for_payload
+            .and_then(|scope| scope.index)
+            .map(str::to_string)
+            .ok_or_else(|| {
+                PipelineEmitError::UnsupportedHostLink(format!(
+                    "numeric event field '{}' requires an enclosing For index",
+                    param.name
+                ))
+            }),
+        EmitPayloadType::Text | EmitPayloadType::Color => Ok(for_payload
+            .map(|scope| scope.item.to_string())
+            .unwrap_or_else(|| href.to_string())),
+        EmitPayloadType::Bool | EmitPayloadType::Component(_) => {
+            Err(PipelineEmitError::UnsupportedHostLink(format!(
+                "cannot synthesize event field '{}' from a link activation",
+                param.name
+            )))
+        }
     }
 }
 
@@ -3941,6 +4176,169 @@ mod tests {
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = suspendLabel)"));
+    }
+
+    #[test]
+    fn host_link_uses_native_url_annotation_and_platform_uri_handler() {
+        let m = component("DocsLink", vec![], vec![]);
+        let l = layout(
+            "DocsLink",
+            node(
+                "HostLink",
+                vec![
+                    LayoutProp {
+                        name: "href".into(),
+                        value: LayoutPropValue::String("https://example.com/docs".into()),
+                    },
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Read docs".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("DocsLink"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("import androidx.compose.ui.text.LinkAnnotation"));
+        assert!(out.contains("val uriHandler = LocalUriHandler.current"));
+        assert!(out.contains("LinkAnnotation.Url(url = href, styles = linkStyles)"));
+        assert!(out.contains("withLink(link) { append(label) }"));
+        assert!(out.contains("href = \"https://example.com/docs\","));
+        assert!(out.contains("label = \"Read docs\","));
+        assert!(out.contains("external = true,"));
+    }
+
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_internal_route() {
+        let m = component(
+            "Breadcrumb",
+            vec![slot(
+                "crumbs",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onSelect",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "Breadcrumb",
+            node(
+                "Row",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        slot_prop("each", "crumbs"),
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("crumb".into()),
+                        },
+                        LayoutProp {
+                            name: "index".into(),
+                            value: LayoutPropValue::Keyword("i".into()),
+                        },
+                    ],
+                    vec![node(
+                        "HostLink",
+                        vec![
+                            LayoutProp {
+                                name: "href".into(),
+                                value: LayoutPropValue::String("#".into()),
+                            },
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("crumb".into()),
+                            },
+                            LayoutProp {
+                                name: "external".into(),
+                                value: LayoutPropValue::Keyword("false".into()),
+                            },
+                            LayoutProp {
+                                name: "onActivate".into(),
+                                value: LayoutPropValue::EmitRef("onSelect".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Breadcrumb"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("LinkAnnotation.Clickable(tag = href, styles = linkStyles)"));
+        assert!(out.contains("label = crumb,"));
+        assert!(out.contains("external = false,"));
+        assert!(out.contains("onActivate = { dispatch(BreadcrumbEvent.Select(i)) },"));
+    }
+
+    #[test]
+    fn host_link_external_activation_dispatches_href_then_opens_uri() {
+        let m = component(
+            "AuditLink",
+            vec![slot("href", SlotType::Text, true)],
+            vec![emit_decl(
+                "onActivate",
+                vec![param("href", EmitPayloadType::Text)],
+            )],
+        );
+        let l = layout(
+            "AuditLink",
+            node(
+                "HostLink",
+                vec![
+                    slot_prop("href", "href"),
+                    LayoutProp {
+                        name: "label".into(),
+                        value: LayoutPropValue::String("Open".into()),
+                    },
+                    LayoutProp {
+                        name: "onActivate".into(),
+                        value: LayoutPropValue::EmitRef("onActivate".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("AuditLink"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("uriHandler.openUri((annotation as LinkAnnotation.Url).url)"));
+        assert!(out.contains("href = href,"));
+        assert!(out.contains("onActivate = { dispatch(AuditLinkEvent.Activate(href)) },"));
+    }
+
+    #[test]
+    fn host_link_rejects_unrepresentable_child_composables() {
+        let m = component("IconLink", vec![], vec![]);
+        let l = layout(
+            "IconLink",
+            node(
+                "HostLink",
+                vec![LayoutProp {
+                    name: "href".into(),
+                    value: LayoutPropValue::String("/home".into()),
+                }],
+                vec![node(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Home".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+
+        let err = from_pipeline(&m, &l, &empty_style("IconLink")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsupportedHostLink(_)));
     }
 
     #[test]
