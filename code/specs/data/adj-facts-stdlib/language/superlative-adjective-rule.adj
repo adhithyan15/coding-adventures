@@ -1,0 +1,66 @@
+% ============================================================================
+% superlative-adjective-rule — common English superlative-adjective
+% formation rules and what each one actually requires (adj-facts-stdlib,
+% LANGUAGE).
+% ============================================================================
+% Turning an adjective into its superlative form ("the biggest", "the
+% happiest") is governed by a small set of named rules, each covering a
+% different spelling pattern the base adjective falls into. Recall is a
+% binding query:
+%
+%     ? superlative_adjective_rule(adjective_ending_in_y, $D)
+%       % change_y_to_i_before_est
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `superlative_adjective_rule(rule, description)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the description WITH its source, on the CPU, with
+% zero model calls, and abstains on any rule not one of these three
+% source-cited examples. The query also runs BACKWARD — bind a description
+% and recall which rule it names:
+%
+%     ? superlative_adjective_rule($R, add_est_suffix)
+%       % one_syllable_adjective
+%
+% Provenance: quoted verbatim from Grammarly's "What Are Superlative
+% Adjectives? Definition and Examples" article, which states each rule
+% directly:
+%
+%     rule (this table's atom label)             description (this table's atom label)      rule quote (verbatim)
+%     -------------------------------------------  ------------------------------------------  --------------------------------------------------------------------------------
+%     one_syllable_adjective                        add_est_suffix                              "If an adjective has only one syllable, most of the time you can simply add
+%                                                                                                  the suffix –est to the end of the word without changing the spelling."
+%     one_syllable_consonant_vowel_consonant        double_final_consonant_before_est            "If the last three letters of a one-syllable adjective follow a
+%                                                                                                  consonant-vowel-consonant format, like big or thin, you have to double the
+%                                                                                                  last consonant and then add –est."
+%     adjective_ending_in_y                         change_y_to_i_before_est                     "To make the superlative, first change the y into an i and then add –est."
+%
+% WebFetch-verified before writing (twice, across two cycles of this loop —
+% the second pass specifically re-confirmed exact wording after an initial
+% fetch surfaced a bullet-list fragment for a DIFFERENT, ultimately
+% rejected rule about long adjectives). `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources and the same
+% source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
+% `contraction.adj`/`possessive-noun.adj`/`simile-meaning.adj`/
+% `prefix-meaning.adj`/`capitalization-rule.adj`. A rule not one of these
+% three — `three_or_more_syllable_adjective`, a real rule the same article
+% covers (longer adjectives use "most" instead of "-est"), but whose own
+% supporting text on the page is a bullet-list fragment rather than a
+% clean quotable sentence, and which is not one of this table's three rows
+% — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table superlative_adjective_rule {
+    columns rule, description
+
+    row (one_syllable_adjective, add_est_suffix)
+    row (one_syllable_consonant_vowel_consonant, double_final_consonant_before_est)
+    row (adjective_ending_in_y, change_y_to_i_before_est)
+
+    source "If an adjective has only one syllable, most of the time you can simply add the suffix –est to the end of the word without changing the spelling."
+    locator "https://www.grammarly.com/blog/parts-of-speech/superlative-adjectives/"
+    trust consensus
+}
