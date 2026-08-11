@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 10751,
   "last_inventory": {
     "revision": "44dc4b563ef10df895ce100d827a1abc6ddca323",
     "schema_version": 3,
@@ -937,14 +937,17 @@
     {
       "id": "build-tool-python-haskell-gradle-field-aware-resolution",
       "title": "Make Python Cabal and Gradle resolution field-aware",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-python-ecosystem-scoped-alias-resolution"],
       "branch": "codex/python-haskell-gradle-field-aware-resolution",
-      "pr_number": null,
+      "pr_number": 10751,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10751",
+      "pr_opened_at": "2026-08-11T16:24:56Z",
       "selection_revision": "96f58be046bb130d59e988f6199c4bb819533156",
       "selection_notes": "Selected after PR #10612 merged externally and a collision-clean refresh classified the new Frigate snapshot host. Although canonical-CBOR became dependency-ready, its fourteen-lane umbrella needs decomposition before review. This bounded, authority-free resolver repair closes a real affected-plan trust boundary and directly unlocks safe Haskell, Java, and Kotlin filtering.",
-      "implementation_revision": "3327d692b37f2525bbf50a929d5ff38dcbe21c50",
+      "implementation_revision": "af71eed4c2f54765220147a71b27db45b1b50a9a",
       "validation_notes": "After rebasing onto identity-neutral 44dc4b563e, Python passes 364 tests with 89.18% total coverage and 91% resolver coverage under Python 3.12.13 through both identical BUILD front doors. The changed resolver passes MyPy, scoped Ruff, and Bandit; the repository's pre-existing full Python lint and Bandit findings remain outside this tranche. The schema and runner pass 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened Haskell/Gradle fixture consumers. Exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges, 129 Java nodes/186 edges, and 133 Kotlin nodes/166 edges; focused affected-closure tests reject comment, string, cross-lane, absolute, interpolated, ambiguous-manifest, duplicate, and self-selection paths. State graph, credential-pattern, diff, and collision gates pass at 1,300 identities, 4,456 slots, 850 singletons, 11,900 singleton gaps, 654 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10751 opened from af71eed4c2. GitHub reports it open, non-draft, and mergeable; CI and CodeQL checks are queued, so the loop is monitor-only until they finish.",
       "notes": "Discovered in the post-#10564 security review. Python currently scans whole Cabal files and line-matches Gradle, so comments, descriptive fields, block-comment examples, and multiline includeBuild declarations can create or hide dependency edges even though the shared Haskell, Java, and Kotlin field-aware fixtures already define the closed behavior. Consume those fixtures, register plain directory and declared Cabal aliases, reject ambiguous manifests, and prove exact graph equality with the Go oracle before exposing these lanes through the Python language filter."
     },
     {
