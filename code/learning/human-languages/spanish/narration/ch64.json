@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 64,
-  "title": "Synthesis --- Promising, and Supposing",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b6b038b11d92ee8a",
+  "title": "Synthesis --- You Can Hear Which Past It Is",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b50b5898e84d92b6",
   "lessons": [
     {
-      "id": "ES-C17-sintesis-futuro-condicional",
-      "sequence": 1202,
-      "title": "Synthesis — promising, and supposing",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — one stem, two endings, and the difference between promising and supposing",
+      "id": "ES-C15-practice",
+      "sequence": 1155,
+      "title": "Practice — six singular patterns, no hidden vocabulary",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for regular and strong completed-past patterns",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48bb0f1de2a47888",
+      "sourceHash": "fnv1a64:920b06fa2f76574a",
       "notice": null,
       "blocks": [
         {
@@ -35,68 +35,80 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say hablaré, then hablaría."
+              "text": "This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the two endings are one word, twice",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you."
+              "text": "Regular rows:"
             },
             {
               "kind": "speech",
-              "text": "Both are the verb haber — Latin habēre, \"to have\" — glued onto the back of the infinitive. Romance speakers stopped saying \"I have to speak\" as two words and fused it into one:"
+              "text": "yo: hablé, comí, viví."
             },
             {
               "kind": "speech",
-              "text": "hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak."
+              "text": "tú: hablaste, comiste, viviste."
             },
             {
               "kind": "speech",
-              "text": "That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments."
+              "text": "él / ella / usted: habló, comió, vivió."
+            },
+            {
+              "kind": "speech",
+              "text": "Strong rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: tuve, hice, estuve."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: tuviste, hiciste, estuviste."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: tuvo, hizo, estuvo."
+            },
+            {
+              "kind": "speech",
+              "text": "The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: let spelling show the stress",
           "segments": [
             {
               "kind": "speech",
-              "text": "And the meaning follows from the grammar rather than being extra to it."
+              "text": "Regular comí, comió, viví, vivió carry written accents for final stress."
             },
             {
               "kind": "speech",
-              "text": "Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical."
+              "text": "Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem."
             },
             {
               "kind": "speech",
-              "text": "Promise from the present. Suppose from the past."
-            },
-            {
-              "kind": "speech",
-              "text": "English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía."
+              "text": "Comiste and viviste need no accent because their ordinary stress is already next to last."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The histories, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien."
-            },
-            {
-              "kind": "speech",
-              "text": "One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word."
+              "text": "The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve."
             }
           ]
         },
@@ -114,78 +126,190 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "hablaré then hablaría, and hear a promise turn into a guess",
+              "instruction": "“hablé, comí, viví”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *hablaré* then *hablaría*, and hear a promise turn into a guess]"
+              "source": "[YOU SAY: “hablé, comí, viví”]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tuve, hice, estuve”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tuve, hice, estuve”]"
             },
             {
-              "kind": "speech",
-              "text": "Until the choice is about what you mean, not which ending it was."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hice café. Viví en Madrid. Estuve bien.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comí and comió have accents; tuve and tuvo do not”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comí and comió have accents; tuve and tuvo do not”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-sintesis-futuro-condicional-promise",
-              "prompt": "You are committing to it. I will speak: which form?",
+              "id": "ES-C15-practice-regular-yo-forms",
+              "prompt": "Give the learned yo past forms of hablar, comer, and vivir, in that order.",
               "assesses": [
-                "ES-GRAMMAR-AR-FUTURE-SINGULAR"
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
+                "ES-LEX-HABLAR",
+                "ES-LEX-COMER",
+                "ES-LEX-VIVIR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "hablare",
-                "hablaré",
-                "yo hablare"
+                "hablé, comí, viví",
+                "hablé comí viví",
+                "hablé / comí / viví"
               ],
               "feedback": {
-                "correct": "Yes — the future is the promise.",
-                "incorrect": "hablare. The present auxiliary means you are standing behind it."
+                "correct": "Right: hablé, comí, viví.",
+                "incorrect": "Retrieve the three regular yo forms: hablé, comí, viví."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-sintesis-futuro-condicional-suppose",
-              "prompt": "Now you are only supposing. I would speak: which form?",
+              "id": "ES-C15-practice-strong-yo-forms",
+              "prompt": "Give the learned yo past forms of tener, hacer, and estar, in that order.",
               "assesses": [
-                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+                "ES-LEX-TENER",
+                "ES-LEX-HACER",
+                "ES-LEX-ESTAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "hablaria",
-                "hablaría",
-                "yo hablaria"
+                "tuve, hice, estuve",
+                "tuve hice estuve",
+                "tuve / hice / estuve"
               ],
               "feedback": {
-                "correct": "Yes — the past auxiliary makes it hypothetical.",
-                "incorrect": "hablaria."
+                "correct": "Right: tuve, hice, estuve.",
+                "incorrect": "Retrieve the three strong yo forms: tuve, hice, estuve."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-sintesis-futuro-condicional-why",
-              "prompt": "What single word is glued onto the infinitive in BOTH tenses?",
+              "id": "ES-C15-practice-hice-cafe",
+              "prompt": "Say 'I made coffee' in Spanish.",
               "assesses": [
-                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "haber",
-                "habere",
-                "the verb to have",
-                "have"
+                "hice café.",
+                "hice café"
               ],
               "feedback": {
-                "correct": "Yes — once in the present, once in the past. That is the only difference.",
-                "incorrect": "haber, from Latin habere. Present gives the future; past gives the conditional."
+                "correct": "Right: Hice café.",
+                "incorrect": "Use the strong yo form hice, then known café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-vivi-madrid",
+              "prompt": "Say 'I lived in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viví en madrid.",
+                "viví en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viví en Madrid.",
+                "incorrect": "Use accented viví, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-estuve-bien",
+              "prompt": "Say 'I was well' as a completed event in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+                "ES-LEX-ESTAR",
+                "ES-LEX-BIEN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "estuve bien.",
+                "estuve bien"
+              ],
+              "feedback": {
+                "correct": "Right: Estuve bien.",
+                "incorrect": "Use the strong yo form estuve, then known bien."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-accent-contrast",
+              "prompt": "Which pair carries written accents: comí/comió or tuve/tuvo?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "comí and comió",
+                "comí comió",
+                "comí/comió",
+                "comí y comió"
+              ],
+              "feedback": {
+                "correct": "Right: comí and comió mark final stress; tuve and tuvo do not.",
+                "incorrect": "The regular final-stressed pair carries the marks: comí and comió."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-history-match",
+              "prompt": "Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?",
+              "assesses": [
+                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
+                "ES-ETYMON-TUVE",
+                "ES-ETYMON-HICE",
+                "ES-ETYMON-ESTUVE-ANALOGY"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "estuve"
+              ],
+              "feedback": {
+                "correct": "Right: estuve was analogically remodeled beside the -uv- strong family.",
+                "incorrect": "Look for the form sharing -uv- with tuve: estuve."
               }
             }
           ]
@@ -203,7 +327,209 @@
             },
             {
               "kind": "speech",
-              "text": "What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)"
+              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C15-sintesis-preterito",
+      "sequence": 1158,
+      "title": "Synthesis — you can hear which past it is",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — two pasts with two histories, and you can hear which is which",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90344ff6c62c1ab4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new in this chapter. Say comí, then tuve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the stress tells you everything",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say those two again and listen to where your voice lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "comí — the stress lands on the ending. tuve — the stress lands on the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví."
+            },
+            {
+              "kind": "speech",
+              "text": "Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve."
+            },
+            {
+              "kind": "speech",
+              "text": "So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The two kinds have two histories."
+            },
+            {
+              "kind": "speech",
+              "text": "The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways."
+            },
+            {
+              "kind": "speech",
+              "text": "The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comí, viví — and feel the lift on the last syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comí*, *viví* — and feel the lift on the last syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuve, hice, estuve — and feel it move back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuve*, *hice*, *estuve* — and feel it move back]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until you can place a preterite by ear before you place it by rule."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-stress",
+              "prompt": "A preterite with no written accent. Where is the stress, and which kind is it?",
+              "assesses": [
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "on the stem, a strong preterite",
+                "stem, strong",
+                "on the stem",
+                "strong preterite"
+              ],
+              "feedback": {
+                "correct": "Yes — no accent means the stress moved back onto the stem.",
+                "incorrect": "On the stem, which makes it a strong preterite."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-accent",
+              "prompt": "Why does comi carry an accent when tuve does not?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the stress is on its final vowel",
+                "because the stress is on the ending",
+                "stressed final vowel",
+                "the ending is stressed"
+              ],
+              "feedback": {
+                "correct": "Right — the accent is the stress, written down.",
+                "incorrect": "Because comi is stressed on its final vowel and tuve is not."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-families",
+              "prompt": "In the regular preterite, do -er and -ir take the same endings?",
+              "assesses": [
+                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "yes",
+                "yes, the same",
+                "they agree",
+                "identical"
+              ],
+              "feedback": {
+                "correct": "Yes — as in the present and the imperfect.",
+                "incorrect": "They do, exactly as in the present and the imperfect."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)"
             }
           ]
         }

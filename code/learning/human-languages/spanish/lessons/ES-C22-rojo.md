@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C22-rojo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1390
-chapter: 72
+sequence: 1410
+chapter: 80
 type: word
 headword: rojo
 gloss: red — a cousin of French rouge and English red, but by a different branch of the same very old family

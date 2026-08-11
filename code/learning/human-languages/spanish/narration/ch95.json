@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 95,
-  "title": "Gustar — the Verb Built the Other Way Round",
+  "title": "Leer — Reading Is Gathering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f5a7cf3dc1185c56",
+  "sourceHash": "fnv1a64:b880274ba004be4f",
   "lessons": [
     {
-      "id": "ES-C35-gustar",
-      "sequence": 1710,
-      "title": "gustar — the verb that runs backwards",
-      "headword": "gustar",
-      "romanization": "gustar",
-      "gloss": "to please — the verb English calls \"to like\", built the other way round",
+      "id": "ES-C34-leer",
+      "sequence": 1680,
+      "title": "leer — \"to read\", and before that, \"to gather\"",
+      "headword": "leer",
+      "romanization": "leer",
+      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5081006ea08983e",
+      "sourceHash": "fnv1a64:c4bc78cc3100f296",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Back in the introductions you learned mucho gusto — \"much pleasure\". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest."
+              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
             }
           ]
         },
@@ -46,92 +46,74 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "g-hard — a hard g before u: goos-TAR."
+              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
             },
             {
               "kind": "speech",
-              "text": "s-clear — a clean hissing s, never a z buzz."
+              "text": "leo is likewise two beats, LE-o."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: gustar",
+          "title": "The word, taken apart: leer",
           "segments": [
             {
               "kind": "speech",
-              "text": "gustar from Latin gustāre, \"to taste\". English kept the root and stayed close to the tongue:"
+              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
             },
             {
               "kind": "speech",
-              "text": "gusto — doing something with relish, that is, with a taste for it."
+              "text": "That gathering root runs through an enormous amount of English:"
             },
             {
               "kind": "speech",
-              "text": "gustatory — of the sense of taste."
+              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
             },
             {
               "kind": "speech",
-              "text": "disgust — dis- \"away\" + taste: what you spit back out."
+              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
             },
             {
               "kind": "speech",
-              "text": "degustation, a tasting menu; and through French, ragout."
+              "text": "diligent and elegant, both of which meant \"picking carefully\"."
             },
             {
               "kind": "speech",
-              "text": "Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means \"to please\"."
+              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the thing you like is the subject",
+          "title": "Grammar Lens: a plain -er verb, with a mouthful",
           "segments": [
             {
               "kind": "speech",
-              "text": "English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — \"the book is pleasing to me\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Everything follows from that:"
-            },
-            {
-              "kind": "speech",
-              "text": "el libro is the subject, which is why the verb is gusta, third person."
-            },
-            {
-              "kind": "speech",
-              "text": "me is the person it happens to, not the one doing anything."
-            },
-            {
-              "kind": "speech",
-              "text": "So the verb agrees with the thing, never with you:"
+              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
             },
             {
               "kind": "table",
               "headers": [
-                "what you mean",
-                "Spanish",
-                "why"
+                "person",
+                "form",
+                "said"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 5,
               "utterances": [
-                "what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.",
-                "what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.",
-                "what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta."
+                "person: yo. form: leo. said: LE-o.",
+                "person: tú. form: lees. said: LE-es.",
+                "person: él/ella/usted. form: lee. said: LE-e.",
+                "person: nosotros. form: leemos. said: le-E-mos.",
+                "person: ellos/ustedes. form: leen. said: LE-en."
               ]
             },
             {
               "kind": "speech",
-              "text": "To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them)."
-            },
-            {
-              "kind": "speech",
-              "text": "Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means \"I am pleasing\" — just not the one you were reaching for."
+              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
             }
           ]
         },
@@ -149,38 +131,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing",
+              "instruction": "\"leer\" — le-ER, two beats",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me gusta el café\" then \"Me gustan los libros\" — the verb follows the thing]"
+              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te gusta tomar café\" — you like drinking coffee",
+              "instruction": "\"Leo un libro\" — I read a book",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te gusta tomar café\" — you like drinking coffee]"
+              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Me gusta ayudar\" — I like helping",
+              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me gusta ayudar\" — I like helping]"
+              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family",
+              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"gustar\" then English \"gusto, disgust, gustatory\" — the tasting family]"
+              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
             }
           ]
         },
@@ -197,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)"
+              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
             }
           ]
         }

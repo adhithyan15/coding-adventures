@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 90,
-  "title": "Synthesis --- What You Understand, and What You Don't",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e0d4b38f5dda9e70",
+  "title": "Dog and Cat",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:36e5a7c1b8134a97",
   "lessons": [
     {
-      "id": "ES-C34-sintesis-mente",
-      "sequence": 1676,
-      "title": "Synthesis — what you understand, and what you don't",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — the sentence you have been saying since chapter 14, finally taken apart",
+      "id": "ES-C32-gato",
+      "sequence": 1620,
+      "title": "gato — the word that travelled with the animal",
+      "headword": "gato",
+      "romanization": "gato",
+      "gloss": "cat — a word that travelled out of Africa with the animal, pushing Latin's own fēlēs aside",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a172f4846c24967",
+      "sourceHash": "fnv1a64:47d405843413aa05",
       "notice": null,
       "blocks": [
         {
@@ -35,77 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "Say the sentence you learned in the repair kit, the one that rescues a conversation. (No entiendo.)"
+              "text": "Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the formula was a verb all along",
+          "type": "etymology",
+          "title": "The word, taken apart: gato",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have been saying no entiendo since the repair kit, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
+              "text": "gato (\"cat\") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline."
             },
             {
               "kind": "speech",
-              "text": "It has parts now. Entiendo is entender, and entender is Latin intendere, \"to stretch toward.\" Which means the sentence you have been using to admit defeat has never actually said I failed. It says:"
+              "text": "Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, \"cat\")."
             },
             {
               "kind": "speech",
-              "text": "I am not managing to stretch that far."
-            },
-            {
-              "kind": "speech",
-              "text": "That was true the whole time. You just could not see it yet."
-            },
-            {
-              "kind": "speech",
-              "text": "And the moment a formula has parts, it turns. No entiendo stops being the only thing you can say and becomes one option among several."
+              "text": "So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Back in the repair kit, all you could do:"
-            },
-            {
-              "kind": "speech",
-              "text": "— No entiendo. Más despacio, por favor."
-            },
-            {
-              "kind": "speech",
-              "text": "Now, the same moment, with the parts working:"
-            },
-            {
-              "kind": "speech",
-              "text": "— Perdón — leo un poco, pero no entiendo. — Más despacio, por favor. Ahora entiendo. Gracias."
-            },
-            {
-              "kind": "speech",
-              "text": "Same trouble. But the second speaker is no longer only failing — they are reporting which part works and which does not. That is the difference between a distress signal and a conversation."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Four verbs is not four words. It is the ability to say where you are in a language: what you take in, what you work on, what lands, what you can produce."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,74 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the repair-kit version — the distress signal on its own",
+              "instruction": "\"el gato\" — the cat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the repair-kit version — the distress signal on its own]"
+              "source": "[YOU SAY: \"el gato\" — the cat]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the version above, where you say what does work before what doesn't",
+              "instruction": "the trail — \"kadis, cattus, gato\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the version above, where you say what *does* work before what doesn't]"
+              "source": "[YOU SAY: the trail — \"kadis, cattus, gato\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run the second one until it sounds like a person, not a repair kit."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-sintesis-mente-literal",
-              "prompt": "What does no entiendo literally say, given intendere?",
-              "assesses": [
-                "ES-ETYMON-ENTENDER-04",
-                "ES-LEX-NO-ENTIENDO-01"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "i am not stretching that far",
-                "i am not reaching that far",
-                "not stretching toward it",
-                "i cannot stretch that far"
-              ],
-              "feedback": {
-                "correct": "Yes — not a confession of failure, a report of reach.",
-                "incorrect": "Intendere is to stretch toward: I am not managing to stretch that far."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-sintesis-mente-now",
-              "prompt": "How do you say I understand now, once it slows down?",
-              "assesses": [
-                "ES-LEX-ENTENDER-03"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word it replaced — \"fēlēs,\" now only in \"feline\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "ahora entiendo",
-                "entiendo",
-                "entiendo ahora"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "Ahora entiendo — now I understand."
-              }
+              "source": "[YOU SAY: the word it replaced — \"fēlēs,\" now only in \"feline\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -197,7 +111,144 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say back then? (Not just that you are lost — which part is lost.)"
+              "text": "What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C32-perro",
+      "sequence": 1630,
+      "title": "perro — the word nobody can explain",
+      "headword": "perro",
+      "romanization": "perro",
+      "gloss": "dog — a genuinely unsolved etymology, and the Latin word it pushed out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eddab99609eb6367",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: perro",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perro (\"dog\"). Roll the rr: PEH-rro."
+            },
+            {
+              "kind": "speech",
+              "text": "The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: an honestly open question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three serious proposals, none confirmed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "proposal",
+                "the case for it",
+                "the problem"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "proposal: onomatopoeia — a growl, or a shepherd's call \"perr, perr\". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.",
+                "proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.",
+                "proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that \"we don't know\" is a real answer in etymology, not a gap in your notes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el perro, el gato\" — dog and cat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el perro, el gato\" — dog and cat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"can\" — the archaic word perro replaced, from Latin canis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"can\" — the archaic word *perro* replaced, from Latin *canis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"gato, traced to Egypt; perro, unsolved\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"gato, traced to Egypt; perro, unsolved\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)"
             }
           ]
         }

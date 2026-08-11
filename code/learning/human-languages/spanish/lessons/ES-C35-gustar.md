@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C35-gustar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1710
-chapter: 95
+sequence: 1730
+chapter: 103
 type: word
 headword: gustar
 gloss: to please — the verb English calls "to like", built the other way round

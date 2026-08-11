@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C35-tomar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1680
-chapter: 91
+sequence: 1700
+chapter: 99
 type: word
 headword: tomar
 gloss: to take (and, across Latin America, to drink) — an everyday word with no settled origin

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 107,
-  "title": "Saying Why",
+  "title": "Telling What Happened",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:13d4bdc34d768da4",
+  "sourceHash": "fnv1a64:712b68a85d9c7270",
   "lessons": [
     {
-      "id": "ES-C41-creer",
-      "sequence": 1910,
-      "title": "creer — to put your heart somewhere",
-      "headword": "creer",
-      "romanization": "creer",
-      "gloss": "to believe, to think — putting your heart somewhere, where pensar weighs it up",
+      "id": "ES-C38-luego",
+      "sequence": 1820,
+      "title": "luego — a word you already have, doing a job you have not seen it do",
+      "headword": "luego",
+      "romanization": "luego",
+      "gloss": "then, next — a word you already own from hasta luego, now doing a second job: joining two events in order",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6dd613ee26f28465",
+      "sourceHash": "fnv1a64:85e4d4643ea43868",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have pensar — to think, and underneath it pēnsāre, \"to weigh\". Spanish has a second verb for the inside of your head, and it does a different job. Where pensar weighs, this one commits."
+              "text": "Nothing new to learn here — you have said luego every time you said hasta luego. What is new is that it can stand alone, between two events, and put them in order."
             }
           ]
         },
@@ -46,62 +46,41 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hiatus-ee — the two e's do not merge: creer = kreh-EHR, two beats."
+              "text": "diphthong-ue — ue is one glide, not two syllables."
             },
             {
               "kind": "speech",
-              "text": "r-tap — a single flick, not the rolled rr."
+              "text": "g-soft-gw — between vowels the g softens; luego is LWEH-gho, not the hard stop English puts in go."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: creer",
+          "title": "The word, taken apart: luego",
           "segments": [
             {
               "kind": "speech",
-              "text": "creer = \"to believe\", and in everyday use \"to think\" in the sense of hold an opinion."
+              "text": "You already know where it comes from: Latin locō, the ablative of locus, \"place\" — \"in that place\", a word about where that slid into a word about when. That is why hasta luego is \"until later\"."
             },
             {
               "kind": "speech",
-              "text": "It comes from Latin crēdere, \"to entrust, to believe\" — and crēdere is a compound so old that Latin had already forgotten it was one. It is PIE ḱred-dʰeh₁-: \"to put ḱred-\"."
+              "text": "What you have not been shown is how much else locus is holding up. It gives local, locate, location, locus, allocate, dislocate. And through French lieu, \"place\", it gives lieutenant — literally the officer holding the place of another."
             },
             {
               "kind": "speech",
-              "text": "What is that first half? Traditionally, the heart word — the root of Latin cor, cordis and of English heart. Be honest that the step is disputed: that root normally appears as ḱḗr, never ḱred-. The compound is not in doubt; only what it was built on."
-            },
-            {
-              "kind": "speech",
-              "text": "Taking the traditional reading:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "from crēdere",
-                "from cor, cordis"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "from crēdere: credit, creed, credo. from cor, cordis: cordial, courage.",
-                "from crēdere: credential, incredible. from cor, cordis: record, accord, discord."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "To record is to bring something back to the cor — for a Roman the seat of memory, not of feeling. To have courage is to have heart."
+              "text": "A leftover worth knowing. Desde luego means \"of course\". It was built on an older sense of luego, \"immediately\", so its literal force was nearer \"from this moment on\". The bare word has since drifted to \"later\"; the phrase kept the old sense."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: creer que",
+          "title": "Grammar Lens: luego between two events",
           "segments": [
             {
               "kind": "speech",
-              "text": "Creer almost always drags a que behind it, and then a whole clause:"
+              "text": "Out of the farewell, luego is not glued to a verb. It marks the join between two events and sits at the front of the second:"
             },
             {
               "kind": "table",
@@ -112,18 +91,14 @@
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "Creo que llueve., I think it's raining.",
-                "Creo que hace frío., I think it's cold.",
-                "No creo que llueva., I don't think it's raining."
+                "Me siento. Luego leo., I sit down. Then I read.",
+                "Bebo café y luego escribo., I drink coffee and then I write.",
+                "Me levanto y luego corro., I get up and then I run."
               ]
             },
             {
               "kind": "speech",
-              "text": "Look hard at that third row. Creo que llueve — but no creo que llueva. Negating creer flips the clause into the subjunctive from chapter eighteen: stop vouching for something and Spanish stops using the tense that states facts."
-            },
-            {
-              "kind": "speech",
-              "text": "Pienso is the weighing; creo is where it landed. Treat that as a way to feel the difference, not a rule — both take que and a clause, and a speaker may use either. But creo que is the ordinary opening for an opinion."
+              "text": "Two events, in order, with one word doing the ordering — and it is a word you have been saying since chapter five."
             }
           ]
         },
@@ -141,38 +116,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"creer\" — kreh-EHR, two beats, not one",
+              "instruction": "\"hasta luego\" then just \"luego\" — same word, standing alone",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"creer\" — *kreh-EHR*, two beats, not one]"
+              "source": "[YOU SAY: \"hasta luego\" then just \"luego\" — same word, standing alone]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Creo que llueve.\"",
+              "instruction": "\"Me siento. Luego leo.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Creo que llueve.\"]"
+              "source": "[YOU SAY: \"Me siento. Luego leo.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"pienso\" (I weigh) then \"creo\" (I hold)",
+              "instruction": "\"Me levanto y luego corro.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"pienso\" (I weigh) then \"creo\" (I hold)]"
+              "source": "[YOU SAY: \"Me levanto y luego corro.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"creer\" then English \"credit, creed, cordial, record\"",
+              "instruction": "\"luego\" then English \"local, locate, lieutenant\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"creer\" then English \"credit, creed, cordial, record\"]"
+              "source": "[YOU SAY: \"luego\" then English \"local, locate, lieutenant\"]"
             }
           ]
         },
@@ -189,30 +164,26 @@
             },
             {
               "kind": "speech",
-              "text": "What shape is crēdere, under the surface? (A compound — ḱred-."
-            },
-            {
-              "kind": "speech",
-              "text": "dʰeh₁-, \"to put ḱred-\".) What is the traditional reading of that first half, and why hedge it? (Heart — but the heart root is ḱḗr, never ḱred-, so the step is disputed.) Pensar weighs; what does creer do? (It lands — it holds the opinion the weighing produced.)"
+              "text": "What job does luego do here that it does not do in hasta luego? (It joins two events in order, instead of sitting inside a fixed farewell.) Which English officer's title hides the same locus? (Lieutenant — the one holding another's place.) Which older sense of luego is frozen inside desde luego? (Immediately — not \"later\".)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C41-asi-que",
-      "sequence": 1920,
-      "title": "así que — \"so\", and a word you have been saying since yes",
-      "headword": "así que",
-      "romanization": "así que",
-      "gloss": "thus, in that way — and with que after it, \"so\"; built on the same sīc that gave you sí",
+      "id": "ES-C38-porque",
+      "sequence": 1830,
+      "title": "porque — \"because\", and the reason a sequence turns into a story",
+      "headword": "porque",
+      "romanization": "porque",
+      "gloss": "because — two tiny words fused into one, and the reason a sequence becomes a story",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9944ee1a73c653d1",
+      "sourceHash": "fnv1a64:9c3692063a3ee3fd",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +199,7 @@
             },
             {
               "kind": "speech",
-              "text": "Porque runs from a claim back to its reason. This runs the other way — from the reason forward to what follows. Same two facts, opposite arrow, and you need both to explain anything."
+              "text": "With luego you can put two events in order. But order is not yet a story. I sat down, then I read tells nobody why. One more word closes that gap, and it is two words wearing a single coat."
             }
           ]
         },
@@ -239,71 +210,72 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "s-clear — a clean hiss in así, never a z buzz."
+              "text": "k-hard — qu before e is a plain k; the u is silent. porque = POR-keh."
             },
             {
               "kind": "speech",
-              "text": "k-hard — qu is a plain k; the u is silent."
+              "text": "r-tap — a single flick of the tongue, not the rolled rr."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The phrase, taken apart: así que",
+          "title": "The word, taken apart: porque",
           "segments": [
             {
               "kind": "speech",
-              "text": "así = \"so, thus, in that way\". así que = \"so, and therefore\"."
+              "text": "porque = por + que, fused."
             },
             {
               "kind": "speech",
-              "text": "Así is Latin sīc, \"thus\" — with an a- that Spanish added later, the same one it put on apenas and afuera. And you have met sīc before: it is the whole of Spanish sí, \"yes\". Latin sīc meant \"thus, in this way\", and saying thus in answer to a question is how a language gets a word for yes."
+              "text": "por descends from Latin prō, \"for, in front of, on behalf of\" — the same prō standing at the front of provide, proceed, protect, propose, and surviving whole in the English phrase quid pro quo."
             },
             {
               "kind": "speech",
-              "text": "So sí and así are the same Latin adverb, one bare and one with the a- attached. English borrowed it raw and never translated it: sic, the mark an editor puts after a quoted mistake — \"thus it stood\"."
+              "text": "que descends from Latin quid, \"what\" — and then quietly took over every job Latin had given quod, without taking its form."
+            },
+            {
+              "kind": "speech",
+              "text": "And this is the good part. That Latin qu- is one branch of the Proto-Indo-European interrogative root kʷo-. The other branch went into Germanic, where kʷ- softened to hw- — Grimm's Law turning a stop into a breath — and came out as English who, what, when, where, why."
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish que and English what are not borrowed from one another. They are siblings — the same ancient question-word, walked down two different roads. Quid pro quo puts both Latin halves of porque side by side in an English sentence."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the two arrows",
+          "title": "Grammar Lens: porque, por qué, el porqué",
           "segments": [
             {
               "kind": "speech",
-              "text": "The pair is worth drilling as a pair, because they carry the same two facts in opposite orders:"
+              "text": "Three spellings, three jobs, and they are genuinely distinct in writing:"
             },
             {
               "kind": "table",
               "headers": [
-                "",
-                ""
+                "written",
+                "stress",
+                "job"
               ],
-              "columns": 2,
-              "rowCount": 2,
+              "columns": 3,
+              "rowCount": 3,
               "utterances": [
-                "No corro porque llueve., I'm not running because it's raining.",
-                "Llueve, así que no corro., It's raining, so I'm not running."
+                "written: porque. stress: one word, no accent. job: because — gives the reason.",
+                "written: por qué. stress: two words, accent on qué. job: why — asks for the reason.",
+                "written: el porqué. stress: one word, accent, with el. job: the reason — a noun."
               ]
             },
             {
               "kind": "speech",
-              "text": "Porque points backwards to the cause. Así que points forwards to the consequence. Which you reach for depends only on which fact you want to say first — and that is a choice about emphasis, not about grammar."
+              "text": "¿Por qué te levantas? — Why do you get up? Me levanto porque corro. — I get up because I run. No entiendo el porqué. — I don't understand the reason."
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "Hace frío, así que bebo café., It's cold, so I drink coffee.",
-                "Creo que llueve, así que leo., I think it's raining, so I read."
-              ]
+              "kind": "speech",
+              "text": "The accent is not decoration. It marks qué as the questioning one, exactly as it does on other question words."
             }
           ]
         },
@@ -321,38 +293,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sí\" then \"así\" — the same Latin word, one with an a- on the front",
+              "instruction": "\"porque\" — POR-keh, silent u",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sí\" then \"así\" — the same Latin word, one with an *a-* on the front]"
+              "source": "[YOU SAY: \"porque\" — *POR-keh*, silent *u*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Llueve, así que no corro.\"",
+              "instruction": "\"Me siento porque leo.\" — I sit down because I read.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Llueve, así que no corro.\"]"
+              "source": "[YOU SAY: \"Me siento porque leo.\" — I sit down because I read.]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same two facts the other way — \"No corro porque llueve.\"",
+              "instruction": "\"Me levanto y luego corro, porque hace sol.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same two facts the other way — \"No corro porque llueve.\"]"
+              "source": "[YOU SAY: \"Me levanto y luego corro, porque hace sol.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Creo que hace frío, así que bebo café.\"",
+              "instruction": "the three shapes — \"porque, por qué, el porqué\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Creo que hace frío, así que bebo café.\"]"
+              "source": "[YOU SAY: the three shapes — \"porque, por qué, el porqué\"]"
             }
           ]
         },
@@ -369,26 +341,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which Latin adverb is hiding in both sí and así? (Sīc, \"thus\".) Which way does porque point, and which way así que? (Porque backwards to the cause; así que forwards to the consequence.) What does an editor's sic mean? (Thus it stood — the same word, borrowed whole.)"
+              "text": "What two Latin words are fused inside porque? (prō and quid.) Are Spanish que and English what parent and child, or siblings? (Siblings — Latin qu- and Germanic wh- from one root, kʷo-.) Which of the three spellings asks a question? (Por qué — two words, accent on qué.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C41-deber",
-      "sequence": 1930,
-      "title": "deber — to owe, and therefore to ought",
-      "headword": "deber",
-      "romanization": "deber",
-      "gloss": "should, ought to — and to owe, because the word is literally \"to have something from someone\"",
+      "id": "ES-C38-imperfecto",
+      "sequence": 1840,
+      "title": "llovía / llovió — the same rain, told two ways",
+      "headword": "llovía / llovió",
+      "romanization": "llovía / llovió",
+      "gloss": "the same rain in two tenses — how a story uses the imperfect for the scene and the preterite for the events",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12f18f94149fa486",
+      "sourceHash": "fnv1a64:f59fda7044043811",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +376,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can now say what you think and what follows from it. This verb adds the third move in any explanation: what somebody ought to do about it. It gets there from an unexpected direction — money."
+              "text": "You already have both past tenses. The imperfect — hablaba, comía — came in chapter sixteen, with its three irregulars. Nothing here is a new form. What is new is which one to reach for, and that turns out to be the whole trick of telling a story."
             }
           ]
         },
@@ -415,60 +387,220 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "b-soft — between vowels the b softens: deber = deh-BEHR."
+              "text": "double-l-y — ll is a y glide: llovía = yo-VEE-a."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one flick at the end, not a roll."
+              "text": "accent-i — the accent splits the vowels: llo-VÍ-a, three beats."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: deber",
+          "title": "The word, taken apart: why \"imperfect\"",
           "segments": [
             {
               "kind": "speech",
-              "text": "deber does two jobs: \"to owe\", and \"ought to, should\"."
+              "text": "The name is the lesson, and it is worth having."
             },
             {
               "kind": "speech",
-              "text": "Latin dēbēre explains both, because it is a compound: dē- (\"from\") plus habēre (\"to have\"). To dēbēre something is to have it from someone — which is exactly what owing is. You are holding what is theirs."
+              "text": "Imperfecto is Latin imperfectus: in- (\"not\") plus perfectus, \"carried all the way through\" — itself per- (\"through\") plus facere (\"to do, to make\"). That facere is everywhere in English: fact, factory, effect, manufacture, and perfect itself, which still means finished through."
             },
             {
               "kind": "speech",
-              "text": "English helped itself to this verb four times over — three of them from the participle dēbitum rather than the verb — and the spellings record each route:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English",
-                "how it came"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "English: debt. how it came: through French, then re-spelled to show the Latin b.",
-                "English: debit. how it came: straight from Latin bookkeeping.",
-                "English: due. how it came: through French deü, the b worn away.",
-                "English: duty. how it came: built on due."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "One more came the long way round, and not by borrowing. French turned dēbēre into devoir, \"duty\". English translated the phrase mettre en devoir — to put oneself under an obligation — half-way, as put in dever, and the last two words later fused into endeavour."
+              "text": "So the imperfect is the not-carried-through tense. Not unfinished in quality — unfinished in time. It shows an action still running, with no edge on it. That is not a label bolted on afterwards; it is a description of the job."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: debo + infinitive",
+          "title": "Grammar Lens: the scene and the events",
           "segments": [
             {
               "kind": "speech",
-              "text": "Deber is regular, and for \"ought to\" it takes a bare infinitive straight after it — no que, no preposition:"
+              "text": "Take one fact — it rained — and watch the tense decide what kind of fact it is:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Llovía., It was raining. (no edge — the weather that day).",
+                "Llovió., It rained. (edged — a thing that happened)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is more correct. They answer different questions. A told story needs both, in a division of labour that never varies:"
+            },
+            {
+              "kind": "speech",
+              "text": "The imperfect paints the scene — what was going on, what things were like. The preterite drops the events into it — what then happened."
+            },
+            {
+              "kind": "speech",
+              "text": "Llovía. Luego me levanté. — It was raining (scene). Then I got up (event)."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no separate form for this, which is the only reason it feels hard. English leans on was ‑ing and used to and lets context carry the rest. Spanish decided it once, in the ending."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"llovía\" then \"llovió\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"llovía\" then \"llovió\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scene, then event — \"Llovía. Luego me levanté.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: scene, then event — \"Llovía. Luego me levanté.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"No corrí, porque llovía.\" — the reason is a scene, the running an event",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"No corrí, porque llovía.\" — the reason is a scene, the running an event]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Comía pan porque llovía.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Comía pan porque llovía.\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does imperfectus literally say, and which English word shares its second half? (Not carried through; perfect — and fact, factory.) In a story, which tense paints the background and which drops in the events? (Imperfect paints; preterite drops in.) Which of llovía and llovió has an edge on it? (Llovió — a thing that happened.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C38-contar",
+      "sequence": 1850,
+      "title": "contar — to tell a story, which is also to count it up",
+      "headword": "contar",
+      "romanization": "contar",
+      "gloss": "to tell a story — and also to count, because in Spanish, as once in English, a story is something you reckon up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:066a000eb97bb00a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces are in your hands: luego to order events, porque to explain them, the imperfect to hold the background still. This lesson adds no fourth piece — it puts the three together, under the verb that names the act."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-ue — the stem breaks under stress: cuento = KWEN-to, but contamos stays plain."
+            },
+            {
+              "kind": "speech",
+              "text": "k-hard — c before o is a hard k."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: contar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contar means to count — and to tell a story. One verb, both jobs, and not a pun."
+            },
+            {
+              "kind": "speech",
+              "text": "It descends from Latin computāre, \"to reckon up\": com- (\"together\") plus putāre, which meant \"to prune\", then \"to settle an account\", then simply \"to reckon\". Putāre gives amputate, dispute, deputy; computāre gives count, compute, account."
+            },
+            {
+              "kind": "speech",
+              "text": "English carries the same double sense — to recount an event, to give an account of yourself — but those are the very same word, borrowed through Old French from computāre. Spanish's relatives, not an independent echo."
+            },
+            {
+              "kind": "speech",
+              "text": "The independent echo is tell: Germanic, unrelated, and it also once meant \"to count\" — hence a bank teller, and all told. Two unrelated languages, one thought: a story is a reckoning-up of events in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the backbone of a told story",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Contar breaks o to ue under stress:"
             },
             {
               "kind": "table",
@@ -479,20 +611,28 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: debo.",
-                "person: tú. form: debes.",
-                "person: él/ella/usted. form: debe.",
-                "person: nosotros. form: debemos.",
-                "person: ellos/ustedes. form: deben."
+                "person: yo. form: cuento.",
+                "person: tú. form: cuentas.",
+                "person: él/ella/usted. form: cuenta.",
+                "person: nosotros. form: contamos.",
+                "person: ellos/ustedes. form: cuentan."
               ]
             },
             {
               "kind": "speech",
-              "text": "Debo estudiar. — I ought to study. Llueve, así que debo leer. — It's raining, so I ought to read."
+              "text": "Here is the shape of a told story:"
             },
             {
               "kind": "speech",
-              "text": "The obligation is softer than a command and firmer than a wish, which is the register an explanation usually wants."
+              "text": "Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho. Me senté y leí. It was raining. I got up, then I drank coffee. I didn't run, because it was raining hard. I sat down and read."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch the two pasts divide the work. Llovía — imperfect, holding the scene still. Me levanté, bebí, me senté, leí — preterite, dropping events in. Luego orders them; porque explains one."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a narration, and every word in it is one this book has taught you."
             }
           ]
         },
@@ -510,47 +650,47 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"debo, debes, debe, debemos, deben\"",
+              "instruction": "\"cuento, cuentas, cuenta, contamos, cuentan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"debo, debes, debe, debemos, deben\"]"
+              "source": "[YOU SAY: \"cuento, cuentas, cuenta, contamos, cuentan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Debo trabajar.\"",
+              "instruction": "\"Cuento hasta cinco.\" — I count to five. Same verb.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Debo trabajar.\"]"
+              "source": "[YOU SAY: \"Cuento hasta cinco.\" — I count to five. Same verb.]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hace frío, así que debo beber café.\"",
+              "instruction": "the scene, then the event — \"Llovía. Luego me levanté.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hace frío, así que debo beber café.\"]"
+              "source": "[YOU SAY: the scene, then the event — \"Llovía. Luego me levanté.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Creo que llueve, así que debo leer.\"",
+              "instruction": "the whole thing — \"Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho.\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Creo que llueve, así que debo leer.\"]"
+              "source": "[YOU SAY: the whole thing — \"Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho.\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"deber\" then English \"debt, debit, due, duty\"",
+              "instruction": "\"contar\" then English \"count, account, recount, teller\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"deber\" then English \"debt, debit, due, duty\"]"
+              "source": "[YOU SAY: \"contar\" then English \"count, account, recount, teller\"]"
             }
           ]
         },
@@ -567,179 +707,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two Latin pieces build dēbēre, and what do they say together? (Dē- + habēre — \"to have from someone\", which is owing.) Name two of the four English words it became. (Any of debt, debit, due, duty.) What follows debo — a que, or a bare infinitive? (A bare infinitive: debo estudiar.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C41-explicar",
-      "sequence": 1940,
-      "title": "explicar — to unfold",
-      "headword": "explicar",
-      "romanization": "explicar",
-      "gloss": "to explain — literally to unfold, and the verb that names what this whole chapter has been building",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:05a46f1bd8306dfb",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three pieces are in your hands: creo que to state an opinion, así que to run forward to what follows, debo to say what ought to happen. This lesson puts all three in a row, under the verb that names the act."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "k-hard — c before a is a hard k: explicar = eks-plee-KAR."
-            },
-            {
-              "kind": "speech",
-              "text": "l-clear — a clean l in the pl, no vowel slipped in between."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: explicar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "explicar = Latin explicāre: ex- (\"out\") + plicāre (\"to fold\"). To explain is to unfold — something was folded shut, and you open it."
-            },
-            {
-              "kind": "speech",
-              "text": "Plicāre is one of the great suppliers of English. Some came from Latin directly, some through French, and the sound changed on the way:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "straight from Latin",
-                "through French"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "straight from Latin: explicate. through French: explicit, application.",
-                "straight from Latin: complicated (com- + fold). through French: employ, deploy.",
-                "straight from Latin: duplicate. through French: display — a doublet of deploy."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "And simple is sim-plex — \"one-fold\". Something simple has been folded only once. Something complicated has been folded together, over and over, which is why it needs unfolding. The metaphor is consistent all the way down, and Spanish keeps it in the plainest verb of the set."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the shape of an explanation",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Explicar is regular — it takes the plain -ar endings of hablar, with no stem change at all: explico, explicas, explica, explicamos, explican. (Contar, which you met earlier, breaks its o to ue; this one does not, and there is nothing to remember.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Here is a whole explanation, with every piece something this book has taught:"
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Por qué no corres? — Creo que llueve. No corro porque llueve, así que leo. Debo estudiar. — Why aren't you running? — I think it's raining. I'm not running because it's raining, so I read. I ought to study."
-            },
-            {
-              "kind": "speech",
-              "text": "Four moves, four words: an opinion (creo que), a cause (porque), a consequence (así que), an obligation (debo). That is what an explanation is made of, and you can now build one in either direction — cause first or claim first — because porque and así que let you choose."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"explico, explicas, explica, explicamos, explican\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"explico, explicas, explica, explicamos, explican\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Explico bien.\" — I explain well.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Explico bien.\" — I explain well.]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the four moves — \"Creo que llueve, porque hace frío, así que debo leer.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the four moves — \"Creo que llueve, porque hace frío, así que debo leer.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"explicar\" then English \"explicit, complicated, simple, display\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"explicar\" then English \"explicit, complicated, simple, display\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does explicāre literally say? (To fold out — ex- + plicāre.) What is simple, folded? (Once — sim-plex; complicated is folded together, again and again.) Name the four moves of an explanation and the word for each. (Opinion creo que, cause porque, consequence así que, obligation debo.)"
+              "text": "Contar does two jobs — which two, and what Latin verb explains both? (Count and tell; computāre, \"to reckon up\".) Which English word carries the same double sense? (Recount — or an account; and tell itself, as in a bank teller.) In your story, which tense held the rain and which one poured the coffee? (Imperfect llovía; preterite bebí.) Name the two joining words you used. (Luego for order, porque for reason.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C31-teens-latinos
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 1580
-chapter: 81
+sequence: 1600
+chapter: 89
 type: etymology
 headword: duodēvīgintī, ūndēvīgintī
 gloss: why 18 and 19 are the interesting ones — Latin counted them backwards from twenty, and Spanish refused to

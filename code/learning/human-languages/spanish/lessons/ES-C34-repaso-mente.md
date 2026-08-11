@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C34-repaso-mente
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1673
-chapter: 89
+sequence: 1693
+chapter: 97
 type: practice-mix
 headword: (review)
 gloss: review — four verbs of the mind, and the four physical acts hiding inside them

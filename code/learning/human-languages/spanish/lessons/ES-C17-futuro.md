@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-futuro
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1170
-chapter: 61
+sequence: 1190
+chapter: 69
 type: grammar
 headword: hablaré
 gloss: the singular simple future of hablar — hablaré, hablarás, hablará

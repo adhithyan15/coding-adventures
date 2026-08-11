@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 91,
-  "title": "Tomar — Taking, and a Word With No Past",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:29fe2d275c12d6a9",
+  "title": "Green and Yellow",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6314f7d2b97834e9",
   "lessons": [
     {
-      "id": "ES-C35-tomar",
-      "sequence": 1680,
-      "title": "tomar — \"to take\", and nobody knows where it came from",
-      "headword": "tomar",
-      "romanization": "tomar",
-      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
+      "id": "ES-C33-verde",
+      "sequence": 1640,
+      "title": "verde — the colour named after being alive",
+      "headword": "verde",
+      "romanization": "verde",
+      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a818fa5a719d9a4",
+      "sourceHash": "fnv1a64:2054d95a17dcd12d",
       "notice": null,
       "blocks": [
         {
@@ -35,61 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
+              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: verde",
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one soft tap of the tongue: to-MAR."
+              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
             },
             {
               "kind": "speech",
-              "text": "vowel-o — a short, pure o, with no English glide toward ow."
+              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
+            },
+            {
+              "kind": "speech",
+              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: tomar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
-            },
-            {
-              "kind": "speech",
-              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
-            },
-            {
-              "kind": "speech",
-              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
-            },
-            {
-              "kind": "speech",
-              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,43 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
+              "instruction": "\"verde\" — green",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
+              "source": "[YOU SAY: \"verde\" — green]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo un café\" — I'll have a coffee",
+              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
+              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
+              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
+              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -150,7 +111,118 @@
             },
             {
               "kind": "speech",
-              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
+              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C33-amarillo",
+      "sequence": 1650,
+      "title": "amarillo — the colour that started as a taste",
+      "headword": "amarillo",
+      "romanization": "amarillo",
+      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d273d6ceb1a6208",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: amarillo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
+            },
+            {
+              "kind": "speech",
+              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde, amarillo\" — green and yellow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
             }
           ]
         }

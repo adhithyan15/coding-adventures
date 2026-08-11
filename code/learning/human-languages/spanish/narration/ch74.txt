@@ -1,76 +1,98 @@
-Spanish, chapter 74: Head and Hand.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 74: The Subjunctive, Regular.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-la cabeza — "the head".
-
-Warm-up.
-[pause 2 seconds]
-Spanish's word for "head" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead.
-
-You'll want to know: la cabeza.
-la cabeza — the head. Feminine, so la.
-
-The word, taken apart: caput.
-Latin's word for "head" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:
-[a table of 4 rows, read aloud]
-English: captain. literally: the "head" of a ship/unit.
-English: capital. literally: the "head" city, or "head" sum of money.
-English: decapitate. literally: to remove the head.
-English: capitulate. literally: to arrange under "headings" — hence, to yield.
-
-Why it's said this way: French made a different choice.
-French had the exact same Latin word available — and dropped it. French tête ("head") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say "noggin" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "la cabeza" — the head]
-[pause 8 seconds for the answer]
-[your turn — say: "me duele la cabeza" — "my head hurts"]
-[pause 8 seconds for the answer]
-[your turn — say: the English family — "captain, capital, decapitate"]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — Spanish kept caput; French swapped it for a pot joke]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "the head." (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, "pot" — soldiers' slang for the skull that took over completely.)
-
-
-Lesson 2 of 2.
-la mano — "the hand".
+Lesson 1 of 3.
+hable, hables, hable — the singular -ar row.
 
 Warm-up.
 [pause 2 seconds]
-You've been trusting "-o words are masculine, -a words are feminine" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name.
+You already used hables for one friend. Today add only the other two singular slots:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: hable.
+person: tú. present subjunctive: hables.
+person: él / ella / usted. present subjunctive: hable.
+Plural forms wait. Say the small row: hable, hables, hable.
 
-Grammar Lens: la mano and its gender.
-la mano — the hand. Feminine, despite ending in -o.
-Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus ("hand") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus "fruit," exercitus "army," senātus "senate"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus "house" and anus "old woman"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern.
+Grammar Lens: the yo stem, then a vowel swap.
+Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
 
-The word, taken apart: manus.
-Mano comes from Latin manus, "hand" — and that root is buried inside an enormous number of English words:
-[a table of 5 rows, read aloud]
-English: manual. literally: done by hand.
-English: manufacture. literally: made by hand (manus + facere, "to make").
-English: manuscript. literally: written by hand (manus + scrībere).
-English: maintain. literally: hold in the hand (manū tenēre).
-English: manage. literally: to handle.
-Manufacture is worth pausing on: it literally means "made by hand" — and today it names precisely the opposite.
+The name, taken apart.
+Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la mano" — feminine, despite the -o]
-[pause 8 seconds for the answer]
-[your turn — say: "me duele la mano" — "my hand hurts"]
-[pause 8 seconds for the answer]
-[your turn — say: the family — "manual, manufacture, maintain — all a hand"]
-[pause 8 seconds for the answer]
-[your turn — say: the irony — "manufacture = made by hand"]
-[pause 8 seconds for the answer]
+Build each answer only from the learned singular row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which present form gives the stem for regular hable: hablo or habla?
+[question — say your answer, then pause 7 seconds]
+What joining idea sits inside the Latin source of subjuntivo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the hand," and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)
+Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
+
+
+Lesson 2 of 3.
+coma, comas, coma — let -er cross to a.
+
+Warm-up.
+[pause 2 seconds]
+Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: coma.
+person: tú. present subjunctive: comas.
+person: él / ella / usted. present subjunctive: coma.
+Say only the singular row: coma, comas, coma.
+
+Grammar Lens: meaning before machinery.
+Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
+
+Guided Practice.
+[pause 1 second]
+Keep comer inside the learned singular frame.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which form belongs after quiero que for one friend: comes or comas?
+[question — say your answer, then pause 8 seconds]
+Say 'I want you to eat' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
+
+
+Lesson 3 of 3.
+viva, vivas, viva — -ir joins -er.
+
+Warm-up.
+[pause 2 seconds]
+Start from vivo, remove -o, then add the same a endings you just used with comer:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: viva.
+person: tú. present subjunctive: vivas.
+person: él / ella / usted. present subjunctive: viva.
+Regular -er and -ir match in this singular row:
+comer: coma, comas, coma.
+vivir: viva, vivas, viva.
+Plural differences wait.
+
+Grammar Lens: meaning in a known frame.
+Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
+
+Guided Practice.
+[pause 1 second]
+Keep vivir inside the learned singular frame.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which two regular verb families share -a, -as, -a here?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to live in Madrid' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)

@@ -1,61 +1,76 @@
-Spanish, chapter 82: Dog and Cat.
+Spanish, chapter 82: Head and Hand.
 2 lessons. All 2 can be done entirely by ear.
 
 
 Lesson 1 of 2.
-gato — the word that travelled with the animal.
+la cabeza — "the head".
 
 Warm-up.
 [pause 2 seconds]
-Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented.
+Spanish's word for "head" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead.
 
-The word, taken apart: gato.
-gato ("cat") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline.
-Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, "cat").
-So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it.
+You'll want to know: la cabeza.
+la cabeza — the head. Feminine, so la.
+
+The word, taken apart: caput.
+Latin's word for "head" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:
+[a table of 4 rows, read aloud]
+English: captain. literally: the "head" of a ship/unit.
+English: capital. literally: the "head" city, or "head" sum of money.
+English: decapitate. literally: to remove the head.
+English: capitulate. literally: to arrange under "headings" — hence, to yield.
+
+Why it's said this way: French made a different choice.
+French had the exact same Latin word available — and dropped it. French tête ("head") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say "noggin" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el gato" — the cat]
+[your turn — say: "la cabeza" — the head]
 [pause 8 seconds for the answer]
-[your turn — say: the trail — "kadis, cattus, gato"]
+[your turn — say: "me duele la cabeza" — "my head hurts"]
 [pause 8 seconds for the answer]
-[your turn — say: the word it replaced — "fēlēs," now only in "feline"]
+[your turn — say: the English family — "captain, capital, decapitate"]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — Spanish kept caput; French swapped it for a pot joke]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all.
+Say "the head." (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, "pot" — soldiers' slang for the skull that took over completely.)
 
 
 Lesson 2 of 2.
-perro — the word nobody can explain.
+la mano — "the hand".
 
 Warm-up.
 [pause 2 seconds]
-Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from.
+You've been trusting "-o words are masculine, -a words are feminine" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name.
 
-The word, taken apart: perro.
-perro ("dog"). Roll the rr: PEH-rro.
-The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin.
+Grammar Lens: la mano and its gender.
+la mano — the hand. Feminine, despite ending in -o.
+Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus ("hand") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus "fruit," exercitus "army," senātus "senate"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus "house" and anus "old woman"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern.
 
-Why it's said this way: an honestly open question.
-Three serious proposals, none confirmed:
-[a table of 3 rows, read aloud]
-proposal: onomatopoeia — a growl, or a shepherd's call "perr, perr". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.
-proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.
-proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose.
-Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that "we don't know" is a real answer in etymology, not a gap in your notes.
+The word, taken apart: manus.
+Mano comes from Latin manus, "hand" — and that root is buried inside an enormous number of English words:
+[a table of 5 rows, read aloud]
+English: manual. literally: done by hand.
+English: manufacture. literally: made by hand (manus + facere, "to make").
+English: manuscript. literally: written by hand (manus + scrībere).
+English: maintain. literally: hold in the hand (manū tenēre).
+English: manage. literally: to handle.
+Manufacture is worth pausing on: it literally means "made by hand" — and today it names precisely the opposite.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el perro, el gato" — dog and cat]
+[your turn — say: "la mano" — feminine, despite the -o]
 [pause 8 seconds for the answer]
-[your turn — say: "can" — the archaic word perro replaced, from Latin canis]
+[your turn — say: "me duele la mano" — "my hand hurts"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "gato, traced to Egypt; perro, unsolved"]
+[your turn — say: the family — "manual, manufacture, maintain — all a hand"]
+[pause 8 seconds for the answer]
+[your turn — say: the irony — "manufacture = made by hand"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)
+Say "the hand," and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)

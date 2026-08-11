@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(107); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(115); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -509,6 +509,34 @@ describe("real curriculum", () => {
       "ES-C40-sintesis-describir-article",
       "ES-C40-sintesis-describir-have",
       "ES-C40-sintesis-describir-weather",
+      "ES-C42-la-agree",
+      "ES-C42-la-form",
+      "ES-C42-la-why",
+      "ES-C42-lo-origin",
+      "ES-C42-lo-place",
+      "ES-C42-lo-replace",
+      "ES-C42-me-objeto-difference",
+      "ES-C42-me-objeto-new",
+      "ES-C42-me-objeto-say",
+      "ES-C42-repaso-objeto-four",
+      "ES-C42-repaso-objeto-hard",
+      "ES-C42-repaso-objeto-question",
+      "ES-C42-sintesis-decirlo-una-vez-book",
+      "ES-C42-sintesis-decirlo-una-vez-meal",
+      "ES-C42-sintesis-decirlo-una-vez-people",
+      "ES-C42-sintesis-decirlo-una-vez-point",
+      "ES-C42-te-english",
+      "ES-C42-te-meaning",
+      "ES-C42-te-say",
+      "ES-C43-casa-article",
+      "ES-C43-casa-french",
+      "ES-C43-casa-have",
+      "ES-C43-comida-build",
+      "ES-C43-comida-gender",
+      "ES-C43-comida-make",
+      "ES-C43-libro-article",
+      "ES-C43-libro-bark",
+      "ES-C43-libro-have",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

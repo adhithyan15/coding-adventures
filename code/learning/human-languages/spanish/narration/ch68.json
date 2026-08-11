@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 68,
-  "title": "Ojala --- a Prayer That Outlived Its Religion",
+  "title": "Synthesis --- Three Exceptions, and No Others",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:01114226a31f63c8",
+  "sourceHash": "fnv1a64:34b79e53a0b391ba",
   "lessons": [
     {
-      "id": "ES-C18-ojala",
-      "sequence": 1238,
-      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
-      "headword": "ojalá + subjunctive",
-      "romanization": "ojalá + subjunctive",
-      "gloss": "a wish trigger borrowed through Hispanic Arabic",
+      "id": "ES-C16-practice",
+      "sequence": 1188,
+      "title": "Practice — keep the past open or close it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for the open past and the completed-past contrast",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a115d1be575bde28",
+      "sourceHash": "fnv1a64:687228b4fadcd643",
       "notice": null,
       "blocks": [
         {
@@ -35,31 +35,89 @@
             },
             {
               "kind": "speech",
-              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ojalá + subjunctive."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
+              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The wish-word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
+              "text": "Regular rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: hablabas, comías, vivías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "The three special rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: eras, ibas, veías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one scene, two frames",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking."
+            },
+            {
+              "kind": "speech",
+              "text": "Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual."
+            },
+            {
+              "kind": "speech",
+              "text": "The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The histories, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -70,72 +128,178 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Use only modern ojalá as the Spanish trigger."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaba, comía, vivía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaba, comía, vivía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“era, iba, veía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “era, iba, veía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablé / hablaba, viví / vivía, fui / iba”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablé / hablaba · viví / vivía · fui / iba”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-ojala-trigger",
-              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
+              "id": "ES-C16-practice-regular-yo-forms",
+              "prompt": "Give the imperfect yo forms of hablar, comer, and vivir, in that order.",
               "assesses": [
-                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "ojalá hables español.",
-                "ojalá hables español",
-                "ojala hables espanol"
+                "hablaba, comía, vivía",
+                "hablaba comía vivía",
+                "hablaba / comía / vivía"
               ],
               "feedback": {
-                "correct": "Right: Ojalá hables español.",
-                "incorrect": "Use ojalá directly before the tú subjunctive hables."
+                "correct": "Right: hablaba, comía, vivía.",
+                "incorrect": "Retrieve hablaba, then the shared -ía forms comía and vivía."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-ojala-no-que",
-              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
+              "id": "ES-C16-practice-short-yo-forms",
+              "prompt": "Give the imperfect yo forms of ser, ir, and ver, in that order.",
               "assesses": [
-                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 5,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "no"
+                "era, iba, veía",
+                "era iba veía",
+                "era / iba / veía"
               ],
               "feedback": {
-                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
-                "incorrect": "No: say Ojalá hables, without que."
+                "correct": "Right: era, iba, veía.",
+                "incorrect": "Retrieve the three learned rows: era, iba, veía."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-ojala-source",
-              "prompt": "Through which historical language variety did Spanish receive ojalá?",
+              "id": "ES-C16-practice-hablaba-espanol",
+              "prompt": "Say 'I was speaking Spanish' in Spanish.",
               "assesses": [
-                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "hispanic arabic",
-                "arabic",
-                "andalusi arabic",
-                "hispano-arabic"
+                "hablaba español.",
+                "hablaba español"
               ],
               "feedback": {
-                "correct": "Right: the recorded route is through Hispanic Arabic.",
-                "incorrect": "The historical route named here is Hispanic Arabic."
+                "correct": "Right: Hablaba español.",
+                "incorrect": "Use imperfect hablaba, then known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-vivia-madrid",
+              "prompt": "Say 'I was living in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "vivía en madrid.",
+                "vivía en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Vivía en Madrid.",
+                "incorrect": "Use imperfect vivía, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-iba-madrid",
+              "prompt": "Say 'I was going to Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-LEX-IR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "iba a madrid.",
+                "iba a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Iba a Madrid.",
+                "incorrect": "Use imperfect iba, then known a Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-comi-comia",
+              "prompt": "Choose the open past: comí or comía.",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "comía"
+              ],
+              "feedback": {
+                "correct": "Right: comía leaves the eating open or habitual.",
+                "incorrect": "Comí closes the event; comía leaves it open."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-history-match",
+              "prompt": "Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.",
+              "assesses": [
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-IBA",
+                "ES-ETYMON-VER-VIDERE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "era—eram; iba—ībam; veía—veer",
+                "era eram iba ībam veía veer",
+                "era-eram, iba-ībam, veía-veer"
+              ],
+              "feedback": {
+                "correct": "Right: era—eram, iba—ībam, veía—veer.",
+                "incorrect": "Pair the visible shapes: era—eram, iba—ībam, veía—veer."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -147,26 +311,26 @@
             },
             {
               "kind": "speech",
-              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
+              "text": "Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C18-practice",
-      "sequence": 1242,
-      "title": "Practice — assert the event or want it",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
+      "id": "ES-C16-sintesis-imperfecto",
+      "sequence": 1189,
+      "title": "Synthesis — three exceptions, and no others",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the kindest tense in Spanish, and the three verbs that break it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4cd8aaa93e0b80e",
+      "sourceHash": "fnv1a64:cfd76232c5ab130b",
       "notice": null,
       "blocks": [
         {
@@ -182,59 +346,49 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
+              "text": "Nothing new in this chapter. Say hablaba, then comía."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the bounded map",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "yo / él / ella / usted",
-                "tú"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
-                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
-                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
-                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
-                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
-                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
-              ]
+              "kind": "speech",
+              "text": "Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them."
             },
             {
               "kind": "speech",
-              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
+              "text": "The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not \"the common ones\", not \"to start with\". Three."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two safe triggers",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Same doer: Quiero hablar español."
+              "text": "And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up."
             },
             {
               "kind": "speech",
-              "text": "Different doer: Quiero que hables español."
+              "text": "That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive."
             },
             {
               "kind": "speech",
-              "text": "Wish by itself: Ojalá hables español."
-            },
-            {
-              "kind": "speech",
-              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
+              "text": "The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions."
             }
           ]
         },
@@ -250,209 +404,88 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Decide the meaning first; then retrieve only the learned form."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "era, iba, veía — the whole irregular inventory, in one breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *era*, *iba*, *veía* — the whole irregular inventory, in one breath]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablaba, comía, vivía — and notice nothing surprises you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablaba*, *comía*, *vivía* — and notice nothing surprises you]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-practice-fact-wanted",
-              "prompt": "Choose the wanted-event form: hablas or hables.",
+              "id": "ES-C16-sintesis-imperfecto-count",
+              "prompt": "How many irregular verbs does the imperfect have in the whole language?",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 5,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hables"
+                "three",
+                "3",
+                "tres",
+                "only three"
               ],
               "feedback": {
-                "correct": "Right: hables is the wanted-event form in this chapter.",
-                "incorrect": "Hablas can assert; hables follows the learned wish frame."
+                "correct": "Three, and that is the complete list.",
+                "incorrect": "Three: ser, ir, ver."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-practice-one-two",
-              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
+              "id": "ES-C16-sintesis-imperfecto-which",
+              "prompt": "Name them.",
               "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 11,
-              "acceptedResponses": [
-                "quiero hablar español; quiero que hables español.",
-                "quiero hablar español quiero que hables español",
-                "quiero hablar español / quiero que hables español"
-              ],
-              "feedback": {
-                "correct": "Right: one doer uses hablar; two use que hables.",
-                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-regular-rows",
-              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hables, comas, vivas",
-                "hables comas vivas",
-                "hables / comas / vivas"
-              ],
-              "feedback": {
-                "correct": "Right: hables, comas, vivas.",
-                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-yo-stem",
-              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
-              "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "the yo form",
-                "yo",
-                "present yo form"
-              ],
-              "feedback": {
-                "correct": "Right: start from the present yo form.",
-                "incorrect": "The recipe begins with the present yo form."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-querer",
-              "prompt": "Give the learned singular subjunctive row of querer.",
-              "assesses": [
-                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-QUERER"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "quiera, quieras, quiera",
-                "quiera quieras quiera",
-                "quiera / quieras / quiera"
-              ],
-              "feedback": {
-                "correct": "Right: quiera, quieras, quiera.",
-                "incorrect": "Keep quier- and add -a, -as, -a."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-poder",
-              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-PODER",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "quiero que puedas hablar español.",
-                "quiero que puedas hablar español"
+                "ser, ir, ver",
+                "era, iba, veia",
+                "ser ir ver",
+                "to be, to go, to see"
               ],
               "feedback": {
-                "correct": "Right: Quiero que puedas hablar español.",
-                "incorrect": "Use quiero que plus puedas, then hablar español."
+                "correct": "Yes — era, iba, veia.",
+                "incorrect": "ser, ir and ver: era, iba, veia."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-practice-hacer",
-              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "id": "ES-C16-sintesis-imperfecto-why",
+              "prompt": "Why are those three the irregular ones?",
               "assesses": [
-                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-IBA"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "quiero que hagas café.",
-                "quiero que hagas café",
-                "quiero que hagas cafe"
+                "they are the most used verbs, so they were never regularised",
+                "because they are used constantly",
+                "most common verbs",
+                "they were never tidied up"
               ],
               "feedback": {
-                "correct": "Right: Quiero que hagas café.",
-                "incorrect": "Use quiero que plus hagas, then café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-ojala",
-              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
-              "assesses": [
-                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "ojalá vivas en madrid.",
-                "ojalá vivas en madrid",
-                "ojala vivas en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Ojalá vivas en Madrid.",
-                "incorrect": "Use ojalá directly before vivas en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-subjunctive-name",
-              "prompt": "What does the Latin source subiūnctīvus help you picture?",
-              "assesses": [
-                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "a clause subjoined or joined under another",
-                "subjoined",
-                "joined under"
-              ],
-              "feedback": {
-                "correct": "Right: a subjoined clause.",
-                "incorrect": "It carries the idea of being subjoined, or joined under another."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-ojala-source",
-              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
-              "assesses": [
-                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hispanic arabic",
-                "arabic",
-                "andalusi arabic",
-                "hispano-arabic"
-              ],
-              "feedback": {
-                "correct": "Right: Hispanic Arabic.",
-                "incorrect": "The route recorded here is Hispanic Arabic."
+                "correct": "Right — heavy use preserves an odd shape; rare verbs get regularised.",
+                "incorrect": "Because they are used constantly. Heavy use keeps an old form alive."
               }
             }
           ]
@@ -470,7 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
+              "text": "How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)"
             }
           ]
         }
