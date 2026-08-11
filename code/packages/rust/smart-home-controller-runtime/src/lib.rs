@@ -101,6 +101,10 @@ impl std::error::Error for ControllerPersistenceError {
 #[derive(Debug)]
 pub enum ControllerTransactionError<E> {
     LockPoisoned(&'static str),
+    RevisionConflict {
+        expected: Revision,
+        actual: Option<Revision>,
+    },
     Mutation(E),
     Persistence(ControllerPersistenceError),
 }
@@ -111,6 +115,16 @@ impl<E: fmt::Display> fmt::Display for ControllerTransactionError<E> {
             Self::LockPoisoned(component) => {
                 write!(f, "smart-home controller {component} mutex was poisoned")
             }
+            Self::RevisionConflict { expected, actual } => match actual {
+                Some(actual) => write!(
+                    f,
+                    "controller revision conflict: expected {expected}, actual {actual}"
+                ),
+                None => write!(
+                    f,
+                    "controller revision conflict: expected {expected}, actual none"
+                ),
+            },
             Self::Mutation(error) => write!(f, "controller mutation failed: {error}"),
             Self::Persistence(error) => write!(f, "{error}"),
         }
@@ -124,6 +138,7 @@ where
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             Self::LockPoisoned(_) => None,
+            Self::RevisionConflict { .. } => None,
             Self::Mutation(error) => Some(error),
             Self::Persistence(error) => Some(error),
         }
@@ -240,6 +255,29 @@ impl<B: StorageBackend> SmartHomeControllerRuntime<B> {
         saved_at_ms: u64,
         mutation: impl FnOnce(&mut SmartHomeRuntime, &mut SmartHomeAutomationRuntime) -> Result<T, E>,
     ) -> Result<ControllerCommit<T>, ControllerTransactionError<E>> {
+        self.transaction_inner(None, saved_at_ms, mutation)
+    }
+
+    /// Mutate and commit only when the controller still owns `expected_revision`.
+    ///
+    /// The revision check happens while all controller locks are held and before
+    /// candidates are cloned or `mutation` is invoked. A conflict therefore has
+    /// no callback, in-memory, or persistence side effects.
+    pub fn transaction_at_revision<T, E>(
+        &self,
+        expected_revision: &Revision,
+        saved_at_ms: u64,
+        mutation: impl FnOnce(&mut SmartHomeRuntime, &mut SmartHomeAutomationRuntime) -> Result<T, E>,
+    ) -> Result<ControllerCommit<T>, ControllerTransactionError<E>> {
+        self.transaction_inner(Some(expected_revision), saved_at_ms, mutation)
+    }
+
+    fn transaction_inner<T, E>(
+        &self,
+        expected_revision: Option<&Revision>,
+        saved_at_ms: u64,
+        mutation: impl FnOnce(&mut SmartHomeRuntime, &mut SmartHomeAutomationRuntime) -> Result<T, E>,
+    ) -> Result<ControllerCommit<T>, ControllerTransactionError<E>> {
         let mut runtime = self
             .runtime
             .lock()
@@ -252,6 +290,15 @@ impl<B: StorageBackend> SmartHomeControllerRuntime<B> {
             .durable
             .lock()
             .map_err(|_| ControllerTransactionError::LockPoisoned("durable coordinator"))?;
+
+        if let Some(expected) = expected_revision {
+            if durable.revision.as_ref() != Some(expected) {
+                return Err(ControllerTransactionError::RevisionConflict {
+                    expected: expected.clone(),
+                    actual: durable.revision.clone(),
+                });
+            }
+        }
 
         let mut runtime_candidate = runtime.clone();
         let mut automation_candidate = automations.clone();
@@ -682,6 +729,90 @@ mod tests {
             THREADS
         );
         assert!(controller.revision().unwrap().is_some());
+    }
+
+    #[test]
+    fn guarded_transaction_commits_only_at_the_expected_revision() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let baseline = controller.save_snapshot(1).unwrap();
+
+        let commit = controller
+            .transaction_at_revision(&baseline.revision, 2, |runtime, _| {
+                runtime.upsert_bridge(bridge("guarded")).unwrap();
+                Ok::<_, Infallible>("committed")
+            })
+            .expect("matching revision should commit");
+
+        assert_eq!(commit.value, "committed");
+        assert_ne!(commit.revision, baseline.revision);
+        assert_eq!(controller.revision().unwrap(), Some(commit.revision));
+        assert_eq!(controller.last_saved_at_ms().unwrap(), Some(2));
+        assert!(controller
+            .runtime_handle()
+            .lock()
+            .unwrap()
+            .registry()
+            .bridge(&BridgeId::trusted("guarded"))
+            .is_some());
+    }
+
+    #[test]
+    fn stale_guard_rejects_before_invoking_or_publishing_mutation() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let stale = controller.save_snapshot(1).unwrap();
+        let current = controller
+            .transaction(2, |runtime, automations| {
+                runtime.upsert_bridge(bridge("current")).unwrap();
+                automations
+                    .upsert_definition(automation("current-rule"))
+                    .unwrap();
+                Ok::<_, Infallible>(())
+            })
+            .unwrap();
+        let runtime_before = controller
+            .runtime_handle()
+            .lock()
+            .unwrap()
+            .durable_snapshot();
+        let automation_before = controller
+            .automation_runtime_handle()
+            .lock()
+            .unwrap()
+            .snapshot();
+        let invoked = AtomicBool::new(false);
+
+        let result = controller.transaction_at_revision(&stale.revision, 3, |runtime, _| {
+            invoked.store(true, Ordering::SeqCst);
+            runtime.upsert_bridge(bridge("stale")).unwrap();
+            Ok::<_, Infallible>(())
+        });
+
+        assert!(matches!(
+            result,
+            Err(ControllerTransactionError::RevisionConflict { expected, actual })
+                if expected == stale.revision && actual == Some(current.revision.clone())
+        ));
+        assert!(!invoked.load(Ordering::SeqCst));
+        assert_eq!(
+            controller
+                .runtime_handle()
+                .lock()
+                .unwrap()
+                .durable_snapshot(),
+            runtime_before
+        );
+        assert_eq!(
+            controller
+                .automation_runtime_handle()
+                .lock()
+                .unwrap()
+                .snapshot(),
+            automation_before
+        );
+        assert_eq!(controller.revision().unwrap(), Some(current.revision));
+        assert_eq!(controller.last_saved_at_ms().unwrap(), Some(2));
     }
 
     #[test]
