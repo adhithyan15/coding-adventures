@@ -2930,6 +2930,58 @@ After promotion, start the OCaml portable-core queue with `http-core -> http1`,
 then recompute dependency-shaped high-consensus work alongside the existing
 Dart, Java/Kotlin, Swift, and Haskell lanes.
 
+## Post-#10564 Refresh and Canonical-CBOR Selection
+
+External review merged PR #10564 at `ded37da774f13dda0755bde4da2751184732a361`
+after every required check passed. The collision-checked `2a6dab3ae0` refresh is
+identity-neutral: 15 established lanes still contain 1,298 normalized
+identities and 4,454 slots, with 173 high-consensus identities and 269 missing
+slots, 848 singletons and 11,872 singleton gaps, 652 Rust singletons, zero
+canonical collisions, and zero unknown buckets.
+
+The intervening range nevertheless exposed behavior ownership that the
+directory inventory cannot express:
+
+- `semantic-ir-sys-write-portable-conformance` owns SIR28 stream selection,
+  terminators, recursive unpacking, frontend lowering, backend/runtime
+  behavior, and the remaining removal of legacy print paths. It remains
+  temporarily blocked while the externally delivered SIR28 wave settles.
+- `gc-core-portable-conformance` owns moving-minor pacing, remembered sets,
+  barriers, tagged layouts, relocation, and fixups. Separate dependent owners
+  cover VM integration, the native C ABI, and the target-specific LLVM runtime
+  bridge; the native reviews are not autonomous parity targets, and the core is
+  temporarily blocked while PR #10593 overlaps it.
+- Python Haskell/Java/Kotlin filter exposure now waits for a dedicated
+  field-aware Cabal/Gradle resolution tranche. Accepting a filter while comments
+  and descriptive fields can create dependency edges would make the apparent
+  language support unsafe.
+- Data-store clock remediation now follows one shared injected-clock fixture;
+  the earlier Lua-first dependency direction could not establish cross-lane
+  TTL, expiry, reset, and provider-consistency semantics.
+
+The loop selected `canonical-cbor-language-neutral-conformance` next. It is
+dependency-free, pure, has no live PR overlap, and unlocks established-lane
+canonical-CBOR parity, both Vault format roots, and the wider Vault application
+and CLI chain. The tranche is not documentation-only: the C, C++, and Rust
+reference encoders currently sort but retain duplicate encoded map keys and do
+not bound encoder depth or output size. CBR01, the shared fixture, and all three
+reference consumers must therefore define and enforce one fallible,
+payload-blind contract before those implementations can serve as parity
+oracles. The fourteen missing established implementations remain a separate
+dependent item.
+
+A late pre-publication refresh rebased this tranche onto `6c3b19b27b35`. The
+intervening GC, HTML, Mermaid, Mosaic, SIR28, ADJ, Spanish, and handwriting
+changes modify only existing package identities. Merged PR #10599 adds the
+empty-capability Rust `vault-pm-audit` singleton, so the collision-checked
+inventory is now 1,299 identities and 4,455 slots, with 849 singletons, 11,886
+singleton gaps, 653 Rust singletons, and zero collisions or unknown buckets.
+The new `vault-pm-audit-portable-conformance` owner waits on canonical-CBOR and
+Vault domain/format parity; it also becomes a dependency of the application
+owner. Open PR #10608 overlaps only that downstream application integration,
+while open #10605 and #10607 overlap the already blocked HTML and GC owners.
+None overlaps canonical CBOR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

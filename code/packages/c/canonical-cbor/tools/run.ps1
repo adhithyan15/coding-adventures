@@ -12,7 +12,9 @@ while ($d -and -not (Test-Path (Join-Path $d 'code\packages\c\iso-harness'))) {
 }
 if (-not $d) { throw 'iso-harness not found (searched upward from ' + $self + ')' }
 $harness = Join-Path $d 'code\packages\c\iso-harness'
+$fixture = Join-Path $d 'code\specs\fixtures\canonical-cbor-v1'
 
-$env:ISO_INCLUDE = "include $harness\include"
+$env:ISO_INCLUDE = "include $harness\include $fixture"
 . (Join-Path $harness 'lib\iso-lib.ps1')
 Iso-BuildAndRun -Lang c -Name canonical_cbor-tests -Sources @("tests\canonical_cbor_test.c", "src\canonical_cbor.c")
+Iso-BuildAndRun -Lang c -Name canonical_cbor-portable-conformance -Sources @("tests\portable_conformance_test.c", "src\canonical_cbor.c")

@@ -45,6 +45,8 @@ extern "C" {
 /* Maximum recursion depth accepted by cbor_decode. A generous cap that guards
  * against attacker-crafted "chain of nested arrays/tags" stack-overflow DoS. */
 #define CBOR_MAX_DECODE_DEPTH 128
+#define CBOR_MAX_ENCODE_DEPTH 128
+#define CBOR_MAX_ENCODED_SIZE 1048576
 
 /* The nine value kinds of the canonical profile (CBOR major types 0..7). */
 typedef enum {
@@ -108,8 +110,14 @@ typedef enum {
     CBOR_ERR_FLOAT_NOT_SUPPORTED,
     CBOR_ERR_TOO_DEEP,
     CBOR_ERR_LENGTH_TOO_LARGE,
+    CBOR_ERR_DUPLICATE_MAP_KEY,
+    CBOR_ERR_ENCODE_TOO_DEEP,
+    CBOR_ERR_ENCODE_TOO_LARGE,
     CBOR_ERR_ALLOC
 } CborStatus;
+
+/* Static, payload-blind diagnostic for every status. */
+const char *cbor_status_message(CborStatus status);
 
 /* ── Constructors (return NULL on allocation failure) ─────────────────────*/
 
@@ -142,7 +150,9 @@ int cbor_equal(const CborValue *a, const CborValue *b);
 /* Encode `v` to canonical bytes. On CBOR_OK, *out is a malloc'd buffer of
  * *out_len bytes (NULL/0 only if the encoding is genuinely empty, which never
  * happens — every value is >= 1 byte) that the caller must free(). On error
- * *out is NULL. Only CBOR_ERR_ALLOC can be returned. */
+ * *out is NULL. Duplicate canonical keys, nesting beyond 128, and an encoded
+ * item beyond 1 MiB return their specific checked-encoder statuses; allocation
+ * failure remains CBOR_ERR_ALLOC. */
 CborStatus cbor_encode(const CborValue *v, uint8_t **out, size_t *out_len);
 
 /* Decode exactly one canonical CBOR item from `bytes[0..len)`. On CBOR_OK *out

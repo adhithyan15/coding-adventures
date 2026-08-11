@@ -38,6 +38,8 @@ namespace canonical_cbor {
 // Maximum recursion depth accepted by decode() — guards against attacker-
 // crafted deeply-nested inputs that would otherwise blow the stack.
 inline constexpr std::size_t MAX_DECODE_DEPTH = 128;
+inline constexpr std::size_t MAX_ENCODE_DEPTH = 128;
+inline constexpr std::size_t MAX_ENCODED_SIZE = 1048576;
 
 // Decoder error kinds (mirror the Rust `CborError` variants).
 enum class CborError {
@@ -52,14 +54,37 @@ enum class CborError {
     FloatNotSupported,
     TooDeep,
     LengthTooLarge,
+    DuplicateMapKey,
+    EncodeTooDeep,
+    EncodeTooLarge,
 };
+
+inline const char* error_message(CborError error) noexcept {
+    switch (error) {
+        case CborError::UnexpectedEof: return "canonical-cbor: unexpected end of input";
+        case CborError::TrailingBytes: return "canonical-cbor: trailing bytes after decoded item";
+        case CborError::Reserved: return "canonical-cbor: reserved additional-info value";
+        case CborError::Indefinite: return "canonical-cbor: indefinite-length item rejected";
+        case CborError::NonMinimalInteger: return "canonical-cbor: argument is not smallest-form";
+        case CborError::InvalidUtf8: return "canonical-cbor: text is not valid UTF-8";
+        case CborError::NonCanonicalMapOrder: return "canonical-cbor: map order is not canonical";
+        case CborError::UnsupportedSimple: return "canonical-cbor: unsupported simple value";
+        case CborError::FloatNotSupported: return "canonical-cbor: floats are not supported";
+        case CborError::TooDeep: return "canonical-cbor: decode nesting depth exceeded";
+        case CborError::LengthTooLarge: return "canonical-cbor: declared length is too large";
+        case CborError::DuplicateMapKey: return "canonical-cbor: duplicate canonical map key";
+        case CborError::EncodeTooDeep: return "canonical-cbor: encode nesting depth exceeded";
+        case CborError::EncodeTooLarge: return "canonical-cbor: encoded item is too large";
+    }
+    return "canonical-cbor: unknown error";
+}
 
 // Thrown by decode() on any violation of the canonical profile.
 class CborException : public std::exception {
 public:
     explicit CborException(CborError e) : err_(e) {}
     CborError error() const noexcept { return err_; }
-    const char* what() const noexcept override { return "canonical-cbor decode error"; }
+    const char* what() const noexcept override { return error_message(err_); }
 
 private:
     CborError err_;
@@ -160,40 +185,59 @@ struct CborValue {
 
 namespace detail {
 
+inline void ensure_space(const std::vector<std::uint8_t>& out, std::size_t extra) {
+    if (out.size() > MAX_ENCODED_SIZE || extra > MAX_ENCODED_SIZE - out.size())
+        throw CborException(CborError::EncodeTooLarge);
+}
+
+inline void append_byte(std::vector<std::uint8_t>& out, std::uint8_t byte) {
+    ensure_space(out, 1);
+    out.push_back(byte);
+}
+
+inline void append_bytes(std::vector<std::uint8_t>& out,
+                         const std::uint8_t* begin, std::size_t length) {
+    if (length == 0) return;
+    ensure_space(out, length);
+    out.insert(out.end(), begin, begin + length);
+}
+
 // Append `arg` big-endian in the shortest form under major type `major`.
 inline void write_type_and_argument(std::vector<std::uint8_t>& out,
                                     std::uint8_t major, std::uint64_t arg) {
     std::uint8_t mt = static_cast<std::uint8_t>(major << 5);
     auto push_be = [&](std::uint64_t a, int nbytes) {
         for (int i = nbytes - 1; i >= 0; i--)
-            out.push_back(static_cast<std::uint8_t>((a >> (8 * i)) & 0xFF));
+            append_byte(out, static_cast<std::uint8_t>((a >> (8 * i)) & 0xFF));
     };
     if (arg <= 23) {
-        out.push_back(static_cast<std::uint8_t>(mt | static_cast<std::uint8_t>(arg)));
+        append_byte(out, static_cast<std::uint8_t>(mt | static_cast<std::uint8_t>(arg)));
     } else if (arg <= 0xFF) {
-        out.push_back(static_cast<std::uint8_t>(mt | 24));
+        append_byte(out, static_cast<std::uint8_t>(mt | 24));
         push_be(arg, 1);
     } else if (arg <= 0xFFFF) {
-        out.push_back(static_cast<std::uint8_t>(mt | 25));
+        append_byte(out, static_cast<std::uint8_t>(mt | 25));
         push_be(arg, 2);
     } else if (arg <= 0xFFFFFFFFu) {
-        out.push_back(static_cast<std::uint8_t>(mt | 26));
+        append_byte(out, static_cast<std::uint8_t>(mt | 26));
         push_be(arg, 4);
     } else {
-        out.push_back(static_cast<std::uint8_t>(mt | 27));
+        append_byte(out, static_cast<std::uint8_t>(mt | 27));
         push_be(arg, 8);
     }
 }
 
-inline void encode_into(const CborValue& v, std::vector<std::uint8_t>& out);
+inline void encode_into(const CborValue& v, std::vector<std::uint8_t>& out,
+                        std::size_t depth);
 
-inline void encode_map(const CborValue& v, std::vector<std::uint8_t>& out) {
+inline void encode_map(const CborValue& v, std::vector<std::uint8_t>& out,
+                       std::size_t depth) {
     // Encode each key, stable-sort length-first then bytewise, then emit.
     std::vector<std::pair<std::vector<std::uint8_t>, const CborValue*>> ents;
     ents.reserve(v.map.size());
     for (const auto& kv : v.map) {
         std::vector<std::uint8_t> kb;
-        encode_into(kv.first, kb);
+        encode_into(kv.first, kb, depth + 1);
         ents.emplace_back(std::move(kb), &kv.second);
     }
     std::stable_sort(ents.begin(), ents.end(), [](const auto& a, const auto& b) {
@@ -201,14 +245,20 @@ inline void encode_map(const CborValue& v, std::vector<std::uint8_t>& out) {
             return a.first.size() < b.first.size();
         return a.first < b.first;  // bytewise lex
     });
+    for (std::size_t i = 1; i < ents.size(); i++)
+        if (ents[i - 1].first == ents[i].first)
+            throw CborException(CborError::DuplicateMapKey);
     write_type_and_argument(out, 5, static_cast<std::uint64_t>(ents.size()));
     for (const auto& e : ents) {
-        out.insert(out.end(), e.first.begin(), e.first.end());
-        encode_into(*e.second, out);
+        append_bytes(out, e.first.data(), e.first.size());
+        encode_into(*e.second, out, depth + 1);
     }
 }
 
-inline void encode_into(const CborValue& v, std::vector<std::uint8_t>& out) {
+inline void encode_into(const CborValue& v, std::vector<std::uint8_t>& out,
+                        std::size_t depth) {
+    if (depth > MAX_ENCODE_DEPTH)
+        throw CborException(CborError::EncodeTooDeep);
     using T = CborValue::Type;
     switch (v.type) {
         case T::Unsigned:
@@ -219,28 +269,29 @@ inline void encode_into(const CborValue& v, std::vector<std::uint8_t>& out) {
             break;
         case T::Bytes:
             write_type_and_argument(out, 2, static_cast<std::uint64_t>(v.bytes.size()));
-            out.insert(out.end(), v.bytes.begin(), v.bytes.end());
+            append_bytes(out, v.bytes.data(), v.bytes.size());
             break;
         case T::Text:
             write_type_and_argument(out, 3, static_cast<std::uint64_t>(v.text.size()));
-            out.insert(out.end(), v.text.begin(), v.text.end());
+            append_bytes(out, reinterpret_cast<const std::uint8_t*>(v.text.data()),
+                         v.text.size());
             break;
         case T::Array:
             write_type_and_argument(out, 4, static_cast<std::uint64_t>(v.array.size()));
-            for (const auto& item : v.array) encode_into(item, out);
+            for (const auto& item : v.array) encode_into(item, out, depth + 1);
             break;
         case T::Map:
-            encode_map(v, out);
+            encode_map(v, out, depth);
             break;
         case T::Tag:
             write_type_and_argument(out, 6, v.u);
-            encode_into(v.array[0], out);
+            encode_into(v.array[0], out, depth + 1);
             break;
         case T::Bool:
-            out.push_back(v.boolean ? 0xF5 : 0xF4);
+            append_byte(out, v.boolean ? 0xF5 : 0xF4);
             break;
         case T::Null:
-            out.push_back(0xF6);
+            append_byte(out, 0xF6);
             break;
     }
 }
@@ -473,7 +524,7 @@ inline CborValue read_value(Cursor& c, std::size_t depth) {
 // Encode a value to canonical CBOR bytes.
 inline std::vector<std::uint8_t> encode(const CborValue& v) {
     std::vector<std::uint8_t> out;
-    detail::encode_into(v, out);
+    detail::encode_into(v, out, 0);
     return out;
 }
 

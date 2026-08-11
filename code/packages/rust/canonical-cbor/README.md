@@ -21,6 +21,12 @@ This crate encodes the canonical profile by construction and
 *rejects non-canonical input on decode*. There is no "permissive
 mode."
 
+For untrusted or caller-built values, use `try_encode` or
+`try_encode_into`. The checked encoder rejects duplicate encoded map keys,
+nesting beyond 128 levels, and output beyond 1 MiB. Its diagnostics are static
+and never include payload bytes. The original `encode` and `encode_into`
+helpers remain source-compatible convenience wrappers over that checked path.
+
 ## Quick example
 
 ```rust
@@ -49,6 +55,8 @@ assert_eq!(encode(&back), bytes); // round-trip is byte-for-byte stable
   the length of each *encoded key*; ties broken by bytewise lex.
   Decoder verifies the order.
 - **Duplicate map keys rejected.**
+- **Bounded processing.** Decode and encode both cap nesting at 128 levels;
+  one encoded item is capped at 1 MiB.
 - **No floats, no undefined.** Vault records do not need them; the
   decoder rejects both.
 - **Tags pass through.** This crate does not interpret tag
@@ -76,6 +84,9 @@ Sits beside other format primitives. Consumed by:
 
 See [`VLT00-vault-roadmap.md`](../../../specs/VLT00-vault-roadmap.md)
 and [`CBR01-canonical-cbor.md`](../../../specs/CBR01-canonical-cbor.md).
+The language-neutral vectors live in
+[`canonical-cbor-v1`](../../../specs/fixtures/canonical-cbor-v1/README.md) and
+are consumed directly by the Rust, C, and C++ implementations.
 
 ## Citations
 
