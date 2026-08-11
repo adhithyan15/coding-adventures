@@ -665,6 +665,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ו"),
   },
+  // The lesson's rounded handwritten Zayin begins with a short rightward rise
+  // and continues around the body without lifting. This path preserves that
+  // order while following Noto Sans Hebrew's broader head and curved stem.
+  [ductusKey("hebrew", "ז")]: {
+    script: "hebrew",
+    glyph: "ז",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short head from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 160, y: 555 },
+              { x: 260, y: 555 },
+            ],
+          },
+          {
+            label: "continue down through the curved stem without lifting",
+            path: [
+              { x: 260, y: 555 },
+              { x: 220, y: 520 },
+              { x: 180, y: 475 },
+              { x: 150, y: 425 },
+              { x: 132, y: 360 },
+              { x: 130, y: 285 },
+              { x: 138, y: 205 },
+              { x: 148, y: 125 },
+              { x: 160, y: 55 },
+              { x: 166, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ז"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

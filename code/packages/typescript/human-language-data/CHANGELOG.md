@@ -4,6 +4,15 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Hebrew Zayin (HL-C09BJ)
+
+- Verify handwritten **ז** from HebrewPod101's dedicated Zayin/Heit lesson: rise
+  briefly to the right, then curve down and around the base without lifting.
+- Preserve the lesson's handwritten-Gimel mirror contrast and Vav warning while
+  fitting the one-stroke order to Noto Sans Hebrew's block outline.
+- Reduce measured HL-C09 debt to 170 entries; Hebrew has 15 outstanding, with
+  the same lesson's Heit demonstration queued next.
+
 ### Added - source-verified Hebrew Vav (HL-C09BI)
 
 - Verify printed **ו** from HebrewPod101's dedicated Vav lesson: draw the small
