@@ -272,10 +272,14 @@ Prioritized work items:
    an open `applet`, `marquee`, or `object` marker now remain on generic
    non-current end-tag recovery instead of emitting an adoption-agency error,
    matching WPT `tests1.dat`'s marquee boundary rows while preserving marker,
-   foster-parenting, and fragment DOM output. Continue the
+   foster-parenting, and fragment DOM output. Repeated `nobr` starts now
+   report when an authored HTML `nobr` is in scope before preserving the
+   existing adoption recovery, covering WPT `tests26.dat`'s ordinary,
+   reconstructed, and foster-parented rows while keeping first starts, open
+   marker boundaries, foreign breakout routing, and synthetic fragment
+   contexts on their required paths. Continue the
    fresh algorithm audit across the remaining active-formatting-list branches,
-   especially repeated `nobr` starts in ordinary, table, and reconstructed
-   formatting contexts evidenced by WPT `tests26.dat`.
+   especially the inner-loop node replacement limit and Noah's Ark clause.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
