@@ -1,0 +1,57 @@
+% ============================================================================
+% capitalization-rule — common English capitalization rules and what each
+% one actually requires (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Capitalization is governed by a small set of named rules, each covering
+% a different trigger for the capital letter — where a word sits in a
+% sentence, what pronoun it is, or what kind of noun it names. Recall is a
+% binding query:
+%
+%     ? capitalization_rule(pronoun_i, $D)
+%       % capitalized_anywhere_in_sentence
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `capitalization_rule(rule, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on any rule not one of these three source-cited
+% examples. The query also runs BACKWARD — bind a description and recall
+% which rule it names:
+%
+%     ? capitalization_rule($R, capitalize_first_letter)
+%       % first_word_of_sentence
+%
+% Provenance: quoted verbatim from Grammarly's "Capitalization Rules and
+% Examples" article, which states each rule directly:
+%
+%     rule (this table's atom label)   description (this table's atom label)      rule quote (verbatim)
+%     -------------------------------  ------------------------------------------  --------------------------------------------------------------------------------
+%     first_word_of_sentence           capitalize_first_letter                     "Whenever you start a sentence, capitalize the first letter of the first word."
+%     pronoun_i                        capitalized_anywhere_in_sentence             "Capitalize I when using it as a pronoun anywhere in a sentence."
+%     proper_noun                      capitalized_regardless_of_position           "Proper nouns are always capitalized in English, no matter where they fall in
+%                                                                                     a sentence."
+%
+% WebFetch-verified before writing (twice, across two cycles of this loop).
+% `trust consensus` — Grammarly is a reputable, widely-cited grammar-content
+% company, the same tier this stdlib already reserves for other non-.gov
+% language sources and the same source family already cited by
+% `sentence-type.adj`/`part-of-speech.adj`/`contraction.adj`/
+% `possessive-noun.adj`/`simile-meaning.adj`/`prefix-meaning.adj`. A rule
+% not one of these three — `quotation`, a real capitalization rule the
+% same article covers in its "Capitalization and quotes" section, but not
+% one of this table's three rows — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table capitalization_rule {
+    columns rule, description
+
+    row (first_word_of_sentence, capitalize_first_letter)
+    row (pronoun_i, capitalized_anywhere_in_sentence)
+    row (proper_noun, capitalized_regardless_of_position)
+
+    source "Whenever you start a sentence, capitalize the first letter of the first word."
+    locator "https://www.grammarly.com/blog/punctuation-capitalization/capitalization-rules/"
+    trust consensus
+}
