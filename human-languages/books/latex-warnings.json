@@ -1,7 +1,14 @@
 {
   "tracks": [
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -14,11 +21,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/arabic/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "arabic"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -31,11 +45,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/bengali/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "bengali"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -48,11 +69,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/chinese/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "chinese"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -65,11 +93,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/french/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "french"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 1
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -82,11 +117,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/german/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "german"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 1
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -99,45 +141,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/gujarati/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "gujarati"
     },
     {
-      "baseline": null,
-      "blocking": false,
-      "counts": {
+      "baseline": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 1,
-        "underfull": 1
+        "overfull": 0,
+        "underfull": 3
       },
-      "improvements": [],
-      "log": "code/learning/human-languages/hindi/book/book.log",
-      "regressions": [],
-      "status": "unseeded",
-      "track": "hindi"
-    },
-    {
-      "baseline": null,
-      "blocking": false,
-      "counts": {
-        "duplicate_destination": 0,
-        "font_substitution": 0,
-        "hyperref_warning": 0,
-        "missing_character": 0,
-        "overfull": 7,
-        "underfull": 0
-      },
-      "improvements": [],
-      "log": "code/learning/human-languages/italian/book/book.log",
-      "regressions": [],
-      "status": "unseeded",
-      "track": "italian"
-    },
-    {
-      "baseline": null,
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -145,16 +160,71 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 1
+        "underfull": 3
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/hindi/book/book.log",
+      "regressions": [],
+      "status": "ok",
+      "track": "hindi"
+    },
+    {
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/italian/book/book.log",
+      "regressions": [],
+      "status": "ok",
+      "track": "italian"
+    },
+    {
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
       },
       "improvements": [],
       "log": "code/learning/human-languages/japanese/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "japanese"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 3
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -167,11 +237,42 @@
       "improvements": [],
       "log": "code/learning/human-languages/kannada/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "kannada"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 4
+      },
+      "blocking": false,
+      "counts": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 4
+      },
+      "improvements": [],
+      "log": "code/learning/human-languages/latin/book/book.log",
+      "regressions": [],
+      "status": "ok",
+      "track": "latin"
+    },
+    {
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 3
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -182,30 +283,20 @@
         "underfull": 3
       },
       "improvements": [],
-      "log": "code/learning/human-languages/latin/book/book.log",
+      "log": "code/learning/human-languages/malayalam/book/book.log",
       "regressions": [],
-      "status": "unseeded",
-      "track": "latin"
+      "status": "ok",
+      "track": "malayalam"
     },
     {
-      "baseline": null,
-      "blocking": false,
-      "counts": {
+      "baseline": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 5
+        "underfull": 0
       },
-      "improvements": [],
-      "log": "code/learning/human-languages/malayalam/book/book.log",
-      "regressions": [],
-      "status": "unseeded",
-      "track": "malayalam"
-    },
-    {
-      "baseline": null,
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -218,11 +309,18 @@
       "improvements": [],
       "log": "code/learning/human-languages/marathi/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "marathi"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -235,62 +333,90 @@
       "improvements": [],
       "log": "code/learning/human-languages/persian/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "persian"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 8,
+        "overfull": 0,
         "underfull": 0
       },
       "improvements": [],
       "log": "code/learning/human-languages/portuguese/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "portuguese"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 2
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 5,
+        "overfull": 0,
         "underfull": 2
       },
       "improvements": [],
       "log": "code/learning/human-languages/punjabi/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "punjabi"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 1
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 2,
+        "overfull": 0,
         "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/russian/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "russian"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 0
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
@@ -303,75 +429,103 @@
       "improvements": [],
       "log": "code/learning/human-languages/sanskrit/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "sanskrit"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 2,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 3
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 2,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 24,
-        "underfull": 9
+        "overfull": 0,
+        "underfull": 3
       },
       "improvements": [],
       "log": "code/learning/human-languages/spanish/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "spanish"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 2
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 1,
+        "overfull": 0,
         "underfull": 2
       },
       "improvements": [],
       "log": "code/learning/human-languages/tamil/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "tamil"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 2
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 4,
-        "underfull": 1
+        "overfull": 0,
+        "underfull": 2
       },
       "improvements": [],
       "log": "code/learning/human-languages/telugu/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "telugu"
     },
     {
-      "baseline": null,
+      "baseline": {
+        "duplicate_destination": 0,
+        "font_substitution": 0,
+        "hyperref_warning": 0,
+        "missing_character": 0,
+        "overfull": 0,
+        "underfull": 1
+      },
       "blocking": false,
       "counts": {
         "duplicate_destination": 0,
         "font_substitution": 0,
         "hyperref_warning": 0,
         "missing_character": 0,
-        "overfull": 3,
+        "overfull": 0,
         "underfull": 1
       },
       "improvements": [],
       "log": "code/learning/human-languages/urdu/book/book.log",
       "regressions": [],
-      "status": "unseeded",
+      "status": "ok",
       "track": "urdu"
     }
   ],
