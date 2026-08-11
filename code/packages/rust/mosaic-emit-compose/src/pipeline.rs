@@ -16,6 +16,7 @@ pub enum PipelineEmitError {
     UnsafeSlotName(String),
     UnsafeEmitName(String),
     UnsupportedHostLink(String),
+    UnsupportedHostDialog(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -29,6 +30,9 @@ impl std::fmt::Display for PipelineEmitError {
             Self::UnsafeEmitName(n) => write!(f, "unsafe emit name '{n}' (post conversion)"),
             Self::UnsupportedHostLink(reason) => {
                 write!(f, "unsupported Compose HostLink contract: {reason}")
+            }
+            Self::UnsupportedHostDialog(reason) => {
+                write!(f, "unsupported Compose HostDialog contract: {reason}")
             }
         }
     }
@@ -94,6 +98,7 @@ pub fn from_pipeline(
     // emission proceeds identically to a styleless pipeline.
     let part_styles = build_part_style_map(style);
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
+    let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
 
     writeln!(out, "import androidx.compose.foundation.background").unwrap();
     writeln!(out, "import androidx.compose.foundation.border").unwrap();
@@ -142,6 +147,9 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
+    if uses_host_dialog {
+        writeln!(out, "import androidx.compose.runtime.LaunchedEffect").unwrap();
+    }
     writeln!(out, "import androidx.compose.ui.Alignment").unwrap();
     writeln!(out, "import androidx.compose.ui.Modifier").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.IntOffset").unwrap();
@@ -164,11 +172,16 @@ pub fn from_pipeline(
         "import androidx.compose.ui.semantics.contentDescription"
     )
     .unwrap();
+    if uses_host_dialog {
+        writeln!(out, "import androidx.compose.ui.semantics.heading").unwrap();
+    }
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
-    if uses_host_link {
+    if uses_host_link || uses_host_dialog {
         writeln!(out, "import androidx.compose.material.MaterialTheme").unwrap();
+    }
+    if uses_host_link {
         writeln!(out, "import androidx.compose.ui.platform.LocalUriHandler").unwrap();
         writeln!(out, "import androidx.compose.ui.text.LinkAnnotation").unwrap();
         writeln!(out, "import androidx.compose.ui.text.SpanStyle").unwrap();
@@ -176,6 +189,12 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.text.buildAnnotatedString").unwrap();
         writeln!(out, "import androidx.compose.ui.text.withLink").unwrap();
         writeln!(out, "import androidx.compose.ui.text.style.TextDecoration").unwrap();
+    }
+    if uses_host_dialog {
+        writeln!(out, "import androidx.compose.ui.window.Dialog").unwrap();
+        writeln!(out, "import androidx.compose.ui.window.DialogProperties").unwrap();
+        writeln!(out, "import androidx.compose.ui.window.Popup").unwrap();
+        writeln!(out, "import androidx.compose.ui.window.PopupProperties").unwrap();
     }
     writeln!(out).unwrap();
 
@@ -1382,6 +1401,16 @@ fn emit_compose_tree(
             text_ctx,
             for_payload,
         ),
+        "HostDialog" => emit_host_dialog(
+            node,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            table_ctx,
+            text_ctx,
+            for_payload,
+        ),
         "HostNumberInput" => {
             emit_host_number_input(node, depth, component_name, emits, part_styles, text_ctx)
         }
@@ -2447,6 +2476,135 @@ fn host_link_payload_expr(
             )))
         }
     }
+}
+
+/// Lower `HostDialog` to Compose's native overlay primitives.
+///
+/// Modal dialogs use `Dialog`, which supplies platform focus trapping,
+/// keyboard dismissal, and backdrop behavior. The contract's compile-time
+/// `modal: false` variant uses `Popup` so the rest of the app remains
+/// interactive. In both cases the title is a semantic heading and the body is
+/// walked normally, preserving nested Mosaic controls and styles.
+#[allow(clippy::too_many_arguments)]
+fn emit_host_dialog(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
+    text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let content = "    ".repeat(depth + 2);
+    let body = "    ".repeat(depth + 3);
+    let open = bool_prop_expr(node, "open", "false")?;
+    let dismiss = bool_prop_expr(node, "dismiss-on-backdrop", "true")?;
+    let modal = match find_prop_value(node, "modal") {
+        None => true,
+        Some(LayoutPropValue::Keyword(value)) if value == "true" => true,
+        Some(LayoutPropValue::Keyword(value)) if value == "false" => false,
+        Some(_) => {
+            return Err(PipelineEmitError::UnsupportedHostDialog(
+                "modal must be the compile-time keyword true or false".to_string(),
+            ));
+        }
+    };
+    let on_open = host_dialog_dispatch(node, "onOpen", component_name, emits)?;
+    let on_close = host_dialog_dispatch(node, "onClose", component_name, emits)?
+        .unwrap_or_else(|| "/* no onClose bound */".to_string());
+    let title = text_prop_expr(node, "title")?;
+
+    let chain_indent = (depth + 4) * 4;
+    let inherited_color = text_ctx.and_then(|text| text.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let modifier =
+        host_control_modifier_expr(node, style.as_ref()).unwrap_or_else(|| "Modifier".to_string());
+    let child_text = match &style {
+        Some(style) => Some(cell_text_style(
+            &text_ctx.cloned().unwrap_or_default(),
+            style,
+        )),
+        None => text_ctx.cloned(),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}if ({open}) {{").unwrap();
+    if modal {
+        writeln!(out, "{inner}Dialog(").unwrap();
+        writeln!(out, "{content}onDismissRequest = {{ {on_close} }},").unwrap();
+        writeln!(out, "{content}properties = DialogProperties(").unwrap();
+        writeln!(out, "{body}dismissOnBackPress = {dismiss},").unwrap();
+        writeln!(out, "{body}dismissOnClickOutside = {dismiss},").unwrap();
+        writeln!(out, "{content}),").unwrap();
+        writeln!(out, "{inner}) {{").unwrap();
+    } else {
+        writeln!(out, "{inner}Popup(").unwrap();
+        writeln!(out, "{content}alignment = Alignment.Center,").unwrap();
+        writeln!(out, "{content}onDismissRequest = {{ {on_close} }},").unwrap();
+        writeln!(out, "{content}properties = PopupProperties(").unwrap();
+        writeln!(out, "{body}focusable = true,").unwrap();
+        writeln!(out, "{body}dismissOnBackPress = {dismiss},").unwrap();
+        writeln!(out, "{body}dismissOnClickOutside = {dismiss},").unwrap();
+        writeln!(out, "{content}),").unwrap();
+        writeln!(out, "{inner}) {{").unwrap();
+    }
+    if let Some(dispatch) = on_open {
+        writeln!(out, "{content}LaunchedEffect(Unit) {{ {dispatch} }}").unwrap();
+    }
+    writeln!(out, "{content}Surface(").unwrap();
+    writeln!(out, "{body}modifier = {modifier},").unwrap();
+    writeln!(out, "{body}shape = MaterialTheme.shapes.medium,").unwrap();
+    writeln!(out, "{body}elevation = 8.dp,").unwrap();
+    writeln!(out, "{content}) {{").unwrap();
+    writeln!(out, "{body}Column(modifier = Modifier.padding(24.dp)) {{").unwrap();
+    if let Some(title) = title {
+        let title_pad = "    ".repeat(depth + 4);
+        writeln!(
+            out,
+            "{title_pad}Text(text = {title}, style = MaterialTheme.typography.h6, modifier = Modifier.semantics {{ heading() }})"
+        )
+        .unwrap();
+    }
+    out.push_str(&emit_children_compose(
+        &node.children,
+        depth + 4,
+        component_name,
+        emits,
+        part_styles,
+        table_ctx,
+        child_text.as_ref(),
+        for_payload,
+        None,
+    )?);
+    writeln!(out, "{body}}}").unwrap();
+    writeln!(out, "{content}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+fn host_dialog_dispatch(
+    node: &LayoutNode,
+    prop_name: &str,
+    component_name: &str,
+    emits: &[EmitDecl],
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, prop_name) else {
+        return Ok(None);
+    };
+    let case = pascalize(&strip_on_prefix(emit_name));
+    validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+    if let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) {
+        if !emit.params.is_empty() {
+            return Err(PipelineEmitError::UnsupportedHostDialog(format!(
+                "{prop_name} event '{emit_name}' must not declare payload fields"
+            )));
+        }
+    }
+    Ok(Some(format!("dispatch({component_name}Event.{case})")))
 }
 
 fn emit_host_checkbox(
@@ -4176,6 +4334,130 @@ mod tests {
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
         assert!(out.contains("Text(text = suspendLabel)"));
+    }
+
+    #[test]
+    fn host_dialog_uses_native_modal_with_semantic_title_and_children() {
+        let m = component(
+            "ConfirmDelete",
+            vec![
+                slot("open", SlotType::Bool, true),
+                slot("title", SlotType::Text, true),
+            ],
+            vec![emit_decl("onClose", vec![])],
+        );
+        let l = layout(
+            "ConfirmDelete",
+            styled_node(
+                "HostDialog",
+                "dialog-shell",
+                vec![
+                    slot_prop("open", "open"),
+                    slot_prop("title", "title"),
+                    LayoutProp {
+                        name: "onClose".into(),
+                        value: LayoutPropValue::EmitRef("onClose".into()),
+                    },
+                ],
+                vec![node(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("This cannot be undone.".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("ConfirmDelete"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("import androidx.compose.ui.window.Dialog"));
+        assert!(out.contains("if (_mosaicTruthy(open)) {"));
+        assert!(out.contains("Dialog("));
+        assert!(out.contains("onDismissRequest = { dispatch(ConfirmDeleteEvent.Close) },"));
+        assert!(out.contains("dismissOnBackPress = true,"));
+        assert!(out.contains("dismissOnClickOutside = true,"));
+        assert!(out.contains("modifier = Modifier.testTag(\"dialog-shell\"),"));
+        assert!(out.contains("style = MaterialTheme.typography.h6"));
+        assert!(out.contains("Modifier.semantics { heading() }"));
+        assert!(out.contains("Text(text = \"This cannot be undone.\")"));
+    }
+
+    #[test]
+    fn host_dialog_open_event_fires_once_when_overlay_enters_composition() {
+        let m = component(
+            "Welcome",
+            vec![slot("open", SlotType::Bool, true)],
+            vec![emit_decl("onOpen", vec![])],
+        );
+        let l = layout(
+            "Welcome",
+            node(
+                "HostDialog",
+                vec![
+                    slot_prop("open", "open"),
+                    LayoutProp {
+                        name: "onOpen".into(),
+                        value: LayoutPropValue::EmitRef("onOpen".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Welcome"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("import androidx.compose.runtime.LaunchedEffect"));
+        assert!(out.contains("LaunchedEffect(Unit) { dispatch(WelcomeEvent.Open) }"));
+    }
+
+    #[test]
+    fn host_dialog_can_disable_interactive_dismissal() {
+        let m = component("Blocking", vec![], vec![]);
+        let l = layout(
+            "Blocking",
+            node(
+                "HostDialog",
+                vec![LayoutProp {
+                    name: "dismiss-on-backdrop".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Blocking"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("dismissOnBackPress = false,"));
+        assert!(out.contains("dismissOnClickOutside = false,"));
+    }
+
+    #[test]
+    fn non_modal_host_dialog_uses_native_popup() {
+        let m = component("Inspector", vec![], vec![]);
+        let l = layout(
+            "Inspector",
+            node(
+                "HostDialog",
+                vec![LayoutProp {
+                    name: "modal".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                }],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Inspector"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("import androidx.compose.ui.window.Popup"));
+        assert!(out.contains("Popup("));
+        assert!(out.contains("alignment = Alignment.Center,"));
+        assert!(out.contains("focusable = true,"));
     }
 
     #[test]

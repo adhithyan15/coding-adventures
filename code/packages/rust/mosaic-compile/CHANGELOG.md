@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed - Compose emits native dialogs
+
+The Compose backend now lowers `HostDialog` to native `Dialog` or non-modal
+`Popup` overlays, including controlled visibility, open/close dispatch,
+interactive-dismiss policy, semantic titles, nested package content, and
+default Material surface chrome. Toolkit `Modal` therefore compiles without
+application-owned dialog wiring.
+
 ### Changed - Compose emits native links
 
 The Compose backend now lowers `HostLink` to `LinkAnnotation.Url` for external

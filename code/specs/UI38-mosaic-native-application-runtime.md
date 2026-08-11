@@ -400,8 +400,11 @@ unblocks multiple downstream targets; never count source generation as completio
   backends as a migration baseline.
   - [x] Lower `HostLink` to native Compose annotated links, including internal
     routing dispatch and indexed toolkit navigation payloads.
-  - [ ] Lower `HostDialog`; after links compile, Compose next rejects Modal's
-    native dialog primitive.
+  - [x] Lower `HostDialog` to native modal `Dialog` and non-modal `Popup`
+    overlays, including dismissal policy, lifecycle dispatch, semantic title,
+    and nested toolkit content.
+  - [ ] Lower `Icon`; after Modal compiles, Compose next rejects Spinner's
+    primitive instead of completing the toolkit package.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 
