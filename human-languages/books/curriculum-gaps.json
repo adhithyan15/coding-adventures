@@ -29,7 +29,7 @@
     "lessonsWithoutSequence": 477,
     "forwardReviews": 267,
     "atomsNeverRevisited": 456,
-    "forwardReferences": 423,
+    "forwardReferences": 418,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 25,
     "chapterGateCleanTracks": 12,
@@ -36812,14 +36812,6 @@
         "lessonsEarly": 34
       },
       {
-        "lessonId": "GE-W01-eszett",
-        "language": "german",
-        "position": 34,
-        "word": "hand",
-        "taughtBy": "GE-C17-hand",
-        "lessonsEarly": 34
-      },
-      {
         "lessonId": "GU-C01-aavjo",
         "language": "gujarati",
         "position": 1,
@@ -36834,22 +36826,6 @@
         "word": "habēre",
         "taughtBy": "LA-C37-habeo",
         "lessonsEarly": 34
-      },
-      {
-        "lessonId": "ES-C02-tarde",
-        "language": "spanish",
-        "position": 7,
-        "word": "regular",
-        "taughtBy": "ES-C04-regular",
-        "lessonsEarly": 33
-      },
-      {
-        "lessonId": "GE-W02-umlauts",
-        "language": "german",
-        "position": 35,
-        "word": "hand",
-        "taughtBy": "GE-C17-hand",
-        "lessonsEarly": 33
       },
       {
         "lessonId": "ES-C06-hablas",
@@ -38620,14 +38596,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "ES-C07-sintesis-preguntar",
-        "language": "spanish",
-        "position": 87,
-        "word": "tres",
-        "taughtBy": "ES-C08-numeros-1-5",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "ES-C08-numeros-6-10",
         "language": "spanish",
         "position": 89,
@@ -39073,14 +39041,6 @@
         "position": 64,
         "word": "sein",
         "taughtBy": "GE-C16-sein",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C17-kopf-haupt",
-        "language": "german",
-        "position": 67,
-        "word": "hand",
-        "taughtBy": "GE-C17-hand",
         "lessonsEarly": 1
       },
       {
@@ -39805,7 +39765,7 @@
         "forwardReviews": 36,
         "atomsTaught": 123,
         "atomsNeverRevisited": 32,
-        "forwardReferences": 67
+        "forwardReferences": 64
       },
       {
         "language": "gujarati",
@@ -39945,7 +39905,7 @@
         "forwardReviews": 0,
         "atomsTaught": 397,
         "atomsNeverRevisited": 47,
-        "forwardReferences": 54
+        "forwardReferences": 52
       },
       {
         "language": "tamil",
@@ -39992,7 +39952,7 @@
         "R3": 1320,
         "R4": 251
       },
-      "forwardReferences": 423
+      "forwardReferences": 418
     }
   },
   "levelGate": {
