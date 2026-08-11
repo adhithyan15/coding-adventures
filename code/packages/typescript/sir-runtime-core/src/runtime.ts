@@ -188,6 +188,77 @@ export function puts(...args: Val[]): null {
   return null;
 }
 
+/**
+ * `__sys_write__` (SIR28 §2.1): the console-output primitive {@link print}/
+ * {@link puts} above generalize into.
+ *
+ * Where those hard-code ONE newline policy each, this is the SAME operation
+ * parameterized by policy flags carried as DATA — the root cause SIR28
+ * exists to fix: real Ruby's `print` never newline-terminates, TypeScript's
+ * own `console.log` always does, but both used to lower to the identical
+ * `BuiltinCall("print", ...)` this backend had no way to tell apart.
+ *
+ * `terminator`: `"none"` ({@link print}'s behavior) | `"per_value"`
+ * ({@link puts}'s array-unpacking behavior, honouring `unpackArrays`) |
+ * `"once"` (TypeScript's native `console.log(a, b)` — space-join every
+ * value, one trailing newline). Deliberately does NOT replicate
+ * {@link puts}'s trailing-newline-suppression nuance above (`puts "x\n"`
+ * prints `x\n`, not `x\n\n`) — that's a pre-existing divergence from the
+ * C/Go/Rust/Python/JS backends' own `puts`, orthogonal to and not fixed by
+ * SIR28; `"per_value"` here always appends exactly one newline per value,
+ * matching SIR28 §2.1's table and every other backend's `__sys_write__`
+ * faithfully.
+ */
+function writeOne(
+  out: NodeJS.WriteStream,
+  v: Val,
+  unpackArrays: boolean,
+  seen: Set<unknown>,
+): void {
+  if (unpackArrays && Array.isArray(v)) {
+    if (seen.has(v)) {
+      out.write("[...]\n");
+      return;
+    }
+    seen.add(v);
+    for (const item of v) {
+      writeOne(out, item, unpackArrays, seen);
+    }
+    seen.delete(v);
+    return;
+  }
+  out.write(toDisplay(v) + "\n");
+}
+
+export function write(
+  stream: string,
+  terminator: string,
+  unpackArrays: boolean,
+  ...values: Val[]
+): null {
+  const out = stream === "stderr" ? process.stderr : process.stdout;
+  if (terminator === "per_value") {
+    if (values.length === 0) {
+      out.write("\n");
+      return null;
+    }
+    const seen = new Set<unknown>();
+    for (const v of values) {
+      writeOne(out, v, unpackArrays, seen);
+    }
+    return null;
+  }
+  if (terminator === "once") {
+    out.write(values.map((v) => toDisplay(v)).join(" ") + "\n");
+    return null;
+  }
+  // "none"
+  for (const v of values) {
+    out.write(toDisplay(v));
+  }
+  return null;
+}
+
 // --- Builtin dispatch ------------------------------------------------------
 
 // Built with a null prototype (matching the JS sibling backend's own
@@ -218,6 +289,8 @@ const builtins: Record<string, (...args: Val[]) => Val> = Object.assign(Object.c
   "symbol?": (v: Val) => isSymbol(v!),
   print: (v: Val) => print(v!),
   puts: (...args: Val[]) => puts(...args),
+  __sys_write__: (...args: Val[]) =>
+    write(args[0] as string, args[1] as string, args[2] as boolean, ...args.slice(3)),
 });
 
 /** Invoke a builtin by SIR name with a list of arguments. */

@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.11.3 — `__sys_write__`, the SIR28 console-output primitive
+
+Part of the SIR28 arc: one primitive (`__sys_write__`) that the
+long-standing `print`/`console.log`/etc. family generalizes into, so a
+future frontend migration can carry newline/stream semantics as explicit
+IR data instead of an implicit per-frontend assumption (see
+[SIR28](../../../specs/SIR28-syscall-primitives.md)). Purely additive —
+no frontend emits `__sys_write__` yet, `print`/`puts` are unchanged.
+
+Added `"__sys_write__" => "__Sir.write"` to the emitter's helper-name
+table, a plain pass-through matching `print`/`puts` (no compile-time
+literal extraction, unlike the C/Go/Rust backends — this backend's OOP
+envelope precedent already routes stream/terminator through the runtime
+at call time). Added `Feature::ConsoleIO` to `ACCEPTED_FEATURES`.
+
+`write`/`writeOne` land in `@coding-adventures/sir-runtime-core` 0.3.0
+(this backend's runtime package) — see that package's own CHANGELOG.
+
+New `tests/compile_and_run_sys_write.rs`: 7 tests hand-building a
+`Module` directly (no frontend emits this yet), compiling to TypeScript,
+transforming to runnable JS via the same import-swap/type-strip
+technique `run_with_node.rs` uses, and executing under `node` — covering
+all three terminator modes, `unpack_arrays` true/false on a nested
+array, the `stderr` stream, and the zero-values `per_value` edge case.
+
+`semantic-ir-to-typescript` 0.11.2 -> 0.11.3.
+
 ## 0.11.2 — `<<` (Ruby's shift operator) as a top-level builtin
 
 Part of "TypeScript backend: implement shift-operator runtime dispatch".
