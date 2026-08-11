@@ -1344,10 +1344,9 @@ const PROGRAMS: &[Prog] = &[
     },
     // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
     // implementation-defined, so this frontend recognises undeclared statement
-    // calls named `print`/`output` as standard output procedures. The narrow
-    // foothold is deliberately literal-only: `print('HI')` lowers to E4
-    // `str_const` + `print_str`, exactly the same shared string op pair BASIC
-    // string `PRINT` already proved. That makes stdout the observable result on
+    // calls named `print`/`output` as standard output procedures. A string
+    // literal lowers to E4 `str_const` + `print_str`, exactly the same shared
+    // pair BASIC string `PRINT` already proved. That makes stdout observable on
     // native-AOT / LLVM / WASM / JVM / CLR / VM / JIT without adding any
     // ALGOL-specific backend hooks.
     Prog {
@@ -1355,6 +1354,16 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin print('HI') end",
         expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — implementation-defined integer output reuses the shared
+    // `call_builtin print_i64` path already supported by every standard backend.
+    // The argument is an expression, proving output is not limited to literals.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer n; n := 40; output(n + 2) end",
+        expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
@@ -5785,6 +5794,34 @@ fn matrix_every_proven_cell_agrees() {
         }
     }
     eprintln!("lang-matrix: {ran} proven cells exercised");
+}
+
+#[test]
+fn algol_integer_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60 && program.src.contains("output(n + 2)")
+        })
+        .expect("the ALGOL integer-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but ALGOL integer output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
 }
 
 #[test]
