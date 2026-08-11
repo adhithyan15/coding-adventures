@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.48.0";
+pub const VERSION: &str = "0.49.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1073,6 +1073,26 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 "RL" => DiagramDirection::Rl,
                 _ => unreachable!("state.tokens restricts direction values"),
             };
+        } else if cursor.current().value.eq_ignore_ascii_case("style") {
+            cursor.advance();
+            let id = take_state_ref(&mut cursor)?;
+            if !node_indices.contains_key(&id) {
+                upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+            }
+            loop {
+                let property = take_state_ref(&mut cursor)?;
+                cursor.consume_if("COLON").ok_or_else(|| {
+                    token_error(cursor.current(), "expected ':' in state style assignment")
+                })?;
+                let value = cursor.advance().clone();
+                if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD") {
+                    return Err(token_error(&value, "expected state style value"));
+                }
+                apply_state_style(&mut nodes[node_indices[&id]], &property, &value)?;
+                if cursor.consume_if("COMMA").is_none() {
+                    break;
+                }
+            }
         } else if cursor.current().value.eq_ignore_ascii_case("state") {
             cursor.advance();
             let (id, label) = if token_name(cursor.current()) == "STRING" {
@@ -1223,17 +1243,54 @@ fn upsert_state_node(
     });
 }
 
+fn apply_state_style(
+    node: &mut GraphNode,
+    property: &str,
+    value: &Token,
+) -> Result<(), ParseError> {
+    let style = node.style.get_or_insert_with(DiagramStyle::default);
+    match property.to_ascii_lowercase().as_str() {
+        "fill" => style.fill = Some(value.value.clone()),
+        "stroke" => style.stroke = Some(value.value.clone()),
+        "color" => style.text_color = Some(value.value.clone()),
+        "stroke-width" => {
+            let width = value
+                .value
+                .strip_suffix("px")
+                .unwrap_or(&value.value)
+                .parse::<f64>()
+                .map_err(|_| token_error(value, "invalid state stroke width"))?;
+            style.stroke_width = Some(width);
+        }
+        _ => {
+            return Err(token_error(
+                value,
+                format!("unsupported state style property {property:?}"),
+            ))
+        }
+    }
+    Ok(())
+}
+
 fn take_state_text(cursor: &mut TokenCursor) -> String {
-    let mut parts = Vec::new();
+    let mut text = String::new();
     while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
         let token = cursor.advance();
-        parts.push(if token_name(token) == "STRING" {
+        let value = if token_name(token) == "STRING" {
             strip_state_string(&token.value)
         } else {
             token.value.clone()
-        });
+        };
+        if token_name(token) == "COMMA" {
+            text.push(',');
+        } else {
+            if !text.is_empty() && !text.ends_with(',') {
+                text.push(' ');
+            }
+            text.push_str(&value);
+        }
     }
-    parts.join(" ")
+    text
 }
 
 fn strip_state_string(value: &str) -> String {
@@ -3864,6 +3921,27 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_inline_styles() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px\n",
+        )
+        .expect("state inline styles should parse");
+        let style = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Ready")
+            .unwrap()
+            .style
+            .as_ref()
+            .unwrap();
+
+        assert_eq!(style.fill.as_deref(), Some("#fee2e2"));
+        assert_eq!(style.stroke.as_deref(), Some("#991b1b"));
+        assert_eq!(style.text_color.as_deref(), Some("#111827"));
+        assert_eq!(style.stroke_width, Some(3.0));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4634,7 +4712,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.48.0");
+        assert_eq!(crate::VERSION, "0.49.0");
     }
 
     #[test]
