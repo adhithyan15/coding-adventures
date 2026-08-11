@@ -281,8 +281,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   independent **س** at 00:01.6–00:02.8: shape the three close teeth
   right-to-left, then flow directly into the final bowl without lifting. Its
   two-frame path preserves that continuous motion, two-way-connector context,
-  and Arabic-scoped provenance independently of Persian and Urdu س. The
-  remaining **186** prose part orders across seven scripts (`arabic` 12,
+  and Arabic-scoped provenance independently of Persian and Urdu س. The page's
+  `FullSizeRender-7.mov` then verifies independent **ش**: draw the same body in
+  one run at 00:00.7–00:02.2, then lift for the lower-left, lower-right, and
+  centered upper dots through 00:03.0. Its five-frame path preserves those
+  three lifts, two-way-connector context, and Arabic-scoped provenance
+  independently of Urdu ش. The remaining **185** prose part orders across
+  seven scripts (`arabic` 11,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

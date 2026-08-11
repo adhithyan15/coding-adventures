@@ -319,6 +319,11 @@ it shapes three close teeth right-to-left, then flows directly into the final
 bowl in the same pen-down run. The two-frame filmstrip preserves that zero-lift
 motion, two-way-connector context, and Arabic-scoped provenance independently
 of Persian and Urdu س while fitting the same isolated Noto Naskh outline. The
+page's `FullSizeRender-7.mov` then verifies **ش** independently: it draws the
+same body in one run before separately placing the lower-left, lower-right, and
+centered upper dots. The five-frame filmstrip preserves those three lifts,
+two-way-connector context, and Arabic-scoped provenance independently of Urdu ش
+while fitting the isolated Noto Naskh outline. The
 runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
