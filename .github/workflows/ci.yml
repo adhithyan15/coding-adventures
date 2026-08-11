@@ -1118,6 +1118,12 @@ jobs:
           set -euo pipefail
           output="$RUNNER_TEMP/mosaic-compose-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project
+          jq -e '
+            ([.degradations[] | select(.code == "interaction.drag-drop-inert")] | length) == 0 and
+            ([.degradations[] | select(.code == "accessibility.table-semantics-missing")] | length) == 1 and
+            ([.degradations[] | select(.code == "runtime.sample-fallback")] | length) == 1
+          ' "$output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$output/compose" compileKotlin
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
 
           harness="$RUNNER_TEMP/mosaic-compose-runtime-conformance"

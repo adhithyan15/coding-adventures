@@ -34,6 +34,12 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
+- **Bundle the Rust engine in native application packages.** Native conformance
+  harnesses can load the engine from an injected path, but generated installers
+  do not yet place and resolve the selected `mosaic_app` library app-relatively.
+  A packaged Compose `.app` therefore launches through its permissive sample
+  fallback unless the library is installed externally. Track this as P0 in
+  UI38 and implement Compose first, then repeat for the other native families.
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
@@ -53,14 +59,12 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   SVG-overlay host component) or product guidance on visual treatment
   before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
   "What does NOT ship" section for the full reasoning.
-- **Native drag support for HostDraggable/HostDropTarget.** Every non-web backend (SwiftUI,
-  Compose, Qt, Flutter, WinUI/XAML, webcomponent) currently degrades the drag family to a plain
-  static container — see `code/specs/UI35-host-drag-drop.md`. This means the board and the
-  calendar are both fully interactive on web but inert on every native shell. Spec-deferred
-  intentionally (native shells are Phase 10+), but tracked as a spawned task:
-  [background task](task_239f7f69) "Wire HostDraggable/HostDropTarget into mosaic-emit-xaml" — do
-  XAML first since it's the most-built-out native backend, then fan out the same pattern to the
-  rest.
+- **Native drag support for HostDraggable/HostDropTarget.** Flutter and Compose
+  Desktop now lower the UI35 family to native drag systems with equivalent
+  keyboard and accessibility operation. SwiftUI, Qt, and WinUI/XAML still
+  degrade the board and calendar drag interactions to static containers; close
+  those three backend gaps one bounded emitter slice at a time. See
+  `code/specs/UI35-host-drag-drop.md` and UI38's prioritized completion backlog.
 - **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
   see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
   the UI35 kernel today; time-blocking needs a time-of-day field on `TaskSchedule` that
