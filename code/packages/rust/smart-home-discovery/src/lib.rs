@@ -129,7 +129,7 @@ impl fmt::Display for DiscoverySource {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoveryConfidence {
     Hint,
     Candidate,
@@ -639,7 +639,7 @@ impl DiscoveryWorkerRunSummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum PairingRequirement {
     Unknown,
     None,
@@ -1108,7 +1108,7 @@ pub fn discovery_hints_for_source(
         .collect()
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DiscoveryRecord {
     pub integration_id: IntegrationId,
     pub protocol_family: ProtocolFamily,

@@ -468,6 +468,26 @@ executable, restart-safe rules runtime:
   idempotency across snapshot restore, durable state validation, and the full
   create-preview-execute-audit HTTP lifecycle.
 
+## Current Production Hue Discovery Composition Slice
+
+This slice runs the existing Hue discovery stack inside the production local
+controller without creating another D23 runtime owner:
+
+- `smart-home-local-controller --hue-mdns-interface NAME` explicitly enables a
+  Hue DNS-SD worker for one selected local interface; discovery remains off by
+  default so controller startup never assumes a network device name.
+- The production process installs `smart-home-discovery-service` in an actor
+  system with the UDP mDNS executor and Hue report adapter, while every schedule
+  registration and run result commits through the same
+  `smart-home-controller-runtime` used by HTTP and automations.
+- Repeated startup preserves existing cadence and retry pressure when the
+  configured worker is unchanged, while an intentional interface change
+  replaces its configuration through a serialized central transaction.
+- `RuntimeDurableSnapshot` now retains normalized discovery records as well as
+  worker schedules, so accepted Hue observations and their bridge candidates
+  survive process replacement. Missing discovery fields still deserialize as
+  empty for backward compatibility with older snapshots.
+
 ## Current Z-Wave Runtime Integration Slice
 
 This slice connects the repository's Z-Wave protocol stack to the normalized
@@ -1806,21 +1826,19 @@ Synology Surveillance Station server without persisting session material:
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The reusable central owner and the discovery service's transactional migration
-are complete. The remaining central-composition backlog takes priority over
-adding another isolated integration or Chief read model:
+The reusable central owner, discovery service transaction migration, and
+production Hue mDNS composition are complete. The remaining
+central-composition backlog takes priority over adding another isolated
+integration or Chief read model:
 
-1. Compose the existing Hue mDNS worker and discovery actor into the local
-   controller so discoveries are visible through the same Home Assistant HTTP
-   runtime.
-2. Migrate Hue pairing and then the remaining pairing/snapshot services so they
+1. Migrate Hue pairing and then the remaining pairing/snapshot services so they
    transact against the same live revision instead of restoring private runtime
    copies.
-3. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
+2. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
    service adapter against the controller authority.
-4. Add provider-neutral model tool declarations/results, authenticated host
+3. Add provider-neutral model tool declarations/results, authenticated host
    tool dispatch, and production Chief daemon injection.
-5. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+4. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those

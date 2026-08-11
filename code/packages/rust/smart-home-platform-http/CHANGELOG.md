@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add opt-in `--hue-mdns-interface` production composition that runs the Hue
+  mDNS discovery service actor through the central controller owner.
 - Compose the production local controller through the central
   `smart-home-controller-runtime` owner instead of independently assembling
   runtime, automation, and persistence state.
