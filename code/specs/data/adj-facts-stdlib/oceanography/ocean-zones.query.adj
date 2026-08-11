@@ -1,0 +1,14 @@
+% ============================================================================
+% ocean-zones.query.adj — worked recall over the ocean-zones library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what position is this
+% zone in, by depth?" (direct) or "which zone comes first/second/etc.?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "ocean-zones.adj"
+
+? ocean_zone(twilight_zone, $N)   % expect 2 (direct: what position is the twilight zone?)
+? ocean_zone($Z, 1)               % expect sunlight_zone (reverse: which zone comes first?)
+? ocean_zone(abyssal_zone, $N)    % expect abstain -- a real deeper zone the source names, but not one of the three tabled here
