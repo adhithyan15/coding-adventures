@@ -176,8 +176,9 @@ read, just like a local string.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
-the same string or integer output paths as typed procedures; using a proper procedure in
-value position is a clean type error because it has no return value.
+the same string, integer, or boolean output paths as typed procedures. Using a
+proper procedure in value position is a clean type error because it has no
+return value.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested
