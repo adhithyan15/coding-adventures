@@ -42,6 +42,7 @@ const HEBREW_SAMEKH = DUCTUS[ductusKey("hebrew", "ס")];
 const HEBREW_AYIN = DUCTUS[ductusKey("hebrew", "ע")];
 const HEBREW_PE = DUCTUS[ductusKey("hebrew", "פ")];
 const HEBREW_TSADI = DUCTUS[ductusKey("hebrew", "צ")];
+const HEBREW_QOF = DUCTUS[ductusKey("hebrew", "ק")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -477,6 +478,22 @@ describe("handwriting ductus", () => {
     expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
     expect(arm[0].x).toBeGreaterThan(arm.at(-1)!.x);
     expect(arm[0].y).toBeGreaterThan(arm.at(-1)!.y);
+  });
+
+  it("Hebrew ק joins its top and right body before the lifted descender", () => {
+    expect(HEBREW_QOF.script).toBe("hebrew");
+    expect(penLifts(HEBREW_QOF)).toBe(1);
+    expect(HEBREW_QOF.strokes).toHaveLength(2);
+    expect(HEBREW_QOF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_QOF.strokes[0].segments[0].path;
+    const body = HEBREW_QOF.strokes[0].segments[1].path;
+    const stem = HEBREW_QOF.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(body[0]).toEqual(top.at(-1));
+    expect(body[0].x).toBeGreaterThan(body.at(-1)!.x);
+    expect(body[0].y).toBeGreaterThan(body.at(-1)!.y);
+    expect(stem[0].y).toBeGreaterThan(0);
+    expect(stem.at(-1)!.y).toBeLessThan(0);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1142,6 +1159,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("צ", HEBREW_TSADI.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ק", HEBREW_QOF.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1372,6 +1392,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Tsadi.*two runs.*02:59.8–03:01.2.*long diagonal.*upper left.*turns sharply left.*base.*without lifting.*one lift.*short upper-right arm.*down-left.*middle junction.*cursive Tsadi.*purple.*compact, rounded 3-like run.*03:03.2–03:04.0.*without lifting.*Noto Sans Hebrew.*compact cursive variation/i,
+    );
+  });
+
+  it("Hebrew ק traces its two-run printed form and records the cursive hook", () => {
+    const src = HEBREW_QOF.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:18.3–03:20.0.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Qof.*two runs.*03:18.3–03:20.0.*top bar.*left-to-right.*down-left.*right body.*without lifting.*one lift.*separate inner-left stem.*below the writing line.*cursive Qof.*purple.*one continuous hooked descent.*03:22.0–03:23.3.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
     );
   });
 

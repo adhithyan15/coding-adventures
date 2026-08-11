@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Qof ductus (HL-C09BV)
+
+- Render **ק** in three evidence-aligned frames: draw the top and slanted right
+  body together, then lift once for the separate below-line stem.
+- Preserve the adjacent purple cursive form's one-run hook while keeping the
+  printed form's lift and descender explicit.
+- Queue the adjacent Resh demonstration as the next counted inventory entry.
+
 ### Added — cited Hebrew Tsadi ductus (HL-C09BU)
 
 - Render **צ** in three evidence-aligned frames: descend the long diagonal into
