@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.30.0] - 2026-08-10
+
+### Added
+
+- Add the stable authenticated object kind and strict canonical wrapper for a
+  signed VLT-PM15 operation-audit event.
+
+### Security
+
+- Encrypt operation events under a distinct object-kind AAD domain and require
+  callers to verify the decoded event against its certified device key; this
+  slice does not yet claim repository publication or CLI enforcement.
+
 ## [0.29.0] - 2026-08-10
 
 ### Added

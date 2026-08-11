@@ -25,9 +25,9 @@ mod verifier;
 
 pub use audit::AuditVerificationV1;
 pub use codec::{
-    decode_device_certificate, decode_item_revision, decode_signed_commit,
-    encode_device_certificate, encode_item_revision, encode_signed_commit, CatalogV1,
-    LocalSecretV1,
+    decode_device_certificate, decode_item_revision, decode_signed_audit_event,
+    decode_signed_commit, encode_device_certificate, encode_item_revision,
+    encode_signed_audit_event, encode_signed_commit, CatalogV1, LocalSecretV1,
 };
 pub use crypto::{
     open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,

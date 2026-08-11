@@ -1445,9 +1445,13 @@ changelog, focused build, and downstream validation.
 9b-2b-2. redacted authenticated search plus non-login show renderers.
 9b-2c-1. completed storage-neutral signed operation-audit event primitive using
          `VLT-PM15-operation-audit.md`.
-9b-2c-2. encrypted repository audit objects, migration epoch, atomic mutation
-         publication, and complete event verification.
-9b-2c-3. fail-closed access-event publication plus redacted audit list/show.
+9b-2c-2. completed distinct encrypted application-object kind and strict
+         canonical wrapper for signed audit events.
+9b-2c-3. explicit pre-audit-vault migration epoch and durable audit-event head
+         state.
+9b-2c-4. atomic mutation-event publication and complete signature, basis-head,
+         per-device-link, and edit/result verification.
+9b-2c-5. fail-closed access-event publication plus redacted audit list/show.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
