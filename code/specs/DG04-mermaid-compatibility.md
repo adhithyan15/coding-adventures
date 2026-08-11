@@ -138,7 +138,10 @@ Explicit and message-suffix deactivation is validated against that semantic
 stack and fails when the participant is inactive, matching Mermaid 11.16.1.
 Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON
-values through the same pipeline. DOM-referenced `details` element IDs also
+values through the same pipeline. Mermaid's built-in `@clock` and `@computer`
+property icons lower to backend-neutral ellipse, rectangle, and path
+instructions; external image-property resolution remains a host concern.
+DOM-referenced `details` element IDs also
 survive the pipeline as scene metadata; host-document resolution remains
 embedding-layer compatibility work. Participant `box` declarations now lower into
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
