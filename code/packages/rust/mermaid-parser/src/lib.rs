@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.31.0";
+pub const VERSION: &str = "0.32.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1339,9 +1339,9 @@ fn parse_sequence_participant_config(
         let (key, value) = field.split_once(':').ok_or_else(|| {
             token_error(token, "participant configuration fields require key: value")
         })?;
-        let key = trim_sequence_config_string(key);
-        let value = trim_sequence_config_string(value);
-        match key {
+        let key = parse_sequence_config_scalar(token, key)?;
+        let value = parse_sequence_config_scalar(token, value)?;
+        match key.as_str() {
             "type" => {
                 kind = Some(match value.to_ascii_lowercase().as_str() {
                     "participant" => SequenceParticipantKind::Participant,
@@ -1360,7 +1360,7 @@ fn parse_sequence_participant_config(
                     }
                 });
             }
-            "alias" => alias = Some(value.to_string()),
+            "alias" => alias = Some(value),
             _ => {}
         }
     }
@@ -1403,10 +1403,29 @@ fn split_sequence_config_fields(input: &str) -> Vec<&str> {
     fields
 }
 
-fn trim_sequence_config_string(value: &str) -> &str {
-    value
-        .trim()
-        .trim_matches(|character| matches!(character, '\'' | '"'))
+fn parse_sequence_config_scalar(token: &Token, value: &str) -> Result<String, ParseError> {
+    let value = value.trim();
+    if value.starts_with('"') {
+        return serde_json::from_str(value).map_err(|error| {
+            token_error(
+                token,
+                format!("invalid double-quoted participant configuration value: {error}"),
+            )
+        });
+    }
+    if let Some(inner) = value
+        .strip_prefix('\'')
+        .and_then(|value| value.strip_suffix('\''))
+    {
+        return Ok(inner.replace("''", "'"));
+    }
+    if value.starts_with('\'') || value.ends_with('\'') {
+        return Err(token_error(
+            token,
+            "invalid single-quoted participant configuration value",
+        ));
+    }
+    Ok(value.to_string())
 }
 
 fn parse_sequence_participant_box(
@@ -3375,7 +3394,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn sequence_parses_participant_stereotypes_and_alias_precedence() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: 'Ledger, primary' }\nparticipant L@{ type: collections }\nparticipant Q@{ type: queue }\n",
+            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: \"Ledger, \\\"primary\\\"\" }\nparticipant L@{ type: collections, alias: 'Collector''s lane' }\nparticipant Q@{ type: queue }\n",
         )
         .unwrap();
         assert_eq!(
@@ -3395,11 +3414,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             diagram.participants[3].kind,
             SequenceParticipantKind::Database
         );
-        assert_eq!(diagram.participants[3].label.text, "Ledger, primary");
+        assert_eq!(diagram.participants[3].label.text, "Ledger, \"primary\"");
         assert_eq!(
             diagram.participants[4].kind,
             SequenceParticipantKind::Collections
         );
+        assert_eq!(diagram.participants[4].label.text, "Collector's lane");
         assert_eq!(diagram.participants[5].kind, SequenceParticipantKind::Queue);
     }
 
@@ -3787,7 +3807,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.31.0");
+        assert_eq!(crate::VERSION, "0.32.0");
     }
 
     #[test]

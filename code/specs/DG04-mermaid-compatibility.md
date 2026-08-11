@@ -161,7 +161,8 @@ Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to
 backend-neutral path, ellipse, and rectangle symbols and have Metal PNG coverage.
 Quoted configuration aliases retain embedded commas instead of being split into
-spurious fields.
+spurious fields. Double-quoted JSON escapes and doubled single quotes decode
+with Mermaid's YAML JSON-schema configuration semantics before semantic IR.
 Mermaid 11.16.1 half arrows are grammar-backed across every solid/dotted,
 normal/reverse, filled/stick, and top/bottom form. Their endpoint semantics
 survive layout and lower to backend-neutral Paint paths.
