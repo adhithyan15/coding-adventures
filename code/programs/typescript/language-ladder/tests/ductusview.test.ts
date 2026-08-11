@@ -113,6 +113,8 @@ const HEBREW_AYIN = ductusFor("ע", "hebrew")!;
 const hebrewAyinOutline = hebrewOutline("ע");
 const HEBREW_PE = ductusFor("פ", "hebrew")!;
 const hebrewPeOutline = hebrewOutline("פ");
+const HEBREW_TSADI = ductusFor("צ", "hebrew")!;
+const hebrewTsadiOutline = hebrewOutline("צ");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1280,6 +1282,37 @@ describe("Hebrew פ — an outer body followed by a lifted inner curl", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_PE.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew צ — a joined diagonal and base followed by a lifted arm", () => {
+  const steps = ductusSteps(HEBREW_TSADI);
+  const strip = ductusFilmstrip(HEBREW_TSADI, hebrewTsadiOutline);
+
+  it("keeps the long diagonal joined to the base before the upper-right arm", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the long diagonal from the upper left",
+      "turn left along the base without lifting",
+      "lift, then curve the upper-right arm down-left into the junction",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the first run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewTsadiOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_TSADI.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_TSADI.strokes[1], 1),
     );
   });
 });

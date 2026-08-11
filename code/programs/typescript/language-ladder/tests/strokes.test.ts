@@ -41,6 +41,7 @@ const HEBREW_NUN = DUCTUS[ductusKey("hebrew", "נ")];
 const HEBREW_SAMEKH = DUCTUS[ductusKey("hebrew", "ס")];
 const HEBREW_AYIN = DUCTUS[ductusKey("hebrew", "ע")];
 const HEBREW_PE = DUCTUS[ductusKey("hebrew", "פ")];
+const HEBREW_TSADI = DUCTUS[ductusKey("hebrew", "צ")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -460,6 +461,22 @@ describe("handwriting ductus", () => {
     expect(base[0]).toEqual(side.at(-1));
     expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
     expect(inner[0].x).toBeLessThan(inner.at(-1)!.x);
+  });
+
+  it("Hebrew צ turns its long diagonal into the base before the lifted arm", () => {
+    expect(HEBREW_TSADI.script).toBe("hebrew");
+    expect(penLifts(HEBREW_TSADI)).toBe(1);
+    expect(HEBREW_TSADI.strokes).toHaveLength(2);
+    expect(HEBREW_TSADI.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const diagonal = HEBREW_TSADI.strokes[0].segments[0].path;
+    const base = HEBREW_TSADI.strokes[0].segments[1].path;
+    const arm = HEBREW_TSADI.strokes[1].segments[0].path;
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+    expect(diagonal[0].y).toBeGreaterThan(diagonal.at(-1)!.y);
+    expect(base[0]).toEqual(diagonal.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(arm[0].x).toBeGreaterThan(arm.at(-1)!.x);
+    expect(arm[0].y).toBeGreaterThan(arm.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -1122,6 +1139,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("פ", HEBREW_PE.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("צ", HEBREW_TSADI.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1341,6 +1361,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /printed Pe.*two runs.*02:36.3–02:38.9.*outer body.*upper left.*right across the top.*right side.*left along the base.*one lift.*short inner curl.*left to right.*cursive Pe.*purple.*one inward spiral.*02:41.5–02:43.0.*without lifting.*Noto Sans Hebrew.*rounded cursive variation/i,
+    );
+  });
+
+  it("Hebrew צ traces its two-run printed form and records the compact cursive form", () => {
+    const src = HEBREW_TSADI.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:59.8–03:01.2.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Tsadi.*two runs.*02:59.8–03:01.2.*long diagonal.*upper left.*turns sharply left.*base.*without lifting.*one lift.*short upper-right arm.*down-left.*middle junction.*cursive Tsadi.*purple.*compact, rounded 3-like run.*03:03.2–03:04.0.*without lifting.*Noto Sans Hebrew.*compact cursive variation/i,
     );
   });
 
