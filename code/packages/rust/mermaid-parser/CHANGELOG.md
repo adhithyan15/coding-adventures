@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.43.0
+
+- Preprocess Mermaid directives before sequence grammar parsing and apply the global `wrap` directive to default-wrapped semantic labels.
+
 ## 0.42.0
 
 - Reject `+` and `-` activation suffixes on central sequence connections, matching the pinned Mermaid grammar alternatives.

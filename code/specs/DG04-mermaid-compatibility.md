@@ -162,6 +162,10 @@ Sequence `accTitle`, single-line `accDescr`, and multiline `accDescr` blocks
 preserve accessibility semantics in PaintScene metadata.
 Sequence newlines and semicolons are interchangeable statement terminators at
 the document level and inside control blocks.
+Mermaid preprocessor directives are removed before sequence grammar parsing
+without changing source line positions. The global `wrap` directive updates
+default participant, message, note, and control labels in semantic IR; host
+configuration from `init` remains outside diagram semantics.
 Both modern `title Text` and legacy `title: Text` sequence title forms lower
 through the same title semantics and native text pipeline.
 Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
