@@ -396,7 +396,7 @@ unblocks multiple downstream targets; never count source generation as completio
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.
 - [ ] Ship `mosaic-std-services` and umbrella `mosaic-std` manifests.
-- [ ] Make the existing `mosaic-pkg-toolkit` compile across all five native
+- [x] Make the existing `mosaic-pkg-toolkit` compile across all five native
   backends as a migration baseline.
   - [x] Lower `HostLink` to native Compose annotated links, including internal
     routing dispatch and indexed toolkit navigation payloads.
@@ -427,6 +427,9 @@ unblocks multiple downstream targets; never count source generation as completio
     Every export is copied into `lib/`; Linux CI analyzes all 23 components and
     builds a native Flutter desktop application from the documented runner
     bootstrap while continuing to mount the first export.
+  - [x] Make the XAML package project compile every exported control. Windows
+    CI builds all 23 component XAML/code-behind triples together in the
+    generated WinUI project while continuing to mount the first export.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 
