@@ -934,6 +934,36 @@ fn publish_mutation(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn activate_audit_epoch(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    wall_time_ms: u64,
+    randomness: AuditedAccessRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if active.audit_event_head().is_some() {
+        return Err(ApplicationError::InvalidInput);
+    }
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        AuditActionV1::AuditEpochStart,
+        AuditOutcomeV1::Succeeded,
+        None,
+        None,
+        wall_time_ms,
+        None,
+        None,
+        &randomness.bytes,
+        local_state_store,
+    )
+}
+
 #[cfg(test)]
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn activate_audit_epoch_for_test(
@@ -947,9 +977,6 @@ pub(crate) fn activate_audit_epoch_for_test(
     randomness: [u8; AUDIT_ONLY_TEST_RANDOM_BYTES],
     local_state_store: &dyn LocalStateStore,
 ) -> Result<ActiveStateV1, ApplicationError> {
-    if active.audit_event_head().is_some() {
-        return Err(ApplicationError::InvalidInput);
-    }
     publish_audit_only_event_inner(
         active,
         keys,

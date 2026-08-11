@@ -1484,8 +1484,10 @@ changelog, focused build, and downstream validation.
             activation and real-process failure-ordering acceptance.
 9b-2c-5c. redacted authenticated audit list/show plus trace-aware output and
           tamper/fault/real-process acceptance.
-9b-2c-4c. explicit pre-audit-vault migration epoch, exposed only once every
-          edit and access path can advance the chain or fail closed.
+9b-2c-4c-1. completed production application boundary for a single durable,
+             crash-resumable pre-audit-vault migration epoch.
+9b-2c-4c-2. expose that migration in the CLI only once every edit and access
+             path can advance the chain or fail closed.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
