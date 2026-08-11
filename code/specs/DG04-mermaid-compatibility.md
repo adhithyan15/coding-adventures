@@ -122,7 +122,9 @@ block events. Sequence layout resolves those events into nested frames and
 branch dividers before existing PaintInstructions render them. Participant
 `create` and `destroy` statements lower into lifecycle events; layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Nested message and statement activations retain stack order in semantic
+markers. Lifecycle declarations bind to Mermaid's required following message:
+created participants must receive it, while destroyed participants must send or
+receive it. Nested message and statement activations retain stack order in semantic
 events and lower to depth-offset bars through backend-neutral Paint rectangles.
 Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON

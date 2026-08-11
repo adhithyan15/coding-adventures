@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.35.0
+
+- Bind `create` and `destroy` declarations to their required following messages and reject invalid lifecycle sequences.
+
 ## 0.34.0
 
 - Give start-only sequence `autonumber` statements their Mermaid 11.16.1 default increment of one.
