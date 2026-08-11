@@ -3691,18 +3691,13 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        let var_name = direct_tokens(node)
-            .into_iter()
-            .find(|t| t.effective_type_name() == "NAME")
-            .map(|t| t.value.clone())
+        let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
-        let var_ty = match self.active_by_name_binding(&var_name) {
-            Some(binding) => binding.ty,
-            None => self.require_var(&var_name)?.ty,
-        };
+        let var_ty = self.for_target_type(target)?;
         if var_ty != ScalarType::Integer {
             return Err(CompileError::Type(format!(
-                "for variable {var_name:?} must be integer"
+                "for controlled variable must be integer, got {}",
+                var_ty.name()
             )));
         }
 
@@ -3721,29 +3716,99 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
-            self.emit_for_element(&var_name, elem, body)?;
+            self.emit_for_element(target, elem, body)?;
         }
         Ok(())
     }
 
+    fn for_target_type(&self, target: &GrammarASTNode) -> Result<ScalarType, CompileError> {
+        if array_subscripts(target).is_some() {
+            let name = direct_tokens(target)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+                .ok_or_else(|| {
+                    CompileError::Malformed("subscripted for variable missing name".into())
+                })?;
+            let binding = self.require_var(&name)?;
+            if binding.array.is_none() {
+                return Err(CompileError::Type(format!(
+                    "{name:?} is not an array — cannot subscript it"
+                )));
+            }
+            return Ok(binding.ty);
+        }
+
+        let name = self.simple_variable_name(target)?;
+        if let Some(binding) = self.active_by_name_binding(&name) {
+            return Ok(binding.ty);
+        }
+        let binding = self.require_var(&name)?;
+        if binding.array.is_some() {
+            return Err(CompileError::Type(format!(
+                "{name:?} is an array, not a scalar controlled variable"
+            )));
+        }
+        Ok(binding.ty)
+    }
+
+    fn emit_for_target_read(
+        &mut self,
+        target: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        if array_subscripts(target).is_some() {
+            return self.emit_array_read(target);
+        }
+        let name = self.simple_variable_name(target)?;
+        self.emit_named_scalar_read(&name)
+    }
+
+    fn emit_for_target_write(
+        &mut self,
+        target: &GrammarASTNode,
+        value: ExprValue,
+    ) -> Result<(), CompileError> {
+        if array_subscripts(target).is_some() {
+            let (binding, zero) = self.resolve_array_index(target)?;
+            if binding.ty != ScalarType::Integer || value.ty != ScalarType::Integer {
+                return Err(CompileError::Type(
+                    "for controlled variable and assigned value must be integer".into(),
+                ));
+            }
+            self.emit(IIRInstr::new(
+                "array_set",
+                None,
+                vec![
+                    Operand::Var(binding.slot),
+                    Operand::Var(zero),
+                    Operand::Var(value.slot),
+                ],
+                "i64",
+            ));
+            return Ok(());
+        }
+        let name = self.simple_variable_name(target)?;
+        self.emit_named_scalar_write(&name, value)
+    }
+
     fn emit_for_element(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
         if direct_tokens(elem).iter().any(|t| t.value == "while") {
-            return self.emit_for_while(var_name, elem, body);
+            return self.emit_for_while(target, elem, body);
         }
         if direct_tokens(elem).iter().any(|t| t.value == "step") {
-            return self.emit_for_step_until(var_name, elem, body);
+            return self.emit_for_step_until(target, elem, body);
         }
-        self.emit_for_once(var_name, elem, body)
+        self.emit_for_once(target, elem, body)
     }
 
     fn emit_for_once(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3763,13 +3828,13 @@ impl Compiler {
                 "single-value for element must be integer".into(),
             ));
         }
-        self.emit_named_scalar_write(var_name, value)?;
+        self.emit_for_target_write(target, value)?;
         self.emit_statement(body)
     }
 
     fn emit_for_step_until(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3794,7 +3859,7 @@ impl Compiler {
                 "for bounds and step must be integer".into(),
             ));
         }
-        self.emit_named_scalar_write(var_name, start)?;
+        self.emit_for_target_write(target, start)?;
 
         let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
         let loop_label = self.fresh_label("for_loop");
@@ -3826,7 +3891,7 @@ impl Compiler {
             "void",
         ));
 
-        let loop_value = self.emit_named_scalar_read(var_name)?;
+        let loop_value = self.emit_for_target_read(target)?;
         let positive_cond = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_le",
@@ -3851,7 +3916,7 @@ impl Compiler {
         ));
 
         self.emit_label(&negative_check_label);
-        let loop_value = self.emit_named_scalar_read(var_name)?;
+        let loop_value = self.emit_for_target_read(target)?;
         let negative_cond = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_ge",
@@ -3871,7 +3936,7 @@ impl Compiler {
 
         self.emit_label(&body_label);
         self.emit_statement(body)?;
-        let loop_value = self.emit_named_scalar_read(var_name)?;
+        let loop_value = self.emit_for_target_read(target)?;
         let next = self.fresh_temp();
         self.emit(IIRInstr::new(
             "add",
@@ -3879,8 +3944,8 @@ impl Compiler {
             vec![Operand::Var(loop_value.slot), Operand::Var(step.slot)],
             "i64",
         ));
-        self.emit_named_scalar_write(
-            var_name,
+        self.emit_for_target_write(
+            target,
             ExprValue {
                 slot: next,
                 ty: ScalarType::Integer,
@@ -3898,7 +3963,7 @@ impl Compiler {
 
     fn emit_for_while(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3919,7 +3984,7 @@ impl Compiler {
                 "for while value expression must be integer".into(),
             ));
         }
-        self.emit_named_scalar_write(var_name, value)?;
+        self.emit_for_target_write(target, value)?;
 
         let cond = self.emit_expr(cond_node)?;
         if cond.ty != ScalarType::Boolean {
@@ -5943,6 +6008,15 @@ mod tests {
     fn compiles_and_runs_multi_element_for_list() {
         let src = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
         assert_eq!(run_i64(src), 39);
+    }
+
+    #[test]
+    fn array_element_can_be_a_for_controlled_variable() {
+        let src = "begin integer result, index; integer array values[1:1]; \
+                   index := 1; result := 36; \
+                   for values[index] := 1 step 1 until 3 do \
+                     result := result + values[index] end";
+        assert_eq!(run_i64(src), 42);
     }
 
     #[test]

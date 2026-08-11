@@ -1211,6 +1211,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an integer array element may be the controlled variable of a
+    // for clause. Each assignment/read uses the existing bounds-checked array
+    // path; summing the three assigned values onto 36 produces 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, index; integer array values[1:1]; \
+               index := 1; result := 36; \
+               for values[index] := 1 step 1 until 3 do \
+                 result := result + values[index] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — report-style `go to` feeds the same runtime-selected
     // designational-expression lowering as the single-word `goto` spelling.
     Prog {
@@ -6197,6 +6210,35 @@ fn algol_array_parameter_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but array parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_array_for_variable_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("for values[index] := 1 step 1 until 3")
+        })
+        .expect("the ALGOL array-controlled for program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array-controlled for execution did not complete"
             );
             continue;
         };

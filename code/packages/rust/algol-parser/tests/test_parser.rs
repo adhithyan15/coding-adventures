@@ -349,6 +349,16 @@ fn test_for_simple_form() {
     assert!(find_rule(&ast, "for_stmt"), "Expected 'for_stmt'");
 }
 
+#[test]
+fn test_for_array_element_controlled_variable() {
+    let source = "begin integer index; integer array values[1:1]; index := 1; \
+                  for values[index] := 1 step 1 until 3 do index := index end";
+    let ast = parse_algol(source);
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "for_stmt"), "Expected 'for_stmt'");
+    assert!(find_rule(&ast, "subscripts"), "Expected array subscript");
+}
+
 // ===========================================================================
 // 6. Boolean expressions
 // ===========================================================================
