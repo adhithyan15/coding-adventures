@@ -402,10 +402,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   run, lifts once, and descends the separate inner-left stem below the writing
   line. Its three-frame Noto Sans Hebrew path preserves the adjacent purple
   cursive form's one-run hooked descent. The adjacent Resh demonstration is the
-  next counted entry.
-  The remaining **158** prose
+  next counted entry. Printed **ר** then draws its top bar left-to-right, rounds
+  the top-right corner, and continues down the right side without lifting. Its
+  two-frame Noto Sans Hebrew path preserves the adjacent purple cursive form's
+  rounder one-run hook. The adjacent Shin demonstration is next.
+  The remaining **157** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 3,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 2,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

@@ -173,7 +173,7 @@ sitting upside down on a correct letter.
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and Hebrew א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל, מ, נ, ס, ע, פ, צ, and ק
+and Hebrew א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל, מ, נ, ס, ע, פ, צ, ק, and ר
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -454,6 +454,10 @@ Its printed **ק** demonstration adds a three-frame filmstrip: the top bar turns
 down-left through the right body, then one lift precedes the separate inner-left
 stem descending below the writing line. The adjacent purple cursive Qof rounds
 those parts into one hooked descent.
+Its printed **ר** demonstration adds a two-frame filmstrip: the top bar travels
+left-to-right, rounds the top-right corner, and continues down the right side in
+one run. The adjacent purple cursive Resh keeps that zero-lift order in a rounder
+hook.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

@@ -117,6 +117,8 @@ const HEBREW_TSADI = ductusFor("צ", "hebrew")!;
 const hebrewTsadiOutline = hebrewOutline("צ");
 const HEBREW_QOF = ductusFor("ק", "hebrew")!;
 const hebrewQofOutline = hebrewOutline("ק");
+const HEBREW_RESH = ductusFor("ר", "hebrew")!;
+const hebrewReshOutline = hebrewOutline("ר");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1346,6 +1348,34 @@ describe("Hebrew ק — a joined top and right body followed by a lifted stem", 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_QOF.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ר — one rounded top-and-right run", () => {
+  const steps = ductusSteps(HEBREW_RESH);
+  const strip = ductusFilmstrip(HEBREW_RESH, hebrewReshOutline);
+
+  it("keeps the top bar and rounded right descent joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "round the top-right corner and continue down without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph with no completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewReshOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_RESH.strokes[0], 1),
     );
   });
 });
