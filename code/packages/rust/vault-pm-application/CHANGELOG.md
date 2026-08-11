@@ -2,6 +2,25 @@
 
 All notable changes to this package are documented here.
 
+## [0.35.0] - 2026-08-10
+
+### Added
+
+- Add a session-consuming audited item-list boundary and a redacted result
+  wrapper that carries both the durable next owner state and the original
+  closed operation result.
+- Add an exact wipe-on-drop entropy container for one trace, encrypted audit
+  event, and audit-only repository commit.
+
+### Security
+
+- Refuse audited access on pre-epoch vaults, and publish either a succeeded or
+  failed `ItemList` event before releasing any redacted list or authenticated
+  conflict result.
+- Withhold the underlying operation result when event publication fails, while
+  retaining the exact pending journal for recovery after ambiguous provider
+  success.
+
 ## [0.34.0] - 2026-08-10
 
 ### Added

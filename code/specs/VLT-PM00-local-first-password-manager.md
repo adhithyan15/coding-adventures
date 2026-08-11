@@ -1463,9 +1463,16 @@ changelog, focused build, and downstream validation.
           newly supplied encrypted event advances the commit, device counter,
           and durable audit head; exact replay after ambiguous provider success
           is covered before any access command adopts the boundary.
-9b-2c-5b. fail-closed access-event enforcement for every authenticated
-          list/show/history/search/verify/diagnose/export and later secret
-          disclosure path, including succeeded, denied, and failed outcomes.
+9b-2c-5b-1. completed reusable application access result/entropy boundary and
+            audited item-list proof: the session is consumed; success and
+            post-authentication failure publish before release; publication
+            failure exposes neither and retains exact recovery state.
+9b-2c-5b-2. extend that boundary across application
+            show/history/search/verify/diagnose/export and later secret
+            disclosure paths, including succeeded, denied, and failed outcomes.
+9b-2c-5b-3. adopt only audited application access methods in every
+            authenticated CLI path, with output strictly after durable owner
+            activation and real-process failure-ordering acceptance.
 9b-2c-5c. redacted authenticated audit list/show plus trace-aware output and
           tamper/fault/real-process acceptance.
 9b-2c-4c. explicit pre-audit-vault migration epoch, exposed only once every

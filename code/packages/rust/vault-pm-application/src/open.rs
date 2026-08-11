@@ -1,9 +1,9 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    add_item, delete_item, import_opened_portable_snapshot, merge_item_conflict, replace_item,
-    resolve_item_conflict, restore_item, AddItemRandomnessV1, DeleteItemRandomnessV1,
-    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1,
+    add_item, delete_item, import_opened_portable_snapshot, merge_item_conflict,
+    publish_audited_access, replace_item, resolve_item_conflict, restore_item, AddItemRandomnessV1,
+    AuditedAccessRandomnessV1, DeleteItemRandomnessV1, PortableImportRandomnessV1,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
@@ -13,6 +13,7 @@ use crate::{
     LocalVaultStateV1, ObjectKind, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
     V1Keys,
 };
+use coding_adventures_vault_pm_audit::{AuditActionV1, AuditOutcomeV1};
 use coding_adventures_vault_pm_domain::{
     CollectionId, ItemCandidate, ItemDocument, ItemId, ItemState, RedactedItemView, RevisionId,
 };
@@ -288,6 +289,48 @@ impl UnlockedVaultV1 {
             }
         }
         Ok(views)
+    }
+
+    /// Return the redacted item list only after its audit event and next owner
+    /// state are durable.
+    ///
+    /// This consumes the session so callers cannot keep reading from stale
+    /// pins after the audit-only commit advances the repository. Both a
+    /// successful list and a post-authentication list failure are recorded;
+    /// the latter is returned inside [`crate::AuditedAccessResultV1`] with the
+    /// durable next state. If event publication fails, this method returns that
+    /// storage or integrity error directly and releases no list or original
+    /// operation failure. Pre-audit sessions reject the boundary until an
+    /// explicit migration epoch has been installed.
+    pub fn audited_list_items(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<Vec<RedactedItemView>>, ApplicationError> {
+        if self.active.audit_event_head().is_none() {
+            return Err(ApplicationError::InvalidInput);
+        }
+        let operation = self.list_items();
+        let outcome = if operation.is_ok() {
+            AuditOutcomeV1::Succeeded
+        } else {
+            AuditOutcomeV1::Failed
+        };
+        let active = publish_audited_access(
+            &self.active,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            AuditActionV1::ItemList,
+            outcome,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, operation))
     }
 
     /// Search unambiguous live items using only approved redacted metadata.
@@ -1015,11 +1058,11 @@ mod tests {
     };
     use crate::{
         complete_generation_zero, decode_signed_audit_event, encode_item_revision,
-        encode_signed_commit, prepare_generation_zero, seal_object, CatalogV1,
-        GenerationZeroPolicyV1, GenerationZeroRandomness, ObjectKind, ObjectRandomness,
+        encode_signed_commit, prepare_generation_zero, seal_object, AuditedAccessRandomnessV1,
+        CatalogV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ObjectKind, ObjectRandomness,
         PublicationJournalV1, V1ApplicationRepositoryFactory, V1Keys, ADD_ITEM_RANDOM_BYTES,
-        DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
-        RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+        AUDITED_ACCESS_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES,
+        REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
     };
     use coding_adventures_canonical_cbor::{
         decode as decode_cbor, encode as encode_cbor, CborValue,
@@ -1323,6 +1366,14 @@ mod tests {
             *byte = (index as u8).wrapping_mul(41).wrapping_add(seed);
         }
         ResolveItemConflictRandomnessV1::new(bytes)
+    }
+
+    fn audited_access_randomness(seed: u8) -> AuditedAccessRandomnessV1 {
+        let mut bytes = [0; AUDITED_ACCESS_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(43).wrapping_add(seed);
+        }
+        AuditedAccessRandomnessV1::new(bytes)
     }
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
@@ -1971,6 +2022,278 @@ mod tests {
         assert_eq!(report.commit_count(), 2);
         assert_eq!(report.catalog_count(), 1);
         assert_eq!(report.audit_event_count(), 1);
+        assert_eq!(backend.pending_faults().unwrap(), 0);
+    }
+
+    #[test]
+    fn audited_list_refuses_pre_audit_sessions_without_changing_owner_state() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+
+        assert!(matches!(
+            session.audited_list_items(704, audited_access_randomness(0xac), &local),
+            Err(ApplicationError::InvalidInput)
+        ));
+        assert_eq!(
+            local.0.lock().unwrap().as_deref(),
+            Some(exact_active.as_slice())
+        );
+    }
+
+    #[test]
+    fn audited_list_releases_redacted_results_only_with_durable_next_state() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            705,
+            None,
+            None,
+            [0xad; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let catalog_root = session.active.catalog_root();
+        let prior_counter = session.active.last_device_counter();
+
+        let audited = session
+            .audited_list_items(706, audited_access_randomness(0xae), &local)
+            .unwrap();
+        assert!(audited.operation_succeeded());
+        assert_eq!(audited.active_state().catalog_root(), catalog_root);
+        assert_eq!(
+            audited.active_state().last_device_counter(),
+            prior_counter + 1
+        );
+        assert_eq!(
+            format!("{audited:?}"),
+            "AuditedAccessResultV1 { operation_succeeded: true, .. }"
+        );
+        let (_, operation) = audited.into_parts();
+        assert_eq!(operation.unwrap(), Vec::new());
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 3);
+        assert_eq!(report.catalog_count(), 1);
+        assert_eq!(report.audit_event_count(), 2);
+        let event_head = reopened.active.audit_event_head().unwrap();
+        let object = reopened._repository.read_object(event_head).unwrap();
+        let plaintext =
+            open_object(&reopened._keys, ObjectKind::AuditEvent, object.frame()).unwrap();
+        let event = decode_signed_audit_event(&plaintext).unwrap();
+        assert_eq!(event.event().action(), AuditActionV1::ItemList);
+        assert_eq!(event.event().outcome(), AuditOutcomeV1::Succeeded);
+    }
+
+    #[test]
+    fn audited_list_records_post_authentication_conflict_before_releasing_failure() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0xaf; 16]);
+        let (publication, _) = pending_live_conflict_publication(&active, item_id);
+        let pending = LocalVaultStateV1::pending_publication(active, publication).unwrap();
+        *local.0.lock().unwrap() = Some(pending.encode().unwrap());
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            707,
+            None,
+            None,
+            [0xb0; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let catalog_root = session.active.catalog_root();
+
+        let audited = session
+            .audited_list_items(708, audited_access_randomness(0xb1), &local)
+            .unwrap();
+        assert!(!audited.operation_succeeded());
+        assert_eq!(audited.active_state().catalog_root(), catalog_root);
+        let (_, operation) = audited.into_parts();
+        assert_eq!(operation, Err(ApplicationError::ConflictRequired));
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.catalog_count(), 2);
+        assert_eq!(report.audit_event_count(), 2);
+        let event_head = reopened.active.audit_event_head().unwrap();
+        let object = reopened._repository.read_object(event_head).unwrap();
+        let plaintext =
+            open_object(&reopened._keys, ObjectKind::AuditEvent, object.frame()).unwrap();
+        let event = decode_signed_audit_event(&plaintext).unwrap();
+        assert_eq!(event.event().action(), AuditActionV1::ItemList);
+        assert_eq!(event.event().outcome(), AuditOutcomeV1::Failed);
+    }
+
+    #[test]
+    fn audited_list_withholds_result_during_ambiguous_provider_failure() {
+        let passphrase = b"active passphrase";
+        let prepared = prepare_generation_zero(
+            Zeroizing::new(passphrase.to_vec()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 10).unwrap(),
+            randomness(),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let local = MemoryLocalStateStore::default();
+        let bootstrap = MemoryBootstrapStore::default();
+        let backend = Arc::new(FaultInjectingObjectStore::new(InMemoryObjectStore::new()));
+        let factory = V1ApplicationRepositoryFactory::from_shared(Arc::clone(&backend));
+        complete_generation_zero(prepared, &local, &bootstrap, &factory).unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        activate_audit_epoch_for_test(
+            &session.active,
+            &session._keys,
+            &session._local_secret,
+            session._repository.as_ref(),
+            709,
+            None,
+            None,
+            [0xb2; AUDIT_ONLY_TEST_RANDOM_BYTES],
+            &local,
+        )
+        .unwrap();
+        drop(session);
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let catalog_root = session.active.catalog_root();
+        backend
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+
+        assert!(matches!(
+            session.audited_list_items(710, audited_access_randomness(0xb3), &local),
+            Err(ApplicationError::StorageUnavailable)
+        ));
+        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::PendingPublication {
+            active,
+            publication,
+        } = LocalVaultStateV1::decode(&exact_pending).unwrap()
+        else {
+            panic!("audited access failure must retain the exact pending journal")
+        };
+        assert_eq!(active.catalog_root(), catalog_root);
+        assert_eq!(publication.catalog_root(), catalog_root);
+        assert_eq!(publication.objects().len(), 1);
+        assert_eq!(
+            publication.audit_event_head(),
+            publication.objects()[0].id().ok()
+        );
+
+        let recovered = recover_pending_publication(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(recovered.catalog_root(), catalog_root);
+        let reopened = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 3);
+        assert_eq!(report.catalog_count(), 1);
+        assert_eq!(report.audit_event_count(), 2);
         assert_eq!(backend.pending_faults().unwrap(), 0);
     }
 
