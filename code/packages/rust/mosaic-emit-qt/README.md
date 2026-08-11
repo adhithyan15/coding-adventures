@@ -115,6 +115,7 @@ sample or inert UI. Permissive builds retain the optional bridge above.
 | `Text`        | `Text { text: "..." }` or `Text { text: slotName }` for slot-ref content    |
 | `Spacer`      | `Item { Layout.fillWidth: true; Layout.fillHeight: true }`                  |
 | `Image`       | `Image { source: "..." }` or `Image { source: slotName }`                   |
+| `Icon`        | `BusyIndicator` for `spinner`; accessible semantic `Label` otherwise         |
 | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
 | `Input`       | `TextArea { ... }` when multiline; otherwise the `HostInput` lowering       |
@@ -124,9 +125,9 @@ sample or inert UI. Permissive builds retain the optional bridge above.
 | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (from Controls 2.15) |
 
 The `QtQuick.Controls 2.15` import is added **only when** the layout
-tree uses a Controls-backed primitive, including multiline `Input` and
-placeholder-capable `Input`/`HostInput`, keeping the import set minimal for
-components that don't need it.
+tree uses a Controls-backed primitive, including `Icon`, multiline `Input`,
+and placeholder-capable `Input`/`HostInput`, keeping the import set minimal
+for components that don't need it.
 
 ### Host primitive prop mappings (UI29 §3)
 

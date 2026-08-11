@@ -103,6 +103,9 @@ Qt JSON/variant APIs. Explicit package host assets can still replace
 builds retain the optional-host seam; `native-complete` builds compile the
 standard binding unconditionally, validate Rust-provided required MIL props
 before QML construction, and never mount an inert or sample-backed component.
+Every exported QML component is listed in the generated
+`qt_add_qml_module`, so CMake and Qt's QML cache compiler validate the complete
+package while the application continues to mount the manifest's first export.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative

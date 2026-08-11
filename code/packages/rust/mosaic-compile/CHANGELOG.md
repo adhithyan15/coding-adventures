@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed - Qt project shells compile complete packages
+
+Qt package projects now place all 23 reusable toolkit exports in the generated
+QML module. Linux CI compiles that complete module, including the accessible
+native `BusyIndicator` Spinner, so broken sibling QML cannot hide behind the
+first mounted component.
+
 ### Fixed - SwiftUI project shells compile complete packages
 
 SwiftUI package projects now place every exported view in the SwiftPM

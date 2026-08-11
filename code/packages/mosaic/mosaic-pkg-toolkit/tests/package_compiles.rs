@@ -222,6 +222,11 @@ fn spinner_interface_matches_spec() {
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
     assert_eq!(slot_names, vec!["size", "variant", "aria-label"]);
     assert!(c.emits.is_empty(), "Spinner has no emits");
+    let mll_src = read_source("Spinner.mll");
+    assert!(
+        mll_src.contains("aria-label : slot: aria-label"),
+        "Spinner must wire its public accessible name into Icon"
+    );
 }
 
 /// Toast — bottom-anchored notification with title/message/open/variant

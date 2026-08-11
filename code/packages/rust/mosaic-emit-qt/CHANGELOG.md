@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native accessible icons and progress
+
+`Icon` now maps semantic names to accessible Qt Quick `Label` glyphs and the
+semantic `spinner` to Qt's native indeterminate `BusyIndicator`. Runtime glyph
+and accessibility-name bindings remain live, MSL color/size styling is
+preserved, and styled `Stack` containers retain their authored geometry.
+
 ### Added - runtime-required native-complete shell
 
 Qt project emission can now require Mosaic's standard Rust runtime. Strict QML

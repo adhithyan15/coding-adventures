@@ -1459,6 +1459,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 )?;
             }
             if let Some(proj) = r.project {
+                let cmake_lists =
+                    qt_cmake_with_package_exports(&proj.cmake_lists, component, components);
                 let runtime_binding = mosaic_app_bindings::qt_runtime_binding();
                 let contract = if require_runtime {
                     " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before constructing QML and exits explicitly if the contract is unavailable."
@@ -1479,7 +1481,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 // qmldir is the same shape as the index path — UI32
                 // §3.4 says --emit-project's shell IS the qmldir.
                 let flat: [(&str, &str); 6] = [
-                    ("CMakeLists.txt", &proj.cmake_lists),
+                    ("CMakeLists.txt", &cmake_lists),
                     ("main.cpp", &proj.main_cpp),
                     ("qmldir", &proj.qmldir),
                     ("README.md", &readme),
@@ -1608,6 +1610,19 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
     }
     Ok(written)
+}
+
+fn qt_cmake_with_package_exports(
+    generated: &str,
+    mounted_component: &str,
+    components: &[String],
+) -> String {
+    let marker = format!("  QML_FILES {mounted_component}.qml\n");
+    let mut source_set = String::from("  QML_FILES\n");
+    for component in components {
+        writeln!(source_set, "    {component}.qml").unwrap();
+    }
+    generated.replacen(&marker, &source_set, 1)
 }
 
 fn build_electron_package_json(
@@ -5953,6 +5968,30 @@ version = "1"
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("MOSAIC_APP_LIBRARY"));
         assert!(readme.contains("owns the application handle"));
+    }
+
+    #[test]
+    fn qt_project_shell_compiles_every_exported_component_in_qml_module() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component Qt package build");
+
+        let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt"))
+            .expect("generated CMakeLists.txt");
+        assert!(cmake.contains("  QML_FILES\n"));
+        for component in ["Grid", "Cell", "Column"] {
+            assert!(
+                cmake.contains(&format!("    {component}.qml")),
+                "{component} must participate in qt_add_qml_module:\n{cmake}"
+            );
+        }
     }
 
     #[test]

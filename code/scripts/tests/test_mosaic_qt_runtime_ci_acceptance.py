@@ -120,6 +120,15 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
         self.assertIn("--expect-missing-prop-failure", workflow)
         self.assertIn("--expect-required-failure", workflow)
+        self.assertIn("mosaic-qt-toolkit", workflow)
+        self.assertIn(
+            "pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt",
+            workflow,
+        )
+        self.assertIn(
+            'cmake --build "$toolkit_output/qt/build"',
+            workflow,
+        )
         self.assertIn(
             "--backend qt --output \"$strict_output\" --emit-project --profile native-complete",
             workflow,
