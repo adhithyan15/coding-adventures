@@ -268,10 +268,14 @@ Prioritized work items:
    outer-loop iteration represented by the parser's combined repair, matching
    the two same-token `adoption-agency-1.3` declarations in WPT `tests8.dat`
    and `tests19.dat` while preserving document, table-cell, and fragment DOM
-   output. Continue the
+   output. Formatting end tags whose older matching element is hidden behind
+   an open `applet`, `marquee`, or `object` marker now remain on generic
+   non-current end-tag recovery instead of emitting an adoption-agency error,
+   matching WPT `tests1.dat`'s marquee boundary rows while preserving marker,
+   foster-parenting, and fragment DOM output. Continue the
    fresh algorithm audit across the remaining active-formatting-list branches,
-   especially formatting scope exits, marker boundaries, and the inner-loop
-   node replacement limit.
+   especially repeated `nobr` starts in ordinary, table, and reconstructed
+   formatting contexts evidenced by WPT `tests26.dat`.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
