@@ -173,7 +173,7 @@ sitting upside down on a correct letter.
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and Hebrew א and ב
+and Hebrew א, ב, and ג
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -380,6 +380,12 @@ its top bar travels left-to-right and turns directly down the right side, then
 one lift precedes the left-to-right baseline. The lesson places an optional
 dagesh afterward, but base U+05D1's path and one-lift count correctly exclude
 that separate sound-changing mark.
+The series' dedicated Gimel/Dalet lesson adds a four-frame printed **ג**
+filmstrip: its short top bar, right stem, and short lower-right leg stay in one
+run, then one lift precedes the longer diagonal leg down-left. The lesson
+explicitly contrasts that angular printed form with a rounded cursive Gimel,
+so the source note preserves both while the learner path follows the vendored
+Noto Sans Hebrew outline.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

@@ -330,8 +330,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   explicitly. The same lesson's second, block-style **ב** then draws its top bar
   into the right descent, lifts once, and draws the baseline left-to-right. Its
   three-frame path excludes the separately placed optional dagesh from base
-  U+05D1's lift count. The remaining **175** prose part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 20,
+  U+05D1's lift count. The dedicated Gimel/Dalet lesson then verifies printed
+  **ג**: its short top bar joins the right stem and short lower-right leg,
+  then one lift precedes the longer diagonal leg down-left. The four-frame path
+  follows the Noto Sans Hebrew outline while preserving the lesson's visibly
+  different rounded cursive form as a documented variation. The remaining
+  **174** prose part orders across seven scripts
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 19,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

@@ -83,6 +83,8 @@ const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
 const hebrewBetOutline = hebrewOutline("ב");
+const HEBREW_GIMEL = ductusFor("ג", "hebrew")!;
+const hebrewGimelOutline = hebrewOutline("ג");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -801,6 +803,38 @@ describe("Hebrew ב — its top and right side precede the lifted baseline", () 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_BET.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ג — its joined top and right leg precede the lifted left leg", () => {
+  const steps = ductusSteps(HEBREW_GIMEL);
+  const strip = ductusFilmstrip(HEBREW_GIMEL, hebrewGimelOutline);
+
+  it("shows the sourced four movements across two strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short top bar from left to right",
+      "continue down the right stem without lifting",
+      "continue into the short lower-right leg",
+      "lift, restart at the lower junction, and draw the longer leg down-left",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("keeps the first angular run visible over the Noto Sans Hebrew outline", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewGimelOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_GIMEL.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_GIMEL.strokes[1], 1),
     );
   });
 });

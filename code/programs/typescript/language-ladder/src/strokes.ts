@@ -476,6 +476,68 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ב"),
   },
+  // The dedicated Gimel lesson's printed-form demonstration joins its short
+  // top bar to the right stem and short lower-right leg. It then lifts once,
+  // restarts at the lower junction, and draws the longer leg down-left. That
+  // angular order follows Noto Sans Hebrew while the source note preserves the
+  // lesson's visibly different rounded cursive alternative.
+  [ductusKey("hebrew", "ג")]: {
+    script: "hebrew",
+    glyph: "ג",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short top bar from left to right",
+            path: [
+              { x: 105, y: 555 },
+              { x: 145, y: 555 },
+              { x: 185, y: 550 },
+              { x: 220, y: 535 },
+              { x: 245, y: 510 },
+            ],
+          },
+          {
+            label: "continue down the right stem without lifting",
+            path: [
+              { x: 245, y: 510 },
+              { x: 260, y: 455 },
+              { x: 263, y: 380 },
+              { x: 263, y: 300 },
+              { x: 263, y: 220 },
+              { x: 265, y: 150 },
+            ],
+          },
+          {
+            label: "continue into the short lower-right leg",
+            path: [
+              { x: 265, y: 150 },
+              { x: 275, y: 110 },
+              { x: 286, y: 70 },
+              { x: 300, y: 25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the lower junction, and draw the longer leg down-left",
+            path: [
+              { x: 235, y: 155 },
+              { x: 215, y: 130 },
+              { x: 185, y: 100 },
+              { x: 150, y: 75 },
+              { x: 110, y: 55 },
+              { x: 70, y: 42 },
+              { x: 38, y: 40 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ג"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
