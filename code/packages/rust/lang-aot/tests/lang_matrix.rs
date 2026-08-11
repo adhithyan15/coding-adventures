@@ -1391,7 +1391,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin real x; x := 2.0 * 2.25; output(x) end",
+        src: "begin real x, y; x := 2.0 * 2.25; y := x; x := 9.0; output(y) end",
         expect: Expect::Stdout("4.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -6062,7 +6062,7 @@ fn algol_straight_line_static_real_variable_output_runs_on_every_available_stand
         .iter()
         .find(|program| {
             program.lang == Language::Algol60
-                && program.src.contains("x := 2.0 * 2.25; output(x)")
+                && program.src.contains("y := x; x := 9.0; output(y)")
         })
         .expect("the static real-variable program must remain in the matrix");
 
