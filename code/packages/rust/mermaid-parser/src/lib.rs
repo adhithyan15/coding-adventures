@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.35.0";
+pub const VERSION: &str = "0.36.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1349,6 +1349,12 @@ fn parse_sequence_participant(
         }
     };
     let id = take_sequence_actor_ref(cursor)?;
+    if created && participant_indices.contains_key(&id) {
+        return Err(token_error(
+            &declaration,
+            format!("cannot create duplicate sequence participant {id:?}"),
+        ));
+    }
     let mut inline_alias = None;
     if token_name(cursor.current()) == "CONFIG" {
         let config = cursor.advance().clone();
@@ -1514,6 +1520,14 @@ fn parse_sequence_participant_box(
         }
         let id = parse_sequence_participant(cursor, diagram, participant_indices, false)?;
         let index = participant_indices[&id];
+        if let Some(existing_group) = diagram.participants[index].group_id.as_deref() {
+            if existing_group != group_id {
+                return Err(token_error(
+                    cursor.current(),
+                    format!("sequence participant {id:?} cannot belong to multiple boxes"),
+                ));
+            }
+        }
         diagram.participants[index].group_id = Some(group_id.clone());
         cursor.skip_terminators();
     }
@@ -3448,6 +3462,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn sequence_rejects_duplicate_created_participants() {
+        let error = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Worker\ncreate actor Worker\nA->>Worker: Start\n",
+        )
+        .expect_err("create cannot reuse an existing participant ID");
+
+        assert!(error.message.contains("duplicate sequence participant"));
+    }
+
+    #[test]
     fn sequence_parses_participant_boxes() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nbox hsl(270, 100%, 50%) Client tier\nactor User\nparticipant API as Banking API\nend\nbox Services\nparticipant DB\nend\n",
@@ -3469,6 +3493,16 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         );
         assert_eq!(diagram.participants[0].group_id.as_deref(), Some("box-1"));
         assert_eq!(diagram.participants[2].group_id.as_deref(), Some("box-2"));
+    }
+
+    #[test]
+    fn sequence_rejects_participants_in_multiple_boxes() {
+        let error = parse_sequence_diagram(
+            "sequenceDiagram\nbox First\nparticipant API\nend\nbox Second\nparticipant API\nend\n",
+        )
+        .expect_err("a participant cannot move between boxes");
+
+        assert!(error.message.contains("cannot belong to multiple boxes"));
     }
 
     #[test]
@@ -3935,7 +3969,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.35.0");
+        assert_eq!(crate::VERSION, "0.36.0");
     }
 
     #[test]
