@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.3.0
+
+- Reserve line-aware geometry for backend-neutral note nodes.
+
 ## 0.2.0
 
 - Give backend-neutral bar nodes compact fork/join geometry.

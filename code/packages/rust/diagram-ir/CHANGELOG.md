@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.25.0
+
+- Add backend-neutral note nodes and note-association edges for annotated diagrams.
+
 ## 0.24.0
 
 - Add a backend-neutral bar node shape for state fork and join pseudostates.

@@ -118,6 +118,43 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_dash_offset: None,
             })
         }
+        DiagramShape::Note => {
+            let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo {
+                        x: node.x,
+                        y: node.y,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x + node.width - fold,
+                        y: node.y,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x + node.width,
+                        y: node.y + fold,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x + node.width,
+                        y: node.y + node.height,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x,
+                        y: node.y + node.height,
+                    },
+                    PathCommand::Close,
+                ],
+                fill: Some(node.style.fill.clone()),
+                fill_rule: None,
+                stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })
+        }
         DiagramShape::Rect | DiagramShape::Bar => PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
@@ -326,11 +363,11 @@ where
 
     // ── 1. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
     for edge in &diagram.edges {
-        instructions.push(PaintInstruction::Path(line_path(
-            &edge.points,
-            &edge.style.stroke,
-            edge.style.stroke_width,
-        )));
+        let mut path = line_path(&edge.points, &edge.style.stroke, edge.style.stroke_width);
+        if edge.kind == EdgeKind::NoteAssociation {
+            path.stroke_dash = Some(vec![4.0, 4.0]);
+        }
+        instructions.push(PaintInstruction::Path(path));
         if let Some(tip) = arrowhead(edge) {
             instructions.push(PaintInstruction::Path(tip));
         }
@@ -3151,6 +3188,25 @@ mod tests {
             !diamond_paths.is_empty(),
             "expected a diamond PaintPath with 5 commands"
         );
+    }
+
+    #[test]
+    fn note_node_and_association_use_backend_neutral_paths() {
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::Note;
+        layout.edges[0].kind = EdgeKind::NoteAssociation;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.commands.len() == 6)
+        }));
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
+        }));
     }
 
     #[test]

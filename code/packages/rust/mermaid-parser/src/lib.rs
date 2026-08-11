@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.51.0";
+pub const VERSION: &str = "0.52.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1059,6 +1059,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut node_indices = HashMap::new();
     let mut edges = Vec::new();
     let mut pseudo_index = 0;
+    let mut note_index = 0;
     let mut class_styles: HashMap<String, DiagramStyle> = HashMap::new();
     let mut pending_classes: Vec<(Vec<String>, String)> = Vec::new();
 
@@ -1103,6 +1104,69 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     &mut pending_classes,
                 );
             }
+        } else if cursor.current().value.eq_ignore_ascii_case("note") {
+            cursor.advance();
+            let note_is_left = if cursor.current().value.eq_ignore_ascii_case("left") {
+                cursor.advance();
+                true
+            } else if cursor.current().value.eq_ignore_ascii_case("right") {
+                cursor.advance();
+                false
+            } else {
+                return Err(token_error(
+                    cursor.current(),
+                    "expected left or right state note placement",
+                ));
+            };
+            if !cursor.current().value.eq_ignore_ascii_case("of") {
+                return Err(token_error(
+                    cursor.current(),
+                    "expected of after note placement",
+                ));
+            }
+            cursor.advance();
+            let state_id = take_state_ref(&mut cursor)?;
+            cursor.consume_if("COLON").ok_or_else(|| {
+                token_error(cursor.current(), "expected ':' before state note text")
+            })?;
+            let text = take_state_text(&mut cursor);
+            if !node_indices.contains_key(&state_id) {
+                upsert_state_node(
+                    &mut nodes,
+                    &mut node_indices,
+                    state_id.clone(),
+                    state_id.clone(),
+                );
+            }
+            let note_id = format!("__state_note_{note_index}");
+            note_index += 1;
+            upsert_state_node(&mut nodes, &mut node_indices, note_id.clone(), text);
+            let note = &mut nodes[node_indices[&note_id]];
+            note.shape = Some(DiagramShape::Note);
+            note.style = Some(DiagramStyle {
+                fill: Some("#fff7cc".into()),
+                stroke: Some("#a16207".into()),
+                text_color: Some("#713f12".into()),
+                corner_radius: Some(0.0),
+                ..Default::default()
+            });
+            let (from, to) = if note_is_left {
+                (note_id, state_id)
+            } else {
+                (state_id, note_id)
+            };
+            edges.push(GraphEdge {
+                id: None,
+                from,
+                to,
+                label: None,
+                kind: EdgeKind::NoteAssociation,
+                style: Some(DiagramStyle {
+                    stroke: Some("#a16207".into()),
+                    stroke_width: Some(1.5),
+                    ..Default::default()
+                }),
+            });
         } else if cursor.current().value.eq_ignore_ascii_case("style") {
             cursor.advance();
             let id = take_state_ref(&mut cursor)?;
@@ -4126,6 +4190,31 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_attached_notes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady --> Running\nnote left of Ready: Waiting for work\nnote right of Running: Work is active\n",
+        )
+        .expect("attached state notes should parse");
+
+        let notes: Vec<_> = diagram
+            .nodes
+            .iter()
+            .filter(|node| node.shape == Some(DiagramShape::Note))
+            .collect();
+        assert_eq!(notes.len(), 2);
+        assert_eq!(notes[0].label.text, "Waiting for work");
+        assert_eq!(notes[1].label.text, "Work is active");
+        let note_edges: Vec<_> = diagram
+            .edges
+            .iter()
+            .filter(|edge| edge.kind == EdgeKind::NoteAssociation)
+            .collect();
+        assert_eq!(note_edges.len(), 2);
+        assert_eq!(note_edges[0].to, "Ready");
+        assert_eq!(note_edges[1].from, "Running");
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4896,7 +4985,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.51.0");
+        assert_eq!(crate::VERSION, "0.52.0");
     }
 
     #[test]
