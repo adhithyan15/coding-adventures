@@ -258,7 +258,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lifts once for the dot below. Its three-frame path preserves the lesson's
   two-way-connector context, Arabic-scoped provenance, and the deliberate
   contrast with Urdu's dot-first ج while following the isolated Noto Naskh
-  outline. The remaining **191** prose part orders across seven scripts (`arabic` 17,
+  outline. The page body does not link Haa, but its WordPress attachment ledger
+  exposes `Haa.mov`. That clip opens while **ح**'s short left stem is already
+  underway, visibly lengthens it downward through 00:00.15, then lifts once and
+  restarts near its top at 00:00.32. The second run sweeps down-right and around
+  the dotless bowl through 00:00.82. Its three-frame path therefore preserves a
+  source-specific stem-first order instead of copying Jeem's body-first motion.
+  The remaining **190** prose part orders across seven scripts (`arabic` 16,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

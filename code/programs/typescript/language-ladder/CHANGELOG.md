@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-haa ductus (HL-C09AM)
+
+- Resolve the source page's hidden Haa attachment and render **ح** in three
+  evidence-aligned frames: its short left stem, a lifted restart near the stem's
+  top, and the continuous dotless bowl.
+- Keep the one-lift, stem-first motion distinct from adjacent Jeem's body-first
+  path while fitting the same isolated Noto Naskh skeleton.
+- Preserve two-way-connector context and script-scoped Arabic provenance, with
+  Khaa queued from the same attachment ledger.
+
 ### Added — cited Arabic independent-jeem ductus (HL-C09AL)
 
 - Record that the page's linked Thaa asset actually writes another two-dot Taa,
