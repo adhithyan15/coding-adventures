@@ -4,6 +4,15 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Hebrew Samekh (HL-C09BR)
+
+- Verify printed **ס** from Aural Writing's full-alphabet demonstration as one
+  clockwise loop: flat top, rounded right side, leftward base, and closing left side.
+- Preserve the source's rounder purple cursive oval while fitting the printed
+  zero-lift order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 162 entries; Hebrew has 7 outstanding, with
+  the same source's Ayin demonstration queued next.
+
 ### Added - source-verified Hebrew Nun (HL-C09BQ)
 
 - Replace the queued non-writing Nun video with Aural Writing's auditable

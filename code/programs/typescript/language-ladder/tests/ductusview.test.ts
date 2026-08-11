@@ -107,6 +107,8 @@ const HEBREW_MEM = ductusFor("מ", "hebrew")!;
 const hebrewMemOutline = hebrewOutline("מ");
 const HEBREW_NUN = ductusFor("נ", "hebrew")!;
 const hebrewNunOutline = hebrewOutline("נ");
+const HEBREW_SAMEKH = ductusFor("ס", "hebrew")!;
+const hebrewSamekhOutline = hebrewOutline("ס");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1183,6 +1185,36 @@ describe("Hebrew נ — one joined printed hook", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_NUN.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ס — one closed clockwise printed loop", () => {
+  const steps = ductusSteps(HEBREW_SAMEKH);
+  const strip = ductusFilmstrip(HEBREW_SAMEKH, hebrewSamekhOutline);
+
+  it("keeps the top, right side, base, and closing left side joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the flat top from left to right",
+      "round down the right side without lifting",
+      "sweep left along the base without lifting",
+      "climb the left side and close the loop without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact closed Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewSamekhOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_SAMEKH.strokes[0], 3),
     );
   });
 });

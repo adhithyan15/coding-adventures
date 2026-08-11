@@ -1037,6 +1037,61 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("נ"),
   },
+  // Printed Samekh closes one continuous clockwise loop. The source's
+  // immediately adjacent cursive form rounds the same zero-lift movement.
+  [ductusKey("hebrew", "ס")]: {
+    script: "hebrew",
+    glyph: "ס",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the flat top from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 170, y: 555 },
+              { x: 275, y: 555 },
+              { x: 365, y: 550 },
+            ],
+          },
+          {
+            label: "round down the right side without lifting",
+            path: [
+              { x: 365, y: 550 },
+              { x: 455, y: 520 },
+              { x: 525, y: 430 },
+              { x: 550, y: 325 },
+              { x: 535, y: 200 },
+              { x: 465, y: 90 },
+              { x: 365, y: 35 },
+            ],
+          },
+          {
+            label: "sweep left along the base without lifting",
+            path: [
+              { x: 365, y: 35 },
+              { x: 285, y: 30 },
+              { x: 205, y: 55 },
+              { x: 145, y: 115 },
+            ],
+          },
+          {
+            label: "climb the left side and close the loop without lifting",
+            path: [
+              { x: 145, y: 115 },
+              { x: 120, y: 210 },
+              { x: 120, y: 315 },
+              { x: 125, y: 410 },
+              { x: 150, y: 490 },
+              { x: 120, y: 535 },
+              { x: 70, y: 555 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ס"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Samekh ductus (HL-C09BR)
+
+- Render **ס** in four evidence-aligned frames: draw the flat top, round down
+  the right side, sweep left along the base, and climb to close without lifting.
+- Preserve the adjacent purple cursive form's rounder oval while keeping the
+  source's single clockwise printed run explicit.
+- Repair the README's Hebrew path inventory and queue Ayin from the same source.
+
 ### Added — cited Hebrew Nun ductus (HL-C09BQ)
 
 - Replace the queued expository Nun video with Aural Writing's auditable

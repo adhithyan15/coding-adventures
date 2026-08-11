@@ -378,10 +378,14 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   **נ** in one run: draw the small head left-to-right, continue down the right
   side, and turn left along the base. Its three-frame Noto Sans Hebrew path
   preserves the source's rounder purple cursive hook while replacing a queued
-  expository video that never exposed pen order.
-  The remaining **163** prose
+  expository video that never exposed pen order. The same source next verifies
+  printed **ס** as one clockwise loop: draw the flat top left-to-right, round
+  down the right side, sweep left along the base, then climb the left side to
+  close without lifting. Its four-frame path preserves the adjacent purple
+  cursive form's rounder oval while keeping the demonstrated zero-lift order.
+  The remaining **162** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 8,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 7,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
