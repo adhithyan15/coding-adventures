@@ -3694,9 +3694,9 @@ impl Compiler {
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
-        if var_ty != ScalarType::Integer {
+        if !matches!(var_ty, ScalarType::Integer | ScalarType::Real) {
             return Err(CompileError::Type(format!(
-                "for controlled variable must be integer, got {}",
+                "for controlled variable must be arithmetic, got {}",
                 var_ty.name()
             )));
         }
@@ -3716,7 +3716,7 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
-            self.emit_for_element(target, elem, body)?;
+            self.emit_for_element(target, var_ty, elem, body)?;
         }
         Ok(())
     }
@@ -3770,10 +3770,12 @@ impl Compiler {
     ) -> Result<(), CompileError> {
         if array_subscripts(target).is_some() {
             let (binding, zero) = self.resolve_array_index(target)?;
-            if binding.ty != ScalarType::Integer || value.ty != ScalarType::Integer {
-                return Err(CompileError::Type(
-                    "for controlled variable and assigned value must be integer".into(),
-                ));
+            if binding.ty != value.ty {
+                return Err(CompileError::Type(format!(
+                    "for controlled variable is {} but assigned value is {}",
+                    binding.ty.name(),
+                    value.ty.name()
+                )));
             }
             self.emit(IIRInstr::new(
                 "array_set",
@@ -3783,7 +3785,7 @@ impl Compiler {
                     Operand::Var(zero),
                     Operand::Var(value.slot),
                 ],
-                "i64",
+                binding.ty.iir(),
             ));
             return Ok(());
         }
@@ -3794,21 +3796,23 @@ impl Compiler {
     fn emit_for_element(
         &mut self,
         target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
         if direct_tokens(elem).iter().any(|t| t.value == "while") {
-            return self.emit_for_while(target, elem, body);
+            return self.emit_for_while(target, target_ty, elem, body);
         }
         if direct_tokens(elem).iter().any(|t| t.value == "step") {
-            return self.emit_for_step_until(target, elem, body);
+            return self.emit_for_step_until(target, target_ty, elem, body);
         }
-        self.emit_for_once(target, elem, body)
+        self.emit_for_once(target, target_ty, elem, body)
     }
 
     fn emit_for_once(
         &mut self,
         target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3823,11 +3827,7 @@ impl Compiler {
         }
 
         let value = self.emit_expr(arith_nodes[0])?;
-        if value.ty != ScalarType::Integer {
-            return Err(CompileError::Type(
-                "single-value for element must be integer".into(),
-            ));
-        }
+        let value = self.coerce_value(value, target_ty, "single-value for element")?;
         self.emit_for_target_write(target, value)?;
         self.emit_statement(body)
     }
@@ -3835,6 +3835,7 @@ impl Compiler {
     fn emit_for_step_until(
         &mut self,
         target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3849,19 +3850,14 @@ impl Compiler {
         }
 
         let start = self.emit_expr(arith_nodes[0])?;
+        let start = self.coerce_value(start, target_ty, "for initial value")?;
         let step = self.emit_expr(arith_nodes[1])?;
+        let step = self.coerce_value(step, target_ty, "for step")?;
         let limit = self.emit_expr(arith_nodes[2])?;
-        if start.ty != ScalarType::Integer
-            || step.ty != ScalarType::Integer
-            || limit.ty != ScalarType::Integer
-        {
-            return Err(CompileError::Type(
-                "for bounds and step must be integer".into(),
-            ));
-        }
+        let limit = self.coerce_value(limit, target_ty, "for limit")?;
         self.emit_for_target_write(target, start)?;
 
-        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let zero = self.emit_const(target_ty, target_ty.default_operand());
         let loop_label = self.fresh_label("for_loop");
         let negative_check_label = self.fresh_label("for_negative_check");
         let body_label = self.fresh_label("for_body");
@@ -3873,13 +3869,13 @@ impl Compiler {
             "cmp_ge",
             Some(step_non_negative.clone()),
             vec![Operand::Var(step.slot.clone()), Operand::Var(zero)],
-            // The guard compares **integer** operands (step vs 0), so the
-            // comparison's `type_hint` is the *operand* width `i64` — not the
+            // The guard compares operands at the controlled variable's width,
+            // so the comparison's `type_hint` is `i64` or `f64` — not the
             // boolean *result* type. A code-gen backend (LLVM `lower_cmp`) reads
-            // this hint as the `icmp` operand type, so `"bool"` would emit the
+            // this hint as the comparison operand type, so `"bool"` would emit
             // invalid `icmp i1 <i64>, <i64>`. This mirrors the regular relational
             // path, which already tags the cmp with `lhs.ty.iir()`.
-            "i64",
+            target_ty.iir(),
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -3900,7 +3896,7 @@ impl Compiler {
                 Operand::Var(loop_value.slot),
                 Operand::Var(limit.slot.clone()),
             ],
-            "i64", // operand width (loop var vs limit, both integer) — see above
+            target_ty.iir(),
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -3925,7 +3921,7 @@ impl Compiler {
                 Operand::Var(loop_value.slot),
                 Operand::Var(limit.slot.clone()),
             ],
-            "i64", // operand width (loop var vs limit, both integer) — see above
+            target_ty.iir(),
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -3942,13 +3938,13 @@ impl Compiler {
             "add",
             Some(next.clone()),
             vec![Operand::Var(loop_value.slot), Operand::Var(step.slot)],
-            "i64",
+            target_ty.iir(),
         ));
         self.emit_for_target_write(
             target,
             ExprValue {
                 slot: next,
-                ty: ScalarType::Integer,
+                ty: target_ty,
             },
         )?;
         self.emit(IIRInstr::new(
@@ -3964,6 +3960,7 @@ impl Compiler {
     fn emit_for_while(
         &mut self,
         target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3979,11 +3976,7 @@ impl Compiler {
         self.emit_label(&loop_label);
 
         let value = self.emit_expr(arith_node)?;
-        if value.ty != ScalarType::Integer {
-            return Err(CompileError::Type(
-                "for while value expression must be integer".into(),
-            ));
-        }
+        let value = self.coerce_value(value, target_ty, "for while value expression")?;
         self.emit_for_target_write(target, value)?;
 
         let cond = self.emit_expr(cond_node)?;
@@ -6016,6 +6009,23 @@ mod tests {
                    index := 1; result := 36; \
                    for values[index] := 1 step 1 until 3 do \
                      result := result + values[index] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_for_controlled_variable_widens_integer_bounds() {
+        let src = "begin integer result; real cursor, total; total := 0.0; \
+                   for cursor := 1 step 1 until 6 do total := total + cursor; \
+                   result := entier(total * 2.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_array_element_can_be_a_for_controlled_variable() {
+        let src = "begin integer result; real total; real array cursor[1:1]; \
+                   total := 0.0; \
+                   for cursor[1] := 1 step 1 until 6 do total := total + cursor[1]; \
+                   result := entier(total * 2.0) end";
         assert_eq!(run_i64(src), 42);
     }
 
