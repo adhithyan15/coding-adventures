@@ -2854,17 +2854,44 @@ fn heap_ops_module() -> IIRModule {
     module_with(f)
 }
 
+/// AOT00-T1y: the default/no-operand `alloc` — every record/union/cons/
+/// closure constructor site — allocates under the MOVABLE `__twig_gc_alloc_pair`
+/// kind, matching `aarch64-backend`/`x86_64-backend`'s identical branch, not
+/// the conservative kind-0 `__twig_gc_alloc`.
 #[test]
-fn alloc_calls_gc_alloc_with_default_size_and_declares_extern() {
+fn alloc_default_size_calls_gc_alloc_pair_and_declares_extern() {
     let ll = lower(&heap_ops_module());
-    // Default payload is a 2-word LispyPair (16 bytes), matching the native backend.
-    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 16)"), "{ll}");
-    // The extern must be declared exactly once when `alloc` is used.
-    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
+    assert!(ll.contains("call i64 @__twig_gc_alloc_pair()"), "{ll}");
+    // The extern must be declared exactly once when a default-size `alloc` is used.
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc_pair()").count(), 1, "{ll}");
+    // The conservative allocator must NOT be declared when nothing needs it.
+    assert!(!ll.contains("@__twig_gc_alloc("), "{ll}");
+    assert!(!ll.contains("declare i64 @__twig_gc_alloc(i64)"), "{ll}");
 }
 
+/// AOT00-T1y: an explicit `16` operand is the same shape as the default and
+/// must take the identical movable-pair branch.
 #[test]
-fn alloc_honours_explicit_payload_size() {
+fn alloc_explicit_16_calls_gc_alloc_pair() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![Operand::Int(16)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_gc_alloc_pair()"), "{ll}");
+}
+
+/// AOT00-T1y: any OTHER explicit size still falls back to the conservative,
+/// kind-0 `__twig_gc_alloc` — its layout isn't the known `{0,8}` pair shape,
+/// so a precise ref-map would be unsound. Unchanged behavior from before
+/// this fix.
+#[test]
+fn alloc_non_pair_size_still_calls_conservative_gc_alloc() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -2876,6 +2903,31 @@ fn alloc_honours_explicit_payload_size() {
     );
     let ll = lower(&module_with(f));
     assert!(ll.contains("call i64 @__twig_gc_alloc(i64 24)"), "{ll}");
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
+    // The pair allocator must NOT be declared when nothing needs it.
+    assert!(!ll.contains("__twig_gc_alloc_pair"), "{ll}");
+}
+
+/// AOT00-T1y: a module using BOTH shapes (default pair + a non-pair explicit
+/// size) declares both externs exactly once each — no cross-contamination
+/// between the two `used_gc_alloc*` flags.
+#[test]
+fn alloc_mixed_sizes_declare_both_externs_once_each() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("a".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("alloc", Some("b".into()), vec![Operand::Int(32)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_gc_alloc_pair()"), "{ll}");
+    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 32)"), "{ll}");
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc_pair()").count(), 1, "{ll}");
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
 }
 
 #[test]

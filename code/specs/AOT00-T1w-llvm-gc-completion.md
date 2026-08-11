@@ -155,10 +155,12 @@ already being linked).
 
 - **WASM's linear-memory strings/arrays** — a separate backend, separate
   crate (`iir-to-wasm`), tracked as Part 3 of this pass.
-- **A per-kind precise interior trace for LLVM's `alloc`'d objects** — same
+- ~~**A per-kind precise interior trace for LLVM's `alloc`'d objects** — same
   kind-0/conservative boundary `AOT00-T1v` draws for `vm-core`; LLVM shares
   the identical `gc-core-capi` engine, so the same boundary applies
-  unchanged.
+  unchanged.~~ **Closed by `AOT00-T1y`**: LLVM's default/16-byte `alloc`
+  shape now allocates under the same movable `__twig_gc_alloc_pair` kind
+  `aarch64-backend`/`x86_64-backend` already use.
 - **Compaction-awareness in LLVM codegen** — `__gc_alloc_kind`'s auto-collect
   may already relocate objects under `gc-core`'s adaptive policy (shared with
   every other consumer of this allocator); this round didn't need to change
