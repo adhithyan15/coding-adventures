@@ -951,6 +951,77 @@ impl UnlockedVaultV1 {
         )
     }
 
+    /// Delete the sole current live revision selected internally by item ID.
+    ///
+    /// This keeps the exact optimistic-mutation revision capability inside the
+    /// application boundary. Missing and tombstoned items return `NotFound`;
+    /// current conflicts return `ConflictRequired`. When an audit epoch is
+    /// active, the resulting `ItemDelete` event binds the internally selected
+    /// revision atomically with the causal tombstone publication.
+    pub fn delete_current_item(
+        self,
+        item_id: ItemId,
+        deleted_at_ms: u64,
+        wall_time_ms: u64,
+        randomness: DeleteItemRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let expected_revision = self
+            .current_item_revision(item_id)?
+            .ok_or(ApplicationError::NotFound)?;
+        self.delete_item(
+            expected_revision,
+            deleted_at_ms,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
+    }
+
+    /// Delete the sole current live revision, recording failed preconditions.
+    ///
+    /// Successful deletion uses the ordinary atomic mutation publication, so
+    /// the `ItemDelete` event and tombstone share one causal commit. Missing,
+    /// tombstoned, and conflicted items instead publish a failed `ItemDelete`
+    /// event before the closed operation error becomes observable. Audit-event
+    /// publication failure supersedes and withholds that operation error.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_delete_current_item(
+        self,
+        item_id: ItemId,
+        deleted_at_ms: u64,
+        wall_time_ms: u64,
+        mutation_randomness: DeleteItemRandomnessV1,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let expected_revision = self
+            .current_item_revision(item_id)
+            .and_then(|revision| revision.ok_or(ApplicationError::NotFound));
+        match expected_revision {
+            Ok(expected_revision) => {
+                let active = self.delete_item(
+                    expected_revision,
+                    deleted_at_ms,
+                    wall_time_ms,
+                    mutation_randomness,
+                    local_state_store,
+                )?;
+                Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+            }
+            Err(error) => self.finish_audited_access(
+                AuditActionV1::ItemDelete,
+                Some(item_id),
+                None,
+                wall_time_ms,
+                failure_randomness,
+                local_state_store,
+                Err(error),
+            ),
+        }
+    }
+
     /// Restore one reachable historical live revision as a new current live
     /// revision and return the resulting durable active owner state.
     ///
@@ -6384,6 +6455,109 @@ mod tests {
             local.0.lock().unwrap().as_deref(),
             Some(exact_deleted.as_slice())
         );
+    }
+
+    #[test]
+    fn audited_current_delete_records_success_and_repeat_failure() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let add_randomness = add_item_randomness(0x51);
+        let item_id = add_randomness.item_id();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .add_item(
+            new_login_document(item_id, "Audited delete", "secret"),
+            455,
+            add_randomness,
+            &local,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(456, audited_access_randomness(0x52), &local)
+        .unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let expected_revision = session.current_item_revision(item_id).unwrap().unwrap();
+        let deleted = session
+            .audited_delete_current_item(
+                item_id,
+                457,
+                458,
+                delete_item_randomness(0x53),
+                audited_access_randomness(0x54),
+                &local,
+            )
+            .unwrap();
+        assert!(deleted.operation_succeeded());
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemDelete,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(expected_revision),
+            )
+        );
+        let repeated = session
+            .audited_delete_current_item(
+                item_id,
+                459,
+                460,
+                delete_item_randomness(0x55),
+                audited_access_randomness(0x56),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(repeated.into_operation(), Err(ApplicationError::NotFound));
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemDelete,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 5);
+        assert_eq!(report.audit_event_count(), 3);
     }
 
     #[test]

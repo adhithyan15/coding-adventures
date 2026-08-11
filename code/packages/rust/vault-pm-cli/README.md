@@ -63,8 +63,13 @@ Passwords and notes bodies never enter the redacted projection; usernames,
 URLs, paths, object frames, and cryptographic details are never emitted by the
 history renderer.
 
-`item delete ITEM` resolves the authenticated sole current live revision and
-consumes the session through an immutable causal-tombstone mutation.
+`item delete ITEM` passes only the stable item identity into an application
+boundary that selects the sole current live revision and consumes the session
+through an immutable causal-tombstone mutation. In an active audit epoch, a
+successful delete publishes its signed event atomically with that tombstone;
+missing, already-deleted, and conflicted attempts publish a failed delete event
+before the CLI exposes the closed error. The exact optimistic revision
+capability never crosses into CLI orchestration.
 `history restore ITEM REVISION` first binds the exact canonical live revision
 to that item's bounded redacted history, then consumes the session while the
 application independently authenticates and copies it into a new current

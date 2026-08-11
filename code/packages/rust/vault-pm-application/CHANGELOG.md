@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.41.0] - 2026-08-11
+
+### Added
+
+- Add one application-selected current-item delete boundary that keeps the
+  exact optimistic revision capability out of transitional CLI hosts.
+- Add an audited variant that returns successful deletion only after its
+  atomic mutation event is durable and returns missing, tombstoned, or
+  conflicted failures only after a failed `ItemDelete` event is durable.
+
+### Security
+
+- Permit audit-only item-mutation events only for failed or denied outcomes;
+  successful item mutations must still bind their result revision atomically
+  to the causal mutation publication.
+
 ## [0.40.0] - 2026-08-11
 
 ### Added

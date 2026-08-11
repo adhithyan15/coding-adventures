@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Collapse active-epoch `item delete ITEM` into one application-selected
+  audited mutation: successful tombstones and failed authenticated
+  preconditions now become durable before the CLI reveals their outcome.
 - Route list, show, history list, audit verify, and unlocked doctor through
   signed publish-before-render access events whenever the vault audit epoch is
   active, while retaining backward-compatible pre-audit behavior.
