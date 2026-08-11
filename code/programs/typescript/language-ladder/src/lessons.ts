@@ -41,10 +41,9 @@ import type {
  * The glob is relative to THIS file; `../../../../learning/...` is the same
  * path `data.ts` already uses to reach the curriculum.
  */
-const LESSON_SOURCE_LOADERS = import.meta.glob(
-  "../../../../learning/human-languages/*/lessons/*.md",
-  { query: "?raw", import: "default" },
-) as Record<string, () => Promise<string>>;
+// The glob itself lives in `lesson-sources.ts` and is reached with `import()`,
+// so that its one-entry-per-lesson map stays out of the eager chunk. See the
+// comment there before making either of the functions below synchronous again.
 
 /** A lesson, ready for the UI and the scheduler. */
 export interface Lesson {
@@ -178,7 +177,8 @@ export function loadLessons(
 }
 
 /** IDs available in the bundled corpus without downloading lesson bodies. */
-export function bundledLessonIds(): string[] {
+export async function bundledLessonIds(): Promise<string[]> {
+  const { LESSON_SOURCE_LOADERS } = await import("./lesson-sources.ts");
   return Object.keys(LESSON_SOURCE_LOADERS)
     .map(lessonIdFromPath)
     .filter((id) => id !== "")
@@ -193,6 +193,7 @@ export function bundledLessonIds(): string[] {
 export async function loadBundledLessons(
   lessonIds?: Iterable<string>,
 ): Promise<Lesson[]> {
+  const { LESSON_SOURCE_LOADERS } = await import("./lesson-sources.ts");
   const wanted = lessonIds ? new Set(lessonIds) : null;
   const entries = Object.entries(LESSON_SOURCE_LOADERS).filter(([path]) => {
     const id = lessonIdFromPath(path);

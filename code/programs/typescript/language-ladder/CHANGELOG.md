@@ -18,6 +18,17 @@
   documented PRC stroke order, while fitting its medians to Noto Sans SC.
 - Establish a reusable source convention for the remaining Chinese inventory.
 
+### Fixed — the lesson-source map leaves the eager chunk (HL-C110)
+
+- Move `import.meta.glob` for lesson sources into `src/lesson-sources.ts` and
+  reach it with `import()`. The map compiles to one entry per lesson — a full
+  path plus a preload wrapper, ~200 bytes each — and at 1,793 lessons it was
+  **363,818 bytes of the eager chunk**, growing with every lesson added.
+- `bundledLessonIds()` and `loadBundledLessons()` are now async. The single
+  synchronous consumer was already inside an async function.
+- Largest eager chunk: **498,326 → 381,819 bytes**. It is now `script-data`,
+  which is per-script and does not grow with the lesson corpus.
+
 ### Added — cited Hebrew Tav ductus (HL-C09BY)
 
 - Render **ת** in four evidence-aligned frames: draw the top bar and right side

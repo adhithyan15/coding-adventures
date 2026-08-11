@@ -140,7 +140,10 @@ let mode: Mode = "learn";
 // The one new thing is that this state SURVIVES: it is keyed by lesson id and
 // written to localStorage (see progress.ts), so the app finally remembers you.
 const REVIEW_STORAGE = browserStorage();
-const BUNDLED_LESSON_IDS = new Set(bundledLessonIds());
+// Filled on the first corpus load. It cannot be built at module load any more:
+// the id list comes from the lesson-source map, which is deliberately lazy so
+// its ~27 kB of paths stay out of the eager chunk (HL-C110).
+let BUNDLED_LESSON_IDS: Set<string> | null = null;
 let LESSONS: Lesson[] = [];
 let LESSON_IDS: string[] = [];
 const AVAILABLE_LANGUAGE_IDS = LANGUAGE_CHAIN.filter((language) =>
@@ -259,8 +262,10 @@ function learnLessonIds(): Set<string> {
 }
 
 async function loadLearnCorpus(): Promise<void> {
+  BUNDLED_LESSON_IDS ??= new Set(await bundledLessonIds());
+  const known = BUNDLED_LESSON_IDS;
   const missing = [...learnLessonIds()].filter(
-    (id) => BUNDLED_LESSON_IDS.has(id) && !LESSON_BY_ID.has(id),
+    (id) => known.has(id) && !LESSON_BY_ID.has(id),
   );
   if (missing.length > 0) installLessons(await loadBundledLessons(missing));
 }
