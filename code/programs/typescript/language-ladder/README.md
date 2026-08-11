@@ -295,7 +295,13 @@ verified path: its dedicated clip draws the short upper head left-to-right,
 continues down and around the bowl in the same pen-down run, then lifts once for
 the dot below. The resulting three-frame filmstrip stays on the isolated Noto
 Naskh outline, keeps the lesson's two-way-connector context, and remains
-script-scoped separately from Urdu's dot-first ج. The runtime
+script-scoped separately from Urdu's dot-first ج. The same page does not link
+Haa in its body, but its WordPress attachment ledger exposes `Haa.mov`. That
+clip opens while **ح**'s short left stem is underway, finishes the descender,
+then lifts once and restarts near its top before sweeping continuously around
+the dotless bowl. Its three-frame filmstrip keeps that stem-first evidence
+distinct from Jeem's body-first order while fitting the isolated Noto Naskh
+outline. The runtime
 resolves each cited path back to the owning script and lazily loads that script's font,
 while Tamil continues to use Noto Sans Tamil. Unverified letters still
 fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

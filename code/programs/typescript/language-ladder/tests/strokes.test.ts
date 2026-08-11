@@ -28,6 +28,7 @@ const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
+const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -483,6 +484,21 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Arabic independent ح draws a short stem, then lifts once for its dotless bowl", () => {
+    expect(penLifts(ARABIC_HAA)).toBe(1);
+    expect(ARABIC_HAA.strokes).toHaveLength(2);
+    expect(ARABIC_HAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2]);
+    const stem = ARABIC_HAA.strokes[0].segments[0].path;
+    const head = ARABIC_HAA.strokes[1].segments[0].path;
+    const bowl = ARABIC_HAA.strokes[1].segments[1].path;
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(head[0]).toEqual(stem[0]);
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(
+      Math.min(...head.map((point) => point.y)),
+    );
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -626,6 +642,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("ج", ARABIC_JEEM.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ح", ARABIC_HAA.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
@@ -778,6 +797,20 @@ describe("handwriting ductus", () => {
       /body first.*00:05.1–00:05.8.*upper head.*left-to-right.*turns downward.*curls back left.*rounded bowl.*without lifting.*lifts once.*dot below.*00:06.3–00:06.5.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic body-first provenance.*Urdu dot-first/i,
     );
     expect(src.url).not.toBe(URDU_JIM.source.url);
+  });
+
+  it("Arabic independent ح traces its stem-first order to the page's Haa attachment", () => {
+    const src = ARABIC_HAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ج ح خ.*Haa.*00:00–00:01.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /Haa attachment.*two pen-down runs.*opens.*first mark already underway.*short left stem downward.*00:00.00–00:00.15.*lifts once.*restarts near the stem's upper portion.*00:00.32.*down-right and around the bowl.*without another lift.*00:00.82.*two-way connector.*contextual shapes.*no dot stroke.*stem-first order.*rather than inherited from ج.*Noto Naskh.*Arabic provenance/i,
+    );
+    expect(src.url).toBe(ARABIC_JEEM.source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

@@ -84,6 +84,8 @@ const ARABIC_TAA = ductusFor("ت", "arabic")!;
 const arabicTaaOutline = naskhOutline("ت");
 const ARABIC_JEEM = ductusFor("ج", "arabic")!;
 const arabicJeemOutline = naskhOutline("ج");
+const ARABIC_HAA = ductusFor("ح", "arabic")!;
+const arabicHaaOutline = naskhOutline("ح");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -834,6 +836,36 @@ describe("Arabic ج — a body-first hook-and-dot filmstrip", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_JEEM.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic ح — a stem-first, dotless filmstrip", () => {
+  const steps = ductusSteps(ARABIC_HAA);
+  const strip = ductusFilmstrip(ARABIC_HAA, arabicHaaOutline);
+
+  it("keeps the short stem separate from the restarted head-and-bowl run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short left stem downward",
+      "lift once and restart near the stem's top",
+      "continue down and around the bowl",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("uses Noto Naskh and retains the separate stem in the final bowl frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicHaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(ARABIC_HAA.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_HAA.strokes[1], 1),
     );
   });
 });
