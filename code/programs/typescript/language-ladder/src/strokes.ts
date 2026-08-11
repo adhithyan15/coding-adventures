@@ -846,6 +846,49 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("י"),
   },
+  // Printed Kaf sharpens the handwritten half-circle into one continuous
+  // top-right-bottom run: across the top, around the right side, then left.
+  [ductusKey("hebrew", "כ")]: {
+    script: "hebrew",
+    glyph: "כ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 135, y: 555 },
+              { x: 209, y: 555 },
+            ],
+          },
+          {
+            label: "continue down the rounded right side without lifting",
+            path: [
+              { x: 209, y: 555 },
+              { x: 300, y: 530 },
+              { x: 380, y: 470 },
+              { x: 420, y: 385 },
+              { x: 423, y: 294 },
+              { x: 420, y: 205 },
+              { x: 380, y: 120 },
+              { x: 300, y: 58 },
+              { x: 209, y: 38 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting",
+            path: [
+              { x: 209, y: 38 },
+              { x: 135, y: 38 },
+              { x: 60, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("כ"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

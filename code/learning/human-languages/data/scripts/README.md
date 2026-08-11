@@ -362,9 +362,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   verifies printed **י** as one tiny run: draw its head left-to-right and turn
   directly down through the short stem. Its two-frame Noto Sans Hebrew path
   preserves the comma-like handwritten form and the source's small print angle.
-  The remaining **167** prose
+  The dedicated Kaf lesson then verifies printed **כ** in one continuous run:
+  draw the top bar left-to-right, turn down the rounded right side, and turn
+  left along the base. Its three-frame Noto Sans Hebrew path preserves the
+  source's rounded handwritten half-circle while sharpening the printed corners.
+  The remaining **166** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 12,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 11,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

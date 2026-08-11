@@ -34,6 +34,7 @@ const HEBREW_ZAYIN = DUCTUS[ductusKey("hebrew", "ז")];
 const HEBREW_HEIT = DUCTUS[ductusKey("hebrew", "ח")];
 const HEBREW_TET = DUCTUS[ductusKey("hebrew", "ט")];
 const HEBREW_YOD = DUCTUS[ductusKey("hebrew", "י")];
+const HEBREW_KAF = DUCTUS[ductusKey("hebrew", "כ")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -335,6 +336,21 @@ describe("handwriting ductus", () => {
     expect(stem[0]).toEqual(head.at(-1));
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     expect(Math.min(...stem.map((point) => point.y))).toBeGreaterThan(250);
+  });
+
+  it("Hebrew כ turns its top bar into the right side and base without lifting", () => {
+    expect(HEBREW_KAF.script).toBe("hebrew");
+    expect(penLifts(HEBREW_KAF)).toBe(0);
+    expect(HEBREW_KAF.strokes).toHaveLength(1);
+    expect(HEBREW_KAF.strokes[0].segments).toHaveLength(3);
+    const top = HEBREW_KAF.strokes[0].segments[0].path;
+    const side = HEBREW_KAF.strokes[0].segments[1].path;
+    const base = HEBREW_KAF.strokes[0].segments[2].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(side[0]).toEqual(top.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -976,6 +992,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("י", HEBREW_YOD.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("כ", HEBREW_KAF.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1118,6 +1137,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /handwritten Yod.*tiny comma-like run.*01:53.4–01:53.8.*high on the writing line.*simplest letter.*01:50.4–01:51.0.*little comma.*upper-right.*01:54.0–01:57.2.*printed demonstration.*head left-to-right.*short stem.*without lifting.*02:00.7–02:01.2.*print is almost the same.*little angle.*02:03.7–02:07.1.*Noto Sans Hebrew.*comma-like handwritten variation/i,
+    );
+  });
+
+  it("Hebrew כ traces the sharp printed form in one continuous run", () => {
+    const src = HEBREW_KAF.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=EcQ0gL-NM-k");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #7.*Kaf.*00:51.3–00:53.2.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Kaf.*rounded half-circle.*upper-left.*00:40.2–00:41.4.*half a circle to the right.*upper-left side.*going down.*00:41.8–00:47.0.*printed demonstration.*top bar left-to-right.*right side.*left along the base.*without lifting.*00:51.3–00:53.2.*same but with sharp corners.*00:47.3–00:49.5.*Noto Sans Hebrew.*rounded handwritten variation/i,
     );
   });
 
