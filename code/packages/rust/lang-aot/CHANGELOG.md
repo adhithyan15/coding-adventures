@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.54 - 2026-08-11 (ALGOL dummy statements — seven-backend matrix)
+
+The matrix now proves that leading, consecutive, trailing, conditional, loop,
+and labeled ALGOL dummy statements are no-ops on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT.
+
 ## 0.220.53 - 2026-08-11 (ALGOL multiple labels — seven-backend matrix)
 
 The matrix now proves that two labels attached to one ALGOL conditional share

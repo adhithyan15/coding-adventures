@@ -528,3 +528,19 @@ fn test_multiple_labels_on_one_statement() {
     assert_eq!(count_rule(&ast, "label"), 2);
     assert!(find_rule(&ast, "proc_stmt"), "Expected labeled procedure statement");
 }
+
+#[test]
+fn test_dummy_statements_at_boundaries() {
+    for source in [
+        "begin end",
+        "begin ; ; end",
+        "begin if false then else halt end",
+        "begin if true then halt else end",
+        "begin integer i; for i := 1 step 1 until 2 do ; end",
+        "begin empty: end",
+    ] {
+        let ast = parse_algol(source);
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "dummy_stmt"), "expected dummy statement in {source:?}");
+    }
+}

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-08-11
+
+### Added
+
+- **Boundary-checked dummy statements.** Empty ALGOL statements now parse
+  before semicolons, `end`, and `else`, enabling empty blocks and branches,
+  consecutive or trailing separators, empty loop bodies, and labeled no-ops.
+
 ## [0.4.0] - 2026-08-11
 
 ### Added

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.81.0 — 2026-08-11 — dummy statements
+
+ALGOL dummy statements now lower as explicit no-ops. Boundary lookahead in the
+parser permits empty blocks, branches, loop bodies, and labeled statements while
+preventing arbitrary invalid syntax from disappearing during compilation.
+
 ## 0.80.0 — 2026-08-11 — multiple labels per statement
 
 The compiler now pre-registers and emits every label prefix attached to one
