@@ -1,6 +1,6 @@
-//! diagram-ir v0.21.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.22.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -260,6 +260,11 @@ pub enum SequenceBlockKind {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum SequenceEvent {
+    AutoNumber {
+        visible: bool,
+        start: Option<f64>,
+        step: Option<f64>,
+    },
     Message {
         from: String,
         to: String,
@@ -950,8 +955,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_21_0() {
-        assert_eq!(VERSION, "0.21.0");
+    fn version_is_0_22_0() {
+        assert_eq!(VERSION, "0.22.0");
     }
     #[test]
     fn default_direction_is_tb() {

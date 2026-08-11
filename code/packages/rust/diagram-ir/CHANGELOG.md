@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.22.0
+
+- Preserve ordered sequence autonumber visibility and counter changes as semantic events.
+
 ## 0.21.0
 
 - Preserve participant-group label wrap intent and resolved label height in sequence IR.

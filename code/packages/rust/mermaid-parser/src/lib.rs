@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.28.0";
+pub const VERSION: &str = "0.29.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1116,10 +1116,22 @@ fn parse_sequence_body(
                 if cursor.current().value == "off" {
                     diagram.auto_number = false;
                     cursor.advance();
+                    diagram.events.push(SequenceEvent::AutoNumber {
+                        visible: false,
+                        start: None,
+                        step: None,
+                    });
                 } else {
                     diagram.auto_number = true;
-                    diagram.auto_number_start = take_sequence_number(cursor)?.unwrap_or(1.0);
-                    diagram.auto_number_step = take_sequence_number(cursor)?.unwrap_or(1.0);
+                    let start = take_sequence_number(cursor)?;
+                    let step = take_sequence_number(cursor)?;
+                    diagram.auto_number_start = start.unwrap_or(1.0);
+                    diagram.auto_number_step = step.unwrap_or(1.0);
+                    diagram.events.push(SequenceEvent::AutoNumber {
+                        visible: true,
+                        start,
+                        step,
+                    });
                 }
             }
             "loop" | "rect" | "opt" | "alt" | "par" | "par_over" | "critical" | "break" => {
@@ -3182,18 +3194,22 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.participants[0].label.text, "Alice");
         assert!(matches!(
             &diagram.events[0],
+            SequenceEvent::AutoNumber { visible: true, .. }
+        ));
+        assert!(matches!(
+            &diagram.events[1],
             SequenceEvent::Message { from, to, activate: true, .. }
                 if from == "A" && to == "Bob"
         ));
         assert!(matches!(
-            &diagram.events[1],
+            &diagram.events[2],
             SequenceEvent::Note {
                 placement: SequenceNotePlacement::RightOf,
                 ..
             }
         ));
         assert!(matches!(
-            &diagram.events[2],
+            &diagram.events[3],
             SequenceEvent::Activation { participant, active: false } if participant == "Bob"
         ));
     }
@@ -3418,6 +3434,40 @@ B//-A: reverse stick top
         assert!(diagram.auto_number);
         assert_eq!(diagram.auto_number_start, 10.5);
         assert_eq!(diagram.auto_number_step, 2.25);
+        assert!(matches!(
+            diagram.events.first(),
+            Some(SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(10.5),
+                step: Some(2.25),
+            })
+        ));
+    }
+
+    #[test]
+    fn sequence_preserves_ordered_autonumber_toggles() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nautonumber\nA->>B: One\nautonumber off\nA->>B: Hidden\nautonumber 20 5\nA->>B: Twenty\n",
+        )
+        .unwrap();
+        let controls: Vec<_> = diagram
+            .events
+            .iter()
+            .filter(|event| matches!(event, SequenceEvent::AutoNumber { .. }))
+            .collect();
+        assert_eq!(controls.len(), 3);
+        assert!(matches!(
+            controls[1],
+            SequenceEvent::AutoNumber { visible: false, .. }
+        ));
+        assert!(matches!(
+            controls[2],
+            SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(20.0),
+                step: Some(5.0)
+            }
+        ));
     }
 
     #[test]
@@ -3688,7 +3738,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.28.0");
+        assert_eq!(crate::VERSION, "0.29.0");
     }
 
     #[test]
