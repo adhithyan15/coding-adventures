@@ -1786,7 +1786,9 @@ impl Lowerer {
     ///
     /// CST: `[callee, arguments]`.  Dispatch on the callee:
     ///   * a bare identifier that names a module `function` → `DirectCall`;
-    ///   * `console.log(x)` → `BuiltinCall("print", [x])`;
+    ///   * `console.log(x)` → SIR28's `__sys_write__` primitive
+    ///     (`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("once"),
+    ///     BoolLit(false), x])`);
     ///   * any *other* dotted member call `recv.method(a, b)` → the SIR
     ///     **method-dispatch convention**
     ///     `BuiltinCall("__method__", [recv, StrLit("method"), a, b])`
@@ -1917,7 +1919,7 @@ impl Lowerer {
     /// Lower the *base* segment of a call chain — `callee(args)` with the
     /// callee already lowered from its CST node.  Dispatches exactly as the
     /// original single-call lowering did:
-    ///   * `console.log(...)` → `BuiltinCall("print", …)` (kept intact);
+    ///   * `console.log(...)` → SIR28's `__sys_write__` primitive (kept intact);
     ///   * any *other* dotted member callee `recv.method` → `__method__`
     ///     dispatch (C3);
     ///   * a bare module-function name → `DirectCall`;
@@ -1930,15 +1932,38 @@ impl Lowerer {
         arg_exprs: Vec<Expr>,
         span: Span,
     ) -> Result<Expr, JsLowerError> {
-        // `console.log(...)` → builtin print.  Detect the two-segment
-        // member callee `member_expression[ console, ., log ]` and keep its
+        // `console.log(...)` → SIR28 §2's `__sys_write__` primitive, not a
+        // bare `BuiltinCall("print", ...)`.  Detect the two-segment member
+        // callee `member_expression[ console, ., log ]` and keep its
         // dedicated lowering intact (do not route it through `__method__`).
+        // Real `console.log(a, b)` space-joins every value with ONE
+        // trailing newline (`terminator: "once"`, `unpack_arrays: false`
+        // — SIR28 §2.1's table), carrying that policy as explicit IR data
+        // instead of an implicit per-backend assumption — see
+        // SIR28-syscall-primitives.md §"Motivation".
         if let Some((obj, method)) = member_callee_parts(callee) {
             if obj == "console" && method == "log" {
-                // `print` may print; mark the effect so backends emit it.
+                self.features_used.add(Feature::ConsoleIO);
+                self.features_used.add(Feature::Strings);
+                let mut sys_args = vec![
+                    Expr::StrLit {
+                        value: "stdout".to_string(),
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: "once".to_string(),
+                        span: span.clone(),
+                    },
+                    Expr::BoolLit {
+                        value: false,
+                        span: span.clone(),
+                    },
+                ];
+                sys_args.extend(arg_exprs);
+                // `__sys_write__` may print; mark the effect so backends emit it.
                 return Ok(Expr::BuiltinCall {
-                    name: "print".to_string(),
-                    args: arg_exprs,
+                    name: "__sys_write__".to_string(),
+                    args: sys_args,
                     effects: EffectSet::PURE.with(Effect::MayPrint),
                     span,
                 });
