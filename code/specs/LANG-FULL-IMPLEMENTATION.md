@@ -852,9 +852,10 @@ backend immediately) come before the enabler-dependent items.
   or `-` signs, preserve and print their source spelling on the same seven
   columns. Arithmetic conditionals whose leaves are all direct real literals
   branch to the selected source-spelled string at run time on those columns,
-  and exact parentheses around a signed direct literal preserve that spelling;
-  computed/runtime `f64` formatting remains a follow-up requiring a portable
-  typed formatter ABI.
+  exact parentheses around a signed direct literal preserve that spelling, and
+  finite literal-only addition/subtraction is evaluated at compile time before
+  entering the string path. General computed/runtime `f64` formatting remains a
+  follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
