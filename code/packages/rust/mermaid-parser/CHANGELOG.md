@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.55.0
+
+- Preserve state click URLs and optional tooltips as graph node links.
+
 ## 0.54.0
 
 - Preserve state accessibility titles and descriptions in graph semantic IR.

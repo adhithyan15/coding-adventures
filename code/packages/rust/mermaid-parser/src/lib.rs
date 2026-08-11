@@ -6,14 +6,14 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.54.0";
+pub const VERSION: &str = "0.55.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
     DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
-    GraphNode,
+    GraphLink, GraphNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -297,6 +297,7 @@ pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        links: Vec::new(),
         nodes: builder.nodes,
         edges: builder.edges,
     })
@@ -1044,8 +1045,8 @@ fn parse_data_list(s: &str) -> Vec<f64> {
 /// Parse the graph-compatible core of Mermaid state diagrams.
 ///
 /// The supported state slice lowers flat declarations, transitions,
-/// pseudostates, and styles into graph IR. Composite states and notes remain
-/// explicit compatibility gaps.
+/// pseudostates, notes, metadata, and styles into graph IR. Composite states
+/// remain an explicit compatibility gap.
 pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_state_ast(&preprocessed.source)?;
@@ -1062,6 +1063,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut edges = Vec::new();
+    let mut links = Vec::new();
     let mut pseudo_index = 0;
     let mut note_index = 0;
     let mut class_styles: HashMap<String, DiagramStyle> = HashMap::new();
@@ -1095,6 +1097,35 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 "RL" => DiagramDirection::Rl,
                 _ => unreachable!("state.tokens restricts direction values"),
             };
+        } else if cursor.current().value.eq_ignore_ascii_case("click") {
+            cursor.advance();
+            let node_id = take_state_ref(&mut cursor)?;
+            if cursor.current().value.eq_ignore_ascii_case("href") {
+                cursor.advance();
+            }
+            if token_name(cursor.current()) != "STRING" {
+                return Err(token_error(cursor.current(), "expected state click URL"));
+            }
+            let url = strip_state_string(&cursor.advance().value);
+            let tooltip = if token_name(cursor.current()) == "STRING" {
+                Some(strip_state_string(&cursor.advance().value))
+            } else {
+                None
+            };
+            if !node_indices.contains_key(&node_id) {
+                upsert_state_node(
+                    &mut nodes,
+                    &mut node_indices,
+                    node_id.clone(),
+                    node_id.clone(),
+                );
+            }
+            links.retain(|link: &GraphLink| link.node_id != node_id);
+            links.push(GraphLink {
+                node_id,
+                url,
+                tooltip,
+            });
         } else if cursor.current().value.eq_ignore_ascii_case("classDef") {
             cursor.advance();
             let class_name = take_state_ref(&mut cursor)?;
@@ -1338,6 +1369,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         title: None,
         accessibility_title,
         accessibility_description,
+        links,
         nodes,
         edges,
     })
@@ -4372,6 +4404,24 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_click_links_and_tooltips() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclick Ready \"https://example.com/ready\" \"Open ready state\"\nclick Running href \"https://example.com/run\"\nReady --> Running\n",
+        )
+        .expect("state click links should parse");
+
+        assert_eq!(diagram.links.len(), 2);
+        assert_eq!(diagram.links[0].node_id, "Ready");
+        assert_eq!(diagram.links[0].url, "https://example.com/ready");
+        assert_eq!(
+            diagram.links[0].tooltip.as_deref(),
+            Some("Open ready state")
+        );
+        assert_eq!(diagram.links[1].node_id, "Running");
+        assert_eq!(diagram.links[1].tooltip, None);
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5142,7 +5192,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.54.0");
+        assert_eq!(crate::VERSION, "0.55.0");
     }
 
     #[test]

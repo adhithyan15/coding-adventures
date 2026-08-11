@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -432,6 +432,7 @@ fn route_edge(
 ///     title: None,
 ///     accessibility_title: None,
 ///     accessibility_description: None,
+///     links: Vec::new(),
 ///     nodes: vec![
 ///         GraphNode { id: "A".into(), label: DiagramLabel::new("A"),
 ///                     shape: None, style: None },
@@ -527,6 +528,7 @@ pub fn layout_graph_diagram(
         title:     diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        links: diagram.links.clone(),
         width,
         height,
         nodes,
@@ -569,6 +571,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B")],
         }
@@ -576,7 +579,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.4.0");
+        assert_eq!(VERSION, "0.5.0");
     }
 
     #[test]
@@ -634,6 +637,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             nodes: vec![simple_node("A")],
             edges: vec![directed_edge("A", "A")],
         };
@@ -663,6 +667,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "A")],
         };
@@ -681,6 +686,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             nodes: vec![
                 simple_node("A"),
                 GraphNode {
@@ -705,6 +711,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            links: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B"), simple_node("C")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "C")],
         };
