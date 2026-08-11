@@ -1041,7 +1041,7 @@ jobs:
 
           taskapp_output="$RUNNER_TEMP/mosaic-qt-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project
-          jq -e '.nativeComplete == false and ([.degradations[].code] | sort) == ["accessibility.table-semantics-missing", "runtime.sample-fallback"]' "$taskapp_output/qt/mosaic-degradations.json"
+          jq -e '.nativeComplete == false and ([.degradations[].code] | sort) == ["runtime.sample-fallback"]' "$taskapp_output/qt/mosaic-degradations.json"
           cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$taskapp_output/qt/build" --config Release --parallel
           taskapp_log="$RUNNER_TEMP/mosaic-qt-taskapp-launch.log"
