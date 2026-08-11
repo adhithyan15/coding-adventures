@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-hablar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 510
-chapter: 14
+chapter: 15
 type: word
 headword: hablar
 gloss: to speak / to talk — at root, "to tell stories"

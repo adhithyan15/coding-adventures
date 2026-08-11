@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 42,
-  "title": "Four Verbs of the Mind",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3198974177550d28",
+  "title": "Green and Yellow",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a971bedb2b99e780",
   "lessons": [
     {
-      "id": "ES-C34-pensar",
-      "sequence": 1610,
-      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
-      "headword": "pensar",
-      "romanization": "pensar",
-      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
+      "id": "ES-C33-verde",
+      "sequence": 1590,
+      "title": "verde — the colour named after being alive",
+      "headword": "verde",
+      "romanization": "verde",
+      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bd7125d247534f4",
+      "sourceHash": "fnv1a64:3c974a4a439639f9",
       "notice": null,
       "blocks": [
         {
@@ -35,102 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
+              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: verde",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
+              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
             },
             {
               "kind": "speech",
-              "text": "The s is always a clear hissing s, never an English z buzz."
+              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
+            },
+            {
+              "kind": "speech",
+              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: pensar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
-            },
-            {
-              "kind": "speech",
-              "text": "English kept the whole family, and most of it still smells of money and scales:"
-            },
-            {
-              "kind": "speech",
-              "text": "pensive — turning something over on the balance."
-            },
-            {
-              "kind": "speech",
-              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
-            },
-            {
-              "kind": "speech",
-              "text": "expense, dispense, pension — payments were literally weighed out."
-            },
-            {
-              "kind": "speech",
-              "text": "peso — a coin whose name simply means \"a weight\"."
-            },
-            {
-              "kind": "speech",
-              "text": "pansy — from French pensée, \"a thought\"."
-            },
-            {
-              "kind": "speech",
-              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the same endings, a broken stem",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "stem"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: pienso. stem: broken.",
-                "person: tú. form: piensas. stem: broken.",
-                "person: él/ella/usted. form: piensa. stem: broken.",
-                "person: nosotros. form: pensamos. stem: plain.",
-                "person: ellos/ustedes. form: piensan. stem: broken."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -143,34 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
+              "instruction": "\"verde\" — green",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
+              "source": "[YOU SAY: \"verde\" — green]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso en ti\" — I am thinking of you",
+              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
+              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
+              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
+              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,26 +111,26 @@
             },
             {
               "kind": "speech",
-              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
+              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C34-entender",
-      "sequence": 1620,
-      "title": "entender — \"to understand\", built out of stretching",
-      "headword": "entender",
-      "romanization": "entender",
-      "gloss": "to understand — literally \"to stretch toward\"; the second e becomes ie stem-changer",
+      "id": "ES-C33-amarillo",
+      "sequence": 1600,
+      "title": "amarillo — the colour that started as a taste",
+      "headword": "amarillo",
+      "romanization": "amarillo",
+      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bc2b6a399046322",
+      "sourceHash": "fnv1a64:70ed9f6e83b87575",
       "notice": null,
       "blocks": [
         {
@@ -217,93 +146,31 @@
             },
             {
               "kind": "speech",
-              "text": "Pensar broke its stem under stress. So does this one — and it hands you the single most useful sentence a beginner owns: no entiendo, \"I don't understand.\""
+              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart: amarillo",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — entiendo = en-TYEN-do."
+              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
             },
             {
               "kind": "speech",
-              "text": "d-soft — the d between vowels is soft, close to the th of English this."
+              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
+            },
+            {
+              "kind": "speech",
+              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: entender",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "entender (\"to understand\") from Latin intendere: in- (\"toward\") + tendere (\"to stretch\"). Understanding something was stretching your attention toward it — leaning in."
-            },
-            {
-              "kind": "speech",
-              "text": "tendere stretches right across English:"
-            },
-            {
-              "kind": "speech",
-              "text": "intend, intent, intense, intention — the very same in- + stretch."
-            },
-            {
-              "kind": "speech",
-              "text": "attend, attention — ad- \"toward\", stretch that way."
-            },
-            {
-              "kind": "speech",
-              "text": "extend, contend, pretend, tension, tendon, and tent, which is stretched cloth."
-            },
-            {
-              "kind": "speech",
-              "text": "So entiendo and I intend are the same two Latin pieces landing in different places: Spanish went to \"I grasp it\", English to \"I mean to\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Careful with a false friend. Spanish pretender is not English pretend. It means \"to aim at, to be after\" — pretende ser médico, \"he means to become a doctor\". Same pieces, different landing."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: an -er verb that cracks, and a calmer twin",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Ordinary -er endings, stressed e broken to ie:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "stem"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "person: yo. form: entiendo. stem: broken.",
-                "person: tú. form: entiendes. stem: broken.",
-                "person: nosotros. form: entendemos. stem: plain.",
-                "person: ellos/ustedes. form: entienden. stem: broken."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish has a second verb for this job: comprender from Latin comprehendere, \"to seize together\" ( becomes English comprehend, apprehend, comprehensive). It is a plain -er verb with no crack at all: comprendo, comprendes, comprende. Both mean \"understand\". Entender is the everyday one; comprender leans a little more formal, and more toward grasping a whole thing than catching a word."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -316,222 +183,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"No entiendo\" — I don't understand",
+              "instruction": "\"verde, amarillo\" — green and yellow",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo\" — I don't understand]"
+              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"entiendo, entiendes, entendemos, entienden\"",
+              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"entiendo, entiendes, entendemos, entienden\"]"
+              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pienso\" then \"entiendo\" — the same crack, twice",
+              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pienso\" then \"entiendo\" — the same crack, twice]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"entender\" then English \"intend, intense, attention\" — the stretching family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"entender\" then English \"intend, intense, attention\" — the stretching family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does tendere mean, and what does in- add? (To stretch; \"toward\".) Give the yo and nosotros forms. (Entiendo, entendemos.) Of entender and comprender, which one breaks its stem? (Entender.) And what does Spanish pretender mean? (To aim at, not to pretend.) Next: leer."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C34-leer",
-      "sequence": 1630,
-      "title": "leer — \"to read\", and before that, \"to gather\"",
-      "headword": "leer",
-      "romanization": "leer",
-      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:cfb0f87cdebf0135",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
-            },
-            {
-              "kind": "speech",
-              "text": "leo is likewise two beats, LE-o."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: leer",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
-            },
-            {
-              "kind": "speech",
-              "text": "That gathering root runs through an enormous amount of English:"
-            },
-            {
-              "kind": "speech",
-              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
-            },
-            {
-              "kind": "speech",
-              "text": "diligent and elegant, both of which meant \"picking carefully\"."
-            },
-            {
-              "kind": "speech",
-              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
+              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a plain -er verb, with a mouthful",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "said"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: leo. said: LE-o.",
-                "person: tú. form: lees. said: LE-es.",
-                "person: él/ella/usted. form: lee. said: LE-e.",
-                "person: nosotros. form: leemos. said: le-E-mos.",
-                "person: ellos/ustedes. form: leen. said: LE-en."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"leer\" — le-ER, two beats",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Leo un libro\" — I read a book",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -543,194 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C34-escribir",
-      "sequence": 1640,
-      "title": "escribir — \"to write\", which once meant \"to scratch\"",
-      "headword": "escribir",
-      "romanization": "escribir",
-      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9cc62dcc517c4ebd",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
-            },
-            {
-              "kind": "speech",
-              "text": "b-soft — between vowels the b is soft, lips barely touching."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: escribir",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
-            },
-            {
-              "kind": "speech",
-              "text": "The English family is huge, and every member still works with a pen:"
-            },
-            {
-              "kind": "speech",
-              "text": "scribe, scribble, script, scripture."
-            },
-            {
-              "kind": "speech",
-              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
-            },
-            {
-              "kind": "speech",
-              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
-            },
-            {
-              "kind": "speech",
-              "text": "conscription — being written into an army."
-            },
-            {
-              "kind": "speech",
-              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Escribir is a plain -ir verb, the family vivir opened:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "ending"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: escribo. ending: -o.",
-                "person: tú. form: escribes. ending: -es.",
-                "person: él/ella/usted. form: escribe. ending: -e.",
-                "person: nosotros. form: escribimos. ending: -imos.",
-                "person: ellos/ustedes. form: escriben. ending: -en."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
-            },
-            {
-              "kind": "speech",
-              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Pienso escribir\" — I mean to write",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
+              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
             }
           ]
         }

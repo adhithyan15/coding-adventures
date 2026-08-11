@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 34,
-  "title": "Water, Wine, and Bread",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e4b61a64195706ef",
+  "title": "The Seasons",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6dc7d35385bdf87d",
   "lessons": [
     {
-      "id": "ES-C26-agua",
-      "sequence": 1440,
-      "title": "el agua — water, and an article that is not what it looks like",
-      "headword": "el agua",
-      "romanization": "el agua",
-      "gloss": "water — a word that barely changed from Latin, and takes el without ever stopping being feminine",
+      "id": "ES-C25-las-estaciones",
+      "sequence": 1430,
+      "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
+      "headword": "la primavera, el verano, el otoño, el invierno",
+      "romanization": "la primavera, el verano, el otoño, el invierno",
+      "gloss": "the four seasons — three straightforward, and one whose MEANING quietly shifted from \"spring\" to \"summer\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100649fa604e8b1f",
+      "sourceHash": "fnv1a64:ca7c67a283bea17a",
       "notice": null,
       "blocks": [
         {
@@ -35,302 +35,41 @@
             },
             {
               "kind": "speech",
-              "text": "One of the least changed words in Spanish, carrying one of its most misunderstood rules. The \"masculine\" article on this feminine noun is not a mistake and not an exception to gender."
+              "text": "Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: agua",
+          "title": "The words, taken apart: three straightforward seasons",
           "segments": [
             {
               "kind": "speech",
-              "text": "agua (\"water\") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed."
+              "text": "la primavera (\"spring\") from Latin prīma vēra, literally \"first spring\" (vēr, \"spring,\" + prīma, \"first\"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)"
             },
             {
               "kind": "speech",
-              "text": "English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: el agua's article and gender",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, \"the cold water,\" keeps the feminine adjective ending, and the plural is las aguas, never los aguas."
+              "text": "el otoño (\"autumn\") from Latin autumnus — the same root behind French automne and English autumn itself."
             },
             {
               "kind": "speech",
-              "text": "The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick \"an apple\" over \"a apple.\""
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "the water. singular: el agua. plural: las aguas.",
-                "the eagle. singular: el águila. plural: las águilas.",
-                "the axe. singular: el hacha. plural: las hachas."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Only the article changes. The noun's gender never moves."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el agua\" — water, feminine, but takes el",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes *el*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the proof — \"el agua fría\" and \"las aguas\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the proof — \"el agua fría\" and \"las aguas\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to \"eau.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C26-vino",
-      "sequence": 1450,
-      "title": "el vino — one word, three separate arrivals in English",
-      "headword": "el vino",
-      "romanization": "el vino",
-      "gloss": "wine — one Latin root that reached English by three separate roads, plus one English built at home",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a26ce4e7a445a5ec",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: vino",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vino (\"wine\") from Latin vīnum — which held its shape well, as French's vin did too."
-            },
-            {
-              "kind": "speech",
-              "text": "English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English word",
-                "how it got there"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.",
-                "English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, \"sour wine\").",
-                "English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el agua, el vino\" — the two drinks",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el agua, el vino\" — the two drinks]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vino\" then English \"wine, vine, vinegar\" — one root, three roads",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vino\" then English \"wine, vine, vinegar\" — one root, three roads]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C26-pan",
-      "sequence": 1460,
-      "title": "el pan — bread, and the friend who shares it",
-      "headword": "el pan",
-      "romanization": "el pan",
-      "gloss": "bread — and the compañero who shares it with you",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c6854d8b26e7a488",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: pan",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
+              "text": "el invierno (\"winter\") from Latin hībernum (tempus), \"the wintry [season]\" — the same root as French hiver and English hibernate, \"to spend the winter.\""
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: bread and friendship",
+          "title": "Why it's said this way: verano",
           "segments": [
             {
               "kind": "speech",
-              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
+              "text": "You might expect verano (\"summer\") to come from Latin aestas, \"heat\" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), \"of spring\" — built on the very same vēr, \"spring,\" behind primavera."
             },
             {
               "kind": "speech",
-              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
-            },
-            {
-              "kind": "speech",
-              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
-            },
-            {
-              "kind": "speech",
-              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
-            },
-            {
-              "kind": "speech",
-              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
+              "text": "So how did a word meaning \"spring-ish\" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera (\"first spring\") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a \"vernal\" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, \"spring,\" ended up naming two different seasons."
             }
           ]
         },
@@ -348,29 +87,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el pan\" — bread",
+              "instruction": "\"primavera, verano, otoño, invierno\" — the four seasons",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el pan\" — bread]"
+              "source": "[YOU SAY: \"primavera, verano, otoño, invierno\" — the four seasons]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"compañero\" — literally, one you share bread with",
+              "instruction": "\"primavera = prima vera, first spring\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
+              "source": "[YOU SAY: \"primavera = prima vera, first spring\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"panadería, panadero\" — bakery, baker",
+              "instruction": "the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
+              "source": "[YOU SAY: the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"invierno hibernate\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"invierno ~ hibernate\"]"
             }
           ]
         },
@@ -387,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
+              "text": "What does primavera literally mean? (\"First spring\" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, \"of spring,\" the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)"
             }
           ]
         }

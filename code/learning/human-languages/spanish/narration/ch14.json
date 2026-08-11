@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 14,
-  "title": "Your First Verb",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:74ff55f68c4a4208",
+  "title": "When You Don't Understand",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:d21f653eba15b5e6",
   "lessons": [
     {
-      "id": "ES-C06-hablar",
-      "sequence": 510,
-      "title": "hablar — \"to speak,\" which used to mean \"to tell tales\"",
-      "headword": "hablar",
-      "romanization": "hablar",
-      "gloss": "to speak / to talk — at root, \"to tell stories\"",
+      "id": "ES-R01-no-entiendo",
+      "sequence": 506,
+      "title": "no entiendo — the most useful sentence a beginner owns",
+      "headword": "no entiendo",
+      "romanization": "no entiendo",
+      "gloss": "\"I don't understand\" — the most useful sentence a beginner owns",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b3d6ea41f50c3aa",
+      "sourceHash": "fnv1a64:ca5d584e23891eb2",
       "notice": null,
       "blocks": [
         {
@@ -35,148 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Fixed phrases got you this far. Hablar (\"to speak\") is the first verb you will take apart and put back together. Today: the word itself. Next lesson: the pattern it unlocks."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "silent-h — the h is completely silent: hablar = ah-BLAR. (Spanish h never makes a sound.)"
-            },
-            {
-              "kind": "speech",
-              "text": "v-b — the b is a soft b; hablo = AH-bloh."
-            },
-            {
-              "kind": "speech",
-              "text": "That silent h is not an accident of spelling. Latin's initial f- weakened in a whole set of Spanish words and eventually fell silent altogether, but the scribes kept writing a letter where it used to be — and that letter is h. You are looking at the gravestone of an f."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hablar comes from Latin fābulārī, \"to chat, to tell tales\" — from fābula, \"a story.\" So to speak, in Spanish, is at root to tell stories. Notice Latin had a plainer verb available (loquī, \"to speak,\" which English keeps in eloquent and loquacious) — and Spanish chose the chattier, more colourful one."
-            },
-            {
-              "kind": "speech",
-              "text": "That fābula is thoroughly English: fable, fabulous (\"story-like\"), confabulate, and ineffable (\"un-speak-able\")."
-            },
-            {
-              "kind": "speech",
-              "text": "The single path you need today is fābulārī becomes hablar; later words will let you test how broadly that f- becomes h- pattern reaches."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hablar\" — ah-BLAR, silent h",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablar\" — *ah-BLAR*, silent *h*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hablar\" then English \"fable, fabulous, ineffable\" — the fābula root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablar\" then English \"fable, fabulous, ineffable\" — the *fābula* root]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the sound law — \"fābulārī\" then \"hablar\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the sound law — \"fābulārī\" then \"hablar\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word is hablar from, and what English word shares it? (Fābulārī from fābula — fable.) What happened to its initial Latin f-? (It weakened away, leaving the written but silent Spanish h-.) Next: the ending pattern that turns this one verb into a machine."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C06-ar-presente",
-      "sequence": 520,
-      "title": "hablo, hablas, habla — one ending swap, three sentences",
-      "headword": "hablo, hablas, habla",
-      "romanization": "hablo, hablas, habla",
-      "gloss": "the -ar present-tense template, and why Spanish leaves the subject pronoun out",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue",
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:45f2d6757e434f2f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the -ar present tense"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the -ar present tense until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Hablar is one word. Swap its last two letters and it becomes \"I speak,\" or a question to a friend, or a polite question to a stranger. This is the biggest single piece of leverage in this book so far."
+              "text": "Everything so far assumed you understood what was said to you. This chapter is for when you did not."
             }
           ]
         },
@@ -187,59 +46,39 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hablar — the verb and its fābula root."
+              "text": "No entiendo. — \"I don't understand.\""
             },
             {
               "kind": "speech",
-              "text": "tú or usted — which forms usted takes."
+              "text": "Say it whole. You already have no; the rest comes with it for now, and the piece you are not yet meant to take apart will come apart later."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not an admission of failure. It is the sentence that keeps a conversation alive — the alternative is nodding at something you did not catch."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the -ar present tense",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hablar belongs to the -ar family. To make the three singular forms you need now: drop the -ar, then add the ending for the person."
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "person",
-                "ending",
-                "hablar, which gives:",
-                "meaning"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: person, ending, hablar, which gives:, meaning. Come back and look at it when you have stopped."
+              "text": "The word hiding inside entiendo comes from Latin intendere — literally to stretch toward. To understand something was to lean into it."
             },
             {
               "kind": "speech",
-              "text": "The usted row is the same he/she form you were warned about back in Chapter 3 — it turns up here for real. This same template fits every regular -ar verb, so learning it once buys you every -ar verb you will ever meet."
+              "text": "English took the same word and kept it in several places: intend (to stretch your mind toward a thing), intense, and — through the same family — attention, which is what you are stretching when you listen hard."
+            },
+            {
+              "kind": "speech",
+              "text": "So no entiendo is, underneath, \"I am not managing to stretch that far yet.\" Which is exactly true, and much kinder than \"I failed.\""
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: pro-drop",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Look at hablo again. The -o already says \"I.\" Saying yo hablo is not wrong, but it is like saying \"I, I speak\" — Spanish normally leaves the subject pronoun out entirely."
-            },
-            {
-              "kind": "speech",
-              "text": "That is called pro-drop, and it is only possible because the endings are distinct enough to carry the information by themselves. English endings are worn down to almost nothing (speak, speak, speaks), so English must keep its pronouns. Spanish endings did not wear down, so Spanish can throw the pronoun away. One word, hablo, is a complete sentence."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -252,25 +91,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pattern — \"hablo, hablas, habla\" (I / tú / usted)",
+              "instruction": "\"No entiendo.\" — calmly, not apologetically",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pattern — \"hablo, hablas, habla\" (I / tú / usted)]"
+              "source": "[YOU SAY: \"No entiendo.\" — calmly, not apologetically]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablo\" alone, and notice it is already a whole sentence",
+              "instruction": "it again, to someone speaking too fast",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablo\" alone, and notice it is already a whole sentence]"
+              "source": "[YOU SAY: it again, to someone speaking too fast]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -282,26 +121,26 @@
             },
             {
               "kind": "speech",
-              "text": "How do you build the three singular forms of an -ar verb? (Drop -ar, add -o / -as / -a.) Which one goes with usted, and why is it the he/she form? (Habla — usted takes third-person forms.) Why is no subject pronoun needed? (Pro-drop — the ending already carries the subject.) Next: trabajar, \"to work,\" straight into the same slot."
+              "text": "Say it once from memory. Which English word shares its root?"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C06-repaso-hablar",
-      "sequence": 525,
-      "title": "Your first verb — putting it together",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "Your first verb — putting the chapter together",
+      "id": "ES-R02-mas-despacio",
+      "sequence": 507,
+      "title": "más despacio — the request that makes the last sentence solvable",
+      "headword": "más despacio",
+      "romanization": "más despacio",
+      "gloss": "\"more slowly\" — the request that makes the last sentence solvable",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16a00140f929513e",
+      "sourceHash": "fnv1a64:8efebaa3a6860d7b",
       "notice": null,
       "blocks": [
         {
@@ -317,29 +156,37 @@
             },
             {
               "kind": "speech",
-              "text": "One verb, three people, and the endings that carry them. Nothing new in this lesson — only what you already have."
+              "text": "Everything so far assumed you understood what was said to you. This chapter is for when you did not."
             }
           ]
         },
         {
           "index": 1,
           "type": "input",
-          "title": "The exchange",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "hablo — I speak. hablas — you speak. habla — he or she speaks."
+              "text": "Más despacio, por favor. — \"More slowly, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "No entiendo stops the conversation. This restarts it. Together they are the whole repair kit: say what went wrong, then say what would fix it."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "You can say who is doing the speaking without a separate word for I or you."
+              "text": "Despacio comes from de spatio — \"of space.\" Latin spatium is English space, and also spatial."
+            },
+            {
+              "kind": "speech",
+              "text": "Doing something de spatio meant doing it with room around it, unhurried. The sense drifted from space into time, which is a journey English made too: we still say we need space when we mean we need time."
             }
           ]
         },
@@ -357,20 +204,125 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole exchange, both parts, without stopping",
+              "instruction": "\"Más despacio.\" — calmly, not apologetically",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
+              "source": "[YOU SAY: \"Más despacio.\" — calmly, not apologetically]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, faster, and let it sound like speech rather than recital",
+              "instruction": "it again, to someone speaking too fast",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
+              "source": "[YOU SAY: it again, to someone speaking too fast]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it once from memory. Which English word shares its root?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R03-repaso-reparar",
+      "sequence": 508,
+      "title": "When you don't understand — putting it together",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "When you don't understand — putting the repair kit together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b31bbb2641c73a67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentences. Between them they rescue almost any conversation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— (something too fast to follow) — No entiendo. Más despacio, por favor. — (again, slower) — Gracias."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Until now, a sentence you missed was the end of the conversation. It is not any more. You can say what went wrong and what would fix it, and then thank someone for doing it — which is the difference between speaking a language badly and not speaking it at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both sentences, one after the other, without a pause between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both sentences, one after the other, without a pause between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "them again, then \"Gracias.\" — the whole repair, start to finish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: them again, then \"Gracias.\" — the whole repair, start to finish]"
             },
             {
               "kind": "repeat",
@@ -392,7 +344,7 @@
             },
             {
               "kind": "speech",
-              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
+              "text": "What do you say when you did not follow? And what do you ask for next? Which English words hide inside entiendo and despacio? (Intend, intense, attention — and space.)"
             }
           ]
         }

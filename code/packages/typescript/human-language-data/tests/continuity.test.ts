@@ -422,7 +422,7 @@ describe("the real corpus", () => {
     // not number the family; ch19's ஆகிறது is described the same way), so it practises
     // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
     // rather than re-teaching it.
-    expect(report.summary.atomsTaught).toBe(2663); // +3: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos)
+    expect(report.summary.atomsTaught).toBe(2667); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos)
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(1819); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
+    expect(report.summary.missedByWindow.R2).toBe(1823); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 199, // +1: HL-C96 splits ch7 and adds its payoff // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 202, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -781,7 +781,7 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 387,
+      atomsTaught: 391,
       atomsNeverRevisited: 48,
     });
   });
@@ -793,7 +793,7 @@ describe("the real corpus", () => {
     // the lesson ids are stable slugs and deliberately do NOT renumber with it.
     const { lessons } = loadEverything();
     const chapter = lessons
-      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 16)
+      .filter((lesson) => lesson.language === "spanish" && lesson.realization.chapter === 17)
       .sort((a, b) => Number(a.frontmatter.sequence) - Number(b.frontmatter.sequence))
       .map((lesson) => lesson.realization.lessonId);
     expect(chapter).toEqual([
