@@ -4674,10 +4674,20 @@ impl HtmlParser {
                             || self.current_element_is("plaintext"))
                             && self.has_disallowed_authored_open_element_for_eof()
                         {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "eof-with-unclosed-elements",
-                                "end of file was reached with disallowed open elements",
-                            ));
+                            if self.has_open_table_context()
+                                && (self.current_element_is_table_structure()
+                                    || self.current_parent_is_fostered_before_open_table())
+                            {
+                                self.diagnostics.push(ParserDiagnostic::new(
+                                    "eof-in-table",
+                                    "end of file was reached while parsing table structure",
+                                ));
+                            } else {
+                                self.diagnostics.push(ParserDiagnostic::new(
+                                    "eof-with-unclosed-elements",
+                                    "end of file was reached with disallowed open elements",
+                                ));
+                            }
                         }
                         self.populate_selectedcontent_for_open_selects();
                         repair_table_cell_fostered_nobr_adoption(&mut self.document);
@@ -34415,6 +34425,57 @@ mod tests {
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-table"));
         }
+    }
+
+    #[test]
+    fn reports_eof_in_table_structure_without_duplicating_generic_eof() {
+        for source in [
+            "<!doctype html><table>",
+            "<!doctype html><table><tbody>",
+            "<!doctype html><table><tr>",
+            "<!doctype html><table><div>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic
+                    == &ParserDiagnostic::new(
+                        "eof-in-table",
+                        "end of file was reached while parsing table structure",
+                    )
+            }));
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
+        }
+
+        for source in [
+            "<!doctype html><table></table>",
+            "<!doctype html><table><tr><td>x",
+            "<!doctype html><div>x",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-in-table"));
+        }
+
+        let cell = parse_html_with_diagnostics("<!doctype html><table><tr><td>x").unwrap();
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-with-unclosed-elements"));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<tr><td>x</td></tr>",
+            "table",
+        )
+        .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-table"));
     }
 
     #[test]

@@ -136,6 +136,11 @@ Prioritized work items:
    report the general in-table parse error alongside non-current end-tag
    recovery, matching WPT `tricky01.dat` while leaving centers outside tables
    and inside cells quiet.
+   EOF reached while table structure or foster parenting remains active now
+   reports the dedicated table-mode parse error instead of the broader
+   unclosed-elements diagnostic, matching WPT's `eof-in-table` evidence while
+   leaving closed tables, open cells, and closed table fragments on their
+   existing paths.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
