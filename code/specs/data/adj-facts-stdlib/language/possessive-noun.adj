@@ -1,0 +1,66 @@
+% ============================================================================
+% possessive-noun — an example noun and which possessive-noun category its
+% possessive form falls into, in a sentence that shows it doing that job
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A possessive noun shows ownership. English forms it three different ways
+% depending on the base noun: a singular noun adds 's ("the dog's collar"),
+% a regular plural noun (already ending in s) adds only an apostrophe ("the
+% bottles' shelf"), and an irregular plural noun (one that doesn't end in s)
+% adds 's just like a singular noun would ("the geese's flock"). Recall is a
+% binding query:
+%
+%     ? possessive_noun(dog, $Category)
+%       % singular_possessive
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `possessive_noun(word, category)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% category WITH its source, on the CPU, with zero model calls, and abstains
+% on any word the source does not classify this way. The query also runs
+% BACKWARD — bind a category and recall which example word it names:
+%
+%     ? possessive_noun($Word, plural_possessive)
+%       % bottles
+%
+% DESIGN NOTE — why `word` is an apostrophe-free atom label rather than the
+% punctuated possessive spelling: ADJ atom labels cannot contain an
+% apostrophe, so this table uses the same apostrophe-free atom-label
+% discipline `contraction.adj` already established — `dog` stands for the
+% base noun whose possessive form is "dog's." The header prose below quotes
+% the ORIGINAL punctuated example sentences, so each mapping remains
+% independently checkable against the cited page.
+%
+% Provenance: quoted verbatim from Grammarly's "Possessive Nouns: How to Use
+% Them, With Examples" article, which gives a worked example sentence for
+% each of the three possessive-noun categories covered here:
+%
+%     word (this table's atom label)   category               example sentence (verbatim)
+%     --------------------------------  ---------------------  ------------------------------------------------
+%     dog                                singular_possessive    "I adjusted the dog's collar."
+%     bottles                            plural_possessive       "The glasses are under the bottles' shelf."
+%     geese                              irregular_possessive    "We followed them back to the geese's flock."
+%
+% WebFetch-verified TWICE before writing. `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources and the same
+% source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
+% `contraction.adj`. A noun that is NOT one of these three — e.g. "cat," a
+% real noun whose possessive is "cat's," but not one this specific cited
+% page's table draws from — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a classification the source never
+% gave. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table possessive_noun {
+    columns word, category
+
+    row (dog, singular_possessive)
+    row (bottles, plural_possessive)
+    row (geese, irregular_possessive)
+
+    source "I adjusted the dog's collar."
+    locator "https://www.grammarly.com/blog/parts-of-speech/possessive-nouns/"
+    trust consensus
+}
