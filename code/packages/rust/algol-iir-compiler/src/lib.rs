@@ -6088,10 +6088,14 @@ fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
             return None;
         };
         let rhs = expr_static_real_arithmetic_value(rhs)?;
+        if op == "/" && rhs == 0.0 {
+            return None;
+        }
         value = match op.as_str() {
             "+" => value + rhs,
             "-" => value - rhs,
             "*" => value * rhs,
+            "/" => value / rhs,
             _ => return None,
         };
         if !value.is_finite() {
@@ -6955,10 +6959,20 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_divided_real_rejects_static_fast_path() {
-        let err = compile_source("begin print(2.0 / 2.25) end", "test")
-            .expect_err("real division still requires runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+    fn al4_print_static_real_division() {
+        let module = compile_source("begin print(9.0 / 2.0, 8.0 / 2.0 * 1.5) end", "test")
+            .expect("static real division compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.5", "6"]);
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
     }
 
     #[test]
@@ -7062,6 +7076,20 @@ mod tests {
     fn al4_print_static_real_multiplication_rejects_non_finite_result() {
         let err = compile_source("begin print(1.0E308 * 2.0) end", "test")
             .expect_err("non-finite compile-time product must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_division_rejects_zero_divisor() {
+        let err = compile_source("begin print(1.0 / 0.0) end", "test")
+            .expect_err("zero divisor must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_division_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 / 1.0E-308) end", "test")
+            .expect_err("non-finite compile-time quotient must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
