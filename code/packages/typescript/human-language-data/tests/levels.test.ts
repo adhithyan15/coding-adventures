@@ -226,11 +226,11 @@ describe("corpus snapshot", () => {
     // +1, and only ONE of chapter 39's four lessons: TA-W20-read-onru, which sits on
     // SPINE-MEET-GREET like every other writing lesson. The chapter's three speaking
     // lessons land at A2, because SPINE-SAY-WHAT-I-WANT is an A2 node — see below.
-    expect(summary.byLevel["pre-A1"]).toBe(880); // +1: ES-C03-vos sits on SPINE-EXCHANGE-NAMES
+    expect(summary.byLevel["pre-A1"]).toBe(880); // +1: ES-C03-vos
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBe(309);
+    expect(summary.byLevel.A1).toBe(310); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
@@ -310,7 +310,7 @@ describe("corpus snapshot", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp).toHaveLength(1189); // +1: ES-C03-vos
+    expect(ramp).toHaveLength(1190); // +1 vos, +1 concordancia
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

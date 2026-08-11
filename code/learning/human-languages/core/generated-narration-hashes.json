@@ -6304,7 +6304,7 @@
     {
       "language": "spanish",
       "chapter": 1,
-      "sourceHash": "fnv1a64:e2e55a440c95c8cb",
+      "sourceHash": "fnv1a64:7f767862168ad0bf",
       "lessonIds": [
         "ES-C01-hola",
         "ES-C01-bien",
@@ -6318,31 +6318,32 @@
       "drivablePrefix": 7,
       "text": "spanish/narration/ch01.txt",
       "json": "spanish/narration/ch01.json",
-      "textHash": "fnv1a64:5a91f9fe54226960",
-      "jsonHash": "fnv1a64:4befde3c1fa3f36c"
+      "textHash": "fnv1a64:86024a3dade152c6",
+      "jsonHash": "fnv1a64:022bf2aaa5f597bd"
     },
     {
       "language": "spanish",
       "chapter": 2,
-      "sourceHash": "fnv1a64:462a506683c04c7f",
+      "sourceHash": "fnv1a64:6676bfa20f821a74",
       "lessonIds": [
         "ES-C02-tarde",
         "ES-C02-buenas-tardes",
         "ES-C02-noche",
         "ES-C02-buenas-noches",
+        "ES-C02-concordancia",
         "ES-C02-practice"
       ],
-      "voiceLessons": 5,
-      "drivablePrefix": 5,
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
       "text": "spanish/narration/ch02.txt",
       "json": "spanish/narration/ch02.json",
-      "textHash": "fnv1a64:354f18f4f9e0da39",
-      "jsonHash": "fnv1a64:fed34282aacfbf35"
+      "textHash": "fnv1a64:f693994f03cf5c5b",
+      "jsonHash": "fnv1a64:63a4bbaf5414905b"
     },
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:c75d827ddf163dc9",
+      "sourceHash": "fnv1a64:418580a43e8de4a0",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
@@ -6364,8 +6365,8 @@
       "drivablePrefix": 8,
       "text": "spanish/narration/ch03.txt",
       "json": "spanish/narration/ch03.json",
-      "textHash": "fnv1a64:95bb49af35700dee",
-      "jsonHash": "fnv1a64:6a65e8da2895871d"
+      "textHash": "fnv1a64:b3f1b8e244301fa7",
+      "jsonHash": "fnv1a64:0963bf8f4789d9e1"
     },
     {
       "language": "spanish",

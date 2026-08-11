@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:c75d827ddf163dc9",
+  "sourceHash": "fnv1a64:418580a43e8de4a0",
   "lessons": [
     {
       "id": "ES-C03-me",
@@ -1978,7 +1978,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:586e754bda1b8e68",
+      "sourceHash": "fnv1a64:6511ed27ba160755",
       "notice": null,
       "blocks": [
         {
@@ -2041,6 +2041,10 @@
             {
               "kind": "speech",
               "text": "mucho gusto — \"much pleasure,\" pleased to meet you."
+            },
+            {
+              "kind": "speech",
+              "text": "And one from two chapters back, because it is worth keeping warm: buenos días but buenas tardes — the describing word copies its noun."
             }
           ]
         },

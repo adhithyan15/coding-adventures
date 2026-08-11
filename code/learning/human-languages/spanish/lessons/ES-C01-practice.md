@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL]
+  knowledge: [ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -49,7 +49,7 @@ first two rules of Spanish grammar:
   turning *bueno* into *buenos* to match.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER] -->
 
 [PAUSE 1s] Say each out loud; don't just read.
 
@@ -65,8 +65,7 @@ masculine-plural *días* → *buenos días*. Do it until the "why" feels obvious
 not memorized.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL] -->
-<!-- hl-activity: {"id":"ES-C01-practice-buenos-agreement","kind":"text","assesses":["ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL"],"prompt":"Why does bueno become buenos in buenos días?","answer":"it agrees with masculine plural días","accepted":["agreement with masculine plural días","días is masculine plural"],"feedback":{"correct":"Right: buenos matches the masculine-plural noun días.","incorrect":"Bueno becomes buenos to agree with días, which is masculine plural."},"response_seconds":8} -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BIEN, ES-LEX-DIA, ES-LEX-BUENOS-DIAS, ES-MORPH-BUENO-BUENA, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-NOUN-NUMBER] -->
 
 [PAUSE 3s] You can now greet two ways and give a one-word positive answer.
 The very next question is the one that opens a real conversation: when

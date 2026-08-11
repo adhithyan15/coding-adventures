@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:b8aa6cd0d85b5107",
+  "sourceHash": "fnv1a64:c8dd0d3f372769c3",
   "summary": {
-    "totalLessons": 1695,
-    "voice": 1115,
+    "totalLessons": 1696,
+    "voice": 1116,
     "sight": 511,
     "pen": 69,
-    "drivableLessons": 1115,
+    "drivableLessons": 1116,
     "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 514,
-    "drivablePrefixTotal": 925,
+    "drivablePrefixTotal": 926,
     "fullyDrivableChapters": 324,
     "unstartableChapters": 138,
     "overriddenLessons": 0,
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 189,
-      "voice": 174,
+      "lessonCount": 190,
+      "voice": 175,
       "sight": 8,
       "pen": 7,
       "drivablePercent": 92,
-      "drivablePrefixTotal": 158,
+      "drivablePrefixTotal": 159,
       "modalities": [
         "voice",
         "sight",
@@ -6790,14 +6790,14 @@
         },
         {
           "chapter": 2,
-          "lessonCount": 5,
-          "voice": 5,
+          "lessonCount": 6,
+          "voice": 6,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 5,
+          "drivablePrefix": 6,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
@@ -6805,6 +6805,7 @@
             "ES-C02-buenas-tardes",
             "ES-C02-noche",
             "ES-C02-buenas-noches",
+            "ES-C02-concordancia",
             "ES-C02-practice"
           ]
         },
@@ -32822,7 +32823,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:29d0935f9ac06644"
+      "sourceHash": "fnv1a64:7d4f1be4805ef6f4"
     },
     {
       "id": "ES-C01-practice",
@@ -32840,7 +32841,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:14e6566acb24a098"
+      "sourceHash": "fnv1a64:9442a395773fb409"
     },
     {
       "id": "ES-C02-tarde",
@@ -32858,7 +32859,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d4d84d98a193ba01"
+      "sourceHash": "fnv1a64:008ddf459005e85a"
     },
     {
       "id": "ES-C02-buenas-tardes",
@@ -32876,7 +32877,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6bfa680323927fc9"
+      "sourceHash": "fnv1a64:d8075387db4da109"
     },
     {
       "id": "ES-C02-noche",
@@ -32912,7 +32913,25 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:353f6913cbc25361"
+      "sourceHash": "fnv1a64:56d585fec8b3ae29"
+    },
+    {
+      "id": "ES-C02-concordancia",
+      "language": "spanish",
+      "chapter": 2,
+      "sequence": 115,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fc380b95a1cdc1bf"
     },
     {
       "id": "ES-C02-practice",
@@ -32930,7 +32949,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2292f4fb7e20251"
+      "sourceHash": "fnv1a64:733f0e17b6f05eb8"
     },
     {
       "id": "ES-C03-me",
@@ -33204,7 +33223,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:586e754bda1b8e68"
+      "sourceHash": "fnv1a64:6511ed27ba160755"
     },
     {
       "id": "ES-C04-gracias",

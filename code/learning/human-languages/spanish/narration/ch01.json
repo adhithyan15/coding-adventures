@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Hola and Buenos Días",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e2e55a440c95c8cb",
+  "sourceHash": "fnv1a64:7f767862168ad0bf",
   "lessons": [
     {
       "id": "ES-C01-hola",
@@ -770,7 +770,7 @@
     {
       "id": "ES-C01-buenos-dias",
       "sequence": 60,
-      "title": "buenos días — assembled from two words you already have",
+      "title": "buenos días — the greeting you say before noon",
       "headword": "buenos días",
       "romanization": "buenos días",
       "gloss": "good morning (literally \"good days\")",
@@ -780,7 +780,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29d0935f9ac06644",
+      "sourceHash": "fnv1a64:7d4f1be4805ef6f4",
       "notice": null,
       "blocks": [
         {
@@ -796,7 +796,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now watch two lessons snap together. You have bueno (\"good,\" from the bien lesson) and días (\"days,\" from the día lesson). Put them side by side and you build the greeting everyone knows — and, for the first time, you'll know why it's shaped the way it is."
+              "text": "You can already greet someone at any hour with hola. Now the one you use in the morning — the greeting everyone knows."
             }
           ]
         },
@@ -807,11 +807,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bien / bueno — the adjective bueno."
-            },
-            {
-              "kind": "speech",
-              "text": "día — the noun días, and that it's masculine."
+              "text": "día — the word day, which you have already met."
             }
           ]
         },
@@ -833,55 +829,24 @@
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "buenos días = bueno (\"good\") + días (\"days\") = literally \"good days.\""
+              "text": "buenos días is, word for word, \"good days\" — plural, and nobody knows quite why the plural stuck. Spanish says it in the plural and always has."
             },
             {
               "kind": "speech",
-              "text": "But look closely: it's buenos, not bueno. Why? Because of the one new grammar rule of this lesson."
+              "text": "Take it whole. It is one thing you say, not two things you assemble: buenos días, said as a single run, the way English says good morning without stopping to think about good or morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape of it — why buenos and not bueno — is a real rule, and a useful one. It is also not the rule you need in order to say hello before lunch. It comes later, once you have enough words for it to be worth explaining."
             }
           ]
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: agreement",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "An adjective in Spanish agrees with its noun — it copies the noun's gender and number. días is masculine (the día lesson's flagged exception) and plural (the -s rule from the día lesson). So bueno has to become masculine plural to match: bueno becomes buenos."
-            },
-            {
-              "kind": "speech",
-              "text": "The adjective bueno has four shapes, and you now understand the machine that picks between them:"
-            },
-            {
-              "kind": "speech",
-              "text": "bueno — masculine singular (un buen día becomes a good day)."
-            },
-            {
-              "kind": "speech",
-              "text": "buena — feminine singular."
-            },
-            {
-              "kind": "speech",
-              "text": "buenos — masculine plural becomes buenos días."
-            },
-            {
-              "kind": "speech",
-              "text": "buenas — feminine plural (you'll want this one the moment we reach tardes and noches, which are feminine)."
-            },
-            {
-              "kind": "speech",
-              "text": "English adjectives never do this — \"good\" is \"good\" whether it's one day or a hundred. Spanish makes the adjective echo the noun. That echo is why it's buenos días and not bueno días."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
@@ -892,7 +857,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -932,7 +897,7 @@
           ]
         },
         {
-          "index": 7,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -963,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14e6566acb24a098",
+      "sourceHash": "fnv1a64:9442a395773fb409",
       "notice": null,
       "blocks": [
         {
@@ -1095,25 +1060,6 @@
             {
               "kind": "speech",
               "text": "You can now greet two ways and give a one-word positive answer. The very next question is the one that opens a real conversation: when someone else says buenos días to you — what do you say back? That's the whole next chapter, and it's where these words start turning into an exchange."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C01-practice-buenos-agreement",
-              "prompt": "Why does bueno become buenos in buenos días?",
-              "assesses": [
-                "ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "it agrees with masculine plural días",
-                "agreement with masculine plural días",
-                "días is masculine plural"
-              ],
-              "feedback": {
-                "correct": "Right: buenos matches the masculine-plural noun días.",
-                "incorrect": "Bueno becomes buenos to agree with días, which is masculine plural."
-              }
             }
           ]
         }

@@ -22,8 +22,7 @@
           "ES-LEX-BUENOS-DIAS",
           "ES-MORPH-BUENO-BUENA",
           "ES-GRAMMAR-NOUN-GENDER",
-          "ES-GRAMMAR-NOUN-NUMBER",
-          "ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL"
+          "ES-GRAMMAR-NOUN-NUMBER"
         ]
       }
     },
@@ -31,7 +30,7 @@
       "chapter": 2,
       "title": "The Rest of the Greetings",
       "label": "ch:greetings",
-      "canDo": "I can greet someone correctly at any hour — morning, afternoon, or night.",
+      "canDo": "I can greet someone correctly at any hour — morning, afternoon or night — and say why the greeting changes shape.",
       "spineNodes": [
         "SPINE-TIME-OF-DAY"
       ],

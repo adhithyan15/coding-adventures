@@ -17,7 +17,10 @@ describe("generated book source hashes", () => {
     // human-language-data, so the data package's own suite passes while this
     // one fails -- which is exactly why the downstream app is built in CI.
     [1, 7],
-    [2, 5],
+    // ch2 5->6: HL-C85 adds ES-C02-concordancia. The greetings stopped REQUIRING
+    // the agreement rule -- it is now a payoff lesson at the end of chapter 2,
+    // after the learner has used all three.
+    [2, 6],
     [3, 15],
     [4, 15],
     [5, 7],

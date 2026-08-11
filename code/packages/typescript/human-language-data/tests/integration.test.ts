@@ -168,7 +168,8 @@ describe("real curriculum", () => {
       "AR-W07-hook-family-ha-kha-dot-position",
       "BN-C10-jol-water",
       "ES-C01-genero-gramatical-class-count",
-      "ES-C01-practice-buenos-agreement",
+      "ES-C02-concordancia-why-buenas",
+      "ES-C02-concordancia-why-buenos",
       "ES-C07-beber-coffee",
       "ES-C07-comer-singular-forms",
       "ES-C07-donde-live-in-madrid",
@@ -209,8 +210,6 @@ describe("real curriculum", () => {
       "ES-C10-practice-ir-forms",
       "ES-C10-practice-near-future",
       "ES-C10-practice-possessive",
-      // Chapter 11 keeps both stem-change patterns, infinitive chaining, and
-      // possessive agreement inside the already-learned singular frontier.
       "ES-C11-nuestro-our-day",
       "ES-C11-nuestro-our-night",
       "ES-C11-poder-can-eat",
@@ -224,8 +223,6 @@ describe("real curriculum", () => {
       "ES-C11-querer-want-to-speak",
       "ES-C11-stem-changes-tu-contrast",
       "ES-C11-stem-changes-yo-contrast",
-      // Chapter 12 keeps hacer and decir inside the learned singular-person
-      // frontier and compares only the already-owned tengo/hago/digo forms.
       "ES-C12-decir-how-do-you-say",
       "ES-C12-decir-say-hello",
       "ES-C12-decir-singular-forms",
@@ -238,8 +235,6 @@ describe("real curriculum", () => {
       "ES-C12-practice-yo-go-order",
       "ES-C12-yo-go-hacer-choice",
       "ES-C12-yo-go-learned-order",
-      // Chapter 13 adds poner, salir, and venir one singular set at a time,
-      // then widens the learned yo-go comparison only in the checkpoint.
       "ES-C13-poner-meaning",
       "ES-C13-poner-singular-forms",
       "ES-C13-practice-leave-come",
@@ -253,9 +248,6 @@ describe("real curriculum", () => {
       "ES-C13-venir-come-from-madrid",
       "ES-C13-venir-singular-forms",
       "ES-C13-venir-tener-contrast",
-      // Chapter 14 introduces two completed-past patterns inside the same
-      // singular-person and known-word frontier, then mixes them without
-      // smuggling in time, place, or person vocabulary.
       "ES-C14-hablar-preterite-hable-espanol",
       "ES-C14-hablar-preterite-present-past",
       "ES-C14-hablar-preterite-singular-forms",
@@ -267,9 +259,6 @@ describe("real curriculum", () => {
       "ES-C14-ser-ir-preterite-context",
       "ES-C14-ser-ir-preterite-fui-madrid",
       "ES-C14-ser-ir-preterite-singular-forms",
-      // Chapter 15 keeps every step inside the known singular-person and
-      // vocabulary frontier: one regular row or one strong verb at a time,
-      // followed by a mapped terminal checkpoint.
       "ES-C15-comer-preterite-history",
       "ES-C15-comer-preterite-past-choice",
       "ES-C15-comer-preterite-singular-forms",
@@ -292,8 +281,6 @@ describe("real curriculum", () => {
       "ES-C15-tener-preterite-history",
       "ES-C15-tener-preterite-singular-forms",
       "ES-C15-tener-preterite-tuve-cafe",
-      // Chapter 16 introduces one singular imperfect row at a time, teaches
-      // ver before using it in the past, and closes with known-word contrasts.
       "ES-C16-comer-imperfecto-comi-comia",
       "ES-C16-comer-imperfecto-singular-forms",
       "ES-C16-comer-imperfecto-syllables",
@@ -322,8 +309,6 @@ describe("real curriculum", () => {
       "ES-C16-vivir-imperfecto-shared-row",
       "ES-C16-vivir-imperfecto-singular-forms",
       "ES-C16-vivir-imperfecto-vivia-madrid",
-      // Chapter 17 keeps future and conditional forms inside the singular
-      // person frame, then adds only three already-known irregular verbs.
       "ES-C17-comer-condicional-future-pair",
       "ES-C17-comer-condicional-shared-endings",
       "ES-C17-comer-condicional-singular-forms",
@@ -439,8 +424,6 @@ describe("real curriculum", () => {
       "MR-C06-number-differences-don-ending",
       "PA-C06-panj-convergence-borrowing",
       "PA-C07-janna-two-js",
-      // The Punjabi eight-verb tranche: one activity per lesson across Chapters 8
-      // and 9, matching how the Persian and Urdu tranches carry theirs.
       "PA-C08-likhna-four-roots",
       "PA-C08-parhna-subjoined",
       "PA-C08-samajhna-tone",
@@ -485,8 +468,6 @@ describe("real curriculum", () => {
       "UR-C05-practice-final-line",
       "UR-C07-likhna-four-stems",
       "UR-C08-pasand-dative",
-      // HL-C41 continuation: the pre-A1 vocabulary tranche added one activity per
-      // payoff/deeper lesson across chapters 9-12.
       "UR-C09-bahan-agreement",
       "UR-C09-khandan-sort",
       "UR-C10-munh-nun",
@@ -494,8 +475,6 @@ describe("real curriculum", () => {
       "UR-C11-dil-cousin",
       "UR-C12-doodh-false-friend",
       "UR-C12-roti-pasand",
-      // HL-C39 added Mandarin Chinese: one activity per Chapter 1 lesson, so the
-      // corpus total moves from 51 to 57.
       "ZH-C01-hao-components",
       "ZH-C01-hao-fond-tone",
       "ZH-C01-ni-meaning",
@@ -517,7 +496,7 @@ describe("real curriculum", () => {
         lesson.realization.chapter <= 3,
     );
     // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
-    expect(pilot).toHaveLength(27) // +1: ES-C03-vos in chapter 3;
+    expect(pilot).toHaveLength(28) // +1 vos (ch3), +1 concordancia (ch2);
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(
