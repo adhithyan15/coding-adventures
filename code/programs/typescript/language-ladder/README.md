@@ -172,7 +172,8 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and Arabic ا, ب, ت, ج, ح, خ, د, and ر have authored pen paths today.**
+and all eleven Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, and ص —
+have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -323,7 +324,12 @@ page's `FullSizeRender-7.mov` then verifies **ش** independently: it draws the
 same body in one run before separately placing the lower-left, lower-right, and
 centered upper dots. The five-frame filmstrip preserves those three lifts,
 two-way-connector context, and Arabic-scoped provenance independently of Urdu ش
-while fitting the isolated Noto Naskh outline. The
+while fitting the isolated Noto Naskh outline. The page's `FullSizeRender-6.mov`
+then verifies **ص** independently: it closes the oval clockwise and rises into
+the short shoulder in one run, then lifts once and restarts at the baseline
+junction for the trailing bowl. The three-frame filmstrip preserves that
+two-stroke order, two-way-connector context, and Arabic-scoped provenance while
+fitting the isolated Noto Naskh outline. The
 runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
