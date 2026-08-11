@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-que
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 610
-chapter: 7
+chapter: 15
 type: word
 headword: qué
 gloss: what? (a new question word for verbs you already know)

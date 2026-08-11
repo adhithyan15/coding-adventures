@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-tu-usted-register
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 170
-chapter: 3
+chapter: 4
 type: word
 headword: tú o usted
 gloss: the choice English lost — and the surprise that usted takes he/she verb forms

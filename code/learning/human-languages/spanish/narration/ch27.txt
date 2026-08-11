@@ -1,41 +1,73 @@
-Spanish, chapter 27: The Months.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 27: Yes and No.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-los meses — the calendar's gods and Caesars.
+Lesson 1 of 2.
+sí — yes.
 
 Warm-up.
 [pause 2 seconds]
-Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters.
+The smallest useful word — and the accent on it is doing real work.
 
-The months, taken apart.
-[a table of 12 rows, read aloud]
-Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.
-Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.
-Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!
-Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, "to open" (buds opening).
-Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.
-Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.
-Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, "the 5th [month]" — renamed for Julius Caesar after his death.
-Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, "the 6th [month]" — renamed for the emperor Augustus.
-Spanish: septiembre. from Latin: september. who / what: "7th" (septem).
-Spanish: octubre. from Latin: octōber. who / what: "8th" (octō).
-Spanish: noviembre. from Latin: november. who / what: "9th" (novem).
-Spanish: diciembre. from Latin: december. who / what: "10th" (decem).
-Two payoffs land at once:
-marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other.
-The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named "7th." Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally "5th" and "6th" — renamed in their honor after the fact. The names stuck; the months themselves were never new.
+The word, taken apart: sí and si.
+sí = yes. One syllable, said see.
+The written accent is not decoration — it is the whole difference between two words:
+sí (with the accent) = yes.
+si (no accent) = if.
+They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = "Yes, if you want." Miss the accent and you've written "if" where you meant "yes."
+
+The word, taken apart: where sí comes from.
+sí is Latin sīc, "thus, so" — answering a question with "just so," exactly the move Latin also made with ita ("thus" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:
+[a table of 3 rows, read aloud]
+Latin sīc: Spanish. , which gives:: sí.
+Latin sīc: Italian. , which gives:: sì.
+Latin sīc: Portuguese. , which gives:: sim.
+French is the odd one out — it went a completely different way for "yes" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the twelve — "enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre"]
+[your turn — say: "sí" — see, and picture the accent]
 [pause 8 seconds for the answer]
-[your turn — say: the tie-back — "marzo / martes — both Mars, the war-god"]
+[your turn — say: the pair — "sí" (yes) vs "si" (if)]
 [pause 8 seconds for the answer]
-[your turn — say: "septiembre = 7, diciembre = 10" — the old March-start year]
+[your turn — say: the cousins — "sí, sì, sim" — all from Latin sīc]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for "ten"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis ("5th"/"6th"), simply renamed in their honor.)
+How do you say yes in Spanish? (sí.) What is the only difference between sí "yes" and si "if"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — "thus, so".)
+
+
+Lesson 2 of 2.
+no — no / not.
+
+Warm-up.
+[pause 2 seconds]
+The easiest word yet — and it quietly does two jobs Spanish never splits apart.
+
+The word, taken apart: no.
+no = no. Said noh, a clean single vowel.
+It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:
+[a table of 3 rows, read aloud]
+Latin nōn: Spanish. , which gives:: no.
+Latin nōn: Italian. , which gives:: no.
+Latin nōn: French. , which gives:: non.
+
+Grammar Lens: one word, two jobs.
+Here's the thing English splits and Spanish doesn't. English has "no" (the answer) and "not" (inside a sentence) — two different words. Spanish uses no for both:
+as the answer: ¿Hablas inglés? — No.
+as the negator, placed right before the verb: No hablo inglés = "I do not speak English."
+So learning no gives you the whole of Spanish negation for free: to make any sentence negative, drop no in front of the verb. One little word, two everyday jobs.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "no" — noh]
+[pause 8 seconds for the answer]
+[your turn — say: as an answer — "¿Hablas inglés? No."]
+[pause 8 seconds for the answer]
+[your turn — say: as a negator — "No hablo inglés"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? ("no" the answer and "not" the negator — No hablo = "I do not speak.") Where does no go to negate a sentence? (Right before the verb.)

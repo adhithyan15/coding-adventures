@@ -190,8 +190,8 @@ describe("the committed corpus", () => {
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
     expect(l.summary.roots).toBe(2719); // +2: vos-latin slug and ES-ETYMON-VOS-03
-    expect(l.summary.underspent).toBe(2625); // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far
-    expect(l.summary.neverSpent).toBe(1808); // +1: the vos-latin slug only latin-vos, introduced and not yet re-spent
+    expect(l.summary.underspent).toBe(2624); // -1: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far
+    expect(l.summary.neverSpent).toBe(1802); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent
     expect(l.summary.underspentPercent).toBe(97);
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -211,8 +211,8 @@ describe("the committed corpus", () => {
     );
     expect(l.summary).toMatchObject({
       roots: 305, // +2: vos-latin and ES-ETYMON-VOS-03
-      underspent: 291,
-      neverSpent: 191,
+      underspent: 290,
+      neverSpent: 185,
       underspentPercent: 95,
     });
   });

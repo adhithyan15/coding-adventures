@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-ar-presente
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 520
-chapter: 6
+chapter: 13
 type: word
 headword: hablo, hablas, habla
 gloss: the -ar present-tense template, and why Spanish leaves the subject pronoun out

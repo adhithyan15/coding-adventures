@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-adios
 spine_node: SPINE-TAKE-LEAVE
 sequence: 420
-chapter: 5
+chapter: 10
 type: word
 headword: adiós
 gloss: goodbye

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-cafe
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 490
-chapter: 6
+chapter: 12
 type: word
 headword: café
 gloss: coffee / a café — one useful noun before the polite request that follows

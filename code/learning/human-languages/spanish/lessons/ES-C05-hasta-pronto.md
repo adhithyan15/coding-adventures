@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-hasta-pronto
 spine_node: SPINE-TAKE-LEAVE
 sequence: 470
-chapter: 5
+chapter: 11
 type: phrase
 headword: hasta pronto
 gloss: see you soon (literally "until soon")

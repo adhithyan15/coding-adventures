@@ -1,133 +1,184 @@
-Spanish, chapter 14: The Preterite --- Your First Past Tense.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 14: More -ar Verbs.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-fui — one past set shared by ser and ir.
+Lesson 1 of 5.
+trabajar — "to work," and it once meant torture.
 
 Warm-up.
 [pause 2 seconds]
-You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue.
+A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel.
 
-Grammar Lens: three singular forms, two verbs.
+Sounds you'll need.
+j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR.
+r-tap, b-soft — tapped r, soft b.
+
+The word, taken apart.
+trabajar comes from Vulgar Latin tripaliāre, "to torture" — from tripalium, a Roman instrument of torture made of three stakes (tri- "three" + pālus "stake," the root of English pale and impale).
+The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:
+travail — painful, laborious effort (and the pains of childbirth).
+travel — yes: journeying was once such an ordeal that "travail" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured.
+So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb.
+
+Grammar Lens: same -ar template.
+Drop -ar, add the ending — identical to hablar:
 [a table of 3 rows, read aloud]
-person: yo. completed past of ser or ir: fui.
-person: tú. completed past of ser or ir: fuiste.
-person: él / ella / usted. completed past of ser or ir: fue.
-Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:
-Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir.
-Fue Roberto. — “It was Roberto.” Identification points to ser.
-Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson.
-
-The form, taken apart.
-The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words.
+person: I (ending carries the subject). form: trabajo. meaning: I work.
+person: tú. form: trabajas. meaning: you work.
+person: usted. form: trabaja. meaning: you (formal) work.
+Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “fui, fuiste, fue”]
+[your turn — say: "trabajar" — tra-ba-HAR, raspy j]
 [pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid.”]
+[your turn — say: "trabajo, trabajas, trabaja" — same endings as hablo/hablas/habla]
 [pause 8 seconds for the answer]
-[your turn — say: “Fue Roberto — identification, so ser.”]
+[your turn — say: "trabajar" becomes travail becomes travel — torture became a journey]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 8 seconds]
-Say 'I went to Madrid' in Spanish.
-[question — say your answer, then pause 6 seconds]
-In 'Fue Roberto', which verb does fue express?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past.
+What did trabajar originally mean, and from what device? ("To torture," from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say "I work"? (Trabajo — same -o ending.) Next: estudiar, "to study."
 
 
-Lesson 2 of 3.
-hablé — a regular singular past from a known verb.
+Lesson 2 of 5.
+estudiar — "to study," and the eagerness inside it.
 
 Warm-up.
 [pause 2 seconds]
-You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló.
+Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness.
 
-Grammar Lens: present beside completed past.
+Sounds you'll need.
+st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR.
+diphthong-io — the -iar glides: es-too-DYAR.
+
+The word, taken apart.
+estudiar comes from Latin studēre, "to be eager, to apply oneself zealously." A studium was zeal, enthusiasm, devotion — only later "study." So to study is, at heart, to throw yourself eagerly at something.
+That studēre is everywhere in English:
+student — literally "one who is eager."
+studio, studious, study — the place, the trait, the act.
+Italian studio and the musical studio keep the "devoted practice" sense.
+So Estudio español is "I devote myself eagerly to Spanish" — a nicer picture than mere schoolwork.
+
+Grammar Lens: the template holds.
+Drop -ar, add the ending — for the third time:
 [a table of 3 rows, read aloud]
-person: yo. present: hablo. completed past: hablé.
-person: tú. present: hablas. completed past: hablaste.
-person: él / ella / usted. present: habla. completed past: habló.
-Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:
-hablo becomes hablé changes the final vowel and moves stress to the end.
-hablas becomes hablaste adds the past ending -aste.
-habla becomes habló changes the final vowel and moves stress to the end.
-
-Grammar Lens: two accents, one natural stress pattern.
-The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past.
-Now reuse known words:
-Hablé español. — “I spoke Spanish.”
-¿Hablaste español? — “Did you speak Spanish?”
-Habló español. — “He, she, or you-formal spoke Spanish.”
-
-The endings, taken apart.
-The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending.
+person: I (ending carries the subject). form: estudio. meaning: I study.
+person: tú. form: estudias. meaning: you study.
+person: usted. form: estudia. meaning: you (formal) study.
+Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hablé, hablaste, habló”]
+[your turn — say: "estudiar" — es-too-DYAR]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablo español. Hablé español.”]
+[your turn — say: "estudio, estudias, estudia" — the now-familiar endings]
 [pause 8 seconds for the answer]
-[your turn — say: “hablé and habló carry written accents; hablaste does not”]
+[your turn — say: "estudiar" then English "student, studio" — the studēre "eagerness"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 8 seconds]
-Say 'I spoke Spanish' in Spanish.
-[question — say your answer, then pause 6 seconds]
-Which form means 'I spoke' as a completed event: hablo or hablé?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words.
+What did studēre originally mean? ("To be eager / apply oneself.") Its English cousins? (Student, studio, studious.) Say "I study" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence.
 
 
-Lesson 3 of 3.
-Practice — two singular ways to talk about a completed past.
+Lesson 3 of 5.
+español — the word for the language.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart.
+You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all.
 
-Grammar Lens: the complete Chapter 14 frame.
-shared past of ser and ir: fui, fuiste, fue.
-regular past of hablar: hablé, hablaste, habló.
-context: Fui a Madrid expresses ir; Fue Roberto expresses ser.
-time contrast: Hablo español is present; Hablé español is completed past.
-spelling: hablé and habló show final stress with a written accent; hablaste needs none.
-Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons.
-
-The two histories, taken apart.
-The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy.
+The word, taken apart — español.
+español = "Spanish" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL.
+Two footnotes worth having:
+English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other.
+Hispania itself may go back through Latin to a Phoenician name for the coast, often read as "land of hyraxes" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “fui, fuiste, fue”]
+[your turn — say: "español" — es-pa-NYOL]
 [pause 8 seconds for the answer]
-[your turn — say: “hablé, hablaste, habló”]
+[your turn — say: the path — "Hispania, hispaniolus, español"]
 [pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid. Fue Roberto.”]
+[your turn — say: "español" then English "Hispanic" — same root]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablo español. Hablé español.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the three learned forms shared by ser and ir.
-[question — say your answer, then pause 9 seconds]
-Give the three learned completed-past forms of hablar.
-[question — say your answer, then pause 7 seconds]
-Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?
-[question — say your answer, then pause 10 seconds]
-Give 'I speak Spanish' and then 'I spoke Spanish.'
-[question — say your answer, then pause 7 seconds]
-Which two of hablé, hablaste, habló carry written accents?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.
+Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence.
+
+
+Lesson 4 of 5.
+Hablo español — your first real sentence.
+
+Warm-up.
+[pause 2 seconds]
+This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled.
+
+What you've built — the sentence assembled.
+Snap two things you already own together:
+Hablo (I speak, from hablar) + español (Spanish) = Hablo español.
+That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says "I" — the pro-drop you just learned, doing real work in a real sentence.
+Now swap the pieces and watch it generate:
+Estudio español. — "I study Spanish."
+Trabajo. — "I work."
+¿Hablas español? — "Do you speak Spanish?" (the ¿? pair opening and closing the question, as in the writing lesson).
+
+Grammar Lens: languages go bare.
+One more thing missing from hablo español: no "the," no "a." After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español.
+This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, "I like coffee"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Hablo español" — AH-bloh es-pa-NYOL]
+[pause 8 seconds for the answer]
+[your turn — say: swap the verb — "Estudio español", "Trabajo"]
+[pause 8 seconds for the answer]
+[your turn — say: ask it — "¿Hablas español?" (raise the pitch; ¿ opens it)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I speak Spanish," then "I study Spanish." (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries "I.") Why no "the" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here.
+
+
+Lesson 5 of 5.
+Practice — making sentences with -ar verbs.
+
+Warm-up.
+[pause 2 seconds]
+A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic.
+
+Grammar Lens: conjugate on command.
+[pause 1 second]
+Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:
+hablar: hablo, hablas, habla.
+trabajar: trabajo, trabajas, trabaja.
+estudiar: estudio, estudias, estudia.
+Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular.
+
+The exchange — say something real.
+— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada.
+
+What you've built this chapter.
+por favor — please ( from "for a favour"), completing gracias / de nada / por favor.
+the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar.
+hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student).
+Hablo español — your first self-assembled sentence (pro-drop, no article).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: conjugate all three verbs for I / tú / usted, without stopping]
+[pause 8 seconds for the answer]
+[your turn — say: answer “¿Hablas español?” and “¿Estudias español?” about yourself]
+[pause 8 seconds for the answer]
+[your turn — say: request “Café, por favor” and run the full gracias/de nada loop]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Ask and answer “¿Hablas español? — Hablo español.”
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families.

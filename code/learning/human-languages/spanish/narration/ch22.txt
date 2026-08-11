@@ -1,124 +1,133 @@
-Spanish, chapter 22: Black, White, Red, and Blue.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 22: The Preterite --- Your First Past Tense.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-negro, blanco — two colours, and one of their histories.
-
-Warm-up.
-[pause 2 seconds]
-Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next.
-
-The words, taken apart: negro.
-negro ("black") from Latin niger. Nothing surprising: the same Latin root gives English denigrate ("to blacken someone's name") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language.
-Hold that in mind as the baseline. It is what a colour word normally does.
-
-The two words in use.
-blanco ("white") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca).
-But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish "white" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "negro, blanco"]
-[pause 8 seconds for the answer]
-[your turn — say: with a noun — "el gato negro, la casa blanca"]
-[pause 8 seconds for the answer]
-[your turn — say: "negro" then English "denigrate" — the niger root]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's "white" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)
-
-
-Lesson 2 of 4.
-blanco — the colour Spanish did not inherit.
+Lesson 1 of 3.
+fui — one past set shared by ser and ir.
 
 Warm-up.
 [pause 2 seconds]
-Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in.
+You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue.
 
-You'll want to know first.
-negro, blanco — the two colour words.
+Grammar Lens: three singular forms, two verbs.
+[a table of 3 rows, read aloud]
+person: yo. completed past of ser or ir: fui.
+person: tú. completed past of ser or ir: fuiste.
+person: él / ella / usted. completed past of ser or ir: fue.
+Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:
+Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir.
+Fue Roberto. — “It was Roberto.” Identification points to ser.
+Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson.
 
-The word, taken apart: blanco.
-blanco comes from Germanic blank — "shining, gleaming." It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed.
-Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings.
-Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in "bright white."
-
-Why it's said this way: where albus went.
-Latin's white did not vanish. It stopped being the everyday word and survived in corners:
-[a table of 4 rows, read aloud]
-word: alba. meaning: dawn. the white inside: the sky going white.
-word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.
-word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.
-word: albino. meaning: albino. the white inside: white-skinned.
-That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn.
+The form, taken apart.
+The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pairing — "negro from Latin, blanco from Germanic"]
+[your turn — say: “fui, fuiste, fue”]
 [pause 8 seconds for the answer]
-[your turn — say: "el alba" — dawn — and hear the old Latin white inside it]
+[your turn — say: “Fui a Madrid.”]
 [pause 8 seconds for the answer]
-[your turn — say: "blanco" then French "blanc" — the same loan, twice over]
+[your turn — say: “Fue Roberto — identification, so ser.”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I went to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+In 'Fue Roberto', which verb does fue express?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does blanco come from, and what did it mean? (Germanic blank, "shining" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba "dawn," álbum, albino — no longer the everyday colour word.)
+Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past.
 
 
-Lesson 3 of 4.
-rojo — the same family as red, by a different branch.
+Lesson 2 of 3.
+hablé — a regular singular past from a known verb.
 
 Warm-up.
 [pause 2 seconds]
-So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess.
+You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló.
 
-The word, taken apart: rojo.
-rojo ("red") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one.
-Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink).
-So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody.
+Grammar Lens: present beside completed past.
+[a table of 3 rows, read aloud]
+person: yo. present: hablo. completed past: hablé.
+person: tú. present: hablas. completed past: hablaste.
+person: él / ella / usted. present: habla. completed past: habló.
+Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:
+hablo becomes hablé changes the final vowel and moves stress to the end.
+hablas becomes hablaste adds the past ending -aste.
+habla becomes habló changes the final vowel and moves stress to the end.
+
+Grammar Lens: two accents, one natural stress pattern.
+The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past.
+Now reuse known words:
+Hablé español. — “I spoke Spanish.”
+¿Hablaste español? — “Did you speak Spanish?”
+Habló español. — “He, she, or you-formal spoke Spanish.”
+
+The endings, taken apart.
+The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "rojo"]
+[your turn — say: “hablé, hablaste, habló”]
 [pause 8 seconds for the answer]
-[your turn — say: the cousins — "rojo, rouge, red", three branches, one root]
+[your turn — say: “Hablo español. Hablé español.”]
 [pause 8 seconds for the answer]
-[your turn — say: the three so far — "negro inherited, blanco borrowed, rojo cousin"]
+[your turn — say: “hablé and habló carry written accents; hablaste does not”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I spoke Spanish' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Which form means 'I spoke' as a completed event: hablo or hablé?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely.
+Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words.
 
 
-Lesson 4 of 4.
-azul — a stone from Afghanistan, in your everyday vocabulary.
+Lesson 3 of 3.
+Practice — two singular ways to talk about a completed past.
 
 Warm-up.
 [pause 2 seconds]
-Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether.
+This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart.
 
-The word, taken apart: azul.
-azul ("blue") from Arabic لازورد (lāzaward), "lapis lazuli" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli.
-So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour.
+Grammar Lens: the complete Chapter 14 frame.
+shared past of ser and ir: fui, fuiste, fue.
+regular past of hablar: hablé, hablaste, habló.
+context: Fui a Madrid expresses ir; Fue Roberto expresses ser.
+time contrast: Hablo español is present; Hablé español is completed past.
+spelling: hablé and habló show final stress with a written accent; hablaste needs none.
+Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons.
 
-Why it's said this way: everyday here, poetic there.
-Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all.
-Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels.
+The two histories, taken apart.
+The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all four — "negro, blanco, rojo, azul"]
+[your turn — say: “fui, fuiste, fue”]
 [pause 8 seconds for the answer]
-[your turn — say: sort them — "negro inherited, blanco Germanic, rojo cousin of red, azul Arabic"]
+[your turn — say: “hablé, hablaste, habló”]
 [pause 8 seconds for the answer]
-[your turn — say: "azul" then English "azure" — the same lapis lazuli]
+[your turn — say: “Fui a Madrid. Fue Roberto.”]
 [pause 8 seconds for the answer]
+[your turn — say: “Hablo español. Hablé español.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the three learned forms shared by ser and ir.
+[question — say your answer, then pause 9 seconds]
+Give the three learned completed-past forms of hablar.
+[question — say your answer, then pause 7 seconds]
+Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?
+[question — say your answer, then pause 10 seconds]
+Give 'I speak Spanish' and then 'I spoke Spanish.'
+[question — say your answer, then pause 7 seconds]
+Which two of hablé, hablaste, habló carry written accents?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)
+Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.

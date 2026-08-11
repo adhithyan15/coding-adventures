@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 11,
-  "title": "Verbs That Break in the Middle --- the Stem Changers",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2d9dfe7d6bbcb269",
+  "title": "Until When",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:7fac3b8afaa8e71d",
   "lessons": [
     {
-      "id": "ES-C11-querer",
-      "sequence": 920,
-      "title": "querer — wanting with one familiar vowel change",
-      "headword": "querer",
-      "romanization": "querer",
-      "gloss": "to want — with the singular present forms quiero, quieres, and quiere",
+      "id": "ES-C05-hasta-luego",
+      "sequence": 450,
+      "title": "hasta luego — the everyday \"see you later\"",
+      "headword": "hasta luego",
+      "romanization": "hasta luego",
+      "gloss": "see you later (literally \"until later\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08454707b72c09c7",
+      "sourceHash": "fnv1a64:e2abd6c5090b27a5",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already say tienes and tiene, where the middle e opens into ie. Today, reuse that visible change in one useful verb and keep the same three-person frame you already own."
+              "text": "This is the goodbye you'll actually use most — friendly, casual, open-ended. hasta luego: \"until later.\" You already own hasta (\"until\"); today you add luego (\"later\"), and it has a very Latin backstory."
             }
           ]
         },
@@ -46,468 +46,65 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — begin quiero with one smooth kye- syllable."
+              "text": "diphthong-ue — luego = LWEH-goh: the ue is a w-glide, lweh-."
             },
             {
               "kind": "speech",
-              "text": "r-tap — end the infinitive querer with one light tap."
+              "text": "The whole phrase: AHS-tah LWEH-goh."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart — the phrase",
           "segments": [
             {
               "kind": "speech",
-              "text": "querer means “to want.” With a person as its object, it can also express love, but wanting is the meaning used in this lesson."
+              "text": "hasta luego = \"until later\" becomes \"see you later.\""
             },
             {
               "kind": "speech",
-              "text": "It descends from Latin quaerere, “to seek or ask.” English keeps the same searching idea in query, quest, inquire, and require. Wanting something begins as seeking it."
+              "text": "hasta = \"until\" (last lesson — Arabic ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "luego = \"later / then / soon,\" from Latin loco, \"at the place / at that point.\" The idea slid from place becomes point in time becomes \"then, next, soon.\" So its cousins in English are all about place: local, locus, location, locate, al-loc-ate. Spanish moved loco from where to when."
+            },
+            {
+              "kind": "speech",
+              "text": "A nice contrast: hasta luego fuses an Arabic word and a Latin word in three syllables — the two great layers of Spanish, shaking hands as you leave."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: only the three singular forms",
+          "title": "Grammar Lens: the \"hasta …\" family",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta + a time word is Spanish's whole toolkit of soft goodbyes. You'll build the other two this chapter:"
+            },
             {
               "kind": "table",
               "headers": [
-                "person",
-                "present of querer"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of querer: quiero.",
-                "person: tú. present of querer: quieres.",
-                "person: él / ella / usted. present of querer: quiere."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say the small set as quiero, quieres, quiere. The e becomes ie that you saw in tienes, tiene is visible again. The plural persons are deliberately left for a later step."
-            },
-            {
-              "kind": "speech",
-              "text": "Place one known infinitive after the form of querer:"
-            },
-            {
-              "kind": "speech",
-              "text": "Quiero hablar. — “I want to speak.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Quieres comer. — “You want to eat.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Quiere vivir. — “He, she, or formal you wants to live.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The second verb stays in its known infinitive form."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“querer — quiero, quieres, quiere”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “querer — quiero, quieres, quiere”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Quiero hablar”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero hablar”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“quaerere — query — querer”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “quaerere — query — querer”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-querer-singular-forms",
-              "prompt": "Give the learned singular present forms of querer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "quiero, quieres, quiere",
-                "quiero quieres quiere",
-                "quiero / quieres / quiere"
-              ],
-              "feedback": {
-                "correct": "Right: quiero, quieres, quiere.",
-                "incorrect": "Keep the e becomes ie stem and use the three singular endings: quiero, quieres, quiere."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-querer-want-to-speak",
-              "prompt": "Say 'I want to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "quiero hablar.",
-                "quiero hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero hablar.",
-                "incorrect": "Use quiero followed by the unchanged infinitive hablar."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does querer mean? (“To want.”) Give the three learned forms. (Quiero, quieres, quiere.) Which Latin verb and English cousin help explain it? (Quaerere, “seek”; query or quest.) Next: add the other singular vowel change with poder."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C11-poder",
-      "sequence": 930,
-      "title": "poder — ability with the o becomes ue change",
-      "headword": "poder",
-      "romanization": "poder",
-      "gloss": "to be able or can — with the singular present forms puedo, puedes, and puede",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:4c9a2e25f9b051f0",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Quiero hablar says what you want to do. Now change the first verb to say what you are able to do. The second verb will remain a known infinitive."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "diphthong-ue — puedo begins pwe- with one smooth glide."
-            },
-            {
-              "kind": "speech",
-              "text": "r-tap — end poder with one light tap."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "poder means “to be able”; in a sentence it often translates as “can.” It descends through Latin potere from posse, “to be able.” English power, potent, potential, and possible belong to the same family. Ability is the power to do something."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the three singular forms",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present of poder"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of poder: puedo.",
-                "person: tú. present of poder: puedes.",
-                "person: él / ella / usted. present of poder: puede."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say puedo, puedes, puede. In these three learned forms, the stem o opens into ue. Plural persons wait."
-            },
-            {
-              "kind": "speech",
-              "text": "Follow the form of poder with one unchanged infinitive:"
-            },
-            {
-              "kind": "speech",
-              "text": "Puedo hablar. — “I can speak.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Puedes comer. — “You can eat.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Puede vivir. — “He, she, or formal you can live.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Compare Quiero hablar with Puedo hablar: only the first verb changes the meaning from want to ability."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“poder — puedo, puedes, puede”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “poder — puedo, puedes, puede”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Puedo hablar”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Puedo hablar”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“poder — power — possible”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “poder — power — possible”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-poder-singular-forms",
-              "prompt": "Give the learned singular present forms of poder: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "puedo, puedes, puede",
-                "puedo puedes puede",
-                "puedo / puedes / puede"
-              ],
-              "feedback": {
-                "correct": "Right: puedo, puedes, puede.",
-                "incorrect": "Keep the o becomes ue stem and use the three singular endings: puedo, puedes, puede."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-poder-can-eat",
-              "prompt": "Say 'You can eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "puedes comer.",
-                "puedes comer"
-              ],
-              "feedback": {
-                "correct": "Right: Puedes comer.",
-                "incorrect": "Use the tú form puedes followed by the unchanged infinitive comer."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does poder mean? (“To be able; can.”) Give the three learned forms. (Puedo, puedes, puede.) What English word is its close cousin? (Power.) Next: compare only the singular forms you have actually learned."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C11-stem-changes",
-      "sequence": 940,
-      "title": "e becomes ie and o becomes ue — compare the singular forms",
-      "headword": "e → ie and o → ue",
-      "romanization": "e → ie and o → ue",
-      "gloss": "comparing the two vowel changes inside the learned singular forms",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:74d1ef9de7d3017e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You now own three small singular sets: tengo, tienes, tiene; quiero, quieres, quiere; and puedo, puedes, puede. Compare only those learned forms before extending the pattern later."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — why vowels opened",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "On the road from Latin to Spanish, many short e and o vowels opened when stressed: e becomes ie and o becomes ue. That history helps explain why a verb's stem can look different across its forms."
-            },
-            {
-              "kind": "speech",
-              "text": "It is a clue, not a machine that predicts every form. Learn each verb's small set, then use the shared history to organize what you remember."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two changes, one learned frame",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "tener / querer, e becomes ie family",
-                "poder, o becomes ue"
+                "phrase",
+                "\"until …\"",
+                "when"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "person: yo. tener / querer, e becomes ie family: tengo / quiero. poder, o becomes ue: puedo.",
-                "person: tú. tener / querer, e becomes ie family: tienes / quieres. poder, o becomes ue: puedes.",
-                "person: él / ella / usted. tener / querer, e becomes ie family: tiene / quiere. poder, o becomes ue: puede."
+                "phrase: hasta luego. \"until …\": later. when: the default \"see you\".",
+                "phrase: hasta mañana. \"until …\": tomorrow. when: leaving for the day.",
+                "phrase: hasta pronto. \"until …\": soon. when: you expect to meet again shortly."
               ]
-            },
-            {
-              "kind": "speech",
-              "text": "The comparison says exactly this:"
-            },
-            {
-              "kind": "speech",
-              "text": "querer shows ie in all three forms learned here."
-            },
-            {
-              "kind": "speech",
-              "text": "poder shows ue in all three forms learned here."
-            },
-            {
-              "kind": "speech",
-              "text": "tener reminds you that a common verb may combine more than one change: tengo has its known g, while tienes and tiene show ie."
-            },
-            {
-              "kind": "speech",
-              "text": "No plural form and no new verb is part of today's generalization."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -520,77 +117,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“quiero, quieres, quiere”",
+              "instruction": "\"hasta luego\" — AHS-tah LWEH-goh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “quiero, quieres, quiere”]"
+              "source": "[YOU SAY: \"hasta luego\" — *AHS-tah LWEH-goh*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“puedo, puedes, puede”",
+              "instruction": "\"luego\" then English \"local, location\" — the loco \"place\" family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “puedo, puedes, puede”]"
+              "source": "[YOU SAY: \"luego\" then English \"local, location\" — the *loco* \"place\" family]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“stressed e and o often opened to ie and ue”",
+              "instruction": "\"¡Adiós! … no — ¡hasta luego!\" — feel the difference: final vs. soon",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “stressed e and o often opened to ie and ue”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-stem-changes-yo-contrast",
-              "prompt": "Give the learned yo forms of querer and poder, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "quiero, puedo",
-                "quiero puedo",
-                "quiero / puedo"
-              ],
-              "feedback": {
-                "correct": "Right: quiero, puedo — e becomes ie beside o becomes ue.",
-                "incorrect": "Use the learned yo forms: quiero, then puedo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-stem-changes-tu-contrast",
-              "prompt": "Give the learned tú forms of tener, querer, and poder, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "tienes, quieres, puedes",
-                "tienes quieres puedes",
-                "tienes / quieres / puedes"
-              ],
-              "feedback": {
-                "correct": "Right: tienes, quieres, puedes.",
-                "incorrect": "Retrieve the three known tú forms: tienes, quieres, puedes."
-              }
+              "source": "[YOU SAY: \"¡Adiós! … no — ¡hasta luego!\" — feel the difference: final vs. soon]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -602,26 +156,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which change appears in querer? (e becomes ie.) In poder? (o becomes ue.) Why is the history useful but not a complete prediction rule? (It organizes learned forms, but individual verbs can combine or resist changes.) Next: one possessive that agrees with a known noun's gender."
+              "text": "What does hasta luego literally mean? (\"Until later.\") What did luego's Latin root loco first mean, and what English words keep it? (Place — local, location, locus.) Which two language layers meet in hasta luego? (Arabic hasta + Latin luego.) Next: hasta mañana."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C11-nuestro",
-      "sequence": 950,
-      "title": "nuestro, nuestra — “our” with singular gender agreement",
-      "headword": "nuestro, nuestra",
-      "romanization": "nuestro, nuestra",
-      "gloss": "our — matching a known masculine or feminine singular noun",
+      "id": "ES-C05-hasta-manana",
+      "sequence": 460,
+      "title": "hasta mañana — \"see you tomorrow\" (and the ñ returns)",
+      "headword": "hasta mañana",
+      "romanization": "hasta mañana",
+      "gloss": "see you tomorrow (literally \"until tomorrow\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68fbc905ec59096b",
+      "sourceHash": "fnv1a64:feba5a6cdbeee694",
       "notice": null,
       "blocks": [
         {
@@ -637,55 +191,213 @@
             },
             {
               "kind": "speech",
-              "text": "You put mi, tu, or su before the known noun café. Now add “our” and let it match one contrast you learned much earlier: masculine día beside feminine noche."
+              "text": "Leaving for the day? hasta mañana — \"until tomorrow.\" It brings back a letter you studied in the writing lessons: the ñ. Here it is, living in a word you'll say every evening."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "nuestro and nuestra mean “our.” They descend from Latin noster, also “our.” Paternoster means “Our Father,” and English nostrum originally meant “our thing.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The change from noster to nuestro also displays the historical o becomes ue opening you just used to organize poder."
+              "text": "enye-ny — mañana = mah-NYAH-nah: the ñ is the squished ny of \"canyon\" (your ñ writing lesson — the tilde is a tiny second n, remember). Three soft ah's: ma-ÑA-na."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: match singular gender",
+          "type": "etymology",
+          "title": "The word, taken apart — the phrase",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta mañana = \"until tomorrow\" becomes \"see you tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "hasta = \"until\" (Arabic ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "mañana = \"tomorrow\" — and \"morning.\" One word for both, from Latin (hōra) maneana, \"the early hour\" (from māne, \"in the morning\"). The logic: the next \"early hour\" you'll see is tomorrow morning becomes mañana came to mean both morning and tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "The ñ, in the wild. Recall the writing lesson: ñ is a frozen nn — a scribe's shorthand for a doubled n. mañana comes from Latin maneana, whose n+ea palatalized (softened) into that single ñ sound. So the tilde is a little historical fossil sitting in the middle of \"tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: same word, two meanings — context decides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mañana means \"morning\" or \"tomorrow\"; the sentence tells you which. Paired with hasta, it's always tomorrow: hasta mañana, \"until tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mañana\" — mah-NYAH-nah, squished ñ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mañana\" — *mah-NYAH-nah*, squished *ñ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hasta mañana\" — until tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hasta mañana\" — until tomorrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“mañana” once as “morning,” then once as “tomorrow” — context decides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “mañana” once as “morning,” then once as “tomorrow” — context decides]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two meanings does mañana carry? (Morning; tomorrow.) With hasta, which one? (Tomorrow.) What sound is the ñ, and what is its tilde, historically? (The ny of \"canyon\"; a frozen doubled-n.) Next: hasta pronto."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C05-hasta-pronto",
+      "sequence": 470,
+      "title": "hasta pronto — \"see you soon\"",
+      "headword": "hasta pronto",
+      "romanization": "hasta pronto",
+      "gloss": "see you soon (literally \"until soon\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4653edd986e9eb41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last of the \"hasta …\" trio: hasta pronto, \"until soon\" — for when you genuinely expect to meet again shortly. One new word, pronto, and it's hiding in plain sight in English."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta pronto = AHS-tah PRON-toh — a clean pr, a pure o."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the phrase",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hasta pronto = \"until soon\" becomes \"see you soon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "hasta = \"until\" (Arabic ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "pronto = \"soon / quickly / ready,\" from Latin promptus, \"brought forth, ready at hand\" (from prōmere, \"to bring out\"). Something prompt is brought out without delay — so pronto slid to \"soon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already know its English twin: prompt (on time; to bring out a response), plus prompter, promptly, and the computer prompt (the cursor \"ready\" for input). Italian borrowed pronto too — it's what Italians say when they pick up the phone (\"Pronto!\" = \"Ready!\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the \"hasta …\" trio, complete",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now have Spanish's three soft goodbyes, sharpest to vaguest in time:"
+            },
             {
               "kind": "table",
               "headers": [
-                "known noun",
-                "“our” phrase"
+                "phrase",
+                "until…",
+                "nuance"
               ],
-              "columns": 2,
-              "rowCount": 2,
+              "columns": 3,
+              "rowCount": 3,
               "utterances": [
-                "known noun: el día, masculine. “our” phrase: nuestro día.",
-                "known noun: la noche, feminine. “our” phrase: nuestra noche."
+                "phrase: hasta pronto. until…: soon. nuance: you'll meet again shortly.",
+                "phrase: hasta luego. until…: later. nuance: the neutral default \"see you\".",
+                "phrase: hasta mañana. until…: tomorrow. nuance: you're parting for the day."
               ]
             },
             {
               "kind": "speech",
-              "text": "Like mi, tu, and su, the new word goes before the noun. Unlike those earlier forms, it shows the noun's gender: nuestro before a masculine singular noun, nuestra before a feminine singular noun."
-            },
-            {
-              "kind": "speech",
-              "text": "Only these two singular forms belong to this lesson. Plural agreement and the separate word for “your” to a group wait."
+              "text": "…and adiós for the long or final goodbye."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -698,74 +410,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“nuestro día”",
+              "instruction": "\"hasta pronto\" — AHS-tah PRON-toh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “nuestro día”]"
+              "source": "[YOU SAY: \"hasta pronto\" — *AHS-tah PRON-toh*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“nuestra noche”",
+              "instruction": "\"pronto\" then English \"prompt, promptly\" — one family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “nuestra noche”]"
+              "source": "[YOU SAY: \"pronto\" then English \"prompt, promptly\" — one family]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“noster — nuestro — Paternoster”",
+              "instruction": "the trio — hasta pronto / hasta luego / hasta mañana",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “noster — nuestro — Paternoster”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-nuestro-our-day",
-              "prompt": "Say 'our day' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
-                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
-                "ES-LEX-DIA"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "nuestro día",
-                "nuestro dia"
-              ],
-              "feedback": {
-                "correct": "Right: masculine día takes nuestro.",
-                "incorrect": "Use the masculine singular form nuestro before día."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-nuestro-our-night",
-              "prompt": "Say 'our night' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
-                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
-                "ES-LEX-NOCHE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "nuestra noche",
-                "nuestra noche."
-              ],
-              "feedback": {
-                "correct": "Right: feminine noche takes nuestra.",
-                "incorrect": "Use the feminine singular form nuestra before noche."
-              }
+              "source": "[YOU SAY: the trio — hasta pronto / hasta luego / hasta mañana]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -777,26 +449,26 @@
             },
             {
               "kind": "speech",
-              "text": "Which form goes before masculine día? (Nuestro.) Before feminine noche? (Nuestra.) What Latin source explains the pair? (Noster, “our.”) Next: retrieve the whole chapter without adding a form."
+              "text": "What does hasta pronto mean, and pronto's English twin? (\"Until soon\"; prompt.) What Latin word is it from, and its literal sense? (promptus, \"brought forth / ready.\") Order the three hasta goodbyes by time. (pronto becomes luego becomes mañana.) Next: put the whole farewell set together."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C11-practice",
-      "sequence": 960,
-      "title": "Practice — wanting, ability, and our known nouns",
+      "id": "ES-C05-practice",
+      "sequence": 480,
+      "title": "Practice — saying goodbye",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "singular wanting, ability, vowel-change comparison, and our day or night",
+      "gloss": "closing a conversation — the full set of farewells",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ae18b5f06383c22",
+      "sourceHash": "fnv1a64:e0f69d7317f4e4be",
       "notice": null,
       "blocks": [
         {
@@ -812,62 +484,72 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve two three-form verbs, compare their two vowel changes, and choose nuestro or nuestra before one known singular noun."
+              "text": "No new words. This chapter's farewells — adiós and the three hasta … goodbyes — now close a real conversation, and fold back into the whole arc you've built since hola."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
+          "title": "Grammar Lens: choosing the right goodbye",
           "segments": [
             {
               "kind": "speech",
-              "text": "wanting: quiero, quieres, quiere plus a known infinitive."
+              "text": "The choice is about when you'll meet again:"
             },
             {
-              "kind": "speech",
-              "text": "ability: puedo, puedes, puede plus a known infinitive."
-            },
-            {
-              "kind": "speech",
-              "text": "the contrast: e becomes ie in the learned querer set; o becomes ue in the learned poder set."
-            },
-            {
-              "kind": "speech",
-              "text": "singular “our”: nuestro día, nuestra noche."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons and plural possessive agreement remain deferred."
+              "kind": "table",
+              "headers": [
+                "you're…",
+                "say"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "you're…: parting for good / a long time. say: Adiós.",
+                "you're…: expecting to meet again shortly. say: Hasta pronto.",
+                "you're…: just \"see you\" (neutral default). say: Hasta luego.",
+                "you're…: leaving for the day. say: Hasta mañana."
+              ]
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The words, taken apart — retrieve the history",
+          "type": "input",
+          "title": "The exchange — start to finish",
           "segments": [
             {
               "kind": "speech",
-              "text": "querer continues Latin quaerere, “seek,” the family of query."
+              "text": "Everything from Chapters 1–5, in one conversation:"
             },
             {
               "kind": "speech",
-              "text": "poder continues the Latin ability family behind power and possible."
-            },
-            {
-              "kind": "speech",
-              "text": "stressed Latin e and o often opened into Spanish ie and ue."
-            },
-            {
-              "kind": "speech",
-              "text": "nuestro, nuestra continue Latin noster, “our.”"
+              "text": "— ¡Hola! Buenos días. Me llamo Ana. ¿Cómo se llama usted? — Me llamo Luis. Mucho gusto. — ¿Cómo está usted? — Bien, gracias. ¿Y usted? — Bien. Hasta mañana, Luis. — Hasta mañana, Ana. ¡Adiós!"
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "adiós — the plain/final goodbye (\"to God\"; twin of goodbye)."
+            },
+            {
+              "kind": "speech",
+              "text": "hasta — \"until,\" Spain's everyday Arabic word ( from ḥattā)."
+            },
+            {
+              "kind": "speech",
+              "text": "hasta luego / mañana / pronto — see you later / tomorrow / soon, each an Arabic + Latin handshake."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -880,134 +562,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“quiero hablar; puedo hablar”",
+              "instruction": "the full conversation above, both voices — greeting to goodbye",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “quiero hablar; puedo hablar”]"
+              "source": "[YOU SAY: the full conversation above, both voices — greeting to goodbye]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“quieres comer; puedes comer”",
+              "instruction": "pick the goodbye — for a friend you'll see tomorrow? (hasta mañana); for someone moving away? (adiós)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “quieres comer; puedes comer”]"
+              "source": "[YOU SAY: pick the goodbye — for a friend you'll see tomorrow? (hasta mañana); for someone moving away? (adiós)]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“nuestro día; nuestra noche”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “nuestro día; nuestra noche”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-querer-forms",
-              "prompt": "Give the learned singular forms of querer: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "quiero, quieres, quiere",
-                "quiero quieres quiere",
-                "quiero / quieres / quiere"
-              ],
-              "feedback": {
-                "correct": "Right: quiero, quieres, quiere.",
-                "incorrect": "Retrieve the three learned forms: quiero, quieres, quiere."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-poder-forms",
-              "prompt": "Give the learned singular forms of poder: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "puedo, puedes, puede",
-                "puedo puedes puede",
-                "puedo / puedes / puede"
-              ],
-              "feedback": {
-                "correct": "Right: puedo, puedes, puede.",
-                "incorrect": "Retrieve the three learned forms: puedo, puedes, puede."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-want-to-speak",
-              "prompt": "Say 'I want to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "quiero hablar.",
-                "quiero hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero hablar.",
-                "incorrect": "Use quiero followed by the known infinitive hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-can-eat",
-              "prompt": "Say 'You can eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "puedes comer.",
-                "puedes comer"
-              ],
-              "feedback": {
-                "correct": "Right: Puedes comer.",
-                "incorrect": "Use puedes followed by the known infinitive comer."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-our-night",
-              "prompt": "Say 'our night' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
-                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
-                "ES-LEX-NOCHE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "nuestra noche",
-                "nuestra noche."
-              ],
-              "feedback": {
-                "correct": "Right: feminine noche takes nuestra.",
-                "incorrect": "Choose feminine singular nuestra before noche."
-              }
+              "kind": "speech",
+              "text": "Run the whole exchange, hola to adiós, without stopping."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1019,7 +601,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) Chapter 12 can now build from this closed singular frontier."
+              "text": "Which goodbye for someone you won't see for a long time? (Adiós.) Which everyday word for \"until\" did Spanish take from Arabic? (hasta.) You can now open and close a conversation in Spanish. Next chapter: por favor and gracias' partner courtesies, then into everyday verbs."
             }
           ]
         }

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-practice
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 410
-chapter: 4
+chapter: 9
 type: practice-mix
 headword: (practice)
 gloss: the full "how are you?" exchange, formal and informal

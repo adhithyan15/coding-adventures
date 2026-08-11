@@ -1,211 +1,88 @@
-Spanish, chapter 8: Numbers, and How Old You Are.
-5 lessons. All 5 can be done entirely by ear.
+Spanish, chapter 8: The Written Accent.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
-uno, dos, tres, cuatro, cinco — counting to five.
+Lesson 1 of 3.
+á é í ó ú — the acute accent, and the two jobs it does.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — shape and stroke until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Numbers are among the most reusable words in any language. Spanish keeps them close enough to Latin that English cousins can help you remember them. This lesson asks for only five: uno, dos, tres, cuatro, cinco.
+You've been reading accented words since your very first noun — día, cómo, está, más. Time to make that little stroke make sense. Spanish uses one mark to write exceptional stress — the acute accent, ´, leaning right — and it does two jobs in the words you know. Learn the stress job now; the next lesson adds its grammar-label job.
 
-Sounds you'll need.
-diphthong-ue — cuatro begins KWA-.
-r-tap — give tres and cuatro one light tap, not an English r.
+Script — shape and stroke.
+A short stroke rising left-to-right, sitting on top of a vowel: á é í ó ú. (On the í, it replaces the dot.) One clean up-stroke — the opposite lean from the French grave accent à. Spanish never uses grave or circumflex; if it leans the wrong way, it isn't Spanish.
 
-The numbers, taken apart.
-[a table of 5 rows, read aloud]
-Spanish: uno (1). Latin source: ūnus. English memory hook: unit, unique.
-Spanish: dos (2). Latin source: duo. English memory hook: duo, dual.
-Spanish: tres (3). Latin source: trēs. English memory hook: trio, triple.
-Spanish: cuatro (4). Latin source: quattuor. English memory hook: quart, quarter.
-Spanish: cinco (5). Latin source: quīnque. English memory hook: quintet, quintuplet.
-The spellings changed, but the family resemblance remains. Cinco and quintet both descend from quīnque; Spanish changed the opening sound while English borrowed a more visibly Latin form.
-
-Grammar Lens: uno becomes un or una.
-When uno stands alone, it means “one.” Before a noun it shortens:
-un before a masculine noun: un café — one coffee / a coffee.
-una before a feminine noun: una noche — one night / a night.
-This shortening is called apocope: the end drops away. Spanish uses the same forms for “one” and “a/an”; context supplies the difference.
+Grammar Lens: the mark records exceptional stress.
+Spanish stress is regular, so most words need no mark. The default:
+word ends in a vowel, -n, or -s becomes stress the second-to-last syllable (ho-la, lla-mo, gus-to).
+word ends in any other consonant becomes stress the last syllable (us-ted, re-gu-lar, es-tar).
+The accent appears only when a word breaks that rule — it marks the exception. está ends in a vowel, so the rule wants ES-ta; the accent overrides it to es-TÁ. cómo ends in a vowel (rule wants co-MO) but is stressed CÓ-mo, so it gets the mark. The accent is a spoken stress you can see — it never changes the vowel's sound, only which syllable you hit.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “uno, dos, tres, cuatro, cinco” — once up, once down]
+[your turn — say: “hola, llamo, gusto” — second-to-last stress]
 [pause 8 seconds for the answer]
-[your turn — say: “uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”]
+[your turn — say: “usted, regular, estar” — final stress]
 [pause 8 seconds for the answer]
-[your turn — say: “un café, una noche” — hear uno shorten]
+[your turn — say: "está, cómo" — the accent overrides the default]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Write the Spanish numbers 1 through 5 in order.
-[question — say your answer, then pause 8 seconds]
-Say 'one coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) Which English word helps you remember cinco? (Quintet, through Latin quīnque.) What happens to uno before a noun? (It becomes un or una.) Next: six through ten.
+How many accent marks does Spanish have, and which way does it lean? (One — the acute, ´, rising left-to-right.) Its two jobs? (Mark irregular stress; the next step covers its look-alike job.) When does a word ending in a vowel, -n, or -s need an accent? (When its stress breaks the second-to-last default.)
 
 
-Lesson 2 of 5.
-seis, siete, ocho, nueve, diez — and the calendar's old count.
+Lesson 2 of 3.
+el or él? — the accent as a meaning label.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-You can count to five. Add one small set and you reach ten: seis, siete, ocho, nueve, diez. Four English month names will help hold the last four in memory.
+You know el as the article “the.” Add one acute accent and the same two letters do a different job.
 
-Sounds you'll need.
-diphthong-ie — siete begins SYE-.
-diphthong-ue — nueve begins NWE-.
-
-The numbers, taken apart.
-[a table of 5 rows, read aloud]
-Spanish: seis (6). Latin source: sex. English memory hook: sextet.
-Spanish: siete (7). Latin source: septem. English memory hook: September, septet.
-Spanish: ocho (8). Latin source: octō. English memory hook: October, octave.
-Spanish: nueve (9). Latin source: novem. English memory hook: November.
-Spanish: diez (10). Latin source: decem. English memory hook: December, decimal.
-Say the chain aloud: siete–September, ocho–October, nueve–November, diez–December. It is a memory path, not a second list to memorize.
-
-Why it's said this way: why September says “seven”.
-The month names preserve an old Roman count in which March was first: September through December occupied positions seven through ten. When January and February stood before March, those names shifted to positions nine through twelve but kept their old numbers.
-One tempting story is wrong: July and August were not new months inserted into the middle. The existing months Quintilis and Sextilis were later renamed for Julius Caesar and Augustus. The calendar moved; the numbered names stayed.
-Numbers above ten belong to a later chapter. For now, stop cleanly at diez.
+Grammar Lens: one mark, two grammatical jobs.
+The tilde diacrítica separates words that otherwise look alike:
+[a table of 1 row, read aloud]
+no accent: el = the. with accent: él = he.
+The two words are pronounced alike. Here the accent does not move stress; it labels meaning and grammar. Other pairs will arrive only when you know both words, so this lesson asks you to hold one contrast, not memorize a list.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: count from uno through diez]
+[your turn — say: “el” — the]
 [pause 8 seconds for the answer]
-[your turn — say: “siete/September, ocho/October, nueve/November, diez/December”]
+[your turn — say: “él” — he]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Write the Spanish numbers 6 through 10 in order.
-[question — say your answer, then pause 8 seconds]
-Were July and August inserted into the Roman calendar or were older months renamed?
+[once you have stopped driving — write: el / él, adding the meaning-label accent only to the pronoun]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give 6–10. (Seis, siete, ocho, nueve, diez.) Why does December carry the old word for ten? (The month names preserve a March-first count.) What happened to Quintilis and Sextilis? (They were renamed July and August.) Next: the verb tener, “to have.”
+What is the accent's second job? (Separate look-alike words.) Which means “the”? (El, no accent.) Which means “he”? (Él, with the accent.) Does this mark change their stress? (No — it labels the job.)
 
 
-Lesson 3 of 5.
-tener — “to have,” with two visible changes.
-
-Warm-up.
-[pause 2 seconds]
-Regular comer gave you como, comes, come. The common verb tener, “to have,” belongs to the same -er family, but its three singular forms change in two places. Learn only those three today.
-
-Sounds you'll need.
-diphthong-ie — tienes begins TYE-.
-r-tap — one light tap at the end of tener.
-
-The word, taken apart.
-tener descends from Latin tenēre, “to hold or keep.” Having is, at root, holding. English borrowed the same root many times:
-tenant, tenure, tenacious — holding land, office, or position.
-contain, retain, maintain, sustain — holding together, back, in hand, or up.
-When you see -tain in English, think of Spanish tener.
-
-Grammar Lens: the three singular forms.
-[a table of 3 rows, read aloud]
-person: yo. regular comer: como. irregular tener: tengo.
-person: tú. regular comer: comes. irregular tener: tienes.
-person: él / ella / usted. regular comer: come. irregular tener: tiene.
-Two small changes do all the work:
-yo adds g: tengo, not teno.
-The other two singular forms change e becomes ie: tienes, tiene.
-Later chapters will expand both patterns. For now, hold only tengo, tienes, tiene — the same three-person frame you already use for regular verbs.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “tener — tengo, tienes, tiene”]
-[pause 8 seconds for the answer]
-[your turn — say: “tener / tenant / retain” — the shared idea is hold]
-[pause 8 seconds for the answer]
-[your turn — say: compare “como, comes, come” with “tengo, tienes, tiene”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Give the yo, tú, and él/ella forms of tener, in that order.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What did Latin tenēre mean? (“To hold.”) Give the three singular forms. (Tengo, tienes, tiene.) What are the two changes? (g appears in tengo; e becomes ie in tienes/tiene.) Next: use them to ask and answer about age.
-
-
-Lesson 4 of 5.
-¿Cuántos años tienes? — asking age.
+Lesson 3 of 3.
+The written accent — putting it together.
 
 Warm-up.
 [pause 2 seconds]
-You now have tengo, tienes, tiene and the numbers one through ten. Put them together and you can ask or answer age. Spanish frames age as something you have.
+Two lessons on one small mark that changes both sound and meaning. Nothing new in this lesson — only what you already have.
 
-The phrase, taken apart.
-¿Cuántos años tienes? “How old are you?” — literally, “How many years do you have?”
-cuántos means “how many.” Latin quantus, “how much,” also gives English quantity, quantum, quantify.
-años means “years.” Latin annus also gives annual and anniversary. Its doubled nn became Spanish ñ, exactly as your script lesson showed.
-tienes is the tú form of tener.
-Keep the marks visible: opening ¿, the accent in cuántos, and the letter ñ in años each carries information.
+The exchange.
+está is not esta. él is not el.
 
-Grammar Lens: Spanish “has” years.
-English says “I am ten years old.” Spanish says:
-— ¿Cuántos años tienes? — Tengo diez años.
-The reusable frame is Tengo + number + años. Use a number you already know: Tengo ocho años, Tengo nueve años, Tengo diez años. Larger numbers wait until their own lesson; the grammar does not change.
+What you've built.
+You can hear where the stress falls and see why the mark is there.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “¿Cuántos años tienes?”]
+[your turn — say: the whole exchange, both parts, without stopping]
 [pause 8 seconds for the answer]
-[your turn — say: “Tengo ocho años. Tengo nueve años. Tengo diez años.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Ask one friend 'How old are you?' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Answer 'I am eight years old' using the Spanish age frame.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the question literally ask? (“How many years do you have?”) Which verb carries age? (Tener.) How do cuántos and años connect to English? (Quantus becomes quantity; annus becomes annual.) Next: combine counting, tener, and age in one short exchange.
-
-
-Lesson 5 of 5.
-Practice — counting, having, and age.
-
-Warm-up.
-[pause 2 seconds]
-This checkpoint asks for three small moves: count to ten, choose the right singular form of tener, and use the age frame. Everything here has already appeared.
-
-Grammar Lens: count and conjugate.
-Count: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.
-Change person: tengo, tienes, tiene.
-Remember the roots: quīnque helps with cinco; decem helps with diez; tenēre, “hold,” helps with tener.
-Keep the calendar correction: July and August were renamed, not inserted.
-
-The exchange — use only what you know.
-— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Cuántos años tienes? — Tengo diez años. ¿Y tú? — Tengo nueve años.
-The exchange reuses the name question you already know, then adds exactly one new capability: age with tener.
-
-What you've built this chapter.
-uno through diez, with Latin and English hooks instead of an isolated list.
-un / una before a noun, where standalone uno shortens.
-tengo, tienes, tiene, the three singular forms of tener.
-¿Cuántos años tienes? — Tengo … años, with quantus/quantity and annus/annual showing where the words came from.
-Numbers above ten and the plural forms of tener remain deliberately deferred.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: count 1–10 up, then down]
-[pause 8 seconds for the answer]
-[your turn — say: “tengo, tienes, tiene”]
-[pause 8 seconds for the answer]
-[your turn — say: ask and answer age with a number from 1–10]
+[your turn — say: it again, faster, and let it sound like speech rather than recital]
 [pause 8 seconds for the answer]
 [repeat that twice]
-“¿Cuántos años tienes? — Tengo nueve años.”
-[question — say your answer, then pause 15 seconds]
-Write the Spanish numbers 1 through 10 in order.
-[question — say your answer, then pause 10 seconds]
-Give the three learned singular forms of tener: yo, tú, then él/ella.
-[question — say your answer, then pause 8 seconds]
-Answer ¿Cuántos años tienes? with nine years.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to ten. Give the three singular forms of tener. Ask “How old are you?” and answer with a number you learned. You can now move from a name exchange into one concrete personal detail. Next: the two Spanish ways to say “to be,” introduced one contrast at a time.
+Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose.
