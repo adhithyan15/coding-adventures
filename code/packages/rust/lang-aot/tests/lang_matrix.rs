@@ -1688,6 +1688,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(36),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a report-style typed procedure formal retains its expected
+    // integer result while direct specialization substitutes `twice`. The
+    // procedure target remains compile-time metadata and adds no IIR argument.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure twice(x); value x; integer x; twice := x + x; \
+               integer procedure apply(p, x); value x; integer procedure p; integer x; \
+                 apply := p(x); \
+               result := apply(twice, 21) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a direct nested procedure actual may capture its enclosing
     // value formal before travelling through `dispatch`. The specialised
     // wrapper calls `add` directly, while the existing capture substrate keeps
@@ -6965,6 +6979,37 @@ fn algol_direct_formal_procedure_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but direct formal-procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_typed_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure twice(x)")
+                && program.src.contains("integer procedure p; integer x")
+                && program.src.contains("result := apply(twice, 21)")
+        })
+        .expect("the typed formal-procedure ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but typed formal-procedure execution did not complete"
             );
             continue;
         };
