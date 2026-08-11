@@ -254,6 +254,20 @@ mod tests {
     }
 
     #[test]
+    fn xaml_binding_prefers_the_application_relative_runtime() {
+        let source = xaml_runtime_binding("Mosaic.Generated");
+        assert!(source.contains("Path.Combine(AppContext.BaseDirectory, \"mosaic_app.dll\")"));
+        let bundled = source
+            .find("Path.Combine(AppContext.BaseDirectory")
+            .unwrap();
+        let global = source.find("\"mosaic_app\",").unwrap();
+        assert!(
+            bundled < global,
+            "the app-relative path must precede global lookup"
+        );
+    }
+
+    #[test]
     fn xaml_binding_uses_shared_protocol_and_successful_sequences() {
         let source = xaml_runtime_binding("Acme.App");
         assert!(source.contains("namespace Acme.App;"));

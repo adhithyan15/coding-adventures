@@ -313,7 +313,13 @@ unblocks multiple downstream targets; never count source generation as completio
     directory, and rejects strict installable builds that omit it. Linux CI
     verifies the installed bytes, launches the generated QML application, and
     runs the complete standard-binding conformance without an injected path.
-  - [ ] Repeat the packaging contract for SwiftUI, XAML, and Flutter.
+  - [x] XAML accepts an explicit target Rust DLL, installs it as
+    `mosaic_app.dll`, copies it beside the WinUI executable through the standard
+    MSBuild project, resolves it from `AppContext.BaseDirectory`, and rejects
+    strict builds that omit it. Windows CI verifies the output bytes and runs
+    the complete standard-binding conformance without an injected path. Visible
+    WinUI launch remains tracked separately on an interactive Windows worker.
+  - [ ] Repeat the packaging contract for SwiftUI and Flutter.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.

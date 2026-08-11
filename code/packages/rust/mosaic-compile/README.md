@@ -99,11 +99,12 @@ BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 runnable shell next to the component artifacts, such as a WinUI/XAML project or
 a Qt/CMake project.
 
-For Compose and Qt distributions, `--runtime-library` selects an already-built
-target Rust application `.dylib`, `.so`, or `.dll`. Mosaic copies it into the
-generated project's native application resources and the standard binding
-resolves it relative to the installed app. The option requires `--emit-project`;
-strict Compose and Qt project builds require it.
+For Compose, Qt, and XAML distributions, `--runtime-library` selects an
+already-built target Rust application library. Compose and Qt accept `.dylib`,
+`.so`, or `.dll`; XAML requires `.dll`. Mosaic copies it into the generated
+project's native application resources and the standard binding resolves it
+relative to the installed app. The option requires `--emit-project`; strict
+Compose, Qt, and XAML project builds require it.
 
 Package mode defaults to `--profile permissive`, which emits the package plus a
 machine-readable `<backend>/mosaic-degradations.json`. Use

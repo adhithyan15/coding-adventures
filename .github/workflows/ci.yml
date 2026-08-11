@@ -1181,6 +1181,12 @@ jobs:
         shell: pwsh
         timeout-minutes: 15
         run: |
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
+          }
+          $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
           if ($LASTEXITCODE -ne 0) {
@@ -1208,7 +1214,7 @@ jobs:
           Write-Host "Built generated WinUI executable at $($executable.FullName)"
 
           $strictOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls'
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend xaml --output $strictOutput --emit-project --profile native-complete
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend xaml --output $strictOutput --emit-project --profile native-complete --runtime-library $library.Path
           if ($LASTEXITCODE -ne 0) {
             throw "Native-complete XAML generation failed with exit code $LASTEXITCODE"
           }
@@ -1223,6 +1229,33 @@ jobs:
           Pop-Location
           if ($strictBuildExitCode -ne 0) {
             throw "Native-complete XAML WinUI build failed with exit code $strictBuildExitCode"
+          }
+
+          $bundledOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-bundled-conformance'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend xaml --output $bundledOutput --emit-project --profile native-complete --runtime-library $library.Path
+          if ($LASTEXITCODE -ne 0) {
+            throw "Bundled XAML conformance generation failed with exit code $LASTEXITCODE"
+          }
+          $bundledReport = Get-Content (Join-Path $bundledOutput 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$bundledReport.nativeComplete -or $bundledReport.degradations.Count -ne 0) {
+            throw 'Bundled XAML conformance generation reported degradations'
+          }
+          $bundledProject = Join-Path $bundledOutput 'xaml/Counter.csproj'
+          Push-Location (Split-Path -Parent $bundledProject)
+          dotnet build (Split-Path -Leaf $bundledProject) -c Release -p:Platform=x64 --nologo
+          $bundledBuildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($bundledBuildExitCode -ne 0) {
+            throw "Bundled XAML WinUI build failed with exit code $bundledBuildExitCode"
+          }
+          $installedRuntime = Get-ChildItem -Path (Join-Path $bundledOutput 'xaml/bin') -Filter 'mosaic_app.dll' -Recurse -File | Select-Object -First 1
+          if ($null -eq $installedRuntime) {
+            throw 'Bundled XAML build did not copy mosaic_app.dll beside the executable'
+          }
+          $sourceHash = (Get-FileHash $library.Path -Algorithm SHA256).Hash
+          $installedHash = (Get-FileHash $installedRuntime.FullName -Algorithm SHA256).Hash
+          if ($sourceHash -ne $installedHash) {
+            throw 'Bundled XAML runtime bytes differ from the selected Rust engine'
           }
 
           $toolkitOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-toolkit'
@@ -1250,7 +1283,7 @@ jobs:
           }
 
           $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
-          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls/xaml/MosaicRuntimeHost.cs'
+          $generatedBinding = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-bundled-conformance/xaml/MosaicRuntimeHost.cs'
           if (!(Test-Path $generatedBinding)) {
             throw "Generated XAML runtime binding not found at $generatedBinding"
           }
@@ -1262,19 +1295,33 @@ jobs:
             $harness `
             -Recurse
           Copy-Item $generatedBinding (Join-Path $harness 'MosaicRuntimeHost.cs')
-          $env:MOSAIC_APP_LIBRARY = $library.Path
-          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release
+          $harnessProject = Join-Path $harness 'XamlRuntimeConformance.csproj'
+          dotnet build $harnessProject -c Release --nologo
+          if ($LASTEXITCODE -ne 0) {
+            throw "Mosaic XAML conformance build failed with exit code $LASTEXITCODE"
+          }
+          $harnessBinary = Get-ChildItem `
+            -Path (Join-Path $harness 'bin') `
+            -Filter 'XamlRuntimeConformance.dll' `
+            -Recurse `
+            -File | Select-Object -First 1
+          if ($null -eq $harnessBinary) {
+            throw 'Mosaic XAML conformance build did not produce XamlRuntimeConformance.dll'
+          }
+          Copy-Item $library.Path (Join-Path $harnessBinary.DirectoryName 'mosaic_app.dll')
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          dotnet $harnessBinary.FullName
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
           }
 
-          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release -- --expect-missing-prop-failure
+          dotnet $harnessBinary.FullName --expect-missing-prop-failure
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML required-prop failure check failed with exit code $LASTEXITCODE"
           }
 
           $env:MOSAIC_APP_LIBRARY = Join-Path $env:RUNNER_TEMP 'missing-mosaic-app.dll'
-          dotnet run --project (Join-Path $harness 'XamlRuntimeConformance.csproj') -c Release -- --expect-required-failure
+          dotnet $harnessBinary.FullName --expect-required-failure
           if ($LASTEXITCODE -ne 0) {
             throw "Mosaic XAML required-runtime failure check failed with exit code $LASTEXITCODE"
           }

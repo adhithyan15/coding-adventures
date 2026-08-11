@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -189,7 +190,12 @@ public static class MosaicRuntimeHost
         {
             var requested = Environment.GetEnvironmentVariable("MOSAIC_APP_LIBRARY");
             var candidates = string.IsNullOrWhiteSpace(requested)
-                ? new[] { "mosaic_app", "mosaic_app.dll" }
+                ? new[]
+                {
+                    Path.Combine(AppContext.BaseDirectory, "mosaic_app.dll"),
+                    "mosaic_app",
+                    "mosaic_app.dll",
+                }
                 : new[] { requested };
             foreach (var candidate in candidates)
                 if (NativeLibrary.TryLoad(candidate, out var library))

@@ -95,11 +95,11 @@ and retain sample props for previews. `native-complete` builds require the
 binding and runtime-provided props before mounting the component. Use
 `build_package_with_profile_and_runtime` with a target `.dylib`, `.so`, or `.dll`
 to copy the selected Rust engine into Compose's platform-specific application
-resources or Qt's CMake install tree under its conventional `mosaic_app`
-filename. The Compose binding resolves its installed resource and the Qt binding
-resolves the engine beside the installed executable before either tries global
-lookup. A strict Compose or Qt project build without that selection reports
-`runtime.library-not-bundled`.
+resources, Qt's CMake install tree, or XAML's WinUI output directory under its
+conventional `mosaic_app` filename. The Compose binding resolves its installed
+resource, while the Qt and XAML bindings resolve the engine beside the installed
+executable before global lookup. A strict Compose, Qt, or XAML project build
+without that selection reports `runtime.library-not-bundled`.
 Every exported Compose component is mirrored into the generated Gradle source
 set, so `gradle compileKotlin` type-checks the complete package even though the
 shell mounts the manifest's first export as its entry component.
