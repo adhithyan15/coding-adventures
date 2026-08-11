@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C34-sintesis-mente
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1776
-chapter: 118
+sequence: 1796
+chapter: 123
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — the sentence you have been saying since chapter 14, finally taken apart

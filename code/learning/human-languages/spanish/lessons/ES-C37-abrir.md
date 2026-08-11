@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C37-abrir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1860
-chapter: 126
+sequence: 1880
+chapter: 131
 type: word
 headword: abrir
 gloss: to open — a regular -ir verb with one irregular part, the participle abierto

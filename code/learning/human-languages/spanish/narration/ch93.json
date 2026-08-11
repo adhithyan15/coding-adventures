@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 93,
-  "title": "Wanting, Not Asserting",
+  "title": "Synthesis --- A Small Story",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:868954cbf12d180d",
+  "sourceHash": "fnv1a64:5eaa87ecb0cabef0",
   "lessons": [
     {
-      "id": "ES-C18-quiero-que",
-      "sequence": 1310,
-      "title": "Hablas español, Quiero que hables español — fact or wanted event?",
-      "headword": "Hablas español · Quiero que hables español",
-      "romanization": "Hablas español · Quiero que hables español",
-      "gloss": "an asserted event beside a wanted, not-yet-real event",
+      "id": "ES-C48-sintesis-una-historia",
+      "sequence": 1274,
+      "title": "Synthesis — a small story",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a66e5f750f02f7ad",
+      "sourceHash": "fnv1a64:fb9f61efa46d5212",
       "notice": null,
       "blocks": [
         {
@@ -35,37 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive."
+              "text": "Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: count the doers",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "meaning",
-                "Spanish",
-                "doers"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.",
-                "meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak."
-              ]
+              "kind": "speech",
+              "text": "Four sentences. Watch the tenses take turns."
             },
             {
               "kind": "speech",
-              "text": "With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish."
+              "text": "Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
+            },
+            {
+              "kind": "speech",
+              "text": "The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what you can now do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice the third sentence. Tuve un libro is not \"I had a book\" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -78,94 +99,109 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablas español.”",
+              "instruction": "the four sentences straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablas español.”]"
+              "source": "[YOU SAY: the four sentences straight through]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Quiero hablar español.”",
+              "instruction": "only the imperfects, then only the preterites, and hear the two layers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero hablar español.”]"
+              "source": "[YOU SAY: only the imperfects, then only the preterites, and hear the two layers]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Quiero que hables español.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero que hables español.”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-meaning",
-              "prompt": "Which form asserts that one friend speaks: hablas or hables?",
+              "id": "ES-C48-sintesis-una-historia-layers",
+              "prompt": "In the story, which two verbs are the background?",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hablas"
+                "estudiaba and tenia",
+                "estudiaba, tenía",
+                "the imperfects"
               ],
               "feedback": {
-                "correct": "Right: hablas can assert the event.",
-                "incorrect": "Use indicative hablas for the asserted event; hables is the wanted form here."
+                "correct": "What things were like.",
+                "incorrect": "Estudiaba and tenia — the imperfects."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-one-doer",
-              "prompt": "Say 'I want to speak Spanish' in Spanish.",
+              "id": "ES-C48-sintesis-una-historia-third",
+              "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
               "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-QUERER",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "quiero hablar español.",
-                "quiero hablar español"
+                "tuve is the moment of getting it",
+                "because it is an event, not a state",
+                "getting has edges"
               ],
               "feedback": {
-                "correct": "Right: one doer keeps the infinitive hablar.",
-                "incorrect": "Use known quiero plus the infinitive: Quiero hablar español."
+                "correct": "Same verb, both layers, nothing irregular.",
+                "incorrect": "Tuve is the moment you got one — an event with edges."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-two-doers",
-              "prompt": "Say 'I want you to speak Spanish' to one friend.",
+              "id": "ES-C48-sintesis-una-historia-tell",
+              "prompt": "Say I was studying when I spoke with Ana.",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-QUE",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO",
+                "ES-LEX-ESTUDIAR",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "quiero que hables español.",
-                "quiero que hables español"
+                "estudiaba cuando hable con ana",
+                "estudiaba cuando hablé con ana"
               ],
               "feedback": {
-                "correct": "Right: two doers give quiero que hables.",
-                "incorrect": "Join the wanted event with que and use hables: Quiero que hables español."
+                "correct": "Background, then the thing that walked into it.",
+                "incorrect": "Estudiaba cuando hable con Ana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-sintesis-una-historia-why",
+              "prompt": "Why did this take three chapters when neither tense was new?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "because the choice is the difficulty, not the forms",
+                "english lets you leave the question unanswered",
+                "the forms were never the hard part"
+              ],
+              "feedback": {
+                "correct": "Spanish asks a question your first language let you skip.",
+                "incorrect": "The forms were never the difficulty. The choice is."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time."
+              "text": "Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)"
             }
           ]
         }

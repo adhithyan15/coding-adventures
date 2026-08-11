@@ -10,6 +10,11 @@
   while keeping the printed form's two runs explicit.
 - Close the Hebrew inventory and reprioritize to the smallest actionable script.
 
+### Changed — Spanish runs 1..140 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five preterite/imperfect chapters
+  inserted at 89; chapters after them shift by five.
+
 ### Added — cited Hebrew Shin ductus (HL-C09BX)
 
 - Render **ש** in three evidence-aligned frames: descend the right branch and
