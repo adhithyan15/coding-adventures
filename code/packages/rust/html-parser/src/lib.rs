@@ -5217,6 +5217,12 @@ impl HtmlParser {
             && !self.current_element_is("template")
             && !self.current_element_is("tbody")
         {
+            if self.first_authored_open_template_index().is_some() {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-row-start-tag-in-template-body",
+                    "start tag `<tr>` in template body content was ignored",
+                ));
+            }
             return;
         }
 
@@ -34630,6 +34636,45 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-cell-start-tag-in-template-table-body"
         }));
+    }
+
+    #[test]
+    fn reports_row_start_tags_ignored_in_authored_template_body_content() {
+        let output =
+            parse_html_with_diagnostics("<!doctype html><template><div><tr></div></template>")
+                .unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-row-start-tag-in-template-body",
+                "start tag `<tr>` in template body content was ignored",
+            )]
+        );
+        assert_eq!(
+            output.document,
+            parse_html("<!doctype html><template><div></div></template>").unwrap()
+        );
+
+        for source in [
+            "<!doctype html><template><tr></tr></template>",
+            "<!doctype html><template><div><template><tr></tr></template></div></template>",
+            "<!doctype html><template><div><table><tr></tr></table></div></template>",
+            "<!doctype html><svg><template><div><tr></tr></div></template></svg>",
+            "<!doctype html><div><tr></tr></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-row-start-tag-in-template-body"
+            }));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<div><tr></div>", "template")
+                .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-row-start-tag-in-template-body" }));
     }
 
     #[test]

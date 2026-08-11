@@ -200,11 +200,17 @@ Prioritized work items:
    `template.dat`'s `<template><tr></tr><td>` and nested-template evidence.
    Direct template-owned cells, cells in an open row, real tables, foreign
    content, and synthetic template fragments remain on their existing paths.
-   The next evidence-backed boundary is a `tr` start processed in ordinary
-   template content after an in-body element: WPT `template.dat` declares the
-   `bad tr` parse error for `<template><div><tr>`, while the parser's dedicated
-   template guard currently ignores that start silently. Audit that in-body
-   table-only start-tag path before moving to adoption agency.
+   A `tr` start processed in ordinary authored template content after an
+   in-body element now reports the required parse error before preserving the
+   existing ignored-token DOM behavior, matching WPT `template.dat`'s
+   `<template><div><tr>` evidence. Valid template table sequences, nested
+   templates, real tables, foreign content, ordinary outside-template content,
+   and synthetic template fragments remain on their existing paths. The next
+   template-state candidate is the adjacent non-whitespace-text boundary:
+   after `<template>x`, the current silent `tr` guard ignores a following row,
+   while the current Standard keeps the template insertion mode available for
+   the row transition. Re-audit that DOM boundary before moving to adoption
+   agency.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
