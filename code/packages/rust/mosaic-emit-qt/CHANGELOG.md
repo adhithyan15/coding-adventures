@@ -4,6 +4,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - non-empty For delegates under Bound component behavior
+
+Generated `Repeater` delegates now declare Qt's injected `modelData` and optional
+`index` values as required properties before re-exporting the author-chosen MIL
+loop names. This makes non-empty `For` collections work with
+`pragma ComponentBehavior: Bound`; empty sample models had previously hidden the
+resulting startup `ReferenceError` and dependent `TypeError`s.
+
 ### Added - native accessible tables
 
 Canonical dynamic `HostTable` layouts now lower to Qt Quick `TableView` and

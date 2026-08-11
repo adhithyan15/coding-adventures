@@ -1039,17 +1039,27 @@ jobs:
             env -u MOSAIC_APP_LIBRARY "$installed_harness" --expect-missing-prop-failure
           )
 
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
+
           taskapp_output="$RUNNER_TEMP/mosaic-qt-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project
-          jq -e '.nativeComplete == false and ([.degradations[].code] | sort) == ["runtime.sample-fallback"]' "$taskapp_output/qt/mosaic-degradations.json"
-          cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/qt/mosaic-degradations.json"
+          cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$taskapp_output/install"
           cmake --build "$taskapp_output/qt/build" --config Release --parallel
+          cmake --install "$taskapp_output/qt/build" --config Release
+          installed_taskapp_runtime="$(find "$taskapp_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_taskapp_runtime"
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+          installed_taskapp="$(dirname "$installed_taskapp_runtime")/TaskApp"
           taskapp_log="$RUNNER_TEMP/mosaic-qt-taskapp-launch.log"
           set +e
-          QT_QPA_PLATFORM=offscreen timeout 5s "$taskapp_output/qt/build/TaskApp" >"$taskapp_log" 2>&1
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen timeout 5s "$installed_taskapp" >"$taskapp_log" 2>&1
           taskapp_status=$?
           set -e
           test "$taskapp_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"
 
           toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project

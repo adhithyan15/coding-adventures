@@ -48,6 +48,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-capi",
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
+            "rust/task-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -137,12 +138,28 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("--expect-required-failure", workflow)
         self.assertIn("mosaic-qt-taskapp", workflow)
         self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app",
+            workflow,
+        )
+        self.assertIn(
             "pkg code/programs/mosaic/task-app --backend qt", workflow
         )
         self.assertNotIn('"accessibility.table-semantics-missing"', workflow)
-        self.assertIn('"runtime.sample-fallback"', workflow)
+        self.assertIn(
+            "pkg code/programs/mosaic/task-app --backend qt --output \"$taskapp_output\" --emit-project --profile native-complete --runtime-library \"$task_runtime_library\"",
+            workflow,
+        )
+        self.assertIn(
+            "'.nativeComplete == true and (.degradations | length == 0)' \"$taskapp_output/qt/mosaic-degradations.json\"",
+            workflow,
+        )
+        self.assertNotIn('"runtime.sample-fallback"', workflow)
         self.assertIn('cmake --build "$taskapp_output/qt/build"', workflow)
-        self.assertIn('QT_QPA_PLATFORM=offscreen timeout 5s "$taskapp_output/qt/build/TaskApp"', workflow)
+        self.assertIn('QT_QPA_PLATFORM=offscreen timeout 5s "$installed_taskapp"', workflow)
+        self.assertIn(
+            '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"',
+            workflow,
+        )
         self.assertIn("mosaic-qt-toolkit", workflow)
         self.assertIn(
             "pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt",
