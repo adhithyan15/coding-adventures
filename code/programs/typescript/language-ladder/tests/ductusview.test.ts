@@ -52,6 +52,11 @@ const naskhOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const hebrewOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansHebrew-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -74,6 +79,8 @@ const RETROFLEX_NNA = DUCTUS["ண"];
 const retroflexNnaOutline = tamilOutline("ண");
 const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
+const HEBREW_ALEF = ductusFor("א", "hebrew")!;
+const hebrewAlefOutline = hebrewOutline("א");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -731,6 +738,37 @@ describe("ந — a real cited three-stroke six-movement filmstrip", () => {
       penPathD(DENTAL_NA.strokes[1], 1),
     ]);
     expect(pen.attrs.d).toBe(penPathD(DENTAL_NA.strokes[2], 1));
+  });
+});
+
+describe("Hebrew א — two crossed handwritten runs fitted to the block outline", () => {
+  const steps = ductusSteps(HEBREW_ALEF);
+  const strip = ductusFilmstrip(HEBREW_ALEF, hebrewAlefOutline);
+
+  it("shows the main diagonal before the lifted opposing run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the main diagonal down and right",
+      "lift, then descend from the upper-right arm to the crossing",
+      "continue through the crossing and down the lower-left leg",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("keeps the first run visible over the vendored Noto Sans Hebrew outline", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewAlefOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_ALEF.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_ALEF.strokes[1], 1),
+    );
   });
 });
 
