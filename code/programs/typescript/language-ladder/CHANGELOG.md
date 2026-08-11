@@ -2,6 +2,17 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Alef ductus (HL-C09BD)
+
+- Render **א** in three evidence-aligned frames: draw the main descending
+  diagonal, lift once, then carry the opposing run from the upper-right arm
+  through the crossing and down the lower-left leg.
+- Keep the dedicated lesson's two pen-down runs and one lift explicit while
+  fitting its compact X-like handwriting to the vendored Noto Sans Hebrew
+  block outline.
+- Record the blocked Arabic Mim and Nun sources and the recovered future Faa
+  inventory source before reprioritizing to Hebrew.
+
 ### Added — cited Arabic independent-waw ductus (HL-C09AZ)
 
 - Render **و** in two evidence-aligned frames: close the small head loop from

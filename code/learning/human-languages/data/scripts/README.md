@@ -321,9 +321,14 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   00:45.7–00:46.9: sweep left from the lower-right junction to close the small
   head loop, then continue down and left through the tail without lifting. Its
   two-frame path preserves Waw's one-way-connector and w/long-ū roles while
-  keeping Arabic and Persian provenance separate. The remaining **177** prose
-  part orders across seven scripts (`arabic` 3,
-  `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
+  keeping Arabic and Persian provenance separate. Hebrew **א** then opens the
+  next-smallest inventory from HebrewPod101's
+  dedicated Alef lesson: draw the main diagonal down and right, lift once, then
+  draw the opposing diagonal from the upper right through the crossing and down
+  the lower-left leg. Its three-frame path fits that compact handwritten order
+  to the vendored Noto Sans Hebrew block outline and records the variation
+  explicitly. The remaining **176** prose part orders across seven scripts
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 21,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

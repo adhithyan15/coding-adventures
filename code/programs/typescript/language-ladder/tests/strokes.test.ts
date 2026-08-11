@@ -24,6 +24,7 @@ const load = (name: string) => {
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
+const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -215,6 +216,19 @@ describe("handwriting ductus", () => {
   it("ம is written without lifting the pen (one stroke)", () => {
     expect(penLifts(DUCTUS["ம"])).toBe(0);
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
+  });
+
+  it("Hebrew א uses two crossed pen-down runs with one lift", () => {
+    expect(HEBREW_ALEF.script).toBe("hebrew");
+    expect(penLifts(HEBREW_ALEF)).toBe(1);
+    expect(HEBREW_ALEF.strokes).toHaveLength(2);
+    expect(HEBREW_ALEF.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2]);
+    const main = penPath(HEBREW_ALEF.strokes[0]);
+    const opposing = penPath(HEBREW_ALEF.strokes[1]);
+    expect(main[0].x).toBeLessThan(main.at(-1)!.x);
+    expect(main[0].y).toBeGreaterThan(main.at(-1)!.y);
+    expect(opposing[0].x).toBeGreaterThan(opposing.at(-1)!.x);
+    expect(opposing[0].y).toBeGreaterThan(opposing.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -826,6 +840,9 @@ describe("handwriting ductus", () => {
   });
 
   it("routes each verified ductus to the owning script font", () => {
+    expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -863,6 +880,15 @@ describe("handwriting ductus", () => {
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
+  });
+
+  it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
+    const src = HEBREW_ALEF.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=JBVpQzvrJ4w");
+    expect(src.citation).toMatch(/Hebrew Writing #1.*Alef and Beit.*01:33.0–01:35.8.*HebrewPod101/i);
+    expect(src.variation).toMatch(
+      /printed block Alef.*two handwritten variants.*descending main diagonal.*01:33.0–01:34.25.*lifts once.*opposing diagonal.*upper right.*crossing.*01:34.5–01:35.8.*styles vary.*X-like.*Noto Sans Hebrew.*two-stroke/i,
+    );
   });
 
   it("ம's stroke order traces to the UT Austin primer, and records Tamil's variation", () => {

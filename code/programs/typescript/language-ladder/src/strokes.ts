@@ -8,6 +8,7 @@
 // where (if ever) it lifts.
 
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
+import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 //
@@ -198,6 +199,14 @@ const arabicAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const hebrewAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = hebrew.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Hebrew ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const persianAlphabetSource = (glyph: string): StrokeSource => {
   const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -359,6 +368,64 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // ---------------------------------------------------------------------------
 
 export const DUCTUS: Record<string, LetterDuctus> = {
+  // HebrewPod101's second handwritten Alef demonstration draws one descending
+  // diagonal, lifts, then draws the opposing diagonal across it. This learner
+  // path keeps those two pen-down runs while routing the crossing through the
+  // branches of the vendored Noto Sans Hebrew block Alef.
+  [ductusKey("hebrew", "א")]: {
+    script: "hebrew",
+    glyph: "א",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the main diagonal down and right",
+            path: [
+              { x: 120, y: 560 },
+              { x: 180, y: 480 },
+              { x: 250, y: 400 },
+              { x: 320, y: 310 },
+              { x: 390, y: 220 },
+              { x: 470, y: 100 },
+              { x: 540, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend from the upper-right arm to the crossing",
+            path: [
+              { x: 540, y: 560 },
+              { x: 535, y: 500 },
+              { x: 525, y: 430 },
+              { x: 500, y: 370 },
+              { x: 470, y: 330 },
+              { x: 425, y: 290 },
+              { x: 385, y: 285 },
+            ],
+          },
+          {
+            label: "continue through the crossing and down the lower-left leg",
+            path: [
+              { x: 385, y: 285 },
+              { x: 350, y: 315 },
+              { x: 320, y: 340 },
+              { x: 280, y: 370 },
+              { x: 252, y: 370 },
+              { x: 220, y: 350 },
+              { x: 175, y: 300 },
+              { x: 135, y: 220 },
+              { x: 105, y: 120 },
+              { x: 85, y: 30 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("א"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
