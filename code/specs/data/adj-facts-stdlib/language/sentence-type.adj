@@ -1,0 +1,66 @@
+% ============================================================================
+% sentence-type — an example sentence and which of the four grammatical
+% sentence types it is (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% English sentences come in four types, sorted by what they DO: a
+% declarative sentence makes a statement, an interrogative sentence asks a
+% question, an imperative sentence gives a command, and an exclamatory
+% sentence shows strong feeling. Recall is a binding query:
+%
+%     ? sentence_type(bears_dont_eat_when_they_hibernate, $Type)
+%       % declarative
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `sentence_type(example, type)` carrying the source citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the type WITH
+% its source, on the CPU, with zero model calls, and abstains on any
+% sentence the source does not classify this way. The query also runs
+% BACKWARD — bind a type and recall which example sentence it names:
+%
+%     ? sentence_type($Example, imperative)
+%       % sweep_the_floor_before_you_mop_it
+%
+% DESIGN NOTE — why `example` is a short atom-style label rather than the
+% full sentence text: `fable-moral.adj` (shipped earlier in this loop)
+% discovered that the ADJ query grammar accepts a quoted-string literal as
+% a `table` row VALUE but NOT as a query ARGUMENT — a query can only ground
+% an atom/number or bind a $Var. Using a short atom label here (the same
+% discipline `vocabulary-in-context.adj` already established) keeps BOTH
+% the direct query (`sentence_type(example, $Type)`) and the reverse query
+% (`sentence_type($Example, type)`) usable as ordinary ground-argument
+% binding queries, without hitting that limitation.
+%
+% Provenance: quoted verbatim from Grammarly's "4 Types of Sentences to
+% Know, With Examples" article, which gives one worked example sentence per
+% type:
+%
+%     example (this table's atom label)             type            example sentence (verbatim)
+%     ----------------------------------------------  --------------  ---------------------------------------------
+%     bears_dont_eat_when_they_hibernate               declarative     "Bears don't eat when they hibernate."
+%     what_is_your_next_class                          interrogative   "What is your next class?"
+%     sweep_the_floor_before_you_mop_it                 imperative      "Sweep the floor before you mop it."
+%     myra_had_the_baby                                 exclamatory     "Myra had the baby!"
+%
+% WebFetch-verified before writing. `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources (7ESL,
+% Speakspeak). A sentence that is NOT one of these four — e.g. "the cat sat
+% on the mat," a real, well-formed declarative sentence, but not one this
+% specific cited page names — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a classification the source never
+% gave. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table sentence_type {
+    columns example, type
+
+    row (bears_dont_eat_when_they_hibernate, declarative)
+    row (what_is_your_next_class, interrogative)
+    row (sweep_the_floor_before_you_mop_it, imperative)
+    row (myra_had_the_baby, exclamatory)
+
+    source "Bears don't eat when they hibernate."
+    locator "https://www.grammarly.com/blog/sentences/kinds-of-sentences/"
+    trust consensus
+}
