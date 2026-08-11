@@ -2484,28 +2484,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — boolean E5 arrays carry `bool` elements through a typed array
-    // value parameter rather than silently widening to integer storage. The
-    // non-unit lower bound proves the descriptor crosses the call and the normal
-    // ALGOL index translation still applies before `array_get` feeds boolean
-    // control flow. `true and not false` selects the observable 42 result.
+    // ALGOL 60 — boolean E5 arrays carry `bool` elements through a true
+    // call-by-value copy. The callee observes its writes and contributes 40,
+    // while the caller's opposite values remain unchanged and contribute 2.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin boolean array flags[-1:0]; integer result; \
                procedure setflags(a); value a; boolean array a; \
-               begin a[-1] := true; a[0] := false end; \
-               setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end",
+               begin a[-1] := true; a[0] := false; \
+                     if a[-1] and not a[0] then result := 40 else result := 0 end; \
+               flags[-1] := false; flags[0] := true; setflags(flags); \
+               if not flags[-1] and flags[0] then result := result + 2 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 -- a 2-D boolean array value formal keeps both lower bounds and
-    // the outer row-major stride. The distinct true/false checkerboard catches
-    // a descriptor that aliases a neighboring cell instead of the intended one.
+    // ALGOL 60 -- a 2-D boolean value copy keeps both lower bounds and the
+    // outer row-major stride. The callee sees its checkerboard, while all four
+    // caller cells remain false after return.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end",
+        src: "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true; if a[-1,2] and not a[-1,3] and not a[0,2] and a[0,3] then result := 40 else result := 0 end; flags[-1,2] := false; flags[-1,3] := false; flags[0,2] := false; flags[0,3] := false; setflags(flags); if not flags[-1,2] and not flags[-1,3] and not flags[0,2] and not flags[0,3] then result := result + 2 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -2578,7 +2578,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -2588,7 +2588,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end",
+        src: "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -2598,7 +2598,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; procedure fill(a); value a; boolean array a; begin procedure seed(b); value b; boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; procedure invoke; seed(a); invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; fill(flags) end",
+        src: "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; procedure fill(a); value a; boolean array a; begin procedure seed(b); boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; procedure invoke; seed(a); invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; fill(flags) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -6129,7 +6129,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_string_array_on_eve
                     .contains("string array words[-1:0, 4:5, 7:8, 10:11]")
                 && program
                     .src
-                    .contains("procedure seed(b); value b; string array b")
+                    .contains("procedure seed(b); string array b")
                 && program.src.contains("procedure invoke; seed(a)")
         })
         .expect("the nested 4-D ALGOL string-array forwarding program must remain in the matrix");
@@ -6165,7 +6165,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_real_array_on_every
                     .contains("real array values[-1:0, 2:3, 5:6, 8:9]")
                 && program
                     .src
-                    .contains("procedure seed(b); value b; real array b")
+                    .contains("procedure seed(b); real array b")
                 && program.src.contains("procedure invoke; seed(a)")
         })
         .expect("the nested 4-D ALGOL real-array forwarding program must remain in the matrix");
@@ -6201,7 +6201,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_boolean_array_on_ev
                     .contains("boolean array flags[-1:0, 2:3, 5:6, 8:9]")
                 && program
                     .src
-                    .contains("procedure seed(b); value b; boolean array b")
+                    .contains("procedure seed(b); boolean array b")
                 && program.src.contains("procedure invoke; seed(a)")
         })
         .expect("the nested 4-D ALGOL boolean-array forwarding program must remain in the matrix");

@@ -2059,6 +2059,89 @@ impl Compiler {
         Ok(true)
     }
 
+    /// Materialize ALGOL call-by-value semantics for an array actual.
+    ///
+    /// Array handles carry their flat element count in the shared E5 header,
+    /// so the caller can clone every element without extending the rank-specific
+    /// procedure ABI. Lower bounds and strides remain ordinary descriptor
+    /// arguments, while only the copied handle crosses the call boundary.
+    fn emit_array_value_copy(&mut self, source_handle: &str, elem_ty: ScalarType) -> String {
+        let length = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_len",
+            Some(length.clone()),
+            vec![Operand::Var(source_handle.to_string())],
+            "i64",
+        ));
+        let copy = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "alloc_array",
+            Some(copy.clone()),
+            vec![Operand::Var(length.clone())],
+            make_array_type(elem_ty.iir()),
+        ));
+
+        let index = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+        let loop_label = self.fresh_label("array_value_copy_loop");
+        let done_label = self.fresh_label("array_value_copy_done");
+        self.emit_label(&loop_label);
+        let in_bounds = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_lt",
+            Some(in_bounds.clone()),
+            vec![Operand::Var(index.clone()), Operand::Var(length)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(in_bounds), Operand::Var(done_label.clone())],
+            "void",
+        ));
+        let element = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_get",
+            Some(element.clone()),
+            vec![
+                Operand::Var(source_handle.to_string()),
+                Operand::Var(index.clone()),
+            ],
+            elem_ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "array_set",
+            None,
+            vec![
+                Operand::Var(copy.clone()),
+                Operand::Var(index.clone()),
+                Operand::Var(element),
+            ],
+            elem_ty.iir(),
+        ));
+        let next = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "add",
+            Some(next.clone()),
+            vec![Operand::Var(index.clone()), Operand::Var(one)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(index),
+            vec![Operand::Var(next)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(loop_label)],
+            "void",
+        ));
+        self.emit_label(&done_label);
+        copy
+    }
+
     /// Shared call-lowering for `proc_call` and `proc_stmt`: resolve the
     /// signature, evaluate and type-check the actuals, then emit a `call`
     /// whose `srcs[0]` names the callee and whose remaining `srcs` are the
@@ -2173,8 +2256,8 @@ impl Compiler {
                     // Global arrays (captured or `own`) store their descriptor
                     // metadata outside the current frame. Reload the complete
                     // rank-specific descriptor so the callee gets the same
-                    // handle/lower-bound/stride values as a local-array actual.
-                    if binding.is_global {
+                    // lower-bound/stride values as a local-array actual.
+                    let (handle, descriptor_slots) = if binding.is_global {
                         let handle = self.fresh_temp();
                         self.emit(IIRInstr::new(
                             "global_load",
@@ -2182,7 +2265,7 @@ impl Compiler {
                             vec![Operand::Str(binding.slot.clone())],
                             make_array_type(binding.ty.iir()),
                         ));
-                        arg_slots.push(handle);
+                        let mut descriptor_slots = Vec::with_capacity(info.dims.len() * 2);
                         for (dim_index, dim) in info.dims.iter().enumerate() {
                             let lower = self.fresh_temp();
                             self.emit(IIRInstr::new(
@@ -2195,7 +2278,7 @@ impl Compiler {
                                 ))],
                                 "i64",
                             ));
-                            arg_slots.push(lower);
+                            descriptor_slots.push(lower);
                             if dim.stride_slot.is_some() {
                                 let stride = self.fresh_temp();
                                 self.emit(IIRInstr::new(
@@ -2208,18 +2291,27 @@ impl Compiler {
                                     ))],
                                     "i64",
                                 ));
-                                arg_slots.push(stride);
+                                descriptor_slots.push(stride);
                             }
                         }
+                        (handle, descriptor_slots)
                     } else {
-                        arg_slots.push(binding.slot);
+                        let mut descriptor_slots = Vec::with_capacity(info.dims.len() * 2);
                         for dim in &info.dims {
-                            arg_slots.push(dim.lower_slot.clone());
+                            descriptor_slots.push(dim.lower_slot.clone());
                             if let Some(stride_slot) = &dim.stride_slot {
-                                arg_slots.push(stride_slot.clone());
+                                descriptor_slots.push(stride_slot.clone());
                             }
                         }
-                    }
+                        (binding.slot, descriptor_slots)
+                    };
+                    let handle = if param.mode == ProcedureParamMode::Value {
+                        self.emit_array_value_copy(&handle, info.elem_ty)
+                    } else {
+                        handle
+                    };
+                    arg_slots.push(handle);
+                    arg_slots.extend(descriptor_slots);
                 }
                 ProcedureParamType::Procedure { .. } => {
                     // The specialised body substitutes this direct target; a
@@ -7367,9 +7459,9 @@ mod tests {
 
     // ---- AL8: one-dimensional array descriptor value parameters ----
 
-    /// A typed array formal preserves the caller's non-unit lower bound and
-    /// aliases its element storage. The callee writes 40 and 2 through `a`, then
-    /// reads them back for the typed procedure result: `sum(values)` = 42.
+    /// A typed array formal preserves the caller's non-unit lower bound. The
+    /// callee writes 40 and 2 into its value copy, then reads them back for the
+    /// typed procedure result: `sum(values)` = 42.
     const AL8_ARRAY_PARAMETER_PROG: &str = "begin integer array values[4:5]; integer result; \
          integer procedure sum(a); value a; integer array a; \
          begin a[4] := 40; a[5] := 2; sum := a[4] + a[5] end; \
@@ -7402,6 +7494,12 @@ mod tests {
             .expect("main calls sum");
         assert_eq!(call.srcs.len(), 3, "callee + handle + lower bound");
         assert!(matches!(call.srcs.first(), Some(Operand::Var(name)) if name == "sum"));
+        for op in ["array_len", "alloc_array", "array_get", "array_set"] {
+            assert!(
+                main.instructions.iter().any(|instr| instr.op == op),
+                "array value lowering must emit {op} at the call site"
+            );
+        }
 
         assert!(
             matches!(sum.instructions.last(), Some(instr)
@@ -7440,8 +7538,10 @@ mod tests {
     fn array_parameter_accepts_boolean_elements() {
         let src = "begin boolean array flags[-1:0]; integer result; \
                    procedure setflags(a); value a; boolean array a; \
-                   begin a[-1] := true; a[0] := false end; \
-                   setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end";
+                   begin a[-1] := true; a[0] := false; \
+                         if a[-1] and not a[0] then result := 40 else result := 0 end; \
+                   flags[-1] := false; flags[0] := true; setflags(flags); \
+                   if not flags[-1] and flags[0] then result := result + 2 else result := 0 end";
         assert_eq!(run_i64(src), 42);
 
         let module = compile_source(src, "boolean_array_param").expect("compiles");
@@ -7460,7 +7560,7 @@ mod tests {
 
     #[test]
     fn multidimensional_boolean_array_parameter_preserves_full_descriptor() {
-        let src = "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end";
+        let src = "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true; if a[-1,2] and not a[-1,3] and not a[0,2] and a[0,3] then result := 40 else result := 0 end; flags[-1,2] := false; flags[-1,3] := false; flags[0,2] := false; flags[0,3] := false; setflags(flags); if not flags[-1,2] and not flags[-1,3] and not flags[0,2] and not flags[0,3] then result := result + 2 else result := 0 end";
         assert_eq!(run_i64(src), 42);
 
         let module =
@@ -7664,7 +7764,7 @@ mod tests {
     #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
-                   procedure seed(a); value a; integer array a; \
+                   procedure seed(a); integer array a; \
                      begin a[4,-2] := 40; a[5,-1] := 2 end; \
                    procedure invoke; seed(values); \
                    invoke; result := values[4,-2] + values[5,-1] end";
@@ -7905,7 +8005,7 @@ mod tests {
     fn nested_procedure_forwards_captured_four_dimensional_string_array_parameter() {
         let src = "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; \
                    procedure fill(a); value a; string array a; \
-                     begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; \
+                     begin procedure seed(b); string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; \
                            procedure invoke; seed(a); \
                            invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; \
                    fill(words) end";
@@ -7913,7 +8013,11 @@ mod tests {
 
         let module = compile_source(src, "captured_four_dimensional_string_array_forwarding")
             .expect("compiles");
-        let seed = module.get_function("seed").expect("seed function exists");
+        let seed = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_seed_"))
+            .expect("specialized seed function exists");
         assert_eq!(
             seed.params,
             vec![
@@ -7966,7 +8070,7 @@ mod tests {
             .iter()
             .find(|instr| {
                 instr.op == "call"
-                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name.starts_with("__algol_by_name_seed_"))
             })
             .expect("invoke forwards the captured array to seed");
         assert_eq!(
@@ -7980,7 +8084,7 @@ mod tests {
     fn nested_procedure_forwards_captured_four_dimensional_real_array_parameter() {
         let src = "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; \
                    procedure fill(a); value a; real array a; \
-                     begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; \
+                     begin procedure seed(b); real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; \
                            procedure invoke; seed(a); \
                            invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; \
                    fill(values) end";
@@ -7988,7 +8092,11 @@ mod tests {
 
         let module = compile_source(src, "captured_four_dimensional_real_array_forwarding")
             .expect("compiles");
-        let seed = module.get_function("seed").expect("seed function exists");
+        let seed = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_seed_"))
+            .expect("specialized seed function exists");
         assert_eq!(
             seed.params,
             vec![
@@ -8041,7 +8149,7 @@ mod tests {
             .iter()
             .find(|instr| {
                 instr.op == "call"
-                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name.starts_with("__algol_by_name_seed_"))
             })
             .expect("invoke forwards the captured array to seed");
         assert_eq!(
@@ -8055,7 +8163,7 @@ mod tests {
     fn nested_procedure_forwards_captured_four_dimensional_boolean_array_parameter() {
         let src = "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; \
                    procedure fill(a); value a; boolean array a; \
-                     begin procedure seed(b); value b; boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; \
+                     begin procedure seed(b); boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; \
                            procedure invoke; seed(a); \
                            invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; \
                    fill(flags) end";
@@ -8063,7 +8171,11 @@ mod tests {
 
         let module = compile_source(src, "captured_four_dimensional_boolean_array_forwarding")
             .expect("compiles");
-        let seed = module.get_function("seed").expect("seed function exists");
+        let seed = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_seed_"))
+            .expect("specialized seed function exists");
         assert_eq!(
             seed.params,
             vec![
@@ -8116,7 +8228,7 @@ mod tests {
             .iter()
             .find(|instr| {
                 instr.op == "call"
-                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name.starts_with("__algol_by_name_seed_"))
             })
             .expect("invoke forwards the captured array to seed");
         assert_eq!(
