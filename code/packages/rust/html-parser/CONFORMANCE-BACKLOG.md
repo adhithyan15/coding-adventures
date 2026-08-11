@@ -251,7 +251,10 @@ Prioritized work items:
    without changing their now-conforming DOM output. Matching open formatting
    elements that are not current now report before existing DOM repair, as do
    matching end tags whose formatting element was displaced from the open stack
-   before reconstruction inside a paragraph boundary. Adoption-agency end tags
+   before reconstruction inside a paragraph boundary. When a newer same-name
+   active entry has left the stack, its end tag now reports and removes that
+   entry instead of silently selecting an older open formatting element,
+   covering both `tests1.dat` adoption-agency-1.2 shapes. Adoption-agency end tags
    reprocessed from foreign content now report both the foreign mismatch and
    non-current formatting errors while preserving the conforming foreign DOM,
    matching WPT `adoption01.dat`'s `<a><svg><tr><input></a>` evidence. Continue
