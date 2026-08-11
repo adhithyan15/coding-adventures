@@ -52,6 +52,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-capi",
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
+            "rust/task-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -120,15 +121,30 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Compose binding", workflow)
         self.assertIn("needs_mosaic_compose_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 15", workflow)
-        self.assertIn("--backend compose --output \"$output\" --emit-project", workflow)
+        self.assertIn("timeout-minutes: 20", workflow)
+        self.assertIn(
+            "--backend compose --output \"$taskapp_output\" --emit-project",
+            workflow,
+        )
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
         self.assertIn(
-            "$output/compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow
+            "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow
         )
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app",
+            workflow,
+        )
+        self.assertIn("libtask_mosaic_app.so", workflow)
+        self.assertIn(
+            'cmp "$task_runtime_library" "$installed_taskapp_runtime"', workflow
+        )
+        self.assertIn("*/bin/task_app", workflow)
+        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('test "$taskapp_status" -eq 124', workflow)
+        self.assertIn("Mosaic Rust runtime unavailable", workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
         self.assertIn("compileKotlin createDistributable", workflow)
         self.assertIn("*/resources/libmosaic_app.so", workflow)
