@@ -60,7 +60,15 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
 
 fn print(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
-        expr: bc("print", vec![arg]),
+        expr: bc(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "once".into(), span: sp() },
+                Expr::BoolLit { value: false, span: sp() },
+                arg,
+            ],
+        ),
         span: sp(),
     }
 }
@@ -75,9 +83,11 @@ fn let_binding(name: &str, value: Expr) -> Stmt {
 }
 
 fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Module {
+    let mut all_features = vec![Feature::ConsoleIO, Feature::Strings];
+    all_features.extend_from_slice(features);
     Module {
         name: "sir22".into(),
-        manifest: FeatureManifest::from_features(features),
+        manifest: FeatureManifest::from_features(&all_features),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -356,6 +366,8 @@ fn function_parameter_self_multiplication_computes_the_square() {
     // reaches codegen.
     let mut features = ARRAY_FEATURES.to_vec();
     features.push(Feature::DynamicTyping);
+    features.push(Feature::ConsoleIO);
+    features.push(Feature::Strings);
 
     let module = Module {
         name: "sir22".into(),

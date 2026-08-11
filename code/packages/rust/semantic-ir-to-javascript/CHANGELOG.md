@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.52.0 — SIR28 §7: remove dead bare `print`/`puts` handling (final backend)
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` handling
+was dead — except for one load-bearing wrinkle unique to this backend:
+the SIR23 (symbolic-domain) evaluator special-case.
+
+- Removed the `"print"`/`"puts"` arms from the emit helper-name match,
+  and the `print`/`puts`/`putsOne` functions (plus their `builtins`
+  table entries and top-level export) from the embedded JS runtime.
+  Confirmed via grep that `write`/`writeOne` are fully independent
+  duplicates (unlike the C backend's shared `_sir_puts_one`), so this
+  was a straight deletion.
+- **Replaced `pick_print_of_sym23_root`/its `emit_stmt` arm with
+  `pick_sys_write_of_sym23_root`.** A top-level `print(<bare SIR23 root
+  shape>)` needed a special case to get the SIR23 addendum's one-time
+  `evalTerm` evaluation (otherwise a printed symbolic term came out
+  unevaluated) — this shape is the harness-only observability pattern
+  several sibling CAS-frontend crates' oracle/e2e tests use, not
+  something any frontend's own lowering emits. Deleting the old arm
+  without an equivalent for `__sys_write__` would have silently
+  regressed those tests to printing unevaluated terms. The new arm
+  generalizes to any `__sys_write__(stream, terminator, unpack_arrays,
+  <bare SIR23 root>)` shape, not just the old print-specific one.
+- Migrated hand-built unit/integration tests that used bare `print`/
+  `puts` purely to observe hand-constructed IR's output, converting them
+  to the equivalent `__sys_write__` envelope, plus
+  `Feature::ConsoleIO`/`Feature::Strings` added to each affected
+  manifest. The dedicated `puts`-semantics execution-proof tests in
+  `tests/run_with_node.rs` (multi-arg, array-flattening, cycle-safety)
+  now exercise the same behavior through `__sys_write__`'s `per_value`
+  terminator.
+- **Coordinated companion PR-worthy changes** to the 6 external
+  CAS-frontend crates whose test suites hand-build bare `print` IR via
+  this backend (`derive-to-semantic-ir`, `reduce-to-semantic-ir`,
+  `maple-to-semantic-ir`, `macsyma-to-semantic-ir`,
+  `wolfram-to-semantic-ir`, `axiom-to-semantic-ir`) — see each crate's
+  own CHANGELOG. Shipped in the same PR/commit as this change since they
+  are load-bearing on the `pick_sys_write_of_sym23_root` arm above.
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
 ## 0.51.9 — implement `__sys_write__`, the SIR28 console-output primitive
 
 Adds a `"__sys_write__" => Some("__Sir.write")` emit arm (plain

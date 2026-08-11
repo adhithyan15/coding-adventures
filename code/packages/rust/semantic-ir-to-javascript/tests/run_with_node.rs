@@ -61,7 +61,18 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
 }
 
 fn print(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("print", vec![arg]), span: sp() }
+    Stmt::ExprStmt {
+        expr: bc(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "once".into(), span: sp() },
+                Expr::BoolLit { value: false, span: sp() },
+                arg,
+            ],
+        ),
+        span: sp(),
+    }
 }
 
 fn let_(name: &str, value: Expr) -> Stmt {
@@ -86,9 +97,11 @@ fn module_with_lang_and_main(
     features: &[Feature],
     lang: &str,
 ) -> Module {
+    let mut all_features = vec![Feature::ConsoleIO, Feature::Strings];
+    all_features.extend_from_slice(features);
     Module {
         name: "sir16".into(),
-        manifest: FeatureManifest::from_features(features),
+        manifest: FeatureManifest::from_features(&all_features),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -459,7 +472,7 @@ fn apl_monadic_neg_rank1_array_negates_elementwise_instead_of_nan() {
     let snippet = r#"
 const F = __Sir;
 const v = F.Array.ndarray([3], Float64Array.of(1, 2, -3));
-F.print(F.neg(v));
+F.write("stdout", "once", false, F.neg(v));
 "#;
     if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_array", "apl") {
         assert_eq!(stdout, "¯1 ¯2 3");
@@ -503,7 +516,7 @@ fn apl_monadic_neg_rank0_ndarray_matches_matlab_ascii_convention_unchanged() {
     let snippet = r#"
 const F = __Sir;
 const seven = F.Array.ndarray([], Float64Array.of(7));
-F.print(F.neg(seven));
+F.write("stdout", "once", false, F.neg(seven));
 "#;
     if let Some(stdout) = run_runtime_snippet_lang(snippet, "apl_neg_rank0", "apl") {
         assert_eq!(stdout, "¯7");
@@ -592,7 +605,18 @@ console.log(o.join("|"));
 }
 
 fn puts_(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: sp() }
+    Stmt::ExprStmt {
+        expr: bc(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "per_value".into(), span: sp() },
+                Expr::BoolLit { value: true, span: sp() },
+                arg,
+            ],
+        ),
+        span: sp(),
+    }
 }
 
 #[test]
@@ -1133,6 +1157,8 @@ fn default_param_is_call_time_and_param_scoped() {
     let module = Module {
         name: "defaultparams".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::DefaultParams,
             Feature::DynamicTyping,
         ]),
@@ -1155,8 +1181,16 @@ fn default_param_is_call_time_and_param_scoped() {
         "expected native JS default param (with polymorphic `+`), got:\n{}",
         artifact.source
     );
-    assert!(artifact.source.contains("__Sir.print(f(5))"), "got:\n{}", artifact.source);
-    assert!(artifact.source.contains("__Sir.print(f(5, 10))"), "got:\n{}", artifact.source);
+    assert!(
+        artifact.source.contains(r#"__Sir.write("stdout", "once", false, f(5))"#),
+        "got:\n{}",
+        artifact.source
+    );
+    assert!(
+        artifact.source.contains(r#"__Sir.write("stdout", "once", false, f(5, 10))"#),
+        "got:\n{}",
+        artifact.source
+    );
 
     if let Some(stdout) = run_module(&module, "defaultparams") {
         assert_eq!(stdout, "6\n10", "f(5) must default b to a+1=6; f(5,10) must use 10");
@@ -1271,6 +1305,8 @@ fn keyword_params_options_object_omitted_and_supplied() {
     let module = Module {
         name: "kwparams".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::KeywordParams,
             Feature::DynamicTyping,
         ]),
@@ -1299,12 +1335,12 @@ fn keyword_params_options_object_omitted_and_supplied() {
         artifact.source
     );
     assert!(
-        artifact.source.contains("__Sir.print(add(5))"),
+        artifact.source.contains(r#"__Sir.write("stdout", "once", false, add(5))"#),
         "omitted-keyword call should have no options object, got:\n{}",
         artifact.source
     );
     assert!(
-        artifact.source.contains("__Sir.print(add(5, { delta: 100 }))"),
+        artifact.source.contains(r#"__Sir.write("stdout", "once", false, add(5, { delta: 100 }))"#),
         "supplied keyword should collapse into a trailing object, got:\n{}",
         artifact.source
     );
@@ -1370,6 +1406,8 @@ fn required_keyword_param_supplied_by_call() {
     let module = Module {
         name: "kwreq".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::KeywordParams,
             Feature::DynamicTyping,
         ]),
@@ -1494,8 +1532,9 @@ fn runtime_rejects_constructor_gadget() {
     let module = Module {
         name: "rce_gadget".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Strings,
-            Feature::DynamicTyping,
+                        Feature::DynamicTyping,
         ]),
         imports: vec![],
         exports: vec![],
@@ -1742,6 +1781,8 @@ fn oop_module(methods: Vec<Function>, main_stmts: Vec<Stmt>) -> Module {
     Module {
         name: "oop".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Classes,
             Feature::InstanceVars,
             Feature::ClassVars,
@@ -2004,6 +2045,8 @@ fn mixin_module(methods: Vec<Function>, main_stmts: Vec<Stmt>) -> Module {
     Module {
         name: "mixin".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Classes,
             Feature::Modules,
             Feature::InstanceVars,
@@ -2209,18 +2252,20 @@ fn puts_matches_ruby_output() {
     //   → "hello\n"   (string + newline)
     //   → "\n"        (no-arg puts → one blank line)
     //   → "1\n2\n3\n" (each array element on its own line)
-    let puts_hello = Stmt::ExprStmt {
-        expr: bc("puts", vec![str_("hello")]),
-        span: sp(),
-    };
-    let puts_bare = Stmt::ExprStmt { expr: bc("puts", vec![]), span: sp() };
-    let puts_arr = Stmt::ExprStmt {
+    let puts_hello = puts_(str_("hello"));
+    let puts_bare = Stmt::ExprStmt {
         expr: bc(
-            "puts",
-            vec![Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: sp() }],
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "per_value".into(), span: sp() },
+                Expr::BoolLit { value: true, span: sp() },
+            ],
         ),
         span: sp(),
     };
+    let puts_arr =
+        puts_(Expr::SeqLit { items: vec![int(1), int(2), int(3)], span: sp() });
     let module = module_with_main(
         vec![puts_hello, puts_bare, puts_arr],
         Expr::NilLit { span: sp() },
@@ -2247,7 +2292,7 @@ fn puts_cyclic_array_terminates() {
         // a[0] = a
         Stmt::SeqSet { seq: local("a"), index: int(0), value: local("a"), span: sp() },
         // puts a
-        Stmt::ExprStmt { expr: bc("puts", vec![local("a")]), span: sp() },
+        puts_(local("a")),
     ];
     let module = module_with_main(
         stmts,
@@ -2278,10 +2323,7 @@ fn poly_array_join_cyclic_terminates() {
         Stmt::SeqSet { seq: local("a"), index: int(0), value: local("a"), span: sp() },
         // puts (a * ", ")  → join renders the single element, which is `a`
         // itself → the cycle guard emits `[...]`.
-        Stmt::ExprStmt {
-            expr: bc("puts", vec![bc("*", vec![local("a"), str_(", ")])]),
-            span: sp(),
-        },
+        puts_(bc("*", vec![local("a"), str_(", ")])),
     ];
     let module = module_with_main(
         stmts,
@@ -3164,6 +3206,8 @@ fn hash_transform_values_and_keys() {
     let module = Module {
         name: "hashtransform".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Maps,
             Feature::Strings,
             Feature::Closures,
@@ -3195,7 +3239,7 @@ fn bool_display_module(source_language: &str) -> Module {
     ];
     Module {
         name: "dispbool".into(),
-        manifest: FeatureManifest::from_features(&[]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -3332,6 +3376,8 @@ fn array_catalog_module() -> Module {
     Module {
         name: "arrcat".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Sequences,
             Feature::Closures,
             Feature::Strings,
@@ -3417,6 +3463,8 @@ fn hash_enumerable_aggregates() {
     let module = Module {
         name: "hashenum".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Maps,
             Feature::Sequences,
             Feature::Strings,
@@ -3505,6 +3553,8 @@ fn hash_enumerable_breadth() {
     let module = Module {
         name: "hashbreadth".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Maps,
             Feature::Sequences,
             Feature::Strings,
@@ -3599,6 +3649,8 @@ fn hash_to_h_and_indexed_iteration() {
     let module = Module {
         name: "hashtoh".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Maps,
             Feature::Sequences,
             Feature::Strings,
@@ -3676,6 +3728,8 @@ fn array_each_slice_each_cons_chunk_while() {
     let module = Module {
         name: "arrslice".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Sequences,
             Feature::Strings,
             Feature::Closures,
@@ -3741,6 +3795,8 @@ fn array_slice_when() {
     let module = Module {
         name: "arrslicewhen".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Sequences,
             Feature::Strings,
             Feature::Closures,
@@ -3804,6 +3860,8 @@ fn array_cycle() {
     let module = Module {
         name: "arrcycle".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Sequences,
             Feature::Strings,
             Feature::Closures,
@@ -3864,6 +3922,8 @@ fn array_tally() {
     let module = Module {
         name: "arrtally".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Sequences,
             Feature::Strings,
             Feature::DynamicTyping,

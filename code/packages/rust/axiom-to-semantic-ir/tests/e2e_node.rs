@@ -36,7 +36,7 @@ use std::io::Write as _;
 use std::process::Command;
 
 use coding_adventures_axiom_to_semantic_ir::compile_source;
-use semantic_ir::{EffectSet, Expr, Module, Stmt};
+use semantic_ir::{EffectSet, Expr, Feature, Module, Stmt};
 
 fn node_available() -> bool {
     Command::new("node")
@@ -99,7 +99,7 @@ fn run_via_node_expecting(name: &str, src: &str, expected_stdout: &str) {
         "SIR validation failed for {name}: {:?}",
         report.issues
     );
-    wrap_whole_statement_in_print(&mut module);
+    wrap_whole_statement_in_sys_write(&mut module);
     let artifact = semantic_ir_to_javascript::compile(&module).expect("backend emit should succeed");
 
     let mut path = std::env::temp_dir();
@@ -124,7 +124,16 @@ fn run_via_node_expecting(name: &str, src: &str, expected_stdout: &str) {
     assert_eq!(stdout.trim_end_matches(['\n', '\r']), expected_stdout, "for {name}");
 }
 
-fn wrap_whole_statement_in_print(module: &mut Module) {
+/// SIR28 §7's successor to the pre-SIR28 `wrap_whole_statement_in_print`
+/// (bare `"print"`). Also declares `Feature::ConsoleIO`/`Feature::Strings`
+/// on the module — `axiom_to_semantic_ir`'s own lowering never emits
+/// console output, so its manifest never carries them, but `__sys_write__`
+/// (unlike the old bare `"print"`) is feature-gated by the validator, and
+/// `semantic_ir_to_javascript::compile` re-validates the module this
+/// function just modified.
+fn wrap_whole_statement_in_sys_write(module: &mut Module) {
+    module.manifest.add(Feature::ConsoleIO);
+    module.manifest.add(Feature::Strings);
     for f in &mut module.functions {
         if f.name != "main" {
             continue;
@@ -133,8 +142,13 @@ fn wrap_whole_statement_in_print(module: &mut Module) {
             if let Stmt::ExprStmt { expr, span } = stmt {
                 let inner = std::mem::replace(expr, Expr::NilLit { span: span.clone() });
                 *expr = Expr::BuiltinCall {
-                    name: "print".to_string(),
-                    args: vec![inner],
+                    name: "__sys_write__".to_string(),
+                    args: vec![
+                        Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                        Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                        Expr::BoolLit { value: false, span: span.clone() },
+                        inner,
+                    ],
                     effects: EffectSet::PURE,
                     span: span.clone(),
                 };

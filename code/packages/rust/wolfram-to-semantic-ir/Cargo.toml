@@ -1,6 +1,6 @@
 [package]
 name = "wolfram-to-semantic-ir"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Wolfram CST → narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). Fifth frontend for the SIR10 narrow-waist IR, first to target SIR23."
 

@@ -148,7 +148,7 @@ use std::process::Command;
 
 use coding_adventures_axiom_runtime::AxiomSession;
 use coding_adventures_axiom_to_semantic_ir::compile_source;
-use semantic_ir::{EffectSet, Expr, Module, Stmt};
+use semantic_ir::{EffectSet, Expr, Feature, Module, Stmt};
 
 /// Is a `node` binary on `PATH`? Mirrors every sibling oracle file's
 /// identical `node_available`: the test below skips (logs, does not fail)
@@ -463,14 +463,18 @@ fn ground_truth(source: &str) -> Result<String, String> {
 
 /// Harness-only fix (see the module doc's own "A harness-only 'make it
 /// observable' step" section): `main`'s ONE `Stmt::ExprStmt` is either an
-/// ordinary expression (wrapped in a single `print(...)`, mirroring every
-/// sibling oracle file's own `wrap_top_level_in_print`) or a top-level
-/// `SymApply(CompoundExpression, [s1, ..., sN])` block, which is instead
-/// "unrolled" into N separate statements -- the first N-1 evaluated bare
-/// (side effects only, value discarded, exactly like `emit.rs`'s own
-/// per-statement `evalTerm` wrap for a bare SIR23 root), the LAST wrapped
-/// in `print(...)`. Never touches `semantic-ir-to-javascript` itself.
+/// ordinary expression (wrapped in a single `__sys_write__(...)`, mirroring
+/// every sibling oracle file's own `wrap_top_level_in_sys_write` — SIR28
+/// §7's successor to the pre-SIR28 `wrap_top_level_in_print`) or a
+/// top-level `SymApply(CompoundExpression, [s1, ..., sN])` block, which is
+/// instead "unrolled" into N separate statements -- the first N-1
+/// evaluated bare (side effects only, value discarded, exactly like
+/// `emit.rs`'s own per-statement `evalTerm` wrap for a bare SIR23 root),
+/// the LAST wrapped in `__sys_write__(...)`. Never touches
+/// `semantic-ir-to-javascript` itself.
 fn wrap_axiom_top_level_for_observation(module: &mut Module) {
+    module.manifest.add(Feature::ConsoleIO);
+    module.manifest.add(Feature::Strings);
     for f in &mut module.functions {
         if f.name != "main" {
             continue;
@@ -499,8 +503,13 @@ fn wrap_axiom_top_level_for_observation(module: &mut Module) {
                 if i == last_index {
                     new_stmts.push(Stmt::ExprStmt {
                         expr: Expr::BuiltinCall {
-                            name: "print".to_string(),
-                            args: vec![a],
+                            name: "__sys_write__".to_string(),
+                            args: vec![
+                                Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                                Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                                Expr::BoolLit { value: false, span: span.clone() },
+                                a,
+                            ],
                             effects: EffectSet::PURE,
                             span: span.clone(),
                         },
@@ -517,8 +526,13 @@ fn wrap_axiom_top_level_for_observation(module: &mut Module) {
         } else {
             f.body.stmts = vec![Stmt::ExprStmt {
                 expr: Expr::BuiltinCall {
-                    name: "print".to_string(),
-                    args: vec![expr],
+                    name: "__sys_write__".to_string(),
+                    args: vec![
+                        Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                        Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                        Expr::BoolLit { value: false, span: span.clone() },
+                        expr,
+                    ],
                     effects: EffectSet::PURE,
                     span: span.clone(),
                 },

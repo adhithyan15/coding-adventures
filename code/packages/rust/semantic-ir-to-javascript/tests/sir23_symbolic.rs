@@ -89,15 +89,25 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
 
 fn print(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
-        expr: bc("print", vec![arg]),
+        expr: bc(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "once".into(), span: sp() },
+                Expr::BoolLit { value: false, span: sp() },
+                arg,
+            ],
+        ),
         span: sp(),
     }
 }
 
 fn module_with_main(stmts: Vec<Stmt>, value: Expr, features: &[Feature]) -> Module {
+    let mut all_features = vec![Feature::ConsoleIO, Feature::Strings];
+    all_features.extend_from_slice(features);
     Module {
         name: "sir23".into(),
-        manifest: FeatureManifest::from_features(features),
+        manifest: FeatureManifest::from_features(&all_features),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -400,6 +410,8 @@ fn derive_display_on_a_deeply_nested_list_of_lists_truncates_at_the_same_depth_a
             Feature::SymbolicExpr,
             Feature::Loops,
             Feature::MutableBindings,
+            Feature::ConsoleIO,
+            Feature::Strings,
         ]),
         imports: vec![],
         exports: vec![],

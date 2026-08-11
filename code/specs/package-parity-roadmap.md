@@ -2943,9 +2943,11 @@ The intervening range nevertheless exposed behavior ownership that the
 directory inventory cannot express:
 
 - `semantic-ir-sys-write-portable-conformance` owns SIR28 stream selection,
-  terminators, recursive unpacking, frontend lowering, backend/runtime
-  behavior, and the remaining removal of legacy print paths. It remains
-  temporarily blocked while the externally delivered SIR28 wave settles.
+  terminators, recursive unpacking, frontend lowering, and backend/runtime
+  behavior. SIR28 §7 (removal of the legacy bare `print`/`puts` paths) is
+  now complete across all 7 backends, including the JavaScript backend's
+  load-bearing SIR23 evaluator special-case and the 6 external CAS-frontend
+  crates whose test harnesses depended on it.
 - `gc-core-portable-conformance` owns moving-minor pacing, remembered sets,
   barriers, tagged layouts, relocation, and fixups. Separate dependent owners
   cover VM integration, the native C ABI, and the target-specific LLVM runtime

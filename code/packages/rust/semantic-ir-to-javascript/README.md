@@ -129,10 +129,11 @@ the O2 Ruby frontend's OOP builtins (`__new__`, `__super__`,
 "none"|"per_value"|"once", unpackArrays, ...values)` → `__Sir.write(...)`
 — a plain pass-through (no compile-time literal extraction, unlike the
 C/Go/Rust backends): JS branches on the `stream`/`terminator` strings at
-runtime, exactly like `print`/`puts`. `write` generalizes the existing
-`print`/`puts` — still present, still used by bare `"print"`/`"puts"` —
-into one function, promoted to a top-level `__Sir` member the same way
-`print` is. Not yet emitted by any frontend — see
+runtime. `write` is now the ONLY console-output primitive the backend
+emits, promoted to a top-level `__Sir` member — bare `"print"`/`"puts"`
+`BuiltinCall`s and the `print`/`puts` functions that used to implement
+them were removed once every frontend finished migrating to
+`__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 ### User-defined-class OOP (O3)
@@ -216,7 +217,7 @@ try {
 } catch (__exc) {
   if (__Sir.rescueMatches(__exc, ["StandardError"])) {
     const e = __exc;
-    __Sir.print("caught");
+    __Sir.write("stdout", "once", false, "caught");
   } else {
     throw __exc;
   }
@@ -269,10 +270,10 @@ const __Sir = (() => {
   function intern(name) { /* one Sym per name */ }
   function applyClosure(c, args) { /* invoke a Closure */ }
   function truthy(v) { /* only false / null are falsy */ }
-  function format(v) { /* Lisp-ish display for print */ }
-  const builtins = { "+": …, "cons": …, "range": …, "print": … };
+  function format(v) { /* Lisp-ish display for console output */ }
+  const builtins = { "+": …, "cons": …, "range": … };
   return { Sym, Pair, Closure, intern, applyClosure, truthy,
-           format, print, builtins, builtinClosure, callBuiltin };
+           format, write, builtins, builtinClosure, callBuiltin };
 })();
 ```
 
@@ -305,7 +306,8 @@ a runtime call:
 - `= != < > <= >=` (2 args) → `(a === b)`, `(a !== b)`, …
 - `not` (1 arg) → `(!__Sir.truthy(a))`; `neg` → `(-(a))`
 - `len` (1 arg) → `(a).length` (arrays and strings)
-- `print` (1 arg) → `__Sir.print(a)` (consistent stringification)
+- `__sys_write__` → `__Sir.write(stream, terminator, unpackArrays, …values)`
+  (the console-output primitive every frontend lowers `print`/`puts`/etc. to)
 
 A **variadic** operator (`(+ 1 2 3)` — more than two args) and any
 unrecognised builtin fall back to `__Sir.callBuiltin("+", […])`, so a new

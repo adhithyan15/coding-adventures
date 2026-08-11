@@ -23,11 +23,11 @@
 //! PR and still have no oracle file of their own).
 //!
 //! ## A harness-only "make it observable" step neither J's nor APL's
-//! oracle file needed: wrapping every top-level statement in `print`
+//! oracle file needed: wrapping every top-level statement in `__sys_write__`
 //!
 //! J's/APL's own lowering already wraps a bare top-level expression in the
-//! shared `"print"` builtin *unconditionally*, as a pre-existing part of
-//! those crates' own shipped lowering (see `j-to-semantic-ir/tests/
+//! shared `__sys_write__` builtin *unconditionally*, as a pre-existing part
+//! of those crates' own shipped lowering (see `j-to-semantic-ir/tests/
 //! oracle.rs`'s module doc, point 1) — so their compiled JS already prints
 //! something on its own, and their oracle files needed no extra plumbing
 //! to make a value observable.
@@ -44,12 +44,13 @@
 //! side-effect-free JS expression statement.
 //!
 //! An oracle test, by its very nature, needs an observable value on BOTH
-//! sides to diff — so [`wrap_top_level_in_print`] below performs a small,
+//! sides to diff — so [`wrap_top_level_in_sys_write`] below performs a small,
 //! test-local transformation: after `compile_source` (and after
 //! `semantic_ir::validate`, so what gets validated is exactly what
 //! shipped, unmodified) it walks the already-built [`semantic_ir::Module`]
 //! and wraps each top-level `Stmt::ExprStmt`'s `expr` in
-//! `Expr::BuiltinCall("print", [expr])` — mirroring the *shape*
+//! `Expr::BuiltinCall("__sys_write__", ["stdout", "once", false, expr])` —
+//! mirroring the *shape*
 //! `j-to-semantic-ir::lower::lower_top_level_statement`'s 1-child arm
 //! already produces, using only `semantic_ir`'s own public `Module`/
 //! `Stmt`/`Expr` types (the same types `tests/test_lower.rs` already
@@ -252,7 +253,7 @@ use std::process::Command;
 
 use coding_adventures_derive_runtime::eval as derive_eval;
 use derive_to_semantic_ir::compile_source;
-use semantic_ir::{EffectSet, Expr, Module, Stmt};
+use semantic_ir::{EffectSet, Expr, Feature, Module, Stmt};
 
 /// Is a `node` binary on `PATH`? Mirrors `j-to-semantic-ir/tests/
 /// oracle.rs`'s own `node_available` (and every sibling oracle file's)
@@ -696,7 +697,7 @@ const CORPUS: &[Case] = &[
 /// every line (MA07 §5's own numbered-history convention — Derive, unlike
 /// J, has no statement-suppression syntax at all, so EVERY statement gets
 /// one of these lines, including `Assign`/`Define`). The compiled side
-/// (via [`wrap_top_level_in_print`]) prints one bare, unnumbered line per
+/// (via [`wrap_top_level_in_sys_write`]) prints one bare, unnumbered line per
 /// statement through `console.log`, so stripping the prefix here is what
 /// makes the two sides directly, textually comparable.
 fn ground_truth(source: &str) -> String {
@@ -727,13 +728,21 @@ fn strip_worksheet_index_prefix(line: &str) -> &str {
     }
 }
 
-/// Wrap every top-level statement's `expr` in the shared `"print"`
-/// builtin — see this file's own module doc comment's "A harness-only
+/// Wrap every top-level statement's `expr` in the shared `__sys_write__`
+/// builtin (SIR28 §7's successor to the pre-SIR28 bare `"print"`
+/// builtin) — see this file's own module doc comment's "A harness-only
 /// 'make it observable' step" section for the full rationale. Runs AFTER
 /// `semantic_ir::validate` in [`compiled`] below, so validation itself
 /// still exercises exactly what `derive_to_semantic_ir::compile_source`
-/// actually shipped, unmodified.
-fn wrap_top_level_in_print(module: &mut Module) {
+/// actually shipped, unmodified. Also declares `Feature::ConsoleIO`/
+/// `Feature::Strings` on the module — `derive_to_semantic_ir`'s own
+/// lowering never emits console output, so its manifest never carries
+/// them, but `__sys_write__` (unlike the old bare `"print"`) is
+/// feature-gated by the validator, and `semantic_ir_to_javascript::compile`
+/// re-validates the module `wrap_top_level_in_sys_write` just modified.
+fn wrap_top_level_in_sys_write(module: &mut Module) {
+    module.manifest.add(Feature::ConsoleIO);
+    module.manifest.add(Feature::Strings);
     for f in &mut module.functions {
         if f.name != "main" {
             continue;
@@ -742,8 +751,13 @@ fn wrap_top_level_in_print(module: &mut Module) {
             if let Stmt::ExprStmt { expr, span } = stmt {
                 let inner = std::mem::replace(expr, Expr::NilLit { span: span.clone() });
                 *expr = Expr::BuiltinCall {
-                    name: "print".to_string(),
-                    args: vec![inner],
+                    name: "__sys_write__".to_string(),
+                    args: vec![
+                        Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                        Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                        Expr::BoolLit { value: false, span: span.clone() },
+                        inner,
+                    ],
                     effects: EffectSet::PURE,
                     span: span.clone(),
                 };
@@ -754,7 +768,7 @@ fn wrap_top_level_in_print(module: &mut Module) {
 
 /// Compiled path: run `source` (unchanged) through
 /// `derive_to_semantic_ir::compile_source`, `semantic_ir::validate`,
-/// [`wrap_top_level_in_print`], `semantic_ir_to_javascript::compile`, and
+/// [`wrap_top_level_in_sys_write`], `semantic_ir_to_javascript::compile`, and
 /// an actual `node` process. Mirrors `j-to-semantic-ir/tests/oracle.rs`'s
 /// own `compiled` exactly, down to the `OpenOptions::create_new(true)`
 /// temp-file handling (that file's own doc comment explains why:
@@ -769,7 +783,7 @@ fn compiled(name: &str, source: &str) -> String {
         "SIR validation failed for {name}: {:?}",
         report.issues
     );
-    wrap_top_level_in_print(&mut module);
+    wrap_top_level_in_sys_write(&mut module);
     let artifact = semantic_ir_to_javascript::compile(&module)
         .unwrap_or_else(|e| panic!("backend emit failed for {name}: {e:?}"));
 

@@ -677,8 +677,6 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "instance_of?": (v, cls) => rubyClassName(v) === methodNameArg(cls),
     "class": (v) => rubyClassName(v),
     "len": (x) => x.length,
-    "print": (x) => { console.log(format(x)); return null; },
-    "puts": (...args) => puts(...args),
     "range": (start, stop, step) => {
       const out = [];
       const s = step === undefined || step === null ? 1 : step;
@@ -700,83 +698,45 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     if (f === undefined) { throw new TypeError("unknown builtin: " + name); }
     return f(...args);
   }
-  // `print` is promoted to a top-level member so emitted code can write
-  // the readable `__Sir.print(x)` rather than `__Sir.builtins["print"](x)`.
-  function print(x) { console.log(format(x)); return null; }
-
-  // ── puts (Ruby semantics) ──────────────────────────────────────
-  //
-  // Ruby's `puts` is THE common output method and is deceptively subtle:
-  //
-  //   - `puts`            → one newline.
-  //   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s` already
-  //                         ends in "\n" (then no second newline is added):
-  //                         `puts "x\n"` prints `x\n`, not `x\n\n`.
-  //   - `puts a, b`       → each argument on its own line, in order.
-  //   - `puts nil`        → a blank line (`nil.to_s` is "", then the newline).
-  //   - `puts []`         → a single newline (an argument that flattens to
-  //                         nothing still prints a blank line).
-  //   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
-  //                         recursively: `1\n2\n3\n`.
-  //
-  // We write via `process.stdout.write` rather than `console.log` because
-  // `console.log` unconditionally appends a newline, defeating the
-  // trailing-newline-suppression rule.  A sequence is a native JS array.
-  // Cycle safety: a JS array is a shared, mutable reference, so a program can
-  // build a *cyclic* array (`a = []; a << a`).  The element-per-line flatten
-  // recurses through nested arrays, so it MUST be cycle-guarded or a self-
-  // referential array throws `RangeError: Maximum call stack size exceeded`
-  // (a DoS: CWE-674, uncontrolled recursion).  `seen` is a `Set` of the array
-  // references currently on the active flatten path.  A array ALREADY on the
-  // path is a cycle: rather than recurse forever we write `[...]` and a
-  // newline — matching real Ruby, where `puts a` on a self-referential array
-  // prints `[...]` and terminates.  (`format` is not itself cycle-guarded, so
-  // we emit the placeholder directly instead of calling it on the cycle.)  An
-  // array removed from `seen` on exit still flattens in full via a sibling
-  // path — only a true self-cycle is short-circuited, so non-cyclic output is
-  // unchanged (`puts [1,[2,3]]` still prints `1\n2\n3\n`).
-  function putsOne(v, seen) {
-    if (Array.isArray(v)) {
-      if (seen.has(v)) { process.stdout.write("[...]\n"); return; }
-      seen.add(v);
-      for (const item of v) { putsOne(item, seen); }
-      seen.delete(v);
-      return;
-    }
-    if (v === null || v === undefined) { process.stdout.write("\n"); return; }
-    const text = format(v);
-    process.stdout.write(text.endsWith("\n") ? text : text + "\n");
-  }
-  function puts(...args) {
-    if (args.length === 0) { process.stdout.write("\n"); return null; }
-    const seen = new Set();
-    for (const a of args) {
-      // `puts []` (empty array arg) still writes one blank line.
-      if (Array.isArray(a) && a.length === 0) { process.stdout.write("\n"); }
-      else { putsOne(a, seen); }
-    }
-    return null;
-  }
-
   // ── write (SIR28 §2.1) ───────────────────────────────────────────
   //
-  // `__sys_write__`, the console-output primitive `print`/`puts` above
-  // generalize into. Where those hard-code ONE newline policy each, this
-  // is the SAME operation parameterized by policy flags carried as DATA
-  // -- the root cause SIR28 exists to fix: real Ruby's `print` never
-  // newline-terminates, JS's own `console.log` always does, but both
-  // used to lower to the identical `BuiltinCall("print", ...)` this
+  // `__sys_write__` is the general console-output primitive every
+  // frontend lowers `print`/`puts`/`console.log`/etc. to. It generalizes
+  // what used to be several backend-hardcoded newline policies into ONE
+  // operation parameterized by policy flags carried as DATA -- the root
+  // cause SIR28 exists to fix: real Ruby's `print` never
+  // newline-terminates, JS's own `console.log` always does, but before
+  // SIR28 both lowered to the identical `BuiltinCall("print", ...)` this
   // backend had no way to tell apart.
   //
-  // `terminator`: "none" (`print`'s behavior) | "per_value" (`puts`'s
-  // array-unpacking behavior, honouring `unpackArrays`) | "once" (JS's
+  // `terminator`: "none" (write each value back to back, no newline --
+  // matches Ruby's `print`) | "per_value" (one newline per value,
+  // honouring `unpackArrays` -- matches Ruby's `puts`) | "once" (JS's
   // native `console.log(a, b)` -- space-join every value, one trailing
-  // newline). Deliberately does NOT replicate `puts`'s trailing-newline-
-  // suppression nuance above (`puts "x\n"` prints `x\n`, not `x\n\n`) --
-  // that's a pre-existing divergence from the C/Go/Rust/Python backends'
-  // own `puts`, orthogonal to and not fixed by SIR28; `per_value` here
-  // always appends exactly one newline per value, matching SIR28 §2.1's
-  // table and every other backend's `__sys_write__` faithfully.
+  // newline). Deliberately does NOT replicate Ruby `puts`'s
+  // trailing-newline-suppression nuance (`puts "x\n"` prints `x\n`, not
+  // `x\n\n`) -- that's a pre-existing, orthogonal divergence between
+  // backends' own historical `puts` implementations that SIR28 does not
+  // fix or replicate; `per_value` here always appends exactly one
+  // newline per value, matching SIR28 §2.1's table and every other
+  // backend's `__sys_write__` faithfully.
+  //
+  // Cycle safety: a JS array is a shared, mutable reference, so a
+  // program can build a *cyclic* array (`a = []; a << a`). The
+  // element-per-line flatten under `per_value`/`unpackArrays` recurses
+  // through nested arrays, so it MUST be cycle-guarded or a self-
+  // referential array throws `RangeError: Maximum call stack size
+  // exceeded` (a DoS: CWE-674, uncontrolled recursion). `seen` is a
+  // `Set` of the array references currently on the active flatten path.
+  // An array ALREADY on the path is a cycle: rather than recurse forever
+  // we write `[...]` and a newline — matching real Ruby, where `puts a`
+  // on a self-referential array prints `[...]` and terminates. (`format`
+  // is not itself cycle-guarded, so we emit the placeholder directly
+  // instead of calling it on the cycle.) An array removed from `seen` on
+  // exit still flattens in full via a sibling path — only a true
+  // self-cycle is short-circuited, so non-cyclic output is unchanged
+  // (`per_value`/`unpackArrays` on `[1,[2,3]]` still writes
+  // `1\n2\n3\n`).
   function writeOne(out, v, unpackArrays, seen) {
     if (unpackArrays && Array.isArray(v)) {
       if (seen.has(v)) { out.write("[...]\n"); return; }
@@ -6545,7 +6505,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
 
   return {
     Sym, Pair, Closure,
-    intern, applyClosure, truthy, matlabTruthy, format, print, puts, write,
+    intern, applyClosure, truthy, matlabTruthy, format, write,
     plus, times, divide, shiftLeft,
     // Tagged floats (Ruby Integer vs Float). Exported so the emitter can
     // mint a boxed float at a `FloatLit` and route `-`/`%`/`neg` through

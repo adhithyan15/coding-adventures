@@ -544,32 +544,42 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push_str("__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
                 emit_expr(out, expr, indent);
                 out.push_str("));\n");
-            } else if let Some(inner) = pick_print_of_sym23_root(expr) {
-                // `print(<bare SIR23 root shape>)` — the harness-only
-                // observability pattern `derive-to-semantic-ir`'s and
-                // `reduce-to-semantic-ir`'s own `tests/oracle.rs` use
-                // (their frontends' own lowering never wraps a top-level
-                // statement in `print`/`console.log` itself — see each
-                // oracle file's own module doc, "a harness-only 'make it
-                // observable' step" — so this shape never occurs in
-                // production output today, only in a test harness that
-                // needs a value on stdout to diff). Discovered
-                // empirically while verifying this addendum item against
-                // that exact harness: without this arm, the harness's own
-                // `wrap_top_level_in_print` re-shapes the statement's
+            } else if let Some((stream, terminator, unpack, inner)) =
+                pick_sys_write_of_sym23_root(expr)
+            {
+                // `__sys_write__(stream, terminator, unpack_arrays, <bare
+                // SIR23 root shape>)` — SIR28 §7's successor to the
+                // pre-SIR28 `print(<bare SIR23 root shape>)` special case.
+                // The harness-only observability pattern
+                // `derive-to-semantic-ir`'s and `reduce-to-semantic-ir`'s
+                // own `tests/oracle.rs` use (their frontends' own lowering
+                // never wraps a top-level statement in `print`/
+                // `console.log` itself — see each oracle file's own
+                // module doc, "a harness-only 'make it observable' step"
+                // — so this shape never occurs in production output
+                // today, only in a test harness that needs a value on
+                // stdout to diff). Discovered empirically while verifying
+                // the original SIR23 addendum item against that exact
+                // harness: without an arm like this, the harness's own
+                // print/write-wrapping helper re-shapes the statement's
                 // `expr` from a bare SIR23 root (which the arm above
-                // would evaluate) into `BuiltinCall("print", [bare root])`
-                // — invisible to the check above, so the printed value
+                // would evaluate) into a builtin-call wrapper around it —
+                // invisible to the check above, so the printed value
                 // stayed unevaluated even with `evalTerm` fully wired.
                 // The fix generalizes the SAME "evaluate the one value
                 // this statement observes" policy to this shape too — the
                 // statement still gets exactly one `evalTerm` call, still
                 // never touches `Expr::SymApply`'s own codegen arm, and
                 // still lives entirely in this `Stmt::ExprStmt` arm,
-                // mirroring the `pick_global_set` special-case immediately
-                // above.
+                // mirroring the `pick_global_set` special-case above.
                 out.push_str(&pad);
-                out.push_str("__Sir.print(__Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
+                out.push_str("__Sir.write(");
+                emit_expr(out, stream, indent);
+                out.push_str(", ");
+                emit_expr(out, terminator, indent);
+                out.push_str(", ");
+                emit_expr(out, unpack, indent);
+                out.push_str(", __Sir.Symbolic.unwrap(__Sir.Symbolic.evalTerm(");
                 emit_expr(out, inner, indent);
                 out.push_str(")));\n");
             } else {
@@ -896,17 +906,19 @@ fn is_sym23_root_shape(e: &Expr) -> bool {
     )
 }
 
-/// Detect `BuiltinCall("print", [<bare SIR23 root shape>])` and return
-/// the inner expression. See `emit_stmt`'s `Stmt::ExprStmt` arm for why
-/// this needs the identical `evalTerm` treatment a bare top-level SIR23
+/// Detect `BuiltinCall("__sys_write__", [stream, terminator, unpack_arrays,
+/// <bare SIR23 root shape>])` and return the `(stream, terminator,
+/// unpack_arrays, inner)` tuple. See `emit_stmt`'s `Stmt::ExprStmt` arm for
+/// why this needs the identical `evalTerm` treatment a bare top-level SIR23
 /// statement gets — this shape is the harness-only observability pattern
 /// `derive-to-semantic-ir`'s/`reduce-to-semantic-ir`'s own `tests/
-/// oracle.rs` use (`wrap_top_level_in_print`), not something any
-/// frontend's own lowering emits today.
-fn pick_print_of_sym23_root(e: &Expr) -> Option<&Expr> {
+/// oracle.rs` use (`wrap_top_level_in_write`, SIR28 §7's successor to the
+/// pre-SIR28 `wrap_top_level_in_print`), not something any frontend's own
+/// lowering emits today.
+fn pick_sys_write_of_sym23_root(e: &Expr) -> Option<(&Expr, &Expr, &Expr, &Expr)> {
     if let Expr::BuiltinCall { name, args, .. } = e {
-        if name == "print" && args.len() == 1 && is_sym23_root_shape(&args[0]) {
-            return Some(&args[0]);
+        if name == "__sys_write__" && args.len() == 4 && is_sym23_root_shape(&args[3]) {
+            return Some((&args[0], &args[1], &args[2], &args[3]));
         }
     }
     None
@@ -1823,19 +1835,18 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         }
     }
     // Named helpers that always route through the inlined runtime.
-    // `print` is exposed on the `__Sir` object directly for readable
-    // output (`__Sir.print(x)`); the predicates and pair constructors
+    // `write` is exposed on the `__Sir` object directly for readable
+    // output (`__Sir.write(...)`); the predicates and pair constructors
     // live in the bracket-indexed dispatch table.
     let helper = match name {
-        "print" => Some("__Sir.print"),
-        "puts" => Some("__Sir.puts"),
-        // SIR28 §2: the console-output primitive `print`/`puts` generalize
-        // into. `args = [StrLit(stream), StrLit(terminator),
-        // BoolLit(unpack_arrays), ...values]`, already validated by
-        // `semantic-ir`'s validator (SIR28 §3.1) against a closed set. A
-        // plain `emit_args` (no special literal extraction, unlike the
-        // C/Go/Rust backends) is correct: JS branches on the
-        // stream/terminator strings at runtime, exactly like `print`/`puts`.
+        // SIR28 §2: the console-output primitive every frontend now emits
+        // in place of the old bare `print`/`puts` (SIR28 §7 removed the
+        // dead bare-name path). `args = [StrLit(stream),
+        // StrLit(terminator), BoolLit(unpack_arrays), ...values]`, already
+        // validated by `semantic-ir`'s validator (SIR28 §3.1) against a
+        // closed set. A plain `emit_args` (no special literal extraction,
+        // unlike the C/Go/Rust backends) is correct: JS branches on the
+        // stream/terminator strings at runtime.
         "__sys_write__" => Some("__Sir.write"),
         "cons" => Some("__Sir.builtins[\"cons\"]"),
         "car" => Some("__Sir.builtins[\"car\"]"),
@@ -2278,6 +2289,23 @@ mod tests {
         }
     }
 
+    /// SIR28 §2: a single-value `print`-shaped `__sys_write__` call
+    /// (`terminator: "once"`, matching this backend's old bare `print`'s
+    /// `console.log`-based always-newline behavior) — used as filler
+    /// "observable statement" content in tests below, not to test print
+    /// semantics itself.
+    fn sys_write_once(v: Expr) -> Expr {
+        bc(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                v,
+            ],
+        )
+    }
+
     #[test]
     fn emit_builtin_arithmetic_routes_through_retagging_helpers() {
         let two = || {
@@ -2404,52 +2432,55 @@ mod tests {
         );
     }
 
+    /// SIR28 §2: a `print`-shaped `__sys_write__` call (`terminator:
+    /// "none"`, `unpack_arrays: false`) routes to the plain `__Sir.write(...)`
+    /// runtime helper — replaces the pre-SIR28 `emit_builtin_print_routes_to_runtime`.
     #[test]
-    fn emit_builtin_print_routes_to_runtime() {
+    fn emit_sys_write_print_shape_routes_to_runtime() {
         assert_eq!(
             emit_e(&bc(
-                "print",
-                vec![Expr::IntLit {
-                    value: 7,
-                    span: s()
-                }]
+                "__sys_write__",
+                vec![
+                    strlit("stdout"),
+                    strlit("none"),
+                    Expr::BoolLit { value: false, span: s() },
+                    Expr::IntLit { value: 7, span: s() },
+                ]
             )),
-            "__Sir.print(7)"
+            r#"__Sir.write("stdout", "none", false, 7)"#
         );
     }
 
-    /// `puts` routes to the variadic `__Sir.puts(...)` runtime helper.  All
-    /// arguments are forwarded (Ruby `puts a, b`), and a bare `puts` becomes
-    /// `__Sir.puts()`.
+    /// SIR28 §2: a `puts`-shaped `__sys_write__` call (`terminator:
+    /// "per_value"`, `unpack_arrays: true`) routes to the variadic
+    /// `__Sir.write(...)` runtime helper.  All value arguments are
+    /// forwarded (Ruby `puts a, b`), and a bare `puts` becomes
+    /// `__Sir.write("stdout", "per_value", true)` — replaces the pre-SIR28
+    /// `emit_builtin_puts_routes_to_runtime`.
     #[test]
-    fn emit_builtin_puts_routes_to_runtime() {
+    fn emit_sys_write_puts_shape_routes_to_runtime() {
+        fn puts_shaped(args: Vec<Expr>) -> Expr {
+            let mut sys_args =
+                vec![strlit("stdout"), strlit("per_value"), Expr::BoolLit { value: true, span: s() }];
+            sys_args.extend(args);
+            bc("__sys_write__", sys_args)
+        }
+
         assert_eq!(
-            emit_e(&bc(
-                "puts",
-                vec![Expr::IntLit {
-                    value: 7,
-                    span: s()
-                }]
-            )),
-            "__Sir.puts(7)"
+            emit_e(&puts_shaped(vec![Expr::IntLit { value: 7, span: s() }])),
+            r#"__Sir.write("stdout", "per_value", true, 7)"#
         );
         assert_eq!(
-            emit_e(&bc(
-                "puts",
-                vec![
-                    Expr::IntLit {
-                        value: 1,
-                        span: s()
-                    },
-                    Expr::IntLit {
-                        value: 2,
-                        span: s()
-                    },
-                ],
-            )),
-            "__Sir.puts(1, 2)"
+            emit_e(&puts_shaped(vec![
+                Expr::IntLit { value: 1, span: s() },
+                Expr::IntLit { value: 2, span: s() },
+            ])),
+            r#"__Sir.write("stdout", "per_value", true, 1, 2)"#
         );
-        assert_eq!(emit_e(&bc("puts", vec![])), "__Sir.puts()");
+        assert_eq!(
+            emit_e(&puts_shaped(vec![])),
+            r#"__Sir.write("stdout", "per_value", true)"#
+        );
     }
 
     #[test]
@@ -3122,7 +3153,7 @@ mod tests {
             step: int(1),
             body: Block {
                 stmts: vec![Stmt::ExprStmt {
-                    expr: bc("print", vec![var("i")]),
+                    expr: sys_write_once(var("i")),
                     span: s(),
                 }],
                 value: Expr::NilLit { span: s() },
@@ -3138,7 +3169,7 @@ mod tests {
             out.contains("while (__sir_step_0 >= 0 ? i < __sir_stop_0 : i > __sir_stop_0) {"),
             "got {out}"
         );
-        assert!(out.contains("__Sir.print(i);"), "got {out}");
+        assert!(out.contains(r#"__Sir.write("stdout", "once", false, i);"#), "got {out}");
         assert!(out.contains("i = i + __sir_step_0;"), "got {out}");
     }
 
@@ -3149,7 +3180,7 @@ mod tests {
             iter: var("xs"),
             body: Block {
                 stmts: vec![Stmt::ExprStmt {
-                    expr: bc("print", vec![var("x")]),
+                    expr: sys_write_once(var("x")),
                     span: s(),
                 }],
                 value: Expr::NilLit { span: s() },
@@ -3159,7 +3190,7 @@ mod tests {
         };
         let out = emit_s(&st);
         assert!(out.starts_with("for (let x of xs) {\n"), "got {out}");
-        assert!(out.contains("__Sir.print(x);"), "got {out}");
+        assert!(out.contains(r#"__Sir.write("stdout", "once", false, x);"#), "got {out}");
     }
 
     #[test]
@@ -3230,18 +3261,15 @@ mod tests {
     #[test]
     fn emit_expr_stmt_terminates_with_semicolon() {
         let st = Stmt::ExprStmt {
-            expr: bc(
-                "print",
-                vec![Expr::IntLit {
-                    value: 1,
-                    span: s(),
-                }],
-            ),
+            expr: sys_write_once(Expr::IntLit {
+                value: 1,
+                span: s(),
+            }),
             span: s(),
         };
         let mut out = String::new();
         emit_stmt(&mut out, &st, 0);
-        assert_eq!(out, "__Sir.print(1);\n");
+        assert_eq!(out, "__Sir.write(\"stdout\", \"once\", false, 1);\n");
     }
 
     // ── functions & module ────────────────────────────────────────
@@ -3635,26 +3663,20 @@ mod tests {
     fn emit_try_catch_emits_rescue_matches_else_chain() {
         let st = Stmt::TryCatch {
             body: vec![Stmt::ExprStmt {
-                expr: bc(
-                    "print",
-                    vec![Expr::StrLit {
-                        value: "try".into(),
-                        span: s(),
-                    }],
-                ),
+                expr: sys_write_once(Expr::StrLit {
+                    value: "try".into(),
+                    span: s(),
+                }),
                 span: s(),
             }],
             rescues: vec![RescueClause {
                 exception_types: vec!["StandardError".into()],
                 binding: Some("e".into()),
                 body: vec![Stmt::ExprStmt {
-                    expr: bc(
-                        "print",
-                        vec![Expr::StrLit {
-                            value: "caught".into(),
-                            span: s(),
-                        }],
-                    ),
+                    expr: sys_write_once(Expr::StrLit {
+                        value: "caught".into(),
+                        span: s(),
+                    }),
                     span: s(),
                 }],
                 span: s(),
