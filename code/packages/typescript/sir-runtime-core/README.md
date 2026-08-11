@@ -15,9 +15,8 @@ namespace into every file:
 | `truthy(v)` | SIR truthiness is **false/nil-only** — `0`, `""`, `[]`, `{}` are *truthy*, unlike JS coercion. |
 | `Sym` / `intern` | Interned identity objects; JS has no symbol *value* type with names. |
 | `Pair` / `cons` / `car` / `cdr` | Lisp cons cells; no native type. |
-| `eq`, `toDisplay`, `print` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
-| `puts` | Ruby `puts`: per-arg line, arrays flattened element-per-line, no double trailing newline, no-arg → one newline. |
-| `write` | [SIR28](../../../specs/SIR28-syscall-primitives.md) `__sys_write__`: the general console-output primitive `print`/`puts` generalize into — `write(stream, terminator, unpackArrays, ...values)`, stream `"stdout"`\|`"stderr"`, terminator `"none"`\|`"per_value"`\|`"once"`. |
+| `eq`, `toDisplay` | Symbol-aware equality and Lisp/Ruby display (`nil`, `#t`/`#f`). |
+| `write` | [SIR28](../../../specs/SIR28-syscall-primitives.md) `__sys_write__`: the general console-output primitive every frontend lowers `print`/`puts`/`console.log`/etc. to — `write(stream, terminator, unpackArrays, ...values)`, stream `"stdout"`\|`"stderr"`, terminator `"none"`\|`"per_value"`\|`"once"`. |
 | `add`/`sub`/`mul`/`div`, `lt`/`gt` | Variadic numeric folds + truncating-integer `/`. `add`/`mul` are **type-polymorphic** like Ruby (dispatched on the first operand's runtime tag): `"a"+"b"`→`"ab"`, `[1]+[2]`→`[1,2]` (fresh array), `"ab"*3`→`"ababab"`, `[0]*3`→`[0,0,0]`, `[1,2]*", "`→`"1, 2"`. `*` repeat guards against oversize allocation (`Error("argument too big")`). |
 | `Closure`/`apply`/`makeClosure`, global store, builtin dispatch | Uniform closure handles + SIR `Globals`. |
 
@@ -36,7 +35,7 @@ function add(a, b) {
 const xs = [1, 2, 3];
 let i = 0;
 while (_sir.truthy(i < xs.length)) {
-  _sir.print(xs[i]);
+  _sir.write("stdout", "once", false, xs[i]);
   i = i + 1;
 }
 ```

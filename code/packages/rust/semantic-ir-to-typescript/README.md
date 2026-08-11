@@ -89,10 +89,11 @@ The TypeScript backend accepts these SIR features:
   "none"|"per_value"|"once", unpackArrays, ...values)` emits
   `__Sir.write(...)`, a plain pass-through (no compile-time literal
   extraction, unlike the C/Go/Rust backends): the runtime branches on the
-  `stream`/`terminator` strings at call time, exactly like `print`/`puts`.
-  `write` generalizes `print`/`puts` — both still present, still used by
-  bare `"print"`/`"puts"` — into one function importable from
-  `@coding-adventures/sir-runtime-core`. Not yet emitted by any frontend —
+  `stream`/`terminator` strings at call time. `write` — importable from
+  `@coding-adventures/sir-runtime-core` — is now the ONLY console-output
+  primitive the backend emits; bare `"print"`/`"puts"` `BuiltinCall`s and
+  the `print`/`puts` functions that used to implement them were removed
+  once every frontend finished migrating to `__sys_write__` (SIR28 §7) —
   see [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 It **rejects**:
