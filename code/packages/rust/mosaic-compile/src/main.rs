@@ -1150,8 +1150,12 @@ fn run_pipeline(
                         _ => relative.to_string(),
                     }
                 };
-                let flat: [(String, &str); 2] = [
+                let flat: [(String, &str); 3] = [
                     (side_file_path("pubspec.yaml"), &proj.pubspec_yaml),
+                    (
+                        side_file_path("analysis_options.yaml"),
+                        &proj.analysis_options_yaml,
+                    ),
                     (side_file_path("README.md"), &proj.readme),
                 ];
                 for (path, src) in &flat {
@@ -1169,6 +1173,17 @@ fn run_pipeline(
                 }
                 write_file_or_die(&main_dart_path, &proj.main_dart);
                 eprintln!("Written: {main_dart_path}");
+                let widget_test_path = side_file_path("test/widget_test.dart");
+                if let Some(parent) = std::path::Path::new(&widget_test_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&widget_test_path, &proj.widget_test_dart);
+                eprintln!("Written: {widget_test_path}");
             }
         }
         "compose" => {

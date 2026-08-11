@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed - Flutter bootstrap analyzes as a complete project
+
+Flutter project emission now writes Mosaic-owned analyzer configuration and a
+package-name-correct widget smoke test. The documented `flutter create`
+bootstrap preserves both files, and Linux acceptance runs whole-project
+`flutter analyze` plus the generated permissive test rather than checking only
+`lib/`.
+
 ### Added - all five native artifacts bundle their Rust engine
 
 Package mode accepts `--runtime-library <target cdylib>`. Compose copies the

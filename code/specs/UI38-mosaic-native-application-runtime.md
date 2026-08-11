@@ -399,9 +399,12 @@ unblocks multiple downstream targets; never count source generation as completio
   TaskApp and round-trip the real Rust engine through the generated .NET binding,
   but can terminate WinUI before `OnLaunched` with stowed-exception status
   `0xc000027b`; they therefore cannot honestly prove a visible native surface.
-- [ ] Make the generated Flutter project analyzer-clean after its documented
+- [x] Make the generated Flutter project analyzer-clean after its documented
   `flutter create` bootstrap: replace the stock `MyApp` widget test, provision
-  its lint configuration, and omit unused authored `For` bindings.
+  its lint configuration, and omit unused authored `For` bindings. Generated
+  shells now own a package-name-correct Mosaic smoke test and lint dependency;
+  Linux CI runs whole-project `flutter analyze`, preserves the generated test
+  across `flutter create`, and executes the permissive toolkit test suite.
 - [x] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
   in boolean positions and supply required native input commit payloads.
 - [x] Restore complete Compose TaskApp generation after package expansion added

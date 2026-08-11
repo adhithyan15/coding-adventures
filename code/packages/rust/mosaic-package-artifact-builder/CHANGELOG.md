@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - analyzer-clean Flutter project bootstrap
+
+- Flutter project shells install Mosaic-owned `analysis_options.yaml` and
+  `test/widget_test.dart` files alongside the matching lint dependency.
+- The generated smoke test imports the actual pub package name and replaces
+  Flutter's stock `MyApp` counter test before `flutter create` adds runners.
+- Package artifacts now report both bootstrap files to callers.
+
 ## [Unreleased] - Flutter Rust engine bundling
 
 - Flutter project shells accept a selected target Rust cdylib, copy it under

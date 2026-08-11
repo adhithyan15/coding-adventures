@@ -122,9 +122,8 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
-        self.assertIn("hook/build.dart", workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
-        self.assertIn("dart analyze lib hook/build.dart", workflow)
+        self.assertIn("flutter analyze", workflow)
         self.assertIn("find \"$output/flutter/build/linux\"", workflow)
         self.assertIn("cmp \"$runtime_library\" \"$bundled_runtime\"", workflow)
         self.assertIn("unset MOSAIC_APP_LIBRARY", workflow)
@@ -133,7 +132,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("mosaic-flutter-native-complete-rating-controls", workflow)
         self.assertIn("--profile native-complete", workflow)
         self.assertIn(".nativeComplete == true", workflow)
-        self.assertIn("dart analyze lib", workflow)
+        self.assertNotIn("dart analyze lib", workflow)
         self.assertIn("mosaic_taskapp_acceptance", workflow)
         self.assertIn("mosaic-flutter-data-grid", workflow)
         self.assertIn("mosaic_data_grid_acceptance", workflow)
@@ -144,6 +143,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             "--project-name mosaic_toolkit_acceptance .",
             workflow,
         )
+        self.assertIn("flutter test", workflow)
         self.assertIn("flutter build linux --debug", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
