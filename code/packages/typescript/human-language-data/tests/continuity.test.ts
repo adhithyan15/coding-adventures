@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(1824); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
+    expect(report.summary.missedByWindow.R2).toBe(1822); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 219, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 220, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and

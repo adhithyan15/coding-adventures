@@ -12,6 +12,12 @@
 - Preserve Arabic Waw independently of the existing Persian record for the same
   Unicode glyph, and queue source recovery for independent Arabic **م** next.
 
+### Changed — Spanish runs 1..82 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the future+conditional chapter
+  split into four, so old Spanish chapters 42–79 shifted to 45–82.
+- Eager bundle 481,805 / 500,000 bytes.
+
 ### Added — cited Arabic independent-heh ductus (HL-C09AY)
 
 - Render **ه** in three evidence-aligned frames: close the lower counter, thread

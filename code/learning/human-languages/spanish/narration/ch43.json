@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 43,
-  "title": "Lo Siento",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bc071d463889084f",
+  "title": "One Stem, Two Tenses",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cb7db99d13c74dad",
   "lessons": [
     {
-      "id": "ES-C20-lo-siento",
-      "sequence": 1300,
-      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
-      "headword": "lo siento",
-      "romanization": "lo siento",
-      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
+      "id": "ES-C17-irregulares",
+      "sequence": 1164,
+      "title": "haré, tendré, podré — three stems, two ending sets",
+      "headword": "haré · tendré · podré",
+      "romanization": "haré · tendré · podré",
+      "gloss": "three bounded stems shared by the future and conditional",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d885a61902f2ca98",
+      "sourceHash": "fnv1a64:a848da28c1956432",
       "notice": null,
       "blocks": [
         {
@@ -35,31 +35,94 @@
             },
             {
               "kind": "speech",
-              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
+              "text": "Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: hacer becomes har-",
           "segments": [
             {
-              "kind": "speech",
-              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
+              "kind": "table",
+              "headers": [
+                "person",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. future: haré. conditional: haría.",
+                "person: tú. future: harás. conditional: harías.",
+                "person: él / ella / usted. future: hará. conditional: haría."
+              ]
             },
             {
               "kind": "speech",
-              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
-            },
-            {
-              "kind": "speech",
-              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
+              "text": "Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”"
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: tener becomes tendr-",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. future: tendré. conditional: tendría.",
+                "person: tú. future: tendrás. conditional: tendrías.",
+                "person: él / ella / usted. future: tendrá. conditional: tendría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: poder becomes podr-",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "future",
+                "conditional"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. future: podré. conditional: podría.",
+                "person: tú. future: podrás. conditional: podrías.",
+                "person: él / ella / usted. future: podrá. conditional: podría."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”"
+            },
+            {
+              "kind": "speech",
+              "text": "These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -72,34 +135,97 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
+              "instruction": "“haré, haría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
+              "source": "[YOU SAY: “haré, haría”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo siento mucho\" — I'm so sorry",
+              "instruction": "“tendré, tendría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
+              "source": "[YOU SAY: “tendré, tendría”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
+              "instruction": "“podré, podría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
+              "source": "[YOU SAY: “podré, podría”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-irregulares-hacer-pair",
+              "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haré café; haría café.",
+                "haré café haría café",
+                "haré café / haría café"
+              ],
+              "feedback": {
+                "correct": "Right: Haré café; haría café.",
+                "incorrect": "Use the shared har- stem with -é, then -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-irregulares-tener-pair",
+              "prompt": "Give the future and conditional yo forms of tener, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-TENER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tendré, tendría",
+                "tendré tendría",
+                "tendré / tendría"
+              ],
+              "feedback": {
+                "correct": "Right: tendré, tendría.",
+                "incorrect": "Keep the learned tendr- stem and switch -é to -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-irregulares-poder-pair",
+              "prompt": "Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "podré hablar español; podría hablar español.",
+                "podré hablar español podría hablar español",
+                "podré hablar español / podría hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Podré hablar español; podría hablar español.",
+                "incorrect": "Use podré, then podría, before known hablar español."
+              }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -111,27 +237,37 @@
             },
             {
               "kind": "speech",
-              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
+              "text": "Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C20-perdon",
-      "sequence": 1310,
-      "title": "perdón — the sorry that asks for something back",
-      "headword": "perdón",
-      "romanization": "perdón",
-      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
+      "id": "ES-C17-practice",
+      "sequence": 1168,
+      "title": "Practice — one infinitive frame, two futures of thought",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for the simple future and conditional",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:c1722b0e24b253df",
-      "notice": null,
+      "sourceHash": "fnv1a64:c4787a6a7b45dcfa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for 2 tables that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Grammar Lens: the regular frame",
+          "Grammar Lens: three learned stems"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -146,61 +282,71 @@
             },
             {
               "kind": "speech",
-              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
+              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the regular frame",
           "segments": [
             {
-              "kind": "speech",
-              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 6,
+              "headers": [
+                "person",
+                "hablar",
+                "comer",
+                "vivir"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
+              "text": "All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: which one to reach for",
+          "type": "grammar",
+          "title": "Grammar Lens: three learned stems",
           "segments": [
             {
-              "kind": "speech",
-              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "lo siento",
-                "perdón"
-              ],
-              "columns": 3,
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
               "rowCount": 3,
-              "utterances": [
-                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
-                "points at. lo siento: your feeling. perdón: their forgiveness.",
-                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
-              ]
+              "headers": [
+                "verb",
+                "learned stem",
+                "future yo",
+                "conditional yo"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
+              "text": "The stems change; the ending sets do not. Other irregular stems remain outside this chapter."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The ending, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,34 +359,179 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"perdón\" — pardon / excuse me",
+              "instruction": "“hablaré, comeré, viviré”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
+              "source": "[YOU SAY: “hablaré, comeré, viviré”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
+              "instruction": "“hablaría, comería, viviría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
+              "source": "[YOU SAY: “hablaría, comería, viviría”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
+              "instruction": "“haré/haría, tendré/tendría, podré/podría”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
+              "source": "[YOU SAY: “haré/haría · tendré/tendría · podré/podría”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-regular-future-yo",
+              "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaré, comeré, viviré",
+                "hablaré comeré viviré",
+                "hablaré / comeré / viviré"
+              ],
+              "feedback": {
+                "correct": "Right: hablaré, comeré, viviré.",
+                "incorrect": "Keep each infinitive whole and add -é."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-regular-conditional-yo",
+              "prompt": "Give the conditional yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaría, comería, viviría",
+                "hablaría comería viviría",
+                "hablaría / comería / viviría"
+              ],
+              "feedback": {
+                "correct": "Right: hablaría, comería, viviría.",
+                "incorrect": "Keep each infinitive whole and add -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-hablare-espanol",
+              "prompt": "Say 'I will speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaré español.",
+                "hablaré español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaré español.",
+                "incorrect": "Use future hablaré before known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-viviria-madrid",
+              "prompt": "Say 'I would live in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
+                "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viviría en madrid.",
+                "viviría en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viviría en Madrid.",
+                "incorrect": "Use conditional viviría, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-hacer-pair",
+              "prompt": "Give the pair 'I will make coffee; I would make coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haré café; haría café.",
+                "haré café haría café",
+                "haré café / haría café"
+              ],
+              "feedback": {
+                "correct": "Right: Haré café; haría café.",
+                "incorrect": "Use har- with future -é, then conditional -ía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-three-stems",
+              "prompt": "Give the learned stems for hacer, tener, and poder, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "har-, tendr-, podr-",
+                "har tendr podr",
+                "har- / tendr- / podr-"
+              ],
+              "feedback": {
+                "correct": "Right: har-, tendr-, podr-.",
+                "incorrect": "Retrieve the bounded three: har-, tendr-, podr-."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-practice-history",
+              "prompt": "Which Latin 'have' verb contributed material to both Romance constructions?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "habēre",
+                "habere",
+                "haber"
+              ],
+              "feedback": {
+                "correct": "Right: habēre contributed to both constructions.",
+                "incorrect": "The shared historical partner was habēre."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -252,7 +543,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
+              "text": "Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary."
             }
           ]
         }
