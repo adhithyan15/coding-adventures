@@ -391,6 +391,12 @@ curls through a small lower loop and continues directly into its tail. The
 instructor explicitly calls it "just one curve," so the learner path keeps that
 zero-lift order while fitting the movement to Noto Sans Hebrew's angular top
 bar, sharp right heel, and downstroke.
+The dedicated Hei lesson adds a three-frame printed **ה** filmstrip: its top bar
+travels left-to-right and turns directly down the right side, then one lift
+precedes the detached left leg from top to bottom. The lesson explicitly asks
+learners to keep the handwritten form curved but use sharp angles in print, so
+the source note preserves that variation while the learner path follows the
+vendored Noto Sans Hebrew outline.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

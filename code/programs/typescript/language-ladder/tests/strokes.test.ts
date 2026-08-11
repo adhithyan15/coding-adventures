@@ -28,6 +28,7 @@ const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
 const HEBREW_DALET = DUCTUS[ductusKey("hebrew", "ד")];
+const HEBREW_HEI = DUCTUS[ductusKey("hebrew", "ה")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -246,6 +247,20 @@ describe("handwriting ductus", () => {
     expect(down[0]).toEqual(top.at(-1));
     expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
     expect(base[0].x).toBeLessThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew ה joins its top and right side before the detached left leg", () => {
+    expect(HEBREW_HEI.script).toBe("hebrew");
+    expect(penLifts(HEBREW_HEI)).toBe(1);
+    expect(HEBREW_HEI.strokes).toHaveLength(2);
+    expect(HEBREW_HEI.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_HEI.strokes[0].segments[0].path;
+    const down = HEBREW_HEI.strokes[0].segments[1].path;
+    const detached = HEBREW_HEI.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(down[0]).toEqual(top.at(-1));
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(detached[0].y).toBeGreaterThan(detached.at(-1)!.y);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -869,6 +884,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ד", HEBREW_DALET.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ה", HEBREW_HEI.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -945,6 +963,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /cursive Dalet.*broad arch left-to-right.*03:43.8–03:44.1.*small lower loop.*03:44.1–03:44.7.*descending tail.*03:45.0.*without lifting.*just one curve.*03:46.6–03:47.3.*printed Dalet.*angular.*Noto Sans Hebrew.*block top-bar-and-right-downstroke.*single continuous run.*zero-lift/i,
+    );
+  });
+
+  it("Hebrew ה traces its printed body separately from the detached left leg", () => {
+    const src = HEBREW_HEI.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=FtCuWlS6V7g");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Hei.*00:59.6–01:01.9.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /curved handwritten Hei.*00:53.7–00:55.1.*printed form.*sharp angles.*top bar left-to-right.*right side.*without lifting.*00:59.6–01:00.8.*lifts once.*detached left leg top-to-bottom.*01:01.2–01:01.9.*curved in handwriting.*sharp angles in print.*01:03.5–01:09.4.*Noto Sans Hebrew/i,
     );
   });
 
