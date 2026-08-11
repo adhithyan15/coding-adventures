@@ -2142,6 +2142,120 @@ fn str_array_set_ptrtoints_the_literal_handle() {
         "must not store a ptr constant into an i64 slot; got:\n{ll}");
 }
 
+/// AOT00-T8 follow-up: `array_set` also calls the generational write barrier,
+/// unconditionally — mirrors `field_store_calls_the_generational_write_barrier`
+/// and `lower_array_set`'s own doc for why no reference/non-reference
+/// discrimination is attempted.
+///
+/// Unlike `field_store` (whose `ptr` operand already IS the GC object's true
+/// base), `array_set`'s `handle` (`%a`) is `raw_payload + 8` — see
+/// `lower_alloc_array` — so the barrier's `parent` argument must be recovered
+/// via `getelementptr i8, ptr %a, i64 -8` + `ptrtoint`, not `%a` itself
+/// (passing `%a` directly would make `write_barrier`'s `parent - HEADER_SIZE`
+/// read 24 bytes into the array's own payload instead of its real header —
+/// this test's `-8` assertion is the regression guard for exactly that bug).
+#[test]
+fn array_set_calls_the_generational_write_barrier() {
+    // `v` is a function PARAMETER, not a `const` — so it lowers as an SSA
+    // reference (`%v`) instead of folding to an immediate, letting the
+    // assertion below name it directly (mirrors `heap_ops_module`'s own
+    // parameter-not-const setup for the identical field_store proof).
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("i0".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare void @__twig_gc_write_barrier(i64, i64)"),
+        "the barrier must be declared whenever any array_set is lowered: {ll}"
+    );
+    assert!(
+        ll.contains("getelementptr i8, ptr %a, i64 -8"),
+        "the barrier's parent must be recovered as the array's true base \
+         (handle - 8), not the handle itself: {ll}"
+    );
+    let barrier_line = ll.lines().find(|l| l.contains("call void @__twig_gc_write_barrier"))
+        .unwrap_or_else(|| panic!("no write-barrier call emitted: {ll}"));
+    assert!(
+        !barrier_line.contains("i64 %a,"),
+        "the barrier's parent must NOT be the raw array handle %a (an interior \
+         pointer 8 bytes past the true base) — got: {barrier_line}"
+    );
+    assert!(
+        barrier_line.trim_end().ends_with("%v)"),
+        "the barrier's child argument must be the stored word %v: {barrier_line}"
+    );
+}
+
+/// Two `array_set`s in the same function must each get their own barrier call —
+/// proving the relocation isn't accidentally deduplicated (mirrors the same
+/// property proven for the aarch64/x86_64 backends' identical fix).
+#[test]
+fn array_set_write_barrier_is_emitted_per_store_not_deduplicated() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("i1".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i1".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("i0".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    let count = ll.matches("call void @__twig_gc_write_barrier").count();
+    assert_eq!(count, 2, "two array_sets must emit two write-barrier calls, got {count} in:\n{ll}");
+}
+
+/// A `double`-element `array_set` must still call the barrier — `child` can't be
+/// passed as a `double` (the barrier's C ABI is `(i64, i64)`), so the stored bits
+/// must be `bitcast` to `i64` first, not truncated or numerically converted.
+#[test]
+fn f64_array_set_bitcasts_child_to_i64_for_the_write_barrier() {
+    // `v` is a function PARAMETER (see `array_set_calls_the_generational_write_barrier`'s
+    // own comment for why) so the bitcast's operand names it directly.
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "f64".into())],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("bitcast double %v to i64"),
+        "the double element must be bitcast (not converted) to i64 before the barrier call: {ll}"
+    );
+    assert!(
+        ll.contains("call void @__twig_gc_write_barrier"),
+        "the barrier must still fire for a double-element array_set: {ll}"
+    );
+}
+
 /// `array<T>` validates (its element type is checked, not the wrapper).
 #[test]
 fn array_type_hint_validates() {
