@@ -283,10 +283,12 @@ by `semantic-ir`'s validator against a closed set) are lifted to quoted Go
 string literals at emit time (same rationale as the OOP envelope's
 class/method-name lifts: keeps the runtime's `switch` on a
 compile-time-known string), the rest pass through as an ordinary
-`[]Value{...}`. Generalizes the existing `_sir_print`/`_sir_puts` — still
-present, still used by bare `"print"`/`"puts"` — into one function. Adds
-`"os"` to the always-emitted import list. Not yet emitted by any frontend
-— see [SIR28](../../../specs/SIR28-syscall-primitives.md).
+`[]Value{...}`. Adds `"os"` to the always-emitted import list. This is now
+the ONLY console-output primitive the backend emits — bare `"print"`/
+`"puts"` `BuiltinCall`s and the `_sir_print`/`_sir_puts` runtime helpers
+that used to implement them were removed once every frontend finished
+migrating to `__sys_write__` (SIR28 §7) — see
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 ## Value model
 
