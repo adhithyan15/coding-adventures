@@ -1,7 +1,7 @@
 # `coding_adventures_vault_pm_cli_host`
 
 This crate is the native secret-input and entropy boundary for the local
-password-manager CLI. It gives the `vault-pm` executable two narrow,
+password-manager CLI. It gives the `vault-pm` executable three narrow,
 auditable adapters:
 
 - `ControllingTerminal` opens `/dev/tty` on Unix or `CONIN$`/`CONOUT$` on
@@ -10,12 +10,17 @@ auditable adapters:
   terminal mode before returning; and
 - `OsEntropy` completely fills a caller-owned non-empty buffer using the
   repository `csprng` wrapper and maps operating-system details to one stable,
-  payload-free failure.
+  payload-free failure; and
+- `write_portable_export` creates one explicit encrypted artifact destination
+  without following or replacing an existing final path, synchronizes the
+  bytes, and requests owner-only mode on Unix.
 
 Secret input never comes from process stdin, argv, an environment variable, a
 configuration value, or a URL. Redirecting stdin therefore cannot inject a
 master passphrase. New-vault collection performs two independent terminal
 reads and compares them with the repository constant-time comparison primitive.
+Portable-export collection applies the same rule to two distinct fixed hidden
+prompts rather than reusing the live vault passphrase.
 Collected bytes are immediately wrapped in `Zeroizing<Vec<u8>>` and are never
 available through `Debug`.
 
@@ -33,12 +38,13 @@ at most 1,024 bytes. Echoed login metadata and secure-note titles have fixed
 per-field bounds up to 2,048 UTF-8 bytes and reject control characters; only
 username and URL may be empty. Prompt strings and every public error are fixed
 and contain no secret, OS error, terminal path, user name, or caller payload.
-This crate deliberately does not parse commands, choose storage, persist
+This crate deliberately does not parse commands, choose vault storage, persist
 configuration, calibrate Argon2id, or prepare vault bytes.
 
-Nine Unix tests exercise stable diagnostics, text/secret bounds, constant-time
+Ten Unix tests exercise stable diagnostics, text/secret bounds, constant-time
 confirmation behavior, real OS entropy, pseudo-terminal ordinary and hidden
-input, mode restoration, oversized-line draining, and non-terminal refusal.
+input, mode restoration, oversized-line draining, non-terminal refusal, and
+create-new durable export persistence.
 Windows adds three target-specific tests for console names and strict bounded
 UTF-16 conversion; cross-target Clippy validates the native Windows API
 surface from Unix.

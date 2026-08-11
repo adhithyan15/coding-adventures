@@ -7,17 +7,19 @@ use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
     AddItemRandomnessV1, ApplicationError, AuditEventViewV1, AuditVerificationV1,
-    AuditedAccessRandomnessV1, BootstrapLocator, DeleteItemRandomnessV1, GenerationZeroPolicyV1,
-    GenerationZeroRandomness, ItemHistoryViewV1, LocalStateStore, LocalStateStoreError,
-    LocalVaultStateV1, LoginEditInputV1, ReplaceItemRandomnessV1, RestoreItemRandomnessV1,
-    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
-    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
-    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES,
-    REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    AuditedAccessRandomnessV1, BootstrapLocator, BootstrapStore, BootstrapStoreError,
+    DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ItemHistoryViewV1,
+    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1,
+    PortableExportPolicyV1, PortableExportRandomnessV1, ReplaceItemRandomnessV1,
+    RestoreItemRandomnessV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
+    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
+    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
+    GENERATION_ZERO_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
-    CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
+    write_portable_export, CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
 };
 use coding_adventures_vault_pm_config::{
     parse_config, render_config, ConfigName, CredentialRef, StorageConfigV1, StorageKind,
@@ -35,6 +37,7 @@ use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::BTreeMap;
 use std::ffi::OsString;
+use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const DEFAULT_VAULT_NAME: &str = "personal";
@@ -43,7 +46,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item add secure-note\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm export FILE\n  vault-pm item add login\n  vault-pm item add secure-note\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -142,6 +145,12 @@ pub trait CliHost {
     /// Collect a secure-note body with terminal echo disabled.
     fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError>;
 
+    /// Collect and confirm a distinct portable-export passphrase without echo.
+    fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
+
+    /// Durably create one explicit encrypted portable-export destination.
+    fn write_portable_export(&self, destination: &Path, artifact: &[u8]) -> Result<(), HostError>;
+
     /// Fill the entire generation-zero randomness block.
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError>;
 
@@ -150,6 +159,11 @@ pub trait CliHost {
 
     /// Return the bounded Argon2id policy for a new vault.
     fn generation_zero_kdf(&self) -> (u32, u32, u8);
+
+    /// Return the bounded Argon2id policy for a portable export.
+    fn portable_export_kdf(&self) -> (u32, u32, u8) {
+        self.generation_zero_kdf()
+    }
 }
 
 /// Payload-free failure at an injected CLI host boundary.
@@ -215,6 +229,16 @@ impl CliHost for NativeCliHost {
 
     fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError> {
         self.read_utf8_secret(SecretPrompt::SecureNoteBody)
+    }
+
+    fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        ControllingTerminal
+            .read_export_passphrase()
+            .map_err(map_native_cli_host)
+    }
+
+    fn write_portable_export(&self, destination: &Path, artifact: &[u8]) -> Result<(), HostError> {
+        write_portable_export(destination, artifact).map_err(map_native_cli_host)
     }
 
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -289,6 +313,9 @@ enum Command {
     Doctor {
         unlock: bool,
     },
+    PortableExport {
+        destination: PathBuf,
+    },
     ItemAddLogin,
     ItemAddSecureNote,
     ItemEdit {
@@ -334,8 +361,18 @@ where
         "status" => parse_status(&values[1..]),
         "audit" => parse_audit(&values[1..]),
         "doctor" => parse_doctor(&values[1..]),
+        "export" => parse_export(&values[1..]),
         "item" => parse_item(&values[1..]),
         "history" => parse_history(&values[1..]),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_export(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [destination] if !destination.is_empty() => Ok(Command::PortableExport {
+            destination: PathBuf::from(destination),
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -437,6 +474,9 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::AuditList => audit_list(host, prepared.paths(), &writer),
         Command::AuditShow { trace_id } => audit_show(host, prepared.paths(), &writer, trace_id),
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
+        Command::PortableExport { destination } => {
+            portable_export(host, prepared.paths(), &writer, &destination)
+        }
         Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
         Command::ItemAddSecureNote => item_add_secure_note(host, prepared.paths(), &writer),
         Command::ItemEdit { item_id } => item_edit_login(host, prepared.paths(), &writer, item_id),
@@ -486,6 +526,98 @@ fn audited_access_inputs(
     let mut random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
     host.fill_entropy(&mut random).map_err(map_host)?;
     Ok((wall_time_ms, AuditedAccessRandomnessV1::new(random)))
+}
+
+fn portable_export(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    destination: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault = configured_vault(paths, &config)?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let exact_bootstrap = application_store
+        .load_latest(locator)
+        .map_err(map_bootstrap_store)?
+        .ok_or(CliFailure::Integrity)?;
+    let (wall_time_ms, audit_randomness) = audited_access_inputs(host)?;
+    let mut export_random = [0_u8; PORTABLE_EXPORT_RANDOM_BYTES];
+    host.fill_entropy(&mut export_random).map_err(map_host)?;
+    let (memory_kib, iterations, lanes) = host.portable_export_kdf();
+    let policy =
+        PortableExportPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
+
+    let repository_factory = repository_factory(paths);
+    let mut access = VaultAccessV1::locked(locator);
+    let vault_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    access
+        .unlock(
+            vault_passphrase,
+            &application_store,
+            &application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    let audit_enabled = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled();
+    let export_passphrase = match host.read_export_passphrase() {
+        Ok(passphrase) => passphrase,
+        Err(error) => {
+            if audit_enabled {
+                access
+                    .into_unlocked()
+                    .map_err(map_application)?
+                    .record_audited_portable_export_host_failure(
+                        wall_time_ms,
+                        audit_randomness,
+                        &application_store,
+                    )
+                    .map_err(map_application)?;
+            }
+            return Err(map_host(error));
+        }
+    };
+    let export_randomness = PortableExportRandomnessV1::new(export_random);
+    let artifact = if audit_enabled {
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_export_portable_with_passphrase(
+                &exact_bootstrap,
+                export_passphrase,
+                policy,
+                export_randomness,
+                wall_time_ms,
+                audit_randomness,
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_operation()
+            .map_err(map_application)?
+    } else {
+        let operation = access
+            .as_unlocked()
+            .map_err(map_application)?
+            .export_portable_with_passphrase(
+                &exact_bootstrap,
+                export_passphrase,
+                policy,
+                export_randomness,
+            );
+        access.lock();
+        operation.map_err(map_application)?
+    };
+    host.write_portable_export(destination, artifact.as_bytes())
+        .map_err(map_host)?;
+    Ok(CliOutput::success("Portable export written.\n"))
 }
 
 struct ItemCreateContext {
@@ -1585,6 +1717,8 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::SecretMismatch
         | CliHostError::EmptyText
         | CliHostError::InvalidText
+        | CliHostError::InvalidExportDestination
+        | CliHostError::ExportDestinationExists
         | CliHostError::InvalidEntropyRequest => HostError::Invalid,
         CliHostError::UnsupportedPlatform => HostError::Unsupported,
         CliHostError::TerminalUnavailable
@@ -1592,7 +1726,15 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::TerminalModeFailed
         | CliHostError::SecretInputFailed
         | CliHostError::TextInputFailed
+        | CliHostError::ExportWriteFailed
         | CliHostError::EntropyUnavailable => HostError::Unavailable,
+    }
+}
+
+fn map_bootstrap_store(error: BootstrapStoreError) -> CliFailure {
+    match error {
+        BootstrapStoreError::Unavailable => CliFailure::Provider,
+        BootstrapStoreError::Conflict | BootstrapStoreError::Corruption => CliFailure::Integrity,
     }
 }
 
@@ -1772,6 +1914,18 @@ mod tests {
             Ok(Zeroizing::new(text.to_owned()))
         }
 
+        fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            self.secret()
+        }
+
+        fn write_portable_export(
+            &self,
+            destination: &Path,
+            artifact: &[u8],
+        ) -> Result<(), HostError> {
+            write_portable_export(destination, artifact).map_err(map_native_cli_host)
+        }
+
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
             for (index, byte) in output.iter_mut().enumerate() {
                 *byte = u8::try_from(index % 251)
@@ -1813,6 +1967,9 @@ mod tests {
             vec!["status", "--unsafe-include-secrets"],
             vec!["doctor", "extra"],
             vec!["doctor", "--unlock", "extra"],
+            vec!["export"],
+            vec!["export", "backup.vpm", "extra"],
+            vec!["export", "--passphrase", "secret"],
             vec!["audit"],
             vec!["audit", "enable", "extra"],
             vec!["audit", "verify", "extra"],
@@ -1961,6 +2118,21 @@ mod tests {
     }
 
     #[test]
+    fn portable_export_parser_accepts_exactly_one_explicit_destination() {
+        assert_eq!(
+            parse(["export", "backup.vpm"]),
+            Ok(Command::PortableExport {
+                destination: PathBuf::from("backup.vpm")
+            })
+        );
+        assert_eq!(parse(["export"]), Err(CliFailure::InvalidCommand));
+        assert_eq!(
+            parse(["export", "backup.vpm", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
     fn init_survives_restart_and_locked_queries_are_redacted() {
         let root = TestRoot::new();
         let paths = root.paths();
@@ -2101,6 +2273,102 @@ mod tests {
             "{audit:?}"
         );
         assert!(!audit.stdout().contains("audited create failure passphrase"));
+    }
+
+    #[test]
+    fn portable_export_is_encrypted_audited_and_never_overwrites() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let vault_passphrase = b"portable source passphrase".to_vec();
+        let export_passphrase = b"distinct export passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [vault_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        activate_test_audit_epoch(&paths, vault_passphrase.clone());
+
+        let destination = root.0.join("backup.vpm");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [vault_passphrase.clone(), export_passphrase.clone()],
+        );
+        let exported = run(
+            [
+                "export",
+                destination.to_str().expect("UTF-8 test destination"),
+            ],
+            &export_host,
+        );
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        assert_eq!(exported.stdout(), "Portable export written.\n");
+        let artifact = fs::read(&destination).unwrap();
+        assert!(!artifact.is_empty());
+        assert!(!artifact
+            .windows(vault_passphrase.len())
+            .any(|window| window == vault_passphrase));
+        assert!(!artifact
+            .windows(export_passphrase.len())
+            .any(|window| window == export_passphrase));
+        let opened = coding_adventures_vault_pm_application::open_portable_with_passphrase(
+            &artifact,
+            Zeroizing::new(export_passphrase.clone()),
+            coding_adventures_vault_pm_application::PortableOpenPolicyV1::new(8 * 1024, 1, 1)
+                .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(opened.item_count(), 0);
+        assert_eq!(opened.candidate_count(), 0);
+
+        let repeated_host = TestHost::new(
+            paths.clone(),
+            [vault_passphrase.clone(), export_passphrase.clone()],
+        );
+        let repeated = run(
+            [
+                "export",
+                destination.to_str().expect("UTF-8 test destination"),
+            ],
+            &repeated_host,
+        );
+        assert_eq!(repeated.exit_code(), ExitCode::InvalidInput, "{repeated:?}");
+        assert_eq!(fs::read(&destination).unwrap(), artifact);
+
+        let audit_host = TestHost::with_entropy_seed(paths, [vault_passphrase], 8);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(audit.stdout().matches("action=portable_export").count(), 2);
+        assert_eq!(audit.stdout().matches("outcome=succeeded").count(), 4);
+        assert!(!audit.stdout().contains("distinct export passphrase"));
+        assert!(!audit.stdout().contains("backup.vpm"));
+    }
+
+    #[test]
+    fn active_epoch_records_export_prompt_failure_before_returning() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let vault_passphrase = b"portable failure passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [vault_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        activate_test_audit_epoch(&paths, vault_passphrase.clone());
+
+        let destination = root.0.join("never-written.vpm");
+        let failed_host = TestHost::new(paths.clone(), [vault_passphrase.clone()]);
+        let failed = run(
+            [
+                "export",
+                destination.to_str().expect("UTF-8 test destination"),
+            ],
+            &failed_host,
+        );
+        assert_eq!(failed.exit_code(), ExitCode::Provider, "{failed:?}");
+        assert!(!destination.exists());
+
+        let audit_host = TestHost::with_entropy_seed(paths, [vault_passphrase], 9);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit
+            .stdout()
+            .contains("action=portable_export\toutcome=failed"));
+        assert!(!audit.stdout().contains("never-written.vpm"));
+        assert!(!audit.stdout().contains("portable failure passphrase"));
     }
 
     #[test]

@@ -295,9 +295,13 @@ and search data; public diagnostics reveal no bytes, while passphrase, key,
 plaintext, encoded revisions, and hash preimages are wiped on drop.
 
 The host receives only exact encrypted bytes and remains responsible for an
-explicit destination and safe file replacement. The audited export workflow
+explicit destination and safe file persistence. The audited export workflow
 holds those bytes until its signed `PortableExport` event and next owner state
-are durable, and records invalid export inputs as failed attempts.
+are durable, and records invalid export inputs as failed attempts. A separate
+session-consuming host-failure boundary lets CLI composition publish a failed
+itemless `PortableExport` event when distinct-passphrase collection fails after
+an active-epoch unlock, without passing a partial secret or destination into
+the event.
 
 Untrusted artifacts can now be opened through a separate no-write boundary.
 The caller supplies the owned export passphrase plus an explicit maximum

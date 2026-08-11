@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.46.0] - 2026-08-11
+
+### Added
+
+- Add a session-consuming boundary for an authenticated portable-export host
+  input failure.
+
+### Security
+
+- Publish a failed itemless `PortableExport` event before CLI composition can
+  expose a post-unlock distinct-passphrase prompt failure.
+
 ## [0.45.0] - 2026-08-11
 
 ### Added

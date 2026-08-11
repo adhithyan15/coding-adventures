@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add fixed hidden portable-export passphrase and confirmation prompts with
+  constant-time comparison.
+- Add create-new durable encrypted-artifact persistence with Unix mode `0600`,
+  no final-path replacement, and best-effort incomplete-file cleanup.
 - Add fixed secure-note title and hidden body prompts, reusing the bounded,
   echo-restoring, wipe-on-drop controlling-terminal input boundary.
 

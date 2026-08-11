@@ -560,6 +560,32 @@ impl UnlockedVaultV1 {
         )
     }
 
+    /// Durably record a host-side portable-export input failure.
+    ///
+    /// The caller reserves the wall time and complete audit randomness before
+    /// authentication, then uses this boundary if later collection of the
+    /// distinct export passphrase fails. No partial passphrase or destination
+    /// crosses into the event. The session is consumed and the closed failure
+    /// becomes observable only after its audit-only commit is durable.
+    pub fn record_audited_portable_export_host_failure(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let audited = self.finish_audited_access(
+            AuditActionV1::PortableExport,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            Err::<(), _>(ApplicationError::InvalidInput),
+        )?;
+        Ok(audited.into_parts().0)
+    }
+
     /// Run authenticated low-resolution diagnostics and release the coarse
     /// report only after its access event and next owner state are durable.
     ///
