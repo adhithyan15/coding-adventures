@@ -6,6 +6,11 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Non-whitespace character data rejected after a template-owned `col` now
+  reports the required column-group parse error while remaining ignored.
+  ASCII whitespace is retained, while ordinary content, real column groups and
+  cells, nested templates, foreign template-named elements, and synthetic
+  template fragment contexts retain their existing diagnostic behavior.
 - Start tags rejected at a template-driven column-group boundary now report
   the required parse error while remaining ignored. Additional columns,
   nested templates, columns outside templates, and ordinary `colgroup`
