@@ -311,8 +311,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   00:33.2–00:35.0: descend and sweep left through its shallow bowl without
   lifting, then place the lower-left and lower-right dots in separate runs.
   Its four-frame path keeps Arabic Yaa U+064A distinct from Urdu Ye U+06CC,
-  whose independent body has no lower dots. The remaining **179**
-  prose part orders across seven scripts (`arabic` 5,
+  whose independent body has no lower dots. The next **ه و ي** page's directly
+  linked `letter-haa.mov` verifies independent **ه** in one run at
+  00:04.9–00:06.0: close the lower counter, thread through the centre into the
+  upper-right counter, then sweep left along the baseline without lifting. Its
+  three-frame path fits that compact demonstration to the wider isolated Noto
+  Naskh outline while keeping Arabic and Persian provenance separate. The
+  remaining **178** prose part orders across seven scripts (`arabic` 4,
   `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

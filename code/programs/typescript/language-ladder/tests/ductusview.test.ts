@@ -106,6 +106,8 @@ const ARABIC_KAF = ductusFor("ك", "arabic")!;
 const arabicKafOutline = naskhOutline("ك");
 const ARABIC_LAM = ductusFor("ل", "arabic")!;
 const arabicLamOutline = naskhOutline("ل");
+const ARABIC_HEH = ductusFor("ه", "arabic")!;
+const arabicHehOutline = naskhOutline("ه");
 const ARABIC_YAA = ductusFor("ي", "arabic")!;
 const arabicYaaOutline = naskhOutline("ي");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
@@ -161,7 +163,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds eleven Tamil letters, nine Persian letters, sixteen Arabic letters, and thirteen Urdu letters", () => {
+  it("finds eleven Tamil letters, nine Persian letters, seventeen Arabic letters, and thirteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -191,6 +193,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ع", "arabic")?.glyph).toBe("ع");
     expect(ductusFor("ك", "arabic")?.glyph).toBe("ك");
     expect(ductusFor("ل", "arabic")?.glyph).toBe("ل");
+    expect(ductusFor("ه", "arabic")?.glyph).toBe("ه");
     expect(ductusFor("ي", "arabic")?.glyph).toBe("ي");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
@@ -1208,6 +1211,35 @@ describe("Arabic ل — its upright continues through the leftward base bowl", (
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_LAM.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ه — its two counters flow into one leftward finish", () => {
+  const steps = ductusSteps(ARABIC_HEH);
+  const strip = ductusFilmstrip(ARABIC_HEH, arabicHehOutline);
+
+  it("shows both counters and the baseline sweep without a lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curve down-left and close the lower counter",
+      "thread through the centre and close the upper-right counter without lifting",
+      "sweep left along the baseline without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicHehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_HEH.strokes[0], 1),
     );
   });
 });

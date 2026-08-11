@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-heh ductus (HL-C09AY)
+
+- Render **ه** in three evidence-aligned frames: close the lower counter, thread
+  through the centre into the upper-right counter, then sweep left along the
+  baseline without lifting.
+- Keep the directly linked MOV's one pen-down run, zero lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Heh independently of the existing Persian record for the same
+  Unicode glyph, and queue the page's directly linked independent **و** source.
+
 ### Added — cited Arabic independent-yaa ductus (HL-C09AX)
 
 - Render **ي** in four evidence-aligned frames: descend into the independent
