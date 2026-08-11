@@ -2232,7 +2232,8 @@ impl Compiler {
             return Ok(true);
         }
 
-        let Some((condition, then_node, else_node)) = real_literal_output_conditional_parts(node)
+        let Some((condition, then_node, else_node)) =
+            self.static_real_output_conditional_parts(node)
         else {
             return Ok(false);
         };
@@ -2273,6 +2274,35 @@ impl Compiler {
         }
         self.emit_label(&end_label);
         Ok(true)
+    }
+
+    fn static_real_output_conditional_parts<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<(&'n GrammarASTNode, &'n GrammarASTNode, &'n GrammarASTNode)> {
+        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+            || !direct_tokens(node).iter().any(|token| token.value == "if")
+        {
+            return None;
+        }
+
+        let condition = first_direct_node(node, "bool_expr")?;
+        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == node.rule_name)
+            .collect();
+        if branches.len() != 2
+            || !self.is_static_real_output_expr(branches[0])
+            || !self.is_static_real_output_expr(branches[1])
+        {
+            return None;
+        }
+        Some((condition, branches[0], branches[1]))
+    }
+
+    fn is_static_real_output_expr(&self, node: &GrammarASTNode) -> bool {
+        self.static_real_output_text(node).is_some()
+            || self.static_real_output_conditional_parts(node).is_some()
     }
 
     fn static_real_output_text(&self, node: &GrammarASTNode) -> Option<String> {
@@ -6155,18 +6185,6 @@ fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
-fn expr_static_real_output_text(node: &GrammarASTNode) -> Option<String> {
-    if let Some(literal) = expr_real_literal_text(node) {
-        return Some(literal);
-    }
-    let value = expr_static_real_arithmetic_value(node)?;
-    value.is_finite().then(|| value.to_string())
-}
-
-fn expr_static_real_arithmetic_value(node: &GrammarASTNode) -> Option<f64> {
-    expr_static_real_arithmetic_value_with(node, &|_| None)
-}
-
 fn expr_static_real_arithmetic_value_with<F>(
     node: &GrammarASTNode,
     static_call_value: &F,
@@ -6280,34 +6298,6 @@ where
         index += 2;
     }
     saw_binary_operator.then_some(value)
-}
-
-fn real_literal_output_conditional_parts(
-    node: &GrammarASTNode,
-) -> Option<(&GrammarASTNode, &GrammarASTNode, &GrammarASTNode)> {
-    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
-        || !direct_tokens(node).iter().any(|token| token.value == "if")
-    {
-        return None;
-    }
-
-    let condition = first_direct_node(node, "bool_expr")?;
-    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
-        .into_iter()
-        .filter(|child| child.rule_name == node.rule_name)
-        .collect();
-    if branches.len() != 2
-        || !is_static_real_output_expr(branches[0])
-        || !is_static_real_output_expr(branches[1])
-    {
-        return None;
-    }
-    Some((condition, branches[0], branches[1]))
-}
-
-fn is_static_real_output_expr(node: &GrammarASTNode) -> bool {
-    expr_static_real_output_text(node).is_some()
-        || real_literal_output_conditional_parts(node).is_some()
 }
 
 fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
@@ -7440,6 +7430,43 @@ mod tests {
             "test",
         )
         .expect_err("a nested user-defined abs result still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_conditional_static_real_standard_functions() {
+        let module = compile_source(
+            "begin boolean flag; flag := false; print(if flag then abs(-4.25) else sqrt(2.25) + 0.5) end",
+            "test",
+        )
+        .expect("conditional static standard-function output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text)))
+                    if matches!(text.as_str(), "4.25" | "2") =>
+                {
+                    Some(text.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "2"]);
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "f64_sqrt" | "cmp_lt" | "fadd")
+        }));
+    }
+
+    #[test]
+    fn al4_print_conditional_static_standard_function_respects_user_override() {
+        let err = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := true; print(if flag then abs(2.0) else 1.5) end",
+            "test",
+        )
+        .expect_err("a conditional user-defined abs result still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
