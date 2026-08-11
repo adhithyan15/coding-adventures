@@ -175,7 +175,15 @@ mod insert_after_delete {
         Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
     }
     fn puts(arg: Expr) -> Stmt {
-        Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+        Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
     }
     fn let_(name: &str, value: Expr) -> Stmt {
         Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s() }
@@ -204,7 +212,7 @@ mod insert_after_delete {
         // insert.
         let m = Module {
             name: "hashdelcapprog".into(),
-            manifest: FeatureManifest::from_features(&[Feature::Maps, Feature::Strings]),
+            manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Maps, Feature::Strings]),
             imports: vec![],
             exports: vec![],
             functions: vec![Function {

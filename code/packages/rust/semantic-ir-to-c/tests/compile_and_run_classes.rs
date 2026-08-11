@@ -79,15 +79,25 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
     Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
 }
 fn puts(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
 }
 fn local(name: &str) -> Expr {
     Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
 }
 fn module(stmts: Vec<Stmt>, feats: &[Feature]) -> Module {
+    let mut all_feats = vec![Feature::ConsoleIO, Feature::Strings];
+    all_feats.extend_from_slice(feats);
     Module {
         name: "clsprog".into(),
-        manifest: FeatureManifest::from_features(feats),
+        manifest: FeatureManifest::from_features(&all_feats),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

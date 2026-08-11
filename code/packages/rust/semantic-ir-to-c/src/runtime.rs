@@ -3761,12 +3761,6 @@ SirValue _sir_cvar_set(const char *var, SirValue val) {
     return val;
 }
 
-SirValue _sir_print_v(SirValue *xs, int n) {
-    int i;
-    for (i = 0; i < n; i++) _sir_fmt(stdout, xs[i]);
-    return _sir_nil();
-}
-
 /* `puts`'s ARRAY-UNPACKING rule -- distinct from every OTHER display path
  * here (`print`, `_sir_fmt`'s general case, `_sir_fmt_seq` nested inside a
  * larger structure), which all bracket-display a Seq (`[1, 2, 3]`). Real
@@ -3795,28 +3789,21 @@ static void _sir_puts_one(FILE *out, SirValue v) {
     _sir_fmt(out, v);
     fputc('\n', out);
 }
-SirValue _sir_puts_v(SirValue *xs, int n) {
-    int i;
-    if (n <= 0) { fputc('\n', stdout); return _sir_nil(); }
-    for (i = 0; i < n; i++) _sir_puts_one(stdout, xs[i]);
-    return _sir_nil();
-}
-SirValue _sir_print(int n, ...) { va_list ap; SirValue *xs; SirValue r; va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap); r = _sir_print_v(xs, n); if (xs) free(xs); return r; }
-SirValue _sir_puts(int n, ...)  { va_list ap; SirValue *xs; SirValue r; va_start(ap, n); xs = _sir_va_collect(n, ap); va_end(ap); r = _sir_puts_v(xs, n);  if (xs) free(xs); return r; }
 
-/* SIR28 §2.1: `__sys_write__`, the console-output primitive `print`/`puts`
- * generalize into.  Where `_sir_print_v`/`_sir_puts_v` above hard-code ONE
- * newline policy each, this is the SAME operation parameterized by policy
- * flags carried as DATA (validated by `semantic-ir`'s validator against a
- * closed enum, SIR28 §2.2) -- the root cause SIR28 exists to fix: real
- * Ruby's `print` never newline-terminates, Python's `print()`/JS's
- * `console.log` always do, but all three used to lower to the identical
- * `BuiltinCall("print", ...)` this backend had no way to tell apart.
+/* SIR28 §2.1: `__sys_write__`, the general console-output primitive every
+ * frontend lowers `print`/`puts`/`console.log`/etc. to.  It generalizes
+ * what used to be several backend-hardcoded newline policies into ONE
+ * operation parameterized by policy flags carried as DATA (validated by
+ * `semantic-ir`'s validator against a closed enum, SIR28 §2.2) -- the root
+ * cause SIR28 exists to fix: real Ruby's `print` never newline-terminates,
+ * Python's `print()`/JS's `console.log` always do, but before SIR28 all
+ * three lowered to the identical `BuiltinCall("print", ...)` this backend
+ * had no way to tell apart.
  *
- * `terminator`: 0 = none (`_sir_print`'s behavior -- write each value's
- * display form back to back, no newline), 1 = per_value (`_sir_puts`'s
- * behavior -- one newline per value, honouring `unpack_arrays`), 2 = once
- * (Python `print`/JS `console.log` -- space-join every value, one trailing
+ * `terminator`: 0 = none (write each value's display form back to back, no
+ * newline -- matches Ruby's `print`), 1 = per_value (one newline per value,
+ * honouring `unpack_arrays` -- matches Ruby's `puts`), 2 = once (Python
+ * `print`/JS `console.log` -- space-join every value, one trailing
  * newline).  `unpack_arrays` is only consulted under `terminator == 1`,
  * matching SIR28 §2.1's table exactly. */
 SirValue _sir_write_v(FILE *out, SirValue *xs, int n, int terminator, int unpack_arrays) {
@@ -3916,8 +3903,6 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "pair?") == 0)    return _sir_is_pair(_sir_arg(args, argc, 0));
     if (strcmp(name, "number?") == 0)  return _sir_is_number(_sir_arg(args, argc, 0));
     if (strcmp(name, "symbol?") == 0)  return _sir_is_symbol(_sir_arg(args, argc, 0));
-    if (strcmp(name, "print") == 0)    return _sir_print_v(args, argc);
-    if (strcmp(name, "puts") == 0)     return _sir_puts_v(args, argc);
     fprintf(stderr, "sir: undefined builtin '%s'\n", name);
     exit(1);
 }

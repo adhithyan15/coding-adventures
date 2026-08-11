@@ -100,7 +100,15 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
     Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
 }
 fn puts(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
 }
 fn let_(name: &str, value: Expr) -> Stmt {
     Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s() }
@@ -111,7 +119,7 @@ fn let_(name: &str, value: Expr) -> Stmt {
 fn map_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "mapprog".into(),
-        manifest: FeatureManifest::from_features(&[
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
             Feature::Maps,
             Feature::Loops,
             Feature::Sequences,

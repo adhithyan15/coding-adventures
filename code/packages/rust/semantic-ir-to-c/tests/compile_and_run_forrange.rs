@@ -78,8 +78,13 @@ fn local(name: &str) -> Expr {
 fn puts(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![arg],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "per_value".into(), span: s() },
+                Expr::BoolLit { value: true, span: s() },
+                arg,
+            ],
             effects: EffectSet::PURE,
             span: s(),
         },
@@ -99,7 +104,7 @@ fn forrange(var: &str, start: i64, stop: i64, step: i64, body: Vec<Stmt>) -> Stm
 fn loops_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "frprog".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Loops]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::Loops]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

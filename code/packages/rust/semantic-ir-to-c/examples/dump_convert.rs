@@ -20,8 +20,13 @@ fn conv(v: i64, w: IntWidth, signed: bool) -> Expr {
 fn puts(e: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![e],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: Span::synthetic() },
+                Expr::StrLit { value: "per_value".into(), span: Span::synthetic() },
+                Expr::BoolLit { value: true, span: Span::synthetic() },
+                e,
+            ],
             effects: EffectSet::PURE,
             span: Span::synthetic(),
         },
@@ -40,6 +45,8 @@ fn main() {
     let module = Module {
         name: "conv".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Conversions,
             Feature::SizedIntegers,
             Feature::Unsigned,

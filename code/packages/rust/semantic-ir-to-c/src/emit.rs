@@ -1941,8 +1941,9 @@ fn variadic_helper(name: &str) -> Option<&'static str> {
         // string rather than mutating in place; a non-String/Symbol RHS
         // is silently dropped rather than codepoint-converted).
         "<<" => "_sir_shift_left",
-        "print" => "_sir_print",
-        "puts" => "_sir_puts",
+        // SIR28 §2: print/puts are dead — every frontend emits
+        // `__sys_write__` instead (handled separately, see `__sys_write__`
+        // above/below in this file).
         _ => return None,
     })
 }
