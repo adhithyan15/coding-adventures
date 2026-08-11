@@ -1,9 +1,10 @@
 use crate::initialize::{unlock_active_material, UnlockedActiveMaterial};
 use crate::mutation::{
-    add_item, delete_item, import_opened_portable_snapshot, merge_item_conflict,
-    publish_audited_access, replace_item, resolve_item_conflict, restore_item, AddItemRandomnessV1,
-    AuditedAccessRandomnessV1, DeleteItemRandomnessV1, PortableImportRandomnessV1,
-    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    activate_audit_epoch, add_item, delete_item, import_opened_portable_snapshot,
+    merge_item_conflict, publish_audited_access, replace_item, resolve_item_conflict, restore_item,
+    AddItemRandomnessV1, AuditedAccessRandomnessV1, DeleteItemRandomnessV1,
+    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1,
 };
 use crate::search::SearchProjectionV1;
 use crate::{
@@ -156,6 +157,30 @@ impl UnlockedVaultV1 {
     /// Borrow the durable local head pins used to anchor this open.
     pub const fn local_pins(&self) -> &PinnedHeads {
         self.active.pinned_heads()
+    }
+
+    /// Begin the durable signed operation-audit epoch for a pre-audit vault.
+    ///
+    /// The unlocked session is consumed and the successful genesis event is
+    /// published through the crash-resumable audit-only journal before the
+    /// next owner state is returned. An already activated vault fails closed.
+    /// Hosts must expose this transition only after all authenticated access
+    /// and mutation paths can continue the epoch or fail closed.
+    pub fn activate_audit_epoch(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        activate_audit_epoch(
+            &self.active,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            wall_time_ms,
+            randomness,
+            local_state_store,
+        )
     }
 
     /// Borrow the complete payload-free verified repository report.
@@ -2369,20 +2394,10 @@ mod tests {
             })
             .unwrap();
 
-        assert_eq!(
-            activate_audit_epoch_for_test(
-                &session.active,
-                &session._keys,
-                &session._local_secret,
-                session._repository.as_ref(),
-                703,
-                None,
-                None,
-                [0xab; AUDIT_ONLY_TEST_RANDOM_BYTES],
-                &local,
-            ),
+        assert!(matches!(
+            session.activate_audit_epoch(703, audited_access_randomness(0xab), &local),
             Err(ApplicationError::StorageUnavailable)
-        );
+        ));
         let exact_pending = local.0.lock().unwrap().clone().unwrap();
         let LocalVaultStateV1::PendingPublication {
             active,
@@ -2398,8 +2413,6 @@ mod tests {
             publication.audit_event_head(),
             publication.objects()[0].id().ok()
         );
-        drop(session);
-
         let recovered = recover_pending_publication(
             Zeroizing::new(passphrase.to_vec()),
             locator,
@@ -2447,6 +2460,51 @@ mod tests {
             local.0.lock().unwrap().as_deref(),
             Some(exact_active.as_slice())
         );
+    }
+
+    #[test]
+    fn production_audit_epoch_activation_is_durable_single_use_and_verifiable() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let active = session
+            .activate_audit_epoch(704, audited_access_randomness(0xac), &local)
+            .unwrap();
+        assert!(active.audit_event_head().is_some());
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::AuditEpochStart,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
+        let report = session.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 2);
+        assert_eq!(report.catalog_count(), 1);
+        assert_eq!(report.audit_event_count(), 1);
+        assert!(matches!(
+            session.activate_audit_epoch(705, audited_access_randomness(0xad), &local),
+            Err(ApplicationError::InvalidInput)
+        ));
+        assert_eq!(*local.0.lock().unwrap(), Some(exact_active));
     }
 
     #[test]

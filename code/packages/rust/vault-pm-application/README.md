@@ -26,12 +26,21 @@ recoverable. Complete verification, coarse diagnostics, and encrypted portable
 export now use that same boundary, including failed export-input attempts.
 Exact current-revision capabilities, whole secret-bearing documents, and
 schema-specific secret fields are also held until their succeeded, denied, or
-failed event is durable. CLI adoption, audit activation, and redacted audit
-history rendering remain later slices. It also defines the
+failed event is durable. The production migration boundary can start one
+explicit audit epoch; CLI adoption and exposure plus redacted audit history
+rendering remain later slices. It also defines the
 exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
 byte-oriented bootstrap/local-state store contracts.
+
+An unlocked pre-audit vault can now begin its one explicit audit epoch through
+a production session-consuming boundary. The successful `AuditEpochStart`
+event has no fabricated predecessor, advances the owner-private event head and
+device counter through the exact audit-only pending journal, and returns only
+after the next owner state is durable. Repeat activation fails closed. Hosts
+must not expose this transition until every authenticated path can continue
+the chain or fail closed.
 
 The crate also supplies the production object-safe application repository
 factory over an injected VLT-PM02 store. It derives no address itself, requires

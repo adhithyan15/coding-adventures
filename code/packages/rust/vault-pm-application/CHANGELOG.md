@@ -2,6 +2,20 @@
 
 All notable changes to this package are documented here.
 
+## [0.39.0] - 2026-08-11
+
+### Added
+
+- Add a production session-consuming audit-epoch activation boundary for
+  explicit migration of a pre-audit vault.
+
+### Security
+
+- Publish the one permitted successful `AuditEpochStart` through the durable
+  audit-only journal before returning the next owner state.
+- Reject repeat activation without changing owner state, and prove exact
+  pending-journal recovery after ambiguous provider success.
+
 ## [0.38.0] - 2026-08-11
 
 ### Added
