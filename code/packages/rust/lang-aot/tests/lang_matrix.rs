@@ -1550,6 +1550,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — array bound pairs are evaluated at run time, and every extent
+    // must remain positive before stride arithmetic or allocation. A reversed
+    // dynamic pair therefore fails closed on all seven standard backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer lower, upper, result; lower := 2; upper := 1; \
+                  begin integer array values[lower:upper]; result := 42 end end",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
     // in `fill2`. The call ABI carries the shared handle plus both lower bounds
     // and the outer row-major stride: `array<i64>, i64, i64, i64`. `invoke`
@@ -6831,6 +6842,36 @@ fn algol_multidimensional_cross_coordinate_oob_traps_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multidimensional coordinate-trap execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reversed_dynamic_array_bounds_trap_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer lower, upper, result")
+                && program.src.contains("values[lower:upper]")
+        })
+        .expect("the ALGOL reversed-bound trap program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reversed-bound execution did not complete"
             );
             continue;
         };
