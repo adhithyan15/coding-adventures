@@ -289,8 +289,11 @@ Prioritized work items:
    div recovery now also remaps the repaired open stack through each formatting
    clone inserted before the selected descendant, so follow-on text and
    formatting remain at the innermost div in document, table-cell, and fragment
-   contexts. Continue the fresh algorithm audit across the remaining bookmark
-   placement and active-formatting-list replacement branches.
+   contexts. Mixed active/non-active wrapper recovery now carries that same
+   remapping through nested divs, preserving the furthest block and current
+   node when a non-formatting wrapper separates retained formatting entries.
+   Continue the fresh algorithm audit across the remaining bookmark placement
+   and active-formatting-list replacement branches.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
