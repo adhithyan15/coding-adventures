@@ -121,10 +121,12 @@ fn identifiers_are_case_folded_to_uppercase() {
             expr: Expr::BuiltinCall { name, args, .. },
             ..
         } => {
-            assert_eq!(name, "print");
-            assert!(matches!(&args[0], Expr::VarRef { name, .. } if name == "MYVAR"));
+            // SIR28 §2: `PRINT` lowers to `__sys_write__`; args[3] is past
+            // the stream/terminator/unpack_arrays envelope.
+            assert_eq!(name, "__sys_write__");
+            assert!(matches!(&args[3], Expr::VarRef { name, .. } if name == "MYVAR"));
         }
-        other => panic!("expected ExprStmt(print), got {other:?}"),
+        other => panic!("expected ExprStmt(__sys_write__), got {other:?}"),
     }
 }
 
@@ -891,7 +893,9 @@ fn call_site_keyword_argument_lowers_to_expr_keyword_arg() {
         Stmt::ExprStmt {
             expr: Expr::BuiltinCall { args, .. },
             ..
-        } => match &args[0] {
+        } => match &args[3] {
+            // SIR28 §2: `PRINT` lowers to `__sys_write__`; args[3] is past
+            // the stream/terminator/unpack_arrays envelope.
             Expr::DirectCall { args, .. } => {
                 assert_eq!(args.len(), 2);
                 assert!(matches!(&args[0], Expr::IntLit { value: 1, .. }));
@@ -902,7 +906,7 @@ fn call_site_keyword_argument_lowers_to_expr_keyword_arg() {
             }
             other => panic!("expected DirectCall, got {other:?}"),
         },
-        other => panic!("expected ExprStmt(print), got {other:?}"),
+        other => panic!("expected ExprStmt(__sys_write__), got {other:?}"),
     }
     assert!(m
         .manifest
@@ -984,11 +988,13 @@ fn nested_pro_function_definitions_do_not_exist_in_this_grammar() {
 
 #[test]
 fn print_with_exactly_one_argument_maps_to_the_shared_print_builtin() {
+    // SIR28 §2: `PRINT` lowers to `__sys_write__`, not a bare
+    // `BuiltinCall("print", ...)`.
     let m = compile_ok("PRINT, 5\n");
     let main = main_fn(&m);
     assert!(matches!(
         &main.body.stmts[0],
-        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "print"
+        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "__sys_write__"
     ));
 }
 
