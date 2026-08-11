@@ -138,6 +138,17 @@
       ]
     },
     {
+      "id": "ES-PATH-017",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C19-si",
+        "ES-C19-no"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
       "id": "ES-PATH-010",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
@@ -730,17 +741,6 @@
       "inline": [
         "ES-EXT-042-LANGUAGE-SPECIFIC"
       ],
-      "after": []
-    },
-    {
-      "id": "ES-PATH-017",
-      "spine_node": "SPINE-RESPOND-BASIC",
-      "lessons": [
-        "ES-C19-si",
-        "ES-C19-no"
-      ],
-      "before": [],
-      "inline": [],
       "after": []
     },
     {

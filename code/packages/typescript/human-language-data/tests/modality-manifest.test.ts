@@ -951,7 +951,7 @@ describe("corpus regression", () => {
       drivableLessons: 1124,
       drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 522,
+      chapterCount: 521,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -1009,7 +1009,7 @@ describe("corpus regression", () => {
       // classifies a `type: writing` lesson as pen without reading its body, so all four
       // record `coreDrivable: false`. It holds because the six lessons that flipped were
       // already core-drivable and the four new ones were never counted.
-      fullyDrivableChapters: 331, // +7: shorter chapters are more often drivable end to end
+      fullyDrivableChapters: 330, // +6: shorter chapters are more often drivable end to end
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.

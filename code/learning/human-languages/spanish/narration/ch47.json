@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 47,
-  "title": "Bringing, Getting, Playing, Meeting",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b8a0d3fc625096f8",
+  "title": "Waiting, Answering, Buying",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:5f5f7b06b265b89e",
   "lessons": [
     {
-      "id": "ES-C39-traer",
-      "sequence": 1810,
-      "title": "traer — \"to bring\", and the direction baked into it",
-      "headword": "traer",
-      "romanization": "traer",
-      "gloss": "to bring — Latin's word for dragging, and a verb with a direction built into it",
+      "id": "ES-C40-esperar",
+      "sequence": 1850,
+      "title": "esperar — one verb for waiting, hoping and expecting",
+      "headword": "esperar",
+      "romanization": "esperar",
+      "gloss": "to wait — and to hope, and to expect, all in one verb",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c63ead1a7cf4676",
+      "sourceHash": "fnv1a64:5f06e10c3e250eb1",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open."
+              "text": "Four verbs that each did something odd to themselves — juego the strangest of them. Here is one that does nothing odd at all, and is still the hardest word in these two chapters."
             }
           ]
         },
@@ -46,242 +46,59 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one flick of the tongue: tra-ER, two beats."
+              "text": "st-no-e — the e- is a run-up: es-pe-RAR, never spe-."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g of traigo is hard, as in English go."
+              "text": "r-tap — one flick for the r in the middle."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: traer",
+          "title": "The word, taken apart: esperar",
           "segments": [
             {
               "kind": "speech",
-              "text": "traer (\"to bring\") from Latin trahere, \"to drag, to pull\". Bringing started out as hauling."
+              "text": "esperar from Latin spērāre, \"to hope\", from spēs, \"hope\". That front e- is the same run-up that turned scrībere into escribir and studēre into estudiar: Spanish will not start a word with s plus a consonant."
             },
             {
               "kind": "speech",
-              "text": "Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something \"dragged away\" from anything particular."
+              "text": "English took the root by its negative: despair from dēspērāre, dē- + spērāre — literally to un-hope — and with it desperate, and desperado, which English shaped from Spanish desesperado. Prosper is traditionally read as prō + spēs, \"according to one's hope\", though that reading is the traditional one rather than a settled one."
             },
             {
               "kind": "speech",
-              "text": "Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, \"to draw forth\", and retreat from retrahere, \"to draw back\"."
+              "text": "Spanish keeps the hope in plain sight: la esperanza. So does Esperanto — its inventor published as Doktoro Esperanto, \"Doctor One-Who-Hopes\"."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the hard g, for the second time",
+          "title": "Grammar Lens: three English verbs, one Spanish word",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "person",
-                "form"
+                "Spanish",
+                "what it means"
               ],
               "columns": 2,
-              "rowCount": 5,
+              "rowCount": 3,
               "utterances": [
-                "person: yo. form: traigo.",
-                "person: tú. form: traes.",
-                "person: él/ella/usted. form: trae.",
-                "person: nosotros. form: traemos.",
-                "person: ellos/ustedes. form: traen."
+                "Espero a María means I am waiting for María.",
+                "Espero el pan means I am expecting the bread.",
+                "Espero que sí means I hope so."
               ]
             },
             {
               "kind": "speech",
-              "text": "Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: here, or away",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not."
+              "text": "One verb, three English words, and nothing in the Spanish tells them apart. Context does all of it, and a learner has to stop translating and start reading the situation. Hope and expect were never far from waiting: to wait for a thing is to think it is coming."
             },
             {
               "kind": "speech",
-              "text": "Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying."
-            },
-            {
-              "kind": "speech",
-              "text": "And llevar from Latin levāre, \"to raise\" — the verb already behind levantarse. To carry a load was first to lift it."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"traigo, traes, trae, traemos, traen\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"traigo, traes, trae, traemos, traen\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Traigo el pan\" then \"Llevo el pan\" — here, then away",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Traigo el pan\" then \"Llevo el pan\" — here, then away]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"oigo\" then \"traigo\" — the same hard g",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"oigo\" then \"traigo\" — the same hard g]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"traer\" then English \"tractor, attract, abstract\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"traer\" then English \"tractor, attract, abstract\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C39-conseguir",
-      "sequence": 1820,
-      "title": "conseguir — \"to get\", by following a thing until you have it",
-      "headword": "conseguir",
-      "romanization": "conseguir",
-      "gloss": "to get, to obtain — getting as following a thing until you have it",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:bb7dce384357b81b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Traigo carries a thing that is already yours. Coger grabs what is in front of you. This verb is for the getting that took some work."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "g-hard — the gu in conseguir is one hard g; the u is silent."
-            },
-            {
-              "kind": "speech",
-              "text": "s-clear — a clean hissing s: con-se-GEER."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: conseguir",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "conseguir (\"to get, to obtain, to manage to\") from Latin cōnsequī: com- (\"along with\") + sequī, \"to follow\". You got a thing by following it until it was yours."
-            },
-            {
-              "kind": "speech",
-              "text": "Sequī is one of Latin's great English suppliers: sequence, sequel, consequence, subsequent, consecutive; second, from secundus, \"the one following\"; execute and prosecute; obsequious, following someone about; and through French, pursue, ensue and suit."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish also keeps the formal partner obtener from obtinēre, \"to hold onto\" — English obtain. It behaves exactly like tener, so its yo-form is obtengo. Conseguir is the everyday one."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the third crack, and a silent u that leaves",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: consigo.",
-                "person: tú. form: consigues.",
-                "person: él/ella/usted. form: consigue.",
-                "person: nosotros. form: conseguimos.",
-                "person: ellos/ustedes. form: consiguen."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "You have met dormir breaking o becomes ue and pido quietly breaking e becomes i. Here is that third pattern in full: stress on the stem turns e into i, and conseguimos stays plain because the stress moved to the ending."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the spelling. Spanish writes gu only to keep a g hard in front of e and i. Once the e becomes i, there is nothing in front to guard against, so the u has no job and goes: consigo, not consiguo. Two changes, one form, and only one of them is a sound."
+              "text": "Note the small a before a person, the same one that stands in conozco a María. And after three chapters of cracking stems, esperar is perfectly regular: espero, esperas, espera, esperamos, esperan."
             }
           ]
         },
@@ -299,29 +116,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"consigo, consigues, consigue, conseguimos, consiguen\"",
+              "instruction": "\"espero, esperas, espera, esperamos, esperan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"consigo, consigues, consigue, conseguimos, consiguen\"]"
+              "source": "[YOU SAY: \"espero, esperas, espera, esperamos, esperan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Traigo el café\" then \"Consigo el café\" — carried, then obtained",
+              "instruction": "\"Espero a María\" then \"Espero el pan\" then \"Espero que sí\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Traigo el café\" then \"Consigo el café\" — carried, then obtained]"
+              "source": "[YOU SAY: \"Espero a María\" then \"Espero el pan\" then \"Espero que sí\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sequī, sequence, second\" then \"conseguir\"",
+              "instruction": "\"spērāre, esperanza\" then English \"despair, desperate\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sequī, sequence, second\" then \"conseguir\"]"
+              "source": "[YOU SAY: \"spērāre, esperanza\" then English \"despair, desperate\"]"
             }
           ]
         },
@@ -338,26 +155,26 @@
             },
             {
               "kind": "speech",
-              "text": "What did sequī mean, and name two English words from it. (To follow; sequence, second, consequence, pursue.) Why is it consigo and not consiguo? (The u only guards a hard g before e and i.) Name the three stem cracks you now have, with a verb for each. (Cerrar e becomes ie, dormir o becomes ue, conseguir e becomes i.) And which Latin verb is behind traer? (Trahere.)"
+              "text": "Give the three English verbs esperar covers. (Wait, hope, expect.) What does dēspērāre take apart into? (Dē- + spērāre, to un-hope.) Name two other Spanish verbs whose e- is a run-up, with their Latin roots. (Escribir from scrībere, estudiar from studēre.) Would you use conocer or saber for a city? (Conocer.) And what did the -sc- inside cognōscere mark? (Beginning — to come to know.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C39-jugar",
-      "sequence": 1830,
-      "title": "jugar — \"to play\", and the only verb of its kind",
-      "headword": "jugar",
-      "romanization": "jugar",
-      "gloss": "to play — from Latin's word for joking, and the only verb in the language that breaks u to ue",
+      "id": "ES-C40-contestar",
+      "sequence": 1860,
+      "title": "contestar — \"to answer\", from a Roman courtroom",
+      "headword": "contestar",
+      "romanization": "contestar",
+      "gloss": "to answer — a Roman courtroom word that English turned into a fight and Spanish turned into a reply",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9417179996245cf9",
+      "sourceHash": "fnv1a64:9a33896714419e05",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +190,7 @@
             },
             {
               "kind": "speech",
-              "text": "Consigo cracked its e to i. Here is a verb that cracks a vowel no other verb in Spanish cracks — and it started life as a joke."
+              "text": "Pregunto pushes the pole down to sound the water. Espero waits. Now the other half of a conversation — and a word that began as an oath."
             }
           ]
         },
@@ -384,235 +201,62 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "j-jota — the j is scraped at the back of the throat: khoo-GAR."
+              "text": "s-clear — a clean s in the middle: con-tes-TAR."
             },
             {
               "kind": "speech",
-              "text": "diphthong-ue — juego is three beats, KHWE-go."
+              "text": "stress-final — the beat lands on the last syllable, with no written accent."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: jugar",
+          "title": "The word, taken apart: contestar",
           "segments": [
             {
               "kind": "speech",
-              "text": "jugar (\"to play\") from Latin iocārī, \"to joke, to jest\", built on the noun iocus, \"a joke\". Playing and joking were one word, and Spanish kept the joking one for both."
+              "text": "contestar (\"to answer\") from Latin contestārī, \"to call witnesses\": com- + testārī, from testis, \"a witness\". In Roman law, contestārī lītem was the formal opening of a lawsuit — both sides calling their witnesses so the argument could begin."
             },
             {
               "kind": "speech",
-              "text": "English holds iocus in several shapes: joke; through French jocular; juggler, from ioculātor, an entertainer; and jeopardy, from Old French jeu parti, \"an evenly divided game\" — a position so balanced that either side might lose. The Spanish family stays close: el juego, a game; el juguete, a toy."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the play-verb Spanish let go",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's ordinary word for playing was lūdere, and Spanish dropped it exactly as it dropped claudere for shutting doors. English kept the whole family instead: illusion, allude, elude, delude, collude, prelude, interlude, ludicrous."
+              "text": "From that one act the two languages walked in opposite directions. English kept the fight: to contest a thing is to dispute it. Spanish kept the reply — first \"say back what the other side said\", then simply answer."
             },
             {
               "kind": "speech",
-              "text": "Claudere and lūdere tell one story: the large English family belongs to the Latin verb Spanish walked away from."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: the fourth crack, with one member",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: juego.",
-                "person: tú. form: juegas.",
-                "person: él/ella/usted. form: juega.",
-                "person: nosotros. form: jugamos.",
-                "person: ellos/ustedes. form: juegan."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Dormir breaks o becomes ue. Jugar breaks u becomes ue, and it is the only verb in Spanish that does: the o of iocārī had already slid irregularly to u, so the crack landed on a vowel no other verb offers. Jugamos stays plain, because the stress moves to the ending."
-            },
-            {
-              "kind": "speech",
-              "text": "One more habit: Spanish plays at a thing rather than simply playing it. El fútbol is football, and you say juego al fútbol, with a + el fused into al. With a companion rather than a game it is con: juego con el perro, I play with the dog."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"juego, juegas, juega, jugamos, juegan\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"juego, juegas, juega, jugamos, juegan\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Juego con el perro\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Juego con el perro\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"duermo\" then \"juego\" — o to ue, then u to ue",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"duermo\" then \"juego\" — o to ue, then u to ue]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"iocus, joke, jocular, juggler\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"iocus, joke, jocular, juggler\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did iocārī mean, and which English words carry it? (To joke; joke, jocular, juggler, jeopardy.) What is unusual about juego among Spanish verbs? (U becomes ue, and no other verb does it.) Which two Latin verbs did Spanish drop while English kept their families? (Claudere and lūdere.) And which vowel does conseguir break? (E to i.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C39-conocer",
-      "sequence": 1840,
-      "title": "conocer — \"to meet\", because knowing has a first moment",
-      "headword": "conocer",
-      "romanization": "conocer",
-      "gloss": "to meet, to be acquainted with — a verb built out of the moment knowing begins",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:fe10c5ace7a7b562",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "soft-c — conoces has a soft second c: a th in Spain, an s elsewhere."
-            },
-            {
-              "kind": "speech",
-              "text": "k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: conocer",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's \"begin to\" marker, so nōscere was never \"to know\" — it was \"to come to know\". Latin said nōvī, \"I have come to know\", for actually knowing a thing."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María."
-            },
-            {
-              "kind": "speech",
-              "text": "The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, \"the knowable one\". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other."
+              "text": "The testis family is shared: testify, testimony, testament, attest, protest, detest."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: conocer and saber",
+          "title": "Grammar Lens: contestar and responder",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has a second answering verb, and it is built on a different promise."
+            },
+            {
+              "kind": "speech",
+              "text": "responder from Latin respondēre, re- + spondēre, \"to pledge solemnly\". Answering is pledging back. English holds that whole branch: respond, response, responsible, sponsor, and spouse, from spōnsus, \"one who has been pledged\"."
+            },
             {
               "kind": "table",
               "headers": [
-                "what you know",
-                "verb"
+                "verb",
+                "where it lives"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "what you know: a person, a city, a book. verb: conocer.",
-                "what you know: a fact, or how to do something. verb: saber."
+                "verb: contestar. where it lives: the everyday one: a question, the phone, a letter.",
+                "verb: responder. where it lives: weightier — responding to something."
               ]
             },
             {
               "kind": "speech",
-              "text": "English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact."
-            },
-            {
-              "kind": "speech",
-              "text": "The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo."
+              "text": "Both are regular, one -ar and one -er: contesto, contestas, contesta, contestamos, contestan; respondo, respondes, responde. The noun is the odd part: the answer is la respuesta, borrowed from responder, never from contestar."
             }
           ]
         },
@@ -630,38 +274,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"conozco, conoces, conoce, conocemos, conocen\"",
+              "instruction": "\"contesto, contestas, contesta, contestamos, contestan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"conozco, conoces, conoce, conocemos, conocen\"]"
+              "source": "[YOU SAY: \"contesto, contestas, contesta, contestamos, contestan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Conozco a María\" then \"Conozco Madrid\"",
+              "instruction": "\"Te pregunto la hora y me contestas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Conozco a María\" then \"Conozco Madrid\"]"
+              "source": "[YOU SAY: \"Te pregunto la hora y me contestas\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"traigo, consigo, juego, conozco\" — the chapter's four yo-forms",
+              "instruction": "\"testis, testify, contest\" then \"contestar\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"traigo, consigo, juego, conozco\" — the chapter's four *yo*-forms]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"padre, father\" then \"conocer, know\" — siblings, not borrowings",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"padre, father\" then \"conocer, know\" — siblings, not borrowings]"
+              "source": "[YOU SAY: \"testis, testify, contest\" then \"contestar\"]"
             }
           ]
         },
@@ -678,7 +313,161 @@
             },
             {
               "kind": "speech",
-              "text": "Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)"
+              "text": "What did contestārī mean literally, and what did English make of it? (To call witnesses; contest.) What does respondēre take apart into? (Re- + spondēre, to pledge back.) Which verb asks for information and which asks for a thing? (Preguntar; pedir.) And name the three English verbs inside esperar. (Wait, hope, expect.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C40-comprar",
+      "sequence": 1870,
+      "title": "comprar — \"to buy\", and a cousin that is not one",
+      "headword": "comprar",
+      "romanization": "comprar",
+      "gloss": "to buy — from Latin's \"get ready, procure\", and not from the verb behind English compare",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:350576beb8db7911",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can ask, answer and wait. Now pay for the bread, with a verb whose obvious English relative turns out to be a stranger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pr-cluster — -pr- is one beat: kom-PRAR, never kom-pe-rar."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-o — a short pure o, with no glide toward ow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: comprar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comprar (\"to buy\") from Latin comparāre: com- + parāre, \"to make ready, to furnish, to procure\". Latin already used it for buying — you procured a thing — and the middle syllable wore away, comparāre to comprar."
+            },
+            {
+              "kind": "speech",
+              "text": "Parāre stocked English well: prepare, repair, apparatus, apparel, separate, parade, and emperor, from imperāre, \"to give orders\". Spanish keeps preparar, and parar, \"to stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That com- is the same one already inside compañero — \"the one you share bread with\" — and inside conseguir, conocer and contestar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the lookalike",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English compare looks like the obvious relative. It is not one."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had two verbs spelled comparāre. One is com- + parāre, \"procure\", and Spanish comprar comes from it. The other is built on compār, \"equal, matched\", and means \"to set side by side\" — that is the one English compare comes from. Two different words that fell together in spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "Comprender is a stranger too: it is comprehendere, \"to seize together\". Same prefix, unrelated second halves. A resemblance is a question, never an answer."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"compro, compras, compra, compramos, compran\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"compro, compras, compra, compramos, compran\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Compro el pan y el vino\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Compro el pan y el vino\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Un café, por favor\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Un café, por favor\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"parāre, prepare, repair\" then \"comprar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"parāre, prepare, repair\" then \"comprar\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the chapter: espero, contesto, compro — three verbs that break nothing, whose difficulty is meaning. Give each root and what it meant. (Spērāre to hope, contestārī to call witnesses, comparāre to procure.) Is English compare a relative of comprar? (No — a different Latin comparāre, built on compār, \"equal\".) Now buy: compro el pan, el vino y un café, por favor — then say what pānis gave compañero, which English words vīnum reached, why café is masculine, and what por favor is word for word. (One who shares bread; wine, vine, vinegar; café arrived as a masculine loan out of Arabic qahwa; \"for a favour\".) And which verb gets a thing by following it? (Conseguir.)"
             }
           ]
         }

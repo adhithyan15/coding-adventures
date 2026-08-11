@@ -8,17 +8,17 @@ type: phrase
 headword: Hablo español
 gloss: your first sentence built from parts — and the rule that languages take no article
 concept_tag: ES-SENTENCE-HABLO-ESPANOL
-prerequisites: [ES-C06-espanol, ES-C06-ar-presente, ES-W03-question-span]
+prerequisites: [ES-C06-espanol, ES-C06-ar-presente, ES-W03-question-span, ES-C19-no]
 sounds: [enye-ny, silent-h]
 roots: [hispania-latin]
 duration:
   max_seconds: 230
 requires:
-  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-ORTHOGRAPHY-PUNCTUATION-SPAN]
+  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-ORTHOGRAPHY-PUNCTUATION-SPAN, ES-LEX-NO-01]
 introduces:
-  knowledge: [ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE]
+  knowledge: [ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE, ES-GRAMMAR-NO-02]
 practises:
-  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE]
+  knowledge: [ES-LEX-ESPANOL, ES-LEX-HABLAR, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE, ES-GRAMMAR-NO-02, ES-LEX-NO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -76,8 +76,20 @@ after *hablar*, the language goes bare.
 - [YOU SAY: swap the verb — "Estudio español", "Trabajo"]
 - [YOU SAY: ask it — "¿Hablas español?" (raise the pitch; ¿ opens it)]
 
+## Why it's said this way
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-NO-02]; assesses=[ES-LEX-NO-01] -->
+
+You met **no** long ago as the answer. It has a second job, and now you have a
+sentence to try it on: put *no* directly in front of the verb and the whole
+thing flips.
+
+**Hablo español** → **No hablo español.**
+
+That is all there is to it. English needs a helper — *do not* — and Spanish
+needs nothing: one small word, in front, and the sentence means its opposite.
+
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NO-02, ES-LEX-ESPANOL, ES-LEX-HABLO-ESPANOL, ES-LEX-TRABAJAR, ES-LEX-ESTUDIAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-GRAMMAR-BARE-LANGUAGE] -->
 
 [PAUSE 3s] Say "I speak Spanish," then "I study Spanish." (*Hablo español;
 estudio español*.) Why is there no separate subject word? (The *-o* ending

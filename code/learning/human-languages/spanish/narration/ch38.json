@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 38,
-  "title": "The Weather",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:01c8cccd8f713acc",
+  "title": "Numbers Eleven to Twenty",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:d275132e409181b9",
   "lessons": [
     {
-      "id": "ES-C30-el-tiempo",
-      "sequence": 1500,
-      "title": "el tiempo — one word doing two jobs",
-      "headword": "el tiempo",
-      "romanization": "el tiempo",
-      "gloss": "the one noun that covers both \"time\" and \"weather\" — because Latin tempus already did",
+      "id": "ES-C31-once-quince",
+      "sequence": 1530,
+      "title": "once — quince: five words with a seam you can no longer see",
+      "headword": "once — quince",
+      "romanization": "once — quince",
+      "gloss": "11-15 — five single opaque words, each one a Latin compound worn down until the seam disappeared",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f35d7ef36f7f29ad",
+      "sourceHash": "fnv1a64:1e9cde14c9aab2c0",
       "notice": null,
       "blocks": [
         {
@@ -35,289 +35,177 @@
             },
             {
               "kind": "speech",
-              "text": "Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking \"what time does it make?\" — because tiempo does not split \"time\" from \"weather\" the way English does."
+              "text": "Spanish counts past ten in two completely different ways, and the join between them is a real boundary in the language, not a place someone drew a line. Today: the first five, which you simply have to learn as words."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: el tiempo",
+          "title": "The words, taken apart: once through quince",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "el tiempo = both \"time\" and \"weather\" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed."
-            },
-            {
-              "kind": "speech",
-              "text": "English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed."
-            },
-            {
-              "kind": "speech",
-              "text": "How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is \"I have no time,\" ¿qué tiempo hace? is \"what's the weather like?\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el tiempo\" — time, or weather, depending on context",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el tiempo\" — time, or weather, depending on context]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿qué tiempo hace?\" — what's the weather like?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿qué tiempo hace?\" — what's the weather like?]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tiempo\" then English \"tempo, temporal\" — the tempus family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tiempo\" then English \"tempo, temporal\" — the *tempus* family]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only \"time.\") Next: how to actually answer ¿qué tiempo hace?"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C30-hace-calor",
-      "sequence": 1510,
-      "title": "hace calor, hace frío, hace sol — the weather Spanish makes",
-      "headword": "hace calor, hace frío, hace sol",
-      "romanization": "hace calor, hace frío, hace sol",
-      "gloss": "the three weather words Spanish reports with hacer — \"it makes heat,\" \"it makes cold,\" \"it makes sun\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:956760ecbdd28e05",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, \"to make.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: calor, frío, sol",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "calor from Latin calor, \"heat, warmth\" becomes English calorie, caloric, cauldron."
-            },
-            {
-              "kind": "speech",
-              "text": "frío from Latin frigidus, \"cold\" (the middle syllable syncopated away) becomes English frigid, refrigerate."
-            },
-            {
-              "kind": "speech",
-              "text": "sol from Latin sol, \"sun,\" unchanged becomes English solar, solstice, parasol."
-            },
-            {
-              "kind": "speech",
-              "text": "Here is the part worth noticing: all three are nouns, not adjectives. Calor is \"heat,\" not \"hot.\" That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one."
-            },
-            {
-              "kind": "speech",
-              "text": "hace calor — \"it's hot,\" literally \"it makes heat\" hace frío — \"it's cold,\" literally \"it makes cold\" hace sol — \"it's sunny,\" literally \"it makes sun\"."
-            },
-            {
-              "kind": "speech",
-              "text": "French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into \"it is hot\" with an adjective."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hace calor. hace frío. hace sol.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hace calor. hace frío. hace sol.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the literal reading — \"it makes heat, it makes cold, it makes sun\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the literal reading — \"it makes heat, it makes cold, it makes sun\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"calor\" then English \"calorie\"; \"frío\" then \"refrigerate\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"calor\" then English \"calorie\"; \"frío\" then \"refrigerate\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"it's hot,\" \"it's cold,\" \"it's sunny.\" (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a \"to be\" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C30-llueve",
-      "sequence": 1520,
-      "title": "llueve — the one weather word that will not join hacer",
-      "headword": "llueve",
-      "romanization": "llueve",
-      "gloss": "rain refuses the hacer pattern and brings its own verb — and its ll- is the sound change you already met in llamar",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a72ffc788c9f580c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: rain brings its own verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "llueve = \"it's raining.\" Not hace lluvia, not \"it makes rain\" — just llueve, a single word that is a complete sentence."
-            },
-            {
-              "kind": "speech",
-              "text": "It comes from llover, \"to rain,\" and llover is impersonal: it has no subject at all, not even a \"it\" you could point to. Compare the two shapes side by side:"
-            },
             {
               "kind": "table",
               "headers": [
-                "pattern",
-                "example",
-                "what carries the weather"
+                "Spanish",
+                "from Latin"
               ],
-              "columns": 3,
-              "rowCount": 2,
+              "columns": 2,
+              "rowCount": 5,
               "utterances": [
-                "pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).",
-                "pattern: dedicated verb. example: llueve. what carries the weather: the verb itself."
+                "Spanish: once. from Latin: undecim (\"one-ten\").",
+                "Spanish: doce. from Latin: duodecim (\"two-ten\").",
+                "Spanish: trece. from Latin: tredecim (\"three-ten\").",
+                "Spanish: catorce. from Latin: quattuordecim (\"four-ten\").",
+                "Spanish: quince. from Latin: quindecim (\"five-ten\")."
               ]
             },
             {
               "kind": "speech",
-              "text": "English does exactly the same split, which makes it easy to feel: you say \"it is hot\" with an adjective, but \"it rains\" with a verb built for the job. Spanish just draws the line in the same place."
+              "text": "Every one of these was a compound — a number plus -decim (\"ten,\" the same root as diez). But these five are the numbers people say most often, and heavy use wears words smooth. Centuries of everyday speech fused each pair into a single, opaque word: no Spanish speaker hears \"one-ten\" in once any more than an English speaker hears \"two-ten\" in twelve."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen for the ghost, though. The -ce ending on doce, trece, catorce, quince is all that survives of Latin's -decim. It is the same \"ten\" you already say in diez, ground down to two letters."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: llover",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "llover from Latin pluere, \"to rain.\" Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, \"key\") and llama ( from flamma, \"flame\"). Latin's cl-, fl- and pl- clusters all became Spanish ll-."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"once, doce, trece, catorce, quince\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"once, doce, trece, catorce, quince\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "just the endings — \"-ce, -ce, -ce, -ce\" — the worn-down ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: just the endings — \"-ce, -ce, -ce, -ce\" — the worn-down *ten*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame."
+              "text": "Count eleven to fifteen. (Once, doce, trece, catorce, quince.) What are these five, structurally? (Fused Latin compounds — number plus -decim, \"ten.\") Which piece of each word is the old \"ten\"? (The -ce ending — diez worn down.) Next: the numbers where the seam is still wide open."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C31-dieciseis-diecinueve",
+      "sequence": 1540,
+      "title": "dieciséis — diecinueve: where the seam reopens",
+      "headword": "dieciséis — diecinueve",
+      "romanization": "dieciséis — diecinueve",
+      "gloss": "16-19 — not words to memorise but a formula, diez y X, with the seam still visible",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:035fde34300599e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You just learned five numbers whose insides had been ground smooth. Now say fifteen and then sixteen — quince, dieciséis — and hear the language change gear. From here you are not memorising words; you are following a rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The words, taken apart: dieciséis through diecinueve",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "Spanish: dieciséis. literally: diez y seis, \"ten and six\".",
+                "Spanish: diecisiete. literally: diez y siete, \"ten and seven\".",
+                "Spanish: dieciocho. literally: diez y ocho, \"ten and eight\".",
+                "Spanish: diecinueve. literally: diez y nueve, \"ten and nine\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a formula, not a list",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the structural difference that makes 15/16 a real boundary in Spanish rather than a convenient place to pause:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "11-15",
+                "16-19"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "how you get the word. 11-15: remember it. 16-19: build it.",
+                "the \"ten\" inside. 11-15: worn to -ce. 16-19: still spelled dieci-.",
+                "can you hear the parts? 11-15: no. 16-19: yes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So once through quince are vocabulary, and dieciséis through diecinueve are grammar: one template, dieci- + digit, filled four times. Learn the template once and all four are already yours."
             }
           ]
         },
@@ -335,29 +223,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿qué tiempo hace?\" then \"hace calor. hace frío. hace sol.\"",
+              "instruction": "\"dieciséis, diecisiete, dieciocho, diecinueve\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿qué tiempo hace?\" then \"hace calor. hace frío. hace sol.\"]"
+              "source": "[YOU SAY: \"dieciséis, diecisiete, dieciocho, diecinueve\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"llueve\" — one word, a whole sentence, no hacer",
+              "instruction": "the seam out loud — \"diez y seis\" then \"dieciséis\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"llueve\" — one word, a whole sentence, no *hacer*]"
+              "source": "[YOU SAY: the seam out loud — \"diez y seis\" then \"dieciséis\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"llamar, llave, llama, llover\" — four Latin clusters, one Spanish ll-",
+              "instruction": "the boundary — \"quince\" (remembered), \"dieciséis\" (built)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"llamar, llave, llama, llover\" — four Latin clusters, one Spanish *ll-*]"
+              "source": "[YOU SAY: the boundary — \"quince\" (remembered), \"dieciséis\" (built)]"
             }
           ]
         },
@@ -374,7 +262,255 @@
             },
             {
               "kind": "speech",
-              "text": "Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)"
+              "text": "Count sixteen to nineteen. (Dieciséis, diecisiete, dieciocho, diecinueve.) Are these fused or transparent? (Transparent — plain \"ten and X.\") Which of the two groups do you have to memorise, and which can you generate? (Memorise 11-15; generate 16-19 from dieci- plus the digit.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C31-teens-latinos",
+      "sequence": 1550,
+      "title": "duodēvīgintī — the quirk Spanish threw away",
+      "headword": "duodēvīgintī, ūndēvīgintī",
+      "romanization": "duodēvīgintī, ūndēvīgintī",
+      "gloss": "why 18 and 19 are the interesting ones — Latin counted them backwards from twenty, and Spanish refused to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c06c526d83d0237",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Dieciocho and diecinueve look like the least interesting words in the chapter — just two more ten-and-X compounds. They are actually the most interesting, because of what Latin said instead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dieciséis — diecinueve — the dieci- plus digit template."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: Latin counted 18 and 19 backwards",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You would expect dieciocho and diecinueve to carry on whatever Latin did for 18 and 19. Latin did something else entirely. Its everyday words for those two numbers were subtractive — counted down from twenty:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "number",
+                "Latin",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "number: 18. Latin: duodēvīgintī. literally: \"two from twenty\".",
+                "number: 19. Latin: ūndēvīgintī. literally: \"one from twenty\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "(You still meet this habit in English clock-talk: \"ten to four.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish did not inherit either word. It built dieciocho and diecinueve fresh, on exactly the same simple template as 16 and 17 — quietly regularising away an irregularity that existed in its own parent language. Languages are usually described as wearing down and getting messier; here is a clean case of one tidying up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Latin's way — \"two from twenty\" — then Spanish's — \"dieciocho\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Latin's way — \"two from twenty\" — then Spanish's — \"dieciocho\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dieciocho, diecinueve\" — addition, not subtraction",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dieciocho, diecinueve\" — addition, not subtraction]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How did Latin say 18 and 19? (Subtractively — duodēvīgintī, \"two from twenty,\" and ūndēvīgintī, \"one from twenty.\") Did Spanish keep that? (No — it built dieciocho and diecinueve on the regular ten-and-X template.) So which language is the irregular one here? (Latin — Spanish simplified.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C31-veinte",
+      "sequence": 1560,
+      "title": "veinte — the number the teens were counting toward",
+      "headword": "veinte",
+      "romanization": "veinte",
+      "gloss": "twenty — the ceiling of the teens, and a word that was worn but never fused",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a8d6218e5cb6f20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin's own 18 and 19 were counted down from twenty. So it is worth meeting twenty itself — the number the whole run has been aiming at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: veinte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "veinte (\"twenty\") from Latin vīgintī. It was worn down by ordinary sound change — the g softened away, the vowels shifted — but notice what did not happen to it: it was never fused out of two separate words the way once through quince were. Vīgintī was already a single word for a single round number, so there is no seam inside veinte to look for."
+            },
+            {
+              "kind": "speech",
+              "text": "Three different histories, then, in one short chapter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "words",
+                "what happened"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "words: once - quince. what happened: two words fused into one.",
+                "words: dieciséis - diecinueve. what happened: two words built into one, seam visible.",
+                "words: veinte. what happened: one word, simply worn."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"once, doce, trece, catorce, quince\" — the five fused Latins",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"once, doce, trece, catorce, quince\" — the five fused Latins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dieciséis, diecisiete, dieciocho, diecinueve\" — built, not fused",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dieciséis, diecisiete, dieciocho, diecinueve\" — built, not fused]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"veinte\" — twenty, worn but never fused",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"veinte\" — twenty, worn but never fused]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count eleven to twenty. Where is the boundary between remembering and building, and why is it there? (After quince — 11-15 are fused Latin compounds, 16-19 are dieci- plus a digit.) Did Spanish inherit Latin's subtractive 18 and 19? (No — it regularised them.) Was veinte fused from two words? (No — Latin vīgintī was already one word; it was only worn down.)"
             }
           ]
         }
