@@ -1,0 +1,68 @@
+% ============================================================================
+% planet-criterion — the three IAU requirements a body must meet to count
+% as a full planet, not a dwarf planet (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% Pluto isn't "not a planet because it's small" — it fails one SPECIFIC,
+% named requirement. Being round and orbiting the Sun aren't enough on
+% their own; a body must ALSO have cleared its neighborhood of similar-
+% sized debris. Recall is a binding query:
+%
+%     ? planet_criterion($C, is_mostly_round)
+%       % roundness
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `planet_criterion(criterion, requirement)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the requirement WITH its source, on the CPU, with zero
+% model calls, and abstains on a planet-classification term that is not
+% one of these three. The query also runs BACKWARD — bind a requirement
+% and recall which criterion it names:
+%
+%     ? planet_criterion(orbit, $R)
+%       % orbits_its_host_star
+%
+% The three IAU planet criteria, as a little truth table:
+%
+%     criterion    requirement                                                        quote (verbatim, from the introductory sentence)
+%     -----------  -----------------------------------------------------------------  --------------------------------------------------------------------------------
+%     orbit        orbits_its_host_star                                                "Orbit its host star (In our solar system that's the Sun)."
+%     roundness    is_mostly_round                                                      "Be mostly round."
+%     cleared_orbit  gravity_cleared_away_other_objects_of_similar_size_near_its_orbit  "Be big enough that its gravity cleared away any other objects of similar size near its orbit around the Sun."
+%
+% Provenance: quoted verbatim from NASA Science's "Dwarf Planets" page,
+% which introduces these three items with "According to the IAU, a planet
+% must do three things:" immediately before the numbered list — the
+% `source`/`locator`/`trust` fields below hold that introductory sentence
+% (the single cleanest, fully self-contained span), the same discipline
+% `celestial-objects.adj` (the other library in this directory using a
+% single shared citation for a multi-row table) already established; each
+% row's own verbatim requirement text is quoted above and independently
+% checkable against the source page. WebFetch-verified before writing
+% (twice — the second pass specifically confirmed the introductory
+% sentence's exact wording and that it directly precedes the three-item
+% list). `trust authoritative` — NASA is a primary .gov source, the same
+% tier the sibling `comet-part.adj`/`solar-eclipse-type.adj`/
+% `space-rock-stage.adj` (the other libraries in this directory) already
+% use for their NASA citations. A planet-classification term that is NOT
+% one of these three criteria — "dwarf_planet", a real category the same
+% page also names, but one that is defined as satisfying the FIRST TWO
+% criteria while FAILING the third ("Dwarf planets like Pluto were defined
+% as objects that orbit the Sun, and are nearly round, but have not been
+% able to clear their orbit of debris") — a compound classification built
+% FROM these criteria, not a fourth criterion itself, and not one of these
+% three tabled here — is deliberately NOT a row, so a recall ABSTAINS on
+% it rather than inventing a requirement. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table planet_criterion {
+    columns criterion, requirement
+
+    row (orbit, orbits_its_host_star)
+    row (roundness, is_mostly_round)
+    row (cleared_orbit, gravity_cleared_away_other_objects_of_similar_size_near_its_orbit)
+
+    source "According to the IAU, a planet must do three things:"
+    locator "https://science.nasa.gov/dwarf-planets/"
+    trust authoritative
+}
