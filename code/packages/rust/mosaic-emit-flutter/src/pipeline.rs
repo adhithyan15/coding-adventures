@@ -385,6 +385,24 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl], require_runtime: bo
 
 fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_root_widget_constructor(component_name, slots);
+    let host_props_field = if slots.is_empty() {
+        String::new()
+    } else {
+        "  Map<String, Object?> _hostProps = const <String, Object?>{};\n".to_string()
+    };
+    let apply_host_props = if slots.is_empty() {
+        String::new()
+    } else {
+        concat!(
+            "    final nextProps = mosaicMap(response['props']);\n",
+            "    if (nextProps.isNotEmpty) {\n",
+            "      setState(() {\n",
+            "        _hostProps = nextProps;\n",
+            "      });\n",
+            "    }\n"
+        )
+        .to_string()
+    };
     format!(
         concat!(
             "{banner}",
@@ -403,7 +421,7 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
             "}}\n\n",
             "class _MosaicAppState extends State<MosaicApp> {{\n",
             "  late final MosaicHost? _mosaicHost;\n",
-            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n\n",
+            "{host_props_field}\n",
             "  @override\n",
             "  void initState() {{\n",
             "    super.initState();\n",
@@ -430,14 +448,9 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
             "  void _applyMosaicResponse(Map<String, Object?>? response) {{\n",
             "    if (response == null) return;\n",
             "    if (!mounted) return;\n",
-            "    final nextProps = mosaicMap(response['props']);\n",
             "    final hostIntent = mosaicMap(response['hostIntent']);\n",
             "    final error = response['error'];\n",
-            "    if (nextProps.isNotEmpty) {{\n",
-            "      setState(() {{\n",
-            "        _hostProps = nextProps;\n",
-            "      }});\n",
-            "    }}\n",
+            "{apply_host_props}",
             "    if (hostIntent.isNotEmpty) {{\n",
             "      debugPrint('hostIntent: $hostIntent');\n",
             "    }}\n",
@@ -537,12 +550,29 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
         ),
         banner = BANNER_DART,
         component_name = component_name,
-        root_widget = root_widget
+        root_widget = root_widget,
+        host_props_field = host_props_field,
+        apply_host_props = apply_host_props,
     )
 }
 
 fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_runtime_required_root_widget_constructor(component_name, slots);
+    let host_props_field = if slots.is_empty() {
+        String::new()
+    } else {
+        "  Map<String, Object?> _hostProps = const <String, Object?>{};\n".to_string()
+    };
+    let next_props = if slots.is_empty() {
+        String::new()
+    } else {
+        "    final nextProps = mosaicMap(response['props']);\n".to_string()
+    };
+    let assign_host_props = if slots.is_empty() {
+        String::new()
+    } else {
+        "      _hostProps = nextProps;\n".to_string()
+    };
     format!(
         concat!(
             "{banner}",
@@ -561,7 +591,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "}}\n\n",
             "class _MosaicAppState extends State<MosaicApp> {{\n",
             "  late final MosaicHost _mosaicHost;\n",
-            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n",
+            "{host_props_field}",
             "  bool _hostReady = false;\n\n",
             "  @override\n",
             "  void initState() {{\n",
@@ -593,12 +623,12 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "    if (!response.containsKey('props')) {{\n",
             "      throw StateError('Mosaic runtime response did not include props');\n",
             "    }}\n",
-            "    final nextProps = mosaicMap(response['props']);\n",
+            "{next_props}",
             "    final hostIntent = mosaicMap(response['hostIntent']);\n",
             "    final error = response['error'];\n",
             "    if (!mounted) return;\n",
             "    setState(() {{\n",
-            "      _hostProps = nextProps;\n",
+            "{assign_host_props}",
             "      _hostReady = true;\n",
             "    }});\n",
             "    if (hostIntent.isNotEmpty) {{\n",
@@ -815,6 +845,9 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
         banner = BANNER_DART,
         component_name = component_name,
         root_widget = root_widget,
+        host_props_field = host_props_field,
+        next_props = next_props,
+        assign_host_props = assign_host_props,
     )
 }
 
@@ -2119,6 +2152,18 @@ fn emit_container(
         // multiple children need a child Column wrapper since Container
         // only accepts one direct child.
         let style_args = style_to_container_args(style_props);
+        if node.children.len() == 1 && style_args.is_empty() {
+            // If the resolved Mosaic style has no Flutter-visible container
+            // properties, this wrapper changes neither layout nor visuals.
+            return emit_widget_tree(
+                &node.children[0],
+                indent,
+                part_styles,
+                component,
+                emits,
+                child_ctx,
+            );
+        }
         if node.children.is_empty() {
             return Ok(format!(
                 "{pad}Container({})\n",
@@ -2375,30 +2420,6 @@ fn for_body_widget(
     }
     if node.children.len() == 1 {
         let child = &node.children[0];
-        let style_props = child
-            .part_name
-            .as_deref()
-            .and_then(|part| part_styles.get(part).map(String::as_str))
-            .unwrap_or("");
-        // A property-free, unstyled Box is a semantic no-op in Flutter. Its
-        // Container lowering also trips avoid_unnecessary_containers, so let
-        // the authored child be the loop body directly.
-        if child.tag == "Box"
-            && child.children.len() == 1
-            && child.props.is_empty()
-            && style_props.is_empty()
-        {
-            return Ok(emit_widget_tree(
-                &child.children[0],
-                body_pad,
-                part_styles,
-                component,
-                emits,
-                ctx,
-            )?
-            .trim_end_matches('\n')
-            .to_string());
-        }
         return Ok(
             emit_widget_tree(child, body_pad, part_styles, component, emits, ctx)?
                 .trim_end_matches('\n')
@@ -5009,6 +5030,30 @@ mod tests {
         assert!(!r.output.contains("_mosaicTruthy"));
     }
 
+    #[test]
+    fn plain_single_child_box_elides_unnecessary_container() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Box",
+                vec![],
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("hello".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let output = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+
+        assert!(output.contains("Text(\"hello\")"), "{output}");
+        assert!(!output.contains("Container(\n"), "{output}");
+    }
+
     // ----- Event union: zero emits emits a sealed base class -----------
 
     #[test]
@@ -7263,6 +7308,7 @@ mod tests {
             .widget_test_dart
             .contains("tester.pumpWidget(const MosaicApp())"));
         assert!(!project.widget_test_dart.contains("MyApp"));
+        assert!(!project.main_dart.contains("_hostProps"));
         assert!(project
             .analysis_options_yaml
             .contains("include: package:flutter_lints/flutter.yaml"));
@@ -7290,6 +7336,7 @@ mod tests {
             .contains("expect(MosaicApp, isNotNull)"));
         assert!(!project.widget_test_dart.contains("loadRequired"));
         assert!(!project.widget_test_dart.contains("pumpWidget"));
+        assert!(!project.main_dart.contains("_hostProps"));
     }
 
     #[test]
