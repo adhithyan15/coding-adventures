@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 亻 ductus (HL-C09CA)
+
+- Render **亻** in two source-aligned frames: draw the long left-falling piě,
+  then lift once for the vertical shù from the central junction.
+- Fit the radical's own pinned medians independently to its narrow Noto Sans SC
+  outline instead of deriving them from the full 人 form.
+- Reduce Chinese's remaining verified-ductus inventory to 22 entries.
+
 ### Added — cited Chinese 人 ductus (HL-C09BZ)
 
 - Render **人** in two evidence-aligned frames: left-falling piě first, then

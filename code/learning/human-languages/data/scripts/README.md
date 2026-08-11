@@ -418,8 +418,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   record: draw the left-falling stroke, lift once, then draw the right-falling
   stroke. Its two-frame Noto Sans SC path preserves the source medians' order
   and direction while documenting the source font's different proportions.
-  The remaining **154** prose part orders across six
-  scripts (`arabic` 3, `chinese` 23, `cyrillic` 33, `devanagari` 28,
+  Chinese **亻** follows from its own pinned record: draw the long left-falling
+  stroke, lift once, then descend the vertical from the central junction. Its
+  two-frame path fits the narrow Noto Sans SC radical independently instead of
+  mechanically squeezing 人. The remaining **153** prose part orders across six
+  scripts (`arabic` 3, `chinese` 22, `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

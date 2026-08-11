@@ -25,6 +25,7 @@ const load = (name: string) => {
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
 const CHINESE_REN = DUCTUS[ductusKey("chinese", "人")];
+const CHINESE_PERSON_RADICAL = DUCTUS[ductusKey("chinese", "亻")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -251,6 +252,19 @@ describe("handwriting ductus", () => {
     expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
     expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
     expect(right[0].x).toBeLessThan(right.at(-1)!.x);
+  });
+
+  it("Chinese 亻 draws the left-falling stroke before the lifted vertical", () => {
+    expect(CHINESE_PERSON_RADICAL.script).toBe("chinese");
+    expect(penLifts(CHINESE_PERSON_RADICAL)).toBe(1);
+    expect(CHINESE_PERSON_RADICAL.strokes).toHaveLength(2);
+    expect(CHINESE_PERSON_RADICAL.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const left = CHINESE_PERSON_RADICAL.strokes[0].segments[0].path;
+    const vertical = CHINESE_PERSON_RADICAL.strokes[1].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
+    expect(vertical[0].y).toBeGreaterThan(vertical.at(-1)!.y);
+    expect(vertical[0].x).toBe(vertical.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1169,6 +1183,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("亻", CHINESE_PERSON_RADICAL.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1284,6 +1301,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /PRC-order dataset.*two ordered strokes.*Median 1.*upper centre.*descends down-left.*median 2.*central junction.*descends down-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*one intervening pen lift.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 亻 traces its falling stroke and vertical to the pinned PRC-order dataset", () => {
+    const src = CHINESE_PERSON_RADICAL.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BA%BB.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 亻\.json.*ordered stroke paths and medians 1–2.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*two ordered strokes.*Median 1.*upper right.*bends slightly right.*descends down-left.*median 2.*central junction.*moves slightly down-right.*descends vertically.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*one intervening pen lift.*Arphic-derived source graphics/i,
     );
   });
 

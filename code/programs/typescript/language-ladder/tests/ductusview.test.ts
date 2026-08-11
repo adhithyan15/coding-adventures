@@ -86,6 +86,8 @@ const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
 const CHINESE_REN = ductusFor("人", "chinese")!;
 const chineseRenOutline = chineseOutline("人");
+const CHINESE_PERSON_RADICAL = ductusFor("亻", "chinese")!;
+const chinesePersonRadicalOutline = chineseOutline("亻");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -816,6 +818,36 @@ describe("Chinese 人 — two cited falling strokes in PRC order", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_REN.strokes[1], 1),
+    );
+  });
+});
+
+describe("Chinese 亻 — a cited falling stroke followed by a vertical", () => {
+  const steps = ductusSteps(CHINESE_PERSON_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_PERSON_RADICAL, chinesePersonRadicalOutline);
+
+  it("shows the left-falling stroke before restarting for the vertical", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left-falling piě stroke from upper right to lower left",
+      "lift, then draw the vertical shù stroke from the junction to the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with the falling stroke settled behind the vertical", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chinesePersonRadicalOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CHINESE_PERSON_RADICAL.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_PERSON_RADICAL.strokes[1], 1),
     );
   });
 });
