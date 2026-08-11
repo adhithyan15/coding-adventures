@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.42.0
+
+- Reject `+` and `-` activation suffixes on central sequence connections, matching the pinned Mermaid grammar alternatives.
+
 ## 0.37.0
 
 - Reject explicit and message-suffix deactivation of inactive sequence participants.

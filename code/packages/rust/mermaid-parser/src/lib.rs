@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.41.0";
+pub const VERSION: &str = "0.42.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -3734,6 +3734,18 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_rejects_activation_suffixes_on_central_connections() {
+        for source in [
+            "sequenceDiagram\nAlice()->>+Bob: invalid source suffix\n",
+            "sequenceDiagram\nAlice->>()-Bob: invalid destination suffix\n",
+            "sequenceDiagram\nAlice()->>()+Bob: invalid dual suffix\n",
+        ] {
+            parse_sequence_diagram(source)
+                .expect_err("central connections have their own activation semantics");
+        }
+    }
+
+    #[test]
     fn sequence_parses_autonumber_start_and_increment() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nautonumber 10.5 2.25\nAlice->>Bob: First\nBob->>Alice: Second\n",
@@ -4132,7 +4144,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.41.0");
+        assert_eq!(crate::VERSION, "0.42.0");
     }
 
     #[test]

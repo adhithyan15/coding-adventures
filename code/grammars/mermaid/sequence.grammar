@@ -1,4 +1,4 @@
-# @version 3
+# @version 4
 # Mermaid 11.16.1 sequence diagram parser grammar: initial native subset.
 
 document = { terminator } HEADER body EOF ;
@@ -9,7 +9,8 @@ participant_stmt = [ "create" ] participant_decl ;
 participant_decl = ( "participant" | "actor" ) actor_ref [ CONFIG ] [ "as" WRAP_DIRECTIVE [ text ] | "as" text | WRAP_DIRECTIVE [ text ] ] ;
 participant_box = "box" [ COLOR ] [ WRAP_DIRECTIVE ] [ text ] terminator { terminator | participant_decl } "end" ;
 destroy_stmt = "destroy" actor_ref ;
-message_stmt = actor_ref [ CENTRAL ] message_arrow [ CENTRAL ] [ PLUS | MINUS ] actor_ref COLON wrapped_text ;
+message_stmt = actor_ref message_tail COLON wrapped_text ;
+message_tail = message_arrow [ PLUS | MINUS ] actor_ref | message_arrow CENTRAL actor_ref | CENTRAL message_arrow actor_ref | CENTRAL message_arrow CENTRAL actor_ref ;
 activation_stmt = ( "activate" | "deactivate" ) actor_ref ;
 note_stmt = "note" ( ( "left" | "right" ) "of" actor_ref | "over" actor_pair ) COLON wrapped_text ;
 link_stmt = "link" actor_ref COLON link_label AT URL ;
