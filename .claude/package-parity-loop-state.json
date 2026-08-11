@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 10612,
   "last_inventory": {
     "revision": "6c3b19b27b35312320c9b141855c3afa3da0159c",
     "schema_version": 3,
@@ -2775,14 +2775,18 @@
     {
       "id": "canonical-cbor-language-neutral-conformance",
       "title": "Define language-neutral canonical CBOR conformance",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/canonical-cbor-language-neutral-conformance",
-      "pr_number": null,
+      "pr_number": 10612,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10612",
+      "pr_opened_at": "2026-08-11T07:19:38Z",
+      "implementation_revision": "b79cf1b87f1a22359880d34b21aaed6b34fca794",
       "selection_revision": "2a6dab3ae0d871aaef97c656c90a90fd6715d3f4",
       "selection_notes": "Selected after external merge of PR #10564, a collision-clean identity-neutral refresh, and classification of the SIR28 and GC work. This dependency-free pure contract has the highest bounded leverage: it unlocks fourteen-lane canonical-CBOR parity, both Vault format roots, and the wider Vault application and CLI chain without overlapping any live PR.",
       "security_findings": "The reference encoders sort but retain duplicate encoded map keys and recurse without encode-side depth or output-size bounds, so a fixture-only change would bless behavior their own decoders reject. Harden the C, C++, and Rust oracles with fallible, static, payload-free duplicate-key, encode-depth, and encode-size failures in this same tranche.",
-      "validation_notes": "The 55-case neutral corpus passes its Draft 2020-12 schema, closed generated-case grammar, exact C-header drift gate, and all 14 stable error-ID coverage checks. Rust passes 50 unit tests, the portable consumer, doctest, rustfmt, Clippy with warnings denied, and direct LLVM coverage at 95.99% production-line coverage; vault-records, vault-pm-format, and vault-pm-application pass 151 downstream tests. C and C++ pass 597 existing-plus-portable checks under strict GCC, Clang, G++, Clang++, and MSVC builds. The C portable consumer also passes Clang AddressSanitizer and UndefinedBehaviorSanitizer. Windows Clang's sanitizer runtime cannot safely unwind the repository's pre-existing C++ exception suite; the unchanged original C++ suite reproduces the same runtime failure, while ordinary strict builds pass on all five compilers. Ruff, MyPy, Bandit, RustSec, capability taxonomy, cross-language fixture, diff, state-graph, and collision gates pass. RustSec reports only the repository's two allowed unmaintained warnings. Inventory remains 1,298 established identities and 4,454 slots with 848 singletons, 11,872 singleton gaps, 652 Rust singletons, zero collisions, and zero unknown buckets.",
+      "validation_notes": "The 55-case neutral corpus passes its Draft 2020-12 schema, closed generated-case grammar, exact C-header drift gate, and all 14 stable error-ID coverage checks. Rust passes 50 unit tests, the portable consumer, doctest, rustfmt, Clippy with warnings denied, and direct LLVM coverage at 95.99% production-line coverage; vault-records, vault-pm-format, and vault-pm-application pass 151 downstream tests. C and C++ pass 597 existing-plus-portable checks under strict GCC, Clang, G++, Clang++, and MSVC builds. The C portable consumer also passes Clang AddressSanitizer and UndefinedBehaviorSanitizer. Windows Clang's sanitizer runtime cannot safely unwind the repository's pre-existing C++ exception suite; the unchanged original C++ suite reproduces the same runtime failure, while ordinary strict builds pass on all five compilers. Ruff, MyPy, Bandit, RustSec, capability taxonomy, cross-language fixture, diff, state-graph, and collision gates pass. RustSec reports only the repository's two allowed unmaintained warnings. The late refresh reports 1,299 established identities and 4,455 slots with 849 singletons, 11,886 singleton gaps, 653 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10612 opened from exact implementation head b79cf1b87f after a stable final rebase and push. GitHub reports the PR open, non-draft, and mergeable; required CI checks are queued, so the loop is now monitor-only until they finish. The late inventory refresh classified vault-pm-audit before publication and raised the collision-clean totals to 1,299 identities and 4,455 slots.",
       "notes": "Discovered while auditing the Vault password-manager dependency graph after PR #10521 merged. CBR01 defines deterministic RFC 8949 length-first canonical CBOR, but no closed language-neutral fixture owns exact encodings, rejection classes, stable payload-blind errors, or depth and length bounds. Rust is the only established lane implementation; emerging C and C++ provide independent references. Specify and cross-check the neutral contract and repair the three reference oracles before any established-lane parity claim."
     },
     {
