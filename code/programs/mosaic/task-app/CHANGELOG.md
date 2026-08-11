@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - concrete Rust TaskApp runtime on Compose Desktop
+
+Compose Desktop's strict acceptance lane now keeps ABI conformance on its
+dedicated counter runtime, then separately bundles `task-mosaic-app` into the
+generated TaskApp distributable. CI checks the installed runtime byte-for-byte
+and launches the packaged Linux application under a virtual display without
+`MOSAIC_APP_LIBRARY`, rejecting runtime, required-prop, JVM exception, and error
+output.
+
 ### Added - concrete Rust TaskApp runtime on Flutter
 
 Flutter's strict acceptance lane now bundles `task-mosaic-app` rather than the
