@@ -110,7 +110,7 @@ fn module_from_main(stmts: Vec<Stmt>, extra: &[Feature]) -> Module {
         metadata: Metadata::new(),
         span: s(),
     };
-    let mut feats = vec![Feature::ConsoleIO, 
+    let mut feats = vec![Feature::ConsoleIO,
         Feature::Exceptions,
         Feature::Strings,
         Feature::Sequences,

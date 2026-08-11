@@ -129,7 +129,7 @@ fn demo_module() -> Module {
 
     Module {
         name: "default_params_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings,
             Feature::DynamicTyping,
             Feature::DefaultParams,
         ]),

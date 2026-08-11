@@ -71,7 +71,7 @@ fn demo_module(name: &str, main_stmts: Vec<Stmt>) -> Module {
         // same process (cargo test's default), so a shared name collides on
         // the same temp file path.
         name: name.into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO,
             Feature::Sequences,
             Feature::Strings,
             Feature::Closures,

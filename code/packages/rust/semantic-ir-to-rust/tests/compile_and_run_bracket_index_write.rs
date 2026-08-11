@@ -66,7 +66,7 @@ fn demo_module(name: &str, main_stmts: Vec<Stmt>) -> Module {
         // another's (the exact hazard `compile_and_run_c` hit; see that
         // crate's CHANGELOG).
         name: name.into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO,
             Feature::Sequences,
             Feature::Strings,
             Feature::DynamicTyping,

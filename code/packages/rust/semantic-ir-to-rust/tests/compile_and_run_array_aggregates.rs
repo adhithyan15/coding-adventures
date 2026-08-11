@@ -133,7 +133,7 @@ fn demo_module(main_stmts: Vec<Stmt>, block_fns: Vec<Function>) -> Module {
 
     Module {
         name: "array_aggregates_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO,
             Feature::Sequences,
             Feature::Strings,
             Feature::Closures,

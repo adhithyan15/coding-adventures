@@ -127,7 +127,7 @@ fn numeric_demo() -> Module {
 
     Module {
         name: "numeric_methods_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO,
             Feature::Sequences,
             Feature::Strings,
             Feature::Floats,

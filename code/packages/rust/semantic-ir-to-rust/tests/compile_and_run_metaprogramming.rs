@@ -125,7 +125,7 @@ fn demo_module(main_stmts: Vec<Stmt>, mut fns: Vec<Function>, features: &[Featur
         span: s(),
     };
     fns.insert(0, main);
-    let mut feats = vec![Feature::ConsoleIO, 
+    let mut feats = vec![Feature::ConsoleIO,
         Feature::Sequences,
         Feature::Strings,
         Feature::Symbols,

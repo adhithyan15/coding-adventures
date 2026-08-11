@@ -127,7 +127,7 @@ fn cyclic_module() -> Module {
 
     Module {
         name: "cyclic_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings,
             Feature::Sequences,
             Feature::MutableBindings,
         ]),

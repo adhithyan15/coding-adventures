@@ -171,7 +171,7 @@ fn demo_module() -> Module {
 
     Module {
         name: "seq_maps_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO,
             Feature::Sequences,
             Feature::Maps,
             Feature::Loops,

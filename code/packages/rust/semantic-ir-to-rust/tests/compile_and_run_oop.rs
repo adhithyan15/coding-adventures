@@ -142,7 +142,7 @@ fn oop_module(mut functions: Vec<Function>, main_stmts: Vec<Stmt>, features: &[F
     //   • MutableBindings — an `Assign` (the `@ivar =` write) observes it.
     // The validator requires the manifest to declare EXACTLY what the module
     // uses, so we declare this whole base set (each test adds nothing more).
-    let mut feats = vec![Feature::ConsoleIO, 
+    let mut feats = vec![Feature::ConsoleIO,
         Feature::Classes,
         Feature::InstanceVars,
         Feature::Closures,

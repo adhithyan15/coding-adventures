@@ -141,7 +141,7 @@ fn demo_module(main_stmts: Vec<Stmt>, block_fns: Vec<Function>) -> Module {
 
     Module {
         name: "hash_catalog_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO,
             Feature::Maps,
             Feature::Sequences,
             Feature::Strings,

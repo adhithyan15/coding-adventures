@@ -160,7 +160,7 @@ fn mixin_module(mut functions: Vec<Function>, main_stmts: Vec<Stmt>, extra: &[Fe
         span: s(),
     };
     functions.push(main_fn);
-    let mut feats = vec![Feature::ConsoleIO, 
+    let mut feats = vec![Feature::ConsoleIO,
         Feature::Classes,
         Feature::Modules,
         Feature::InstanceVars,
