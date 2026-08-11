@@ -167,7 +167,9 @@ nesting into a clean error rather than a native stack overflow.
 | nested `def` (returned / referenced)   | lifted `Function` + `MakeClosure` with captures       | `Closures`             |
 | `f(args)` — `f` a known function       | `DirectCall { fn_name f, args }`                      | —                      |
 | `f(args)` — `f` a closure value        | `IndirectCall { target VarRef, args }`                | `Closures`             |
-| `print(x)`, `len(x)`, `range(n)`       | `BuiltinCall("print" / "len" / "range", …)`           | —                      |
+| `print(x)`                             | SIR28 §2 `__sys_write__(stdout, "once", false, x)`    | `ConsoleIO`, `Strings` |
+| `len(x)`                               | `SeqLen { seq: x }`                                   | `Sequences`            |
+| `range(n)`                             | `BuiltinCall("range", …)`                             | —                      |
 | `is_even`/`is_odd` cross-calling       | (call-graph cycle of length ≥ 2)                      | `MutualRecursion`      |
 
 † a `def`/`lambda` with parameters declares `DynamicTyping` (the subset
@@ -381,8 +383,9 @@ assignment; short-circuit nodes; `if` / `elif` / `else`, `while`,
 - **early-return rejection** — a `return` followed by more statements, or
   nested in an `if` branch, errors with a position;
 - **calls** — `DirectCall` (incl. forward references resolved by the
-  first pass), `BuiltinCall` (`print` / `len` / `range`), and
-  `IndirectCall` through a closure value;
+  first pass), `BuiltinCall("range", ...)`, `print(x)` → SIR28's
+  `__sys_write__`, `len(x)` → `SeqLen`, and `IndirectCall` through a
+  closure value;
 - **closures** — `lambda` → `MakeClosure` + synthesised function; capture
   of an enclosing local; non-capture of globals / functions; nested-`def`
   capture of an enclosing param with a returned closure;

@@ -7,6 +7,36 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.10.0 — SIR28 Slice 5: `print(...)` lowers to `__sys_write__`
+
+Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
+family — see `code/specs/SIR28-syscall-primitives.md`). All 7 backends
+already implement it (Slice 3); `ruby-to-semantic-ir` migrated first
+(Slice 4); this crate is the second frontend to emit it.
+
+**Behavior change**: `print(a, b)` no longer lowers to bare
+`BuiltinCall("print", args)`. It now lowers to
+`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("once"),
+BoolLit(false), a, b])` — matching real Python's `print()`: every value
+space-joined, one trailing newline (SIR28 §2.1's table). `Feature::ConsoleIO`
+is declared whenever `print` is used. `range`/`len` are unaffected — only
+`print` routes through the new envelope.
+
+This closes a pre-existing bug for the Python-to-Python-backend path
+specifically, but more importantly it makes EVERY backend agree on
+`print`'s newline semantics for Python-sourced programs, the same
+consistency fix Slice 4 delivered for Ruby-sourced programs.
+
+Also fixes a latent gap surfaced by security review while touching this
+call site: the `print` (and prior generic `BUILTIN_CALLS`) lowering never
+set `Effect::MayPrint` on the emitted `BuiltinCall`, unlike every other
+frontend's print/puts/console.log lowering. Now sets it, matching
+`ruby-to-semantic-ir`'s `print`/`puts` and `javascript-to-semantic-ir`'s
+`console.log`, so effect-consulting backend passes (e.g. pure-call
+elimination) can't drop a `print` call.
+
+`python-to-semantic-ir` 0.9.0 -> 0.10.0.
+
 ## 0.9.0 — OOP declaration surface (SIR25 §2)
 
 Extends the frontend from method-*dispatch* (0.8.0's C2) to the full class

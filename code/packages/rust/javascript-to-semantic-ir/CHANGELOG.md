@@ -7,6 +7,29 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.9.0 — SIR28 Slice 5: `console.log(...)` lowers to `__sys_write__`
+
+Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
+family — see `code/specs/SIR28-syscall-primitives.md`). All 7 backends
+already implement it (Slice 3); `ruby-to-semantic-ir` and
+`python-to-semantic-ir` migrated first (Slices 4-5); this crate closes
+out Slice 5.
+
+**Behavior change**: `console.log(a, b)` no longer lowers to bare
+`BuiltinCall("print", args)`. It now lowers to
+`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("once"),
+BoolLit(false), a, b])` — matching real JS's `console.log`: every value
+space-joined, one trailing newline (SIR28 §2.1's table). `Feature::ConsoleIO`
+is declared whenever `console.log` is used. The dedicated `console.log`
+detection (kept out of the generic `__method__` dispatch path) is
+unchanged — only the envelope it lowers to is new.
+
+This makes every backend agree on `console.log`'s newline semantics for
+JS-sourced programs, the same consistency fix Slices 3-4 delivered for
+Ruby- and Python-sourced programs.
+
+`javascript-to-semantic-ir` 0.8.0 -> 0.9.0.
+
 ## 0.8.0 — OOP declaration surface (SIR25 §2)
 
 Extends the frontend from member-*dispatch* (0.7.0's C3) to the full

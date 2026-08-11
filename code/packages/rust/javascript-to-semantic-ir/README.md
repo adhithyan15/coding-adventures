@@ -70,7 +70,7 @@ M5 + C3 + OOP):
 | nested `function inner(){…}` | lifted `Function` + local `MakeClosure` binding |
 | `f(1, 2)` (known function)  | `DirectCall { fn_name, args }`                |
 | `g(3)` (closure value)      | `IndirectCall { target, args }`               |
-| `console.log(x)`            | `BuiltinCall("print", [x])`                   |
+| `console.log(x)`            | SIR28 §2 `__sys_write__(stdout, "once", false, x)` |
 | `[1, 2, 3]`, `[]`           | `SeqLit { items }`                            |
 | `{ a: 1, "k": v }`, `{}`    | `MapLit { entries }` (id/string keys → string) |
 | `xs.length`                 | `SeqLen { seq }`                              |
@@ -186,8 +186,8 @@ own OOP slices used.
   inside the body) with matching `CaptureValue`s on the `MakeClosure`.
   Captures thread transitively through nested closures.
 - **Calls** dispatch on the callee: a known module `function` →
-  `DirectCall`; `console.log(x)` → `BuiltinCall("print", …)`; any other
-  identifier resolving to a closure value → `IndirectCall`. A call may omit
+  `DirectCall`; `console.log(x)` → SIR28's `__sys_write__` primitive; any
+  other identifier resolving to a closure value → `IndirectCall`. A call may omit
   trailing defaulted arguments (`f(5)` against `function f(a, b = a + 1)`):
   it lowers to a **partial** `DirectCall` carrying only the present args,
   with the default filled at the call site (the validator permits this).
