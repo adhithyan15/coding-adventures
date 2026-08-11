@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C40-sintesis-describir
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1775
-chapter: 123
+chapter: 129
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — fourteen chapters of words, and the first time you are asked to say something with them

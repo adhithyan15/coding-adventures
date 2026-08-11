@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C34-entender
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1790
-chapter: 125
+chapter: 131
 type: word
 headword: entender
 gloss: to understand — literally "to stretch toward"; the second e→ie stem-changer

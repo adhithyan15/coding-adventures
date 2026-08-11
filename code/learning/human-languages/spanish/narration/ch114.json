@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 114,
-  "title": "The Seasons",
+  "title": "Synthesis --- Asking Without Sounding Rude",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5bbdf0907251b140",
+  "sourceHash": "fnv1a64:9417dafeb65a1ada",
   "lessons": [
     {
-      "id": "ES-C25-las-estaciones",
-      "sequence": 1600,
-      "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
-      "headword": "la primavera, el verano, el otoño, el invierno",
-      "romanization": "la primavera, el verano, el otoño, el invierno",
-      "gloss": "the four seasons — three straightforward, and one whose MEANING quietly shifted from \"spring\" to \"summer\"",
+      "id": "ES-C50-sintesis-pedir-bien",
+      "sequence": 1392,
+      "title": "Synthesis — asking without sounding rude",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a command in Spanish is not the blunt thing a bare English imperative is, and knowing why keeps you from sounding rude by accident",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68e050f3074cc3da",
+      "sourceHash": "fnv1a64:75e46a4ca4263ddf",
       "notice": null,
       "blocks": [
         {
@@ -35,41 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another."
+              "text": "Say \"eat\" to a friend. (Come.) In English, saying \"Eat.\" to somebody lands hard. You are about to learn that it does not land the same way here."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: three straightforward seasons",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "la primavera (\"spring\") from Latin prīma vēra, literally \"first spring\" (vēr, \"spring,\" + prīma, \"first\"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)"
+              "text": "English has almost no polite imperative. Eat. Sit. Bare, they sound like orders to a dog, so English speakers pad them: could you, would you mind."
             },
             {
               "kind": "speech",
-              "text": "el otoño (\"autumn\") from Latin autumnus — the same root behind French automne and English autumn itself."
+              "text": "Spanish needs no padding, because it spends its politeness elsewhere — on the choice of person."
             },
             {
               "kind": "speech",
-              "text": "el invierno (\"winter\") from Latin hībernum (tempus), \"the wintry [season]\" — the same root as French hiver and English hibernate, \"to spend the winter.\""
+              "text": "Come. — to a friend. Perfectly warm. Coma, por favor. — to a stranger. Perfectly polite."
+            },
+            {
+              "kind": "speech",
+              "text": "The tú command is not blunt; it is intimate. Using it says we are on those terms, which between friends is friendly rather than bossy. The usted command is not cold; it is respectful, for the same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "So an English speaker's mistake here is not tone. It is picking the wrong person: usted with a friend sounds stiff, tú with a stranger presumptuous. The politeness lives in the pronoun you chose before the command left your mouth. Por favor helps and costs nothing, but here it is a garnish rather than the structure."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: verano",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "You might expect verano (\"summer\") to come from Latin aestas, \"heat\" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), \"of spring\" — built on the very same vēr, \"spring,\" behind primavera."
+              "text": "The same four things said twice — once to a friend, once to a stranger."
             },
             {
               "kind": "speech",
-              "text": "So how did a word meaning \"spring-ish\" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera (\"first spring\") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a \"vernal\" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, \"spring,\" ended up naming two different seasons."
+              "text": "To a friend: Ven. Come. No hables. Ten. To a stranger: Venga. Coma, por favor. No hable. Tenga."
+            },
+            {
+              "kind": "speech",
+              "text": "Read both aloud. The first is not ruder; it is closer. Say the second to somebody you have known for years and you have not been polite — you have put a small distance between you, and they will hear it."
             }
           ]
         },
@@ -87,38 +99,105 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera, verano, otoño, invierno\" — the four seasons",
+              "instruction": "\"Ven\" then \"Venga\" — hear the distance, not the rudeness",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera, verano, otoño, invierno\" — the four seasons]"
+              "source": "[YOU SAY: \"Ven\" then \"Venga\" — hear the distance, not the rudeness]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera = prima vera, first spring\"",
+              "instruction": "the friend row, then the stranger row, straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera = prima vera, first spring\"]"
+              "source": "[YOU SAY: the friend row, then the stranger row, straight through]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"invierno hibernate\"",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-friend",
+              "prompt": "Tell a friend to come.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+                "ES-LEX-VENIR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"invierno ~ hibernate\"]"
+              "acceptedResponses": [
+                "ven",
+                "¡ven!"
+              ],
+              "feedback": {
+                "correct": "Warm, not blunt.",
+                "incorrect": "Ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-stranger",
+              "prompt": "Ask a stranger to eat, politely.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-USTED",
+                "ES-LEX-COMER",
+                "ES-LEX-POR-FAVOR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "coma, por favor",
+                "coma por favor"
+              ],
+              "feedback": {
+                "correct": "Coma, por favor.",
+                "incorrect": "Coma, por favor — the usted form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-where",
+              "prompt": "In Spanish, where does the politeness of a command mostly live?",
+              "assesses": [
+                "ES-CULTURE-COMMAND-REGISTER",
+                "ES-LEX-TU",
+                "ES-LEX-USTED"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "in the choice of tu or usted",
+                "in which person you chose",
+                "in the pronoun"
+              ],
+              "feedback": {
+                "correct": "Chosen before the command ever left your mouth.",
+                "incorrect": "In whether you chose tu or usted — not in extra words."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-mistake",
+              "prompt": "You use usted commands with an old friend. What have you done?",
+              "assesses": [
+                "ES-CULTURE-COMMAND-REGISTER",
+                "ES-GRAMMAR-COMMAND-USTED"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "put distance between you",
+                "sounded stiff",
+                "been cold rather than polite"
+              ],
+              "feedback": {
+                "correct": "Politeness in the wrong place reads as distance.",
+                "incorrect": "Not been extra polite — you have opened a small distance, and they will hear it."
+              }
             }
           ]
         },
@@ -135,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does primavera literally mean? (\"First spring\" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, \"of spring,\" the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)"
+              "text": "Is Come rude to a friend? (No — it is close.) Where does the politeness of a Spanish command live? (In the person you chose.) And what does usted with an old friend sound like? (Distance, not courtesy.)"
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 132,
-  "title": "Ayudar — the Same Word as Aid",
+  "title": "Leer — Reading Is Gathering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1b5b07708bdd8564",
+  "sourceHash": "fnv1a64:6b7c9977fff848d8",
   "lessons": [
     {
-      "id": "ES-C35-ayudar",
-      "sequence": 1840,
-      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
-      "headword": "ayudar",
-      "romanization": "ayudar",
-      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
+      "id": "ES-C34-leer",
+      "sequence": 1800,
+      "title": "leer — \"to read\", and before that, \"to gather\"",
+      "headword": "leer",
+      "romanization": "leer",
+      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b686d7e938ff927b",
+      "sourceHash": "fnv1a64:3d2aea2f40992dc6",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
+              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
             }
           ]
         },
@@ -46,77 +46,74 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-a — a clean, open a: a-yoo-DAR."
+              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one tap at the end, not an English r."
+              "text": "leo is likewise two beats, LE-o."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: ayudar",
+          "title": "The word, taken apart: leer",
           "segments": [
             {
               "kind": "speech",
-              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
+              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
             },
             {
               "kind": "speech",
-              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
+              "text": "That gathering root runs through an enormous amount of English:"
             },
             {
               "kind": "speech",
-              "text": "aide, and aide-de-camp, an officer who helps."
+              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
             },
             {
               "kind": "speech",
-              "text": "adjutant — the officer whose whole job is assisting."
+              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
             },
             {
               "kind": "speech",
-              "text": "adjuvant — a substance that helps another drug work."
+              "text": "diligent and elegant, both of which meant \"picking carefully\"."
             },
             {
               "kind": "speech",
-              "text": "coadjutor — one who helps alongside."
-            },
-            {
-              "kind": "speech",
-              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
+              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
+          "title": "Grammar Lens: a plain -er verb, with a mouthful",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nothing breaks; the endings are the ones you started with:"
+              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
             },
             {
               "kind": "table",
               "headers": [
                 "person",
                 "form",
-                "meaning"
+                "said"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 5,
               "utterances": [
-                "person: yo. form: ayudo. meaning: I help.",
-                "person: tú. form: ayudas. meaning: you help.",
-                "person: nosotros. form: ayudamos. meaning: we help.",
-                "person: ellos/ustedes. form: ayudan. meaning: they help."
+                "person: yo. form: leo. said: LE-o.",
+                "person: tú. form: lees. said: LE-es.",
+                "person: él/ella/usted. form: lee. said: LE-e.",
+                "person: nosotros. form: leemos. said: le-E-mos.",
+                "person: ellos/ustedes. form: leen. said: LE-en."
               ]
             },
             {
               "kind": "speech",
-              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
+              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
             }
           ]
         },
@@ -134,38 +131,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
+              "instruction": "\"leer\" — le-ER, two beats",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
+              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Me ayudas?\" — will you help me?",
+              "instruction": "\"Leo un libro\" — I read a book",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
+              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
+              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
+              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
+              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
+              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
             }
           ]
         },
@@ -182,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
+              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
             }
           ]
         }
