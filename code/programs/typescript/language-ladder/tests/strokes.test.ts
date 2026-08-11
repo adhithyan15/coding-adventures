@@ -33,6 +33,7 @@ const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
+const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
 
@@ -380,6 +381,17 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
     expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(0);
     expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(0);
+  });
+
+  it("Urdu independent ں reuses ن's below-baseline bowl without a dot or lift", () => {
+    expect(URDU_GHUNNA.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_GHUNNA)).toBe(0);
+    expect(URDU_GHUNNA.strokes).toHaveLength(1);
+    expect(URDU_GHUNNA.strokes[0].segments).toHaveLength(1);
+    const bowl = URDU_GHUNNA.strokes[0].segments[0].path;
+    expect(bowl).toEqual(URDU_NUN.strokes[0].segments[0].path);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(0);
   });
 
   it("Urdu independent ہ closes its counterclockwise teardrop without lifting", () => {
@@ -768,6 +780,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one uninterrupted dotless S-shaped body.*upper right.*descend through the upper curve.*sweep left around the below-baseline bowl.*rising tip.*without lifting.*independent and final chhoṭī ye.*ī sound.*initial and medial.*be-series tooth.*two dots below.*do not belong to the independent form.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ں traces to Zer o Zabar's dotless nūn animations", () => {
+    const src = URDU_GHUNNA.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ں.*calligraphic and handwriting animations.*Nasalization with nūn-e ġhunna instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted right-to-left bowl.*below the baseline.*without lifting.*final and independent nūn-e ġhunna.*nūn without any dot.*initial and medial.*identical to regular nūn.*sukūn.*semicircular diacritic.*U\+06BA.*U\+0646.*body contour.*dot removed.*Nastaliq/i,
     );
   });
 

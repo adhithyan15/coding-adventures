@@ -727,6 +727,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: urduAlphabetSource("ن"),
   },
+  [ductusKey("urdu-nastaliq", "ں")]: {
+    script: "urdu-nastaliq",
+    glyph: "ں",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the independent dotless bowl right to left below the baseline",
+            path: [
+              { x: 495, y: 210 },
+              { x: 475, y: 160 },
+              { x: 480, y: 100 },
+              { x: 500, y: 40 },
+              { x: 510, y: -20 },
+              { x: 485, y: -80 },
+              { x: 430, y: -140 },
+              { x: 360, y: -190 },
+              { x: 280, y: -220 },
+              { x: 210, y: -215 },
+              { x: 150, y: -170 },
+              { x: 105, y: -110 },
+              { x: 90, y: -60 },
+              { x: 95, y: 0 },
+              { x: 105, y: 45 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ں"),
+  },
   [ductusKey("urdu-nastaliq", "ہ")]: {
     script: "urdu-nastaliq",
     glyph: "ہ",
