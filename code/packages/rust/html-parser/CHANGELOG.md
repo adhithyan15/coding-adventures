@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- `img` start tags processed directly in table structure now report the
+  required parse error and foster before the table, while preserving the
+  existing center/font reconstruction behavior.
 - `li` start tags processed in table foster-parenting state now report the
   required parse error while preserving repeated-list-item recovery and DOM
   placement before the table.

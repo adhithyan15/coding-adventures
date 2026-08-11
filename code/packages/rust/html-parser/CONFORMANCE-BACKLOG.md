@@ -124,6 +124,10 @@ Prioritized work items:
    repeated start whose parent is already fostered before the table, matching
    WPT `tests8.dat` while leaving list items outside tables and inside cells
    quiet.
+   `img` start tags processed directly in table structure now report the
+   general in-table parse error and foster before the table, including the
+   specialized center/font reconstruction path evidenced by WPT
+   `tricky01.dat`, while leaving images outside tables and inside cells quiet.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
