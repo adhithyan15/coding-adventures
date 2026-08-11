@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.0
+
+- Tokenize Mermaid state `:::` inline class separators from the pinned grammar.
+
 ## 0.29.0
 
 - Recognize Mermaid state `classDef` and `class` statements in the portable lexer grammar.

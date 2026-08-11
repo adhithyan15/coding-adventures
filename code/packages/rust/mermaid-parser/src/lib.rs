@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.50.0";
+pub const VERSION: &str = "0.51.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1041,9 +1041,9 @@ fn parse_data_list(s: &str) -> Vec<f64> {
 
 /// Parse the graph-compatible core of Mermaid state diagrams.
 ///
-/// This first slice covers state declarations, aliases, transitions, labels,
-/// directions, and start/end edge states. Composite states, notes, choices,
-/// forks, joins, and styling remain explicit compatibility gaps.
+/// The supported state slice lowers flat declarations, transitions,
+/// pseudostates, and styles into graph IR. Composite states and notes remain
+/// explicit compatibility gaps.
 pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_state_ast(&preprocessed.source)?;
@@ -1093,15 +1093,15 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
                 }
             }
-            if let Some(class_style) = class_styles.get(&class_name) {
-                for id in &ids {
-                    merge_state_style(
-                        nodes[node_indices[id]].style.get_or_insert_default(),
-                        class_style,
-                    );
-                }
-            } else {
-                pending_classes.push((ids, class_name));
+            for id in ids {
+                apply_or_defer_state_class(
+                    &id,
+                    class_name.clone(),
+                    &mut nodes,
+                    &node_indices,
+                    &class_styles,
+                    &mut pending_classes,
+                );
             }
         } else if cursor.current().value.eq_ignore_ascii_case("style") {
             cursor.advance();
@@ -1157,27 +1157,38 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             };
             upsert_state_node(&mut nodes, &mut node_indices, id, label);
         } else {
-            let from = if token_name(cursor.current()) == "EDGE_STATE" {
-                take_state_endpoint(
-                    &mut cursor,
-                    true,
-                    &mut pseudo_index,
+            let from_is_edge_state = token_name(cursor.current()) == "EDGE_STATE";
+            let from = take_state_endpoint(
+                &mut cursor,
+                true,
+                &mut pseudo_index,
+                &mut nodes,
+                &mut node_indices,
+            )?;
+            let from_class = take_state_class_suffix(&mut cursor)?;
+            if !from_is_edge_state && from_class.is_none() && cursor.consume_if("COLON").is_some() {
+                let label = take_state_text(&mut cursor);
+                upsert_state_node(&mut nodes, &mut node_indices, from, label);
+                cursor.skip_terminators();
+                continue;
+            }
+            if let Some(class_name) = from_class {
+                apply_or_defer_state_class(
+                    &from,
+                    class_name,
                     &mut nodes,
-                    &mut node_indices,
-                )?
-            } else {
-                let id = take_state_ref(&mut cursor)?;
-                if cursor.consume_if("COLON").is_some() {
-                    let label = take_state_text(&mut cursor);
-                    upsert_state_node(&mut nodes, &mut node_indices, id, label);
+                    &node_indices,
+                    &class_styles,
+                    &mut pending_classes,
+                );
+                if matches!(
+                    token_name(cursor.current()),
+                    "NEWLINE" | "SEMICOLON" | "EOF"
+                ) {
                     cursor.skip_terminators();
                     continue;
                 }
-                if !node_indices.contains_key(&id) {
-                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
-                }
-                id
-            };
+            }
             cursor
                 .consume_if("ARROW")
                 .ok_or_else(|| token_error(cursor.current(), "expected state transition arrow"))?;
@@ -1188,6 +1199,16 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 &mut nodes,
                 &mut node_indices,
             )?;
+            if let Some(class_name) = take_state_class_suffix(&mut cursor)? {
+                apply_or_defer_state_class(
+                    &to,
+                    class_name,
+                    &mut nodes,
+                    &node_indices,
+                    &class_styles,
+                    &mut pending_classes,
+                );
+            }
             let label = cursor
                 .consume_if("COLON")
                 .map(|_| DiagramLabel::new(take_state_text(&mut cursor)));
@@ -1230,6 +1251,14 @@ fn take_state_ref(cursor: &mut TokenCursor) -> Result<String, ParseError> {
         Ok(cursor.advance().value.clone())
     } else {
         Err(token_error(cursor.current(), "expected state identifier"))
+    }
+}
+
+fn take_state_class_suffix(cursor: &mut TokenCursor) -> Result<Option<String>, ParseError> {
+    if cursor.consume_if("STYLE_SEPARATOR").is_some() {
+        take_state_ref(cursor).map(Some)
+    } else {
+        Ok(None)
     }
 }
 
@@ -1337,6 +1366,24 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     }
     if source.text_color.is_some() {
         target.text_color.clone_from(&source.text_color);
+    }
+}
+
+fn apply_or_defer_state_class(
+    id: &str,
+    class_name: String,
+    nodes: &mut [GraphNode],
+    node_indices: &HashMap<String, usize>,
+    class_styles: &HashMap<String, DiagramStyle>,
+    pending_classes: &mut Vec<(Vec<String>, String)>,
+) {
+    if let Some(class_style) = class_styles.get(&class_name) {
+        merge_state_style(
+            nodes[node_indices[id]].style.get_or_insert_default(),
+            class_style,
+        );
+    } else {
+        pending_classes.push((vec![id.to_string()], class_name));
     }
 }
 
@@ -4041,6 +4088,44 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_resolves_inline_class_shorthand() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef quiet fill:#f8fafc,stroke:#64748b\nclassDef active fill:#dcfce7,color:#14532d\n[*]:::quiet --> Still:::quiet\nStill --> Moving:::active\nCrash:::active\n",
+        )
+        .expect("state inline class shorthand should parse");
+
+        let still = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Still")
+            .unwrap();
+        assert_eq!(
+            still.style.as_ref().unwrap().fill.as_deref(),
+            Some("#f8fafc")
+        );
+        for id in ["Moving", "Crash"] {
+            let style = diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == id)
+                .unwrap()
+                .style
+                .as_ref()
+                .unwrap();
+            assert_eq!(style.fill.as_deref(), Some("#dcfce7"));
+            assert_eq!(style.text_color.as_deref(), Some("#14532d"));
+        }
+        assert!(diagram.nodes.iter().any(|node| {
+            node.shape == Some(DiagramShape::Ellipse)
+                && node
+                    .style
+                    .as_ref()
+                    .and_then(|style| style.stroke.as_deref())
+                    == Some("#64748b")
+        }));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4811,7 +4896,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.50.0");
+        assert_eq!(crate::VERSION, "0.51.0");
     }
 
     #[test]
