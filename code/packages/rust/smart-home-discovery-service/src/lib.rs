@@ -8,14 +8,17 @@ use std::fmt;
 use actor::{ActorError, ActorResult, ActorSystem, Message};
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
+use smart_home_controller_runtime::{
+    ControllerTransactionError, SharedSmartHomeRuntime, SmartHomeControllerRuntime,
+};
 use smart_home_core::{IntegrationId, Metadata};
 use smart_home_discovery::{
     DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRunStatus,
     MdnsWorkerScanExecutor,
 };
 use smart_home_runtime::{
-    DiscoverySupervisorRunReport, DiscoveryWorkerQuery, MdnsDiscoveryRunAdapter, RuntimeError,
-    ScheduledDiscoveryWorker, SmartHomeRuntime, WorkerStatus,
+    DiscoverySupervisorRunReport, MdnsDiscoveryRunAdapter, RuntimeError, ScheduledDiscoveryWorker,
+    WorkerStatus,
 };
 use storage_core::{
     StorageBackend, StorageError, StorageListOptions, StoragePutInput, StorageRecord,
@@ -34,6 +37,7 @@ const SCHEMA_VERSION: u64 = 1;
 pub enum DiscoveryServiceError {
     Storage(StorageError),
     Runtime(RuntimeError),
+    Controller(ControllerTransactionError<RuntimeError>),
     InvalidData(String),
 }
 
@@ -42,6 +46,7 @@ impl fmt::Display for DiscoveryServiceError {
         match self {
             Self::Storage(error) => write!(f, "discovery service storage failed: {error}"),
             Self::Runtime(error) => write!(f, "discovery service runtime failed: {error}"),
+            Self::Controller(error) => write!(f, "discovery service controller failed: {error}"),
             Self::InvalidData(message) => write!(f, "invalid discovery service data: {message}"),
         }
     }
@@ -58,6 +63,12 @@ impl From<StorageError> for DiscoveryServiceError {
 impl From<RuntimeError> for DiscoveryServiceError {
     fn from(error: RuntimeError) -> Self {
         Self::Runtime(error)
+    }
+}
+
+impl From<ControllerTransactionError<RuntimeError>> for DiscoveryServiceError {
+    fn from(error: ControllerTransactionError<RuntimeError>) -> Self {
+        Self::Controller(error)
     }
 }
 
@@ -120,9 +131,9 @@ pub struct DiscoveryServiceSnapshot {
     pub last_error: Option<String>,
 }
 
-pub struct DiscoveryServiceActorState<B, E, A> {
-    runtime: SmartHomeRuntime,
-    backend: B,
+pub struct DiscoveryServiceActorState<S, C, E, A> {
+    controller: SmartHomeControllerRuntime<C>,
+    service_backend: S,
     executor: E,
     adapter: A,
     ttl_ms: u64,
@@ -130,38 +141,47 @@ pub struct DiscoveryServiceActorState<B, E, A> {
     last_report: Option<DiscoverySupervisorRunReport>,
 }
 
-impl<B, E, A> DiscoveryServiceActorState<B, E, A>
+impl<S, C, E, A> DiscoveryServiceActorState<S, C, E, A>
 where
-    B: StorageBackend,
+    S: StorageBackend,
+    C: StorageBackend,
     E: MdnsWorkerScanExecutor,
     A: MdnsDiscoveryRunAdapter,
 {
     pub fn open(
-        backend: B,
+        controller: SmartHomeControllerRuntime<C>,
+        service_backend: S,
         executor: E,
         adapter: A,
         ttl_ms: u64,
+        opened_at_ms: u64,
     ) -> Result<Self, DiscoveryServiceError> {
         if ttl_ms == 0 {
             return Err(invalid_data("ttl_ms must be greater than zero"));
         }
-        backend.initialize()?;
-        let snapshot = load_service_snapshot(&backend)?.unwrap_or_default();
-        let mut state = Self {
-            runtime: SmartHomeRuntime::new(),
-            backend,
+        service_backend.initialize()?;
+        let snapshot = load_service_snapshot(&service_backend)?.unwrap_or_default();
+        let state = Self {
+            controller,
+            service_backend,
             executor,
             adapter,
             ttl_ms,
             snapshot,
             last_report: None,
         };
-        state.restore_schedules()?;
+        state.import_legacy_schedules(opened_at_ms)?;
         Ok(state)
     }
 
-    pub fn runtime(&self) -> &SmartHomeRuntime {
-        &self.runtime
+    /// Clone the central runtime handle used by every controller adapter.
+    pub fn runtime_handle(&self) -> SharedSmartHomeRuntime {
+        self.controller.runtime_handle()
+    }
+
+    /// Borrow the central controller supplied during service composition.
+    pub fn controller(&self) -> &SmartHomeControllerRuntime<C> {
+        &self.controller
     }
 
     pub fn snapshot(&self) -> &DiscoveryServiceSnapshot {
@@ -175,6 +195,7 @@ where
     pub fn register_worker(
         &mut self,
         worker: ScheduledDiscoveryWorker,
+        saved_at_ms: u64,
     ) -> Result<Option<ScheduledDiscoveryWorker>, DiscoveryServiceError> {
         if worker.kind != DiscoveryWorkerKind::MdnsScan
             || !worker.sources.contains(&DiscoverySource::Mdns)
@@ -183,9 +204,12 @@ where
                 "discovery service workers must be scheduled mDNS scans",
             ));
         }
-        let previous = self.runtime.register_discovery_worker_schedule(worker)?;
-        self.persist_schedules()?;
-        Ok(previous)
+        Ok(self
+            .controller
+            .transaction(saved_at_ms, move |runtime, _| {
+                runtime.register_discovery_worker_schedule(worker)
+            })?
+            .value)
     }
 
     pub fn tick(
@@ -196,22 +220,28 @@ where
         self.snapshot.last_tick_started_at_ms = Some(tick.started_at_ms);
         self.snapshot.last_tick_completed_at_ms = Some(tick.completed_at_ms);
 
-        let result = self.runtime.run_due_mdns_discovery_workers_with_executor(
-            tick.started_at_ms,
-            tick.completed_at_ms,
-            self.ttl_ms,
-            &mut self.executor,
-            &mut self.adapter,
-        );
+        let controller = self.controller.clone();
+        let ttl_ms = self.ttl_ms;
+        let executor = &mut self.executor;
+        let adapter = &mut self.adapter;
+        let result = controller.transaction(tick.completed_at_ms, |runtime, _| {
+            runtime.run_due_mdns_discovery_workers_with_executor(
+                tick.started_at_ms,
+                tick.completed_at_ms,
+                ttl_ms,
+                executor,
+                adapter,
+            )
+        });
 
         match result {
-            Ok(report) => {
+            Ok(commit) => {
+                let report = commit.value;
                 self.snapshot.last_planned_instruction_count = report.planned_instruction_count;
                 self.snapshot.last_mdns_request_count = report.mdns_request_count;
                 self.snapshot.last_recorded_run_count = report.recorded_run_count();
                 self.snapshot.last_failed_run_count = report.failed_run_count();
                 self.snapshot.last_error = None;
-                self.persist_schedules()?;
                 self.persist_run_report(&report)?;
                 self.persist_service_snapshot()?;
                 self.last_report = Some(report);
@@ -222,7 +252,6 @@ where
             }
             Err(error) => {
                 self.snapshot.last_error = Some(error.to_string());
-                self.persist_schedules()?;
                 self.persist_service_snapshot()?;
                 Err(error.into())
             }
@@ -231,7 +260,7 @@ where
 
     pub fn persisted_run_records(&self) -> Result<Vec<StorageRecord>, DiscoveryServiceError> {
         Ok(self
-            .backend
+            .service_backend
             .list(
                 RUN_NAMESPACE,
                 StorageListOptions {
@@ -242,34 +271,48 @@ where
             .records)
     }
 
-    fn restore_schedules(&mut self) -> Result<(), DiscoveryServiceError> {
-        let page = self.backend.list(
+    fn import_legacy_schedules(&self, opened_at_ms: u64) -> Result<(), DiscoveryServiceError> {
+        let page = self.service_backend.list(
             SCHEDULE_NAMESPACE,
             StorageListOptions {
                 recursive: true,
                 ..StorageListOptions::default()
             },
         )?;
-        for record in page.records {
-            let worker = decode_worker(&record.body)?;
-            self.runtime.register_discovery_worker_schedule(worker)?;
+        let workers = page
+            .records
+            .iter()
+            .map(|record| decode_worker(&record.body))
+            .collect::<Result<Vec<_>, _>>()?;
+        let runtime_handle = self.controller.runtime_handle();
+        let missing_workers = {
+            let runtime = runtime_handle
+                .lock()
+                .map_err(|_| invalid_data("central smart-home runtime mutex was poisoned"))?;
+            workers
+                .into_iter()
+                .filter(|worker| {
+                    runtime
+                        .discovery_worker_schedule(&worker.worker_id)
+                        .is_none()
+                })
+                .collect::<Vec<_>>()
+        };
+        if missing_workers.is_empty() {
+            return Ok(());
         }
-        Ok(())
-    }
-
-    fn persist_schedules(&self) -> Result<(), DiscoveryServiceError> {
-        let workers = self
-            .runtime
-            .query_discovery_worker_schedules(&DiscoveryWorkerQuery::new());
-        for worker in workers {
-            self.backend.put(StoragePutInput::new(
-                SCHEDULE_NAMESPACE,
-                worker.worker_id.as_str(),
-                JSON_CONTENT_TYPE,
-                schema_metadata(),
-                encode_json(&encode_worker(worker))?,
-            )?)?;
-        }
+        self.controller
+            .transaction(opened_at_ms, move |runtime, _| {
+                for worker in missing_workers {
+                    if runtime
+                        .discovery_worker_schedule(&worker.worker_id)
+                        .is_none()
+                    {
+                        runtime.register_discovery_worker_schedule(worker)?;
+                    }
+                }
+                Ok(())
+            })?;
         Ok(())
     }
 
@@ -281,7 +324,7 @@ where
             "{:020}-{:020}",
             report.completed_at_ms, self.snapshot.tick_count
         );
-        self.backend.put(StoragePutInput::new(
+        self.service_backend.put(StoragePutInput::new(
             RUN_NAMESPACE,
             key,
             JSON_CONTENT_TYPE,
@@ -292,7 +335,7 @@ where
     }
 
     fn persist_service_snapshot(&self) -> Result<(), DiscoveryServiceError> {
-        persist_service_snapshot(&self.backend, &self.snapshot)
+        persist_service_snapshot(&self.service_backend, &self.snapshot)
     }
 
     fn record_message_error(&mut self, error: &DiscoveryServiceError) {
@@ -301,13 +344,14 @@ where
     }
 }
 
-pub fn install_discovery_service_actor<B, E, A>(
+pub fn install_discovery_service_actor<S, C, E, A>(
     system: &mut ActorSystem,
     actor_id: &str,
-    state: DiscoveryServiceActorState<B, E, A>,
+    state: DiscoveryServiceActorState<S, C, E, A>,
 ) -> Result<String, ActorError>
 where
-    B: StorageBackend + 'static,
+    S: StorageBackend + 'static,
+    C: StorageBackend + 'static,
     E: MdnsWorkerScanExecutor + 'static,
     A: MdnsDiscoveryRunAdapter + 'static,
 {
@@ -316,7 +360,7 @@ where
         Box::new(state),
         Box::new(|state: Box<dyn Any>, message| {
             let mut state = *state
-                .downcast::<DiscoveryServiceActorState<B, E, A>>()
+                .downcast::<DiscoveryServiceActorState<S, C, E, A>>()
                 .expect("discovery service actor received the wrong state type");
             match DiscoveryServiceTick::from_message(message) {
                 Ok(tick) => {
@@ -334,6 +378,7 @@ where
     )
 }
 
+#[cfg(test)]
 fn encode_worker(worker: &ScheduledDiscoveryWorker) -> JsonValue {
     JsonValue::Object(vec![
         ("schema_version".to_string(), json_u64(SCHEMA_VERSION)),
@@ -630,6 +675,7 @@ fn decode_service_snapshot(
     })
 }
 
+#[cfg(test)]
 fn encode_metadata(metadata: &[Metadata]) -> JsonValue {
     JsonValue::Array(
         metadata
@@ -860,6 +906,7 @@ fn json_optional_u64(value: Option<u64>) -> JsonValue {
     value.map(json_u64).unwrap_or(JsonValue::Null)
 }
 
+#[cfg(test)]
 fn string_array<'a>(values: impl IntoIterator<Item = &'a str>) -> JsonValue {
     JsonValue::Array(
         values
@@ -971,18 +1018,25 @@ mod tests {
         ))
     }
 
+    fn restore_controller(root: &PathBuf) -> SmartHomeControllerRuntime<LocalFolderStorageBackend> {
+        SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(root)).unwrap()
+    }
+
     #[test]
     fn actor_tick_binds_selected_interface_and_restores_durable_cadence() {
         let root = test_directory("success");
-        let backend = LocalFolderStorageBackend::new(&root);
+        let controller = restore_controller(&root);
+        let observer = controller.clone();
         let mut state = DiscoveryServiceActorState::open(
-            backend,
+            controller,
+            LocalFolderStorageBackend::new(&root),
             RecordingExecutor::default(),
             ScriptedAdapter::successful(),
             30_000,
+            900,
         )
         .unwrap();
-        state.register_worker(worker(1_000)).unwrap();
+        state.register_worker(worker(1_000), 1_000).unwrap();
 
         let mut system = ActorSystem::new();
         install_discovery_service_actor(&mut system, "mdns-service", state).unwrap();
@@ -1002,6 +1056,7 @@ mod tests {
             .state
             .downcast_ref::<DiscoveryServiceActorState<
                 LocalFolderStorageBackend,
+                LocalFolderStorageBackend,
                 RecordingExecutor,
                 ScriptedAdapter,
             >>()
@@ -1015,19 +1070,36 @@ mod tests {
         assert_eq!(state.snapshot().tick_count, 1);
         assert_eq!(state.snapshot().last_mdns_request_count, 2);
         assert_eq!(state.persisted_run_records().unwrap().len(), 1);
+        let observed_runtime = observer.runtime_handle();
+        assert_eq!(
+            observed_runtime
+                .lock()
+                .unwrap()
+                .discovery_worker_schedule(&DiscoveryWorkerId::trusted("hue-mdns"))
+                .unwrap()
+                .total_run_count,
+            1
+        );
 
         drop(system);
+        drop(observer);
+        let restored_controller = restore_controller(&root);
         let restored = DiscoveryServiceActorState::open(
+            restored_controller,
             LocalFolderStorageBackend::new(&root),
             RecordingExecutor::default(),
             ScriptedAdapter::successful(),
             30_000,
+            2_000,
         )
         .unwrap();
-        let schedule = restored
-            .runtime()
+        let runtime = restored.runtime_handle();
+        let runtime = runtime.lock().unwrap();
+        let schedule = runtime
             .discovery_worker_schedule(&DiscoveryWorkerId::trusted("hue-mdns"))
+            .cloned()
             .unwrap();
+        drop(runtime);
         assert_eq!(restored.snapshot().tick_count, 1);
         assert_eq!(schedule.total_run_count, 1);
         assert_eq!(schedule.status, WorkerStatus::Running);
@@ -1043,30 +1115,39 @@ mod tests {
     #[test]
     fn failed_run_backoff_and_audit_survive_restart() {
         let root = test_directory("failure");
+        let central = restore_controller(&root);
         let mut state = DiscoveryServiceActorState::open(
+            central,
             LocalFolderStorageBackend::new(&root),
             RecordingExecutor::default(),
             ScriptedAdapter::failing("unsupported advertisement"),
             30_000,
+            1_900,
         )
         .unwrap();
-        state.register_worker(worker(2_000)).unwrap();
+        state.register_worker(worker(2_000), 2_000).unwrap();
         let report = state
             .tick(DiscoveryServiceTick::new(2_100, 2_180).unwrap())
             .unwrap();
         assert_eq!(report.failed_run_count(), 1);
 
+        drop(state);
         let restored = DiscoveryServiceActorState::open(
+            restore_controller(&root),
             LocalFolderStorageBackend::new(&root),
             RecordingExecutor::default(),
             ScriptedAdapter::successful(),
             30_000,
+            3_000,
         )
         .unwrap();
-        let schedule = restored
-            .runtime()
+        let runtime = restored.runtime_handle();
+        let runtime = runtime.lock().unwrap();
+        let schedule = runtime
             .discovery_worker_schedule(&DiscoveryWorkerId::trusted("hue-mdns"))
+            .cloned()
             .unwrap();
+        drop(runtime);
         assert_eq!(restored.snapshot().last_failed_run_count, 1);
         assert_eq!(schedule.status, WorkerStatus::Unhealthy);
         assert_eq!(
@@ -1076,6 +1157,118 @@ mod tests {
         assert_eq!(schedule.consecutive_failure_count, 1);
         assert_eq!(schedule.next_due_at_ms, 2_680);
         assert_eq!(restored.persisted_run_records().unwrap().len(), 1);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn stale_controller_cannot_publish_discovery_registration() {
+        let root = test_directory("stale-controller");
+        let stale_controller = restore_controller(&root);
+        let stale_observer = stale_controller.runtime_handle();
+        let mut state = DiscoveryServiceActorState::open(
+            stale_controller,
+            LocalFolderStorageBackend::new(&root),
+            RecordingExecutor::default(),
+            ScriptedAdapter::successful(),
+            30_000,
+            100,
+        )
+        .unwrap();
+
+        let external_controller = restore_controller(&root);
+        let mut external_worker = worker(500);
+        external_worker.worker_id = DiscoveryWorkerId::trusted("external-mdns");
+        external_controller
+            .transaction(500, move |runtime, _| {
+                runtime.register_discovery_worker_schedule(external_worker)
+            })
+            .unwrap();
+
+        let error = state.register_worker(worker(1_000), 1_000).unwrap_err();
+        assert!(matches!(error, DiscoveryServiceError::Controller(_)));
+        assert!(stale_observer
+            .lock()
+            .unwrap()
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("hue-mdns"))
+            .is_none());
+        assert!(external_controller
+            .runtime_handle()
+            .lock()
+            .unwrap()
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("external-mdns"))
+            .is_some());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn legacy_schedule_import_is_idempotent_and_central_state_wins() {
+        let root = test_directory("legacy-import");
+        let service_backend = LocalFolderStorageBackend::new(&root);
+        service_backend.initialize().unwrap();
+        let legacy_hue = worker(1_000);
+        let mut legacy_other = worker(2_000);
+        legacy_other.worker_id = DiscoveryWorkerId::trusted("other-mdns");
+        legacy_other.integration_id = IntegrationId::trusted("other");
+        for legacy in [&legacy_hue, &legacy_other] {
+            service_backend
+                .put(
+                    StoragePutInput::new(
+                        SCHEDULE_NAMESPACE,
+                        legacy.worker_id.as_str(),
+                        JSON_CONTENT_TYPE,
+                        schema_metadata(),
+                        encode_json(&encode_worker(legacy)).unwrap(),
+                    )
+                    .unwrap(),
+                )
+                .unwrap();
+        }
+
+        let central = restore_controller(&root);
+        let mut canonical_hue = worker(9_000);
+        canonical_hue.next_due_at_ms = 9_000;
+        central
+            .transaction(400, move |runtime, _| {
+                runtime.register_discovery_worker_schedule(canonical_hue)
+            })
+            .unwrap();
+
+        let first = DiscoveryServiceActorState::open(
+            central.clone(),
+            LocalFolderStorageBackend::new(&root),
+            RecordingExecutor::default(),
+            ScriptedAdapter::successful(),
+            30_000,
+            500,
+        )
+        .unwrap();
+        let runtime = first.runtime_handle();
+        let runtime = runtime.lock().unwrap();
+        assert_eq!(
+            runtime
+                .discovery_worker_schedule(&DiscoveryWorkerId::trusted("hue-mdns"))
+                .unwrap()
+                .next_due_at_ms,
+            9_000
+        );
+        assert!(runtime
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("other-mdns"))
+            .is_some());
+        drop(runtime);
+        drop(first);
+
+        let imported_revision = central.revision().unwrap();
+        let second = DiscoveryServiceActorState::open(
+            central.clone(),
+            LocalFolderStorageBackend::new(&root),
+            RecordingExecutor::default(),
+            ScriptedAdapter::successful(),
+            30_000,
+            600,
+        )
+        .unwrap();
+        assert_eq!(central.revision().unwrap(), imported_revision);
+        drop(second);
         fs::remove_dir_all(root).unwrap();
     }
 

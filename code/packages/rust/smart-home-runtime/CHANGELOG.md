@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Retain centrally owned discovery worker schedules, cadence, and retry state in
+  `RuntimeDurableSnapshot`, with backward-compatible restore of older snapshots.
 - Add validated whole-device retained identity migration with all-child
   coverage, destination collision checks, capability-shape preservation, and
   atomic replacement only after every retained and live reference is rebuilt.

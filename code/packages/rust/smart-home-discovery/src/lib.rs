@@ -8,6 +8,7 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Health, IntegrationId, Metadata, ProtocolFamily,
     ProtocolIdentifier,
@@ -67,7 +68,7 @@ impl fmt::Display for DiscoveryError {
 
 impl std::error::Error for DiscoveryError {}
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoverySource {
     Mdns,
     WsDiscovery,
@@ -374,7 +375,7 @@ impl DiscoveryRecordSummary {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct DiscoveryWorkerId(String);
 
 impl DiscoveryWorkerId {
@@ -397,7 +398,7 @@ impl fmt::Display for DiscoveryWorkerId {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoveryWorkerKind {
     MdnsScan,
     CloudFallback,
@@ -424,7 +425,7 @@ impl fmt::Display for DiscoveryWorkerKind {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoveryWorkerRunStatus {
     Completed,
     Partial,

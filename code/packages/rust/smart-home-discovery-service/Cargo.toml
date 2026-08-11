@@ -10,6 +10,7 @@ actor = { path = "../actor" }
 coding-adventures-json-serializer = { path = "../json-serializer" }
 coding-adventures-json-value = { path = "../json-value" }
 smart-home-core = { path = "../smart-home-core" }
+smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 storage-core = { path = "../storage-core" }
