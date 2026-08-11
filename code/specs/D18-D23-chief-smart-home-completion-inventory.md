@@ -999,6 +999,28 @@ keeping session and media boundaries explicit:
   loopback-test-only, and an exact protocol test proves login-body isolation,
   cookie-only authenticated reads, bounded parsing, and redirecting logout.
 
+## Current Frigate Snapshot Slice
+
+This slice composes the installed Frigate camera identity with the camera-media
+authorization and lease boundary without persisting a JWT or reusable secret:
+
+- Exact D23 Human Approval runs before Vault resolution or transport I/O. The
+  host then revalidates the installed Frigate bridge, credential reference,
+  native camera-name identifier, snapshot capability, and reviewed pinned
+  address before registering one process-local endpoint.
+- One bounded Vault credential envelope is installed only in the dedicated
+  executor for one delivery. The executor logs in at `/api/login`, sends the
+  validated JWT cookie only to the same-origin `/api/{camera}/latest.jpg`,
+  accepts one bounded JPEG, and explicitly calls `/api/logout` after every
+  authenticated success or failure.
+- Credentials, cookies, and endpoint state are zeroized or removed after the
+  delivery attempt. Strict HTTPS uses the reviewed address with the canonical
+  host retained for certificate validation; HTTP remains loopback-test-only.
+- Tests prove denial before Vault, exact-target and malformed-envelope refusal,
+  repeated sealed-Vault deliveries, cleanup after executor failure, percent-
+  encoded camera names, pinned TLS, cookie-only image authentication, and
+  logout after both successful and invalid-image outcomes.
+
 ## Current Synology Surveillance Station Inspection Slice
 
 This slice adds a first-party authenticated local Synology NVR health host while
@@ -1755,10 +1777,9 @@ No additional camera snapshot slice is currently executable without a concrete
 authentication prerequisite. Blue Iris documents `/image/{camera}` and secure
 JSON sessions independently, but does not document how a secure session binds
 to that image request; the only documented direct URL credentials require
-disabling secure sessions and are rejected. Frigate snapshot delivery remains
-blocked on a cookie-capable media authentication boundary. Revision-guarded
-D23 pairing completion, its recoverable cross-store journal, and production
-Hue, ONVIF, ZoneMinder, Axis, direct Reolink RLC, Reolink NVR, and Synology
+disabling secure sessions and are rejected. Revision-guarded D23 pairing
+completion, its recoverable cross-store journal, and production Hue, ONVIF,
+ZoneMinder, Axis, direct Reolink RLC, Reolink NVR, Synology, and Frigate
 compositions are now available. The camera pairing services prove bounded
 host-owned secret input, D23 principal propagation, authenticated exact-bridge
 inspection, durable runtime revision ownership, startup recovery, actor-state
@@ -1825,53 +1846,49 @@ MQTT after firmware no longer logs plaintext credentials.
    checks, bounded semantics, and readable postcondition verification.
 20. Add Frigate event and review push only after a concrete authenticated event
    or WebSocket host and supervised subscription lifecycle exist.
-21. Add bounded Frigate snapshots through the completed camera-media HTTPS
-    executor after process-local endpoint registration and credential lifetime
-    are wired; recordings, export, and playback still require a concrete
-    supervised resource executor.
-22. Add Frigate commands or configuration mutations only with operation-specific
+21. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
-23. Add bounded Blue Iris snapshots only after an official interface documents
+22. Add bounded Blue Iris snapshots only after an official interface documents
     how an isolated secure JSON session authenticates `/image/{camera}`, or a
     concrete cookie/session-bound media executor exists. Never disable secure
     sessions or place reusable Blue Iris credentials in a URL. Alert/clip
     search, export, and playback still require a supervised resource executor.
-24. Add broader Blue Iris `camconfig` or administrative mutations only with
+23. Add broader Blue Iris `camconfig` or administrative mutations only with
    operation-specific D23 contracts, least-privilege permissions, and readable
    postcondition verification; do not persist the license value returned at
    login.
-25. Add automatic Blue Iris discovery only if the server exposes a documented,
+24. Add automatic Blue Iris discovery only if the server exposes a documented,
    stable LAN advertisement; the current production path is explicit local
    HTTPS endpoint configuration.
-26. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
+25. Add Blue Iris focus, iris, digital-I/O, preset-setting, or broader PTZ
    controls only when each operation has a specific native capability probe,
    bounded semantics, and readable verification where the device exposes it.
-27. Add Axis event streaming only after the existing WebSocket protocol core has
+26. Add Axis event streaming only after the existing WebSocket protocol core has
    a concrete authenticated host using the completed Digest primitive or a
    short-lived session token, plus subscription supervision.
-28. Enumerate Axis video sources/channels before extending PTZ beyond the current
+27. Enumerate Axis video sources/channels before extending PTZ beyond the current
     capability-probed VAPIX camera 1 boundary.
-29. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
+28. Add Axis absolute/relative zoom, guard-tour, or advanced preset management
     only when each operation has a specific capability probe and readable state.
-30. Add Reolink current-position, zoom, guard-point, or patrol controls only when
+29. Add Reolink current-position, zoom, guard-point, or patrol controls only when
     each operation has a capability-specific probe and the firmware exposes the
     native state needed to avoid invented orientation claims.
-31. Add Reolink push events only after a concrete webhook or event-stream host
+30. Add Reolink push events only after a concrete webhook or event-stream host
     and subscription lifecycle exist.
-32. Add authenticated KLAP/Tapo devices and other broader-device families only
+31. Add authenticated KLAP/Tapo devices and other broader-device families only
     after their authentication and session prerequisites are concrete.
-33. Add ONVIF PullPoint events once a concrete event host and subscription
+32. Add ONVIF PullPoint events once a concrete event host and subscription
     lifecycle exist.
-34. Add RTSP media transfer and recording once concrete media transfer and
+33. Add RTSP media transfer and recording once concrete media transfer and
     recorder host primitives exist.
-35. Add a production Matter commissioning, secure-session, and network host only
+34. Add a production Matter commissioning, secure-session, and network host only
     after certificate, fabric, Interaction Model encoding, subscription, and
     transport prerequisites exist.
-36. Add a Thread border-router host only after an actual host transport exists.
-37. Add a production Zigbee coordinator, join, and security host only after
+35. Add a Thread border-router host only after an actual host transport exists.
+36. Add a production Zigbee coordinator, join, and security host only after
     concrete coordinator transport and security primitives exist.
-38. Add production Z-Wave inclusion and S2 only after concrete host transport
+37. Add production Z-Wave inclusion and S2 only after concrete host transport
     and security primitives exist.
 
 ## End-To-End Definition

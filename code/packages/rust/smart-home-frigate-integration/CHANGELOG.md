@@ -8,3 +8,5 @@
   documented Frigate API.
 - Add normalized bridge, camera device, entity, capability, and confirmed state
   installation with an exact loopback protocol proof.
+- Add reviewed-address-pinned, cookie-authenticated bounded JPEG snapshots with
+  percent-encoded camera names and logout after every authenticated outcome.
