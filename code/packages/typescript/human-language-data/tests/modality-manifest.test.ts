@@ -902,7 +902,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 1726, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
+      totalLessons: 1727, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -931,7 +931,7 @@ describe("corpus regression", () => {
       // -poy-varugiren, -naalai, -mindum-sandippom and TA-C05-pesu, -velai-sey, -vaazh,
       // -naan-tamizh-pesugiren all flip ["script-block"] -> ["no-visual-dependency"]
       // with an empty detachableSegments, verified against the GENERATED manifest.
-      sight: 510,
+      sight: 511,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -951,7 +951,7 @@ describe("corpus regression", () => {
       drivableLessons: 1147,
       drivablePercent: 66,
       trackCount: 22,
-      chapterCount: 555,
+      chapterCount: 559,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -1009,12 +1009,12 @@ describe("corpus regression", () => {
       // classifies a `type: writing` lesson as pen without reading its body, so all four
       // record `coreDrivable: false`. It holds because the six lessons that flipped were
       // already core-drivable and the four new ones were never counted.
-      fullyDrivableChapters: 364, // +6: shorter chapters are more often drivable end to end
+      fullyDrivableChapters: 367, // +6: shorter chapters are more often drivable end to end
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.
       // -2 more: Tamil chapters 4 and 5 now start by ear as well.
-      unstartableChapters: 140,
+      unstartableChapters: 141,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

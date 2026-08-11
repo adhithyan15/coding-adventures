@@ -239,13 +239,13 @@ describe("the committed corpus", () => {
     const { lessons } = loadEverything();
     const r = measureMetalanguage(lessons, loadMetalanguage());
     expect(r.summary.terms).toBe(54);
-    expect(r.summary.lessonsUsingTerms).toBe(1710); // +8: HL-C94 // +4: HL-C98
+    expect(r.summary.lessonsUsingTerms).toBe(1711); // +8: HL-C94 // +4: HL-C98
 
     // No lesson declares an introduction yet, so every use is early. The total
     // says how pervasive the assumption is; the technical count says what to fix.
-    expect(r.summary.usesBeforeIntroduction).toBe(7841); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form)
-    expect(r.summary.technicalUsesBeforeIntroduction).toBe(2319); // +4: HL-C98
-    expect(r.summary.technicalLessons).toBe(1181); // +4: HL-C98
+    expect(r.summary.usesBeforeIntroduction).toBe(7845); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form)
+    expect(r.summary.technicalUsesBeforeIntroduction).toBe(2323); // +4: HL-C98
+    expect(r.summary.technicalLessons).toBe(1182); // +4: HL-C98
 
     expect(r.summary.worstTerms.slice(0, 2)).toEqual([
       { term: "verb", lessons: 813 }, // +4: HL-C98 // +2: HL-C99

@@ -1,63 +1,92 @@
-Spanish, chapter 47: Days of the Week.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 47: The Subjunctive Built From the Yo Form.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-lunes to viernes — the planets of the week, worn down.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 3.
+quiera, quieras, quiera — keep the change you know.
 
 Warm-up.
 [pause 2 seconds]
-The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
+Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: quiera.
+person: tú. present subjunctive: quieras.
+person: él / ella / usted. present subjunctive: quiera.
+Say only this bounded singular row: quiera, quieras, quiera.
 
-The words, taken apart: the planet weekdays.
-Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
-Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
+Grammar Lens: one known verb, one inherited stem.
+You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
-[pause 8 seconds for the answer]
-[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
-[pause 8 seconds for the answer]
-[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
-[pause 8 seconds for the answer]
+Carry only the known quier- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem quier-?
+[question — say your answer, then pause 7 seconds]
+Complete 'Quiero que ___ hablar español' for one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Recall the weekday family:
-What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
-Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
-What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
-Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
+Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
 
 
-Lesson 2 of 2.
-sábado and domingo — the week's religious edge.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
+Lesson 2 of 3.
+pueda, puedas, pueda — one more known stem change.
 
 Warm-up.
 [pause 2 seconds]
-Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
+Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: pueda.
+person: tú. present subjunctive: puedas.
+person: él / ella / usted. present subjunctive: pueda.
+Say pueda, puedas, pueda. No other poder forms enter today.
 
-The two days, taken apart.
-There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
-Two different rewrites:
-sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
-domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
+Grammar Lens: use it immediately.
+Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
-[pause 8 seconds for the answer]
-[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
-[pause 8 seconds for the answer]
-[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
-[pause 8 seconds for the answer]
+Carry only the known pued- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem pued-?
+[question — say your answer, then pause 10 seconds]
+Say 'I want you to be able to speak Spanish' to one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)
+Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
+
+
+Lesson 3 of 3.
+haga, hagas, haga — hago lends its stem.
+
+Warm-up.
+[pause 2 seconds]
+The known present yo form is hago. Remove -o and keep hag-:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: haga.
+person: tú. present subjunctive: hagas.
+person: él / ella / usted. present subjunctive: haga.
+Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
+
+Grammar Lens: spend the new form.
+Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
+
+Guided Practice.
+[pause 1 second]
+Carry only the known hag- stem into this row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which known present yo form gives the stem hag-?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to make coffee' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)

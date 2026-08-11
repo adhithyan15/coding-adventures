@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 79,
-  "title": "Review --- All Four Stem Changes",
+  "title": "Traer --- Bringing, and Latin for Dragging",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:978208cf179c11ab",
+  "sourceHash": "fnv1a64:7df1b54c9719eaa3",
   "lessons": [
     {
-      "id": "ES-C39-repaso-cambios",
-      "sequence": 1843,
-      "title": "Review — the four stem changes, all of them",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the stem-change system, now complete, and the one pattern with a single member",
+      "id": "ES-C39-traer",
+      "sequence": 1810,
+      "title": "traer — \"to bring\", and the direction baked into it",
+      "headword": "traer",
+      "romanization": "traer",
+      "gloss": "to bring — Latin's word for dragging, and a verb with a direction built into it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20703f8caba9bb89",
+      "sourceHash": "fnv1a64:7d71c63337c383eb",
       "notice": null,
       "blocks": [
         {
@@ -35,66 +35,92 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met."
+              "text": "Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Something finished in the last two chapters and it is worth stopping for."
+              "text": "r-tap — one flick of the tongue: tra-ER, two beats."
             },
             {
               "kind": "speech",
-              "text": "Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "the change",
-                "the verb that taught it",
-                "what breaks"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.",
-                "the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.",
-                "the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.",
-                "the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise."
+              "text": "g-hard — the g of traigo is hard, as in English go."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the pattern with one member",
+          "type": "etymology",
+          "title": "The word, taken apart: traer",
           "segments": [
             {
               "kind": "speech",
-              "text": "The fourth row is strange, and worth knowing precisely."
+              "text": "traer (\"to bring\") from Latin trahere, \"to drag, to pull\". Bringing started out as hauling."
             },
             {
               "kind": "speech",
-              "text": "u becomes ue happens in exactly one verb in the entire language: jugar."
+              "text": "Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something \"dragged away\" from anything particular."
             },
             {
               "kind": "speech",
-              "text": "Not \"mostly one.\" One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more."
+              "text": "Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, \"to draw forth\", and retreat from retrahere, \"to draw back\"."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the hard g, for the second time",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: traigo.",
+                "person: tú. form: traes.",
+                "person: él/ella/usted. form: trae.",
+                "person: nosotros. form: traemos.",
+                "person: ellos/ustedes. form: traen."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: here, or away",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not."
+            },
+            {
+              "kind": "speech",
+              "text": "Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying."
+            },
+            {
+              "kind": "speech",
+              "text": "And llevar from Latin levāre, \"to raise\" — the verb already behind levantarse. To carry a load was first to lift it."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -107,95 +133,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "one verb from each of the four rows",
+              "instruction": "\"traigo, traes, trae, traemos, traen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: one verb from each of the four rows]"
+              "source": "[YOU SAY: \"traigo, traes, trae, traemos, traen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue",
+              "instruction": "\"Traigo el pan\" then \"Llevo el pan\" — here, then away",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four changes themselves, as sounds — *e-ie, o-ue, e-i, u-ue*]"
+              "source": "[YOU SAY: \"Traigo el pan\" then \"Llevo el pan\" — here, then away]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until naming the pattern is faster than working it out."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-repaso-cambios-count",
-              "prompt": "How many stem-change patterns does Spanish have in total?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"oigo\" then \"traigo\" — the same hard g",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "four",
-                "4",
-                "cuatro"
-              ],
-              "feedback": {
-                "correct": "Four — and you now hold all of them.",
-                "incorrect": "Four: e-ie, o-ue, e-i, u-ue."
-              }
+              "source": "[YOU SAY: \"oigo\" then \"traigo\" — the same hard g]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-repaso-cambios-only",
-              "prompt": "Which pattern belongs to exactly one verb, and which verb?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-U-UE-09",
-                "ES-LEX-JUGAR-07"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "u to ue, jugar",
-                "u-ue, jugar",
-                "jugar, u to ue",
-                "jugar"
-              ],
-              "feedback": {
-                "correct": "Yes — jugar is the only u-ue verb in Spanish.",
-                "incorrect": "u to ue, and the verb is jugar. It is the only one."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-repaso-cambios-ei",
-              "prompt": "Which change does conseguir make?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-E-I-06",
-                "ES-LEX-CONSEGUIR-04"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"traer\" then English \"tractor, attract, abstract\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "e to i",
-                "e-i",
-                "e becomes i",
-                "consigo"
-              ],
-              "feedback": {
-                "correct": "Yes — conseguir becomes consigo.",
-                "incorrect": "e to i: conseguir, consigo."
-              }
+              "source": "[YOU SAY: \"traer\" then English \"tractor, attract, abstract\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -207,7 +181,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
+              "text": "Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)"
             }
           ]
         }
