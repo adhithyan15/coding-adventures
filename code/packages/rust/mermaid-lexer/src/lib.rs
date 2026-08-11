@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -16,6 +16,7 @@ const ER_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid
 const C4_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.tokens");
 const SEQUENCE_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sequence.tokens");
+const STATE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/state.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -49,6 +50,10 @@ pub fn create_mermaid_c4_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_sequence_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, SEQUENCE_TOKEN_GRAMMAR_SOURCE, "sequence.tokens")
+}
+
+pub fn create_mermaid_state_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, STATE_TOKEN_GRAMMAR_SOURCE, "state.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -185,6 +190,13 @@ pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
     tokens
 }
 
+pub fn tokenize_mermaid_state(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_state_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid state tokenization failed: {e}"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -196,7 +208,24 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.24.0");
+        assert_eq!(VERSION, "0.25.0");
+    }
+
+    #[test]
+    fn tokenizes_state_transitions_and_aliases() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\ndirection LR\nstate \"Still waiting\" as Still\n[*] --> Still\nStill --> [*]: done\n",
+        );
+        let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
+        assert!(names.contains(&"HEADER"));
+        assert_eq!(names.iter().filter(|name| **name == "ARROW").count(), 2);
+        assert_eq!(
+            names.iter().filter(|name| **name == "EDGE_STATE").count(),
+            2
+        );
+        assert!(tokens
+            .iter()
+            .any(|token| token.value == "Still waiting" || token.value == "\"Still waiting\""));
     }
 
     #[test]

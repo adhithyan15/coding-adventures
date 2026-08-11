@@ -1,0 +1,25 @@
+# @version 1
+# @case_insensitive true
+# Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
+
+case_sensitive: false
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /%%[^\r\n]*/
+
+NEWLINE      = /\r?\n/
+SEMICOLON    = ";"
+HEADER       = /stateDiagram(?:-v2)?/
+ARROW        = "-->"
+EDGE_STATE   = "[*]"
+COLON        = ":"
+STRING       = /"[^"\r\n]*"/
+DIRECTION    = /TB|BT|LR|RL/
+ID           = /[A-Za-z_][A-Za-z0-9_-]*/
+WORD         = /[^ \t\r\n;:]+/
+
+keywords:
+  state
+  direction
+  as
