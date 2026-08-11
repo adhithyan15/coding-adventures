@@ -87,14 +87,22 @@ fn bin(name: &str, a: Expr, b: Expr) -> Expr {
     bc(name, vec![a, b])
 }
 fn puts(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
 }
 /// A `main` module declaring only `Floats` (arithmetic / `puts` are builtins,
 /// gated by the builtin allowlist rather than by a feature).
 fn float_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "fltprog".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Floats]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::Floats]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

@@ -82,14 +82,19 @@ fn convert_module(v: i64, to: IntSpec) -> Module {
         span: Span::synthetic(),
     };
     let puts = Expr::BuiltinCall {
-        name: "puts".into(),
-        args: vec![conv],
+        name: "__sys_write__".into(),
+        args: vec![
+            Expr::StrLit { value: "stdout".into(), span: Span::synthetic() },
+            Expr::StrLit { value: "per_value".into(), span: Span::synthetic() },
+            Expr::BoolLit { value: true, span: Span::synthetic() },
+            conv,
+        ],
         effects: EffectSet::PURE,
         span: Span::synthetic(),
     };
     Module {
         name: "prog".into(),
-        manifest: FeatureManifest::from_features(&[
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, 
             Feature::Conversions,
             Feature::SizedIntegers,
             Feature::Unsigned,
@@ -162,7 +167,7 @@ fn convert_emit_shape_uses_the_runtime_helper() {
         .unwrap()
         .source;
     assert!(
-        arb.contains("_sir_puts(1, _sir_int(5LL))"),
+        arb.contains("_sir_write(0, 1, 1, 1, _sir_int(5LL))"),
         "arbitrary is identity:\n{arb}"
     );
 }

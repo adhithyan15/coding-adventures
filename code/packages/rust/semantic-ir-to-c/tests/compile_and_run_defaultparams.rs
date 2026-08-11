@@ -81,7 +81,15 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
     Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
 }
 fn puts(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
 }
 fn directcall(fn_name: &str, args: Vec<Expr>) -> Expr {
     Expr::DirectCall { fn_name: fn_name.into(), args, effects: EffectSet::PURE, span: s() }
@@ -121,7 +129,7 @@ fn defparam_module(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) 
     };
     Module {
         name: "defprog".into(),
-        manifest: FeatureManifest::from_features(&[Feature::DefaultParams, Feature::DynamicTyping]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::DefaultParams, Feature::DynamicTyping]),
         imports: vec![],
         exports: vec![],
         functions: vec![f, main],

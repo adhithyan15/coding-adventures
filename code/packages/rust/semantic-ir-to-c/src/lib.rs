@@ -198,11 +198,9 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // `_sir_fmt`, not a refactor of it — so that already-tested path is
     // untouched) and the results are concatenated with `_sir_cat`.
     Feature::StringInterpolation,
-    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
-    // console-output primitive `print`/`puts` will migrate to. Additive:
-    // nothing emits it yet, so this declares acceptance ahead of any
-    // frontend using it (mirrors how `DefaultParams`/`KeywordParams`
-    // backend-acceptance PRs landed before any frontend emitted them).
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the general
+    // console-output primitive every frontend now emits in place of the
+    // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
     Feature::ConsoleIO,
 ];
 

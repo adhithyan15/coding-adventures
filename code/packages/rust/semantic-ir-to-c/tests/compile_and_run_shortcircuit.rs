@@ -92,13 +92,21 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
     Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
 }
 fn puts(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
 }
 /// A `main` module declaring only `ShortCircuit`.
 fn sc_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "scprog".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ShortCircuit]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::ShortCircuit]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -170,7 +178,7 @@ fn logical_and_in_tail_position() {
     // `2`), and `main` prints the call result.
     let m = Module {
         name: "sctail".into(),
-        manifest: FeatureManifest::from_features(&[Feature::ShortCircuit]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::ShortCircuit]),
         imports: vec![],
         exports: vec![],
         functions: vec![
