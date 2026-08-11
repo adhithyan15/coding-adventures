@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.40.0";
+pub const VERSION: &str = "0.41.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1064,10 +1064,24 @@ fn validate_sequence_activation_balance(
                 to,
                 activate,
                 deactivate,
+                central_connection,
                 ..
             } => {
                 if *deactivate {
                     deactivate_sequence_participant(&mut active, from, eof)?;
+                }
+                match central_connection {
+                    SequenceCentralConnection::Source => {
+                        *active.entry(from).or_default() += 1;
+                    }
+                    SequenceCentralConnection::Destination => {
+                        *active.entry(to).or_default() += 1;
+                    }
+                    SequenceCentralConnection::Both => {
+                        *active.entry(from).or_default() += 1;
+                        *active.entry(to).or_default() += 1;
+                    }
+                    SequenceCentralConnection::None => {}
                 }
                 if *activate {
                     *active.entry(to).or_default() += 1;
@@ -3712,6 +3726,14 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_central_connections_open_endpoint_activations() {
+        parse_sequence_diagram(
+            "sequenceDiagram\nAlice()->>Bob: source\ndeactivate Alice\nAlice->>()Bob: destination\ndeactivate Bob\nAlice()->>()Bob: both\ndeactivate Alice\ndeactivate Bob\n",
+        )
+        .expect("central endpoint activations should balance explicit deactivations");
+    }
+
+    #[test]
     fn sequence_parses_autonumber_start_and_increment() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nautonumber 10.5 2.25\nAlice->>Bob: First\nBob->>Alice: Second\n",
@@ -4110,7 +4132,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.40.0");
+        assert_eq!(crate::VERSION, "0.41.0");
     }
 
     #[test]

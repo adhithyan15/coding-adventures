@@ -187,8 +187,9 @@ Mermaid 11.16.1 half arrows are grammar-backed across every solid/dotted,
 normal/reverse, filled/stick, and top/bottom form. Their endpoint semantics
 survive layout and lower to backend-neutral Paint paths.
 Central connection syntax (`()->>`, `->>()`, and `()->>()`) lowers to explicit
-source/destination endpoint semantics and Paint ellipse markers layered above
-activation bars.
+source/destination endpoint semantics. Each marked endpoint opens its own
+validated activation stack entry before layout emits the activation bars and
+Paint ellipse markers.
 Automatic numbering preserves Mermaid 11.15+ decimal start and increment
 values through semantic IR, layout, and shaped Paint labels. Re-enabling a
 paused counter without arguments resumes its current value and increment;
