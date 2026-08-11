@@ -321,6 +321,60 @@ describe("the committed inventory", () => {
     expect(receptive[0]?.receptiveOnlyBecause).toContain("legal");
   });
 
+  it("pins the irregular overlays, and keeps the regular inventory untouched", () => {
+    // HL10 section 5.1 sized the Spanish verb system at ~630 cells. 231 regular
+    // plus 402 overlays is 633, so the original estimate holds.
+    const overlays = spanish.overlays ?? [];
+    expect(spanish.cells).toHaveLength(231);
+    expect(overlays).toHaveLength(402);
+
+    const byKind = overlays.reduce<Record<string, number>>((acc, o) => {
+      acc[o.kind] = (acc[o.kind] ?? 0) + 1;
+      return acc;
+    }, {});
+    expect(byKind["strong-preterite"]).toBe(90);
+    expect(byKind["short-stem"]).toBe(144);
+    expect(byKind["go-club"]).toBe(10);
+    expect(byKind["irregular-imperfect"]).toBe(18);
+  });
+
+  it("hangs every overlay off a regular cell that exists", () => {
+    const ids = new Set(spanish.cells.map((c) => c.id));
+    for (const o of spanish.overlays ?? []) {
+      expect(ids.has(o.deviatesFrom)).toBe(true);
+      expect(o.prerequisites).toEqual([o.deviatesFrom]);
+    }
+  });
+
+  it("keeps the plural persons out of a stem change, which is the boot", () => {
+    // Singular plus third plural change; the two plural persons keep the regular
+    // stem. If this ever covers six persons, the pattern has been flattened into
+    // "poder is irregular", which is the thing the cell model exists to prevent.
+    const poder = (spanish.overlays ?? []).filter(
+      (o) => o.verb === "poder" && o.kind.startsWith("stem-change"),
+    );
+    expect(poder).toHaveLength(4);
+    const persons = poder.map((o) => o.deviatesFrom.split("-")[4]).sort();
+    expect(persons).toEqual(["1SG", "2SG", "3PL", "3SG"]);
+  });
+
+  it("gives a short-stem verb both the future and the conditional", () => {
+    // One weld, twice (HL10 section 5.4 rung 22): a single shortened stem serves
+    // both tenses, so the verb owns twelve cells but one thing to learn.
+    const tener = (spanish.overlays ?? []).filter(
+      (o) => o.verb === "tener" && o.kind === "short-stem",
+    );
+    expect(tener).toHaveLength(12);
+    expect(new Set(tener.map((o) => o.deviatesFrom.split("-")[3]))).toEqual(
+      new Set(["FUT", "COND"]),
+    );
+  });
+
+  it("has unique overlay ids", () => {
+    const overlays = spanish.overlays ?? [];
+    expect(new Set(overlays.map((o) => o.id)).size).toBe(overlays.length);
+  });
+
   it("measures the corpus at zero taught cells, which is the honest number", () => {
     // No lesson declares `teaches_cells` yet. Deliberately not inferred from
     // atom names: ES-GRAMMAR-AR-FUTURE-SINGULAR looks like three cells, but

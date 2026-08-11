@@ -326,13 +326,33 @@ export interface GrammarCell {
   receptiveOnlyBecause?: string;
 }
 
+/**
+ * One verb's one cell that deviates from the regular pattern.
+ *
+ * Kept separate from the regular cells because a learner never meets "the
+ * irregular verbs" as a category. They meet the regular row, then the one verb
+ * that breaks it, one cell at a time -- so every overlay hangs off the regular
+ * cell it deviates from and the DAG gains depth rather than breadth.
+ */
+export interface GrammarCellOverlay {
+  id: string;
+  verb: string;
+  kind: string;
+  conjugation: string;
+  /** The regular cell this one breaks. Always a real id in `cells`. */
+  deviatesFrom: string;
+  prerequisites: string[];
+  note: string;
+}
+
 export interface TrackGrammarCells {
   version: number;
   language: string;
   note?: string;
   conjugationClasses?: Record<string, string>;
-  counts?: Record<string, number>;
+  counts?: Record<string, unknown>;
   cells: GrammarCell[];
+  overlays?: GrammarCellOverlay[];
 }
 
 /** HL10 section 7.5 -- one word for talking about language, and when it is earned. */

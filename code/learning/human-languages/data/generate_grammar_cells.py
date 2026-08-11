@@ -315,6 +315,143 @@ def check_dag(cells: list[dict]) -> None:
         raise SystemExit(f"cycle in the cell DAG, {len(stuck)} cells unreachable, e.g. {stuck[:5]}")
 
 
+# --- irregular and stem-changing overlays (HL-C91) ---------------------------
+#
+# An OVERLAY is one verb's one cell that deviates from the regular pattern:
+# `tengo` overlays SLOT-IND-PRES-1SG-CONJ2. It is kept in a separate list from
+# the regular cells for a reason that matters pedagogically -- the learner does
+# not meet "the irregular verbs" as a category. They meet the regular row, and
+# then meet the one verb that breaks it, in frequency order, one cell at a time.
+#
+# So every overlay's prerequisite is the REGULAR cell it deviates from. The DAG
+# gains depth rather than breadth: nothing becomes reachable earlier, and the
+# irregular is always taught against a pattern the learner already holds.
+
+# The four stem-change patterns. Singular plus third-plural change; the two
+# plural persons keep the regular stem -- the shape traditionally drawn as a
+# boot, and the reason these are four cells per verb rather than six.
+STEM_CHANGE_PERSONS = ["1SG", "2SG", "3SG", "3PL"]
+STEM_CHANGERS = {
+    "e-ie": ["pensar", "querer", "sentir", "empezar", "entender", "preferir",
+             "cerrar", "perder", "mentir"],
+    "o-ue": ["poder", "dormir", "contar", "volver", "morir", "encontrar",
+             "recordar", "mover"],
+    "e-i": ["pedir", "servir", "repetir", "seguir", "vestir"],
+    "u-ue": ["jugar"],
+}
+STEM_CHANGE_CONJ = {
+    "pensar": "CONJ1", "querer": "CONJ2", "sentir": "CONJ3", "empezar": "CONJ1",
+    "entender": "CONJ2", "preferir": "CONJ3", "cerrar": "CONJ1", "perder": "CONJ2",
+    "mentir": "CONJ3", "poder": "CONJ2", "dormir": "CONJ3", "contar": "CONJ1",
+    "volver": "CONJ2", "morir": "CONJ3", "encontrar": "CONJ1", "recordar": "CONJ1",
+    "mover": "CONJ2", "pedir": "CONJ3", "servir": "CONJ3", "repetir": "CONJ3",
+    "seguir": "CONJ3", "vestir": "CONJ3", "jugar": "CONJ1",
+}
+
+# The -go club: irregular in the first person singular of the present ONLY.
+# One cell each, and the club is why HL10 section 5.4 puts these before the
+# subjunctive -- the subjunctive stem is built from exactly this form.
+GO_VERBS = {"tener": "CONJ2", "poner": "CONJ2", "salir": "CONJ3", "venir": "CONJ3",
+            "hacer": "CONJ2", "decir": "CONJ3", "traer": "CONJ2", "oir": "CONJ3",
+            "caer": "CONJ2", "valer": "CONJ2"}
+
+# Strong preterites: irregular across all six persons, and unstressed in the
+# first and third singular, which is the audible signature of the whole set.
+# Ordered by frequency, because that is the order they are taught in.
+STRONG_PRETERITES = {"ser-ir": "CONJ2", "hacer": "CONJ2", "decir": "CONJ3",
+                     "tener": "CONJ2", "estar": "CONJ1", "poder": "CONJ2",
+                     "poner": "CONJ2", "saber": "CONJ2", "querer": "CONJ2",
+                     "venir": "CONJ3", "traer": "CONJ2", "dar": "CONJ1",
+                     "ver": "CONJ2", "andar": "CONJ1", "haber": "CONJ2"}
+
+# The imperfect has exactly three irregular verbs in the whole language, which
+# is why HL10 section 5.4 places it immediately after the preterite as a rest.
+IMPERFECT_IRREGULARS = {"ser": "CONJ2", "ir": "CONJ3", "ver": "CONJ2"}
+
+# Irregular past participles: one cell each, and each one is also a word the
+# learner will meet as an adjective.
+IRREGULAR_PARTICIPLES = {"abrir": "CONJ3", "decir": "CONJ3", "escribir": "CONJ3",
+                         "hacer": "CONJ2", "morir": "CONJ3", "poner": "CONJ2",
+                         "romper": "CONJ2", "ver": "CONJ2", "volver": "CONJ2",
+                         "cubrir": "CONJ3", "resolver": "CONJ2", "freir": "CONJ3"}
+
+# Shortened future/conditional stems. One stem serves BOTH tenses -- the single
+# weld HL10 section 5.4 rung 22 calls "one weld, twice" -- so a verb here owns
+# twelve cells but only one thing to learn.
+SHORT_STEM_VERBS = {"tener": "CONJ2", "poner": "CONJ2", "salir": "CONJ3",
+                    "venir": "CONJ3", "poder": "CONJ2", "saber": "CONJ2",
+                    "hacer": "CONJ2", "decir": "CONJ3", "querer": "CONJ2",
+                    "haber": "CONJ2", "valer": "CONJ2", "caber": "CONJ2"}
+
+# Present subjunctive irregulars: the six whose stem is NOT the present-tense
+# first person, so the rule that carries every other verb does not reach them.
+SUBJUNCTIVE_IRREGULARS = {"ser": "CONJ2", "ir": "CONJ3", "saber": "CONJ2",
+                          "haber": "CONJ2", "dar": "CONJ1", "estar": "CONJ1"}
+
+
+def overlay(verb: str, kind: str, slot_suffix: str, conj: str, note: str) -> dict:
+    """One verb's one deviating cell, hung off the regular cell it breaks."""
+    regular = f"ES-CELL-{slot_suffix}"
+    return collections.OrderedDict(
+        id=f"ES-OVERLAY-{verb.upper().replace('-', '')}-{slot_suffix}",
+        verb=verb,
+        kind=kind,
+        conjugation=conj,
+        deviatesFrom=regular,
+        prerequisites=[regular],
+        note=note,
+    )
+
+
+def build_overlays() -> list[dict]:
+    out: list[dict] = []
+    for pattern, verbs in STEM_CHANGERS.items():
+        for verb in verbs:
+            conj = STEM_CHANGE_CONJ[verb]
+            for person in STEM_CHANGE_PERSONS:
+                out.append(overlay(
+                    verb, f"stem-change-{pattern}", f"IND-PRES-{person}-{conj}", conj,
+                    f"stem vowel {pattern.replace('-', ' to ')} under stress; "
+                    f"the two plural persons keep the regular stem"))
+    for verb, conj in GO_VERBS.items():
+        out.append(overlay(verb, "go-club", f"IND-PRES-1SG-{conj}", conj,
+                           "first person singular only; the form the present subjunctive is built from"))
+    for verb, conj in STRONG_PRETERITES.items():
+        for person in PERSON_ORDER:
+            out.append(overlay(verb, "strong-preterite", f"IND-PRET-{person}-{conj}", conj,
+                               "irregular stem across all six persons, unstressed in 1SG and 3SG"))
+    for verb, conj in IMPERFECT_IRREGULARS.items():
+        for person in PERSON_ORDER:
+            out.append(overlay(verb, "irregular-imperfect", f"IND-IMPF-{person}-{conj}", conj,
+                               "one of only three irregular imperfects in the language"))
+    for verb, conj in IRREGULAR_PARTICIPLES.items():
+        out.append(overlay(verb, "irregular-participle", f"PART-{conj}", conj,
+                           "irregular past participle; also met as an adjective"))
+    for verb, conj in SHORT_STEM_VERBS.items():
+        for tense in ("FUT", "COND"):
+            for person in PERSON_ORDER:
+                out.append(overlay(verb, "short-stem", f"IND-{tense}-{person}-{conj}", conj,
+                                   "shortened stem, shared by the future and the conditional"))
+    for verb, conj in SUBJUNCTIVE_IRREGULARS.items():
+        for person in PERSON_ORDER:
+            out.append(overlay(verb, "irregular-subjunctive", f"SBJ-PRES-{person}-{conj}", conj,
+                               "stem is not the present first person, so the general rule does not reach it"))
+    return out
+
+
+def check_overlays(overlays: list[dict], cells: list[dict]) -> None:
+    """Every overlay must deviate from a regular cell that actually exists."""
+    ids = {c["id"] for c in cells}
+    seen: set[str] = set()
+    for item in overlays:
+        if item["deviatesFrom"] not in ids:
+            raise SystemExit(
+                f"overlay {item['id']} deviates from {item['deviatesFrom']}, which is not a regular cell")
+        if item["id"] in seen:
+            raise SystemExit(f"duplicate overlay id: {item['id']}")
+        seen.add(item["id"])
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true", help="fail if the committed files differ")
@@ -325,6 +462,8 @@ def main() -> int:
         raise SystemExit("duplicate slot id")
     cells = build_spanish_cells(slots)
     check_dag(cells)
+    overlays = build_overlays()
+    check_overlays(overlays, cells)
 
     kinds = collections.Counter(s["kind"] for s in slots)
     slot_doc = collections.OrderedDict(
@@ -359,16 +498,26 @@ def main() -> int:
             "1SG conjugation-1 cell, the present subjunctive hanging off the present "
             "indicative 1SG where its stem actually comes from, and compounds "
             "requiring both the participle and the auxiliary's own finite cell. "
-            "REGULAR CELLS ONLY -- the irregular and stem-changing overlays are "
-            "HL-C91 and are NOT counted here. Generated; do not hand-edit."
+            "`cells` is the REGULAR inventory. `overlays` holds the irregular and "
+            "stem-changing forms, kept separate because a learner never meets \"the "
+            "irregular verbs\" as a category -- they meet the regular row, then the one "
+            "verb that breaks it, one cell at a time. Every overlay hangs off the regular "
+            "cell it deviates from, so the DAG gains depth and nothing becomes reachable "
+            "earlier. Generated; do not hand-edit."
         ),
         conjugationClasses=collections.OrderedDict(sorted(ES_CONJ.items())),
         counts=collections.OrderedDict(
             regularCells=len(cells),
             productive=sum(1 for c in cells if c.get("productive") is not False),
             receptiveOnly=sum(1 for c in cells if c.get("productive") is False),
+            overlayCells=len(overlays),
+            overlaysByKind=collections.OrderedDict(
+                sorted(collections.Counter(o["kind"] for o in overlays).items())
+            ),
+            totalCells=len(cells) + len(overlays),
         ),
         cells=cells,
+        overlays=overlays,
     )
 
     targets = [
@@ -389,7 +538,8 @@ def main() -> int:
     if drift:
         return 1
     if not args.check:
-        print(f"slots {len(slots)} ({dict(kinds)}), spanish regular cells {len(cells)}")
+        print(f"slots {len(slots)} ({dict(kinds)}), spanish regular {len(cells)}, "
+              f"overlays {len(overlays)}, total {len(cells) + len(overlays)}")
     return 0
 
 
