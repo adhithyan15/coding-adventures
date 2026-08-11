@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.21.0
+
+- Preserve participant-group label wrap intent and resolved label height in sequence IR.
+
 ## 0.20.0
 
 - Preserve participant-label wrap intent and resolved label height in sequence IR.

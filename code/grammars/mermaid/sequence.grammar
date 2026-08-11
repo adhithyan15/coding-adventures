@@ -7,7 +7,7 @@ statement = participant_stmt | participant_box | destroy_stmt | message_stmt | a
 
 participant_stmt = [ "create" ] participant_decl ;
 participant_decl = ( "participant" | "actor" ) actor_ref [ CONFIG ] [ "as" WRAP_DIRECTIVE [ text ] | "as" text | WRAP_DIRECTIVE [ text ] ] ;
-participant_box = "box" [ text ] terminator { terminator | participant_decl } "end" ;
+participant_box = "box" [ COLOR ] [ WRAP_DIRECTIVE ] [ text ] terminator { terminator | participant_decl } "end" ;
 destroy_stmt = "destroy" actor_ref ;
 message_stmt = actor_ref [ CENTRAL ] message_arrow [ CENTRAL ] [ PLUS | MINUS ] actor_ref COLON wrapped_text ;
 activation_stmt = ( "activate" | "deactivate" ) actor_ref ;

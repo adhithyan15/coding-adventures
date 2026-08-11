@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 
 use std::collections::HashMap;
 
@@ -1116,6 +1116,7 @@ where
     for item in &diagram.items {
         if let LayoutedSequenceItem::ParticipantGroup {
             label,
+            label_height,
             fill,
             x,
             y,
@@ -1138,12 +1139,12 @@ where
                 stroke_dash_offset: None,
             }));
             if let Some(label) = label {
-                text_children.push(text_node(
+                text_children.push(text_node_no_wrap(
                     label,
                     *x + 8.0,
                     *y + 6.0,
                     *width - 16.0,
-                    20.0,
+                    (*label_height + 4.0).max(20.0),
                     label_font.clone(),
                     text_color,
                 ));
@@ -2703,7 +2704,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.20.0");
+        assert_eq!(crate::VERSION, "0.21.0");
     }
 
     #[test]
