@@ -4,6 +4,22 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - concrete Rust application adapter and strict Qt app
+
+TaskApp now has a concrete `task-mosaic-app` native runtime instead of borrowing
+the unrelated counter conformance engine. The adapter owns portable UI state,
+delegates domain behavior to `task-core`, covers the complete MIL slot/event
+surface, preserves transactional errors, snapshots/restores state, and exports the
+standard Mosaic C ABI.
+
+The Qt acceptance lane builds and bundles that exact library, requires a
+zero-degradation `native-complete` report, compiles and installs the generated app,
+verifies the installed runtime byte-for-byte, and launches the installed TaskApp
+without `MOSAIC_APP_LIBRARY`. Exercising its non-empty project list found a Qt
+emitter defect that sample-fallback launches had hidden: Bound Repeater delegates
+could not see implicit `modelData`/`index`. Generated `For` delegates now declare
+those inputs explicitly, eliminating the startup `ReferenceError`/`TypeError`s.
+
 ### Added - first zero-degradation native-complete backend
 
 The package-expanded TaskApp now passes Flutter's `native-complete` profile

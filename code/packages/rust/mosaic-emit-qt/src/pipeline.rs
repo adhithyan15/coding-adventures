@@ -4609,8 +4609,8 @@ fn emit_table_section_rows(
 /// |---|---|
 /// | `each: slot: <name>`      | `model: <camelName>` — bare-identifier binding              |
 /// | `each: <expr>`            | `model: <expr-verbatim>` — passed through to QML            |
-/// | `as: <NAME>`              | `property var <NAME>: modelData` on the delegate `Item`     |
-/// | `index: <NAME>` (optional)| `property int <NAME>: index` on the delegate `Item`         |
+/// | `as: <NAME>`              | required `modelData`, re-exported as `<NAME>` on the delegate |
+/// | `index: <NAME>` (optional)| required `index`, re-exported as `<NAME>` on the delegate     |
 ///
 /// ## QML repeater shape — and why the delegate is an `Item`
 ///
@@ -4627,6 +4627,8 @@ fn emit_table_section_rows(
 /// Repeater {
 ///   model: viewportRows
 ///   delegate: Item {
+///     required property var modelData
+///     required property int index
 ///     property var row: modelData
 ///     property int r: index
 ///     // any descendant can now refer to `row` or `r` like a slot
@@ -4669,8 +4671,15 @@ fn emit_for_qml(
     writeln!(out, "{pad}Repeater {{").unwrap();
     writeln!(out, "{delegate_pad}model: {model_expr}").unwrap();
     writeln!(out, "{delegate_pad}delegate: Item {{").unwrap();
+    // `pragma ComponentBehavior: Bound` intentionally prevents delegates from
+    // reaching into an outer creation context. Repeater's `modelData` and `index`
+    // therefore need to be explicit required delegate properties; Qt supplies them
+    // from the model. Without these declarations every non-empty generated `For`
+    // fails at runtime even though an empty-model launch looks healthy.
+    writeln!(out, "{prop_pad}required property var modelData").unwrap();
     writeln!(out, "{prop_pad}property var {as_name}: modelData").unwrap();
     if let Some(idx) = &index_name {
+        writeln!(out, "{prop_pad}required property int index").unwrap();
         writeln!(out, "{prop_pad}property int {idx}: index").unwrap();
     }
     // The delegate `Item` carries no intrinsic size, but it IS a layout
@@ -8158,6 +8167,11 @@ mod tests {
             result.output
         );
         assert!(
+            result.output.contains("required property var modelData"),
+            "Bound delegate must declare Repeater modelData explicitly:\n{}",
+            result.output
+        );
+        assert!(
             result.output.contains("property var row: modelData"),
             "missing as-binding property in:\n{}",
             result.output
@@ -8186,6 +8200,11 @@ mod tests {
         assert!(
             result.output.contains("property int r: index"),
             "missing index-binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("required property int index"),
+            "Bound delegate must declare Repeater index explicitly:\n{}",
             result.output
         );
 

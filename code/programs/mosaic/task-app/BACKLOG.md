@@ -34,12 +34,11 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
-- **Bundle the Rust engine in native application packages.** Native conformance
-  harnesses cover the fixed application ABI. Compose packaging now accepts an
-  explicit target `cdylib`, installs it app-relatively, and proves a strict
-  conformance `.app` launches without an injected path. TaskApp still needs its
-  own concrete Rust application engine before it can use that contract; SwiftUI,
-  Qt, XAML, and Flutter packaging remain P0 in UI38.
+- **Promote the concrete TaskApp Rust adapter on the remaining native backends.**
+  `task-mosaic-app` now supplies the complete MIL prop/event contract and Qt bundles
+  it in a strict, zero-degradation app (see Resolved). Replace the conformance
+  fixture with this application library for SwiftUI, XAML, Flutter, and Compose one
+  backend at a time, retaining each platform's build/install/launch gate.
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
@@ -94,6 +93,17 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   needs SQL-over-IndexedDB rather than load-all.
 
 ## Resolved (kept for traceability, not actionable)
+
+- **Concrete Rust TaskApp engine adapter + strict Qt application.**
+  `task-mosaic-app` composes the pure `task-core` engine with portable presentation
+  state, emits every required TaskApp MIL slot, accepts every declared semantic
+  event, snapshots/restores the combined state, and exports the standard Mosaic C
+  ABI. Qt CI now builds this library, emits TaskApp with `native-complete`, requires
+  zero degradations, installs the app/runtime together, compares the bundled library
+  to the exact build artifact, and launches the installed app offscreen without an
+  injected path. The launch exposed and closed a real Qt `For` bug: under
+  `pragma ComponentBehavior: Bound`, non-empty Repeater delegates must declare
+  `modelData` and `index` as required properties. Empty sample data had hidden it.
 
 - **Icon/SVG assets.** Closes most of the design-fidelity gap's icon line —
   see `code/specs/task-app-icon-assets-v1.md`. Pill status dot

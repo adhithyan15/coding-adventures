@@ -21,6 +21,21 @@
    directly, observing changes the platform's own way. React-isms live only in the React (web)
    backend — never leaked into the others.
 
+### 2026-08 native-generation addendum
+
+The later standard Mosaic application ABI does not move state management into
+`task-core` and does not turn the domain engine into a Flux store. Generated native
+shells need one stable lifecycle boundary for loading an app library, delivering
+semantic MIL events, receiving complete slot snapshots, and persisting opaque app
+state. `task-mosaic-app` is that thin application adapter. It owns TaskApp-specific
+presentation cursors and maps the fixed ABI to ordinary typed `task-core` methods;
+all task/project validation and projections remain pure engine code.
+
+Hand-authored hosts may still wrap `task-core` through platform-native models as
+described below. Generated hosts translate the ABI update into native observable
+properties, controls, accessibility objects, tables, and signals. The portable JSON
+envelope is a dynamic-library seam, not the UI implementation and not the domain API.
+
 ## The layer cake
 
 ```
