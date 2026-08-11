@@ -251,9 +251,12 @@ Prioritized work items:
    reprocessed from foreign content now report both the foreign mismatch and
    non-current formatting errors while preserving the conforming foreign DOM,
    matching WPT `adoption01.dat`'s `<a><svg><tr><input></a>` evidence. Continue
-   the fresh algorithm audit across the remaining active-formatting-list
-   branches, including foreign end tags with no matching HTML formatting
-   ancestor.
+   Repeated HTML anchor start tags now report before the existing adoption
+   recovery and preserve both anchors required by WPT `adoption02.dat`'s
+   `<a><div><style></style><address><a>` row. Continue the fresh algorithm audit
+   across the remaining active-formatting-list branches, including foreign end
+   tags with no matching HTML formatting ancestor and repeated anchors
+   reprocessed through table foster parenting.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
