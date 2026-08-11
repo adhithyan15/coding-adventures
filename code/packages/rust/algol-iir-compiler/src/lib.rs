@@ -2337,7 +2337,21 @@ impl Compiler {
     fn static_real_arithmetic_value(&self, node: &GrammarASTNode) -> Option<f64> {
         expr_static_real_arithmetic_value_with(node, &|call| {
             self.static_standard_real_value(call)
+                .or_else(|| self.static_tracked_real_value(call))
         })
+    }
+
+    fn static_tracked_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        let name = expr_variable_name(node)?;
+        let binding = self.require_var(&name).ok()?;
+        if binding.ty != ScalarType::Real || binding.is_global {
+            return None;
+        }
+        self.static_real_slots
+            .get(&binding.slot)?
+            .parse::<f64>()
+            .ok()
+            .filter(|value| value.is_finite())
     }
 
     /// Evaluate deterministic real standard-function calls inside the static
@@ -3803,14 +3817,7 @@ impl Compiler {
             .then(|| self.static_real_arithmetic_value(expr))
             .flatten()
             .filter(|value| value.is_finite())
-            .map(|value| value.to_string())
-            .or_else(|| {
-                let source_name = expr_variable_name(expr)?;
-                let source = self.require_var(&source_name).ok()?;
-                (source.ty == ScalarType::Real && !source.is_global)
-                    .then(|| self.static_real_slots.get(&source.slot).cloned())
-                    .flatten()
-            });
+            .map(|value| value.to_string());
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -7230,6 +7237,24 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
         }));
+    }
+
+    #[test]
+    fn al4_print_static_real_scalar_expression() {
+        let module = compile_source(
+            "begin real x; x := 2.25; print(x * 2.0 + 0.5) end",
+            "test",
+        )
+        .expect("tracked real locals compose in finite static expressions");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "5")
+        }));
+        assert!(main
+            .instructions
+            .iter()
+            .all(|instr| !matches!(instr.op.as_str(), "mul" | "add")));
     }
 
     #[test]

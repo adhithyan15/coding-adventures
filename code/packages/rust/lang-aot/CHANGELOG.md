@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.220.87 - 2026-08-11 (ALGOL static real scalar expressions — seven backends)
+
+The LANG matrix now composes a copied static real local with additional finite
+arithmetic before printing on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
 ## 0.220.86 - 2026-08-11 (ALGOL static real scalar copies — seven backends)
 
 The LANG matrix now copies a tracked static real local, reassigns its source,
