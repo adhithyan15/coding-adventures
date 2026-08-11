@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.36.0
+
+- Reject duplicate participant IDs in `create` declarations and participants assigned to multiple boxes.
+
 ## 0.35.0
 
 - Bind `create` and `destroy` declarations to their required following messages and reject invalid lifecycle sequences.

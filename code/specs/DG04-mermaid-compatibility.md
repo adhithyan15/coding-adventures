@@ -124,7 +124,9 @@ branch dividers before existing PaintInstructions render them. Participant
 to place dynamic participant headers, bound lifelines, and emit destruction
 markers. Lifecycle declarations bind to Mermaid's required following message:
 created participants must receive it, while destroyed participants must send or
-receive it. Nested message and statement activations retain stack order in semantic
+receive it. Created participant IDs must be new, and an existing participant
+cannot be reassigned between participant boxes. Nested message and statement
+activations retain stack order in semantic
 events and lower to depth-offset bars through backend-neutral Paint rectangles.
 Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON
