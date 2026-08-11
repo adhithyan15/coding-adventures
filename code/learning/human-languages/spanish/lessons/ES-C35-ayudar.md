@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C35-ayudar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1670
-chapter: 89
+sequence: 1680
+chapter: 90
 type: word
 headword: ayudar
 gloss: to help — literally the same word as English "aid", arriving by a different road

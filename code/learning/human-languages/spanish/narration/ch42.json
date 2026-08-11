@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 42,
-  "title": "Verbs That Break in the Middle --- the Stem Changers",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6edd5e13871d58c4",
+  "title": "Estar in the Plural",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:69dae5d1812dbbe8",
   "lessons": [
     {
-      "id": "ES-C11-querer",
+      "id": "ES-C09-estamos",
       "sequence": 920,
-      "title": "querer — wanting with one familiar vowel change",
-      "headword": "querer",
-      "romanization": "querer",
-      "gloss": "to want — with the singular present forms quiero, quieres, and quiere",
+      "title": "estamos — the other \"we are\"",
+      "headword": "estamos",
+      "romanization": "estamos",
+      "gloss": "\"we are\" — the other one, and the plural where estar behaves and ser does not",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b3998642e415a8b",
+      "sourceHash": "fnv1a64:e210640d49ae8041",
       "notice": null,
       "blocks": [
         {
@@ -35,22 +35,30 @@
             },
             {
               "kind": "speech",
-              "text": "You already say tienes and tiene, where the middle e opens into ie. Today, reuse that visible change in one useful verb and keep the same three-person frame you already own."
+              "text": "Say \"we are\" with ser. (Somos.) And how do you ask a friend how they are? (¿Cómo estás?)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: this one behaves",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — begin quiero with one smooth kye- syllable."
+              "text": "estamos — we are."
             },
             {
               "kind": "speech",
-              "text": "r-tap — end the infinitive querer with one light tap."
+              "text": "Drop the -ar, add -amos. That is the plain -ar ending you learned on hablamos, applied without alteration."
+            },
+            {
+              "kind": "speech",
+              "text": "And that is the point of this lesson. You have just spent a chapter on ser, whose six forms come from two different Latin verbs and refuse to resemble each other. Estar is not like that at all. In the plural it is an ordinary -ar verb."
+            },
+            {
+              "kind": "speech",
+              "text": "hablamos, estamos — the same ending, and no surprises."
             }
           ]
         },
@@ -61,61 +69,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "querer means “to want.” With a person as its object, it can also express love, but wanting is the meaning used in this lesson."
+              "text": "The reason is simple, and it is the reason for almost every irregularity you have met: estar is one verb. Latin stāre, \"to stand\" — and that is the whole ancestry. Nothing was fused into it, so nothing in it has a seam."
             },
             {
               "kind": "speech",
-              "text": "It descends from Latin quaerere, “to seek or ask.” English keeps the same searching idea in query, quest, inquire, and require. Wanting something begins as seeking it."
+              "text": "Ser is irregular because two verbs were welded together. Estar is regular because it never was."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth carrying, because it predicts the rest. Where a Spanish verb looks chaotic, the usual explanation is not that it decayed strangely but that it is more than one word wearing a single name."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: only the three singular forms",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present of querer"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of querer: quiero.",
-                "person: tú. present of querer: quieres.",
-                "person: él / ella / usted. present of querer: quiere."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say the small set as quiero, quieres, quiere. The e becomes ie that you saw in tienes, tiene is visible again. The plural persons are deliberately left for a later step."
-            },
-            {
-              "kind": "speech",
-              "text": "Place one known infinitive after the form of querer:"
-            },
-            {
-              "kind": "speech",
-              "text": "Quiero hablar. — “I want to speak.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Quieres comer. — “You want to eat.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Quiere vivir. — “He, she, or formal you wants to live.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The second verb stays in its known infinitive form."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -128,74 +95,64 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“querer — quiero, quieres, quiere”",
+              "instruction": "\"hablamos, estamos\" — the same ending",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “querer — quiero, quieres, quiere”]"
+              "source": "[YOU SAY: \"hablamos, estamos\" — the same ending]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Quiero hablar”",
+              "instruction": "\"somos, estamos\" — two verbs for we are, and only one of them is strange",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero hablar”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“quaerere — query — querer”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “quaerere — query — querer”]"
+              "source": "[YOU SAY: \"somos, estamos\" — two verbs for *we are*, and only one of them is strange]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C11-querer-singular-forms",
-              "prompt": "Give the learned singular present forms of querer: yo, tú, then él/ella/usted.",
+              "id": "ES-C09-estamos-form",
+              "prompt": "Say we are, using estar.",
               "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-ESTAR-PRESENT-1PL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "quiero, quieres, quiere",
-                "quiero quieres quiere",
-                "quiero / quieres / quiere"
+                "estamos",
+                "nosotros estamos"
               ],
               "feedback": {
-                "correct": "Right: quiero, quieres, quiere.",
-                "incorrect": "Keep the e becomes ie stem and use the three singular endings: quiero, quieres, quiere."
+                "correct": "Yes — a plain -ar ending.",
+                "incorrect": "estamos."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C11-querer-want-to-speak",
-              "prompt": "Say 'I want to speak' in Spanish.",
+              "id": "ES-C09-estamos-why",
+              "prompt": "Why is estar regular here when ser is not?",
               "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-LEX-HABLAR"
+                "ES-ETYMON-STARE",
+                "ES-GRAMMAR-SER-PRESENT-1PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "quiero hablar.",
-                "quiero hablar"
+                "estar is one latin verb, ser is two fused",
+                "estar is one verb",
+                "ser is two verbs, estar is one",
+                "because estar has one ancestor"
               ],
               "feedback": {
-                "correct": "Right: Quiero hablar.",
-                "incorrect": "Use quiero followed by the unchanged infinitive hablar."
+                "correct": "Right — nothing was welded into estar, so it has no seam.",
+                "incorrect": "Estar descends from one verb, stare. Ser is two fused together."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -207,26 +164,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does querer mean? (“To want.”) Give the three learned forms. (Quiero, quieres, quiere.) Which Latin verb and English cousin help explain it? (Quaerere, “seek”; query or quest.) Next: add the other singular vowel change with poder."
+              "text": "What is \"we are\" with estar? (Estamos.) Which Latin verb is it from? (Stāre, \"to stand\".) And why is it regular where ser is not? (Because it is one verb, not two.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C11-poder",
-      "sequence": 930,
-      "title": "poder — ability with the o becomes ue change",
-      "headword": "poder",
-      "romanization": "poder",
-      "gloss": "to be able or can — with the singular present forms puedo, puedes, and puede",
+      "id": "ES-C09-estan",
+      "sequence": 923,
+      "title": "están — \"they are\"",
+      "headword": "están",
+      "romanization": "están",
+      "gloss": "\"they are\" — with an accent that tells you where the stress went",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f482b96a3d0e2a44",
+      "sourceHash": "fnv1a64:3f167fde4448dadf",
       "notice": null,
       "blocks": [
         {
@@ -242,83 +199,39 @@
             },
             {
               "kind": "speech",
-              "text": "Quiero hablar says what you want to do. Now change the first verb to say what you are able to do. The second verb will remain a known infinitive."
+              "text": "Say \"we are\" with estar. (Estamos.) And \"they speak.\" (Hablan.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the ending is regular, the accent is the clue",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ue — puedo begins pwe- with one smooth glide."
+              "text": "están — they are, and ustedes están, you all are."
             },
             {
               "kind": "speech",
-              "text": "r-tap — end poder with one light tap."
+              "text": "The ending is -an, exactly as in hablan. But there is a written accent, and it is not decoration."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar is unusual in one specific way: it puts its stress on the ending rather than the stem, in every singular and plural form except estamos. You have already seen this without being told — estás, está, and now están. The accent is simply Spanish writing that stress down, by the rule for written accents you learned long ago."
+            },
+            {
+              "kind": "speech",
+              "text": "hablan — stress on the stem, no accent. están — stress on the ending, so an accent."
+            },
+            {
+              "kind": "speech",
+              "text": "Same ending, different stress, and the spelling records it faithfully."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "poder means “to be able”; in a sentence it often translates as “can.” It descends through Latin potere from posse, “to be able.” English power, potent, potential, and possible belong to the same family. Ability is the power to do something."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the three singular forms",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present of poder"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of poder: puedo.",
-                "person: tú. present of poder: puedes.",
-                "person: él / ella / usted. present of poder: puede."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say puedo, puedes, puede. In these three learned forms, the stem o opens into ue. Plural persons wait."
-            },
-            {
-              "kind": "speech",
-              "text": "Follow the form of poder with one unchanged infinitive:"
-            },
-            {
-              "kind": "speech",
-              "text": "Puedo hablar. — “I can speak.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Puedes comer. — “You can eat.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Puede vivir. — “He, she, or formal you can live.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Compare Quiero hablar with Puedo hablar: only the first verb changes the meaning from want to ability."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -331,74 +244,65 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“poder — puedo, puedes, puede”",
+              "instruction": "\"hablan\" then \"están\" — same ending, and hear the stress move",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “poder — puedo, puedes, puede”]"
+              "source": "[YOU SAY: \"hablan\" then \"están\" — same ending, and hear the stress move]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Puedo hablar”",
+              "instruction": "\"ustedes están\", addressing a group",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Puedo hablar”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“poder — power — possible”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “poder — power — possible”]"
+              "source": "[YOU SAY: \"ustedes están\", addressing a group]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C11-poder-singular-forms",
-              "prompt": "Give the learned singular present forms of poder: yo, tú, then él/ella/usted.",
+              "id": "ES-C09-estan-form",
+              "prompt": "Say they are, using estar.",
               "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "puedo, puedes, puede",
-                "puedo puedes puede",
-                "puedo / puedes / puede"
+                "estan",
+                "están",
+                "ellos estan",
+                "ustedes estan"
               ],
               "feedback": {
-                "correct": "Right: puedo, puedes, puede.",
-                "incorrect": "Keep the o becomes ue stem and use the three singular endings: puedo, puedes, puede."
+                "correct": "Yes — with the accent.",
+                "incorrect": "estan, written with an accent."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C11-poder-can-eat",
-              "prompt": "Say 'You can eat' to one friend in Spanish.",
+              "id": "ES-C09-estan-accent",
+              "prompt": "Why does estan carry an accent when hablan does not?",
               "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
-                "ES-LEX-COMER"
+                "ES-SOUND-WRITTEN-ACCENT",
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "puedes comer.",
-                "puedes comer"
+                "the stress is on the ending",
+                "because estar stresses the ending",
+                "stress on the last syllable"
               ],
               "feedback": {
-                "correct": "Right: Puedes comer.",
-                "incorrect": "Use the tú form puedes followed by the unchanged infinitive comer."
+                "correct": "Right — the accent is the stress, written down.",
+                "incorrect": "Because estar stresses its ending, and hablan stresses its stem."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -410,26 +314,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does poder mean? (“To be able; can.”) Give the three learned forms. (Puedo, puedes, puede.) What English word is its close cousin? (Power.) Next: compare only the singular forms you have actually learned."
+              "text": "What is \"they are\" with estar? (Están.) Why the accent? (The stress falls on the ending.) Which form of estar does not do that? (Estamos.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C11-stem-changes",
-      "sequence": 940,
-      "title": "e becomes ie and o becomes ue — compare the singular forms",
-      "headword": "e → ie and o → ue",
-      "romanization": "e → ie and o → ue",
-      "gloss": "comparing the two vowel changes inside the learned singular forms",
+      "id": "ES-C09-estais",
+      "sequence": 926,
+      "title": "estáis — and nothing surprises you",
+      "headword": "estáis",
+      "romanization": "estáis",
+      "gloss": "the vosotros form of estar, and the pattern is now fully predictable",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4be80501a3eb93da",
+      "sourceHash": "fnv1a64:d79eaac76e50543d",
       "notice": null,
       "blocks": [
         {
@@ -445,69 +349,192 @@
             },
             {
               "kind": "speech",
-              "text": "You now own three small singular sets: tengo, tienes, tiene; quiero, quieres, quiere; and puedo, puedes, puede. Compare only those learned forms before extending the pattern later."
+              "text": "Say \"they are\" with estar. (Están.) And the vosotros form of hablar? (Habláis.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — why vowels opened",
+          "type": "grammar",
+          "title": "Grammar Lens: predictable, and that is the news",
           "segments": [
             {
               "kind": "speech",
-              "text": "On the road from Latin to Spanish, many short e and o vowels opened when stressed: e becomes ie and o becomes ue. That history helps explain why a verb's stem can look different across its forms."
+              "text": "vosotros estáis — you all are, in Spain."
             },
             {
               "kind": "speech",
-              "text": "It is a clue, not a machine that predicts every form. Learn each verb's small set, then use the shared history to organize what you remember."
+              "text": "If you guessed that before reading it, you have understood the chapter. The ending is -áis, the plain -ar one from habláis, and the accent is there for the reason it is always there with this verb: the stress sits on the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "That is now three forms in a row where knowing estar meant knowing nothing new. In the Americas, ustedes están does this job."
             }
           ]
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"habláis\" then \"estáis\" — the same ending, twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"habláis\" then \"estáis\" — the same ending, twice]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estais-form",
+              "prompt": "Vosotros, from estar.",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRESENT-2PL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "estais",
+                "estáis",
+                "vosotros estais"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "estais, with an accent."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estais-where",
+              "prompt": "The same thing in Chile: which form?",
+              "assesses": [
+                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "estan",
+                "están",
+                "ustedes estan"
+              ],
+              "feedback": {
+                "correct": "Yes — ustedes estan.",
+                "incorrect": "Estan, with ustedes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the vosotros form of estar? (Estáis.) Why the accent? (Estar stresses its ending.) And in Argentina? (Ustedes están.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C09-repaso-ser-estar",
+      "sequence": 929,
+      "title": "Review — both verbs for \"to be\"",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — two verbs for \"to be,\" in every person, and why only one of them is strange",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a352ca09ffc57e8f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new. Say somos, then estamos."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: two changes, one learned frame",
+          "title": "Grammar Lens: side by side, and the difference is history",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "person",
-                "tener / querer, e becomes ie family",
-                "poder, o becomes ue"
+                "who",
+                "ser",
+                "estar"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 6,
               "utterances": [
-                "person: yo. tener / querer, e becomes ie family: tengo / quiero. poder, o becomes ue: puedo.",
-                "person: tú. tener / querer, e becomes ie family: tienes / quieres. poder, o becomes ue: puedes.",
-                "person: él / ella / usted. tener / querer, e becomes ie family: tiene / quiere. poder, o becomes ue: puede."
+                "who: yo. ser: soy. estar: estoy.",
+                "who: tú. ser: eres. estar: estás.",
+                "who: él, ella, usted. ser: es. estar: está.",
+                "who: nosotros. ser: somos. estar: estamos.",
+                "who: vosotros. ser: sois. estar: estáis.",
+                "who: ellos, ustedes. ser: son. estar: están."
               ]
             },
             {
               "kind": "speech",
-              "text": "The comparison says exactly this:"
+              "text": "Read the two columns down and the difference is not a matter of difficulty. It is a matter of history."
             },
             {
               "kind": "speech",
-              "text": "querer shows ie in all three forms learned here."
+              "text": "Ser is two Latin verbs fused — esse and sedēre — so its forms have no common shape. Five begin with s-; eres does not, and that is the seam."
             },
             {
               "kind": "speech",
-              "text": "poder shows ue in all three forms learned here."
+              "text": "Estar is one Latin verb, stāre. Its plural is a plain -ar paradigm, and the only oddity in the whole column is where the stress falls, which the written accent records honestly."
             },
             {
               "kind": "speech",
-              "text": "tener reminds you that a common verb may combine more than one change: tengo has its known g, while tienes and tiene show ie."
-            },
-            {
-              "kind": "speech",
-              "text": "No plural form and no new verb is part of today's generalization."
+              "text": "So the two hardest-looking verbs in Spanish are hard for opposite reasons: one because it is two words, and the other not really at all."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -520,252 +547,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“quiero, quieres, quiere”",
+              "instruction": "one column down, then the other",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “quiero, quieres, quiere”]"
+              "source": "[YOU SAY: one column down, then the other]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“puedo, puedes, puede”",
+              "instruction": "each row across — soy, estoy, somos, estamos — and hear which column surprises you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “puedo, puedes, puede”]"
+              "source": "[YOU SAY: each row across — *soy, estoy* · *somos, estamos* — and hear which column surprises you]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“stressed e and o often opened to ie and ue”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “stressed e and o often opened to ie and ue”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C11-stem-changes-yo-contrast",
-              "prompt": "Give the learned yo forms of querer and poder, in that order.",
+              "id": "ES-C09-repaso-ser-estar-we",
+              "prompt": "We are, with estar.",
               "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-ESTAR-PRESENT-1PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "quiero, puedo",
-                "quiero puedo",
-                "quiero / puedo"
+                "estamos",
+                "nosotros estamos"
               ],
               "feedback": {
-                "correct": "Right: quiero, puedo — e becomes ie beside o becomes ue.",
-                "incorrect": "Use the learned yo forms: quiero, then puedo."
+                "correct": "Yes.",
+                "incorrect": "estamos."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C11-stem-changes-tu-contrast",
-              "prompt": "Give the learned tú forms of tener, querer, and poder, in that order.",
+              "id": "ES-C09-repaso-ser-estar-they",
+              "prompt": "They are, with estar.",
               "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "estan",
+                "están",
+                "ellos estan"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "estan."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-repaso-ser-estar-why",
+              "prompt": "Which of the two has a regular plural, and why?",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRESENT-COMPLETE",
+                "ES-GRAMMAR-SER-PRESENT-COMPLETE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "tienes, quieres, puedes",
-                "tienes quieres puedes",
-                "tienes / quieres / puedes"
+                "estar, because it is one latin verb",
+                "estar",
+                "estar - one verb",
+                "estar, it has one ancestor"
               ],
               "feedback": {
-                "correct": "Right: tienes, quieres, puedes.",
-                "incorrect": "Retrieve the three known tú forms: tienes, quieres, puedes."
+                "correct": "Right — estar is one verb, so it has no seam.",
+                "incorrect": "Estar. It descends from a single verb, stare."
               }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which change appears in querer? (e becomes ie.) In poder? (o becomes ue.) Why is the history useful but not a complete prediction rule? (It organizes learned forms, but individual verbs can combine or resist changes.) Next: one possessive that agrees with a known noun's gender."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C11-nuestro",
-      "sequence": 950,
-      "title": "nuestro, nuestra — “our” with singular gender agreement",
-      "headword": "nuestro, nuestra",
-      "romanization": "nuestro, nuestra",
-      "gloss": "our — matching a known masculine or feminine singular noun",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:82e61889cb78fd47",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You put mi, tu, or su before the known noun café. Now add “our” and let it match one contrast you learned much earlier: masculine día beside feminine noche."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "nuestro and nuestra mean “our.” They descend from Latin noster, also “our.” Paternoster means “Our Father,” and English nostrum originally meant “our thing.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The change from noster to nuestro also displays the historical o becomes ue opening you just used to organize poder."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: match singular gender",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "known noun",
-                "“our” phrase"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "known noun: el día, masculine. “our” phrase: nuestro día.",
-                "known noun: la noche, feminine. “our” phrase: nuestra noche."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Like mi, tu, and su, the new word goes before the noun. Unlike those earlier forms, it shows the noun's gender: nuestro before a masculine singular noun, nuestra before a feminine singular noun."
-            },
-            {
-              "kind": "speech",
-              "text": "Only these two singular forms belong to this lesson. Plural agreement and the separate word for “your” to a group wait."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“nuestro día”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “nuestro día”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“nuestra noche”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “nuestra noche”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“noster — nuestro — Paternoster”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “noster — nuestro — Paternoster”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-nuestro-our-day",
-              "prompt": "Say 'our day' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
-                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
-                "ES-LEX-DIA"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "nuestro día",
-                "nuestro dia"
-              ],
-              "feedback": {
-                "correct": "Right: masculine día takes nuestro.",
-                "incorrect": "Use the masculine singular form nuestro before día."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-nuestro-our-night",
-              "prompt": "Say 'our night' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
-                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
-                "ES-LEX-NOCHE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "nuestra noche",
-                "nuestra noche."
-              ],
-              "feedback": {
-                "correct": "Right: feminine noche takes nuestra.",
-                "incorrect": "Use the feminine singular form nuestra before noche."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -777,249 +640,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which form goes before masculine día? (Nuestro.) Before feminine noche? (Nuestra.) What Latin source explains the pair? (Noster, “our.”) Next: retrieve the whole chapter without adding a form."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C11-practice",
-      "sequence": 960,
-      "title": "Practice — wanting, ability, and our known nouns",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "singular wanting, ability, vowel-change comparison, and our day or night",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f32b35f833685afa",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve two three-form verbs, compare their two vowel changes, and choose nuestro or nuestra before one known singular noun."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "wanting: quiero, quieres, quiere plus a known infinitive."
-            },
-            {
-              "kind": "speech",
-              "text": "ability: puedo, puedes, puede plus a known infinitive."
-            },
-            {
-              "kind": "speech",
-              "text": "the contrast: e becomes ie in the learned querer set; o becomes ue in the learned poder set."
-            },
-            {
-              "kind": "speech",
-              "text": "singular “our”: nuestro día, nuestra noche."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons and plural possessive agreement remain deferred."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The words, taken apart — retrieve the history",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "querer continues Latin quaerere, “seek,” the family of query."
-            },
-            {
-              "kind": "speech",
-              "text": "poder continues the Latin ability family behind power and possible."
-            },
-            {
-              "kind": "speech",
-              "text": "stressed Latin e and o often opened into Spanish ie and ue."
-            },
-            {
-              "kind": "speech",
-              "text": "nuestro, nuestra continue Latin noster, “our.”"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“quiero hablar; puedo hablar”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “quiero hablar; puedo hablar”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“quieres comer; puedes comer”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “quieres comer; puedes comer”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“nuestro día; nuestra noche”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “nuestro día; nuestra noche”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-querer-forms",
-              "prompt": "Give the learned singular forms of querer: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "quiero, quieres, quiere",
-                "quiero quieres quiere",
-                "quiero / quieres / quiere"
-              ],
-              "feedback": {
-                "correct": "Right: quiero, quieres, quiere.",
-                "incorrect": "Retrieve the three learned forms: quiero, quieres, quiere."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-poder-forms",
-              "prompt": "Give the learned singular forms of poder: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "puedo, puedes, puede",
-                "puedo puedes puede",
-                "puedo / puedes / puede"
-              ],
-              "feedback": {
-                "correct": "Right: puedo, puedes, puede.",
-                "incorrect": "Retrieve the three learned forms: puedo, puedes, puede."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-want-to-speak",
-              "prompt": "Say 'I want to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "quiero hablar.",
-                "quiero hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero hablar.",
-                "incorrect": "Use quiero followed by the known infinitive hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-can-eat",
-              "prompt": "Say 'You can eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-LEX-PODER",
-                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "puedes comer.",
-                "puedes comer"
-              ],
-              "feedback": {
-                "correct": "Right: Puedes comer.",
-                "incorrect": "Use puedes followed by the known infinitive comer."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C11-practice-our-night",
-              "prompt": "Say 'our night' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
-                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
-                "ES-LEX-NOCHE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "nuestra noche",
-                "nuestra noche."
-              ],
-              "feedback": {
-                "correct": "Right: feminine noche takes nuestra.",
-                "incorrect": "Choose feminine singular nuestra before noche."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) The next chapter can now build from this closed singular frontier."
+              "text": "Which of the two verbs is regular in the plural? (Estar.) Why? (It is one Latin verb; ser is two.) And what is the only oddity in estar's column? (Where the stress falls — which the accent records.)"
             }
           ]
         }

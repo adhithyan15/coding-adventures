@@ -18,6 +18,12 @@
   comma-like handwritten alternative.
 - Queue the series' dedicated Kaf lesson (`EcQ0gL-NM-k`) next.
 
+### Changed — Spanish runs 1..104 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `estar` gained a plural
+  chapter beside `ser`'s, so old Spanish chapters 42–103 shifted to 43–104.
+- Eager bundle 486,989 / 500,000 bytes.
+
 ### Added — cited Hebrew Tet ductus (HL-C09BL)
 
 - Render **ט** in four evidence-aligned frames: descend the left side and turn
