@@ -38,6 +38,7 @@ const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
 const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
+const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -633,6 +634,20 @@ describe("handwriting ductus", () => {
     expect(inner[0].y).toBeGreaterThan(inner.at(-1)!.y);
   });
 
+  it("Arabic independent ل descends through its leftward bowl without lifting", () => {
+    expect(ARABIC_LAM.script).toBe("arabic");
+    expect(penLifts(ARABIC_LAM)).toBe(0);
+    expect(ARABIC_LAM.strokes).toHaveLength(1);
+    expect(ARABIC_LAM.strokes[0].segments).toHaveLength(2);
+    const upright = ARABIC_LAM.strokes[0].segments[0].path;
+    const bowl = ARABIC_LAM.strokes[0].segments[1].path;
+    expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
+    expect(upright.at(-1)).toEqual(bowl[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -1079,6 +1094,23 @@ describe("handwriting ductus", () => {
     );
     expect(src.url).not.toBe(URDU_KAF.source.url);
     expect(ARABIC_KAF.glyph).not.toBe(URDU_KAF.glyph);
+  });
+
+  it("Arabic independent ل traces its unbroken upright and bowl to the Oregon MOV", () => {
+    const src = ARABIC_LAM.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ي ك ل.*Lam.*00:01.9–00:02.4.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked lam.mov.*one continuous pen-down run.*00:01.9–00:02.4.*descends the tall upright.*turns left.*base bowl.*without lifting.*rises.*outer edge.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*Arabic-scoped ل.*distinct from.*Persian and Urdu.*same Unicode glyph.*own source-backed orders/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ل"].source.url);
+    expect(src.url).not.toBe(URDU_LAM.source.url);
+    expect(ARABIC_LAM.glyph).toBe(DUCTUS["ل"].glyph);
+    expect(ARABIC_LAM.glyph).toBe(URDU_LAM.glyph);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

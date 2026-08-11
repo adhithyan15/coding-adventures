@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-lam ductus (HL-C09AW)
+
+- Render **ل** in two evidence-aligned frames: descend the tall upright, then
+  continue left through the base bowl without lifting.
+- Keep the directly linked MOV's one pen-down run, zero lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Lam independently of the existing Persian and Urdu records
+  for the same Unicode glyph, and queue the page's directly linked **ي** source.
+
 ### Added — cited Arabic independent-kaf ductus (HL-C09AV)
 
 - Render **ك** in three evidence-aligned frames: descend the main upright, turn
