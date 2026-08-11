@@ -32,6 +32,7 @@ const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
+const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -539,6 +540,18 @@ describe("handwriting ductus", () => {
     expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
   });
 
+  it("Arabic independent س joins its three close teeth directly to the final bowl", () => {
+    expect(ARABIC_SEEN.script).toBe("arabic");
+    expect(penLifts(ARABIC_SEEN)).toBe(0);
+    expect(ARABIC_SEEN.strokes).toHaveLength(1);
+    expect(ARABIC_SEEN.strokes[0].segments).toHaveLength(2);
+    const teeth = ARABIC_SEEN.strokes[0].segments[0].path;
+    const bowl = ARABIC_SEEN.strokes[0].segments[1].path;
+    expect(teeth[0].x).toBeGreaterThan(teeth.at(-1)!.x);
+    expect(teeth.at(-1)).toEqual(bowl[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -902,6 +915,21 @@ describe("handwriting ductus", () => {
       /one continuous pen-down run.*00:08.8–00:09.3.*upper tip.*descends through the short stroke.*sweeps left.*lower curve.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*Urdu ر source.*same Unicode glyph/i,
     );
     expect(src.url).not.toBe(URDU_RE.source.url);
+  });
+
+  it("Arabic independent س traces its continuous teeth and bowl to the University of Oregon", () => {
+    const src = ARABIC_SEEN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Seen.*00:01.6–00:02.8.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /FullSizeRender-8.mov.*one continuous pen-down run.*00:01.6–00:02.8.*upper right.*three close teeth.*right to left.*final bowl.*without lifting.*two-way connector.*contextual shapes.*Noto Naskh.*scoped to Arabic.*Persian or Urdu س sources.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["س"].source.url);
+    expect(src.url).not.toBe(URDU_SIN.source.url);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {

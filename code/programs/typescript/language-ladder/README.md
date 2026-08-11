@@ -314,7 +314,11 @@ independently: its upper tip descends through the short stroke, then sweeps left
 through the lower curve in the same pen-down run. The two-frame filmstrip
 preserves that zero-lift motion, one-way-connector context, and Arabic-scoped
 provenance independently of Urdu ر while fitting the same isolated Noto Naskh
-outline. The
+outline. The next page's `FullSizeRender-8.mov` verifies **س** independently:
+it shapes three close teeth right-to-left, then flows directly into the final
+bowl in the same pen-down run. The two-frame filmstrip preserves that zero-lift
+motion, two-way-connector context, and Arabic-scoped provenance independently
+of Persian and Urdu س while fitting the same isolated Noto Naskh outline. The
 runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

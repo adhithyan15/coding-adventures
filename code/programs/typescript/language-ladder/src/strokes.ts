@@ -253,6 +253,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // descends through its short stroke, and sweeps left through the lower curve
 // without lifting. Its scoped source stays distinct from Urdu ر even though
 // both paths fit the same vendored Noto Naskh glyph.
+// The next page's Arabic س clip shapes all three close teeth right-to-left and
+// flows directly into the final bowl in one uninterrupted run. Its scoped
+// evidence stays distinct from the already-authored Persian and Urdu س paths.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -785,6 +788,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ر"),
+  },
+  [ductusKey("arabic", "س")]: {
+    script: "arabic",
+    glyph: "س",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "form the three close teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow directly into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("س"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",
