@@ -1384,6 +1384,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("4.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — exact unary signs stay attached to direct real literals while
+    // the bounded source-spelling path continues to reject computed reals.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(-4.25, +2.5) end",
+        expect: Expect::Stdout("-4.25+2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
     // E4-dyn *frontend* feature: a `string procedure` returns a runtime string.
     // Here the result is chosen by control flow inside the body
@@ -5892,6 +5901,34 @@ fn algol_real_literal_output_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but ALGOL real-literal output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_signed_real_literal_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60 && program.src.contains("output(-4.25, +2.5)")
+        })
+        .expect("the ALGOL signed-real-literal program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but signed real output did not complete"
             );
             continue;
         };
