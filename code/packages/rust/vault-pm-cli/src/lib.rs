@@ -6,13 +6,13 @@
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
-    AddItemRandomnessV1, ApplicationError, AuditVerificationV1, BootstrapLocator,
-    DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ItemHistoryViewV1,
-    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, ReplaceItemRandomnessV1,
-    RestoreItemRandomnessV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
-    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT,
-    DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
-    RESTORE_ITEM_RANDOM_BYTES,
+    AddItemRandomnessV1, ApplicationError, AuditVerificationV1, AuditedAccessRandomnessV1,
+    BootstrapLocator, DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness,
+    ItemHistoryViewV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1,
+    ReplaceItemRandomnessV1, RestoreItemRandomnessV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
+    GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -432,6 +432,15 @@ fn authenticated_access(
     Ok((access, application_store))
 }
 
+fn audited_access_inputs(
+    host: &dyn CliHost,
+) -> Result<(u64, AuditedAccessRandomnessV1), CliFailure> {
+    let wall_time_ms = host.now_ms().map_err(map_host)?;
+    let mut random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
+    host.fill_entropy(&mut random).map_err(map_host)?;
+    Ok((wall_time_ms, AuditedAccessRandomnessV1::new(random)))
+}
+
 fn item_add_login(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -483,11 +492,26 @@ fn item_list(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, _) = authenticated_access(host, paths, writer)?;
-    let result = access
+    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let result = if access
         .as_unlocked()
-        .and_then(|session| session.list_items());
-    access.lock();
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_list_items(wall_time_ms, randomness, &application_store)
+            .map_err(map_application)?
+            .into_operation()
+    } else {
+        let result = access
+            .as_unlocked()
+            .and_then(|session| session.list_items());
+        access.lock();
+        result
+    };
     let items = result.map_err(map_application)?;
     if items.is_empty() {
         return Ok(CliOutput::success("No items.\n"));
@@ -576,14 +600,29 @@ fn item_show(
     writer: &LocalWriterGuard,
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, _) = authenticated_access(host, paths, writer)?;
-    let result = access
+    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let item = if access
         .as_unlocked()
-        .and_then(|session| session.get_item(item_id));
-    access.lock();
-    let item = result
         .map_err(map_application)?
-        .ok_or(CliFailure::NotFound)?;
+        .audit_enabled()
+    {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_get_item(item_id, wall_time_ms, randomness, &application_store)
+            .map_err(map_application)?
+            .into_operation()
+            .map_err(map_application)?
+    } else {
+        let result = access
+            .as_unlocked()
+            .and_then(|session| session.get_item(item_id));
+        access.lock();
+        result
+            .map_err(map_application)?
+            .ok_or(CliFailure::NotFound)?
+    };
     render_item(item)
 }
 
@@ -626,11 +665,32 @@ fn history_list(
     writer: &LocalWriterGuard,
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, _) = authenticated_access(host, paths, writer)?;
-    let result = access
+    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let result = if access
         .as_unlocked()
-        .and_then(|session| session.item_history(item_id, DEFAULT_ITEM_HISTORY_LIMIT));
-    access.lock();
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_item_history(
+                item_id,
+                DEFAULT_ITEM_HISTORY_LIMIT,
+                wall_time_ms,
+                randomness,
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_operation()
+    } else {
+        let result = access
+            .as_unlocked()
+            .and_then(|session| session.item_history(item_id, DEFAULT_ITEM_HISTORY_LIMIT));
+        access.lock();
+        result
+    };
     let history = result.map_err(map_application)?;
     if history.is_empty() {
         return Err(CliFailure::NotFound);
@@ -908,10 +968,25 @@ fn audit_verify(
             &repository_factory,
         )
         .map_err(map_application)?;
-    let result = access
+    let result = if access
         .as_unlocked()
-        .and_then(|session| session.audit_verify());
-    access.lock();
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_verify(wall_time_ms, randomness, &application_store)
+            .map_err(map_application)?
+            .into_operation()
+    } else {
+        let result = access
+            .as_unlocked()
+            .and_then(|session| session.audit_verify());
+        access.lock();
+        result
+    };
     let report = result.map_err(map_application)?;
     Ok(render_audit(report))
 }
@@ -945,8 +1020,30 @@ fn doctor(
             )
             .map_err(map_application)?;
     }
-    let report = access.doctor(&application_store, &application_store);
-    access.lock();
+    let report = if unlock
+        && access
+            .as_unlocked()
+            .map_err(map_application)?
+            .audit_enabled()
+    {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_doctor(
+                &application_store,
+                &application_store,
+                wall_time_ms,
+                randomness,
+            )
+            .map_err(map_application)?
+            .into_operation()
+            .map_err(map_application)?
+    } else {
+        let report = access.doctor(&application_store, &application_store);
+        access.lock();
+        report
+    };
     let (label, code) = match report.state() {
         VaultDoctorStateV1::Healthy => ("healthy", ExitCode::Success),
         VaultDoctorStateV1::InitializationRequired => {
@@ -1351,6 +1448,19 @@ mod tests {
         }
     }
 
+    fn activate_test_audit_epoch(paths: &LocalVaultPaths, passphrase: Vec<u8>) {
+        let prepared = paths.prepare().unwrap();
+        let writer = prepared.try_acquire_writer().unwrap();
+        let host = TestHost::new(paths.clone(), [passphrase]);
+        let (access, application_store) = authenticated_access(&host, paths, &writer).unwrap();
+        let (wall_time_ms, randomness) = audited_access_inputs(&host).unwrap();
+        access
+            .into_unlocked()
+            .unwrap()
+            .activate_audit_epoch(wall_time_ms, randomness, &application_store)
+            .unwrap();
+    }
+
     #[test]
     fn parser_is_closed_and_never_accepts_secret_arguments() {
         let root = TestRoot::new();
@@ -1476,6 +1586,68 @@ mod tests {
 
         let locked = TestHost::new(paths, []);
         assert_eq!(run(["status"], &locked).stdout(), "Status: locked\n");
+    }
+
+    #[test]
+    fn active_epoch_routes_direct_cli_reads_through_durable_audit_events() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audited cli passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"audited item secret".to_vec()],
+            [
+                "Audited CLI item".to_owned(),
+                "user@example.test".to_owned(),
+                String::new(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+        let item_id =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        for arguments in [
+            vec!["item", "list"],
+            vec!["item", "show", item_id.as_str()],
+            vec!["history", "list", item_id.as_str()],
+        ] {
+            let host = TestHost::new(paths.clone(), [passphrase.clone()]);
+            let output = run(arguments, &host);
+            assert_eq!(output.exit_code(), ExitCode::Success, "{output:?}");
+            assert!(!output.stdout().contains("audited item secret"));
+        }
+
+        let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let audit = run(["audit", "verify"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit.stdout().contains("commits=6"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=4"), "{audit:?}");
+
+        let doctor_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let doctor = run(["doctor", "--unlock"], &doctor_host);
+        assert_eq!(doctor.exit_code(), ExitCode::Success, "{doctor:?}");
+
+        let final_host = TestHost::new(paths, [passphrase]);
+        let final_audit = run(["audit", "verify"], &final_host);
+        assert_eq!(
+            final_audit.exit_code(),
+            ExitCode::Success,
+            "{final_audit:?}"
+        );
+        assert!(
+            final_audit.stdout().contains("commits=8"),
+            "{final_audit:?}"
+        );
+        assert!(
+            final_audit.stdout().contains("audit_events=6"),
+            "{final_audit:?}"
+        );
     }
 
     #[test]

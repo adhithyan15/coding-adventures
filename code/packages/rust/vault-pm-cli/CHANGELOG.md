@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Route list, show, history list, audit verify, and unlocked doctor through
+  signed publish-before-render access events whenever the vault audit epoch is
+  active, while retaining backward-compatible pre-audit behavior.
 - Added reversible authenticated `item delete ITEM` and
   `history restore ITEM REVISION` mutations with strict item-bound selectors,
   causal tombstones, and restore-as-new-revision semantics.

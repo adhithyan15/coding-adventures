@@ -36,12 +36,19 @@ fully authenticated encrypted operation events (zero for pre-audit vaults),
 with no paths, locators, providers, identities, or cryptographic details. No command accepts a
 passphrase through argv, stdin, environment, configuration, or URL.
 
+When an audit epoch already exists, `audit verify`, `doctor --unlock`, `item
+list`, `item show`, and `history list` consume the unlocked session through the
+application's signed publish-before-release boundary. Output is constructed
+only after the event and next owner state are durable. Pre-audit vaults retain
+their prior read behavior until the all-command migration cutover is exposed.
+
 `item add login` unlocks once, collects bounded fields from the controlling
 terminal, obtains fresh mutation and metadata identities from OS entropy, and
 consumes the session through the crash-resumable application mutation.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; the password and notes body are
-never available to the renderer.
+never available to the renderer. In an active epoch, both commands first make
+their exact signed access outcome durable.
 
 `item edit ITEM` resolves the authenticated sole current revision, opens that
 exact document only inside a wipe-on-drop wrapper, preserves immutable identity
