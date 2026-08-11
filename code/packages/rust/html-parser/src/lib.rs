@@ -5213,6 +5213,12 @@ impl HtmlParser {
             && !self.current_has_child_element("tr")
             && !self.current_has_child_element("thead")
         {
+            if self.first_authored_open_template_index().is_some() {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-row-start-tag-in-template-body",
+                    "start tag `<tr>` in template body content was ignored",
+                ));
+            }
             return;
         }
 
@@ -34719,6 +34725,22 @@ mod tests {
         assert_eq!(
             output.document,
             parse_html("<!doctype html><template><div></div></template>").unwrap()
+        );
+
+        let restored_template_current = parse_html_with_diagnostics(
+            "<!doctype html><template><div></div><tr><span>x</span></template>",
+        )
+        .unwrap();
+        assert_eq!(
+            restored_template_current.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-row-start-tag-in-template-body",
+                "start tag `<tr>` in template body content was ignored",
+            )]
+        );
+        assert_eq!(
+            restored_template_current.document,
+            parse_html("<!doctype html><template><div></div><span>x</span></template>").unwrap()
         );
 
         for source in [
