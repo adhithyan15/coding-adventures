@@ -1092,34 +1092,61 @@ jobs:
         timeout-minutes: 25
         run: |
           set -euo pipefail
-          sudo apt-get install -y libgtk-3-dev
+          sudo apt-get install -y libgtk-3-dev xvfb
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
           runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
-          output="$RUNNER_TEMP/mosaic-flutter-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/flutter/mosaic-degradations.json"
+          bundled_output="$RUNNER_TEMP/mosaic-flutter-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend flutter --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/flutter/mosaic-degradations.json"
           (
-            cd "$output/flutter"
+            cd "$bundled_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_flutter_runtime_conformance .
+            flutter pub get
+            flutter analyze
+            flutter build linux --debug
+          )
+
+          bundled_runtime="$(find "$bundled_output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
+          test -n "$bundled_runtime"
+          cmp "$runtime_library" "$bundled_runtime"
+
+          mkdir -p "$bundled_output/flutter/bin"
+          sed 's|package:mosaic_flutter_runtime_conformance/mosaic_host.dart|package:mosaic_counter/mosaic_host.dart|' \
+            code/packages/rust/mosaic-app-bindings/conformance/flutter/bin/conformance.dart \
+            > "$bundled_output/flutter/bin/mosaic_runtime_conformance.dart"
+          (
+            cd "$bundled_output/flutter"
+            unset MOSAIC_APP_LIBRARY
+            dart analyze bin/mosaic_runtime_conformance.dart
+            dart run bin/mosaic_runtime_conformance.dart
+          )
+
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
+          taskapp_output="$RUNNER_TEMP/mosaic-flutter-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/flutter/mosaic-degradations.json"
+          (
+            cd "$taskapp_output/flutter"
             flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
             flutter pub get
             flutter analyze
             flutter build linux --debug
           )
 
-          bundled_runtime="$(find "$output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
-          test -n "$bundled_runtime"
-          cmp "$runtime_library" "$bundled_runtime"
-
-          mkdir -p "$output/flutter/bin"
-          sed 's|package:mosaic_flutter_runtime_conformance/mosaic_host.dart|package:mosaic_task_app/mosaic_host.dart|' \
-            code/packages/rust/mosaic-app-bindings/conformance/flutter/bin/conformance.dart \
-            > "$output/flutter/bin/mosaic_runtime_conformance.dart"
-          (
-            cd "$output/flutter"
-            unset MOSAIC_APP_LIBRARY
-            dart analyze bin/mosaic_runtime_conformance.dart
-            dart run bin/mosaic_runtime_conformance.dart
-          )
+          bundled_taskapp_runtime="$(find "$taskapp_output/flutter/build/linux" -type f -name 'libmosaic_app.so' -print -quit)"
+          test -n "$bundled_taskapp_runtime"
+          cmp "$task_runtime_library" "$bundled_taskapp_runtime"
+          installed_taskapp="$(find "$taskapp_output/flutter/build/linux" -type f -name 'mosaic_taskapp_acceptance' -perm -111 -print -quit)"
+          test -n "$installed_taskapp"
+          taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY xvfb-run -a timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          taskapp_status=$?
+          set -e
+          test "$taskapp_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "Unhandled Exception|MissingPluginException|NoSuchMethodError|TypeError" "$taskapp_log"
 
           strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"

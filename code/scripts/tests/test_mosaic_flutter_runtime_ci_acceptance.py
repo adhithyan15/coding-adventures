@@ -45,6 +45,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-capi",
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
+            "rust/task-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -117,14 +118,27 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
         self.assertIn("flutter-version: '3.44.0'", workflow)
         self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
-        self.assertIn("--backend flutter --output \"$output\" --emit-project", workflow)
+        self.assertIn(
+            "--backend flutter --output \"$taskapp_output\" --emit-project",
+            workflow,
+        )
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app",
+            workflow,
+        )
+        self.assertIn('libtask_mosaic_app.so', workflow)
+        self.assertIn('cmp "$task_runtime_library" "$bundled_taskapp_runtime"', workflow)
+        self.assertIn('find "$taskapp_output/flutter/build/linux"', workflow)
+        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('test "$taskapp_status" -eq 124', workflow)
+        self.assertIn('Mosaic Rust runtime unavailable', workflow)
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
         self.assertIn("flutter analyze", workflow)
-        self.assertIn("find \"$output/flutter/build/linux\"", workflow)
+        self.assertIn("find \"$bundled_output/flutter/build/linux\"", workflow)
         self.assertIn("cmp \"$runtime_library\" \"$bundled_runtime\"", workflow)
         self.assertIn("unset MOSAIC_APP_LIBRARY", workflow)
         self.assertIn("dart run bin/mosaic_runtime_conformance.dart", workflow)

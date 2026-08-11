@@ -37,8 +37,9 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 - **Promote the concrete TaskApp Rust adapter on the remaining native backends.**
   `task-mosaic-app` now supplies the complete MIL prop/event contract and Qt bundles
   it in a strict, zero-degradation app (see Resolved). Replace the conformance
-  fixture with this application library for SwiftUI, XAML, Flutter, and Compose one
-  backend at a time, retaining each platform's build/install/launch gate.
+  fixture with this application library for SwiftUI, XAML, and Compose one backend
+  at a time, retaining each platform's build/install/launch gate. Flutter now uses
+  the concrete adapter and launches the generated Linux desktop app (see Resolved).
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
@@ -93,6 +94,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   needs SQL-over-IndexedDB rather than load-all.
 
 ## Resolved (kept for traceability, not actionable)
+
+- **Concrete Rust TaskApp engine on strict Flutter.** Flutter CI keeps the small
+  counter ABI conformance build as an independent binding proof, then separately
+  emits TaskApp with `task-mosaic-app`, requires zero degradations, builds the Linux
+  desktop bundle, compares its `libmosaic_app.so` byte-for-byte with the adapter
+  artifact, and launches the packaged app under a virtual display without an
+  injected runtime path. This turns the earlier compile-only TaskApp shell into the
+  second concrete native application gate after Qt.
 
 - **Concrete Rust TaskApp engine adapter + strict Qt application.**
   `task-mosaic-app` composes the pure `task-core` engine with portable presentation

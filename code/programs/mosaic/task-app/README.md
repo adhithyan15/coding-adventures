@@ -38,10 +38,11 @@ generated native UI + standard host binding
 task-mosaic-app (MIL slots/events + presentation state) → task-core
 ```
 
-Qt is the first TaskApp backend gated on this concrete engine: CI requires zero
-degradations, builds and installs the generated project, verifies the bundled
-library byte-for-byte, and launches the installed app without an injected runtime
-path.
+Qt and Flutter are gated on this concrete engine. CI requires zero degradations,
+builds the generated native project, verifies the bundled library byte-for-byte,
+and launches the installed app without an injected runtime path. The ABI
+conformance fixture remains a separate gate, so a passing TaskApp launch cannot
+mask a regression in the standard host binding.
 
 ## What it does
 
