@@ -4669,15 +4669,27 @@ impl HtmlParser {
                             ));
                             self.open_elements.pop();
                         }
+                        let authored_template_count = self.authored_open_template_count();
+                        for _ in 0..authored_template_count {
+                            self.diagnostics.push(ParserDiagnostic::new(
+                                "eof-in-template",
+                                "end of file was reached while parsing a template",
+                            ));
+                        }
+                        let eof_open_element_limit = self
+                            .first_authored_open_template_index()
+                            .unwrap_or(self.open_elements.len());
                         if (self.is_fragment
-                            || self.has_open_element("body")
-                            || self.current_element_is("plaintext"))
-                            && self.has_disallowed_authored_open_element_for_eof()
+                            || self.open_element_prefix_has_name(eof_open_element_limit, "body")
+                            || self.open_element_prefix_current_is(
+                                eof_open_element_limit,
+                                "plaintext",
+                            ))
+                            && self.has_disallowed_authored_open_element_for_eof_before(
+                                eof_open_element_limit,
+                            )
                         {
-                            if self.has_open_table_context()
-                                && (self.current_element_is_table_structure()
-                                    || self.current_parent_is_fostered_before_open_table())
-                            {
+                            if self.eof_open_element_prefix_is_in_table(eof_open_element_limit) {
                                 self.diagnostics.push(ParserDiagnostic::new(
                                     "eof-in-table",
                                     "end of file was reached while parsing table structure",
@@ -8473,13 +8485,68 @@ impl HtmlParser {
         })
     }
 
-    fn has_disallowed_authored_open_element_for_eof(&self) -> bool {
-        self.open_elements.iter().any(|path| {
+    fn has_disallowed_authored_open_element_for_eof_before(&self, limit: usize) -> bool {
+        self.open_elements[..limit].iter().any(|path| {
             element_ref_at_path(&self.document, path).is_some_and(|element| {
                 !has_fragment_context_marker(element)
                     && is_disallowed_open_element_for_body_end(element)
             })
         })
+    }
+
+    fn first_authored_open_template_index(&self) -> Option<usize> {
+        self.open_elements.iter().position(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name == "template"
+                    && element.namespace.is_none()
+                    && !has_fragment_context_marker(element)
+            })
+        })
+    }
+
+    fn authored_open_template_count(&self) -> usize {
+        self.open_elements
+            .iter()
+            .filter(|path| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.name == "template"
+                        && element.namespace.is_none()
+                        && !has_fragment_context_marker(element)
+                })
+            })
+            .count()
+    }
+
+    fn eof_open_element_prefix_is_in_table(&self, limit: usize) -> bool {
+        let open_elements = &self.open_elements[..limit];
+        let Some(current_path) = open_elements.last() else {
+            return false;
+        };
+        let Some(table_path) = open_elements.iter().rfind(|path| {
+            element_at_path(&self.document, path).is_some_and(is_table_context_element)
+        }) else {
+            return false;
+        };
+        element_at_path(&self.document, current_path).is_some_and(|name| {
+            matches!(
+                name,
+                "table" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
+            )
+        }) || !current_path.starts_with(table_path)
+    }
+
+    fn open_element_prefix_has_name(&self, limit: usize, name: &str) -> bool {
+        self.open_elements[..limit]
+            .iter()
+            .any(|path| element_at_path(&self.document, path).is_some_and(|open| open == name))
+    }
+
+    fn open_element_prefix_current_is(&self, limit: usize, name: &str) -> bool {
+        self.open_elements[..limit]
+            .last()
+            .is_some_and(|path| {
+                element_at_path(&self.document, path).is_some_and(|open| open == name)
+            })
     }
 
     fn current_element_is_authored_text_mode_element(&self) -> bool {
@@ -32157,7 +32224,6 @@ mod tests {
         for source in [
             "<!doctype html><html><plaintext></plaintext>",
             "<!doctype html><head><plaintext></plaintext>",
-            "<!doctype html><template><plaintext>a</template>b",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
@@ -32168,6 +32234,19 @@ mod tests {
                 "source {source:?}"
             );
         }
+
+        let template = parse_html_with_diagnostics(
+            "<!doctype html><template><plaintext>a</template>b",
+        )
+        .unwrap();
+        assert!(template
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-template"));
+        assert!(template
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
 
         let noscript = parse_html_with_diagnostics_and_options(
             "<!doctype html><html><noscript><plaintext></plaintext>",
@@ -34476,6 +34555,78 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "eof-in-table"));
+    }
+
+    #[test]
+    fn reports_eof_once_for_each_authored_open_template() {
+        for (source, expected_count) in [
+            ("<!doctype html><template>", 1),
+            ("<!doctype html><template><div>", 1),
+            ("<!doctype html><template><template><div>", 2),
+            ("<!doctype html><template><script>var i", 1),
+            ("<!doctype html><table><tr><template><td>", 1),
+            ("<!doctype html><select><template>", 1),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "eof-in-template")
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
+
+        let table =
+            parse_html_with_diagnostics("<!doctype html><table><tr><template><td>").unwrap();
+        assert!(table
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-table"));
+        assert!(table
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
+
+        let cell = parse_html_with_diagnostics(
+            "<!doctype html><table><tr><td><template><div>",
+        )
+        .unwrap();
+        assert_eq!(
+            cell.parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-in-template")
+                .count(),
+            1
+        );
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-table"));
+        assert!(cell
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-with-unclosed-elements"));
+
+        for source in [
+            "<!doctype html><template></template>",
+            "<!doctype html><template><template></template></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-in-template"));
+        }
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("<div>", "template")
+            .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-template"));
     }
 
     #[test]
