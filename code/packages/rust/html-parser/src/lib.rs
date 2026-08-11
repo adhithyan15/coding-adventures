@@ -8247,6 +8247,27 @@ impl HtmlParser {
         }
     }
 
+    fn adoption_inner_loop_formatting_wrappers(
+        &self,
+        formatting_index: usize,
+        furthest_block_index: usize,
+    ) -> Vec<(String, Vec<Attribute>)> {
+        self.open_elements
+            .iter()
+            .enumerate()
+            .take(furthest_block_index)
+            .skip(formatting_index + 1)
+            .filter_map(|(index, path)| {
+                if furthest_block_index - index > 3 {
+                    return None;
+                }
+                let element = element_ref_at_path(&self.document, path)?;
+                is_adoption_agency_element(&element.name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect()
+    }
+
     fn remove_pending_formatting_reconstruction(&mut self, name: &str) {
         self.pending_formatting_reconstruction
             .retain(|(candidate, _)| candidate != name);
@@ -8470,12 +8491,15 @@ impl HtmlParser {
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
 
-        let Some(first_div_path) = self
+        let Some((first_div_index, first_div_path)) = self
             .open_elements
             .iter()
+            .enumerate()
             .skip(formatting_index + 1)
-            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "div"))
-            .cloned()
+            .find(|(_, path)| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "div")
+            })
+            .map(|(index, path)| (index, path.clone()))
         else {
             return false;
         };
@@ -8492,7 +8516,7 @@ impl HtmlParser {
             let Some(element) = element_ref_at_path(&self.document, ancestor_path) else {
                 return false;
             };
-            if is_formatting_element(&element.name) {
+            if is_adoption_agency_element(&element.name) {
                 formatting_wrappers.push((element.name.clone(), element.attributes.clone()));
             } else {
                 saw_non_formatting_wrapper = true;
@@ -8508,7 +8532,8 @@ impl HtmlParser {
         };
         wrap_formatting_along_path(&mut div, &[], &formatting_name, &formatting_attributes);
 
-        let wrappers_to_clone = &formatting_wrappers[..formatting_wrappers.len() - 1];
+        let wrappers_to_clone =
+            self.adoption_inner_loop_formatting_wrappers(formatting_index, first_div_index);
         let mut adopted_subtree = div;
         for (wrapper_name, wrapper_attributes) in wrappers_to_clone.iter().rev() {
             let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
@@ -8536,7 +8561,7 @@ impl HtmlParser {
         self.open_elements.truncate(formatting_index);
         let mut inserted_path = insertion.0;
         inserted_path.push(insertion.1);
-        for _ in wrappers_to_clone {
+        for _ in &wrappers_to_clone {
             self.open_elements.push(inserted_path.clone());
             inserted_path.push(0);
         }
@@ -8568,23 +8593,15 @@ impl HtmlParser {
                 .find(|element| element.name == "a")
                 .map(|element| (element.name.clone(), element.attributes.clone()))
         };
-        let pending_formatting_reconstruction = self
+        let Some((first_div_index, first_div_path)) = self
             .open_elements
             .iter()
+            .enumerate()
             .skip(formatting_index + 1)
-            .filter_map(|path| {
-                let element = element_ref_at_path(&self.document, path)?;
-                (is_formatting_element(&element.name) && element.name != formatting_name)
-                    .then(|| (element.name.clone(), element.attributes.clone()))
+            .find(|(_, path)| {
+                element_at_path(&self.document, path).is_some_and(|name| name == "div")
             })
-            .collect::<Vec<_>>();
-
-        let Some(first_div_path) = self
-            .open_elements
-            .iter()
-            .skip(formatting_index + 1)
-            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "div"))
-            .cloned()
+            .map(|(index, path)| (index, path.clone()))
         else {
             return false;
         };
@@ -8593,6 +8610,16 @@ impl HtmlParser {
         {
             return false;
         }
+        let pending_formatting_reconstruction = self
+            .open_elements
+            .iter()
+            .skip(first_div_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                (is_adoption_agency_element(&element.name) && element.name != formatting_name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
 
         let mut wrapper_elements = Vec::new();
         for depth in formatting_path.len() + 1..first_div_path.len() {
@@ -8600,7 +8627,7 @@ impl HtmlParser {
             let Some(element) = element_ref_at_path(&self.document, ancestor_path) else {
                 return false;
             };
-            if !is_formatting_element(&element.name) {
+            if !is_adoption_agency_element(&element.name) {
                 return false;
             }
             wrapper_elements.push((element.name.clone(), element.attributes.clone()));
@@ -8663,11 +8690,8 @@ impl HtmlParser {
             );
         }
         let mut adopted_subtree = div;
-        let cloned_wrappers = if wrapper_elements.len() > 1 && relative_div_path.is_empty() {
-            &wrapper_elements[1..]
-        } else {
-            wrapper_elements.as_slice()
-        };
+        let cloned_wrappers =
+            self.adoption_inner_loop_formatting_wrappers(formatting_index, first_div_index);
         for (wrapper_name, wrapper_attributes) in cloned_wrappers.iter().rev() {
             let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
             if let Node::Element(wrapper_element) = &mut wrapper {
@@ -8690,7 +8714,7 @@ impl HtmlParser {
         self.open_elements.truncate(formatting_index);
         let mut moved_div_path = formatting_parent_path.to_vec();
         moved_div_path.push(insert_index);
-        for _ in cloned_wrappers {
+        for _ in &cloned_wrappers {
             self.open_elements.push(moved_div_path.clone());
             moved_div_path.push(0);
         }
@@ -31187,6 +31211,29 @@ mod tests {
         let aside = element(&non_foo_body.children[1]);
         assert_eq!(aside.name, "aside");
         assert_eq!(element(&aside.children[0]).name, "b");
+    }
+
+    #[test]
+    fn adoption_inner_loop_drops_formatting_beyond_three_nodes() {
+        for (source, continued_formatting) in [
+            ("<div><a><b><u><i><div></a>X", &["b", "u", "i"][..]),
+            ("<div><a><b><u><i><code><div></a>X", &["u", "i", "code"][..]),
+            ("<div><a><b><span><u><i><div></a>X", &["u", "i"][..]),
+        ] {
+            let document = parse_html(source).unwrap();
+            let outer_div = element(&body(&document).children[0]);
+            assert_eq!(outer_div.name, "div", "source {source:?}");
+            assert_eq!(outer_div.children.len(), 2, "source {source:?}");
+
+            let mut continued = element(&outer_div.children[1]);
+            for expected_name in continued_formatting {
+                assert_eq!(continued.name, *expected_name, "source {source:?}");
+                continued = element(&continued.children[0]);
+            }
+            assert_eq!(continued.name, "div", "source {source:?}");
+            assert_eq!(element(&continued.children[0]).name, "a");
+            assert_eq!(continued.children[1], Node::text("X"));
+        }
     }
 
     #[test]
