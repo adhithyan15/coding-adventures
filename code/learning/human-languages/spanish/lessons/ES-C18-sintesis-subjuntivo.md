@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-sintesis-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1286
-chapter: 82
+sequence: 1306
+chapter: 87
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — the mood tells your listener whether you are claiming it is true

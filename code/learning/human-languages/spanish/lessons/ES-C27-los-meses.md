@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C27-los-meses
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1540
-chapter: 90
+sequence: 1560
+chapter: 95
 type: word
 headword: los meses
 gloss: the months — Roman gods and emperors, marching almost unchanged from Latin

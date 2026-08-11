@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 107,
-  "title": "Review --- Three Verbs That Behave",
+  "title": "Review --- Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a99214e5953914b9",
+  "sourceHash": "fnv1a64:2e723bec5e4d7179",
   "lessons": [
     {
-      "id": "ES-C35-repaso-tres",
-      "sequence": 1744,
-      "title": "Review — three verbs that behave",
+      "id": "ES-C34-repaso-mente",
+      "sequence": 1733,
+      "title": "Review — four verbs of the mind",
       "headword": "(review)",
       "romanization": "(review)",
-      "gloss": "review — three ordinary verbs, and what \"ordinary\" is about to mean",
+      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49fe6dd9ccd75f7e",
+      "sourceHash": "fnv1a64:5f96e00d2c82d2fc",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Name the three verbs of the last three chapters: to take, to ask, to help."
+              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "All three work the way you expect, and it is worth naming that out loud before the next chapter, where one does not."
-            },
-            {
-              "kind": "speech",
-              "text": "In each of them, you are the one doing it. You take. You ask. You help. The person doing the verb is the person the sentence is about — exactly as in English, and exactly as in every verb you have met since hablo."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold on to that. It is about to be worth money."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three origins, three very different kinds of story:"
+              "text": "Here is the thing none of the four chapters could show you on its own."
             },
             {
               "kind": "speech",
-              "text": "ayudar is the tidy one. Latin adiūtāre becomes English aid. Same word, two roads, and you can still hear it."
+              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
             },
             {
               "kind": "speech",
-              "text": "preguntar is the reshaped one — percontārī, to sound a depth with a pole. Asking as measuring how deep something goes."
+              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
             },
             {
               "kind": "speech",
-              "text": "tomar is the honest gap. It has no agreed origin at all. The verb Latin actually handed down for \"take\" was coger, and coger turned coarse across much of Latin America — so an everyday word had to come from somewhere, and nobody is sure where."
+              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
             },
             {
               "kind": "speech",
-              "text": "Not every word has a clean story. A course that pretended otherwise would be inventing them."
+              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
+            },
+            {
+              "kind": "speech",
+              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
+            },
+            {
+              "kind": "speech",
+              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
+            },
+            {
+              "kind": "speech",
+              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
             }
           ]
         },
@@ -99,11 +103,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three verbs, then one sentence with each",
+              "instruction": "the four verbs in order — to read, to think, to understand, to write",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three verbs, then one sentence with each]"
+              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "for each one, the body word underneath it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: for each one, the body word underneath it]"
             },
             {
               "kind": "repeat",
@@ -113,59 +126,58 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C35-repaso-tres-aid",
-              "prompt": "Which of the three is the same word as English aid?",
+              "id": "ES-C34-repaso-mente-weigh",
+              "prompt": "Which of the four verbs originally meant to weigh?",
               "assesses": [
-                "ES-ETYMON-AYUDAR-06"
+                "ES-ETYMON-PENSAR-02"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "ayudar",
-                "ayudar (to help)",
-                "help"
+                "pensar",
+                "pensar (to think)",
+                "think"
               ],
               "feedback": {
-                "correct": "Yes — adiutare, straight through to aid.",
-                "incorrect": "ayudar, from adiutare."
+                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
+                "incorrect": "pensar, from pensare, to weigh."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C35-repaso-tres-nostory",
-              "prompt": "Which of the three has no agreed etymology at all?",
+              "id": "ES-C34-repaso-mente-gather",
+              "prompt": "Which one meant to gather or pick out?",
               "assesses": [
-                "ES-LEX-TOMAR-01"
+                "ES-ETYMON-LEER-06"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "tomar",
-                "tomar (to take)",
-                "take"
+                "leer",
+                "leer (to read)",
+                "read"
               ],
               "feedback": {
-                "correct": "Yes — nobody is sure. That is an honest answer, not a missing one.",
-                "incorrect": "tomar. Its origin is genuinely unsettled."
+                "correct": "Yes — legere, the root inside collect, select and intellect.",
+                "incorrect": "leer, from legere, to gather."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C35-repaso-tres-who",
-              "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
+              "id": "ES-C34-repaso-mente-scratch",
+              "prompt": "And which one meant to scratch?",
               "assesses": [
-                "ES-LEX-PREGUNTAR-03"
+                "ES-ETYMON-ESCRIBIR-08"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the one doing it",
-                "the doer",
-                "the person doing it",
-                "the subject does it"
+                "escribir",
+                "escribir (to write)",
+                "write"
               ],
               "feedback": {
-                "correct": "Right. Remember that for the next chapter.",
-                "incorrect": "The one doing it — which is about to stop being true."
+                "correct": "Yes — scribere. Writing was scratching a surface.",
+                "incorrect": "escribir, from scribere, to scratch."
               }
             }
           ]
@@ -183,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which one has no settled origin? (Tomar.) In all three, who is the sentence about? (The one doing it.) Next chapter: a verb where that stops being true."
+              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
             }
           ]
         }

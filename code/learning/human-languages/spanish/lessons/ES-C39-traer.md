@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C39-traer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1880
-chapter: 113
+sequence: 1900
+chapter: 118
 type: word
 headword: traer
 gloss: to bring — Latin's word for dragging, and a verb with a direction built into it

@@ -10,6 +10,11 @@
   printed form's lift and descender explicit.
 - Queue the adjacent Resh demonstration as the next counted inventory entry.
 
+### Changed — Spanish runs 1..125 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five plural object-pronoun
+  chapters inserted at 66; chapters after them shift by five.
+
 ### Added — cited Hebrew Tsadi ductus (HL-C09BU)
 
 - Render **צ** in three evidence-aligned frames: descend the long diagonal into

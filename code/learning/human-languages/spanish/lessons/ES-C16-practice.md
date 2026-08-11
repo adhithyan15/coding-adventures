@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C16-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1208
-chapter: 73
+sequence: 1228
+chapter: 78
 type: practice-mix
 headword: (practice)
 gloss: a singular checkpoint for the open past and the completed-past contrast

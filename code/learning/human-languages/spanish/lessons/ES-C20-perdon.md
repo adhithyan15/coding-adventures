@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C20-perdon
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1380
-chapter: 83
+sequence: 1400
+chapter: 88
 type: phrase
 headword: perdón
 gloss: the other sorry — "give completely" — for fault and for getting past people, where lo siento is for regret

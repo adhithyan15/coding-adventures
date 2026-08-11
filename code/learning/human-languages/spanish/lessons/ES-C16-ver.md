@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C16-ver
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1192
-chapter: 71
+sequence: 1212
+chapter: 76
 type: word
 headword: ver
 gloss: to see — veo, ves, ve
