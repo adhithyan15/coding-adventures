@@ -17,6 +17,31 @@ from a citable source (see [feedback: nothing human-authored]); nothing is asser
 memory," and the trust tier honestly reflects the source (`authoritative` for a primary/official
 source — NIST, NASA, IUPAC, PubChem, a standards body; `consensus` for a secondary reference).
 
+## Known overlapping tables (discovered 2026-08-11)
+
+Because this library grows via many parallel, independently-scoped rotations, a handful of
+tables ended up covering nearly the same ground under different names before anyone
+cross-checked the whole tree. Discovered while scoping a new "science 13th slice" candidate:
+
+- `earth-science/rock-types.adj` (`rock_formation(rock_type, forms_from)`, NPS source) and
+  `geology/rock-type.adj` (`rock_type(rock, formation_process)`, USGS sources) both table the
+  same three rock classes (igneous/sedimentary/metamorphic) and essentially the same "how it
+  forms" fact, just with different atom labels and citations. Both are shipped; neither has
+  been deprecated. Left as-is pending a maintainer decision on whether to merge/rename.
+- `earth-science/water-cycle.adj` (`water_cycle_stage(stage, step_number)`, USGS, 5 rows) was
+  discovered to already exist with the SAME predicate name as a candidate "water cycle stages"
+  slice that was about to be implemented — that candidate was dropped before writing any code.
+- `physics/simple-machines.adj` (`simple_machine_example(machine, example)`, NASA) was
+  discovered to already cover the six simple machines' functions in its own header prose before
+  a redundant `simple_machine(machine, description)` candidate (sourced from teachengineering.org)
+  was implemented — that candidate was also dropped before writing any code.
+
+**Lesson for future rotations**: before scoping a new table, grep the WHOLE
+`adj-facts-stdlib/` tree for the candidate's predicate name and topic keywords (not just
+`ls` the one subdirectory you plan to write to) — related content easily lands in a
+different subject directory than you'd guess (e.g. a "cloud" or "rock" fact could be under
+`meteorology/`, `geology/`, or `earth-science/`).
+
 ## Organized by subject, not by level
 
 Files live under `code/specs/data/adj-facts-stdlib/<subject>/<name>.adj`. There is **no
@@ -138,6 +163,7 @@ per rotation, in parallel):
 | `language/` | fable → its own narrator-stated moral (`fable_moral(fable, moral)`, tortoise_and_the_hare/shepherds_boy_and_the_wolf/boy_and_the_filberts → their own stated lessons) — the FIRST literacy slice grounding a whole-text comprehension artifact rather than a word-level phonics/spelling fact | George Fyler Townsend's translation of Aesop's Fables via Project Gutenberg (authoritative; see `fable-moral.adj`'s header) |
 | `language/` | vocabulary word → its meaning as revealed by a worked context-clue example sentence (`vocabulary_in_context(word, meaning)`, ornithology/frugivorous/inconspicuous → their own cited meanings) | Reading Rockets "Using Context Clues to Understand Word Meanings" (consensus; see `vocabulary-in-context.adj`'s header) |
 | `language/` | regular past-tense verb → which of three sounds its -ed ending is pronounced with (`past_tense_ed_sound(word, sound)`, walked/lived/wanted → t_sound/d_sound/id_sound) — a phonics pattern beyond CCSS RF.K.2, distinct from the spelling-pattern (`silent-e-word.adj`, `r-controlled-vowel-word.adj`) and whole-text (`fable-moral.adj`) slices already shipped | 7ESL "Pronunciation of ED: Past Tense Pronunciation for Regular Verbs" (consensus; see `past-tense-ed-sound.adj`'s header) |
+| `language/` | regular plural noun → which of three sounds its -s/-es ending is pronounced with (`plural_s_sound(word, sound)`, hats/dogs/boxes → s_sound/z_sound/iz_sound) — a sibling phonics pattern to `past-tense-ed-sound.adj` | Speakspeak "Pronunciation of 's' and 'es' plural endings" (consensus; see `plural-s-sound.adj`'s header) |
 | `physics/` | **DERIVED, not looked up, CROSS-FILE composition** — which phase change heating or cooling CAUSES (`causes_phase_change(direction, name)`), by a `rule` combining a new `heat_direction` table with the ALREADY-SHIPPED sibling `phase_change_name` table — no single source states "heating causes melting" directly, but the general heat-direction principle and the specific change-name mapping are each independently citable | LibreTexts "9.3.1: Melting, Freezing, and Sublimation" (consensus; see `heat-causes-phase-change.adj`'s header — same source `states-of-matter.adj` already cites) |
 | `physics/` | **DERIVED, not looked up, CROSS-FILE composition** — which named force CAUSES acceleration of its everyday example (`force_causes_acceleration(force, example)`), by a `rule` combining Newton's second law's own general statement with the ALREADY-SHIPPED sibling `force_example` table — reuses two already-verified NASA citations, zero new sourcing work | NASA Beginner's Guide to Aeronautics (authoritative; see `force-causes-acceleration.adj`'s header — same sources `newton-laws.adj`/`forces.adj` already cite) |
 | `earth-science/` | **DERIVED, not looked up, CROSS-DIRECTORY composition** — which numbered month a meteorological season STARTS in (`season_start_month_number(season, number)`), by a `rule` bridging the already-shipped `season_start_month` table (`earth-science/`) to the already-shipped `month_number` table (`calendar/`) via a relative `../calendar/months.adj` import — the first cross-DIRECTORY (not just cross-file, same-directory) `rule` composition in this library; the companion query file lives at the package root so the CLI's import sandbox (rooted at the top-level program's own directory) resolves the `../` hop, mirroring `mathematics/word-problems.adj`'s established cross-directory pattern | NOAA NCEI + ISO 8601 month numbering (authoritative/consensus; see `season-start-month-number.adj`'s header) |
