@@ -2183,11 +2183,11 @@ impl Compiler {
                 continue;
             }
 
-            // A real literal has a deterministic source spelling, so this
-            // bounded AL4 step can print it through the already-portable string
-            // path without introducing a runtime f64 formatting ABI.
-            if let Some(literal) = expr_real_literal_text(actual) {
-                self.emit_standard_output_literal(&literal);
+            // Real-literal-only expressions have deterministic source
+            // spellings. Conditional expressions whose leaves are all such
+            // literals can branch directly to the portable string path too,
+            // without materialising or formatting a runtime f64.
+            if self.try_emit_real_literal_output_expr(actual)? {
                 continue;
             }
 
@@ -2219,6 +2219,58 @@ impl Compiler {
             self.emit_standard_output_value(name, value)?;
         }
 
+        Ok(true)
+    }
+
+    fn try_emit_real_literal_output_expr(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<bool, CompileError> {
+        if let Some(literal) = expr_real_literal_text(node) {
+            self.emit_standard_output_literal(&literal);
+            return Ok(true);
+        }
+
+        let Some((condition, then_node, else_node)) = real_literal_output_conditional_parts(node)
+        else {
+            return Ok(false);
+        };
+        let condition = self.emit_expr(condition)?;
+        if condition.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(
+                "conditional expression condition must be boolean".into(),
+            ));
+        }
+
+        let else_label = self.fresh_label("output_real_literal_else");
+        let end_label = self.fresh_label("output_real_literal_end");
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![
+                Operand::Var(condition.slot),
+                Operand::Var(else_label.clone()),
+            ],
+            "void",
+        ));
+        if !self.try_emit_real_literal_output_expr(then_node)? {
+            return Err(CompileError::Malformed(
+                "validated real-literal output branch changed shape".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_label(&else_label);
+        if !self.try_emit_real_literal_output_expr(else_node)? {
+            return Err(CompileError::Malformed(
+                "validated real-literal output branch changed shape".into(),
+            ));
+        }
+        self.emit_label(&end_label);
         Ok(true)
     }
 
@@ -5983,6 +6035,34 @@ fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn real_literal_output_conditional_parts(
+    node: &GrammarASTNode,
+) -> Option<(&GrammarASTNode, &GrammarASTNode, &GrammarASTNode)> {
+    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+        || !direct_tokens(node).iter().any(|token| token.value == "if")
+    {
+        return None;
+    }
+
+    let condition = first_direct_node(node, "bool_expr")?;
+    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+        .into_iter()
+        .filter(|child| child.rule_name == node.rule_name)
+        .collect();
+    if branches.len() != 2
+        || !is_real_literal_output_expr(branches[0])
+        || !is_real_literal_output_expr(branches[1])
+    {
+        return None;
+    }
+    Some((condition, branches[0], branches[1]))
+}
+
+fn is_real_literal_output_expr(node: &GrammarASTNode) -> bool {
+    expr_real_literal_text(node).is_some()
+        || real_literal_output_conditional_parts(node).is_some()
+}
+
 fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     // A call with one bare-variable actual has a single `actual_params` child.
     // Do not mistake that actual for the call expression itself.
@@ -6827,6 +6907,41 @@ mod tests {
             })
             .collect();
         assert_eq!(literals, vec!["-4.25", "+2.5"]);
+    }
+
+    #[test]
+    fn al4_print_conditional_real_literals_branches_before_output() {
+        let module = compile_source(
+            "begin boolean flag; flag := false; print(if flag then +4.25 else -2.5) end",
+            "test",
+        )
+        .expect("conditional real-literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text)))
+                    if matches!(text.as_str(), "+4.25" | "-2.5") =>
+                {
+                    Some(text.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["+4.25", "-2.5"]);
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
+    }
+
+    #[test]
+    fn al4_print_conditional_with_computed_real_leaf_rejects() {
+        let err = compile_source(
+            "begin boolean flag; flag := true; print(if flag then 2.0 + 2.25 else 4.25) end",
+            "test",
+        )
+        .expect_err("computed real leaf still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
