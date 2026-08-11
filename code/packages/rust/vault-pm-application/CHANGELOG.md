@@ -2,6 +2,23 @@
 
 All notable changes to this package are documented here.
 
+## [0.34.0] - 2026-08-10
+
+### Added
+
+- Add a dedicated crash-resumable audit-only publication journal that advances
+  the repository commit, device counter, and encrypted event head while reusing
+  the exact active catalog root.
+
+### Security
+
+- Permit catalog reuse only when the publication supplies a distinct new audit
+  event, and require pending-state validation to bind an omitted catalog frame
+  to the exact prior active catalog.
+- Prove canonical pending-state replay after an ambiguous provider success and
+  complete verification of epoch and non-mutating access events without
+  manufacturing replacement catalog ciphertext.
+
 ## [0.33.0] - 2026-08-10
 
 ### Added

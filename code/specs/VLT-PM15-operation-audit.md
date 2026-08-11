@@ -259,7 +259,8 @@ The security track is deliberately split into reviewable PRs:
 1. **Primitive:** closed event model, canonical codec, device signing,
    verification, redacted diagnostics, tests, and this contract.
 2. **Repository integration:** encrypted audit object kind, per-device active
-   head, migration epoch, atomic mutation publication, and complete verifier.
+   head, audit-only catalog-reusing journal, migration epoch, atomic mutation
+   publication, and complete verifier.
 3. **Access enforcement:** audit-only commits before every authenticated
    list/show/history/search/verify/diagnose/export disclosure.
 4. **Audit surface:** redacted `audit list`/`audit show TRACE`, trace-aware
