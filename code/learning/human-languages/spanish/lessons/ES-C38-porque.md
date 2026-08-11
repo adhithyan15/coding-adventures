@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C38-porque
 spine_node: SPINE-NARRATE-EVENTS
-sequence: 1870
-chapter: 117
+sequence: 1890
+chapter: 122
 type: word
 headword: porque
 gloss: because — two tiny words fused into one, and the reason a sequence becomes a story

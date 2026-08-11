@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 91,
-  "title": "Parents and Siblings",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:77db7c14f3dd4fe1",
+  "title": "Ojala --- a Prayer That Outlived Its Religion",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:e2d4f09c85dc159e",
   "lessons": [
     {
-      "id": "ES-C23-padre-madre",
-      "sequence": 1470,
-      "title": "el padre, la madre — among the oldest words there are",
-      "headword": "el padre, la madre",
-      "romanization": "el padre, la madre",
-      "gloss": "father and mother — among the oldest reconstructible words in the whole family",
+      "id": "ES-C18-ojala",
+      "sequence": 1318,
+      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
+      "headword": "ojalá + subjunctive",
+      "romanization": "ojalá + subjunctive",
+      "gloss": "a wish trigger borrowed through Hispanic Arabic",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f26d639c43e3a34",
+      "sourceHash": "fnv1a64:304cbb64d27c63af",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "\"Father\" and \"mother\" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother."
+              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá + subjunctive."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: padre and madre",
+          "title": "The wish-word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "el padre (\"father\") from Latin pater from PIE ph₂tḗr."
-            },
-            {
-              "kind": "speech",
-              "text": "la madre (\"mother\") from Latin māter from PIE méh₂tēr."
+              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the English sound-law",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "PIE ancestor",
-                "Latin becomes Spanish",
-                "Germanic becomes English"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.",
-                "PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their \"of a parent\" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, \"the stuff a tree-mother produces,\" gives Spanish materia and, separately, matriz — \"womb\" — via Latin mātrix.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -95,36 +70,72 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el padre, la madre\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el padre, la madre\"]"
+              "kind": "speech",
+              "text": "Use only modern ojalá as the Spanish trigger."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the sound-law — \"padre keeps p; father shifts to f — same word\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the sound-law — \"padre keeps p; father shifts to f — same word\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-trigger",
+              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá hables español.",
+                "ojalá hables español",
+                "ojala hables espanol"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá hables español.",
+                "incorrect": "Use ojalá directly before the tú subjunctive hables."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"padre becomes paternal; madre becomes maternal\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"padre → paternal; madre → maternal\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-no-que",
+              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "no"
+              ],
+              "feedback": {
+                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
+                "incorrect": "No: say Ojalá hables, without que."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-source",
+              "prompt": "Through which historical language variety did Spanish receive ojalá?",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: the recorded route is through Hispanic Arabic.",
+                "incorrect": "The historical route named here is Hispanic Arabic."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -136,26 +147,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)"
+              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C23-hermano-hermana",
-      "sequence": 1480,
-      "title": "el hermano, la hermana — brother and sister, from a different word entirely",
-      "headword": "el hermano, la hermana",
-      "romanization": "el hermano, la hermana",
-      "gloss": "brother and sister — NOT from frater/soror, but from an adjective meaning \"of the same seed\"",
+      "id": "ES-C18-practice",
+      "sequence": 1322,
+      "title": "Practice — assert the event or want it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce4dd2c21207e45d",
+      "sourceHash": "fnv1a64:fb5b14a28291d96b",
       "notice": null,
       "blocks": [
         {
@@ -171,189 +182,59 @@
             },
             {
               "kind": "speech",
-              "text": "You might expect Spanish \"brother\" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds."
+              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: hermano and hermana",
+          "type": "grammar",
+          "title": "Grammar Lens: the bounded map",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "Classical Latin could say frāter germānus, literally \"a brother of the same stock/blood\" — distinguishing a full brother from a half-brother, or from a \"brother\" in some looser sense."
-            },
-            {
-              "kind": "speech",
-              "text": "Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:"
-            },
-            {
-              "kind": "speech",
-              "text": "el hermano (\"brother\") from Latin germānus."
-            },
-            {
-              "kind": "speech",
-              "text": "la hermana (\"sister\") from Latin germāna."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's everyday word for brother is, grammatically, a leftover adjective."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where germanus comes from",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Germānus traces back to germen, \"sprout, bud, seed\" — the same root that gives English germ, germinate, and germane (originally \"closely related,\" from the same seed, before it loosened into just \"relevant\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So calling someone your hermano is, at the etymological root, calling them \"sprung from the same seed.\" (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el hermano, la hermana\" — brother, sister",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el hermano, la hermana\" — brother, sister]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root chain — \"germen, seed\" becomes \"germānus, of the same seed\" becomes \"hermano\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root chain — \"germen, seed\" → \"germānus, of the same seed\" → \"hermano\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hermano\" then English \"germinate, germane\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hermano\" then English \"germinate, germane\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does Spanish hermano come from Latin frāter? (No — from germānus, \"of the same stock/seed,\" an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C23-hermano-hache",
-      "sequence": 1490,
-      "title": "the h in hermano — a letter that was never spoken",
-      "headword": "hermano ← *ermano*",
-      "romanization": "hermano ← *ermano*",
-      "gloss": "the h on hermano is not the h on hijo — one was spoken for centuries, the other never was",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:0f4f8202fa10eccb",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el hermano, la hermana — the words and the germen root."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: two different silent h's",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo (\"son\"), facere becomes hacer (\"to do\"). Hermano is not that, and the difference is worth getting right."
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago."
-            },
-            {
-              "kind": "speech",
-              "text": "The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:"
-            },
             {
               "kind": "table",
               "headers": [
-                "word",
-                "what happened to the sound",
-                "was the h ever spoken?"
+                "verb",
+                "yo / él / ella / usted",
+                "tú"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 6,
               "utterances": [
-                "word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.",
-                "word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never."
+                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
+                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
+                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
+                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
+                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
+                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
               ]
             },
             {
               "kind": "speech",
-              "text": "Same silent letter today; two completely different backstories, only one of which involves a sound at all."
+              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two safe triggers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Same doer: Quiero hablar español."
+            },
+            {
+              "kind": "speech",
+              "text": "Different doer: Quiero que hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Wish by itself: Ojalá hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
             }
           ]
         },
@@ -369,22 +250,210 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"germānus\" then \"ermano\" then \"hermano\" — the three stages",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"germānus\" then \"ermano\" then \"hermano\" — the three stages]"
+              "kind": "speech",
+              "text": "Decide the meaning first; then retrieve only the learned form."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the honest distinction — hijo/hacer's *h* was once truly spoken; hermano's *h* never was]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-fact-wanted",
+              "prompt": "Choose the wanted-event form: hablas or hables.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "hables"
+              ],
+              "feedback": {
+                "correct": "Right: hables is the wanted-event form in this chapter.",
+                "incorrect": "Hablas can assert; hables follows the learned wish frame."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-one-two",
+              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "quiero hablar español; quiero que hables español.",
+                "quiero hablar español quiero que hables español",
+                "quiero hablar español / quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer uses hablar; two use que hables.",
+                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-regular-rows",
+              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hables, comas, vivas",
+                "hables comas vivas",
+                "hables / comas / vivas"
+              ],
+              "feedback": {
+                "correct": "Right: hables, comas, vivas.",
+                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-yo-stem",
+              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "the yo form",
+                "yo",
+                "present yo form"
+              ],
+              "feedback": {
+                "correct": "Right: start from the present yo form.",
+                "incorrect": "The recipe begins with the present yo form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-querer",
+              "prompt": "Give the learned singular subjunctive row of querer.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-poder",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-hacer",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala",
+              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá vivas en madrid.",
+                "ojalá vivas en madrid",
+                "ojala vivas en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá vivas en Madrid.",
+                "incorrect": "Use ojalá directly before vivas en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-subjunctive-name",
+              "prompt": "What does the Latin source subiūnctīvus help you picture?",
+              "assesses": [
+                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "a clause subjoined or joined under another",
+                "subjoined",
+                "joined under"
+              ],
+              "feedback": {
+                "correct": "Right: a subjoined clause.",
+                "incorrect": "It carries the idea of being subjoined, or joined under another."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala-source",
+              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: Hispanic Arabic.",
+                "incorrect": "The route recorded here is Hispanic Arabic."
+              }
             }
           ]
         },
@@ -401,7 +470,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)"
+              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
             }
           ]
         }

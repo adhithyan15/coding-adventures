@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C40-comprar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1960
-chapter: 124
+sequence: 1980
+chapter: 129
 type: word
 headword: comprar
 gloss: to buy — from Latin's "get ready, procure", and not from the verb behind English compare

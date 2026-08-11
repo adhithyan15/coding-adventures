@@ -1,90 +1,34 @@
-Spanish, chapter 98: The Weather.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 98: The Seasons.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-el tiempo — one word doing two jobs.
+Lesson 1 of 1.
+la primavera, el verano, el otoño, el invierno — three plain, one surprising.
 
 Warm-up.
 [pause 2 seconds]
-Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking "what time does it make?" — because tiempo does not split "time" from "weather" the way English does.
+Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another.
 
-The word, taken apart: el tiempo.
-el tiempo = both "time" and "weather" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed.
-English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed.
-How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is "I have no time," ¿qué tiempo hace? is "what's the weather like?"
+The words, taken apart: three straightforward seasons.
+la primavera ("spring") from Latin prīma vēra, literally "first spring" (vēr, "spring," + prīma, "first"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)
+el otoño ("autumn") from Latin autumnus — the same root behind French automne and English autumn itself.
+el invierno ("winter") from Latin hībernum (tempus), "the wintry [season]" — the same root as French hiver and English hibernate, "to spend the winter."
+
+Why it's said this way: verano.
+You might expect verano ("summer") to come from Latin aestas, "heat" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), "of spring" — built on the very same vēr, "spring," behind primavera.
+So how did a word meaning "spring-ish" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera ("first spring") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a "vernal" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, "spring," ended up naming two different seasons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el tiempo" — time, or weather, depending on context]
+[your turn — say: "primavera, verano, otoño, invierno" — the four seasons]
 [pause 8 seconds for the answer]
-[your turn — say: "¿qué tiempo hace?" — what's the weather like?]
+[your turn — say: "primavera = prima vera, first spring"]
 [pause 8 seconds for the answer]
-[your turn — say: "tiempo" then English "tempo, temporal" — the tempus family]
+[your turn — say: the surprise — "verano ALSO comes from vēr, 'spring' — but its meaning moved to summer"]
+[pause 8 seconds for the answer]
+[your turn — say: "invierno hibernate"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only "time.") Next: how to actually answer ¿qué tiempo hace?
-
-
-Lesson 2 of 3.
-hace calor, hace frío, hace sol — the weather Spanish makes.
-
-Warm-up.
-[pause 2 seconds]
-You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, "to make."
-
-The words, taken apart: calor, frío, sol.
-calor from Latin calor, "heat, warmth" becomes English calorie, caloric, cauldron.
-frío from Latin frigidus, "cold" (the middle syllable syncopated away) becomes English frigid, refrigerate.
-sol from Latin sol, "sun," unchanged becomes English solar, solstice, parasol.
-Here is the part worth noticing: all three are nouns, not adjectives. Calor is "heat," not "hot." That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one.
-hace calor — "it's hot," literally "it makes heat" hace frío — "it's cold," literally "it makes cold" hace sol — "it's sunny," literally "it makes sun".
-French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into "it is hot" with an adjective.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hace calor. hace frío. hace sol."]
-[pause 8 seconds for the answer]
-[your turn — say: the literal reading — "it makes heat, it makes cold, it makes sun"]
-[pause 8 seconds for the answer]
-[your turn — say: "calor" then English "calorie"; "frío" then "refrigerate"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "it's hot," "it's cold," "it's sunny." (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a "to be" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)
-
-
-Lesson 3 of 3.
-llueve — the one weather word that will not join hacer.
-
-Warm-up.
-[pause 2 seconds]
-Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own.
-
-Grammar Lens: rain brings its own verb.
-llueve = "it's raining." Not hace lluvia, not "it makes rain" — just llueve, a single word that is a complete sentence.
-It comes from llover, "to rain," and llover is impersonal: it has no subject at all, not even a "it" you could point to. Compare the two shapes side by side:
-[a table of 2 rows, read aloud]
-pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).
-pattern: dedicated verb. example: llueve. what carries the weather: the verb itself.
-English does exactly the same split, which makes it easy to feel: you say "it is hot" with an adjective, but "it rains" with a verb built for the job. Spanish just draws the line in the same place.
-
-The word, taken apart: llover.
-llover from Latin pluere, "to rain." Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, "key") and llama ( from flamma, "flame"). Latin's cl-, fl- and pl- clusters all became Spanish ll-.
-So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "¿qué tiempo hace?" then "hace calor. hace frío. hace sol."]
-[pause 8 seconds for the answer]
-[your turn — say: "llueve" — one word, a whole sentence, no hacer]
-[pause 8 seconds for the answer]
-[your turn — say: the family — "llamar, llave, llama, llover" — four Latin clusters, one Spanish ll-]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)
+What does primavera literally mean? ("First spring" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, "of spring," the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)
