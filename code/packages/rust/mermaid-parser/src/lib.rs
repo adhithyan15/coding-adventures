@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.46.0";
+pub const VERSION: &str = "0.47.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1086,6 +1086,14 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 (take_state_ref(&mut cursor)?, label)
             } else {
                 let id = take_state_ref(&mut cursor)?;
+                if cursor.consume_if("CHOICE").is_some() {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), String::new());
+                    let node = &mut nodes[node_indices[&id]];
+                    node.label = DiagramLabel::new("");
+                    node.shape = Some(DiagramShape::Diamond);
+                    cursor.skip_terminators();
+                    continue;
+                }
                 let label = if cursor.consume_if("COLON").is_some() {
                     take_state_text(&mut cursor)
                 } else {
@@ -3811,6 +3819,20 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_parses_choice_pseudostates() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate First <<choice>>\nstate Second [[choice]]\nReady --> First\nFirst --> Second: continue\n",
+        )
+        .expect("choice pseudostates should parse");
+
+        for id in ["First", "Second"] {
+            let node = diagram.nodes.iter().find(|node| node.id == id).unwrap();
+            assert_eq!(node.shape, Some(DiagramShape::Diamond));
+            assert_eq!(node.label.text, "");
+        }
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -4581,7 +4603,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.46.0");
+        assert_eq!(crate::VERSION, "0.47.0");
     }
 
     #[test]
