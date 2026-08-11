@@ -127,7 +127,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertIn(
-            "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow
+            "$output/compose/src/main/kotlin/MosaicRuntimeHost.kt", workflow
         )
         self.assertIn("--runtime-library \"$runtime_library\"", workflow)
         self.assertIn("compileKotlin createDistributable", workflow)

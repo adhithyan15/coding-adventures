@@ -51,11 +51,12 @@ native pointer/touch drag targets plus the UI35 keyboard and announcement
 contract. The other native backends remain explicit degradations until they
 ship equivalent behavior.
 
-The package-expanded TaskApp is the first full strict-profile proof point: its
-Flutter output has no known degradations, requires the standard Rust runtime,
-passes whole-project Dart analysis, and builds as a native desktop app in CI.
-This does not close the cross-backend milestone; the other four native emitters
-still have explicit TaskApp degradations.
+The package-expanded TaskApp is the full strict-profile proof point for Flutter
+and Compose. Both outputs have no known degradations and require the standard
+Rust runtime. Flutter passes whole-project Dart analysis and a native desktop
+build; Compose passes Kotlin compilation and native desktop distribution
+packaging. This does not close the cross-backend milestone; Qt, SwiftUI, and
+XAML still have explicit TaskApp degradations.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false

@@ -108,6 +108,7 @@ pub fn from_pipeline(
     let part_styles = build_part_style_map(style);
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
+    let uses_native_table_semantics = layout_has_native_table_semantics(&layout.root);
     let uses_icon = layout_contains_tag(&layout.root, "Icon");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
@@ -279,8 +280,22 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.semantics.onClick").unwrap();
         writeln!(out, "import androidx.compose.ui.semantics.stateDescription").unwrap();
     }
-    if uses_host_dialog {
+    if uses_host_dialog || uses_native_table_semantics {
         writeln!(out, "import androidx.compose.ui.semantics.heading").unwrap();
+    }
+    if uses_native_table_semantics {
+        writeln!(out, "import androidx.compose.ui.semantics.CollectionInfo").unwrap();
+        writeln!(
+            out,
+            "import androidx.compose.ui.semantics.CollectionItemInfo"
+        )
+        .unwrap();
+        writeln!(out, "import androidx.compose.ui.semantics.collectionInfo").unwrap();
+        writeln!(
+            out,
+            "import androidx.compose.ui.semantics.collectionItemInfo"
+        )
+        .unwrap();
     }
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
@@ -1044,6 +1059,7 @@ fn emit_split_composable_function(
         root_composable,
         root_depth,
         part_styles,
+        table_context.as_ref(),
         root_text.as_ref(),
         None,
     );
@@ -1228,11 +1244,139 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
 /// `HostTableColGroup`, when the ColGroup does not contain a `For` whose
 /// body is a `Col`, or when the For's `each:` is not a `SlotRef`.  In
 /// any of those cases the emitter falls back to auto-sized cells.
+#[derive(Clone)]
 struct TableContext {
     /// Kotlin identifier (e.g. `columnWidths`) referring to the
     /// column-widths `List<Double>`.  `None` when no addressable
     /// column-widths slot was discovered; cells render unchanged.
     column_widths_slot: Option<String>,
+    native_semantics: Option<NativeTableSemantics>,
+    semantic_scope: TableSemanticScope,
+}
+
+#[derive(Clone)]
+struct NativeTableSemantics {
+    row_count: String,
+    column_count: String,
+}
+
+#[derive(Clone, Default)]
+enum TableSemanticScope {
+    #[default]
+    Root,
+    HeaderSection,
+    BodySection,
+    HeaderCell {
+        column_index: String,
+    },
+    BodyRow {
+        row_index: String,
+    },
+    BodyCell {
+        row_index: String,
+        column_index: String,
+    },
+}
+
+struct ComposeSemanticTableShape<'a> {
+    header_cells: &'a LayoutNode,
+    body_rows: &'a LayoutNode,
+}
+
+fn compose_semantic_table_shape(host_table: &LayoutNode) -> Option<ComposeSemanticTableShape<'_>> {
+    if host_table.children.iter().any(|child| {
+        !matches!(
+            child.tag.as_str(),
+            "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+        )
+    }) {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    let [header_cell] = header_cells.children.as_slice() else {
+        return None;
+    };
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    let [body_cell] = body_cells.children.as_slice() else {
+        return None;
+    };
+
+    if header_row.tag != "Row"
+        || header_cells.tag != "For"
+        || body_rows.tag != "For"
+        || body_row.tag != "Row"
+        || body_cells.tag != "For"
+        || header_cell.tag != "Box"
+        || body_cell.tag != "Box"
+        || find_keyword_prop(header_cells, "index").is_none()
+        || find_keyword_prop(body_rows, "index").is_none()
+        || find_keyword_prop(body_cells, "index").is_none()
+        || for_collection_expr(header_cells).is_none()
+        || for_collection_expr(body_rows).is_none()
+    {
+        return None;
+    }
+
+    Some(ComposeSemanticTableShape {
+        header_cells,
+        body_rows,
+    })
+}
+
+/// Returns whether a HostTable has the canonical dynamic Grid structure that
+/// Compose lowers with native collection, header, row, and cell coordinates.
+/// Package capability analysis calls this same predicate so strict-profile
+/// reporting cannot drift away from the emitted semantics.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    compose_semantic_table_shape(host_table).is_some()
+}
+
+fn layout_has_native_table_semantics(node: &LayoutNode) -> bool {
+    (node.tag == "HostTable" && host_table_has_native_semantics(node))
+        || node.children.iter().any(layout_has_native_table_semantics)
+}
+
+fn for_collection_expr(node: &LayoutNode) -> Option<String> {
+    match find_prop_value(node, "each")? {
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            Some(to_camel_case_first_lower(slot))
+        }
+        LayoutPropValue::Expr(expression) => Some(format!("({})", expression.trim())),
+        LayoutPropValue::String(_) | LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => {
+            None
+        }
+    }
 }
 
 /// Scan a `HostTable` node's immediate children for a
@@ -1240,6 +1384,12 @@ struct TableContext {
 /// extract the column-widths slot name (camel-cased).  Mirrors the
 /// SwiftUI emitter's `extract_table_context`.
 fn extract_table_context(host_table: &LayoutNode) -> TableContext {
+    let native_semantics = compose_semantic_table_shape(host_table).and_then(|shape| {
+        Some(NativeTableSemantics {
+            row_count: format!("{}.size + 1", for_collection_expr(shape.body_rows)?),
+            column_count: format!("{}.size", for_collection_expr(shape.header_cells)?),
+        })
+    });
     for child in &host_table.children {
         if child.tag != "HostTableColGroup" {
             continue;
@@ -1257,6 +1407,8 @@ fn extract_table_context(host_table: &LayoutNode) -> TableContext {
                 if validate_safe_identifier(&camel).is_ok() {
                     return TableContext {
                         column_widths_slot: Some(camel),
+                        native_semantics,
+                        semantic_scope: TableSemanticScope::Root,
                     };
                 }
             }
@@ -1264,6 +1416,68 @@ fn extract_table_context(host_table: &LayoutNode) -> TableContext {
     }
     TableContext {
         column_widths_slot: None,
+        native_semantics,
+        semantic_scope: TableSemanticScope::Root,
+    }
+}
+
+impl TableContext {
+    fn in_section(&self, tag: &str) -> Self {
+        let mut next = self.clone();
+        if self.native_semantics.is_some() {
+            next.semantic_scope = match tag {
+                "HostTableHead" => TableSemanticScope::HeaderSection,
+                "HostTableBody" => TableSemanticScope::BodySection,
+                _ => self.semantic_scope.clone(),
+            };
+        }
+        next
+    }
+
+    fn in_loop(&self, index: Option<&str>) -> Self {
+        let mut next = self.clone();
+        let Some(index) = index else {
+            return next;
+        };
+        let kotlin_index = format!("_kotlinIdx{index}");
+        next.semantic_scope = match &self.semantic_scope {
+            TableSemanticScope::HeaderSection => TableSemanticScope::HeaderCell {
+                column_index: kotlin_index,
+            },
+            TableSemanticScope::BodySection => TableSemanticScope::BodyRow {
+                row_index: kotlin_index,
+            },
+            TableSemanticScope::BodyRow { row_index } => TableSemanticScope::BodyCell {
+                row_index: row_index.clone(),
+                column_index: kotlin_index,
+            },
+            other => other.clone(),
+        };
+        next
+    }
+}
+
+fn table_semantics_modifier(node: &LayoutNode, table_ctx: Option<&TableContext>) -> Option<String> {
+    let ctx = table_ctx?;
+    let semantics = ctx.native_semantics.as_ref()?;
+    match (&ctx.semantic_scope, node.tag.as_str()) {
+        (TableSemanticScope::Root, "HostTable") => Some(format!(
+            "semantics {{ collectionInfo = CollectionInfo(rowCount = {}, columnCount = {}) }}",
+            semantics.row_count, semantics.column_count
+        )),
+        (TableSemanticScope::HeaderCell { column_index }, "Box") => Some(format!(
+            "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = {column_index}, columnSpan = 1); heading() }}"
+        )),
+        (
+            TableSemanticScope::BodyCell {
+                row_index,
+                column_index,
+            },
+            "Box",
+        ) => Some(format!(
+            "semantics {{ collectionItemInfo = CollectionItemInfo(rowIndex = {row_index} + 1, rowSpan = 1, columnIndex = {column_index}, columnSpan = 1) }}"
+        )),
+        _ => None,
     }
 }
 
@@ -1925,18 +2139,21 @@ fn emit_compose_tree(
         // The structural sub-tags lower to `Column` too, preserving the
         // discovered table context + inherited text style so deeply
         // nested Rows still see them.
-        "HostTableHead" | "HostTableBody" | "HostTableFoot" => emit_container(
-            node,
-            "Column",
-            depth,
-            component_name,
-            emits,
-            part_styles,
-            table_ctx,
-            text_ctx,
-            for_payload,
-            injected_width,
-        ),
+        "HostTableHead" | "HostTableBody" | "HostTableFoot" => {
+            let section_ctx = table_ctx.map(|ctx| ctx.in_section(node.tag.as_str()));
+            emit_container(
+                node,
+                "Column",
+                depth,
+                component_name,
+                emits,
+                part_styles,
+                section_ctx.as_ref(),
+                text_ctx,
+                for_payload,
+                injected_width,
+            )
+        }
         "HostTableColGroup" => {
             // The col-group itself produces no visible Compose output —
             // column widths reach the cells via TableContext threading.
@@ -2282,6 +2499,7 @@ fn emit_container_frame(
     composable: &str,
     depth: usize,
     part_styles: &PartStyleMap,
+    table_ctx: Option<&TableContext>,
     text_ctx: Option<&TextStyleCtx>,
     injected_width: Option<&str>,
 ) -> ContainerFrame {
@@ -2315,10 +2533,12 @@ fn emit_container_frame(
         None
     };
 
-    let has_chain = style
+    let has_style_chain = style
         .as_ref()
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
+    let semantic_modifier = table_semantics_modifier(node, table_ctx);
+    let has_chain = has_style_chain || semantic_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
     let child_text: Option<TextStyleCtx> = match &style {
         Some(s) => {
@@ -2331,12 +2551,16 @@ fn emit_container_frame(
     if has_chain || content_alignment.is_some() {
         let modifier_pad = "    ".repeat(depth + 1);
         writeln!(opener, "{pad}{composable}(").unwrap();
-        if has_chain {
+        if has_style_chain {
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
-            writeln!(opener, "{modifier_pad}modifier = Modifier{chain},").unwrap();
+            write!(opener, "{modifier_pad}modifier = Modifier{chain}").unwrap();
         } else {
-            writeln!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth(),").unwrap();
+            write!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
+        if let Some(semantics) = &semantic_modifier {
+            write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        writeln!(opener, ",").unwrap();
         if let Some(a) = &content_alignment {
             writeln!(opener, "{modifier_pad}contentAlignment = {a},").unwrap();
         }
@@ -2427,10 +2651,12 @@ fn emit_container(
         None
     };
 
-    let has_chain = style
+    let has_style_chain = style
         .as_ref()
         .map(|s| !s.modifier.is_empty())
         .unwrap_or(false);
+    let semantic_modifier = table_semantics_modifier(node, table_ctx);
+    let has_chain = has_style_chain || semantic_modifier.is_some();
     let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
 
     // The text style children inherit: a styled Box may override the
@@ -2448,12 +2674,16 @@ fn emit_container(
         // Multi-line styled opener.
         let modifier_pad = "    ".repeat(depth + 1);
         writeln!(out, "{pad}{composable}(").unwrap();
-        if has_chain {
+        if has_style_chain {
             let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
-            writeln!(out, "{modifier_pad}modifier = Modifier{chain},").unwrap();
+            write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
         } else {
-            writeln!(out, "{modifier_pad}modifier = Modifier.fillMaxWidth(),").unwrap();
+            write!(out, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
         }
+        if let Some(semantics) = &semantic_modifier {
+            write!(out, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
+        }
+        writeln!(out, ",").unwrap();
         if let Some(a) = &content_alignment {
             writeln!(out, "{modifier_pad}contentAlignment = {a},").unwrap();
         }
@@ -2730,6 +2960,7 @@ fn emit_for_compose(
             .as_deref()
             .or(for_payload.and_then(|scope| scope.index)),
     });
+    let scoped_table_ctx = table_ctx.map(|ctx| ctx.in_loop(index_name.as_deref()));
 
     let mut out = header;
     if node.children.is_empty() {
@@ -2747,7 +2978,7 @@ fn emit_for_compose(
             component_name,
             emits,
             part_styles,
-            table_ctx,
+            scoped_table_ctx.as_ref(),
             text_ctx,
             scoped_payload,
             width_expr.as_deref(),
@@ -6137,6 +6368,33 @@ mod tests {
     }
 
     // ── UI34 Compose part-style inlining (the spreadsheet fix) ─────────
+
+    #[test]
+    fn canonical_host_table_emits_native_collection_and_cell_semantics() {
+        let (m, l, s) = visicalc_grid_triple();
+        assert!(host_table_has_native_semantics(&l.root));
+
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        for expected in [
+            "import androidx.compose.ui.semantics.CollectionInfo",
+            "collectionInfo = CollectionInfo(rowCount = viewportRows.size + 1, columnCount = columnHeaders.size)",
+            "collectionItemInfo = CollectionItemInfo(rowIndex = 0, rowSpan = 1, columnIndex = _kotlinIdxch, columnSpan = 1); heading()",
+            "collectionItemInfo = CollectionItemInfo(rowIndex = _kotlinIdxr + 1, rowSpan = 1, columnIndex = _kotlinIdxc, columnSpan = 1)",
+        ] {
+            assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+
+        let mut unsupported = l.root.clone();
+        unsupported
+            .children
+            .push(node("HostTableFoot", vec![], vec![]));
+        assert!(!host_table_has_native_semantics(&unsupported));
+        assert!(!host_table_has_native_semantics(&node(
+            "HostTable",
+            vec![],
+            vec![]
+        )));
+    }
 
     /// Body cell `Box [cell]` threads the column width from the
     /// enclosing cell `For`'s Int index shadow (`_kotlinIdxc`), NOT the
