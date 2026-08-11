@@ -1,127 +1,97 @@
-Spanish, chapter 31: Numbers Eleven to Twenty.
-4 lessons. All 4 can be done entirely by ear.
+Spanish, chapter 31: Parents and Siblings.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-once — quince: five words with a seam you can no longer see.
+Lesson 1 of 3.
+el padre, la madre — among the oldest words there are.
 
 Warm-up.
 [pause 2 seconds]
-Spanish counts past ten in two completely different ways, and the join between them is a real boundary in the language, not a place someone drew a line. Today: the first five, which you simply have to learn as words.
+"Father" and "mother" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother.
 
-The words, taken apart: once through quince.
-[a table of 5 rows, read aloud]
-Spanish: once. from Latin: undecim ("one-ten").
-Spanish: doce. from Latin: duodecim ("two-ten").
-Spanish: trece. from Latin: tredecim ("three-ten").
-Spanish: catorce. from Latin: quattuordecim ("four-ten").
-Spanish: quince. from Latin: quindecim ("five-ten").
-Every one of these was a compound — a number plus -decim ("ten," the same root as diez). But these five are the numbers people say most often, and heavy use wears words smooth. Centuries of everyday speech fused each pair into a single, opaque word: no Spanish speaker hears "one-ten" in once any more than an English speaker hears "two-ten" in twelve.
-Listen for the ghost, though. The -ce ending on doce, trece, catorce, quince is all that survives of Latin's -decim. It is the same "ten" you already say in diez, ground down to two letters.
+The words, taken apart: padre and madre.
+el padre ("father") from Latin pater from PIE ph₂tḗr.
+la madre ("mother") from Latin māter from PIE méh₂tēr.
+
+Why it's said this way: the English sound-law.
+Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:
+[a table of 2 rows, read aloud]
+PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.
+PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother.
+So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their "of a parent" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, "the stuff a tree-mother produces," gives Spanish materia and, separately, matriz — "womb" — via Latin mātrix.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "once, doce, trece, catorce, quince"]
+[your turn — say: "el padre, la madre"]
 [pause 8 seconds for the answer]
-[your turn — say: just the endings — "-ce, -ce, -ce, -ce" — the worn-down ten]
+[your turn — say: the sound-law — "padre keeps p; father shifts to f — same word"]
+[pause 8 seconds for the answer]
+[your turn — say: "padre becomes paternal; madre becomes maternal"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count eleven to fifteen. (Once, doce, trece, catorce, quince.) What are these five, structurally? (Fused Latin compounds — number plus -decim, "ten.") Which piece of each word is the old "ten"? (The -ce ending — diez worn down.) Next: the numbers where the seam is still wide open.
+Give "father" and "mother" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)
 
 
-Lesson 2 of 4.
-dieciséis — diecinueve: where the seam reopens.
+Lesson 2 of 3.
+el hermano, la hermana — brother and sister, from a different word entirely.
 
 Warm-up.
 [pause 2 seconds]
-You just learned five numbers whose insides had been ground smooth. Now say fifteen and then sixteen — quince, dieciséis — and hear the language change gear. From here you are not memorising words; you are following a rule.
+You might expect Spanish "brother" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds.
 
-The words, taken apart: dieciséis through diecinueve.
-[a table of 4 rows, read aloud]
-Spanish: dieciséis. literally: diez y seis, "ten and six".
-Spanish: diecisiete. literally: diez y siete, "ten and seven".
-Spanish: dieciocho. literally: diez y ocho, "ten and eight".
-Spanish: diecinueve. literally: diez y nueve, "ten and nine".
-No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it.
+The words, taken apart: hermano and hermana.
+Classical Latin could say frāter germānus, literally "a brother of the same stock/blood" — distinguishing a full brother from a half-brother, or from a "brother" in some looser sense.
+Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:
+el hermano ("brother") from Latin germānus.
+la hermana ("sister") from Latin germāna.
+So Spanish's everyday word for brother is, grammatically, a leftover adjective.
 
-Grammar Lens: a formula, not a list.
-This is the structural difference that makes 15/16 a real boundary in Spanish rather than a convenient place to pause:
-[a table of 3 rows, read aloud]
-how you get the word. 11-15: remember it. 16-19: build it.
-the "ten" inside. 11-15: worn to -ce. 16-19: still spelled dieci-.
-can you hear the parts? 11-15: no. 16-19: yes.
-So once through quince are vocabulary, and dieciséis through diecinueve are grammar: one template, dieci- + digit, filled four times. Learn the template once and all four are already yours.
+Why it's said this way: where germanus comes from.
+Germānus traces back to germen, "sprout, bud, seed" — the same root that gives English germ, germinate, and germane (originally "closely related," from the same seed, before it loosened into just "relevant").
+So calling someone your hermano is, at the etymological root, calling them "sprung from the same seed." (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "dieciséis, diecisiete, dieciocho, diecinueve"]
+[your turn — say: "el hermano, la hermana" — brother, sister]
 [pause 8 seconds for the answer]
-[your turn — say: the seam out loud — "diez y seis" then "dieciséis"]
+[your turn — say: the root chain — "germen, seed" becomes "germānus, of the same seed" becomes "hermano"]
 [pause 8 seconds for the answer]
-[your turn — say: the boundary — "quince" (remembered), "dieciséis" (built)]
+[your turn — say: "hermano" then English "germinate, germane"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count sixteen to nineteen. (Dieciséis, diecisiete, dieciocho, diecinueve.) Are these fused or transparent? (Transparent — plain "ten and X.") Which of the two groups do you have to memorise, and which can you generate? (Memorise 11-15; generate 16-19 from dieci- plus the digit.)
+Does Spanish hermano come from Latin frāter? (No — from germānus, "of the same stock/seed," an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is.
 
 
-Lesson 3 of 4.
-duodēvīgintī — the quirk Spanish threw away.
+Lesson 3 of 3.
+the h in hermano — a letter that was never spoken.
 
 Warm-up.
 [pause 2 seconds]
-Dieciocho and diecinueve look like the least interesting words in the chapter — just two more ten-and-X compounds. They are actually the most interesting, because of what Latin said instead.
+Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one.
 
 You'll want to know first.
-dieciséis — diecinueve — the dieci- plus digit template.
+el hermano, la hermana — the words and the germen root.
 
-Why it's said this way: Latin counted 18 and 19 backwards.
-You would expect dieciocho and diecinueve to carry on whatever Latin did for 18 and 19. Latin did something else entirely. Its everyday words for those two numbers were subtractive — counted down from twenty:
+Why it's said this way: two different silent h's.
+You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo ("son"), facere becomes hacer ("to do"). Hermano is not that, and the difference is worth getting right.
+Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago.
+The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:
 [a table of 2 rows, read aloud]
-number: 18. Latin: duodēvīgintī. literally: "two from twenty".
-number: 19. Latin: ūndēvīgintī. literally: "one from twenty".
-(You still meet this habit in English clock-talk: "ten to four.")
-Spanish did not inherit either word. It built dieciocho and diecinueve fresh, on exactly the same simple template as 16 and 17 — quietly regularising away an irregularity that existed in its own parent language. Languages are usually described as wearing down and getting messier; here is a clean case of one tidying up.
+word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.
+word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never.
+Same silent letter today; two completely different backstories, only one of which involves a sound at all.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: Latin's way — "two from twenty" — then Spanish's — "dieciocho"]
+[your turn — say: "germānus" then "ermano" then "hermano" — the three stages]
 [pause 8 seconds for the answer]
-[your turn — say: "dieciocho, diecinueve" — addition, not subtraction]
+[your turn — say: the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How did Latin say 18 and 19? (Subtractively — duodēvīgintī, "two from twenty," and ūndēvīgintī, "one from twenty.") Did Spanish keep that? (No — it built dieciocho and diecinueve on the regular ten-and-X template.) So which language is the irregular one here? (Latin — Spanish simplified.)
-
-
-Lesson 4 of 4.
-veinte — the number the teens were counting toward.
-
-Warm-up.
-[pause 2 seconds]
-Latin's own 18 and 19 were counted down from twenty. So it is worth meeting twenty itself — the number the whole run has been aiming at.
-
-The word, taken apart: veinte.
-veinte ("twenty") from Latin vīgintī. It was worn down by ordinary sound change — the g softened away, the vowels shifted — but notice what did not happen to it: it was never fused out of two separate words the way once through quince were. Vīgintī was already a single word for a single round number, so there is no seam inside veinte to look for.
-Three different histories, then, in one short chapter:
-[a table of 3 rows, read aloud]
-words: once - quince. what happened: two words fused into one.
-words: dieciséis - diecinueve. what happened: two words built into one, seam visible.
-words: veinte. what happened: one word, simply worn.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "once, doce, trece, catorce, quince" — the five fused Latins]
-[pause 8 seconds for the answer]
-[your turn — say: "dieciséis, diecisiete, dieciocho, diecinueve" — built, not fused]
-[pause 8 seconds for the answer]
-[your turn — say: "veinte" — twenty, worn but never fused]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Count eleven to twenty. Where is the boundary between remembering and building, and why is it there? (After quince — 11-15 are fused Latin compounds, 16-19 are dieci- plus a digit.) Did Spanish inherit Latin's subtractive 18 and 19? (No — it regularised them.) Was veinte fused from two words? (No — Latin vīgintī was already one word; it was only worn down.)
+Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)

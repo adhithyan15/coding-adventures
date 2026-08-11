@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-mucho
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 240
-chapter: 3
+chapter: 5
 type: word
 headword: mucho
 gloss: much / a lot

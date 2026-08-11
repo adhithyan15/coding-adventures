@@ -1,62 +1,170 @@
-Spanish, chapter 20: Lo Siento.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 20: Hacer, Decir, and the -go Verb Club.
+4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
-lo siento — "I'm sorry," i.e. "I feel it".
-
-Warm-up.
-[pause 2 seconds]
-You already know por favor, "please." The next courtesy phrase is lo siento. Spanish does not say "I am sorry" as an adjective; it says something closer to "I feel this."
-
-The phrase, taken apart.
-lo = "it" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for "the whole business, unnamed."
-siento = "I feel," from sentir, "to feel," from Latin sentīre. That root gave English a whole family: sentiment, sense, consent ("feel together"), resent ("feel back at"), and sentence (originally an opinion, something felt).
-So lo siento is literally "I feel it." You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, "I feel it a lot," works both for stepping on someone's foot and for hearing that their father died.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "siento" — I feel — then "lo siento," I feel it / I'm sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "lo siento mucho" — I'm so sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "siento" then English "sentiment, sense, consent"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does lo siento literally mean? ("I feel it" — siento, "I feel," from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter "it.") Next: Spanish's other word for sorry, and when it is the right one.
-
-
-Lesson 2 of 2.
-perdón — the sorry that asks for something back.
+Lesson 1 of 4.
+hacer — doing or making with three singular forms.
 
 Warm-up.
 [pause 2 seconds]
-Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person.
+You already use tengo, tienes, tiene, and you already know café and the question word qué. Reuse that small frontier for one verb that covers both English “do” and “make.”
+
+Sounds you'll need.
+The h in hacer is silent, just as it is in hola. In hago, the written g has the hard sound heard before a.
 
 The word, taken apart.
-perdón ("pardon"), from the verb perdonar — Latin per- ("thoroughly") + dōnāre ("to give"). Literally: "to give completely."
-That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect ("thoroughly made") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it.
+hacer means “to do” or “to make.” It descends from Latin facere, with the same making root preserved in English fact, factory, and manufacture. Much of early Castilian changed word-initial Latin f into an h sound that later became silent, leaving the spelling as a historical trace.
 
-Why it's said this way: which one to reach for.
-The two are not interchangeable, and the difference follows straight from the etymologies:
+Grammar Lens: only the three singular forms.
 [a table of 3 rows, read aloud]
-literally. lo siento: "I feel it". perdón: "give [it] completely".
-points at. lo siento: your feeling. perdón: their forgiveness.
-use for. lo siento: regret, sympathy. perdón: fault, or getting past someone.
-So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English "excuse me"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward "I'm sorry that happened," including things that are nobody's fault at all.
-Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off.
+person: yo. present of hacer: hago.
+person: tú. present of hacer: haces.
+person: él / ella / usted. present of hacer: hace.
+Say the bounded set as hago, haces, hace. Only the learned yo form contains g. Compare it with the familiar tengo, but do not extend the comparison beyond forms you already own.
+Use the forms with one known object:
+Hago café. — “I make coffee.”
+Haces café. — “You make coffee.”
+Hace café. — “He, she, or formal you makes coffee.”
+You can also ask ¿Qué haces? — “What are you doing?” Plural persons and weather expressions wait for later lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "perdón" — pardon / excuse me]
+[your turn — say: “hacer — hago, haces, hace”]
 [pause 8 seconds for the answer]
-[your turn — say: the pair — "lo siento" for regret, "perdón" for fault]
+[your turn — say: “¿Qué haces? Hago café.”]
 [pause 8 seconds for the answer]
-[your turn — say: "perdón" then English "donate, condone" — the dōnāre root]
+[your turn — say: “facere — fact — factory — hacer”]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I make coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do the two halves of perdonar mean? (Per-, "thoroughly," plus dōnāre, "to give" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — "I feel it.")
+What two English verbs does hacer cover? (“Do” and “make.”) Give the three learned forms. (Hago, haces, hace.) Which Latin source and English cousin help explain it? (Facere; fact or factory.) Next: add decir without widening the person frame.
+
+
+Lesson 2 of 4.
+decir — saying with the same small person frame.
+
+Warm-up.
+[pause 2 seconds]
+You can ask cómo, say hola, and retrieve hago, haces, hace. Keep those three persons fixed while adding the verb “to say.”
+
+Sounds you'll need.
+In digo, the g before o is hard. Keep the i in all three learned forms short and clear: digo, dices, dice.
+
+The word, taken apart.
+decir means “to say” or “to tell.” It descends from Latin dīcere, “to say.” English keeps the same root in diction, dictionary, predict (“say beforehand”), and verdict (“a true saying”).
+
+Grammar Lens: one more three-form set.
+[a table of 3 rows, read aloud]
+person: yo. present of decir: digo.
+person: tú. present of decir: dices.
+person: él / ella / usted. present of decir: dice.
+Say digo, dices, dice. The yo form has g, while the other two learned forms do not. Do not build a full table or a general vowel-change rule from this small set yet.
+Now combine it only with known language:
+Digo hola. — “I say hello.”
+Dices hola. — “You say hello.”
+Dice hola. — “He, she, or formal you says hello.”
+¿Cómo dices “hola”? — “How do you say ‘hello’?”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “decir — digo, dices, dice”]
+[pause 8 seconds for the answer]
+[your turn — say: “Digo hola. ¿Cómo dices hola?”]
+[pause 8 seconds for the answer]
+[your turn — say: “dīcere — diction — decir”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of decir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Say 'I say hello' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'How do you say hello?' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does decir mean? (“To say” or “to tell.”) Give the three learned forms. (Digo, dices, dice.) Which Latin source and English cousin help explain it? (Dīcere; diction, dictionary, or predict.) Next: compare only the three yo forms you have actually learned.
+
+
+Lesson 3 of 4.
+tengo, hago, digo — compare only what you know.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: one visible corner until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Three learned verbs now place g in the yo form: tengo, hago, digo. Compare those three without guessing the form of any unseen verb.
+
+Grammar Lens: one visible corner.
+There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: infinitive, meaning, learned yo form, learned tú form. Come back and look at it when you have stopped.
+The shared observation is narrow: each learned yo form ends in -go, while each learned tú form does not. This is a memory organizer for three known forms, not permission to manufacture new ones.
+
+The pattern, taken apart — convergence, not one magic rule.
+The three modern forms did not arise by attaching one productive Latin -go ending. Older stem sounds changed in different ways, and analogy helped common verbs converge on a familiar shape. That mixed history explains why the group is useful to remember but unsafe as a prediction rule.
+Later lessons can introduce other verbs on their own evidence. For now, the complete comparison is exactly tengo, hago, digo.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “tengo — hago — digo”]
+[pause 8 seconds for the answer]
+[your turn — say: “tienes — haces — dices”]
+[pause 8 seconds for the answer]
+[your turn — say: “a memory organizer, not a prediction machine”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned yo forms of tener, hacer, and decir, in that order.
+[question — say your answer, then pause 6 seconds]
+Which learned yo form means 'I do' or 'I make'?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which three learned yo forms end in -go? (Tengo, hago, digo.) May this comparison predict an unseen verb? (No.) Why not? (Different sound histories and analogy converged on the same shape.) Next: retrieve the whole chapter without adding any word or form.
+
+
+Lesson 4 of 4.
+Practice — doing, making, and saying in the singular.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds nothing. Retrieve two bounded three-form sets, use them with known words, and compare only tengo, hago, digo.
+
+Grammar Lens: the complete small chapter frame.
+doing or making: hago, haces, hace.
+saying or telling: digo, dices, dice.
+the learned yo comparison: tengo, hago, digo.
+known-word use: Hago café. Digo hola. ¿Cómo dices “hola”?
+Plural persons, weather nouns, homework vocabulary, and unseen verbs remain outside this checkpoint.
+
+The words, taken apart — retrieve the history.
+hacer continues Latin facere, the making family of fact and factory.
+decir continues Latin dīcere, the saying family of diction and predict.
+inherited sound changes and analogy made three known yo forms converge on -go; the resemblance does not predict forms you have not learned.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hago, haces, hace”]
+[pause 8 seconds for the answer]
+[your turn — say: “digo, dices, dice”]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, hago, digo”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hago café. Digo hola.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of hacer: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of decir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned yo forms of tener, hacer, and decir, in that order.
+[question — say your answer, then pause 8 seconds]
+Say 'I make coffee' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'How do you say hello?' in Spanish.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) Chapter 13 may now introduce its own verbs one at a time.

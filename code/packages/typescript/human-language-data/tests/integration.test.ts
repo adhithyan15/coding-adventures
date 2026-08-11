@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(41);
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(49);
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -496,7 +496,7 @@ describe("real curriculum", () => {
         lesson.realization.chapter <= 3,
     );
     // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
-    expect(pilot).toHaveLength(28) // +1 vos (ch3), +1 concordancia (ch2);
+    expect(pilot).toHaveLength(17) // HL-C94: chapters 1-3 are now short on purpose;
     expect(pilot.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(
       report.duration.violations.filter(

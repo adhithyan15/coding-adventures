@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-tu-usted
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 160
-chapter: 3
+chapter: 4
 type: word
 headword: tú / usted
 gloss: two of the three words Spanish uses to one person — and the one English quietly retired

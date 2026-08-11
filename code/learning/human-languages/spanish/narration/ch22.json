@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 22,
-  "title": "Black, White, Red, and Blue",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7ce9af6cb50c3202",
+  "title": "The Preterite --- Your First Past Tense",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:60b51c349462ddc3",
   "lessons": [
     {
-      "id": "ES-C22-negro-blanco",
-      "sequence": 1340,
-      "title": "negro, blanco — two colours, and one of their histories",
-      "headword": "negro, blanco",
-      "romanization": "negro, blanco",
-      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
+      "id": "ES-C14-ser-ir-preterite",
+      "sequence": 1050,
+      "title": "fui — one past set shared by ser and ir",
+      "headword": "fui",
+      "romanization": "fui",
+      "gloss": "the shared singular preterite of ser and ir — fui, fuiste, fue",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db51bf774d990900",
+      "sourceHash": "fnv1a64:e819a775303af207",
       "notice": null,
       "blocks": [
         {
@@ -35,37 +35,55 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
+              "text": "You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: negro",
+          "type": "grammar",
+          "title": "Grammar Lens: three singular forms, two verbs",
           "segments": [
             {
-              "kind": "speech",
-              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
+              "kind": "table",
+              "headers": [
+                "person",
+                "completed past of ser or ir"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. completed past of ser or ir: fui.",
+                "person: tú. completed past of ser or ir: fuiste.",
+                "person: él / ella / usted. completed past of ser or ir: fue."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
+              "text": "Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:"
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir."
+            },
+            {
+              "kind": "speech",
+              "text": "Fue Roberto. — “It was Roberto.” Identification points to ser."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The two words in use",
+          "type": "etymology",
+          "title": "The form, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
-            },
-            {
-              "kind": "speech",
-              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
+              "text": "The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words."
             }
           ]
         },
@@ -83,29 +101,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro, blanco\"",
+              "instruction": "“fui, fuiste, fue”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro, blanco\"]"
+              "source": "[YOU SAY: “fui, fuiste, fue”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
+              "instruction": "“Fui a Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
+              "source": "[YOU SAY: “Fui a Madrid.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
+              "instruction": "“Fue Roberto — identification, so ser.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
+              "source": "[YOU SAY: “Fue Roberto — identification, so ser.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-ser-ir-preterite-singular-forms",
+              "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "fui, fuiste, fue",
+                "fui fuiste fue",
+                "fui / fuiste / fue"
+              ],
+              "feedback": {
+                "correct": "Right: fui, fuiste, fue.",
+                "incorrect": "Retrieve only the three learned singular forms: fui, fuiste, fue."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-ser-ir-preterite-fui-madrid",
+              "prompt": "Say 'I went to Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "fui a madrid.",
+                "fui a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Fui a Madrid.",
+                "incorrect": "Use the shared yo form fui, then known a plus Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-ser-ir-preterite-context",
+              "prompt": "In 'Fue Roberto', which verb does fue express?",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "ser"
+              ],
+              "feedback": {
+                "correct": "Right: identifying Roberto points to ser.",
+                "incorrect": "This sentence identifies who it was, so fue expresses ser."
+              }
             }
           ]
         },
@@ -122,26 +198,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
+              "text": "Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-blanco-germanico",
-      "sequence": 1350,
-      "title": "blanco — the colour Spanish did not inherit",
-      "headword": "blanco ← *blank",
-      "romanization": "blanco ← *blank",
-      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
+      "id": "ES-C14-hablar-preterite",
+      "sequence": 1060,
+      "title": "hablé — a regular singular past from a known verb",
+      "headword": "hablé",
+      "romanization": "hablé",
+      "gloss": "the regular singular -ar preterite — hablé, hablaste, habló",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6fe8636baaf2417",
+      "sourceHash": "fnv1a64:a5e4676fae651b35",
       "notice": null,
       "blocks": [
         {
@@ -157,68 +233,83 @@
             },
             {
               "kind": "speech",
-              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
+              "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "grammar",
+          "title": "Grammar Lens: present beside completed past",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present",
+                "completed past"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present: hablo. completed past: hablé.",
+                "person: tú. present: hablas. completed past: hablaste.",
+                "person: él / ella / usted. present: habla. completed past: habló."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "negro, blanco — the two colour words."
+              "text": "Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablo becomes hablé changes the final vowel and moves stress to the end."
+            },
+            {
+              "kind": "speech",
+              "text": "hablas becomes hablaste adds the past ending -aste."
+            },
+            {
+              "kind": "speech",
+              "text": "habla becomes habló changes the final vowel and moves stress to the end."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: blanco",
+          "type": "grammar",
+          "title": "Grammar Lens: two accents, one natural stress pattern",
           "segments": [
             {
               "kind": "speech",
-              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
+              "text": "The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past."
             },
             {
               "kind": "speech",
-              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
+              "text": "Now reuse known words:"
             },
             {
               "kind": "speech",
-              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
+              "text": "Hablé español. — “I spoke Spanish.”"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablaste español? — “Did you speak Spanish?”"
+            },
+            {
+              "kind": "speech",
+              "text": "Habló español. — “He, she, or you-formal spoke Spanish.”"
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where albus went",
+          "type": "etymology",
+          "title": "The endings, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "meaning",
-                "the white inside"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "word: alba. meaning: dawn. the white inside: the sky going white.",
-                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
-                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
-                "word: albino. meaning: albino. the white inside: white-skinned."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
+              "text": "The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending."
             }
           ]
         },
@@ -236,29 +327,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
+              "instruction": "“hablé, hablaste, habló”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
+              "source": "[YOU SAY: “hablé, hablaste, habló”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
+              "instruction": "“Hablo español. Hablé español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
+              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
+              "instruction": "“hablé and habló carry written accents; hablaste does not”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
+              "source": "[YOU SAY: “hablé and habló carry written accents; hablaste does not”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-hablar-preterite-singular-forms",
+              "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hablé, hablaste, habló",
+                "hablé hablaste habló",
+                "hablé / hablaste / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé, hablaste, habló.",
+                "incorrect": "Keep habl- and retrieve -é, -aste, -ó."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-hablar-preterite-hable-espanol",
+              "prompt": "Say 'I spoke Spanish' in Spanish.",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-ESPANOL",
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablé español.",
+                "hablé español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablé español.",
+                "incorrect": "Use hablé with its final written accent, then known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-hablar-preterite-present-past",
+              "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablé"
+              ],
+              "feedback": {
+                "correct": "Right: hablé is the completed-past yo form.",
+                "incorrect": "Hablo is present; hablé is the completed-past form."
+              }
             }
           ]
         },
@@ -275,26 +426,26 @@
             },
             {
               "kind": "speech",
-              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
+              "text": "Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-rojo",
-      "sequence": 1360,
-      "title": "rojo — the same family as red, by a different branch",
-      "headword": "rojo",
-      "romanization": "rojo",
-      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
+      "id": "ES-C14-practice",
+      "sequence": 1070,
+      "title": "Practice — two singular ways to talk about a completed past",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95fcef898178289a",
+      "sourceHash": "fnv1a64:9bb1c79a7a1aaba6",
       "notice": null,
       "blocks": [
         {
@@ -310,148 +461,49 @@
             },
             {
               "kind": "speech",
-              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
+              "text": "This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: rojo",
+          "type": "grammar",
+          "title": "Grammar Lens: the complete Chapter 14 frame",
           "segments": [
             {
               "kind": "speech",
-              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
+              "text": "shared past of ser and ir: fui, fuiste, fue."
             },
             {
               "kind": "speech",
-              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
+              "text": "regular past of hablar: hablé, hablaste, habló."
             },
             {
               "kind": "speech",
-              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
+              "text": "context: Fui a Madrid expresses ir; Fue Roberto expresses ser."
+            },
+            {
+              "kind": "speech",
+              "text": "time contrast: Hablo español is present; Hablé español is completed past."
+            },
+            {
+              "kind": "speech",
+              "text": "spelling: hablé and habló show final stress with a written accent; hablaste needs none."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons."
             }
           ]
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rojo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rojo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-azul",
-      "sequence": 1370,
-      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
-      "headword": "azul",
-      "romanization": "azul",
-      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:93ee0709ae2c9910",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: azul",
+          "title": "The two histories, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: everyday here, poetic there",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
+              "text": "The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy."
             }
           ]
         },
@@ -469,29 +521,143 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four — \"negro, blanco, rojo, azul\"",
+              "instruction": "“fui, fuiste, fue”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
+              "source": "[YOU SAY: “fui, fuiste, fue”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
+              "instruction": "“hablé, hablaste, habló”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
+              "source": "[YOU SAY: “hablé, hablaste, habló”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
+              "instruction": "“Fui a Madrid. Fue Roberto.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
+              "source": "[YOU SAY: “Fui a Madrid. Fue Roberto.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablo español. Hablé español.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-ser-ir-forms",
+              "prompt": "Give the three learned forms shared by ser and ir.",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "fui, fuiste, fue",
+                "fui fuiste fue",
+                "fui / fuiste / fue"
+              ],
+              "feedback": {
+                "correct": "Right: fui, fuiste, fue.",
+                "incorrect": "Retrieve the singular set: fui, fuiste, fue."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-ar-forms",
+              "prompt": "Give the three learned completed-past forms of hablar.",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablé, hablaste, habló",
+                "hablé hablaste habló",
+                "hablé / hablaste / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé, hablaste, habló.",
+                "incorrect": "Retrieve the singular set: hablé, hablaste, habló."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-context-ser-ir",
+              "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "fui a madrid.",
+                "fui a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: a plus Madrid supplies a destination, so fui expresses ir.",
+                "incorrect": "The destination phrase a Madrid makes Fui a Madrid the ir sentence."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-present-past",
+              "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hablo español. hablé español.",
+                "hablo español; hablé español",
+                "hablo español. hablé español",
+                "hablo español hablé español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablo español; Hablé español.",
+                "incorrect": "Use present hablo first, then completed-past hablé."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-written-accents",
+              "prompt": "Which two of hablé, hablaste, habló carry written accents?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
+                "ES-SOUND-WRITTEN-ACCENT",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablé and habló",
+                "hablé habló",
+                "hablé y habló",
+                "hablé / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé and habló mark final stress.",
+                "incorrect": "The final-stressed forms are hablé and habló."
+              }
             }
           ]
         },
@@ -508,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
+              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
             }
           ]
         }

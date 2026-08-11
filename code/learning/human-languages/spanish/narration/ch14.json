@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 14,
-  "title": "The Preterite --- Your First Past Tense",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8355b5c240fbea88",
+  "title": "More -ar Verbs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cdf7535689c738af",
   "lessons": [
     {
-      "id": "ES-C14-ser-ir-preterite",
-      "sequence": 1050,
-      "title": "fui — one past set shared by ser and ir",
-      "headword": "fui",
-      "romanization": "fui",
-      "gloss": "the shared singular preterite of ser and ir — fui, fuiste, fue",
+      "id": "ES-C06-trabajar",
+      "sequence": 530,
+      "title": "trabajar — \"to work,\" and it once meant torture",
+      "headword": "trabajar",
+      "romanization": "trabajar",
+      "gloss": "to work (a second -ar verb — same pattern)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9972a5a5d60a1796",
+      "sourceHash": "fnv1a64:0414256cf4f40046",
       "notice": null,
       "blocks": [
         {
@@ -35,281 +35,79 @@
             },
             {
               "kind": "speech",
-              "text": "You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue."
+              "text": "A second -ar verb — snap it into the exact template you just learned. And trabajar has the darkest, best etymology in this chapter: it began as a word for torture, and it's the secret origin of English travel."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: three singular forms, two verbs",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "completed past of ser or ir"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. completed past of ser or ir: fui.",
-                "person: tú. completed past of ser or ir: fuiste.",
-                "person: él / ella / usted. completed past of ser or ir: fue."
-              ]
+              "kind": "speech",
+              "text": "j-jota — the j is a raspy h-from-the-throat (the jota): trabajar = tra-ba-HAR."
             },
             {
               "kind": "speech",
-              "text": "Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:"
-            },
-            {
-              "kind": "speech",
-              "text": "Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir."
-            },
-            {
-              "kind": "speech",
-              "text": "Fue Roberto. — “It was Roberto.” Identification points to ser."
-            },
-            {
-              "kind": "speech",
-              "text": "Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson."
+              "text": "r-tap, b-soft — tapped r, soft b."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The form, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words."
+              "text": "trabajar comes from Vulgar Latin tripaliāre, \"to torture\" — from tripalium, a Roman instrument of torture made of three stakes (tri- \"three\" + pālus \"stake,\" the root of English pale and impale)."
+            },
+            {
+              "kind": "speech",
+              "text": "The chain of meaning is grimly logical: torture becomes torment / suffering becomes hard toil becomes just work. And English took the very same word down a parallel road:"
+            },
+            {
+              "kind": "speech",
+              "text": "travail — painful, laborious effort (and the pains of childbirth)."
+            },
+            {
+              "kind": "speech",
+              "text": "travel — yes: journeying was once such an ordeal that \"travail\" (toil) became travel (to make a journey). Every time you travel, you're etymologically being tortured."
+            },
+            {
+              "kind": "speech",
+              "text": "So even plain trabajo, “I work,” hides the old idea of toil as torment — a dark little joke inside an everyday verb."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“fui, fuiste, fue”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “fui, fuiste, fue”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Fui a Madrid.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Fui a Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Fue Roberto — identification, so ser.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Fue Roberto — identification, so ser.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-ser-ir-preterite-singular-forms",
-              "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "fui, fuiste, fue",
-                "fui fuiste fue",
-                "fui / fuiste / fue"
-              ],
-              "feedback": {
-                "correct": "Right: fui, fuiste, fue.",
-                "incorrect": "Retrieve only the three learned singular forms: fui, fuiste, fue."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-ser-ir-preterite-fui-madrid",
-              "prompt": "Say 'I went to Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
-                "ES-LEX-A"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "fui a madrid.",
-                "fui a madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Fui a Madrid.",
-                "incorrect": "Use the shared yo form fui, then known a plus Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-ser-ir-preterite-context",
-              "prompt": "In 'Fue Roberto', which verb does fue express?",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "ser"
-              ],
-              "feedback": {
-                "correct": "Right: identifying Roberto points to ser.",
-                "incorrect": "This sentence identifies who it was, so fue expresses ser."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C14-hablar-preterite",
-      "sequence": 1060,
-      "title": "hablé — a regular singular past from a known verb",
-      "headword": "hablé",
-      "romanization": "hablé",
-      "gloss": "the regular singular -ar preterite — hablé, hablaste, habló",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ffe1d91d615359ce",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: present beside completed past",
+          "title": "Grammar Lens: same -ar template",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop -ar, add the ending — identical to hablar:"
+            },
             {
               "kind": "table",
               "headers": [
                 "person",
-                "present",
-                "completed past"
+                "form",
+                "meaning"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present: hablo. completed past: hablé.",
-                "person: tú. present: hablas. completed past: hablaste.",
-                "person: él / ella / usted. present: habla. completed past: habló."
+                "person: I (ending carries the subject). form: trabajo. meaning: I work.",
+                "person: tú. form: trabajas. meaning: you work.",
+                "person: usted. form: trabaja. meaning: you (formal) work."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:"
-            },
-            {
-              "kind": "speech",
-              "text": "hablo becomes hablé changes the final vowel and moves stress to the end."
-            },
-            {
-              "kind": "speech",
-              "text": "hablas becomes hablaste adds the past ending -aste."
-            },
-            {
-              "kind": "speech",
-              "text": "habla becomes habló changes the final vowel and moves stress to the end."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two accents, one natural stress pattern",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past."
-            },
-            {
-              "kind": "speech",
-              "text": "Now reuse known words:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hablé español. — “I spoke Spanish.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hablaste español? — “Did you speak Spanish?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Habló español. — “He, she, or you-formal spoke Spanish.”"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The endings, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending."
+              "text": "Notice you didn't learn a new ending — that's the point. One template, every regular -ar verb."
             }
           ]
         },
@@ -327,89 +125,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, hablaste, habló”",
+              "instruction": "\"trabajar\" — tra-ba-HAR, raspy j",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+              "source": "[YOU SAY: \"trabajar\" — *tra-ba-HAR*, raspy *j*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablo español. Hablé español.”",
+              "instruction": "\"trabajo, trabajas, trabaja\" — same endings as hablo/hablas/habla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
+              "source": "[YOU SAY: \"trabajo, trabajas, trabaja\" — same endings as *hablo/hablas/habla*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé and habló carry written accents; hablaste does not”",
+              "instruction": "\"trabajar\" becomes travail becomes travel — torture became a journey",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé and habló carry written accents; hablaste does not”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hablé, hablaste, habló",
-                "hablé hablaste habló",
-                "hablé / hablaste / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé, hablaste, habló.",
-                "incorrect": "Keep habl- and retrieve -é, -aste, -ó."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-hable-espanol",
-              "prompt": "Say 'I spoke Spanish' in Spanish.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-LEX-ESPANOL",
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablé español.",
-                "hablé español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablé español.",
-                "incorrect": "Use hablé with its final written accent, then known español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-present-past",
-              "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hablé"
-              ],
-              "feedback": {
-                "correct": "Right: hablé is the completed-past yo form.",
-                "incorrect": "Hablo is present; hablé is the completed-past form."
-              }
+              "source": "[YOU SAY: \"trabajar\" → travail → travel — torture became a journey]"
             }
           ]
         },
@@ -426,26 +164,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words."
+              "text": "What did trabajar originally mean, and from what device? (\"To torture,\" from tripalium, a three-stake tool.) What two English words come from the same root? (Travail and travel.) How do you say \"I work\"? (Trabajo — same -o ending.) Next: estudiar, \"to study.\""
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C14-practice",
-      "sequence": 1070,
-      "title": "Practice — two singular ways to talk about a completed past",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló",
+      "id": "ES-C06-estudiar",
+      "sequence": 540,
+      "title": "estudiar — \"to study,\" and the eagerness inside it",
+      "headword": "estudiar",
+      "romanization": "estudiar",
+      "gloss": "to study (a third -ar verb — the pattern is automatic now)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6add1b7975e3eb47",
+      "sourceHash": "fnv1a64:6ae5e8334549e643",
       "notice": null,
       "blocks": [
         {
@@ -461,49 +199,340 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart."
+              "text": "Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete Chapter 14 frame",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "shared past of ser and ir: fui, fuiste, fue."
+              "text": "st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR."
             },
             {
               "kind": "speech",
-              "text": "regular past of hablar: hablé, hablaste, habló."
-            },
-            {
-              "kind": "speech",
-              "text": "context: Fui a Madrid expresses ir; Fue Roberto expresses ser."
-            },
-            {
-              "kind": "speech",
-              "text": "time contrast: Hablo español is present; Hablé español is completed past."
-            },
-            {
-              "kind": "speech",
-              "text": "spelling: hablé and habló show final stress with a written accent; hablaste needs none."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons."
+              "text": "diphthong-io — the -iar glides: es-too-DYAR."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The two histories, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy."
+              "text": "estudiar comes from Latin studēre, \"to be eager, to apply oneself zealously.\" A studium was zeal, enthusiasm, devotion — only later \"study.\" So to study is, at heart, to throw yourself eagerly at something."
+            },
+            {
+              "kind": "speech",
+              "text": "That studēre is everywhere in English:"
+            },
+            {
+              "kind": "speech",
+              "text": "student — literally \"one who is eager.\""
+            },
+            {
+              "kind": "speech",
+              "text": "studio, studious, study — the place, the trait, the act."
+            },
+            {
+              "kind": "speech",
+              "text": "Italian studio and the musical studio keep the \"devoted practice\" sense."
+            },
+            {
+              "kind": "speech",
+              "text": "So Estudio español is \"I devote myself eagerly to Spanish\" — a nicer picture than mere schoolwork."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the template holds",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop -ar, add the ending — for the third time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: I (ending carries the subject). form: estudio. meaning: I study.",
+                "person: tú. form: estudias. meaning: you study.",
+                "person: usted. form: estudia. meaning: you (formal) study."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"estudiar\" — es-too-DYAR",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"estudiar\" — *es-too-DYAR*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"estudio, estudias, estudia\" — the now-familiar endings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"estudio, estudias, estudia\" — the now-familiar endings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"estudiar\" then English \"student, studio\" — the studēre \"eagerness\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"estudiar\" then English \"student, studio\" — the *studēre* \"eagerness\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did studēre originally mean? (\"To be eager / apply oneself.\") Its English cousins? (Student, studio, studious.) Say \"I study\" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C06-espanol",
+      "sequence": 550,
+      "title": "español — the word for the language",
+      "headword": "español",
+      "romanization": "español",
+      "gloss": "\"Spanish\" — the language, the people, and the Roman name for the peninsula underneath it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38238ee920b7d6dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart — español",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
+            },
+            {
+              "kind": "speech",
+              "text": "Two footnotes worth having:"
+            },
+            {
+              "kind": "speech",
+              "text": "English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Hispania itself may go back through Latin to a Phoenician name for the coast, often read as \"land of hyraxes\" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"español\" — es-pa-NYOL",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"español\" — *es-pa-NYOL*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the path — \"Hispania, hispaniolus, español\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"español\" then English \"Hispanic\" — same root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"español\" then English \"Hispanic\" — same root]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C06-hablo-espanol",
+      "sequence": 560,
+      "title": "Hablo español — your first real sentence",
+      "headword": "Hablo español",
+      "romanization": "Hablo español",
+      "gloss": "your first sentence built from parts — and the rule that languages take no article",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8e4005305de5e41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — the sentence assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Snap two things you already own together:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo (I speak, from hablar) + español (Spanish) = Hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says \"I\" — the pro-drop you just learned, doing real work in a real sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Now swap the pieces and watch it generate:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudio español. — \"I study Spanish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Trabajo. — \"I work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablas español? — \"Do you speak Spanish?\" (the ¿? pair opening and closing the question, as in the writing lesson)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: languages go bare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more thing missing from hablo español: no \"the,\" no \"a.\" After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español."
+            },
+            {
+              "kind": "speech",
+              "text": "This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, \"I like coffee\"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare."
             }
           ]
         },
@@ -521,143 +550,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“fui, fuiste, fue”",
+              "instruction": "\"Hablo español\" — AH-bloh es-pa-NYOL",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “fui, fuiste, fue”]"
+              "source": "[YOU SAY: \"Hablo español\" — *AH-bloh es-pa-NYOL*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, hablaste, habló”",
+              "instruction": "swap the verb — \"Estudio español\", \"Trabajo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+              "source": "[YOU SAY: swap the verb — \"Estudio español\", \"Trabajo\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Fui a Madrid. Fue Roberto.”",
+              "instruction": "ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Fui a Madrid. Fue Roberto.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hablo español. Hablé español.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-ser-ir-forms",
-              "prompt": "Give the three learned forms shared by ser and ir.",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "fui, fuiste, fue",
-                "fui fuiste fue",
-                "fui / fuiste / fue"
-              ],
-              "feedback": {
-                "correct": "Right: fui, fuiste, fue.",
-                "incorrect": "Retrieve the singular set: fui, fuiste, fue."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-ar-forms",
-              "prompt": "Give the three learned completed-past forms of hablar.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablé, hablaste, habló",
-                "hablé hablaste habló",
-                "hablé / hablaste / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé, hablaste, habló.",
-                "incorrect": "Retrieve the singular set: hablé, hablaste, habló."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-context-ser-ir",
-              "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
-                "ES-LEX-A"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "fui a madrid.",
-                "fui a madrid"
-              ],
-              "feedback": {
-                "correct": "Right: a plus Madrid supplies a destination, so fui expresses ir.",
-                "incorrect": "The destination phrase a Madrid makes Fui a Madrid the ir sentence."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-present-past",
-              "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hablo español. hablé español.",
-                "hablo español; hablé español",
-                "hablo español. hablé español",
-                "hablo español hablé español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablo español; Hablé español.",
-                "incorrect": "Use present hablo first, then completed-past hablé."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-written-accents",
-              "prompt": "Which two of hablé, hablaste, habló carry written accents?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
-                "ES-SOUND-WRITTEN-ACCENT",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hablé and habló",
-                "hablé habló",
-                "hablé y habló",
-                "hablé / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé and habló mark final stress.",
-                "incorrect": "The final-stressed forms are hablé and habló."
-              }
+              "source": "[YOU SAY: ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)]"
             }
           ]
         },
@@ -674,7 +589,175 @@
             },
             {
               "kind": "speech",
-              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
+              "text": "Say \"I speak Spanish,\" then \"I study Spanish.\" (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries \"I.\") Why no \"the\" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C06-practice",
+      "sequence": 570,
+      "title": "Practice — making sentences with -ar verbs",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "your first sentences — the -ar present tense in action",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8c5ada38a225e06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: conjugate on command",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar: hablo, hablas, habla."
+            },
+            {
+              "kind": "speech",
+              "text": "trabajar: trabajo, trabajas, trabaja."
+            },
+            {
+              "kind": "speech",
+              "text": "estudiar: estudio, estudias, estudia."
+            },
+            {
+              "kind": "speech",
+              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange — say something real",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
+            },
+            {
+              "kind": "speech",
+              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
+            },
+            {
+              "kind": "speech",
+              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
             }
           ]
         }

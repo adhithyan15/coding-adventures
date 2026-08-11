@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-como-se-llama
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 230
-chapter: 3
+chapter: 5
 type: word
 headword: ¿cómo se llama usted?
 gloss: what's your name? (formal)

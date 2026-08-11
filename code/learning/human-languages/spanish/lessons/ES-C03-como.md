@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-como
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 190
-chapter: 3
+chapter: 5
 type: word
 headword: cómo
 gloss: how — a whole Latin phrase, quo modo, worn smooth into one word

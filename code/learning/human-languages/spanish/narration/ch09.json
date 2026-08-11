@@ -2,25 +2,36 @@
   "version": 1,
   "language": "spanish",
   "chapter": 9,
-  "title": "Ser and Estar --- Two Ways to Be",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0d5111b733667b75",
+  "title": "Enye and the Upside-Down Marks",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0bc2e6e71941f875",
   "lessons": [
     {
-      "id": "ES-C09-ser",
-      "sequence": 830,
-      "title": "ser — another way to say “to be”",
-      "headword": "ser",
-      "romanization": "ser",
-      "gloss": "to be — the verb used here to identify someone or say what someone is",
+      "id": "ES-W02-enye",
+      "sequence": 370,
+      "title": "ñ — the letter that remembers a doubled n",
+      "headword": "ñ",
+      "romanization": "ñ",
+      "gloss": "the letter eñe — a tiny second n riding on the first",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:9aa278d1af4407f2",
-      "notice": null,
+      "sourceHash": "fnv1a64:7e63137cf6709264",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — how to write it"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — how to write it until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,7 +46,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already use estar for a current state or location. Spanish also has ser. This chapter adds one job at a time; today, learn the verb and the three singular forms that match the person frame you already know."
+              "text": "ñ is the one letter English does not have — and it has the best origin story in the alphabet. That wavy hat (, a tilde) is not decoration. It is a tiny second n, written on top to save space. Once you know that, you know both how to write it and why it sounds as it does."
             }
           ]
         },
@@ -46,52 +57,49 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-e — ser begins with the clear vowel in mesa."
-            },
-            {
-              "kind": "speech",
-              "text": "r-tap — the final r is one light tap: SER."
+              "text": "ñ = the ny in \"canyon\" or \"onion\" — one squished sound, tongue flat against the roof of the mouth. English canyon is, in fact, Spanish cañón with the ñ spelled out as ny. Say \"onion,\" freeze on the middle: that is ñ."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "script",
+          "title": "Script — how to write it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Modern ser grew from a historical merger. Latin esse meant “to be,” while sedēre meant “to sit.” The infinitive and the present forms do not all come down the same path, so the modern verb cannot be predicted from one neat stem."
+              "text": "Write a normal n, then a small wavy floating above it. Two strokes, one letter."
             },
             {
               "kind": "speech",
-              "text": "The esse family is still visible in English essence, essential, entity, present, and absent. That makes essence a useful memory hook for one major use of ser: identifying what someone or something is."
+              "text": "Careful: ñ is its own letter, not \"n with an accent.\" año (\"year\") and ano (a rather different word) are completely different words — the tilde is not an optional flourish, it is a distinct letter of the alphabet, with its own slot in the dictionary."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: only three forms today",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the scribe's shortcut",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "a small identifying frame"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. form: soy. a small identifying frame: Soy Ana. — “I am Ana.”",
-                "person: tú. form: eres. a small identifying frame: Eres Ana. — “You are Ana.”",
-                "person: él / ella / usted. form: es. a small identifying frame: Usted es Ana. — “You are Ana.”"
-              ]
+              "kind": "speech",
+              "text": "That wave is a medieval shorthand. Scribes copying Latin were forever writing double letters, so they saved a stroke: write the letter once, and put a little mark above meaning \"…and one more of these.\" A bar over a vowel meant a dropped n or m (Latin tantum becomes tãtum); a wave over an n meant nn."
             },
             {
               "kind": "speech",
-              "text": "Say the set as soy, eres, es. These forms are irregular: do not try to remove -er and attach the regular endings from comer. A later lesson will build the plural-person frame."
+              "text": "Spanish is full of words where a Latin -nn- did exactly this:"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin annus (\"year\") becomes anno becomes año. (That same annus gives English annual, anniversary, bi-ennial.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin canna (\"reed\") becomes caña; Latin domina becomes donna becomes doña."
+            },
+            {
+              "kind": "speech",
+              "text": "So the tilde on ñ is a frozen abbreviation — a thousand-year-old note saying \"there used to be two n's here.\" You are writing a scribe's shortcut."
             }
           ]
         },
@@ -109,69 +117,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ser — soy, eres, es”",
+              "instruction": "\"año\" — AH-nyo, one squished ny; then English \"annual\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ser — soy, eres, es”]"
+              "source": "[YOU SAY: \"año\" — *AH-nyo*, one squished *ny*; then English \"annual\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Soy Ana. Eres Ana. Usted es Ana.”",
+              "instruction": "the doubled-n words — \"año, caña, doña\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Soy Ana. Eres Ana. Usted es Ana.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“esse — essence — ser”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “esse — essence — ser”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-singular-forms",
-              "prompt": "Give the three learned singular forms of ser: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "soy, eres, es",
-                "soy eres es",
-                "soy / eres / es"
-              ],
-              "feedback": {
-                "correct": "Right: soy, eres, es.",
-                "incorrect": "Use the three irregular forms: soy, eres, es."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-identity",
-              "prompt": "Complete the identification for formal you: Usted ___ Ana.",
-              "assesses": [
-                "ES-LEX-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "es",
-                "usted es ana.",
-                "usted es ana"
-              ],
-              "feedback": {
-                "correct": "Right: Usted es Ana uses es.",
-                "incorrect": "Usted takes the él/ella form: es."
-              }
+              "source": "[YOU SAY: the doubled-n words — \"año, caña, doña\"]"
             }
           ]
         },
@@ -188,27 +147,38 @@
             },
             {
               "kind": "speech",
-              "text": "Which two Latin verbs fed ser? (Esse and sedēre.) Give the three forms learned today. (Soy, eres, es.) Why not predict them from the infinitive? (The verb is historically mixed and irregular.) Next: set ser beside estar using only identity and state frames you already have."
+              "text": "What is the tilde on ñ, really? (A tiny second n — a scribe's shorthand for a doubled nn.) What Latin word gives año, and what English words share it? (Annus becomes annual, anniversary.) Is ñ a separate letter or an accented n? (A separate letter.) Next: the two everyday words you will be writing it in."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C09-ser-vs-estar",
-      "sequence": 840,
-      "title": "ser vs estar — identity or current state?",
-      "headword": "ser vs estar",
-      "romanization": "ser vs estar",
-      "gloss": "identify with ser; describe a current state or location with estar",
+      "id": "ES-W02-enye-formas",
+      "sequence": 380,
+      "title": "mañana, español — the ñ in the words you are about to need",
+      "headword": "mañana, español",
+      "romanization": "mañana, español",
+      "gloss": "the two ñ words you will meet next — and the second road to ñ, which is not a doubled n at all",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:9a2e819491bd91ba",
-      "notice": null,
+      "sourceHash": "fnv1a64:ad547ae7b2496a46",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the two forms"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two forms until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -223,51 +193,41 @@
             },
             {
               "kind": "speech",
-              "text": "You now have two small sets: soy, eres, es and estás, está. Do not memorize a long rule list. Make one contrast: ser identifies; estar places someone in a current state or location."
+              "text": "You can write ñ and you can say it. Two of the next words in this book carry it, and both are worth a minute on their own — because neither of them got its ñ from a doubled n."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the first contrast, from known material",
+          "type": "input",
+          "title": "You'll want to know first",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "question",
-                "what it asks",
-                "verb"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "question: ¿Es usted Ana? — “Are you Ana?” what it asks: identity. verb: ser.",
-                "question: ¿Está usted bien? — “Are you well?” what it asks: current state. verb: estar."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Only the verb and the job change. The first question identifies the person; the second checks how that person is now. Both Ana, usted, and bien are already part of your course, so the contrast adds no hidden vocabulary."
+              "text": "ñ — the letter, the sound, and the scribe's shorthand."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: a memory hook, not a law",
+          "type": "script",
+          "title": "Script — the two forms",
           "segments": [
             {
               "kind": "speech",
-              "text": "ser recalls Latin esse and English essence: use it here to say who someone is."
+              "text": "mañana — \"tomorrow,\" and also \"morning.\" ma-NYA-na: the ñ is in the middle, and it is the stressed syllable."
             },
             {
               "kind": "speech",
-              "text": "estar comes from Latin stāre, “to stand,” the family behind state: use it for the state or location in which someone stands."
+              "text": "español — \"Spanish.\" es-pa-NYOL: the ñ is at the end, right before the -ol."
             },
             {
               "kind": "speech",
-              "text": "“Permanent versus temporary” is only a rough beginner shortcut, not the rule. A location may last for centuries and still use estar; an identification may last one minute and still use ser. Ask instead: am I identifying, or am I giving a state or location?"
+              "text": "Now the honest footnote. The scribe's doubled nn is one road to ñ, the one you met with año. These two words took a different road: Latin's -ni- before a vowel. Mañana traces back through maneana to māne (\"morning\" — the root of English matinée); español comes from Hispaniolus, built on Hispania. In both, a ni sequence squeezed together into the same single palatal sound."
+            },
+            {
+              "kind": "speech",
+              "text": "So ñ is where two separate Latin sequences ended up — -nn- and -ni-. One letter, one sound, two histories."
             }
           ]
         },
@@ -285,82 +245,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿Es usted Ana?” — identity, ser",
+              "instruction": "\"año, mañana, español\" — the ñ in three positions",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Es usted Ana?” — identity, *ser*]"
+              "source": "[YOU SAY: \"año, mañana, español\" — the ñ in three positions]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿Está usted bien?” — state, estar",
+              "instruction": "the two roads — \"año, from -nn-\" then \"mañana, from -ni-\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Está usted bien?” — state, *estar*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“identify: ser; state or location: estar”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “identify: ser; state or location: estar”]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“¿Es usted Ana? ¿Está usted bien?”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-vs-estar-identify",
-              "prompt": "Choose es or está: ¿___ usted Ana?",
-              "assesses": [
-                "ES-GRAMMAR-SER-IDENTITY",
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "es",
-                "¿es usted ana?",
-                "es usted ana?"
-              ],
-              "feedback": {
-                "correct": "Right: identity takes ser — ¿Es usted Ana?",
-                "incorrect": "The question identifies the person, so use es."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-vs-estar-state",
-              "prompt": "Choose es or está: ¿___ usted bien?",
-              "assesses": [
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "está",
-                "¿está usted bien?",
-                "esta usted bien?",
-                "esta"
-              ],
-              "feedback": {
-                "correct": "Right: a current state takes estar — ¿Está usted bien?",
-                "incorrect": "The question asks about a current state, so use está."
-              }
+              "source": "[YOU SAY: the two roads — \"año, from -nn-\" then \"mañana, from -ni-\"]"
             }
           ]
         },
@@ -377,27 +275,38 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb identifies? (Ser.) Which gives a current state or location? (Estar.) Why is “permanent versus temporary” incomplete? (The choice follows the kind of claim, not its duration.) Next: use ser for one specific identity fact — origin."
+              "text": "Where does the ñ sit in mañana, and where in español? (Middle; end.) Did those two get their ñ from a doubled n? (No — from Latin -ni- before a vowel, a second road to the same letter.) What was the first road? (-nn-, the scribe's shorthand, as in año.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C09-soy-de",
-      "sequence": 850,
-      "title": "soy de… — saying where you are from",
-      "headword": "soy de…",
-      "romanization": "soy de…",
-      "gloss": "I am from… — use ser with de to state origin",
+      "id": "ES-W03-inverted",
+      "sequence": 390,
+      "title": "¿ ¡ — the marks that open a question",
+      "headword": "¿ ¡",
+      "romanization": "¿ ¡",
+      "gloss": "the inverted opening marks — an early cue for question or exclamation intonation",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:6ef90fa81f2b62f2",
-      "notice": null,
+      "sourceHash": "fnv1a64:f0df76d72c3f33e4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the two opening marks"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the two opening marks until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -412,54 +321,41 @@
             },
             {
               "kind": "speech",
-              "text": "You can identify yourself with Soy Ana. Add one short word and you can state another identity fact: Soy de…, “I am from…”."
+              "text": "You've been writing them since ¿cómo está usted? Spanish is the one major language that puts an upside-down question or exclamation mark at the start of the sentence, as well as the normal one at the end. It looks exotic; the reason is purely practical."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — de",
+          "type": "script",
+          "title": "Script — the two opening marks",
           "segments": [
             {
               "kind": "speech",
-              "text": "de means “from” or “of.” It comes from Latin dē, “down from, away from.” English keeps that direction in depart and descend."
+              "text": "¿ …? wraps a question: ¿Cómo estás?"
             },
             {
               "kind": "speech",
-              "text": "You already learned that dónde grew from Latin de unde, “from where.” Spanish can put the still-living word de before dónde to ask explicitly about origin."
+              "text": "¡ …! wraps an exclamation: ¡Hola! ¡Gracias!"
+            },
+            {
+              "kind": "speech",
+              "text": "The opening mark is just the closing mark flipped 180° — turned upside down and left-right. To write ¿, draw a normal? and rotate it half a turn: the hook ends up at the bottom, the dot on top."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: ser + de for origin",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the opening mark is an early cue",
           "segments": [
             {
               "kind": "speech",
-              "text": "¿De dónde eres? — “Where are you from?” Soy de Madrid. — “I am from Madrid.”"
+              "text": "English lets you read most of a sentence before the final? reveals it was a question — fine, because English usually flags a question early with word order (\"Are you…\", \"Do you…\"). Spanish often doesn't reorder words: Tienes hambre. (\"You're hungry.\") and ¿Tienes hambre? (\"Are you hungry?\") are the same words — only punctuation and the spoken rising tone tell them apart."
             },
             {
               "kind": "speech",
-              "text": "The place name Madrid already appeared with vivir. Here, the new piece is the frame around it. Use ser, because this sentence states origin; it does not say where someone is located now."
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the two known questions separate:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "question",
-                "asks about"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "question: ¿De dónde eres? asks about: origin — where you are from.",
-                "question: ¿Dónde vives? asks about: residence — where you live."
-              ]
+              "text": "So the Spanish Royal Academy, in 1754, made the opening ¿ official: it warns the reader \"a question is starting — read this with rising intonation from the very first word.\" It's a melody cue placed before the melody, the exact same instinct as the written accent marking stress you can't otherwise see. For a language read aloud, it's genuinely useful."
             }
           ]
         },
@@ -477,72 +373,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿De dónde eres?”",
+              "instruction": "read \"¿Cómo estás?\" — start the rising question melody from the very first word, the way the ¿ tells you to",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿De dónde eres?”]"
+              "source": "[YOU SAY: read \"¿Cómo estás?\" — start the rising *question* melody from the very first word, the way the ¿ tells you to]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Soy de Madrid.”",
+              "instruction": "\"¡Hola!\" — the ¡ warns you to begin with exclamation energy",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Soy de Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“de — depart — descend”: the shared direction is from",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “de — depart — descend”: the shared direction is *from*]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-soy-de-ask-origin",
-              "prompt": "Ask one friend 'Where are you from?' in Spanish.",
-              "assesses": [
-                "ES-LEX-DE",
-                "ES-GRAMMAR-ORIGIN-WITH-SER",
-                "ES-LEX-DONDE",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿de dónde eres?",
-                "de dónde eres?",
-                "¿de dónde eres",
-                "de donde eres?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿De dónde eres?",
-                "incorrect": "Use de dónde plus the tú form eres: ¿De dónde eres?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-soy-de-madrid",
-              "prompt": "Answer 'I am from Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-DE",
-                "ES-GRAMMAR-ORIGIN-WITH-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "soy de madrid.",
-                "soy de madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Soy de Madrid.",
-                "incorrect": "Use the origin frame soy de: Soy de Madrid."
-              }
+              "source": "[YOU SAY: \"¡Hola!\" — the ¡ warns you to begin with exclamation energy]"
             }
           ]
         },
@@ -559,27 +403,39 @@
             },
             {
               "kind": "speech",
-              "text": "What does de mean? (“From” or “of.”) Ask where one friend is from. (¿De dónde eres?) Answer with Madrid. (Soy de Madrid.) Next: reuse dónde and en to say where someone is located now."
+              "text": "Why does Spanish open a question with ¿? (Because word order often doesn't change, so the reader needs an early warning to use question intonation.) How do you write it? (A normal? rotated 180°.) Does it always sit at the sentence's start? (The next step places it around a question inside a larger sentence.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C09-esta-en",
-      "sequence": 860,
-      "title": "está en… — saying where someone is",
-      "headword": "está en…",
-      "romanization": "está en…",
-      "gloss": "is in or at… — locate someone with estar and the already-known en",
+      "id": "ES-W03-question-span",
+      "sequence": 400,
+      "title": "Where does ¿ begin? — bracket the spoken span",
+      "headword": "Roberto, ¿cómo estás?",
+      "romanization": "Roberto, ¿cómo estás?",
+      "gloss": "opening punctuation brackets only the question or exclamation span inside a larger sentence",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:d88336f3e0e9f123",
-      "notice": null,
+      "sourceHash": "fnv1a64:2daa142c589cb47e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — bracket the spoken span",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — bracket the spoken span and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -594,56 +450,39 @@
             },
             {
               "kind": "speech",
-              "text": "In Chapter 7, ¿Dónde vives? — Vivo en Madrid asked about where someone lives. Now use the same dónde and en with estar to ask about a current location."
+              "text": "You can open a whole question with ¿. Now place that mark inside a larger sentence, exactly where the questioning voice begins."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — en",
+          "type": "script",
+          "title": "Script — bracket the spoken span",
           "segments": [
             {
               "kind": "speech",
-              "text": "en already means “in,” “on,” or “at.” It descends from Latin in and is a cognate of English in. No new preposition is needed; only the surrounding verb changes."
+              "text": "The opening mark goes where the question begins, even if the sentence started earlier:"
+            },
+            {
+              "kind": "speech",
+              "text": "Roberto, ¿cómo estás?"
+            },
+            {
+              "kind": "speech",
+              "text": "The name Roberto is outside the question. The marks bracket the words that need question intonation. The same principle works for an exclamation:"
+            },
+            {
+              "kind": "speech",
+              "text": "Roberto, ¡buenos días!"
+            },
+            {
+              "kind": "speech",
+              "text": "This is why the opening mark is more than decoration. It tells the reader exactly where to begin and end a change in spoken melody."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: dónde + estar, then estar + en",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "¿Dónde está usted? — “Where are you?” (formal) Usted está en Madrid. — “You are in Madrid.” Ana está en Madrid. — “Ana is in Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The form está is already familiar from ¿Cómo está usted? The phrase está en… simply gives that form a place. Location uses estar even when a place seems stable; the choice marks the kind of claim, not how long it lasts."
-            },
-            {
-              "kind": "speech",
-              "text": "Compare origin and location without adding any new form:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "sentence",
-                "meaning",
-                "verb"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "sentence: Ana es de Madrid. meaning: origin. verb: ser.",
-                "sentence: Ana está en Madrid. meaning: location. verb: estar."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -655,80 +494,35 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“¿Dónde está usted?”",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "“María, ¿cómo estás?”",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Dónde está usted?”]"
+              "source": "[YOU WRITE: “María, ¿cómo estás?”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "“María, ¡buenos días!”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: “María, ¡buenos días!”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Ana está en Madrid.”",
+              "instruction": "begin the new melody at ¿ or ¡, not at the first capital",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Ana está en Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“en / in” — two cognates",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “en / in” — two cognates]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-esta-en-ask-formal",
-              "prompt": "Ask formal you 'Where are you?' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿dónde está usted?",
-                "dónde está usted?",
-                "¿dónde está usted",
-                "donde esta usted?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Dónde está usted?",
-                "incorrect": "Use dónde, the formal form está, and usted."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-esta-en-ana",
-              "prompt": "Say 'Ana is in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "ana está en madrid.",
-                "ana está en madrid",
-                "ana esta en madrid",
-                "ana esta en madrid."
-              ],
-              "feedback": {
-                "correct": "Right: Ana está en Madrid.",
-                "incorrect": "Use the location frame está en: Ana está en Madrid."
-              }
+              "source": "[YOU SAY: begin the new melody at ¿ or ¡, not at the first capital]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -740,26 +534,45 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb locates someone? (Estar.) What already-known word introduces the place? (En.) Ask formal “Where are you?” (¿Dónde está usted?) Next: combine identity, origin, state, and location without adding another word or verb form."
+              "text": "In Roberto, ¿cómo estás?, is Roberto inside the question? (No.) Where does the inverted mark go? (At the start of the question or exclamation span.) What does that placement tell a reader? (Where to change the spoken melody.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-W03-question-span-roberto-outside",
+              "prompt": "In 'Roberto, ¿cómo estás?', is Roberto inside the question?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no",
+                "no it is not",
+                "it is not"
+              ],
+              "feedback": {
+                "correct": "Correct: Roberto is outside the question; ¿ begins where the questioning voice begins.",
+                "incorrect": "No. Roberto is outside the question because the inverted mark comes after the name."
+              }
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C09-practice",
-      "sequence": 870,
-      "title": "Practice — identity, origin, state, and location",
+      "id": "ES-C04-practice",
+      "sequence": 410,
+      "title": "Practice — \"how are you?\", start to finish",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "identify someone, state origin, check wellbeing, and give a location",
+      "gloss": "the full \"how are you?\" exchange, formal and informal",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1b67b076d8ebd3b",
+      "sourceHash": "fnv1a64:3d42006ff8c1cce5",
       "notice": null,
       "blocks": [
         {
@@ -775,88 +588,66 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Use ser for identity and origin; use estar for a current state or location."
+              "text": "No new words. This chapter's atoms — gracias, de nada, estar, ¿cómo está?, regular — now assemble into a real exchange, run formally and informally until the register swap is automatic. It picks up right where the Chapter 3 introduction left off."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: retrieve the two small form sets",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "ser: soy, eres, es."
+              "text": "Formal (a stranger, an elder, a customer):"
             },
             {
               "kind": "speech",
-              "text": "estar in the questions used here: estás, está."
+              "text": "— Buenos días. ¿Cómo está usted? — Bien, gracias. ¿Y usted? — Más o menos. — [reply to a thanks, later in the chat] De nada."
             },
             {
               "kind": "speech",
-              "text": "Plural forms remain deliberately deferred."
+              "text": "Informal (a friend, a peer) — only the verb + pronoun change:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¡Hola! ¿Cómo estás? — Regular. ¿Y tú? — Bien, gracias."
+            },
+            {
+              "kind": "speech",
+              "text": "The glue pattern you just secured is ¿y usted? / ¿y tú? — “and you?” It bounces the question back without repeating the whole sentence."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — four root hooks",
+          "type": "notice",
+          "title": "What you've built this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "ser: esse + sedēre."
+              "text": "gracias — thank you ( from grātia, \"grace\")."
             },
             {
               "kind": "speech",
-              "text": "estar: stāre, “stand.”"
+              "text": "de nada — you're welcome ( from \"of a born-thing\" becomes \"of nothing\")."
             },
             {
               "kind": "speech",
-              "text": "de: Latin dē, “from.”"
+              "text": "estar — the state/location be-verb ( from stāre, “to stand”)."
             },
             {
               "kind": "speech",
-              "text": "en: Latin in, English in."
+              "text": "¿cómo está usted? / ¿cómo estás? — how are you, formal / informal."
+            },
+            {
+              "kind": "speech",
+              "text": "bien / regular / más o menos — well / so-so / more-or-less."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: sort by the kind of claim",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "prompt",
-                "answer",
-                "why"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "prompt: ¿Es usted Ana? answer: ser. why: identity.",
-                "prompt: ¿De dónde eres? answer: ser. why: origin.",
-                "prompt: ¿Está usted bien? answer: estar. why: current state.",
-                "prompt: ¿Dónde está Ana? answer: estar. why: location."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "input",
-          "title": "The exchange — only known pieces",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— Hola. ¿Es usted Ana? — Sí. Soy Ana. — ¿De dónde es usted? — Soy de Madrid. — ¿Dónde está Ana? — Está en Madrid. — ¿Está usted bien? — Bien, gracias."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -869,29 +660,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“soy, eres, es”",
+              "instruction": "the full formal exchange, both voices",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “soy, eres, es”]"
+              "source": "[YOU SAY: the full *formal* exchange, both voices]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four questions, naming each job",
+              "instruction": "the same exchange informally — catch está becomes estás, usted becomes tú",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four questions, naming each job]"
+              "source": "[YOU SAY: the same exchange *informally* — catch *está → estás*, *usted → tú*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange once",
+              "instruction": "chain Chapter 3 + 4 — introduce yourself and ask how they are: \"Me llamo … ¿Cómo está usted?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange once]"
+              "source": "[YOU SAY: chain Chapter 3 + 4 — introduce yourself *and* ask how they are: \"Me llamo … ¿Cómo está usted?\"]"
             },
             {
               "kind": "repeat",
@@ -900,98 +691,12 @@
             },
             {
               "kind": "speech",
-              "text": "“¿Es usted Ana? ¿Está usted bien?”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-identity",
-              "prompt": "Complete with es or está: ¿___ usted Ana?",
-              "assesses": [
-                "ES-GRAMMAR-SER-IDENTITY",
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "es",
-                "¿es usted ana?",
-                "es usted ana?"
-              ],
-              "feedback": {
-                "correct": "Right: identifying someone uses es.",
-                "incorrect": "This is identity, so use the ser form es."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-origin",
-              "prompt": "Say 'I am from Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-DE",
-                "ES-GRAMMAR-ORIGIN-WITH-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "soy de madrid.",
-                "soy de madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Soy de Madrid.",
-                "incorrect": "Use soy de for origin: Soy de Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-location",
-              "prompt": "Say 'Ana is in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "ana está en madrid.",
-                "ana está en madrid",
-                "ana esta en madrid",
-                "ana esta en madrid."
-              ],
-              "feedback": {
-                "correct": "Right: Ana está en Madrid.",
-                "incorrect": "Location uses the frame está en: Ana está en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-state",
-              "prompt": "Complete with es or está: ¿___ usted bien?",
-              "assesses": [
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "está",
-                "¿está usted bien?",
-                "esta usted bien?",
-                "esta"
-              ],
-              "feedback": {
-                "correct": "Right: a current state uses está.",
-                "incorrect": "This asks about a current state, so use está."
-              }
+              "text": "Run the formal exchange, greeting to answer, without stopping."
             }
           ]
         },
         {
-          "index": 6,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1003,7 +708,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned forms of ser. (Soy, eres, es.) Which verb identifies and states origin? (Ser.) Which gives a state or location? (Estar.) Ask where one friend is from, then locate Ana in Madrid. Next: ir, “to go,” introduced in the same small-step frame."
+              "text": "Which be-verb carries \"how are you?\" and why? (estar — current state.) Two words swap between formal and informal — which? (está becomes estás, and usted becomes tú.) What does de nada literally say? (\"Of nothing.\") And if the person answering you says vos instead of tú — do you switch? (No. You understand it and keep saying tú.) Next chapter: farewells — hasta luego, hasta mañana, adiós."
             }
           ]
         }

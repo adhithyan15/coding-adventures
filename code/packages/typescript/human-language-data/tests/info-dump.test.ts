@@ -241,7 +241,7 @@ describe("the committed corpus", () => {
 
   it("pins the first measurement", () => {
     const report = measureInfoDump(lessons, budget);
-    expect(report.summary.lessons).toBe(1696); // +1 vos, +1 concordancia
+    expect(report.summary.lessons).toBe(1704); // +8: HL-C94 payoff lessons
 
     // The finding that reframed this gate: the PROSE is fine. Seventeen rule
     // statements across 1,694 lessons is a corpus whose writing is already

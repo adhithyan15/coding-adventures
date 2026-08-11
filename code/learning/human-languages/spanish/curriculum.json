@@ -87,7 +87,9 @@
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
         "ES-C03-vos",
-        "ES-C03-usted-origin"
+        "ES-C03-usted-origin",
+        "ES-C03-repaso-nombre",
+        "ES-C03-repaso-tu-usted"
       ],
       "before": [],
       "inline": [
@@ -96,7 +98,9 @@
       ],
       "after": [
         "ES-EXT-007-ETYMOLOGY",
-        "ES-EXT-007-VARIETY"
+        "ES-EXT-007-VARIETY",
+        "ES-EXT-007-CONSOLIDATION-NOMBRE",
+        "ES-EXT-007-CONSOLIDATION-USTED"
       ]
     },
     {
@@ -138,11 +142,14 @@
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
         "ES-C04-gracias",
-        "ES-C04-de-nada"
+        "ES-C04-de-nada",
+        "ES-C04-repaso-gracias"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "ES-EXT-010-CONSOLIDATION-GRACIAS"
+      ]
     },
     {
       "id": "ES-PATH-011",
@@ -160,7 +167,9 @@
         "ES-W02-enye-formas",
         "ES-W03-inverted",
         "ES-W03-question-span",
-        "ES-C04-practice"
+        "ES-C04-practice",
+        "ES-C04-repaso-estar",
+        "ES-W01-repaso-acento"
       ],
       "before": [],
       "inline": [
@@ -170,7 +179,9 @@
       ],
       "after": [
         "ES-EXT-011-SCRIPT",
-        "ES-EXT-011-CONSOLIDATION"
+        "ES-EXT-011-CONSOLIDATION",
+        "ES-EXT-011-CONSOLIDATION-ESTAR",
+        "ES-EXT-011-CONSOLIDATION-ACENTO"
       ]
     },
     {
@@ -183,7 +194,8 @@
         "ES-C05-hasta-luego",
         "ES-C05-hasta-manana",
         "ES-C05-hasta-pronto",
-        "ES-C05-practice"
+        "ES-C05-practice",
+        "ES-C05-repaso-adios"
       ],
       "before": [],
       "inline": [
@@ -191,7 +203,8 @@
         "ES-EXT-012-GRAMMAR"
       ],
       "after": [
-        "ES-EXT-012-CONSOLIDATION"
+        "ES-EXT-012-CONSOLIDATION",
+        "ES-EXT-012-CONSOLIDATION-ADIOS"
       ]
     },
     {
@@ -206,14 +219,18 @@
         "ES-C06-estudiar",
         "ES-C06-espanol",
         "ES-C06-hablo-espanol",
-        "ES-C06-practice"
+        "ES-C06-practice",
+        "ES-C06-repaso-cafe",
+        "ES-C06-repaso-hablar"
       ],
       "before": [],
       "inline": [
         "ES-EXT-013-LANGUAGE-SPECIFIC"
       ],
       "after": [
-        "ES-EXT-013-CONSOLIDATION"
+        "ES-EXT-013-CONSOLIDATION",
+        "ES-EXT-013-CONSOLIDATION-CAFE",
+        "ES-EXT-013-CONSOLIDATION-HABLAR"
       ]
     },
     {
@@ -2159,6 +2176,94 @@
       "prerequisites": [],
       "lessons": [
         "ES-C13-practice"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-CONSOLIDATION-NOMBRE",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-repaso-nombre"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-CONSOLIDATION-USTED",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-repaso-tu-usted"
+      ]
+    },
+    {
+      "id": "ES-EXT-010-CONSOLIDATION-GRACIAS",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-repaso-gracias"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-CONSOLIDATION-ESTAR",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C04-repaso-estar"
+      ]
+    },
+    {
+      "id": "ES-EXT-011-CONSOLIDATION-ACENTO",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-W01-repaso-acento"
+      ]
+    },
+    {
+      "id": "ES-EXT-012-CONSOLIDATION-ADIOS",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C05-repaso-adios"
+      ]
+    },
+    {
+      "id": "ES-EXT-013-CONSOLIDATION-CAFE",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C06-repaso-cafe"
+      ]
+    },
+    {
+      "id": "ES-EXT-013-CONSOLIDATION-HABLAR",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can run this chapter's material end to end without new vocabulary.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C06-repaso-hablar"
       ]
     }
   ]

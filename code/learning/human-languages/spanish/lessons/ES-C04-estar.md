@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-estar
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 290
-chapter: 4
+chapter: 7
 type: word
 headword: estar
 gloss: to be — but the *standing* kind, straight from Latin stāre

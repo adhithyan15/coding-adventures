@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-gusto
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 250
-chapter: 3
+chapter: 5
 type: word
 headword: mucho gusto
 gloss: pleased to meet you (literally "much pleasure")

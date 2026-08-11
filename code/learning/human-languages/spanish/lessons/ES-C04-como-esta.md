@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-como-esta
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 310
-chapter: 4
+chapter: 7
 type: phrase
 headword: ¿cómo está usted?
 gloss: how are you? — assemble the formal question from cómo, estar, and usted

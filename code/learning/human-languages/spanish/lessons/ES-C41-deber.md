@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C41-deber
 spine_node: SPINE-GIVE-REASONS
 sequence: 1900
-chapter: 41
+chapter: 49
 type: word
 headword: deber
 gloss: should, ought to — and to owe, because the word is literally "to have something from someone"

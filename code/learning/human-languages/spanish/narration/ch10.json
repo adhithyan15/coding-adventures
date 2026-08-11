@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 10,
-  "title": "Going, and the Future You Can Already Say",
+  "title": "Goodbye",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8f2029488988ce30",
+  "sourceHash": "fnv1a64:3f8dfe9ecd76752e",
   "lessons": [
     {
-      "id": "ES-C10-ir",
-      "sequence": 880,
-      "title": "ir — “to go,” from more than one historical stem",
-      "headword": "ir",
-      "romanization": "ir",
-      "gloss": "to go — with the three singular present forms voy, vas, and va",
+      "id": "ES-C05-adios",
+      "sequence": 420,
+      "title": "adiós — \"goodbye,\" or \"to God\"",
+      "headword": "adiós",
+      "romanization": "adiós",
+      "gloss": "goodbye",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4fa3390809549f7",
+      "sourceHash": "fnv1a64:30922ffd5a6b6ae3",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms."
+              "text": "You can greet, introduce yourself, and ask how someone is. Time to leave gracefully. The final, plainest parting is adiós — and, like the English goodbye, it's a tiny prayer worn smooth."
             }
           ]
         },
@@ -46,11 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-i — ir is one clear syllable, like ear without a glide."
-            },
-            {
-              "kind": "speech",
-              "text": "diphthong-oy — voy ends with the sound in English boy."
+              "text": "diphthong-io — the -iós is one glide, ee-OHS: ah-DYOHS, stress on the end (that's what the accent on ó marks — remember the acute-accent lesson)."
             }
           ]
         },
@@ -61,44 +57,46 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family."
+              "text": "adiós is a + Dios — \"to God.\" It's the front half of an old blessing, a Dios te encomiendo, \"I commend you to God\" — said to someone setting off, when a journey was dangerous and you left them in God's keeping."
             },
             {
               "kind": "speech",
-              "text": "One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend."
+              "text": "Every Romance sister kept the same farewell-prayer:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "goodbye",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "language: Spanish. goodbye: adiós. literally: \"to God\".",
+                "language: French. goodbye: adieu. literally: \"to God\" (à Dieu).",
+                "language: Italian. goodbye: addio. literally: \"to God\".",
+                "language: Portuguese. goodbye: adeus. literally: \"to God\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And English is doing the exact same thing without telling you: goodbye is a crushed-down \"God be with ye.\" So adiós and goodbye are, at heart, the same sentence — a blessing for the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Dios (\"God\") from Latin Deus — the Deus of English deity, divine, adieu, and (via Greek Zeus, same root) the whole sky-god family."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: only three forms today",
+          "title": "Grammar Lens: adiós is a final goodbye",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present of ir"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of ir: voy.",
-                "person: tú. present of ir: vas.",
-                "person: él / ella / usted. present of ir: va."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "The known question word now gives you a useful prompt:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Dónde va usted? — “Where are you going?”"
+              "text": "adiós leans toward a longer parting — you won't see them soon, or it's the end of the day. For \"see you later / tomorrow,\" Spanish reaches for hasta …, which the rest of this chapter is about — and hasta has a surprising origin."
             }
           ]
         },
@@ -116,70 +114,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ir — voy, vas, va”",
+              "instruction": "\"adiós\" — ah-DYOHS, stress the end",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ir — voy, vas, va”]"
+              "source": "[YOU SAY: \"adiós\" — *ah-DYOHS*, stress the end]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿Dónde va usted?”",
+              "instruction": "adiós / adieu / addio / adeus — four \"to God\" farewells",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Dónde va usted?”]"
+              "source": "[YOU SAY: adiós / adieu / addio / adeus — four \"to God\" farewells]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“īre gives ir; vādere gives the present set”",
+              "instruction": "English \"goodbye\" = \"God be with ye\" — the same prayer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “īre gives ir; vādere gives the present set”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-singular-forms",
-              "prompt": "Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
-              ],
-              "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Use the three singular forms: voy, vas, va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-formal-question",
-              "prompt": "Complete the formal question: ¿Dónde ___ usted?",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "va",
-                "¿dónde va usted?",
-                "donde va usted?"
-              ],
-              "feedback": {
-                "correct": "Right: usted takes va — ¿Dónde va usted?",
-                "incorrect": "Usted uses the third-person singular form va."
-              }
+              "source": "[YOU SAY: English \"goodbye\" = \"God be with ye\" — the same prayer]"
             }
           ]
         },
@@ -196,26 +153,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming."
+              "text": "What two words hide inside adiós? (a + Dios — \"to God.\") What English goodbye is built the same way? (Goodbye from \"God be with ye.\") Is adiós for a quick \"see you soon\"? (No — it's the longer/final parting; hasta … comes next.) Next: hasta, and a word Spain borrowed from Arabic."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-ir-a-futuro",
-      "sequence": 890,
-      "title": "voy a + infinitive — moving toward the near future",
-      "headword": "voy a + infinitive",
-      "romanization": "voy a + infinitive",
-      "gloss": "I am going to… — the near future with ir, a, and a known infinitive",
+      "id": "ES-C05-hasta",
+      "sequence": 430,
+      "title": "hasta — \"until,\" and Spain's Arabic centuries",
+      "headword": "hasta",
+      "romanization": "hasta",
+      "gloss": "until / up to",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfe5a6bf08c4baf2",
+      "sourceHash": "fnv1a64:119bdffd9fece085",
       "notice": null,
       "blocks": [
         {
@@ -231,48 +188,49 @@
             },
             {
               "kind": "speech",
-              "text": "You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word."
+              "text": "Spanish says \"see you later\" as hasta luego — literally \"until later.\" So the key word is hasta, \"until.\" And hasta carries the single most important fact about Spanish's history: for nearly 800 years, much of Spain spoke Arabic."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — a",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance."
-            },
-            {
-              "kind": "speech",
-              "text": "Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar."
+              "text": "silent-h — Spanish h is always silent: hasta = AHS-tah (no breath on the h at all). Stress the front."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: ir + a + an unchanged infinitive",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "near-future frame",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. near-future frame: voy a hablar. meaning: I am going to speak.",
-                "person: tú. near-future frame: vas a comer. meaning: you are going to eat.",
-                "person: usted. near-future frame: va a vivir. meaning: you are going to live."
-              ]
+              "kind": "speech",
+              "text": "hasta comes from Arabic ḥattā, “until, up to.” From 711 CE, Muslim armies ruled much of the Iberian Peninsula — al-Andalus — and Arabic was the language of government, science, and poetry there for centuries, until."
             },
             {
               "kind": "speech",
-              "text": "Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern."
+              "text": "Spanish absorbed roughly four thousand Arabic words in that time — more of its vocabulary than from any source except Latin itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Most of those loans are nouns, and you can spot a huge number by the frozen Arabic article al- (\"the\") fused onto the front:"
+            },
+            {
+              "kind": "speech",
+              "text": "almohada (pillow), alcázar (fortress), alcalde (mayor), alfombra (rug), aduana (customs), álgebra, alcohol."
+            },
+            {
+              "kind": "speech",
+              "text": "azúcar (sugar), aceite (oil), naranja (orange)."
+            },
+            {
+              "kind": "speech",
+              "text": "But hasta is rare and special: it is a function word — a preposition, part of the grammatical skeleton. Languages borrow nouns easily and grammar words almost never — so an Arabic preposition surviving in everyday Spanish shows how deep, how intimate, those centuries of contact were. (Its Latin rival ad \"to\"/usque \"up to\" simply lost.) You say a piece of al-Andalus every time you say goodbye."
             }
           ]
         },
@@ -290,70 +248,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar”",
+              "instruction": "\"hasta\" — AHS-tah, silent h",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar”]"
+              "source": "[YOU SAY: \"hasta\" — *AHS-tah*, silent h]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“vas a comer”",
+              "instruction": "\"hasta\" then Arabic ḥattā — the same word, 1,300 years apart",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “vas a comer”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“va a vivir”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “va a vivir”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-voy-hablar",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + the unchanged infinitive hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-vas-comer",
-              "prompt": "Say 'You are going to eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vas a comer.",
-                "vas a comer"
-              ],
-              "feedback": {
-                "correct": "Right: Vas a comer.",
-                "incorrect": "Use the tú form vas, then a, then comer."
-              }
+              "source": "[YOU SAY: \"hasta\" then Arabic *ḥattā* — the same word, 1,300 years apart]"
             }
           ]
         },
@@ -370,26 +278,26 @@
             },
             {
               "kind": "speech",
-              "text": "What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is."
+              "text": "What language is hasta from, and what does it mean? (Arabic ḥattā — \"until.\") Why is it remarkable that Spanish borrowed it? (It's a function word / preposition — languages almost never borrow those; it shows how deep the Arabic centuries went.) How do you spot many Arabic nouns in Spanish? (The frozen al- article: almohada, azúcar, álgebra.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-mi-tu-su",
-      "sequence": 900,
-      "title": "mi, tu, su — whose café?",
-      "headword": "mi, tu, su",
-      "romanization": "mi, tu, su",
-      "gloss": "my, your informal, and your formal or his or her — before a singular noun",
+      "id": "ES-C05-hasta-limits",
+      "sequence": 440,
+      "title": "hasta aquí / hasta la noche — point to the limit",
+      "headword": "hasta aquí / hasta la noche",
+      "romanization": "hasta aquí / hasta la noche",
+      "gloss": "hasta points to an endpoint in space or time",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57f79e4665d0f93b",
+      "sourceHash": "fnv1a64:a8420c6c206c3aa2",
       "notice": null,
       "blocks": [
         {
@@ -405,63 +313,39 @@
             },
             {
               "kind": "speech",
-              "text": "You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun."
+              "text": "You know hasta means “until” or “up to.” Give that small word one spatial endpoint and one temporal endpoint, using only one new word."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: endpoints in space and time",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "Latin source",
-                "meaning in today's frame"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "Spanish: mi. Latin source: meus. meaning in today's frame: my.",
-                "Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.",
-                "Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her."
-              ]
+              "kind": "speech",
+              "text": "Aquí means here. Put it after hasta:"
             },
             {
               "kind": "speech",
-              "text": "English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent."
+              "text": "hasta aquí — up to here."
+            },
+            {
+              "kind": "speech",
+              "text": "For a time endpoint, reuse la noche, “the night,” from Chapter 2:"
+            },
+            {
+              "kind": "speech",
+              "text": "hasta la noche — until the night / until tonight."
+            },
+            {
+              "kind": "speech",
+              "text": "The same preposition points to a place or the end of a stretch of time. The next lessons will place new time words after it one at a time."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: put the ownership word before the noun",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "phrase",
-                "meaning"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "mi café means my coffee.",
-                "tu café means your coffee, informal.",
-                "su café means your coffee, formal; or his or her coffee."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -474,75 +358,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“mi café”",
+              "instruction": "“aquí” — here",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café”]"
+              "source": "[YOU SAY: “aquí” — here]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tu café” to tú",
+              "instruction": "“hasta aquí” — up to here",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tu café” to *tú*]"
+              "source": "[YOU SAY: “hasta aquí” — up to here]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“su café” to usted",
+              "instruction": "“hasta la noche” — until tonight",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “su café” to *usted*]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-mi-tu-su-my-coffee",
-              "prompt": "Say 'my coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "mi café",
-                "mi cafe"
-              ],
-              "feedback": {
-                "correct": "Right: mi café.",
-                "incorrect": "Put mi before the known noun café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-mi-tu-su-formal-your-coffee",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: formal usted pairs here with su café.",
-                "incorrect": "For formal usted, put su before café."
-              }
+              "source": "[YOU SAY: “hasta la noche” — until tonight]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -554,26 +397,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun."
+              "text": "What does hasta point to? (An endpoint.) Give one spatial and one temporal example. (Hasta aquí; hasta la noche.) What is the only new lexical item? (Aquí, “here.”)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-practice",
-      "sequence": 910,
-      "title": "Practice — going, approaching events, and ownership",
+      "id": "ES-C05-repaso-adios",
+      "sequence": 445,
+      "title": "Leaving — putting it together",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "singular ir, the near future, and mi, tu, or su before café",
+      "gloss": "Leaving — putting the chapter together",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d00e9396b191d69c",
+      "sourceHash": "fnv1a64:956ce561bb24671e",
       "notice": null,
       "blocks": [
         {
@@ -589,49 +432,29 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café."
+              "text": "One farewell that is final, and one word that opens all the others. Nothing new in this lesson — only what you already have."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir, singular: voy, vas, va."
-            },
-            {
-              "kind": "speech",
-              "text": "near future: voy a hablar, vas a comer, va a vivir."
-            },
-            {
-              "kind": "speech",
-              "text": "ownership before one singular known noun: mi café, tu café, su café."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural person forms of ir and possessives before plural nouns remain deferred."
+              "text": "Adiós — meant, and a little final. Hasta — \"until,\" and it is waiting for what comes next."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — retrieve the history",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir continues Latin īre, while voy, vas, va continue vādere."
-            },
-            {
-              "kind": "speech",
-              "text": "a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event."
-            },
-            {
-              "kind": "speech",
-              "text": "mi, tu, su continue Latin meus, tuus, suus."
+              "text": "You can close a conversation, and you have the word every softer goodbye is built from."
             }
           ]
         },
@@ -649,121 +472,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy, vas, va”",
+              "instruction": "the whole exchange, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy, vas, va”]"
+              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar, vas a comer, va a vivir”",
+              "instruction": "it again, faster, and let it sound like speech rather than recital",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar, vas a comer, va a vivir”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“mi café, tu café, su café”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café, tu café, su café”]"
+              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
             },
             {
               "kind": "repeat",
               "times": 2,
               "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Voy a hablar. Su café.”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-ir-forms",
-              "prompt": "Give the learned singular forms of ir: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
-              ],
-              "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Retrieve only the learned singular set: voy, vas, va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-formal-going",
-              "prompt": "Ask formal you 'Where are you going?' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿dónde va usted?",
-                "dónde va usted?",
-                "donde va usted?",
-                "¿donde va usted?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Dónde va usted?",
-                "incorrect": "Use dónde with the usted form va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-near-future",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-possessive",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: su café.",
-                "incorrect": "Formal usted uses su before café."
-              }
             }
           ]
         },
@@ -780,7 +507,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier."
+              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
             }
           ]
         }

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C05-hasta-luego
 spine_node: SPINE-TAKE-LEAVE
 sequence: 450
-chapter: 5
+chapter: 11
 type: phrase
 headword: hasta luego
 gloss: see you later (literally "until later")

@@ -143,7 +143,7 @@ describe("etymology is a hook, not a skill", () => {
     // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Chapter 10 revisits
     // another older atom and lowers the shortfall again. Its etymon atoms sit above
     // pre-A1, so this level-specific waiver count correctly stays unchanged.
-    expect(reinforcement.shortfall).toBe(47);
+    expect(reinforcement.shortfall).toBe(40); // -7: HL-C94's payoff lessons revisit their chapters' atoms
     expect(reinforcement.detail).toContain("38 etymology hook(s) waived"); // +1: ES-ETYMON-VOS-03
   });
 

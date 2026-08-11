@@ -51,109 +51,293 @@
     },
     {
       "chapter": 3,
-      "title": "Introducing Yourself",
-      "label": "ch:introductions",
-      "canDo": "I can give my name, ask someone else's, and say it was a pleasure to meet them.",
+      "title": "Saying Your Name",
+      "label": "ch:your-name",
+      "canDo": "I can say my own name in Spanish.",
       "spineNodes": [
         "SPINE-EXCHANGE-NAMES"
       ],
       "payoff": {
-        "lesson": "ES-C03-practice",
+        "lesson": "ES-C03-repaso-nombre",
         "kind": "dialogue",
-        "summary": "A first meeting start to finish: greet, exchange names at the right level of formality, and close with mucho gusto.",
+        "summary": "Saying Your Name — the chapter run end to end.",
         "assesses": [
-          "ES-LEX-HOLA",
-          "ES-LEX-BUENOS-DIAS",
+          "ES-LEX-ME",
+          "ES-GRAMMAR-OBJECT-PRONOUN",
+          "ES-LEX-LLAMO",
+          "ES-GRAMMAR-FIRST-PERSON-VERB",
           "ES-LEX-ME-LLAMO",
-          "ES-LEX-TU",
-          "ES-LEX-USTED",
-          "ES-LEX-COMO-SE-LLAMA",
-          "ES-LEX-TE-LLAMAS",
-          "ES-LEX-MUCHO-GUSTO"
+          "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON"
         ]
       }
     },
     {
       "chapter": 4,
-      "title": "How Are You?",
-      "label": "ch:how-are-you",
-      "canDo": "I can ask how someone is in Spanish, formally or informally, answer for myself, and hand the question back.",
+      "title": "The Three Words for You",
+      "label": "ch:three-yous",
+      "canDo": "I can choose between tú and usted, and recognise vos.",
       "spineNodes": [
-        "SPINE-COURTESY-THANK",
-        "SPINE-CHECK-WELLBEING"
+        "SPINE-EXCHANGE-NAMES"
       ],
       "payoff": {
-        "lesson": "ES-C04-practice",
+        "lesson": "ES-C03-repaso-tu-usted",
         "kind": "dialogue",
-        "summary": "The whole how-are-you exchange run twice — ¿Cómo está usted? for a stranger, ¿Cómo estás? for a friend — answered with bien, regular or más o menos and closed with gracias / de nada.",
+        "summary": "The Three Words for You — the chapter run end to end.",
         "assesses": [
-          "ES-LEX-GRACIAS",
-          "ES-LEX-DE-NADA",
-          "ES-LEX-ESTAR",
-          "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-          "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
-          "ES-LEX-COMO-ESTA-USTED",
-          "ES-LEX-COMO-ESTAS",
-          "ES-LEX-BIEN",
-          "ES-LEX-REGULAR",
-          "ES-LEX-MAS-O-MENOS",
-          "ES-PRAGMATICS-AND-YOU",
-          "ES-LEX-ME-LLAMO"
+          "ES-LEX-TU",
+          "ES-LEX-USTED",
+          "ES-ETYMON-TU-THOU",
+          "ES-REGISTER-TU-USTED",
+          "ES-GRAMMAR-USTED-THIRD-PERSON",
+          "ES-LEX-VOS-01",
+          "ES-CULTURE-VOSEO-02",
+          "ES-ETYMON-VOS-03",
+          "ES-ETYMON-VUESTRA-MERCED"
         ]
       }
     },
     {
       "chapter": 5,
-      "title": "Farewells",
-      "label": "ch:farewells",
-      "canDo": "I can close a Spanish conversation and pick the goodbye that fits how soon I will see the person again.",
+      "title": "Asking Someone's Name",
+      "label": "ch:asking-a-name",
+      "canDo": "I can ask someone's name in either register and say it was a pleasure.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C03-practice",
+        "kind": "dialogue",
+        "summary": "Asking Someone's Name — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-COMO",
+          "ES-ETYMON-QUOMODO",
+          "ES-SCRIPT-INVERTED-QUESTION",
+          "ES-GRAMMAR-QUESTION-ACCENT",
+          "ES-ETYMON-QUESTION-QU",
+          "ES-LEX-SE-LLAMA",
+          "ES-LEX-TE-LLAMAS",
+          "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+          "ES-LEX-COMO-SE-LLAMA",
+          "ES-LEX-MUCHO",
+          "ES-LEX-GUSTO",
+          "ES-LEX-MUCHO-GUSTO"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Thank You",
+      "label": "ch:thank-you",
+      "canDo": "I can thank someone and answer when I am thanked.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-repaso-gracias",
+        "kind": "dialogue",
+        "summary": "Thank You — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-GRACIAS",
+          "ES-ETYMON-GRATIA",
+          "ES-LEX-DE-NADA",
+          "ES-ETYMON-NATA"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "How Are You",
+      "label": "ch:how-are-you",
+      "canDo": "I can ask how someone is, answer, and hand the question back.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-repaso-estar",
+        "kind": "dialogue",
+        "summary": "How Are You — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-ESTAR",
+          "ES-ETYMON-STARE",
+          "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
+          "ES-GRAMMAR-STATE-LOCATION-ESTAR",
+          "ES-LEX-COMO-ESTA-USTED",
+          "ES-LEX-COMO-ESTAS",
+          "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
+          "ES-LEX-REGULAR",
+          "ES-LEX-MAS-O-MENOS",
+          "ES-ETYMON-REGULA",
+          "ES-LEX-Y",
+          "ES-PRAGMATICS-AND-YOU",
+          "ES-ETYMON-ET"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "The Written Accent",
+      "label": "ch:written-accent",
+      "canDo": "I can hear where a Spanish word is stressed and see why the accent is written.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-W01-repaso-acento",
+        "kind": "dialogue",
+        "summary": "The Written Accent — the chapter run end to end.",
+        "assesses": [
+          "ES-SCRIPT-ACUTE-ACCENT",
+          "ES-GRAMMAR-DEFAULT-STRESS",
+          "ES-GRAMMAR-STRESS-EXCEPTION",
+          "ES-LEX-EL-PRONOUN",
+          "ES-GRAMMAR-DIACRITIC-ACCENT"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Enye and the Upside-Down Marks",
+      "label": "ch:enye-and-marks",
+      "canDo": "I can read and write ñ and the upside-down question and exclamation marks.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-practice",
+        "kind": "dialogue",
+        "summary": "Enye and the Upside-Down Marks — the chapter run end to end.",
+        "assesses": [
+          "ES-SCRIPT-ENYE",
+          "ES-SOUND-ENYE",
+          "ES-ETYMON-DOUBLE-N",
+          "ES-FORM-MANANA",
+          "ES-FORM-ESPANOL",
+          "ES-SCRIPT-INVERTED-EXCLAMATION",
+          "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
+          "ES-HISTORY-RAE-INVERTED-MARKS",
+          "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Goodbye",
+      "label": "ch:goodbye",
+      "canDo": "I can end a conversation, and I know the word every softer goodbye is built from.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C05-repaso-adios",
+        "kind": "dialogue",
+        "summary": "Goodbye — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-ADIOS",
+          "ES-PRAGMATICS-FINAL-FAREWELL",
+          "ES-ETYMON-A-DIOS",
+          "ES-LEX-HASTA",
+          "ES-ETYMON-HATTA",
+          "ES-HISTORY-AL-ANDALUS-LOANS",
+          "ES-LEX-AQUI",
+          "ES-GRAMMAR-HASTA-ENDPOINT"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Until When",
+      "label": "ch:until-when",
+      "canDo": "I can pick the farewell that matches when I will next see someone.",
       "spineNodes": [
         "SPINE-TAKE-LEAVE"
       ],
       "payoff": {
         "lesson": "ES-C05-practice",
         "kind": "dialogue",
-        "summary": "One conversation from hola to its ending, choosing hasta luego, hasta mañana, hasta pronto or the final adiós to match when the two of you will next meet.",
+        "summary": "Until When — the chapter run end to end.",
         "assesses": [
-          "ES-LEX-ADIOS",
-          "ES-LEX-HASTA",
+          "ES-LEX-LUEGO",
           "ES-LEX-HASTA-LUEGO",
+          "ES-ETYMON-LOCUS",
+          "ES-LEX-MANANA",
           "ES-LEX-HASTA-MANANA",
+          "ES-ETYMON-MANEANA",
+          "ES-LEX-PRONTO",
           "ES-LEX-HASTA-PRONTO",
-          "ES-LEX-HOLA",
-          "ES-LEX-COMO-ESTA-USTED"
+          "ES-ETYMON-PROMPTUS"
         ]
       }
     },
     {
-      "chapter": 6,
-      "title": "The First Verbs",
-      "label": "ch:first-verbs",
-      "canDo": "I can build my own Spanish sentences with -ar verbs and ask politely for a coffee.",
+      "chapter": 12,
+      "title": "A Coffee, Please",
+      "label": "ch:a-coffee",
+      "canDo": "I can ask for something politely.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-repaso-cafe",
+        "kind": "dialogue",
+        "summary": "A Coffee, Please — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-CAFE",
+          "ES-ETYMON-QAHWA",
+          "ES-GRAMMAR-CAFE-MASCULINE",
+          "ES-LEX-POR-FAVOR",
+          "ES-PRAGMATICS-POLITE-REQUEST",
+          "ES-ETYMON-PRO-FAVOR"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Your First Verb",
+      "label": "ch:first-verb",
+      "canDo": "I can say what I do with an -ar verb in the singular.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-repaso-hablar",
+        "kind": "dialogue",
+        "summary": "Your First Verb — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-HABLAR",
+          "ES-SOUND-F-TO-H",
+          "ES-ETYMON-FABULARI",
+          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+          "ES-GRAMMAR-PRO-DROP"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "More -ar Verbs",
+      "label": "ch:more-ar-verbs",
+      "canDo": "I can use several -ar verbs and say that I speak Spanish.",
       "spineNodes": [
         "SPINE-POLITE-REQUEST-REPAIR"
       ],
       "payoff": {
         "lesson": "ES-C06-practice",
-        "kind": "production",
-        "summary": "Conjugate hablar, trabajar and estudiar across yo, tú and usted with no pronoun spoken, answer ¿Hablas español? about yourself, then order café, por favor and run the gracias / de nada loop.",
+        "kind": "dialogue",
+        "summary": "More -ar Verbs — the chapter run end to end.",
         "assesses": [
-          "ES-LEX-CAFE",
-          "ES-LEX-POR-FAVOR",
-          "ES-LEX-HABLAR",
           "ES-LEX-TRABAJAR",
+          "ES-ETYMON-TRIPALIUM",
           "ES-LEX-ESTUDIAR",
+          "ES-ETYMON-STUDERE",
           "ES-LEX-ESPANOL",
+          "ES-ETYMON-HISPANIA",
           "ES-LEX-HABLO-ESPANOL",
-          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-          "ES-GRAMMAR-PRO-DROP",
-          "ES-LEX-GRACIAS",
-          "ES-LEX-DE-NADA"
+          "ES-GRAMMAR-BARE-LANGUAGE"
         ]
       }
     },
     {
-      "chapter": 7,
+      "chapter": 15,
       "title": "Eating, Drinking, Living --- the -er and -ir Verbs",
       "label": "ch:er-ir-verbs",
       "canDo": "I can use the singular forms of regular Spanish -er and -ir verbs to ask and answer what someone eats or drinks and where they live.",
@@ -183,7 +367,7 @@
       }
     },
     {
-      "chapter": 8,
+      "chapter": 16,
       "title": "Numbers, and How Old You Are",
       "label": "ch:numbers-and-age",
       "canDo": "I can count from one through ten and use singular forms of tener to ask and answer age with a number I know.",
@@ -212,7 +396,7 @@
       }
     },
     {
-      "chapter": 9,
+      "chapter": 17,
       "title": "Ser and Estar --- Two Ways to Be",
       "label": "ch:ser-y-estar",
       "canDo": "I can identify someone, state origin, check wellbeing, and give a location by choosing a learned singular form of ser or estar.",
@@ -240,7 +424,7 @@
       }
     },
     {
-      "chapter": 10,
+      "chapter": 18,
       "title": "Going, and the Future You Can Already Say",
       "label": "ch:ir-y-futuro",
       "canDo": "I can ask where someone is going, say what a singular person is going to do, and mark a known singular noun with mi, tu, or su.",
@@ -268,7 +452,7 @@
       }
     },
     {
-      "chapter": 11,
+      "chapter": 19,
       "title": "Verbs That Break in the Middle --- the Stem Changers",
       "label": "ch:stem-changes",
       "canDo": "I can express singular wanting and ability, compare the learned e-to-ie and o-to-ue changes, and say our with a known singular noun.",
@@ -298,7 +482,7 @@
       }
     },
     {
-      "chapter": 12,
+      "chapter": 20,
       "title": "Hacer, Decir, and the -go Verb Club",
       "label": "ch:yo-go-verbs",
       "canDo": "I can use the three learned singular forms of hacer and decir and compare tengo, hago, and digo without predicting unseen verbs.",
@@ -323,7 +507,7 @@
       }
     },
     {
-      "chapter": 13,
+      "chapter": 21,
       "title": "Poner, Salir, Venir --- Completing the -go Club",
       "label": "ch:completing-go-club",
       "canDo": "I can use the three learned singular forms of poner, salir, and venir and compare their yo forms with tengo, hago, and digo.",
@@ -349,7 +533,7 @@
       }
     },
     {
-      "chapter": 14,
+      "chapter": 22,
       "title": "The Preterite --- Your First Past Tense",
       "label": "ch:preterite",
       "canDo": "I can use the singular completed past of ser or ir and the known regular -ar verb hablar.",
@@ -372,7 +556,7 @@
       }
     },
     {
-      "chapter": 15,
+      "chapter": 23,
       "title": "Completing the Preterite --- Three Families, One Question",
       "label": "ch:completing-preterite",
       "canDo": "I can form the singular completed past of regular -er/-ir verbs and the known strong verbs tener, hacer, and estar.",
@@ -401,7 +585,7 @@
       }
     },
     {
-      "chapter": 16,
+      "chapter": 24,
       "title": "The Imperfect --- the Past That Kept Going",
       "label": "ch:imperfect",
       "canDo": "I can use the Spanish imperfect for past habits, background, and actions in progress.",
@@ -430,7 +614,7 @@
       }
     },
     {
-      "chapter": 17,
+      "chapter": 25,
       "title": "The Future and the Conditional --- One Weld, Twice",
       "label": "ch:future-conditional",
       "canDo": "I can form the Spanish future and conditional from the infinitive and use each for its core meaning.",
@@ -459,7 +643,7 @@
       }
     },
     {
-      "chapter": 18,
+      "chapter": 26,
       "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
       "label": "ch:subjunctive",
       "canDo": "I can distinguish an asserted event from a wanted one and use the learned singular present-subjunctive forms after quiero que or ojalá.",
@@ -488,7 +672,7 @@
       }
     },
     {
-      "chapter": 19,
+      "chapter": 27,
       "title": "Yes and No",
       "label": "ch:spanish-basic-responses",
       "canDo": "I can answer yes or no in Spanish and negate a sentence by putting no in front of the verb.",
@@ -506,7 +690,7 @@
       }
     },
     {
-      "chapter": 20,
+      "chapter": 28,
       "title": "Lo Siento",
       "label": "ch:spanish-sorry",
       "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
@@ -527,7 +711,7 @@
       }
     },
     {
-      "chapter": 21,
+      "chapter": 29,
       "title": "Days of the Week",
       "label": "ch:spanish-days-of-the-week",
       "canDo": "I can name all seven days of the week in Spanish and say why the last two broke away from the planet names.",
@@ -547,7 +731,7 @@
       }
     },
     {
-      "chapter": 22,
+      "chapter": 30,
       "title": "Black, White, Red, and Blue",
       "label": "ch:spanish-black-white-red-blue",
       "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
@@ -569,7 +753,7 @@
       }
     },
     {
-      "chapter": 23,
+      "chapter": 31,
       "title": "Parents and Siblings",
       "label": "ch:spanish-family",
       "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
@@ -589,7 +773,7 @@
       }
     },
     {
-      "chapter": 24,
+      "chapter": 32,
       "title": "Head and Hand",
       "label": "ch:spanish-head-and-hand",
       "canDo": "I can name the head and the hand in Spanish and get la mano's gender right despite its -o ending.",
@@ -609,7 +793,7 @@
       }
     },
     {
-      "chapter": 25,
+      "chapter": 33,
       "title": "The Seasons",
       "label": "ch:spanish-seasons",
       "canDo": "I can name the four seasons in Spanish and explain how verano moved from spring to summer.",
@@ -628,7 +812,7 @@
       }
     },
     {
-      "chapter": 26,
+      "chapter": 34,
       "title": "Water, Wine, and Bread",
       "label": "ch:spanish-water-wine-bread",
       "canDo": "I can name water, wine and bread in Spanish and say why a compañero is someone who shares bread with me.",
@@ -647,7 +831,7 @@
       }
     },
     {
-      "chapter": 27,
+      "chapter": 35,
       "title": "The Months",
       "label": "ch:spanish-months",
       "canDo": "I can name the twelve months in Spanish and explain why diciembre carries the Latin word for ten.",
@@ -667,7 +851,7 @@
       }
     },
     {
-      "chapter": 28,
+      "chapter": 36,
       "title": "Noon and Midnight",
       "label": "ch:spanish-noon-midnight",
       "canDo": "I can say that it is noon or midnight in Spanish and break both words into their two living halves.",
@@ -685,7 +869,7 @@
       }
     },
     {
-      "chapter": 29,
+      "chapter": 37,
       "title": "Telling Time",
       "label": "ch:spanish-telling-time",
       "canDo": "I can tell the time in Spanish and choose correctly between es la una and son las dos.",
@@ -704,7 +888,7 @@
       }
     },
     {
-      "chapter": 30,
+      "chapter": 38,
       "title": "The Weather",
       "label": "ch:spanish-weather",
       "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
@@ -727,7 +911,7 @@
       }
     },
     {
-      "chapter": 31,
+      "chapter": 39,
       "title": "Numbers Eleven to Twenty",
       "label": "ch:spanish-numbers-eleven-to-twenty",
       "canDo": "I can count from eleven to twenty in Spanish and say where the fused Latin teens stop and the ten-and-X ones begin.",
@@ -750,7 +934,7 @@
       }
     },
     {
-      "chapter": 32,
+      "chapter": 40,
       "title": "Dog and Cat",
       "label": "ch:spanish-dog-and-cat",
       "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
@@ -770,7 +954,7 @@
       }
     },
     {
-      "chapter": 33,
+      "chapter": 41,
       "title": "Green and Yellow",
       "label": "ch:spanish-green-and-yellow",
       "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
@@ -790,7 +974,7 @@
       }
     },
     {
-      "chapter": 34,
+      "chapter": 42,
       "title": "Four Verbs of the Mind",
       "label": "ch:spanish-verbs-of-the-mind",
       "canDo": "I can say what I think, understand, read and write in Spanish, and break the stems of pensar and entender the way a stem-changer requires.",
@@ -811,7 +995,7 @@
       }
     },
     {
-      "chapter": 35,
+      "chapter": 43,
       "title": "Taking, Asking, Helping — and the Backwards Verb",
       "label": "ch:spanish-backwards-verb",
       "canDo": "I can say I take, ask and help in Spanish, and build a sentence with gustar the way Spanish actually builds it — with the thing liked as the subject.",
@@ -832,7 +1016,7 @@
       }
     },
     {
-      "chapter": 36,
+      "chapter": 44,
       "title": "Hearing, Sleeping, Walking, Running",
       "label": "ch:spanish-hear-sleep-walk-run",
       "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
@@ -862,7 +1046,7 @@
       }
     },
     {
-      "chapter": 37,
+      "chapter": 45,
       "title": "Opening, Closing, Sitting Down, Standing Up",
       "label": "ch:spanish-open-close-sit-stand",
       "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
@@ -893,7 +1077,7 @@
       }
     },
     {
-      "chapter": 38,
+      "chapter": 46,
       "title": "Telling What Happened",
       "label": "ch:spanish-narrating",
       "canDo": "I can tell a short connected story about something that happened — ordering the events with luego, giving a reason with porque, and choosing the imperfect for the scene and the preterite for the events.",
@@ -917,7 +1101,7 @@
       }
     },
     {
-      "chapter": 39,
+      "chapter": 47,
       "title": "Bringing, Getting, Playing, Meeting",
       "label": "ch:spanish-bring-get-play-meet",
       "canDo": "I can say I bring, get, play and meet in Spanish, and name what each verb does to its yo-form or its stem: traigo grows a hard g, consigo breaks e to i and drops a silent u, juego breaks u to ue alone in the language, and conozco keeps a cluster the other forms lost.",
@@ -948,7 +1132,7 @@
       }
     },
     {
-      "chapter": 40,
+      "chapter": 48,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
       "canDo": "I can say I wait, answer and buy in Spanish — three verbs whose endings never surprise me — and I know that esperar alone carries wait, hope and expect, so context does the work English hands to three separate verbs.",
@@ -983,7 +1167,7 @@
       }
     },
     {
-      "chapter": 41,
+      "chapter": 49,
       "title": "Saying Why",
       "label": "ch:spanish-giving-reasons",
       "canDo": "I can give a reason for what I think and what I plan — stating an opinion with creo que, running forward to its consequence with así que, and naming an obligation with debo.",

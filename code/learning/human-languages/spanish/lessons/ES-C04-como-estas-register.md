@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-como-estas-register
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 320
-chapter: 4
+chapter: 7
 type: grammar
 headword: ¿cómo está usted? / ¿cómo estás?
 gloss: formal and informal how-are-you questions differ in the verb ending and presence of usted

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C36-correr
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1720
-chapter: 36
+chapter: 44
 type: word
 headword: correr
 gloss: to run — a plain -er verb sitting on one of the largest roots English ever borrowed

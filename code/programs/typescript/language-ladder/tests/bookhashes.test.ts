@@ -11,20 +11,60 @@ describe("generated book source hashes", () => {
     // ch4 13->15, ch6 7->9. The generated-book manifest and the lesson files
     // agree on these numbers; only this app-side pin was stale.
     //
-    // ch3 14->15: HL-C86 adds ES-C03-vos. Spanish had asserted a two-way "you"
-    // as universal while `vos` appeared zero times in 188 lessons; it is now
-    // taught receptively. This pin lives in the CONSUMER, not in
-    // human-language-data, so the data package's own suite passes while this
-    // one fails -- which is exactly why the downstream app is built in CI.
+    // HL-C94 then split the four over-budget opening chapters into twelve, so
+    // Spanish runs 1..49 and these counts are regenerated from the lesson files
+    // rather than hand-edited. This pin lives in the CONSUMER, so the data
+    // package's own suite passes while this one fails -- which is exactly why
+    // the downstream app is built in CI.
     [1, 7],
-    // ch2 5->6: HL-C85 adds ES-C02-concordancia. The greetings stopped REQUIRING
-    // the agreement rule -- it is now a payoff lesson at the end of chapter 2,
-    // after the learner has used all three.
     [2, 6],
-    [3, 15],
-    [4, 15],
-    [5, 7],
-    [6, 9],
+    [3, 4],
+    [4, 5],
+    [5, 8],
+    [6, 3],
+    [7, 7],
+    [8, 3],
+    [9, 5],
+    [10, 4],
+    [11, 4],
+    [12, 3],
+    [13, 3],
+    [14, 5],
+    [15, 6],
+    [16, 5],
+    [17, 5],
+    [18, 4],
+    [19, 5],
+    [20, 4],
+    [21, 4],
+    [22, 3],
+    [23, 6],
+    [24, 8],
+    [25, 8],
+    [26, 9],
+    [27, 2],
+    [28, 2],
+    [29, 2],
+    [30, 4],
+    [31, 3],
+    [32, 2],
+    [33, 1],
+    [34, 3],
+    [35, 1],
+    [36, 1],
+    [37, 1],
+    [38, 3],
+    [39, 4],
+    [40, 2],
+    [41, 2],
+    [42, 4],
+    [43, 4],
+    [44, 4],
+    [45, 4],
+    [46, 4],
+    [47, 4],
+    [48, 3],
+    [49, 4],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
@@ -314,6 +354,7 @@ describe("generated book source hashes", () => {
       lesson.id === "ES-C01-hola" ? { ...lesson, sourceHash: "fnv1a64:changed" } : lesson,
     );
     expect(bookHashStatus(changed, "spanish", 1)).toBe("stale");
-    expect(bookHashStatus(lessons, "spanish", 42)).toBe("not-generated");
+    // 42 -> 99: HL-C94 grew Spanish to 49 chapters, so 42 now exists and is synced.
+    expect(bookHashStatus(lessons, "spanish", 99)).toBe("not-generated");
   });
 });

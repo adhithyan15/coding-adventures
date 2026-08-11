@@ -2333,199 +2333,239 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "output": "spanish/book/chapters/ch03-introductions.tex"
+      "output": "spanish/book/chapters/ch03-your-name.tex"
     },
     {
       "language": "spanish",
       "chapter": 4,
-      "output": "spanish/book/chapters/ch04-how-are-you.tex"
+      "output": "spanish/book/chapters/ch04-three-yous.tex"
     },
     {
       "language": "spanish",
       "chapter": 5,
-      "output": "spanish/book/chapters/ch05-farewells.tex"
+      "output": "spanish/book/chapters/ch05-asking-a-name.tex"
     },
     {
       "language": "spanish",
       "chapter": 6,
-      "output": "spanish/book/chapters/ch06-first-verbs.tex"
+      "output": "spanish/book/chapters/ch06-thank-you.tex"
     },
     {
       "language": "spanish",
       "chapter": 7,
-      "output": "spanish/book/chapters/ch07-er-ir-verbs.tex"
+      "output": "spanish/book/chapters/ch07-how-are-you.tex"
     },
     {
       "language": "spanish",
       "chapter": 8,
-      "output": "spanish/book/chapters/ch08-numbers-and-age.tex"
+      "output": "spanish/book/chapters/ch08-written-accent.tex"
     },
     {
       "language": "spanish",
       "chapter": 9,
-      "output": "spanish/book/chapters/ch09-ser-y-estar.tex"
+      "output": "spanish/book/chapters/ch09-enye-and-marks.tex"
     },
     {
       "language": "spanish",
       "chapter": 10,
-      "output": "spanish/book/chapters/ch10-ir-y-futuro.tex"
+      "output": "spanish/book/chapters/ch10-goodbye.tex"
     },
     {
       "language": "spanish",
       "chapter": 11,
-      "output": "spanish/book/chapters/ch11-stem-changes.tex"
+      "output": "spanish/book/chapters/ch11-until-when.tex"
     },
     {
       "language": "spanish",
       "chapter": 12,
-      "output": "spanish/book/chapters/ch12-yo-go-verbs.tex"
+      "output": "spanish/book/chapters/ch12-a-coffee.tex"
     },
     {
       "language": "spanish",
       "chapter": 13,
-      "output": "spanish/book/chapters/ch13-completing-go-club.tex"
+      "output": "spanish/book/chapters/ch13-first-verb.tex"
     },
     {
       "language": "spanish",
       "chapter": 14,
-      "output": "spanish/book/chapters/ch14-preterite.tex"
+      "output": "spanish/book/chapters/ch14-more-ar-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 15,
-      "output": "spanish/book/chapters/ch15-completing-preterite.tex"
+      "output": "spanish/book/chapters/ch15-er-ir-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 16,
-      "output": "spanish/book/chapters/ch16-imperfect.tex"
+      "output": "spanish/book/chapters/ch16-numbers-and-age.tex"
     },
     {
       "language": "spanish",
       "chapter": 17,
-      "output": "spanish/book/chapters/ch17-future-conditional.tex"
+      "output": "spanish/book/chapters/ch17-ser-y-estar.tex"
     },
     {
       "language": "spanish",
       "chapter": 18,
-      "output": "spanish/book/chapters/ch18-subjunctive.tex"
+      "output": "spanish/book/chapters/ch18-ir-y-futuro.tex"
     },
     {
       "language": "spanish",
       "chapter": 19,
-      "output": "spanish/book/chapters/ch19-yes-and-no.tex"
+      "output": "spanish/book/chapters/ch19-stem-changes.tex"
     },
     {
       "language": "spanish",
       "chapter": 20,
-      "output": "spanish/book/chapters/ch20-lo-siento.tex"
+      "output": "spanish/book/chapters/ch20-yo-go-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 21,
-      "output": "spanish/book/chapters/ch21-days-of-the-week.tex"
+      "output": "spanish/book/chapters/ch21-completing-go-club.tex"
     },
     {
       "language": "spanish",
       "chapter": 22,
-      "output": "spanish/book/chapters/ch22-black-white-red-blue.tex",
+      "output": "spanish/book/chapters/ch22-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 23,
+      "output": "spanish/book/chapters/ch23-completing-preterite.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 24,
+      "output": "spanish/book/chapters/ch24-imperfect.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 25,
+      "output": "spanish/book/chapters/ch25-future-conditional.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 26,
+      "output": "spanish/book/chapters/ch26-subjunctive.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 27,
+      "output": "spanish/book/chapters/ch27-yes-and-no.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 28,
+      "output": "spanish/book/chapters/ch28-lo-siento.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 29,
+      "output": "spanish/book/chapters/ch29-days-of-the-week.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 30,
+      "output": "spanish/book/chapters/ch30-black-white-red-blue.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "esar"
     },
     {
       "language": "spanish",
-      "chapter": 23,
-      "output": "spanish/book/chapters/ch23-family.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 24,
-      "output": "spanish/book/chapters/ch24-head-and-hand.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 25,
-      "output": "spanish/book/chapters/ch25-seasons.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 26,
-      "output": "spanish/book/chapters/ch26-water-wine-bread.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 27,
-      "output": "spanish/book/chapters/ch27-months.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 28,
-      "output": "spanish/book/chapters/ch28-noon-midnight.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 29,
-      "output": "spanish/book/chapters/ch29-telling-time.tex"
-    },
-    {
-      "language": "spanish",
-      "chapter": 30,
-      "output": "spanish/book/chapters/ch30-weather.tex"
-    },
-    {
-      "language": "spanish",
       "chapter": 31,
-      "output": "spanish/book/chapters/ch31-numbers-11-20.tex"
+      "output": "spanish/book/chapters/ch31-family.tex"
     },
     {
       "language": "spanish",
       "chapter": 32,
-      "output": "spanish/book/chapters/ch32-dog-and-cat.tex"
+      "output": "spanish/book/chapters/ch32-head-and-hand.tex"
     },
     {
       "language": "spanish",
       "chapter": 33,
-      "output": "spanish/book/chapters/ch33-green-and-yellow.tex"
+      "output": "spanish/book/chapters/ch33-seasons.tex"
     },
     {
       "language": "spanish",
       "chapter": 34,
-      "output": "spanish/book/chapters/ch34-verbs-of-the-mind.tex"
+      "output": "spanish/book/chapters/ch34-water-wine-bread.tex"
     },
     {
       "language": "spanish",
       "chapter": 35,
-      "output": "spanish/book/chapters/ch35-take-ask-help.tex"
+      "output": "spanish/book/chapters/ch35-months.tex"
     },
     {
       "language": "spanish",
       "chapter": 36,
-      "output": "spanish/book/chapters/ch36-hear-sleep-walk-run.tex"
+      "output": "spanish/book/chapters/ch36-noon-midnight.tex"
     },
     {
       "language": "spanish",
       "chapter": 37,
-      "output": "spanish/book/chapters/ch37-open-close-sit-stand.tex"
+      "output": "spanish/book/chapters/ch37-telling-time.tex"
     },
     {
       "language": "spanish",
       "chapter": 38,
-      "output": "spanish/book/chapters/ch38-narrating.tex"
+      "output": "spanish/book/chapters/ch38-weather.tex"
     },
     {
       "language": "spanish",
       "chapter": 39,
-      "output": "spanish/book/chapters/ch39-bring-get-play-meet.tex"
+      "output": "spanish/book/chapters/ch39-numbers-11-20.tex"
     },
     {
       "language": "spanish",
       "chapter": 40,
-      "output": "spanish/book/chapters/ch40-wait-answer-buy.tex"
+      "output": "spanish/book/chapters/ch40-dog-and-cat.tex"
     },
     {
       "language": "spanish",
       "chapter": 41,
-      "output": "spanish/book/chapters/ch41-giving-reasons.tex"
+      "output": "spanish/book/chapters/ch41-green-and-yellow.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 42,
+      "output": "spanish/book/chapters/ch42-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 43,
+      "output": "spanish/book/chapters/ch43-take-ask-help.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 44,
+      "output": "spanish/book/chapters/ch44-hear-sleep-walk-run.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 45,
+      "output": "spanish/book/chapters/ch45-open-close-sit-stand.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 46,
+      "output": "spanish/book/chapters/ch46-narrating.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 47,
+      "output": "spanish/book/chapters/ch47-bring-get-play-meet.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 48,
+      "output": "spanish/book/chapters/ch48-wait-answer-buy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 49,
+      "output": "spanish/book/chapters/ch49-giving-reasons.tex"
     },
     {
       "language": "tamil",
