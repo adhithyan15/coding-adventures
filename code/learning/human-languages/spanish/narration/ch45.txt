@@ -1,111 +1,94 @@
-Spanish, chapter 45: The Conditional --- Saying What Would Happen.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 45: Synthesis --- Three Exceptions, and No Others.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-hablaría — the whole infinitive meets -ía.
+Lesson 1 of 2.
+Practice — keep the past open or close it.
 
 Warm-up.
 [pause 2 seconds]
-Hablaré español places speaking in the future. Hablaría español means “I would speak Spanish” in an imagined or conditional situation. Today the situation can remain unstated; learn the form and its core “would” meaning first.
+This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit.
 
-Grammar Lens: three familiar persons.
-Keep hablar whole, then add the learned singular conditional endings:
-[a table of 3 rows, read aloud]
-person: yo. conditional: hablaría.
-person: tú. conditional: hablarías.
-person: él / ella / usted. conditional: hablaría.
-Say hablaría, hablarías, hablaría. The first and third forms match. The accent keeps í-a in separate syllables, just as it did in comía. Plural persons wait.
+Grammar Lens: the complete frame for this chapter.
+Regular rows:
+yo: hablaba, comía, vivía.
+tú: hablabas, comías, vivías.
+él / ella / usted: hablaba, comía, vivía.
+The three special rows:
+yo: era, iba, veía.
+tú: eras, ibas, veías.
+él / ella / usted: era, iba, veía.
+The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint.
 
-The second weld, taken apart.
-The conditional developed from an infinitive beside past or imperfect forms of the same “have” verb that helped form the Romance future. That is why the whole infinitive remains visible again and why the endings resemble the -ía row. The history passes through older Romance forms; modern hablaría is not made by attaching the complete modern word había.
+Grammar Lens: one scene, two frames.
+Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking.
+Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch.
+Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual.
+The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint.
+
+The histories, taken apart.
+-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hablaría, hablarías, hablaría”]
+[your turn — say: “hablaba, comía, vivía”]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablaré español. Hablaría español.”]
+[your turn — say: “era, iba, veía”]
 [pause 8 seconds for the answer]
-[your turn — say: “ha-bla-rí-a”]
+[your turn — say: “Hablé / hablaba, viví / vivía, fui / iba”]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.
+Give the imperfect yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the imperfect yo forms of ser, ir, and ver, in that order.
 [question — say your answer, then pause 7 seconds]
-Say 'I would speak Spanish' in Spanish.
+Say 'I was speaking Spanish' in Spanish.
 [question — say your answer, then pause 7 seconds]
-Write hablaría with the final three syllables separated.
+Say 'I was living in Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was going to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Choose the open past: comí or comía.
+[question — say your answer, then pause 10 seconds]
+Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned forms. (Hablaría, hablarías, hablaría.) What is the core meaning? (“Would speak.”) Which older construction stands behind the row? (An infinitive plus past forms of haber.) Next: give comer the same ending set.
+Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here.
 
 
-Lesson 2 of 3.
-comería — keep -er before “would”.
+Lesson 2 of 2.
+Synthesis — three exceptions, and no others.
 
 Warm-up.
 [pause 2 seconds]
-Comeré means “I will eat.” Keep comer whole and exchange the future ending for -ía: comería — “I would eat.”
+Nothing new in this chapter. Say hablaba, then comía.
 
-Grammar Lens: the singular -er row.
-[a table of 3 rows, read aloud]
-person: yo. conditional: comería.
-person: tú. conditional: comerías.
-person: él / ella / usted. conditional: comería.
-Say comería, comerías, comería. Compare hablaría / comería: one bounded ending set serves both complete infinitives. Plural persons wait.
+What you've built.
+Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them.
+The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not "the common ones", not "to start with". Three.
+Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it.
+So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying.
+
+The word, taken apart.
+And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up.
+That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive.
+The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “comería, comerías, comería”]
+[your turn — say: era, iba, veía — the whole irregular inventory, in one breath]
 [pause 8 seconds for the answer]
-[your turn — say: “comeré, comería”]
+[your turn — say: hablaba, comía, vivía — and notice nothing surprises you]
 [pause 8 seconds for the answer]
-[your turn — say: “hablaría, comería”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.
+[repeat that twice]
 [question — say your answer, then pause 8 seconds]
-Give the yo pair 'I will eat; I would eat' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which endings do hablaría and comería share across the learned singular row?
+How many irregular verbs does the imperfect have in the whole language?
+[question — say your answer, then pause 10 seconds]
+Name them.
+[question — say your answer, then pause 10 seconds]
+Why are those three the irregular ones?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned forms. (Comería, comerías, comería.) Which piece stays whole? (Comer.) Which endings match hablaría? (-ía, -ías, -ía.) Next: complete the regular pattern with vivir.
-
-
-Lesson 3 of 3.
-viviría — the regular conditional closes its small frame.
-
-Warm-up.
-[pause 2 seconds]
-You can move from comeré to comería. Apply the same move to viviré: viviría — “I would live.”
-
-Grammar Lens: the singular -ir row.
-[a table of 3 rows, read aloud]
-person: yo. conditional: viviría.
-person: tú. conditional: vivirías.
-person: él / ella / usted. conditional: viviría.
-Say viviría, vivirías, viviría. The complete regular frame is now hablaría, comería, viviría. Plural persons wait.
-
-Grammar Lens: meaning with known words.
-Viviría en Madrid says “I would live in Madrid.” The lesson adds no new place or preposition.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “viviría, vivirías, viviría”]
-[pause 8 seconds for the answer]
-[your turn — say: “hablaría, comería, viviría”]
-[pause 8 seconds for the answer]
-[your turn — say: “Viviría en Madrid.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular conditional forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I would live in Madrid' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Give the conditional yo forms of hablar, comer, and vivir, in that order.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three vivir forms. (Viviría, vivirías, viviría.) Which regular verb families share the ending row? (All three.) Next: three already-known verbs change the stem but keep both sets of endings.
+How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)

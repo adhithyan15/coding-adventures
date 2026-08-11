@@ -22,6 +22,12 @@
 - Record the blocked Arabic Mim and Nun sources and the recovered future Faa
   inventory source before reprioritizing to Hebrew.
 
+### Changed — Spanish runs 1..91 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the preterite split into three,
+  so old Spanish chapters 40–89 shifted to 42–91.
+- Eager bundle 482,464 / 500,000 bytes.
+
 ### Added — cited Arabic independent-waw ductus (HL-C09AZ)
 
 - Render **و** in two evidence-aligned frames: close the small head loop from

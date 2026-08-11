@@ -1,76 +1,124 @@
-Spanish, chapter 57: Head and Hand.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 57: Black, White, Red, and Blue.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-la cabeza — "the head".
+Lesson 1 of 4.
+negro, blanco — two colours, and one of their histories.
 
 Warm-up.
 [pause 2 seconds]
-Spanish's word for "head" is the boring, expected one — and that's exactly what makes it interesting, once you see what French did instead.
+Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next.
 
-You'll want to know: la cabeza.
-la cabeza — the head. Feminine, so la.
+The words, taken apart: negro.
+negro ("black") from Latin niger. Nothing surprising: the same Latin root gives English denigrate ("to blacken someone's name") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language.
+Hold that in mind as the baseline. It is what a colour word normally does.
 
-The word, taken apart: caput.
-Latin's word for "head" was caput. Spanish's cabeza comes straight from it (by way of Vulgar Latin capitia), and caput shows up all over English too:
+The two words in use.
+blanco ("white") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca).
+But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish "white" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "negro, blanco"]
+[pause 8 seconds for the answer]
+[your turn — say: with a noun — "el gato negro, la casa blanca"]
+[pause 8 seconds for the answer]
+[your turn — say: "negro" then English "denigrate" — the niger root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's "white" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)
+
+
+Lesson 2 of 4.
+blanco — the colour Spanish did not inherit.
+
+Warm-up.
+[pause 2 seconds]
+Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in.
+
+You'll want to know first.
+negro, blanco — the two colour words.
+
+The word, taken apart: blanco.
+blanco comes from Germanic blank — "shining, gleaming." It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed.
+Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings.
+Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in "bright white."
+
+Why it's said this way: where albus went.
+Latin's white did not vanish. It stopped being the everyday word and survived in corners:
 [a table of 4 rows, read aloud]
-English: captain. literally: the "head" of a ship/unit.
-English: capital. literally: the "head" city, or "head" sum of money.
-English: decapitate. literally: to remove the head.
-English: capitulate. literally: to arrange under "headings" — hence, to yield.
-
-Why it's said this way: French made a different choice.
-French had the exact same Latin word available — and dropped it. French tête ("head") comes instead from testa, Latin for an earthenware pot: Roman soldiers joked about the skull the way English speakers say "noggin" (a small mug), and in Gaul that joke eventually replaced the real word entirely. Spanish never made that swap — cabeza is caput, plain and simple, still standing after two thousand years.
+word: alba. meaning: dawn. the white inside: the sky going white.
+word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.
+word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.
+word: albino. meaning: albino. the white inside: white-skinned.
+That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la cabeza" — the head]
+[your turn — say: the pairing — "negro from Latin, blanco from Germanic"]
 [pause 8 seconds for the answer]
-[your turn — say: "me duele la cabeza" — "my head hurts"]
+[your turn — say: "el alba" — dawn — and hear the old Latin white inside it]
 [pause 8 seconds for the answer]
-[your turn — say: the English family — "captain, capital, decapitate"]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — Spanish kept caput; French swapped it for a pot joke]
+[your turn — say: "blanco" then French "blanc" — the same loan, twice over]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the head." (La cabeza — feminine.) What Latin word is it from? (Caput.) Give an English word from the same root. (Captain, capital, decapitate...) What did French do instead? (Replaced caput with testa, "pot" — soldiers' slang for the skull that took over completely.)
+Where does blanco come from, and what did it mean? (Germanic blank, "shining" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba "dawn," álbum, albino — no longer the everyday colour word.)
 
 
-Lesson 2 of 2.
-la mano — "the hand".
+Lesson 3 of 4.
+rojo — the same family as red, by a different branch.
 
 Warm-up.
 [pause 2 seconds]
-You've been trusting "-o words are masculine, -a words are feminine" since your first chapters. Here's the word that breaks it — and everyone learning Spanish has to memorize this one by name.
+So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess.
 
-Grammar Lens: la mano and its gender.
-la mano — the hand. Feminine, despite ending in -o.
-Almost every Spanish noun ending in -o is masculine (el libro, el gato...). Mano is the single most common exception, and it's actually doubly irregular. Latin manus ("hand") belonged to the 4th declension — a group of -us nouns that were mostly masculine (frūctus "fruit," exercitus "army," senātus "senate"). Manus was one of a small handful of exceptions that were feminine instead (alongside domus "house" and anus "old woman"). So mano broke the rule twice over: an exception within Latin's own mostly-masculine 4th declension, and then an exception again against Spanish's usual -o = masculine pattern.
-
-The word, taken apart: manus.
-Mano comes from Latin manus, "hand" — and that root is buried inside an enormous number of English words:
-[a table of 5 rows, read aloud]
-English: manual. literally: done by hand.
-English: manufacture. literally: made by hand (manus + facere, "to make").
-English: manuscript. literally: written by hand (manus + scrībere).
-English: maintain. literally: hold in the hand (manū tenēre).
-English: manage. literally: to handle.
-Manufacture is worth pausing on: it literally means "made by hand" — and today it names precisely the opposite.
+The word, taken apart: rojo.
+rojo ("red") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one.
+Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink).
+So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la mano" — feminine, despite the -o]
+[your turn — say: "rojo"]
 [pause 8 seconds for the answer]
-[your turn — say: "me duele la mano" — "my hand hurts"]
+[your turn — say: the cousins — "rojo, rouge, red", three branches, one root]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "manual, manufacture, maintain — all a hand"]
-[pause 8 seconds for the answer]
-[your turn — say: the irony — "manufacture = made by hand"]
+[your turn — say: the three so far — "negro inherited, blanco borrowed, rojo cousin"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the hand," and name its gender. (La mano — feminine, despite ending in -o.) Why is mano feminine when most -o words aren't? (It's doubly irregular — Latin's 4th declension, where manus belongs, was mostly masculine; manus was one of a few feminine exceptions there, and then an exception again against Spanish's usual -o=masculine rule.) Give an English word built on manus. (Manual, manufacture, manuscript, maintain, manage.)
+Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely.
+
+
+Lesson 4 of 4.
+azul — a stone from Afghanistan, in your everyday vocabulary.
+
+Warm-up.
+[pause 2 seconds]
+Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether.
+
+The word, taken apart: azul.
+azul ("blue") from Arabic لازورد (lāzaward), "lapis lazuli" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli.
+So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour.
+
+Why it's said this way: everyday here, poetic there.
+Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all.
+Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four — "negro, blanco, rojo, azul"]
+[pause 8 seconds for the answer]
+[your turn — say: sort them — "negro inherited, blanco Germanic, rojo cousin of red, azul Arabic"]
+[pause 8 seconds for the answer]
+[your turn — say: "azul" then English "azure" — the same lapis lazuli]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)
