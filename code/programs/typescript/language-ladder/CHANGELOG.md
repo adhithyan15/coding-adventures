@@ -2,6 +2,16 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-khaa ductus (HL-C09AN)
+
+- Resolve the page's Khaa QuickTime attachment and render **خ** in three
+  evidence-aligned frames: its short upper head, continuous bowl, and lifted
+  upper dot.
+- Keep Khaa's body-first motion distinct from Haa's restarted stem while fitting
+  the same isolated Noto Naskh skeleton as adjacent Jeem and Haa.
+- Preserve two-way-connector context and script-scoped Arabic provenance, with
+  Daal queued from the next directly linked source.
+
 ### Added — cited Arabic independent-haa ductus (HL-C09AM)
 
 - Resolve the source page's hidden Haa attachment and render **ح** in three

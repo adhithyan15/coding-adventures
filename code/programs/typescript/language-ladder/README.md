@@ -301,10 +301,13 @@ clip opens while **ح**'s short left stem is underway, finishes the descender,
 then lifts once and restarts near its top before sweeping continuously around
 the dotless bowl. Its three-frame filmstrip keeps that stem-first evidence
 distinct from Jeem's body-first order while fitting the isolated Noto Naskh
-outline. The runtime
-resolves each cited path back to the owning script and lazily loads that script's font,
-while Tamil continues to use Noto Sans Tamil. Unverified letters still
-fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
+outline. The page's `kha.mov` verifies **خ** independently: its short upper head
+travels left-to-right and continues around the bowl in one run, then one lift
+precedes the dot above. That three-frame filmstrip follows Khaa's own body-first
+evidence rather than copying Haa's restart or merely moving Jeem's dot. The
+runtime resolves each cited path back to the owning script and lazily loads that
+script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
+still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
 and it needs a cited source per letter.
 
 ## Where it fits
