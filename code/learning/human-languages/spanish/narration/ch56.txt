@@ -1,43 +1,33 @@
-Spanish, chapter 56: Lo --- Saying It Without Naming It.
+Spanish, chapter 56: Las --- The Plural Article That Behaves.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-lo — "it".
+las casas — "the houses".
 
 Warm-up.
 [pause 2 seconds]
-Say "my name is" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?
+You learned this in your first chapter: a noun ending in a vowel adds -s. So what is "houses"? (Casas.) Now — what is "the houses"?
 
-Grammar Lens: a slot you have been using all along.
-Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name.
-Here is a second word for that same slot.
-lo — it, standing in for something masculine.
-Watch what it does:
-Tengo el libro. — I have the book. Lo tengo. — I have it.
-The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own.
-Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first.
-
-The word, taken apart.
-Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause.
-Latin ille, "that one," changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:
-Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el.
-Standing alone in the verb's slot, it kept the vowel: illum becomes lo.
-So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job.
+Grammar Lens: the article does what the noun does.
+las — the, for more than one feminine thing.
+la casa becomes las casas — the houses. la comida becomes las comidas — the meals.
+The -s lands on both words. That is not two rules; it is one rule applied where it belongs. You have already seen Spanish do this — buenas noches is buena copying noche's number — and it is the same instinct throughout the language: the words around a noun agree with it, so when the noun goes plural, they follow.
+So las is not a word to memorise. It is la obeying the rule you already hold.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tengo el libro" then "Lo tengo" — hear the noun disappear]
+[your turn — say: "la casa" then "las casas" — hear the -s twice]
 [pause 8 seconds for the answer]
-[your turn — say: "me llamo" then "lo tengo" — the same slot, twice]
+[your turn — say: "las comidas"]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I have it, replacing el libro.
+Say the houses.
 [question — say your answer, then pause 8 seconds]
-Does the pronoun go before or after the conjugated verb?
-[question — say your answer, then pause 10 seconds]
-Which everyday Spanish word comes from the same Latin word as lo?
+Say the meals.
+[question — say your answer, then pause 8 seconds]
+How many new rules did this lesson add?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all.
+"The houses"? (Las casas.) Where did the -s go? (Both words.) Next: the masculine one, which does not do the obvious thing — and the reason will be familiar.

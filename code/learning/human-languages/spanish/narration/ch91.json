@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 91,
-  "title": "Green and Yellow",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6314f7d2b97834e9",
+  "title": "Noon and Midnight",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8c45f39e6096be09",
   "lessons": [
     {
-      "id": "ES-C33-verde",
-      "sequence": 1640,
-      "title": "verde — the colour named after being alive",
-      "headword": "verde",
-      "romanization": "verde",
-      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
+      "id": "ES-C28-mediodia-medianoche",
+      "sequence": 1550,
+      "title": "mediodía, medianoche — noon and midnight, spelled out in full",
+      "headword": "mediodía, medianoche",
+      "romanization": "mediodía, medianoche",
+      "gloss": "noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2054d95a17dcd12d",
+      "sourceHash": "fnv1a64:a2064704f2768417",
       "notice": null,
       "blocks": [
         {
@@ -35,26 +35,44 @@
             },
             {
               "kind": "speech",
-              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
+              "text": "Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: verde",
+          "title": "The two words, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "from Latin",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Spanish: mediodía. from Latin: medius diēs. literally: \"mid-day\" (medio \"middle\" + día \"day\").",
+                "Spanish: medianoche. from Latin: media nox. literally: \"mid-night\" (media \"middle\" + noche \"night\")."
+              ]
             },
             {
               "kind": "speech",
-              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
+              "text": "Both halves are fully alive, ordinary Spanish words on their own: medio/media (\"middle\" — cousin of English medium, mid, middle) and día/noche (\"day/night,\" words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for \"night\" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for \"day\" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept \"night\" transparent and lost \"day,\" while Spanish kept both."
             },
             {
               "kind": "speech",
-              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
+              "text": "They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es mediodía. — \"It is noon.\" Es medianoche. — \"It is midnight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "(Fun aside: English noon comes from Latin nōna hōra, \"the ninth hour\" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent \"mid-day\" instead.)"
             }
           ]
         },
@@ -72,29 +90,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"verde\" — green",
+              "instruction": "\"mediodía\" (noon), \"medianoche\" (midnight)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"verde\" — green]"
+              "source": "[YOU SAY: \"mediodía\" (noon), \"medianoche\" (midnight)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
+              "instruction": "break them — \"medio + día\", \"media + noche\" — both halves still ordinary words",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
+              "source": "[YOU SAY: break them — \"medio + día\", \"media + noche\" — both halves still ordinary words]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
+              "instruction": "\"Es mediodía. Es medianoche.\" — they stand in for the hour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
+              "source": "[YOU SAY: \"Es mediodía. Es medianoche.\" — they stand in for the hour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)]"
             }
           ]
         },
@@ -111,118 +138,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C33-amarillo",
-      "sequence": 1650,
-      "title": "amarillo — the colour that started as a taste",
-      "headword": "amarillo",
-      "romanization": "amarillo",
-      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:4d273d6ceb1a6208",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: amarillo",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
-            },
-            {
-              "kind": "speech",
-              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
-            },
-            {
-              "kind": "speech",
-              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"verde, amarillo\" — green and yellow",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
+              "text": "What do mediodía and medianoche literally mean, and from what Latin? (\"Mid-day\" from medius diēs; \"mid-night\" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media \"middle,\" día/noche \"day/night.\") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for \"day\" is actually jour.) How do you say \"it is noon\"? (Es mediodía.)"
             }
           ]
         }

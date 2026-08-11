@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 83,
-  "title": "The Seasons",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4b969b9c8466cde4",
+  "title": "Lo Siento",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:242feb82f90f1ab8",
   "lessons": [
     {
-      "id": "ES-C25-las-estaciones",
-      "sequence": 1480,
-      "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
-      "headword": "la primavera, el verano, el otoño, el invierno",
-      "romanization": "la primavera, el verano, el otoño, el invierno",
-      "gloss": "the four seasons — three straightforward, and one whose MEANING quietly shifted from \"spring\" to \"summer\"",
+      "id": "ES-C20-lo-siento",
+      "sequence": 1370,
+      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
+      "headword": "lo siento",
+      "romanization": "lo siento",
+      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e139fe8bc6361a9",
+      "sourceHash": "fnv1a64:6af59a35cca27c5d",
       "notice": null,
       "blocks": [
         {
@@ -35,41 +35,167 @@
             },
             {
               "kind": "speech",
-              "text": "Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another."
+              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: three straightforward seasons",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "la primavera (\"spring\") from Latin prīma vēra, literally \"first spring\" (vēr, \"spring,\" + prīma, \"first\"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)"
+              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
             },
             {
               "kind": "speech",
-              "text": "el otoño (\"autumn\") from Latin autumnus — the same root behind French automne and English autumn itself."
+              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
             },
             {
               "kind": "speech",
-              "text": "el invierno (\"winter\") from Latin hībernum (tempus), \"the wintry [season]\" — the same root as French hiver and English hibernate, \"to spend the winter.\""
+              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lo siento mucho\" — I'm so sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C20-perdon",
+      "sequence": 1380,
+      "title": "perdón — the sorry that asks for something back",
+      "headword": "perdón",
+      "romanization": "perdón",
+      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f682d3f7ac0a11c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: verano",
+          "title": "Why it's said this way: which one to reach for",
           "segments": [
             {
               "kind": "speech",
-              "text": "You might expect verano (\"summer\") to come from Latin aestas, \"heat\" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), \"of spring\" — built on the very same vēr, \"spring,\" behind primavera."
+              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "lo siento",
+                "perdón"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
+                "points at. lo siento: your feeling. perdón: their forgiveness.",
+                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
+              ]
             },
             {
               "kind": "speech",
-              "text": "So how did a word meaning \"spring-ish\" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera (\"first spring\") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a \"vernal\" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, \"spring,\" ended up naming two different seasons."
+              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
             }
           ]
         },
@@ -87,38 +213,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera, verano, otoño, invierno\" — the four seasons",
+              "instruction": "\"perdón\" — pardon / excuse me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera, verano, otoño, invierno\" — the four seasons]"
+              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"primavera = prima vera, first spring\"",
+              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"primavera = prima vera, first spring\"]"
+              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"",
+              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"invierno hibernate\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"invierno ~ hibernate\"]"
+              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
             }
           ]
         },
@@ -135,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does primavera literally mean? (\"First spring\" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, \"of spring,\" the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)"
+              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
             }
           ]
         }

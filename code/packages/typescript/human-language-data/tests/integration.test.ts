@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(115); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(120); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -537,6 +537,22 @@ describe("real curriculum", () => {
       "ES-C43-libro-article",
       "ES-C43-libro-bark",
       "ES-C43-libro-have",
+      "ES-C44-las-houses",
+      "ES-C44-las-meals",
+      "ES-C44-las-rule",
+      "ES-C44-los-books",
+      "ES-C44-los-four",
+      "ES-C44-los-why",
+      "ES-C44-plural-es-already",
+      "ES-C44-plural-es-espanol",
+      "ES-C44-plural-es-why",
+      "ES-C44-repaso-articulos-four",
+      "ES-C44-repaso-articulos-grid",
+      "ES-C44-repaso-articulos-rule",
+      "ES-C44-sintesis-mas-de-uno-bare",
+      "ES-C44-sintesis-mas-de-uno-contrast",
+      "ES-C44-sintesis-mas-de-uno-definite",
+      "ES-C44-sintesis-mas-de-uno-meals",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

@@ -1,39 +1,43 @@
-Spanish, chapter 57: La --- The Pronoun Carries What Left.
+Spanish, chapter 57: Los --- The One That Does Not Add -s.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-la — "it," for a feminine noun.
+los libros — "the books".
 
 Warm-up.
 [pause 2 seconds]
-Say "I have it," about the book. (Lo tengo.) Now guess the feminine version before you read on.
+Last chapter: la casa becomes las casas. Apply the same move to el libro and say what you get, out loud, before reading on.
 
-Grammar Lens: the form you probably guessed.
-la — it, standing in for something feminine.
-Hago la comida. — I make the meal. La hago. — I make it.
-If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way.
-The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la.
-That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said.
+Grammar Lens: not els.
+If you said els libros, you did exactly the right thing and Spanish did not.
+los — the, for more than one masculine thing.
+el libro becomes los libros — the books.
+The noun behaved. The article did not: el became los, not els. Out of four articles this is the only one that changes more than its ending, and it is worth two minutes rather than a shrug.
 
 The word, taken apart.
-Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears.
-The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side.
-So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other.
+You have met this exact story before, three chapters ago, wearing different clothes.
+El is not a whole word that lost its way. It is a worn-down one: Latin illum gave elo, and elo lost its final vowel to become el. The plural came from illos — and it did not lose that vowel. It kept it, dropped the front instead, and arrived as los.
+So the pair is not el + s. It is two forms of one Latin word that wore down in two different directions:
+[a table of 2 rows, read aloud]
+masculine. singular: elo becomes el. plural: illos becomes los.
+feminine. singular: illam becomes la. plural: illas becomes las.
+This is the same shape as el and lo, which you met when the object pronouns started: the masculine forms lost a vowel where the feminine ones had none to lose. One sound change, showing up for the third time.
+An "irregular" article turns out to be a regular word that was worn down twice.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Hago la comida" then "La hago"]
+[your turn — say: "el libro" then "los libros"]
 [pause 8 seconds for the answer]
-[your turn — say: "lo tengo" then "la hago" — one syllable carries the whole difference]
+[your turn — say: "el, la, los, las" — the whole set, in order]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I make it, about la comida.
-[question — say your answer, then pause 10 seconds]
-What decides whether you say lo or la?
+Say the books.
 [question — say your answer, then pause 12 seconds]
-Why does the feminine article match its pronoun exactly, when the masculine pair does not?
+Why is it los and not els?
+[question — say your answer, then pause 10 seconds]
+Give all four forms of the Spanish word for the.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking.
+"The books"? (Los libros.) Why not els? (El is worn down from elo; the plural kept the vowel.) Next: the plural rule your first chapter promised and did not give you.

@@ -190,7 +190,7 @@ describe("the committed corpus", () => {
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
     expect(l.summary.roots).toBe(2729); // +5: vos-latin slug and ES-ETYMON-VOS-03
-    expect(l.summary.underspent).toBe(2629); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time
+    expect(l.summary.underspent).toBe(2626); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time
     expect(l.summary.neverSpent).toBe(1799); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
@@ -211,9 +211,9 @@ describe("the committed corpus", () => {
     );
     expect(l.summary).toMatchObject({
       roots: 315, // +2: vos-latin and ES-ETYMON-VOS-03
-      underspent: 295, // -1: HL-C98 spends fabulari-latin a third time
+      underspent: 292, // -1: HL-C98 spends fabulari-latin a third time
       neverSpent: 182, // +1: HL-C98
-      underspentPercent: 94,
+      underspentPercent: 93,
     });
   });
 });

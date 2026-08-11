@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 69,
-  "title": "The Future --- Saying What Will Happen",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:59eb13ee24460b23",
+  "title": "Synthesis --- You Can Hear Which Past It Is",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6e8ce2bbc36079e4",
   "lessons": [
     {
-      "id": "ES-C17-futuro",
-      "sequence": 1190,
-      "title": "hablaré — keep the infinitive, add the future",
-      "headword": "hablaré",
-      "romanization": "hablaré",
-      "gloss": "the singular simple future of hablar — hablaré, hablarás, hablará",
+      "id": "ES-C15-practice",
+      "sequence": 1175,
+      "title": "Practice — six singular patterns, no hidden vocabulary",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for regular and strong completed-past patterns",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db1fc907338eb6ca",
+      "sourceHash": "fnv1a64:b900bb222825b817",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,85 @@
             },
             {
               "kind": "speech",
-              "text": "Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object."
+              "text": "This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: three familiar persons",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the whole infinitive hablar, then add one ending:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "simple future"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. simple future: hablaré.",
-                "person: tú. simple future: hablarás.",
-                "person: él / ella / usted. simple future: hablará."
-              ]
+              "text": "Regular rows:"
             },
             {
               "kind": "speech",
-              "text": "Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait."
+              "text": "yo: hablé, comí, viví."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: hablaste, comiste, viviste."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: habló, comió, vivió."
+            },
+            {
+              "kind": "speech",
+              "text": "Strong rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: tuve, hice, estuve."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: tuviste, hiciste, estuviste."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: tuvo, hizo, estuvo."
+            },
+            {
+              "kind": "speech",
+              "text": "The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The weld, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: let spelling show the stress",
           "segments": [
             {
               "kind": "speech",
-              "text": "Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré."
+              "text": "Regular comí, comió, viví, vivió carry written accents for final stress."
             },
             {
               "kind": "speech",
-              "text": "That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment."
+              "text": "Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Comiste and viviste need no accent because their ordinary stress is already next to last."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The histories, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -97,469 +126,392 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablaré, hablarás, hablará”",
+              "instruction": "“hablé, comí, viví”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaré, hablarás, hablará”]"
+              "source": "[YOU SAY: “hablé, comí, viví”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Voy a hablar español. Hablaré español.”",
+              "instruction": "“tuve, hice, estuve”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Voy a hablar español. Hablaré español.”]"
+              "source": "[YOU SAY: “tuve, hice, estuve”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“infinitive plus historical habēre material”",
+              "instruction": "“Hice café. Viví en Madrid. Estuve bien.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “infinitive plus historical habēre material”]"
+              "source": "[YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comí and comió have accents; tuve and tuvo do not”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comí and comió have accents; tuve and tuvo do not”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-futuro-singular-forms",
-              "prompt": "Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.",
+              "id": "ES-C15-practice-regular-yo-forms",
+              "prompt": "Give the learned yo past forms of hablar, comer, and vivir, in that order.",
               "assesses": [
-                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablaré, hablarás, hablará",
-                "hablaré hablarás hablará",
-                "hablaré / hablarás / hablará"
-              ],
-              "feedback": {
-                "correct": "Right: hablaré, hablarás, hablará.",
-                "incorrect": "Keep hablar whole and add -é, -ás, -á."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-futuro-hablare-espanol",
-              "prompt": "Say 'I will speak Spanish' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
-                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
                 "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hablaré español.",
-                "hablaré español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablaré español.",
-                "incorrect": "Use the yo future hablaré before known español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-futuro-history",
-              "prompt": "Which Latin verb meaning 'to have' contributed material to the Romance future endings?",
-              "assesses": [
-                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "habēre",
-                "habere",
-                "haber"
-              ],
-              "feedback": {
-                "correct": "Right: forms of habēre contributed to the future construction.",
-                "incorrect": "The historical partner was habēre, the source of haber."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C17-comer-futuro",
-      "sequence": 1194,
-      "title": "comeré — the same endings keep -er",
-      "headword": "comeré",
-      "romanization": "comeré",
-      "gloss": "the singular simple future of comer — comeré, comerás, comerá",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e23c7d661bca1909",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the singular -er row",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "simple future"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. simple future: comeré.",
-                "person: tú. simple future: comerás.",
-                "person: él / ella / usted. simple future: comerá."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The ending, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comeré, comerás, comerá”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comeré, comerás, comerá”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hablaré. Comeré.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablaré. Comeré.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Beberé café.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Beberé café.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-comer-futuro-singular-forms",
-              "prompt": "Give the learned singular future forms of comer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-PATTERN-ER-FUTURE-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "comeré, comerás, comerá",
-                "comeré comerás comerá",
-                "comeré / comerás / comerá"
-              ],
-              "feedback": {
-                "correct": "Right: comeré, comerás, comerá.",
-                "incorrect": "Keep comer whole and add -é, -ás, -á."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-comer-futuro-cafe",
-              "prompt": "Use the learned -er future pattern to say 'I will drink coffee' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
-                "ES-PATTERN-ER-FUTURE-SINGULAR",
-                "ES-LEX-BEBER",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "beberé café.",
-                "beberé café",
-                "bebere cafe",
-                "bebere cafe."
-              ],
-              "feedback": {
-                "correct": "Right: Beberé café.",
-                "incorrect": "Keep known beber whole, add -é, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-comer-futuro-shared-endings",
-              "prompt": "Which endings do hablaré and comeré share across the learned singular row?",
-              "assesses": [
-                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-PATTERN-ER-FUTURE-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "-é, -ás, -á",
-                "é ás á",
-                "-é -ás -á"
-              ],
-              "feedback": {
-                "correct": "Right: -é, -ás, -á serve both infinitives.",
-                "incorrect": "Read the final pieces: hablaré/comeré, hablarás/comerás, hablará/comerá."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C17-vivir-futuro",
-      "sequence": 1198,
-      "title": "viviré — one future row for three verb families",
-      "headword": "viviré",
-      "romanization": "viviré",
-      "gloss": "the singular simple future of vivir — viviré, vivirás, vivirá",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a1784c781a2ab4fc",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the singular -ir row",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "simple future"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. simple future: viviré.",
-                "person: tú. simple future: vivirás.",
-                "person: él / ella / usted. simple future: vivirá."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: meaning with known words",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“viviré, vivirás, vivirá”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “viviré, vivirás, vivirá”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hablaré, comeré, viviré”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaré, comeré, viviré”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Viviré en Madrid.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Viviré en Madrid.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C17-vivir-futuro-singular-forms",
-              "prompt": "Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-COMER",
                 "ES-LEX-VIVIR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "viviré, vivirás, vivirá",
-                "viviré vivirás vivirá",
-                "viviré / vivirás / vivirá"
+                "hablé, comí, viví",
+                "hablé comí viví",
+                "hablé / comí / viví"
               ],
               "feedback": {
-                "correct": "Right: viviré, vivirás, vivirá.",
-                "incorrect": "Keep vivir whole and add -é, -ás, -á."
+                "correct": "Right: hablé, comí, viví.",
+                "incorrect": "Retrieve the three regular yo forms: hablé, comí, viví."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-vivir-futuro-madrid",
-              "prompt": "Say 'I will live in Madrid' in Spanish.",
+              "id": "ES-C15-practice-strong-yo-forms",
+              "prompt": "Give the learned yo past forms of tener, hacer, and estar, in that order.",
               "assesses": [
-                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
-                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+                "ES-LEX-TENER",
+                "ES-LEX-HACER",
+                "ES-LEX-ESTAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "tuve, hice, estuve",
+                "tuve hice estuve",
+                "tuve / hice / estuve"
+              ],
+              "feedback": {
+                "correct": "Right: tuve, hice, estuve.",
+                "incorrect": "Retrieve the three strong yo forms: tuve, hice, estuve."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-hice-cafe",
+              "prompt": "Say 'I made coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hice café.",
+                "hice café"
+              ],
+              "feedback": {
+                "correct": "Right: Hice café.",
+                "incorrect": "Use the strong yo form hice, then known café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-vivi-madrid",
+              "prompt": "Say 'I lived in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
                 "ES-LEX-VIVIR",
                 "ES-LEX-EN"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "viviré en madrid.",
-                "viviré en madrid"
+                "viví en madrid.",
+                "viví en madrid"
               ],
               "feedback": {
-                "correct": "Right: Viviré en Madrid.",
-                "incorrect": "Use viviré, then the known frame en Madrid."
+                "correct": "Right: Viví en Madrid.",
+                "incorrect": "Use accented viví, then known en Madrid."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C17-vivir-futuro-three-yo",
-              "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
+              "id": "ES-C15-practice-estuve-bien",
+              "prompt": "Say 'I was well' as a completed event in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-                "ES-PATTERN-ER-FUTURE-SINGULAR",
-                "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+                "ES-LEX-ESTAR",
+                "ES-LEX-BIEN"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "hablaré, comeré, viviré",
-                "hablaré comeré viviré",
-                "hablaré / comeré / viviré"
+                "estuve bien.",
+                "estuve bien"
               ],
               "feedback": {
-                "correct": "Right: hablaré, comeré, viviré.",
-                "incorrect": "Keep each infinitive whole and add -é."
+                "correct": "Right: Estuve bien.",
+                "incorrect": "Use the strong yo form estuve, then known bien."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-accent-contrast",
+              "prompt": "Which pair carries written accents: comí/comió or tuve/tuvo?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "comí and comió",
+                "comí comió",
+                "comí/comió",
+                "comí y comió"
+              ],
+              "feedback": {
+                "correct": "Right: comí and comió mark final stress; tuve and tuvo do not.",
+                "incorrect": "The regular final-stressed pair carries the marks: comí and comió."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-practice-history-match",
+              "prompt": "Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?",
+              "assesses": [
+                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
+                "ES-ETYMON-TUVE",
+                "ES-ETYMON-HICE",
+                "ES-ETYMON-ESTUVE-ANALOGY"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "estuve"
+              ],
+              "feedback": {
+                "correct": "Right: estuve was analogically remodeled beside the -uv- strong family.",
+                "incorrect": "Look for the form sharing -uv- with tuve: estuve."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C15-sintesis-preterito",
+      "sequence": 1178,
+      "title": "Synthesis — you can hear which past it is",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — two pasts with two histories, and you can hear which is which",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:010c959d198d6c79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new in this chapter. Say comí, then tuve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the stress tells you everything",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say those two again and listen to where your voice lifts."
+            },
+            {
+              "kind": "speech",
+              "text": "comí — the stress lands on the ending. tuve — the stress lands on the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví."
+            },
+            {
+              "kind": "speech",
+              "text": "Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve."
+            },
+            {
+              "kind": "speech",
+              "text": "So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The two kinds have two histories."
+            },
+            {
+              "kind": "speech",
+              "text": "The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways."
+            },
+            {
+              "kind": "speech",
+              "text": "The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comí, viví — and feel the lift on the last syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comí*, *viví* — and feel the lift on the last syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuve, hice, estuve — and feel it move back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuve*, *hice*, *estuve* — and feel it move back]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until you can place a preterite by ear before you place it by rule."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-stress",
+              "prompt": "A preterite with no written accent. Where is the stress, and which kind is it?",
+              "assesses": [
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "on the stem, a strong preterite",
+                "stem, strong",
+                "on the stem",
+                "strong preterite"
+              ],
+              "feedback": {
+                "correct": "Yes — no accent means the stress moved back onto the stem.",
+                "incorrect": "On the stem, which makes it a strong preterite."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-accent",
+              "prompt": "Why does comi carry an accent when tuve does not?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the stress is on its final vowel",
+                "because the stress is on the ending",
+                "stressed final vowel",
+                "the ending is stressed"
+              ],
+              "feedback": {
+                "correct": "Right — the accent is the stress, written down.",
+                "incorrect": "Because comi is stressed on its final vowel and tuve is not."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-families",
+              "prompt": "In the regular preterite, do -er and -ir take the same endings?",
+              "assesses": [
+                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "yes",
+                "yes, the same",
+                "they agree",
+                "identical"
+              ],
+              "feedback": {
+                "correct": "Yes — as in the present and the imperfect.",
+                "incorrect": "They do, exactly as in the present and the imperfect."
               }
             }
           ]
@@ -577,7 +529,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”"
+              "text": "Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)"
             }
           ]
         }

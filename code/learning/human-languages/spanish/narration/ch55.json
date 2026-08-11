@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "La Comida --- A Noun You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:70d843680bbd4048",
+  "sourceHash": "fnv1a64:996f43ed765e4e3d",
   "lessons": [
     {
       "id": "ES-C43-comida",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac9a3b62563ba5b6",
+      "sourceHash": "fnv1a64:10a6f3d6f28ade4e",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: the three nouns together, and what they let you finally do."
+              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something."
             }
           ]
         }

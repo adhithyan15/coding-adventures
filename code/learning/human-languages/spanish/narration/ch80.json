@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 80,
-  "title": "Black, White, Red, and Blue",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:32e453ccba699aa7",
+  "title": "The Subjunctive Built From the Yo Form",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8ace017c25ea3463",
   "lessons": [
     {
-      "id": "ES-C22-negro-blanco",
-      "sequence": 1390,
-      "title": "negro, blanco — two colours, and one of their histories",
-      "headword": "negro, blanco",
-      "romanization": "negro, blanco",
-      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
+      "id": "ES-C18-querer-subjuntivo",
+      "sequence": 1266,
+      "title": "quiera, quieras, quiera — keep the change you know",
+      "headword": "quiera · quieras · quiera",
+      "romanization": "quiera · quieras · quiera",
+      "gloss": "the singular present subjunctive of querer",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62b5d8c9f178e881",
+      "sourceHash": "fnv1a64:6bed6da42bb63bb6",
       "notice": null,
       "blocks": [
         {
@@ -35,301 +35,36 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: negro",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "input",
-          "title": "The two words in use",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
-            },
-            {
-              "kind": "speech",
-              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"negro, blanco\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro, blanco\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-blanco-germanico",
-      "sequence": 1400,
-      "title": "blanco — the colour Spanish did not inherit",
-      "headword": "blanco ← *blank",
-      "romanization": "blanco ← *blank",
-      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c8102591a75e0543",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "negro, blanco — the two colour words."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: blanco",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
-            },
-            {
-              "kind": "speech",
-              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
-            },
-            {
-              "kind": "speech",
-              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where albus went",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
+              "text": "Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:"
             },
             {
               "kind": "table",
               "headers": [
-                "word",
-                "meaning",
-                "the white inside"
+                "person",
+                "present subjunctive"
               ],
-              "columns": 3,
-              "rowCount": 4,
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "word: alba. meaning: dawn. the white inside: the sky going white.",
-                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
-                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
-                "word: albino. meaning: albino. the white inside: white-skinned."
+                "person: yo. present subjunctive: quiera.",
+                "person: tú. present subjunctive: quieras.",
+                "person: él / ella / usted. present subjunctive: quiera."
               ]
             },
             {
               "kind": "speech",
-              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-rojo",
-      "sequence": 1410,
-      "title": "rojo — the same family as red, by a different branch",
-      "headword": "rojo",
-      "romanization": "rojo",
-      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9e6d85fbe5c63dd8",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
+              "text": "Say only this bounded singular row: quiera, quieras, quiera."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: rojo",
+          "type": "grammar",
+          "title": "Grammar Lens: one known verb, one inherited stem",
           "segments": [
             {
               "kind": "speech",
-              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
-            },
-            {
-              "kind": "speech",
-              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
-            },
-            {
-              "kind": "speech",
-              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
+              "text": "You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form."
             }
           ]
         },
@@ -345,31 +80,67 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rojo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rojo\"]"
+              "kind": "speech",
+              "text": "Carry only the known quier- stem into this row."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem quier-?",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "quiero"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from quiero.",
+                "incorrect": "Start from the learned yo form quiero."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-wanted",
+              "prompt": "Complete 'Quiero que ___ hablar español' for one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "quieras"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que quieras hablar español.",
+                "incorrect": "Use the tú subjunctive of querer: quieras."
+              }
             }
           ]
         },
@@ -386,26 +157,26 @@
             },
             {
               "kind": "speech",
-              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
+              "text": "Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-azul",
-      "sequence": 1420,
-      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
-      "headword": "azul",
-      "romanization": "azul",
-      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
+      "id": "ES-C18-poder-subjuntivo",
+      "sequence": 1270,
+      "title": "pueda, puedas, pueda — one more known stem change",
+      "headword": "pueda · puedas · pueda",
+      "romanization": "pueda · puedas · pueda",
+      "gloss": "the singular present subjunctive of poder",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dd683bd49110de0",
+      "sourceHash": "fnv1a64:fb8a5a5314355156",
       "notice": null,
       "blocks": [
         {
@@ -421,42 +192,41 @@
             },
             {
               "kind": "speech",
-              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
+              "text": "Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: pueda.",
+                "person: tú. present subjunctive: puedas.",
+                "person: él / ella / usted. present subjunctive: pueda."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say pueda, puedas, pueda. No other poder forms enter today."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: azul",
+          "type": "grammar",
+          "title": "Grammar Lens: use it immediately",
           "segments": [
             {
               "kind": "speech",
-              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
+              "text": "Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: everyday here, poetic there",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -467,36 +237,73 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"negro, blanco, rojo, azul\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
+              "kind": "speech",
+              "text": "Carry only the known pued- stem into this row."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "pueda, puedas, pueda",
+                "pueda puedas pueda",
+                "pueda / puedas / pueda"
+              ],
+              "feedback": {
+                "correct": "Right: pueda, puedas, pueda.",
+                "incorrect": "Keep pued- and add -a, -as, -a."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem pued-?",
+              "assesses": [
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "puedo"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from puedo.",
+                "incorrect": "Start from the learned yo form puedo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-wanted",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then known hablar español."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -508,7 +315,165 @@
             },
             {
               "kind": "speech",
-              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
+              "text": "Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-hacer-subjuntivo",
+      "sequence": 1274,
+      "title": "haga, hagas, haga — hago lends its stem",
+      "headword": "haga · hagas · haga",
+      "romanization": "haga · hagas · haga",
+      "gloss": "the singular present subjunctive of hacer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce495735faa7fbc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The known present yo form is hago. Remove -o and keep hag-:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: haga.",
+                "person: tú. present subjunctive: hagas.",
+                "person: él / ella / usted. present subjunctive: haga."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: spend the new form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Carry only the known hag- stem into this row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haga, hagas, haga",
+                "haga hagas haga",
+                "haga / hagas / haga"
+              ],
+              "feedback": {
+                "correct": "Right: haga, hagas, haga.",
+                "incorrect": "Keep hag- from hago and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem hag-?",
+              "assesses": [
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hago"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from hago.",
+                "incorrect": "The stem comes from the learned yo form hago."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-wanted",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then known café."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)"
             }
           ]
         }

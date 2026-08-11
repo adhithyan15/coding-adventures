@@ -97,4 +97,5 @@ Set your three nouns side by side and the pattern is doing all the work:
 
 [PAUSE 3s] What verb is hiding inside *comida*? (***Comer***.) What does the
 *-ida* ending give you besides the word? (Its **gender** — always feminine.)
-Next: the three nouns together, and what they let you finally do.
+Next: what happens to these three nouns, and to their articles, when there is
+more than one of something.

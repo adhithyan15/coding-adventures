@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-vivir-futuro
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1198
-chapter: 69
+sequence: 1218
+chapter: 74
 type: grammar
 headword: viviré
 gloss: the singular simple future of vivir — viviré, vivirás, vivirá

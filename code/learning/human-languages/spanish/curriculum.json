@@ -672,6 +672,66 @@
       "after": []
     },
     {
+      "id": "ES-PATH-003-LAS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C44-las"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-LAS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-LOS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C44-los"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-LOS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-PLURAL-ES",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C44-plural-es"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-PLURAL-ES"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-REVIEW-ART",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C44-repaso-articulos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-REVIEW-ART"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-SYNTH-PLURAL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C44-sintesis-mas-de-uno"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-SYNTH-PLURAL"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-003-LO",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
@@ -1269,6 +1329,11 @@
         "ES-PATH-003-CASA",
         "ES-PATH-003-LIBRO",
         "ES-PATH-003-COMIDA",
+        "ES-PATH-003-LAS",
+        "ES-PATH-003-LOS",
+        "ES-PATH-003-PLURAL-ES",
+        "ES-PATH-003-REVIEW-ART",
+        "ES-PATH-003-SYNTH-PLURAL",
         "ES-PATH-003-LO",
         "ES-PATH-003-LA",
         "ES-PATH-003-ME-TE",
@@ -2781,6 +2846,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C42-sintesis-decirlo-una-vez"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-LAS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C44-las"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-LOS",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C44-los"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-PLURAL-ES",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C44-plural-es"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-REVIEW-ART",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C44-repaso-articulos"
+      ]
+    },
+    {
+      "id": "ES-EXT-003-SYNTH-PLURAL",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C44-sintesis-mas-de-uno"
       ]
     }
   ]
