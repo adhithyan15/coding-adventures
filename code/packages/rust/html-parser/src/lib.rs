@@ -6472,14 +6472,16 @@ impl HtmlParser {
 
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
-            && incoming_name == "nobr" {
-                let formatting_above_nobr = self.formatting_above_open_element("nobr");
-                self.close_open_element_silently("nobr");
-                if !formatting_above_nobr.is_empty() {
-                    self.pending_formatting_reconstruction =
-                        trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
-                }
+            && incoming_name == "nobr"
+        {
+            self.report_repeated_nobr_start_if_in_scope();
+            let formatting_above_nobr = self.formatting_above_open_element("nobr");
+            self.close_open_element_silently("nobr");
+            if !formatting_above_nobr.is_empty() {
+                self.pending_formatting_reconstruction =
+                    trim_formatting_reconstruction_noah_ark(formatting_above_nobr);
             }
+        }
 
         if !self.current_element_is_table_structure()
             && self.current_parent_is_fostered_before_open_table()
@@ -7808,6 +7810,7 @@ impl HtmlParser {
                 false
             }
             "nobr" => {
+                self.report_repeated_nobr_start_if_in_scope();
                 let formatting_above_nobr = self.formatting_above_open_element("nobr");
                 self.close_open_element_silently("nobr");
                 if !formatting_above_nobr.is_empty() {
@@ -7824,6 +7827,15 @@ impl HtmlParser {
                 true
             }
             _ => false,
+        }
+    }
+
+    fn report_repeated_nobr_start_if_in_scope(&mut self) {
+        if self.open_html_element_in_scope_index("nobr").is_some() {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "nested-nobr-start-tag",
+                "start tag `<nobr>` triggered adoption-agency recovery for an active nobr in scope",
+            ));
         }
     }
 
@@ -9143,6 +9155,50 @@ impl HtmlParser {
             }
         }
         false
+    }
+
+    fn open_html_element_in_scope_index(&self, target_name: &str) -> Option<usize> {
+        for (index, path) in self.open_elements.iter().enumerate().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none()
+                && element.name == target_name
+                && !has_fragment_context_marker(element)
+            {
+                return Some(index);
+            }
+            if element.namespace.is_none()
+                && matches!(
+                    element.name.as_str(),
+                    "applet"
+                        | "caption"
+                        | "html"
+                        | "table"
+                        | "td"
+                        | "th"
+                        | "marquee"
+                        | "object"
+                        | "template"
+                )
+            {
+                return None;
+            }
+            if element.namespace.as_deref() == Some("math")
+                && matches!(
+                    element.name.as_str(),
+                    "mi" | "mo" | "mn" | "ms" | "mtext" | "annotation-xml"
+                )
+            {
+                return None;
+            }
+            if element.namespace.as_deref() == Some("svg")
+                && matches!(element.name.as_str(), "foreignObject" | "desc" | "title")
+            {
+                return None;
+            }
+        }
+        None
     }
 
     fn current_parent_has_element_in_table_scope(&self, target_name: &str) -> bool {
@@ -31031,6 +31087,57 @@ mod tests {
         let second_nobr = element(&body.children[5]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn reports_repeated_nobr_starts_only_when_an_authored_html_nobr_is_in_scope() {
+        for (source, expected_count) in [
+            ("<!doctype html><nobr>x", 0),
+            ("<!doctype html><nobr>1<nobr>2", 1),
+            (
+                "<!doctype html><body><b><nobr>1<nobr></b><i><nobr>2<nobr></i>3",
+                3,
+            ),
+            (
+                "<!doctype html><body><b><nobr>1<table><nobr></b><i><nobr>2<nobr></i>3",
+                2,
+            ),
+            ("<!doctype html><nobr><object><nobr>x", 0),
+            ("<!doctype html><object><nobr>1<nobr>2", 1),
+            ("<!doctype html><nobr><object></object><nobr>x", 1),
+            ("<!doctype html><table><nobr>x", 0),
+            ("<!doctype html><table><tr><td><nobr>1<nobr>2", 1),
+            ("<!doctype html><svg><nobr><nobr>", 1),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<nobr>1<nobr>2", "div").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-nobr-start-tag")
+                .count(),
+            1,
+        );
+
+        let synthetic_nobr =
+            parse_html_fragment_for_context_with_diagnostics("<nobr>x", "nobr").unwrap();
+        assert!(synthetic_nobr
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-nobr-start-tag"));
     }
 
     #[test]
