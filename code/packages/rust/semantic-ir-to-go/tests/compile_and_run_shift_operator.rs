@@ -51,8 +51,13 @@ fn shift(args: Vec<Expr>) -> Expr {
 fn puts_stmt(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![arg],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "per_value".into(), span: s() },
+                Expr::BoolLit { value: true, span: s() },
+                arg,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -66,7 +71,7 @@ fn demo_module(name: &str, stmts: Vec<Stmt>) -> Module {
         // same process (cargo test's default), so a shared name collides on
         // the same temp file path.
         name: name.into(),
-        manifest: FeatureManifest::from_features(&[
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
             Feature::Strings,
             Feature::Sequences,
             Feature::MutableBindings,

@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.38.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` emit
+arms, runtime helpers, and by-name builtin dispatch entries are dead
+code. Removed:
+
+- The `"print" => "_sir_print"` / `"puts" => "_sir_puts"` arms from
+  `emit_builtin`'s helper-name match.
+- `_sir_print`, `_sir_puts`, and `_sir_puts_one` from `runtime.rs` (these
+  were fully independent of `_sir_write`/`_sir_write_one` — confirmed via
+  grep that nothing else called them — so this is a straight deletion,
+  not a refactor).
+- The `case "print":` / `case "puts":` arms from
+  `_sir_call_builtin_by_name`.
+
+Also fixed two stale doc-comment references to the deleted functions
+(the `flatten` case in `_sir_call_method` and `_sir_flatten_into`'s doc
+comment now cite `_sir_write`'s `per_value` terminator instead).
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: every local test helper that hand-built bare `print`/`puts`
+`BuiltinCall`s purely to observe hand-constructed IR's output (unrelated
+to testing print semantics itself) now builds the equivalent
+`__sys_write__` envelope instead, plus `Feature::ConsoleIO` (and, where
+missing, `Feature::Strings`) added to each affected manifest. A
+single-value `print`-shaped helper maps to `terminator: "once"` (not
+`"none"`) where the backend's old bare `print` historically always
+newline-terminated (true for Go, via the deleted `_sir_print`'s
+`fmt.Println`) — this preserves existing `stdout.lines()`-based test
+assertions exactly, since these helpers were never asserting on real
+Ruby `print` semantics to begin with.
+
 ## 0.37.3 — implement `__sys_write__`, the SIR28 console-output primitive
 
 Adds a `"__sys_write__"` emit arm (mirroring `__new__`'s "lift a

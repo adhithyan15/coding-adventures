@@ -40,8 +40,13 @@ fn str_lit(v: &str) -> Expr {
 fn print_stmt(v: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![v],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                v,
+            ],
             effects: EffectSet::PURE,
             span: s(),
         },
@@ -68,7 +73,12 @@ fn raise_class(class: &str) -> Stmt {
 
 /// Wrap `main`'s body statements into a runnable, validated module.
 fn module_from(stmts: Vec<Stmt>, extra_features: &[Feature]) -> Module {
-    let mut features = vec![Feature::Exceptions, Feature::Constants, Feature::Strings];
+    let mut features = vec![
+        Feature::Exceptions,
+        Feature::Constants,
+        Feature::Strings,
+        Feature::ConsoleIO,
+    ];
     features.extend_from_slice(extra_features);
     Module {
         name: "exc_demo".into(),

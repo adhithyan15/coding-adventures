@@ -58,8 +58,13 @@ fn case_eq(pattern: Expr, value: Expr) -> Expr {
 fn puts_stmt(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![arg],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "per_value".into(), span: s() },
+                Expr::BoolLit { value: true, span: s() },
+                arg,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -99,7 +104,7 @@ fn demo_module() -> Module {
 
     Module {
         name: "case_eq_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Strings, Feature::Symbols]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::Symbols]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

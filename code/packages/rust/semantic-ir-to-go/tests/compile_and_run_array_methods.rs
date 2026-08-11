@@ -63,8 +63,13 @@ fn closure(fn_name: &str) -> Expr {
 fn print_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -78,8 +83,13 @@ fn print_stmt(expr: Expr) -> Stmt {
 fn puts_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "per_value".into(), span: s() },
+                Expr::BoolLit { value: true, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -137,7 +147,7 @@ fn lambda_fn2(fn_name: &str, p0: &str, p1: &str, body: Block) -> Function {
 }
 
 fn manifest() -> FeatureManifest {
-    FeatureManifest::from_features(&[
+    FeatureManifest::from_features(&[Feature::ConsoleIO, 
         Feature::Closures,
         Feature::Sequences,
         Feature::Maps,

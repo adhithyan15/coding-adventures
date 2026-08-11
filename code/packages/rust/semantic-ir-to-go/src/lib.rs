@@ -1019,7 +1019,10 @@ mod tests {
     }
 
     // Direct proof that the E3 SOUNDNESS GATE fires: a `VarRef{Const}` used as
-    // a value OUTSIDE a `raise` (here as a `print` argument) is a shape the
+    // a value OUTSIDE a `raise` (here as an argument to an arbitrary builtin
+    // call — the check is builtin-name-agnostic, see `check_soundness_expr`;
+    // the name below is a placeholder unrelated to any real builtin, chosen
+    // so this test needs no extra `Feature` declared) is a shape the
     // validator accepts (`Constants` observed, manifest declares it) yet the
     // Go backend cannot emit — so `check_exception_soundness` rejects it with
     // an `UnsupportedFeature` naming the constant reference.
@@ -1033,7 +1036,7 @@ mod tests {
             body: Block {
                 stmts: vec![Stmt::ExprStmt {
                     expr: Expr::BuiltinCall {
-                        name: "print".into(),
+                        name: "__test_probe__".into(),
                         args: vec![Expr::VarRef {
                             name: "FOO".into(),
                             scope: Scope::Const,
