@@ -15,9 +15,10 @@ corpus is sound.
 These reports exist to make problems visible. A report that can be edited by its
 subject does not.
 
-`stripControlCharacters` now guards **thirteen interpolation sites** across
-`report.ts`, `strands.ts`, `grammar-cells.ts`, `root-ledger.ts` and
-`info-dump.ts`. Control characters are removed rather than escaped: the reports
+`stripControlCharacters` now guards **nineteen interpolations** across
+`report.ts`, `strands.ts`, `grammar-cells.ts`, `root-ledger.ts`, `info-dump.ts`
+and `metalanguage.ts` -- every place a corpus-derived string reaches a report
+line. Control characters are removed rather than escaped: the reports
 are read by humans, not parsed, so a visible `\u001b` adds noise without adding
 information. Tab and newline survive -- they are ordinary layout, and the render
 helpers control their own line breaks.

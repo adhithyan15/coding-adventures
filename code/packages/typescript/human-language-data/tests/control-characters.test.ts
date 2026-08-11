@@ -15,6 +15,8 @@ import { stripControlCharacters } from "../src/constants.js";
 import { renderStrandSummary, summarizeStrands } from "../src/strands.js";
 import { renderRootLedger, buildRootLedger } from "../src/root-ledger.js";
 import { renderInfoDump, measureInfoDump } from "../src/info-dump.js";
+import { renderMetalanguage, measureMetalanguage } from "../src/metalanguage.js";
+import { loadMetalanguage } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import { CURRICULUM_STRANDS, type CurriculumSpine, type SpineNode } from "../src/types.js";
 
@@ -91,6 +93,39 @@ describe("the render helpers cannot be edited by their own subject", () => {
     const text = renderRootLedger(buildRootLedger([lesson], 3)).join("\n");
     expect(text).toContain("EVIL");
     expect(containsControl(text)).toBe(false);
+  });
+
+  it("metalanguage", () => {
+    // The site deliberately deferred when this fix was written: metalanguage.ts
+    // landed in a different PR, so it was picked up on rebase rather than left
+    // as the one unguarded render helper.
+    const inventory = {
+      version: 1,
+      terms: [
+        {
+          id: "META-EVIL",
+          term: LINE_EATER,
+          stage: "A1",
+          order: 1,
+          introduceAfter: "x",
+          plainAlternative: "y",
+          technical: true,
+        },
+      ],
+    };
+    const lesson = parseLesson(
+      `---\nschema_version: 2\nid: L1\nsequence: 10\nchapter: 1\ntype: vocabulary\nheadword: x\ngloss: x\n---\n\n# x\n\nThe ${LINE_EATER} matters.\n`,
+      "spanish",
+    );
+    const text = renderMetalanguage(measureMetalanguage([lesson], inventory as never)).join("\n");
+    expect(containsControl(text)).toBe(false);
+  });
+
+  it("every committed metalanguage term is already control-free", () => {
+    for (const term of loadMetalanguage().terms) {
+      expect(containsControl(term.term)).toBe(false);
+      expect(containsControl(term.plainAlternative)).toBe(false);
+    }
   });
 
   it("info dump", () => {

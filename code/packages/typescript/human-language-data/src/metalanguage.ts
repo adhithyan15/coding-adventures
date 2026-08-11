@@ -42,7 +42,7 @@
  * on metadata teaches authors to distrust it.
  */
 
-import { hasOwn } from "./constants.js";
+import { hasOwn, stripControlCharacters as clean } from "./constants.js";
 import type { ParsedLesson } from "./parse.js";
 import type { MetalanguageInventory, MetalanguageTerm } from "./types.js";
 
@@ -258,7 +258,7 @@ export function renderMetalanguage(report: MetalanguageReport): string[] {
   if (s.worstTerms.length > 0) {
     lines.push(
       `  most-used-before-introduction: ${s.worstTerms
-        .map((t) => `${t.term} (${t.lessons} lessons)`)
+        .map((t) => `${clean(t.term)} (${t.lessons} lessons)`)
         .join(", ")}`,
     );
   }
