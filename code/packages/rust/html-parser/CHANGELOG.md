@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- `li` start tags processed in table foster-parenting state now report the
+  required parse error while preserving repeated-list-item recovery and DOM
+  placement before the table.
 - Generic start tags handled by the in-table "anything else" path, including
   paragraph-boundary elements, `br`, `p`, and `plaintext`, now report the
   required parse error before retaining their foster-parented DOM placement.

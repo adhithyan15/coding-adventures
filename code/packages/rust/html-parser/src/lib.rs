@@ -5360,6 +5360,10 @@ impl HtmlParser {
             && (self.current_element_is_table_structure()
                 || self.current_parent_is_fostered_before_open_table())
         {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-li-start-tag-in-table",
+                "li start tag in a table context was foster parented",
+            ));
             self.close_open_element_if(|name| name == "li");
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
@@ -34264,6 +34268,35 @@ mod tests {
                 .parser_diagnostics
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-start-tag-in-table"));
+        }
+    }
+
+    #[test]
+    fn reports_li_start_tags_fostered_from_table_context() {
+        let output = parse_html_with_diagnostics("<!doctype html><table><li><li></table>").unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-li-start-tag-in-table")
+                .count(),
+            2
+        );
+
+        let children = &body(&output.document).children;
+        assert_eq!(element(&children[0]).name, "li");
+        assert_eq!(element(&children[1]).name, "li");
+        assert_eq!(element(&children[2]).name, "table");
+
+        for source in [
+            "<!doctype html><ul><li></li></ul>",
+            "<!doctype html><table><tr><td><ul><li></li></ul></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-li-start-tag-in-table"));
         }
     }
 
