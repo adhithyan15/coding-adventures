@@ -61,9 +61,13 @@ the specialized parse error when no heading is in scope or the current heading
 does not match the token. A `li` start tag reports when its implied-end-tag
 recovery closes a non-current list item, and a paragraph end tag reports when it
 breaks out of MathML foreign content. A formatting end tag also reports when an
-open table blocks adoption-agency recovery. Description-list item start tags
-now report when implied-end-tag recovery closes a non-current `dt` or `dd`,
-without flagging adjacent description-list items.
+open table blocks adoption-agency recovery. Foreign formatting end tags now
+report when they do not match the current foreign node, close a matching foreign
+element before the HTML boundary, re-enter adoption-agency recovery for a
+matching HTML ancestor, and report the ordinary unmatched ending when neither
+exists. Description-list item start tags now report when implied-end-tag
+recovery closes a non-current `dt` or `dd`, without flagging adjacent
+description-list items.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
