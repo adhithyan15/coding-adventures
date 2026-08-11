@@ -272,7 +272,11 @@ enum ProcedureParamType {
     },
     /// A formal procedure is compiled by direct, call-site-specialised
     /// substitution. It therefore has no ordinary IIR value representation.
-    Procedure,
+    Procedure {
+        /// `Some` for report-style typed formals such as `integer procedure p`.
+        /// `None` retains the existing untyped direct-procedure formal.
+        expected_ret: Option<ScalarType>,
+    },
 }
 
 /// Whether an ALGOL formal receives an eager value or re-evaluates its actual
@@ -698,7 +702,7 @@ impl Compiler {
             })?;
             if sig.params.iter().any(|param| {
                 param.mode == ProcedureParamMode::Name
-                    || matches!(param.ty, ProcedureParamType::Procedure)
+                    || matches!(param.ty, ProcedureParamType::Procedure { .. })
             })
             {
                 // Name and procedure formals are not ordinary ABI values. Their
@@ -1287,11 +1291,20 @@ impl Compiler {
                 .ok_or_else(|| CompileError::Malformed(format!(
                     "unknown array parameter element type {ty:?}"
                 ))),
-            ["procedure"] => Ok(ProcedureParamType::Procedure),
+            ["procedure"] => Ok(ProcedureParamType::Procedure { expected_ret: None }),
+            [ty, "procedure"] => scalar(ty)
+                .map(|expected_ret| ProcedureParamType::Procedure {
+                    expected_ret: Some(expected_ret),
+                })
+                .ok_or_else(|| {
+                    CompileError::Malformed(format!(
+                        "unknown procedure parameter return type {ty:?}"
+                    ))
+                }),
             [ty] => scalar(ty)
                 .map(ProcedureParamType::Scalar)
                 .ok_or_else(|| CompileError::Unsupported(format!("{ty} parameters"))),
-            [_, kind] if matches!(*kind, "label" | "switch" | "procedure") => Err(
+            [_, kind] if matches!(*kind, "label" | "switch") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
             ),
             _ => Err(CompileError::Malformed(format!(
@@ -1385,7 +1398,7 @@ impl Compiler {
                     elem_ty,
                     dimensions: array_formal_dimension_count(proc_decl, &p)?,
                 },
-                ProcedureParamType::Scalar(_) | ProcedureParamType::Procedure => ty,
+                ProcedureParamType::Scalar(_) | ProcedureParamType::Procedure { .. } => ty,
             };
             // Formal procedures are replaced with a statically captured target
             // during direct specialisation, so value mode does not need a
@@ -1527,7 +1540,7 @@ impl Compiler {
                 }
                 continue;
             }
-            if matches!(*pty, ProcedureParamType::Procedure) {
+            if matches!(*pty, ProcedureParamType::Procedure { .. }) {
                 if !self.procedure_bindings.contains_key(pname) {
                     return Err(CompileError::Malformed(format!(
                         "formal procedure parameter {pname:?} has no call-site binding"
@@ -1603,7 +1616,7 @@ impl Compiler {
                         )?;
                     }
                 }
-                ProcedureParamType::Procedure => unreachable!(
+                ProcedureParamType::Procedure { .. } => unreachable!(
                     "formal procedure parameters are bound through specialisation"
                 ),
             }
@@ -1999,7 +2012,7 @@ impl Compiler {
 
         let target_name = if sig.params.iter().any(|param| {
             param.mode == ProcedureParamMode::Name
-                || matches!(param.ty, ProcedureParamType::Procedure)
+                || matches!(param.ty, ProcedureParamType::Procedure { .. })
         })
         {
             self.compile_by_name_specialization(&target_source_name, &sig, &actuals)?
@@ -2105,7 +2118,7 @@ impl Compiler {
                         }
                     }
                 }
-                ProcedureParamType::Procedure => {
+                ProcedureParamType::Procedure { .. } => {
                     // The specialised body substitutes this direct target; a
                     // formal procedure does not cross the fixed IIR ABI.
                 }
@@ -2151,7 +2164,7 @@ impl Compiler {
         let has_procedure_formal = sig
             .params
             .iter()
-            .any(|param| matches!(param.ty, ProcedureParamType::Procedure));
+            .any(|param| matches!(param.ty, ProcedureParamType::Procedure { .. }));
         let in_flight = self.compiling_by_name_procedures.get(source_name).cloned();
         if let Some(in_flight) = &in_flight {
             // Name arrays already travel through the ordinary typed descriptor
@@ -2184,8 +2197,13 @@ impl Compiler {
                     let (actual, key) = self.prepare_by_name_actual(actual)?;
                     by_name_bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
                 }
-                ProcedureParamType::Procedure => {
-                    let binding = self.prepare_procedure_actual(source_name, &param.name, actual)?;
+                ProcedureParamType::Procedure { expected_ret } => {
+                    let binding = self.prepare_procedure_actual(
+                        source_name,
+                        &param.name,
+                        expected_ret,
+                        actual,
+                    )?;
                     procedure_bindings.insert(param.name.clone(), binding);
                 }
                 _ => {}
@@ -2289,7 +2307,7 @@ impl Compiler {
                         .expect("scalar name formal must have a prepared binding");
                     Some(format!("scalar:{}={}", param.name, binding.key))
                 }
-                ProcedureParamType::Procedure => {
+                ProcedureParamType::Procedure { .. } => {
                     let binding = procedure_bindings
                         .get(&param.name)
                         .expect("formal procedure must have a prepared binding");
@@ -2308,6 +2326,7 @@ impl Compiler {
         &self,
         caller_name: &str,
         formal_name: &str,
+        expected_ret: Option<ScalarType>,
         actual: &GrammarASTNode,
     ) -> Result<ProcedureBinding, CompileError> {
         let actual_name = expr_variable_name(actual).ok_or_else(|| {
@@ -2315,23 +2334,63 @@ impl Compiler {
                 "procedure {caller_name:?}: formal procedure {formal_name:?} requires a direct procedure name"
             ))
         })?;
-        if let Some(binding) = self.procedure_bindings.get(&actual_name) {
-            return Ok(binding.clone());
-        }
-        if let Some(stable_name) = self.proc_names.get(&actual_name) {
-            return Ok(ProcedureBinding {
+        let binding = if let Some(binding) = self.procedure_bindings.get(&actual_name) {
+            binding.clone()
+        } else if let Some(stable_name) = self.proc_names.get(&actual_name) {
+            ProcedureBinding {
                 source_name: stable_name.clone(),
-            });
-        }
-        if is_supported_standard_function(&actual_name)
+            }
+        } else if is_supported_standard_function(&actual_name)
             || is_supported_standard_output_procedure(&actual_name)
         {
-            return Ok(ProcedureBinding {
+            ProcedureBinding {
                 source_name: actual_name,
-            });
+            }
+        } else {
+            return Err(CompileError::Type(format!(
+                "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, supported standard function, or standard output procedure, got {actual_name:?}"
+            )));
+        };
+        self.validate_procedure_actual_return(
+            caller_name,
+            formal_name,
+            expected_ret,
+            &binding.source_name,
+        )?;
+        Ok(binding)
+    }
+
+    fn validate_procedure_actual_return(
+        &self,
+        caller_name: &str,
+        formal_name: &str,
+        expected_ret: Option<ScalarType>,
+        actual_name: &str,
+    ) -> Result<(), CompileError> {
+        let Some(expected) = expected_ret else {
+            return Ok(());
+        };
+        let actual_ret = self.proc_sigs.get(actual_name).map(|sig| sig.ret);
+        let matches = match actual_ret {
+            Some(Some(actual)) => actual == expected,
+            Some(None) => false,
+            None if is_supported_standard_function(actual_name) => {
+                standard_function_supports_return(actual_name, expected)
+            }
+            None => false,
+        };
+        if matches {
+            return Ok(());
         }
+        let actual = match actual_ret {
+            Some(Some(actual)) => actual.name(),
+            Some(None) => "proper",
+            None if is_supported_standard_output_procedure(actual_name) => "proper",
+            None => "incompatible",
+        };
         Err(CompileError::Type(format!(
-            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, supported standard function, or standard output procedure, got {actual_name:?}"
+            "procedure {caller_name:?}: typed formal procedure {formal_name:?} expects an {} result, but {actual_name:?} is {actual}",
+            expected.name()
         )))
     }
 
@@ -5375,6 +5434,17 @@ fn is_supported_standard_function(name: &str) -> bool {
     )
 }
 
+fn standard_function_supports_return(name: &str, expected: ScalarType) -> bool {
+    match name {
+        "abs" => matches!(expected, ScalarType::Integer | ScalarType::Real),
+        "sign" | "entier" => expected == ScalarType::Integer,
+        "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan" => {
+            expected == ScalarType::Real
+        }
+        _ => false,
+    }
+}
+
 /// Standard output procedures that direct formal-procedure bindings may
 /// substitute. They retain their existing statement-only lowering and never
 /// become dynamic procedure values.
@@ -8034,6 +8104,73 @@ mod tests {
         assert!(apply.instructions.iter().any(|instr| {
             instr.op == "call" && instr.srcs.first() == Some(&Operand::Var("twice".to_string()))
         }));
+    }
+
+    #[test]
+    fn typed_formal_procedure_accepts_matching_direct_actual() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p, x); value x; integer procedure p; integer x; \
+                     apply := p(x); \
+                   result := apply(twice, 21) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn typed_formal_procedure_forwards_matching_actual() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p, x); value x; integer procedure p; integer x; \
+                     begin integer procedure forward(p, x); value x; \
+                           integer procedure p; integer x; forward := p(x); \
+                           apply := forward(p, x) end; \
+                   result := apply(twice, 21) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn typed_formal_procedure_accepts_matching_standard_function() {
+        let src = "begin integer result; \
+                   integer procedure apply(p, x); value x; real procedure p; real x; \
+                     apply := entier(p(x)); \
+                   result := apply(sqrt, 1764.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn typed_formal_procedure_rejects_wrong_standard_function_result() {
+        let err = compile_source(
+            "begin integer result; \
+             integer procedure apply(p, x); value x; integer procedure p; real x; \
+             apply := p(x); result := apply(sqrt, 1764.0) end",
+            "typed_formal_wrong_standard_result",
+        )
+        .expect_err("typed formal must reject a mismatched standard function");
+        assert!(err.to_string().contains("expects an integer result"));
+    }
+
+    #[test]
+    fn typed_formal_procedure_rejects_wrong_declared_return_type() {
+        let err = compile_source(
+            "begin integer result; real procedure measure; measure := 42.0; \
+             integer procedure apply(p); integer procedure p; apply := p(); \
+             result := apply(measure) end",
+            "typed_formal_wrong_return",
+        )
+        .expect_err("typed formal must reject a mismatched declared result");
+        assert!(err.to_string().contains("expects an integer result"));
+    }
+
+    #[test]
+    fn typed_formal_procedure_rejects_proper_procedure_actual() {
+        let err = compile_source(
+            "begin integer result; procedure touch; result := 1; \
+             integer procedure apply(p); integer procedure p; apply := p(); \
+             result := apply(touch) end",
+            "typed_formal_proper_actual",
+        )
+        .expect_err("typed formal must reject a proper procedure actual");
+        assert!(err.to_string().contains("but \"touch\" is proper"));
     }
 
     #[test]

@@ -859,8 +859,8 @@ backend immediately) come before the enabler-dependent items.
   per-procedure slot, and crucially drops the per-declaration `const` zero-init for
   globals so the value is not re-zeroed each call. `bump(1) + bump(1) + bump(1)`
   accumulates `1 + 2 + 3 = 6` (a non-`own` local gives `3`) on **all 7 backends**.
-  (Grammar was patched surgically, not full-regen — the checked-in `algol.grammar`
-  has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
+  The canonical grammar resync completed in `coding-adventures-algol-parser`
+  0.8.0, replacing the earlier surgical generated-artifact patch.
 - ✅ **AL7** — direct call-by-name (Jensen-style expression thunks).
   Each direct call with `integer`, `real`, `boolean`, or `string` name formals emits a
   specialised typed sibling IIR function. Scalar formal reads re-evaluate the
@@ -896,7 +896,10 @@ backend immediately) come before the enabler-dependent items.
   statement-only lowering. An active formal can be forwarded into a nested
   direct wrapper, so `dispatch(square, 6)` through `forward(p, x)` returns 36,
   `dispatch(abs, 0 - 42)` returns 42, and `dispatch(print, 'FORMAL')` through
-  a nested wrapper prints `FORMAL` on native/LLVM/WASM/JVM/CLR/VM/JIT. This
+  a nested wrapper prints `FORMAL` on native/LLVM/WASM/JVM/CLR/VM/JIT.
+  Report-style `integer procedure p` and other typed procedure formals retain
+  and validate the expected result type during the same static specialization;
+  mismatched and proper procedure actuals are rejected before IIR lowering. This
   intentionally excludes expression and scalar actuals plus dynamic/nonlocal
   procedure values, which require the descriptor ABI described by LANG27.
 - ✅ **AL8** — standard functions (§3.2.4/§3.2.5). All pure-IIR and transcendental
