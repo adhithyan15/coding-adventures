@@ -1,0 +1,19 @@
+% ============================================================================
+% rainforest-layer.query.adj — a worked recall over the biology rainforest
+% layer library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's the canopy
+% layer?": it states no biology fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `rainforest_layer` rows and returns the description atom + the table's
+% source/locator/trust. The last query runs the relation BACKWARD (bind the
+% description, recall the layer). A word that is not one of the four layers
+% abstains honestly — the engine never invents a description.
+% ============================================================================
+
+import "rainforest-layer.adj"
+
+? rainforest_layer(emergent, $D)                            % expect tallest_trees_dominate_skyline
+? rainforest_layer(canopy, $D)                               % expect deep_treetop_vegetation_layer
+? rainforest_layer($L, tallest_trees_dominate_skyline)        % expect emergent — the reverse recall
+? rainforest_layer(soil_layer, $D)                            % expect abstain — not one of the four layers
