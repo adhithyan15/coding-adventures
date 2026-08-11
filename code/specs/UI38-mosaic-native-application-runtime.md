@@ -300,6 +300,12 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Flutter through the standard Dart FFI binding.
   - [x] Qt/QML through the standard Qt Core binding.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
+- [ ] Bundle the selected Rust application engine library into every generated
+  installable native artifact and resolve it from an app-relative location.
+  Conformance harnesses currently inject the library path externally; a packaged
+  Compose `.app`, for example, launches only through the permissive sample
+  fallback when `libmosaic_app` is not installed globally. Start with Compose,
+  then repeat the packaging contract for SwiftUI, Qt, XAML, and Flutter.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
@@ -333,6 +339,11 @@ unblocks multiple downstream targets; never count source generation as completio
       canonical dynamic UI31/Grid shape to native `DataTable` primitives.
       The full package-expanded TaskApp now passes Flutter's strict profile,
       whole-project Dart analysis, and a native desktop build in CI.
+    - [x] Remove Compose's four inert drag/drop reports by lowering UI35 to
+      Compose Desktop's native `dragAndDropSource`/`dragAndDropTarget`
+      modifiers with an instance-scoped keyboard target registry, RTL-aware
+      navigation, live-region state, accepted-only outcomes, and one shared
+      drop payload path. Compose TaskApp now has only its table-semantics gap.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

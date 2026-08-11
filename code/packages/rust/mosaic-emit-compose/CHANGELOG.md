@@ -7,6 +7,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostDraggable` and `HostDropTarget` now lower to Compose Desktop's native
+  drag source/target modifiers. Generated components add an instance-scoped
+  target registry, kind filtering, disabled-state enforcement, pointer
+  before/into/after hit testing, focus and Space/Enter/arrow/Escape operation,
+  RTL-aware horizontal navigation, live-region state, and shared event payload
+  construction for pointer and keyboard drops.
 - `Icon` now lowers through a dependency-free native font-glyph vocabulary,
   including runtime glyph and accessibility-label slots, MSL color/size/test
   tags, and a visible fallback. The semantic `spinner` glyph becomes Compose's

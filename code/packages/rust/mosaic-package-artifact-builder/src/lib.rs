@@ -672,7 +672,8 @@ fn collect_native_degradations(
     let backend_name = backend.dir_name();
     let reason = match node.tag.as_str() {
         "HostDraggable" | "HostDropTarget"
-            if backend.is_native() && backend != Backend::Flutter => Some((
+            if backend.is_native()
+                && !matches!(backend, Backend::Flutter | Backend::Compose) => Some((
             "interaction.drag-drop-inert",
             "the backend lowers this interactive primitive to a non-interactive container",
         )),
@@ -3638,17 +3639,10 @@ layout Board {
                 .iter()
                 .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
                 .collect::<Vec<_>>(),
-            vec![
-                ("interaction.drag-drop-inert", "root.children[0]"),
-                (
-                    "interaction.drag-drop-inert",
-                    "root.children[0].children[0]"
-                ),
-                (
-                    "accessibility.table-semantics-missing",
-                    "root.children[0].children[0].children[0]"
-                ),
-            ]
+            vec![(
+                "accessibility.table-semantics-missing",
+                "root.children[0].children[0].children[0]"
+            )]
         );
         assert_eq!(
             report,
@@ -3659,7 +3653,7 @@ layout Board {
     }
 
     #[test]
-    fn flutter_native_drag_drop_is_not_reported_as_inert() {
+    fn flutter_and_compose_native_drag_drop_are_not_reported_as_inert() {
         let pkg = make_package("mosaic-pkg-board", &["Board"]);
         fs::write(
             pkg.path().join("src/Board.mll"),
@@ -3694,14 +3688,8 @@ layout Board {
         let compose =
             analyze_package_degradations(&options(Backend::Compose), BuildProfile::NativeComplete)
                 .expect("Compose analysis");
-        assert_eq!(
-            compose
-                .degradations
-                .iter()
-                .map(|entry| entry.code.as_str())
-                .collect::<Vec<_>>(),
-            vec!["interaction.drag-drop-inert", "interaction.drag-drop-inert"]
-        );
+        assert!(compose.native_complete);
+        assert!(compose.degradations.is_empty());
     }
 
     #[test]
@@ -4319,7 +4307,7 @@ layout NativeEvents {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.mll"),
-            "layout Card { HostDraggable [ root ] { Text ( content: \"Card\" ) } }\n",
+            "layout Card { HostTable [ root ] { Text ( content: \"Card\" ) } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();
@@ -4345,7 +4333,7 @@ layout NativeEvents {
         assert_eq!(json["nativeComplete"], false);
         assert_eq!(
             json["degradations"][0]["code"],
-            "interaction.drag-drop-inert"
+            "accessibility.table-semantics-missing"
         );
     }
 
@@ -4354,7 +4342,7 @@ layout NativeEvents {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.mll"),
-            "layout Card { HostDraggable [ root ] { Text ( content: \"Card\" ) } }\n",
+            "layout Card { HostTable [ root ] { Text ( content: \"Card\" ) } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();
@@ -4368,7 +4356,7 @@ layout NativeEvents {
             },
             BuildProfile::NativeComplete,
         )
-        .expect_err("strict build must reject an inert drag primitive");
+        .expect_err("strict build must reject missing table semantics");
 
         assert!(matches!(
             error,

@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - Compose native drag capability
+
+- Native-complete analysis no longer reports Compose `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
+  keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- Qt, SwiftUI, and XAML retain the stable `interaction.drag-drop-inert`
+  degradation until their native implementations land.
+
 ## [Unreleased] - Flutter native table capability
 
 - Native-complete analysis recognizes the canonical UI31/Grid shape as a
