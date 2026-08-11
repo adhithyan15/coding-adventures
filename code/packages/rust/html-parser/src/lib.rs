@@ -8725,8 +8725,10 @@ impl HtmlParser {
             moved_div_path.push(usize::from(boundary_child_index > 0));
             self.open_elements.push(moved_div_path.clone());
         }
-        for index in &relative_div_path[..adoption_path_len] {
-            moved_div_path.push(*index);
+        for _ in &relative_div_path[..adoption_path_len] {
+            // Each repair step inserts the formatting clone at child 0 and
+            // moves the selected descendant to child 1.
+            moved_div_path.push(1);
             self.open_elements.push(moved_div_path.clone());
         }
         if let Some(anchor) = pending_anchor_reconstruction {
@@ -35086,6 +35088,53 @@ mod tests {
             diagnostic.code != "formatting-element-not-in-table-scope"
                 && diagnostic.code != "unexpected-formatting-start-tag-in-table"
         }));
+    }
+
+    #[test]
+    fn keeps_nested_div_adoption_follow_on_content_at_the_repaired_current_node() {
+        fn assert_repaired_outer_div(outer_div: &Element, formatted_tail: bool) {
+            let cloned_bold = element(&outer_div.children[1]);
+            assert_eq!(cloned_bold.name, "b");
+            let first_div = element(&cloned_bold.children[0]);
+            assert_eq!(first_div.name, "div");
+            assert_eq!(element(&first_div.children[0]).name, "a");
+
+            let inner_div = element(&first_div.children[1]);
+            assert_eq!(inner_div.name, "div");
+            let empty_anchor = element(&inner_div.children[0]);
+            assert_eq!(empty_anchor.name, "a");
+            assert!(empty_anchor.children.is_empty());
+            if formatted_tail {
+                let italic = element(&inner_div.children[1]);
+                assert_eq!(italic.name, "i");
+                assert_eq!(italic.children, vec![Node::text("X")]);
+            } else {
+                assert_eq!(inner_div.children[1], Node::text("X"));
+            }
+        }
+
+        for (source, formatted_tail) in [
+            ("<!doctype html><div><a><b><div><div></a>X", false),
+            ("<!doctype html><div><a><b><div><div></a><i>X", true),
+        ] {
+            let document = parse_html(source).unwrap();
+            assert_repaired_outer_div(element(&body(&document).children[0]), formatted_tail);
+        }
+
+        let fragment =
+            parse_html_fragment_for_context("<div><a><b><div><div></a>X", "div").unwrap();
+        assert_repaired_outer_div(element(&fragment[0]), false);
+
+        let table =
+            parse_html("<!doctype html><table><tr><td><div><a><b><div><div></a>X").unwrap();
+        let cell = find_first_element_in_nodes(&table.children, "td").unwrap();
+        assert_repaired_outer_div(element(&cell.children[0]), false);
+
+        let shallow = parse_html("<!doctype html><a><b><u><div></a>X").unwrap();
+        let shallow_bold = element(&body(&shallow).children[1]);
+        let shallow_div = element(&element(&shallow_bold.children[0]).children[0]);
+        assert_eq!(element(&shallow_div.children[0]).name, "a");
+        assert_eq!(shallow_div.children[1], Node::text("X"));
     }
 
     #[test]
