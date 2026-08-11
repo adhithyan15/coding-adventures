@@ -1117,10 +1117,33 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 // word is a mark candidate, which is always sound (a look-alike integer that
 // isn't really a live heap address is filtered out by `find_header`, not
 // followed) even though it is less precise than a registered kind's exact
-// ref-field map. A future rung could register a kind per object shape for
-// full precision; kind 0 is the safe, always-correct default this additive
+// ref-field map; kind 0 is the safe, always-correct default this additive
 // path starts from — exactly gc-core's own "unregistered kind falls back to
-// conservative" invariant.
+// conservative" invariant. It is also why nothing vm-core allocates is ever
+// *movable*: `classify_mobility`'s `movable = precise ∧ ¬pinned ∧ kind≠0` rule
+// pins every kind-0 object, so `collect_compacting`/`collect_minor_compacting`
+// degrade to non-moving here even after AOT00-T9 PR-5 wired their pacing in
+// (see that PR's own changelog note).
+//
+// **Registering a `{0,8}`-style kind here (mirroring native-AOT's `__dyn_cons`)
+// is NOT a safe drop-in, despite looking like one** — investigated and
+// rejected during AOT00-T9 PR-5 follow-up scouting; see lessons.md ("vm-core
+// kind registration soundness note") for the full trace. Short version: a
+// field here holds a *tagged word*, not always a boxed reference (the comment
+// above this one explains the tag scheme) — a raw `Value::Int` is a completely
+// legitimate thing to store in, say, a cons cell's car/cdr. Marking tolerates
+// this fine (`mark_word` tag-strips and validates against `find_header`, so a
+// look-alike int is simply never found — safe over-approximation). *Compaction*
+// does not: `fixup_ref_fields`'s `forwarded()` rewrites a precise field's bits
+// whenever they match a key in the `forward` map of relocated addresses, with
+// no way to tell "this word is really a reference" from "this word is really
+// an int that coincidentally matches" — an actual (if astronomically unlikely)
+// wrong-direction correctness bug, not a safe bias-to-leak/pin-when-unsure
+// case like every other probabilistic-collision argument in this codebase.
+// Making this sound for real needs type-directed field maps (vm-core has no
+// per-field-offset type information to give gc-core today) or an explicit,
+// reviewed decision to accept the collision risk — a real design decision,
+// not a mechanical follow-up.
 
 /// `gc_alloc [<size_bytes>] -> dest` — allocate a GC-managed heap object on
 /// the shared `FlatHeap` collector, returning a `Value::HeapRef`. Also the
