@@ -205,6 +205,31 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(!restored_transcript.contains("e2e item password"));
     assert!(!restored_transcript.contains("e2e updated password"));
 
+    let (enable_status, enable_transcript) =
+        run_unlock_in_pty(&home, &["audit", "enable"], b"Audit: enabled.");
+    assert!(
+        enable_status.success(),
+        "audit enable failed: {enable_transcript}"
+    );
+    assert_transcript_excludes_secrets(&enable_transcript);
+
+    let (failed_edit_status, failed_edit_transcript) = run_empty_title_edit_in_pty(&home, &item_id);
+    assert_eq!(failed_edit_status.code(), Some(2));
+    assert!(failed_edit_transcript.contains("Title: "));
+    assert!(failed_edit_transcript.contains("vault-pm: invalid command"));
+    assert_transcript_excludes_secrets(&failed_edit_transcript);
+
+    let (post_failure_status, post_failure_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "verify"],
+        b"commits=7 catalogs=5 revisions=4 items=1 audit_events=2",
+    );
+    assert!(
+        post_failure_status.success(),
+        "post-failure audit failed: {post_failure_transcript}"
+    );
+    assert_transcript_excludes_secrets(&post_failure_transcript);
+
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
@@ -232,6 +257,45 @@ fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String)
         b"",
         b"Item updated: ",
     )
+}
+
+fn run_empty_title_edit_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["item", "edit", item_id]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Title: ");
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"vault-pm: invalid command");
+    let error_line = transcript.len() - b"vault-pm: invalid command".len();
+    read_until_from(&mut master, &mut transcript, error_line, b"\n");
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
 }
 
 fn run_login_form_in_pty(

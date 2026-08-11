@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed `audit enable` and extended the real-process PTY suite through audit
+  activation, an invalid edit prompt, and later verification of its event.
 - Exposed reversible item delete/restore and extended the real-process PTY
   suite through tombstone observation and exact historical restoration.
 - Exposed redacted revision history listing and extended the PTY suite through

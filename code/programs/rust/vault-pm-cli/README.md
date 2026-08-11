@@ -10,6 +10,7 @@ The current command surface is:
 ```text
 vault-pm init [--vault NAME] [--storage NAME]
 vault-pm status [--json]
+vault-pm audit enable
 vault-pm audit verify
 vault-pm doctor [--unlock]
 vault-pm item add login
@@ -28,8 +29,9 @@ under fresh pseudo-terminals, verify passphrases and item passwords are not
 echoed, restart the process for durable item add/edit/list/show, inject decoy
 bytes through stdin, verify redacted canonical history across another fresh
 process, delete to a causal tombstone, restore an exact live ancestor into a
-new revision, and inspect the isolated filesystem tree for plaintext secret
-bytes.
+new revision, activate the signed audit epoch, force an invalid edit prompt in
+a later process, verify that failure event from another process, and inspect the
+isolated filesystem tree for plaintext secret bytes.
 
 ## Verification
 

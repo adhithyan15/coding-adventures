@@ -901,6 +901,7 @@ vault-pm storage check NAME
 vault-pm storage migrate SOURCE TARGET [--mirror]
 
 vault-pm sync status|pull|push|run
+vault-pm audit enable
 vault-pm audit verify
 vault-pm doctor
 vault-pm gc plan|run
@@ -1500,8 +1501,10 @@ changelog, focused build, and downstream validation.
           tamper/fault/real-process acceptance.
 9b-2c-4c-1. completed production application boundary for a single durable,
              crash-resumable pre-audit-vault migration epoch.
-9b-2c-4c-2. expose that migration in the CLI only once every edit and access
-             path can advance the chain or fail closed.
+9b-2c-4c-2. completed explicit authenticated CLI audit migration after every
+             exposed edit and access path can advance the chain or fail
+             closed, including real-process proof that an edit prompt failure
+             is durable before its process error.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
 9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
