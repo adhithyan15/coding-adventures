@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.30.0
+
+- Accept Mermaid 11.16.1 sequence `#` comments without losing entity-coded text.
+
 ## 0.29.0
 
 - Preserve ordered sequence `autonumber`, `autonumber off`, and counter-reset statements.

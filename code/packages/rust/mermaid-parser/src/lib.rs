@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.29.0";
+pub const VERSION: &str = "0.30.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -3577,6 +3577,19 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_ignores_hash_comments_around_semantic_text() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\n# participant setup\nparticipant A # declaration comment\nA->>B: Hello # message comment\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants.len(), 2);
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { label, .. } if label == "Hello"
+        ));
+    }
+
+    #[test]
     fn sequence_converts_html_breaks_to_semantic_newlines() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nAlice->>Bob: First line<br/>Second line\nnote over Alice,Bob: Note one<br />Note two\n",
@@ -3738,7 +3751,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.29.0");
+        assert_eq!(crate::VERSION, "0.30.0");
     }
 
     #[test]
