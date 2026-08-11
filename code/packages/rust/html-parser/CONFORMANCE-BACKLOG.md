@@ -280,9 +280,14 @@ Prioritized work items:
    contexts on their required paths. Noah's Ark reconstruction now treats
    attribute order as insignificant when limiting equivalent formatting
    entries to the three most recent entries, while preserving entries with
-   distinct attribute values and marker-isolated formatting. Continue the
-   fresh algorithm audit across the remaining active-formatting-list branches,
-   especially the inner-loop node replacement limit.
+   distinct attribute values and marker-isolated formatting. Div-based
+   adoption recovery now applies the inner-loop replacement limit to the three
+   stack nodes nearest the furthest block, counts intervening non-formatting
+   nodes, and preserves active formatting opened below that block. This covers
+   the deep `adoption01.dat` formatting shape with follow-on text while keeping
+   the three-node boundary and existing table reconstruction conforming.
+   Continue the fresh algorithm audit across the remaining bookmark-placement
+   and active-formatting replacement branches.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
