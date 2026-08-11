@@ -45,7 +45,11 @@ from build_tool.ci_workflow import (
     analyze_ci_workflow_changes,
     sorted_toolchains,
 )
-from build_tool.discovery import Package, discover_packages
+from build_tool.discovery import (
+    DISCOVERABLE_LANGUAGES,
+    Package,
+    discover_packages,
+)
 from build_tool.executor import execute_builds
 from build_tool.gitdiff import get_changed_files, map_files_to_packages
 from build_tool.hasher import hash_deps, hash_package
@@ -80,7 +84,7 @@ except ImportError:
 
 # ALL_LANGUAGES is the canonical list of package languages the Python build
 # tool knows how to build directly.
-ALL_LANGUAGES = ["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "haskell"]
+ALL_LANGUAGES = list(DISCOVERABLE_LANGUAGES)
 
 # ALL_TOOLCHAINS is the canonical list of CI toolchains we can request.
 ALL_TOOLCHAINS = [
@@ -201,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--language",
-        choices=["python", "ruby", "go", "typescript", "rust", "elixir", "lua", "perl", "swift", "all"],
+        choices=[*ALL_LANGUAGES, "all"],
         default="all",
         help="Only build packages of this language",
     )

@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10751,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "44dc4b563ef10df895ce100d827a1abc6ddca323",
+    "revision": "38ecfd9ff014d447659b37227abd44fcfc55dcc5",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1300,
-    "implementation_package_slots": 4456,
+    "implementation_identities": 1301,
+    "implementation_package_slots": 4457,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 850,
-    "singleton_missing_slots": 11900,
-    "rust_singletons": 654,
+    "singleton_packages": 851,
+    "singleton_missing_slots": 11914,
+    "rust_singletons": 655,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -928,16 +928,19 @@
     {
       "id": "build-tool-python-haskell-language-filter",
       "title": "Expose Haskell, Java, and Kotlin in Python build-tool filtering",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-lua-rockspec-encoding", "build-tool-python-ecosystem-scoped-alias-resolution", "build-tool-python-haskell-gradle-field-aware-resolution"],
-      "branch": null,
+      "branch": "codex/python-haskell-jvm-language-filter",
       "pr_number": null,
+      "selection_revision": "a4ad42e1f71ad146af212817ef72c7154af83a9b",
+      "selection_notes": "Selected after PR #10751 merged externally and the collision-clean refresh classified smart-home-controller-runtime. This bounded follow-up exposes 206 Haskell, 129 Java, and 133 Kotlin build roots only after their resolver graphs became field-aware, while also making their package/program identities follow the shared discovery contract. Canonical-CBOR lane children remain ready but none independently unlocks the twelve-child completion umbrella.",
+      "validation_notes": "Both Python BUILD front doors pass 379 tests with 89.23% total coverage and 96% discovery coverage under Python 3.13.14; focused discovery and filter coverage passes 70 tests. The 58-case language-neutral corpus validates 243 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened discovery fixture. With real Cabal output still present and excluded, exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges/3 programs, 129 Java nodes/186 edges/1 program, and 133 Kotlin nodes/166 edges/7 programs. Native GHC 9.4.8/Cabal tests pass for Haskell logic-gates (6 examples) and its arithmetic downstream (5 examples); Temurin 21.0.12 and Gradle 8.11.1 pass Java and Kotlin algol-lexer plus each algol-parser downstream. Scoped Ruff safety rules, discovery MyPy, Bandit, Go vet, state-graph, strict-JSON, credential-pattern, diff, and collision gates pass. The repository's pre-existing full Ruff debt decreases from 19 to 14 findings; the one pre-existing CLI MyPy nullable-length finding remains outside this tranche. The collision-clean report remains 1,301 identities, 4,457 slots, 851 singletons, 11,914 singleton gaps, 655 Rust singletons, zero collisions, and zero unknown buckets. Reusing an existing Windows plan filename reproduced the separately tracked atomic-overwrite owner; fresh output paths pass all real plan comparisons.",
       "notes": "Discovered while validating the full Python build-tool scan. Haskell resolver branches exist but discovery omits the lane, while Java and Kotlin are discoverable and resolvable but absent from ALL_LANGUAGES and argparse choices. Add the focused discovery, filter, and dry-run contract only after ecosystem-scoped aliases and field-aware Cabal/Gradle resolution make default all-language planning safe."
     },
     {
       "id": "build-tool-python-haskell-gradle-field-aware-resolution",
       "title": "Make Python Cabal and Gradle resolution field-aware",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-python-ecosystem-scoped-alias-resolution"],
       "branch": "codex/python-haskell-gradle-field-aware-resolution",
       "pr_number": 10751,
@@ -946,9 +949,29 @@
       "selection_revision": "96f58be046bb130d59e988f6199c4bb819533156",
       "selection_notes": "Selected after PR #10612 merged externally and a collision-clean refresh classified the new Frigate snapshot host. Although canonical-CBOR became dependency-ready, its fourteen-lane umbrella needs decomposition before review. This bounded, authority-free resolver repair closes a real affected-plan trust boundary and directly unlocks safe Haskell, Java, and Kotlin filtering.",
       "implementation_revision": "af71eed4c2f54765220147a71b27db45b1b50a9a",
+      "merged_at": "2026-08-11T19:44:49Z",
+      "merge_revision": "c4e8e8399f1a102651cec4002cde84ca1c1aa133",
       "validation_notes": "After rebasing onto identity-neutral 44dc4b563e, Python passes 364 tests with 89.18% total coverage and 91% resolver coverage under Python 3.12.13 through both identical BUILD front doors. The changed resolver passes MyPy, scoped Ruff, and Bandit; the repository's pre-existing full Python lint and Bandit findings remain outside this tranche. The schema and runner pass 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened Haskell/Gradle fixture consumers. Exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges, 129 Java nodes/186 edges, and 133 Kotlin nodes/166 edges; focused affected-closure tests reject comment, string, cross-lane, absolute, interpolated, ambiguous-manifest, duplicate, and self-selection paths. State graph, credential-pattern, diff, and collision gates pass at 1,300 identities, 4,456 slots, 850 singletons, 11,900 singleton gaps, 654 Rust singletons, zero collisions, and zero unknown buckets.",
-      "publication_notes": "Ready-for-review PR #10751 opened from af71eed4c2. GitHub reports it open, non-draft, and mergeable; CI and CodeQL checks are queued, so the loop is monitor-only until they finish.",
+      "publication_notes": "Ready-for-review PR #10751 opened from af71eed4c2 and merged externally as c4e8e8399f after all 20 checks reached terminal success, neutral, or expected skip states with no failures.",
       "notes": "Discovered in the post-#10564 security review. Python currently scans whole Cabal files and line-matches Gradle, so comments, descriptive fields, block-comment examples, and multiline includeBuild declarations can create or hide dependency edges even though the shared Haskell, Java, and Kotlin field-aware fixtures already define the closed behavior. Consume those fixtures, register plain directory and declared Cabal aliases, reject ambiguous manifests, and prove exact graph equality with the Go oracle before exposing these lanes through the Python language filter."
+    },
+    {
+      "id": "build-tool-python-dotnet-field-aware-resolution-and-filter",
+      "title": "Add field-aware C# and F# support to the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-python-haskell-language-filter"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established C# and F# package roots as unknown, has no project-file resolver branch, and omits both filters even though the shared C#, F#, and cross-language .NET fixtures define authoritative project references. Consume those fixtures, preserve package/program identities and the reviewed shared dotnet toolchain mapping, compare complete graphs with Go, then expose both lanes without widening the Haskell/JVM tranche."
+    },
+    {
+      "id": "build-tool-python-dart-field-aware-resolution-and-filter",
+      "title": "Add field-aware Dart support to the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-python-haskell-language-filter"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established Dart package roots as unknown, has no pubspec resolver branch, and omits the Dart filter even though the shared field-aware Dart fixture defines the closed dependency grammar. Consume that fixture, preserve package/program identities, prove complete graph equality with Go, and expose Dart in its own manifest-shaped tranche."
     },
     {
       "id": "build-tool-python-plan-atomic-overwrite-windows",
@@ -3003,6 +3026,15 @@
       "selection_blocked": true,
       "security_findings": "The current top-level profile does not express the effective terminal, entropy, environment, and FFI authority constructed through its concrete hosts; retain the block until composed authority is truthful.",
       "notes": "Review the normalized Rust vault-pm-cli package and program composition after its deterministic command contract is extracted. Require exact filesystem read/write/create, wall-clock, terminal, entropy, storage-adapter, process-exit, secret-custody, cleanup, redaction, and platform evidence with a truthful capability profile. Do not replicate native composition in every lane; keep portable command behavior in the separate fixture owner."
+    },
+    {
+      "id": "smart-home-controller-runtime-portable-conformance",
+      "title": "Fixture and port transactional smart-home controller ownership",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification", "smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean a4ad42e1f7 inventory after merged PR #10791 added Rust-only smart-home-controller-runtime. Production code is authority-free over an injected StorageBackend and caller-supplied timestamps; it serializes clone-mutate-persist-publish transactions, atomically owns runtime plus automation state, and exposes stable revision and rollback semantics. Define language-neutral fixtures for empty and restored startup, mutation, persistence, and CAS failures without publication, combined snapshots, serialized no-lost-update behavior, automation evaluation and ticks, adapter callbacks, revision metadata, and stable redacted errors; add explicit empty capability metadata. Local-folder storage, HTTP serving, worker scheduling, and other concrete host effects remain native consumers."
     },
     {
       "id": "in-memory-data-store-clock-language-neutral-conformance",

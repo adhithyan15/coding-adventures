@@ -3025,6 +3025,39 @@ same-lane discovered roots without opening referenced targets. The downstream
 Python language-filter owner remains pending until exact Python-versus-Go graph
 equality is proven.
 
+## Post-#10751 Refresh and Haskell/JVM Filter Selection
+
+External review merged ready-for-review PR #10751 as
+`c4e8e8399f1a102651cec4002cde84ca1c1aa133` after all 20 checks reached a
+terminal success, neutral, or expected skipped state with no failures. The
+collision-checked `38ecfd9ff014` late refresh covers 15 established lanes, 1,301
+normalized implementation identities, and 4,457 established slots. It reports
+173 high-consensus identities with 269 missing slots, 851 singletons with
+11,914 missing singleton slots, 655 Rust singletons, zero canonical collisions,
+and zero unknown buckets. The tranche was selected at `a4ad42e1f71a`; the
+intervening curriculum, HTML, Mermaid, Mosaic, ALGOL, Vault, and Semantic-IR
+changes modify only existing identities and do not overlap this tranche.
+
+The sole topology addition is Rust `smart-home-controller-runtime` from merged
+PR #10791. It is an authority-free orchestration package over an injected
+storage backend and caller-supplied timestamps, so a new portable-conformance
+owner tracks its clone-mutate-persist-publish transaction, atomic combined
+snapshot, CAS, rollback, serialization, and stable-error behavior. Concrete
+storage, HTTP, scheduling, and worker authority remains with native hosts.
+
+The audit also found that Python still omits the established C#, F#, and Dart
+lanes from discovery, dependency resolution, and filtering. Separate pending
+.NET and Dart field-aware owners now track the shared project-file and pubspec
+fixture work; those manifest families do not widen this Haskell/JVM tranche.
+
+The loop selected `build-tool-python-haskell-language-filter`. The merged
+field-aware resolver work now makes 206 Haskell, 129 Java, and 133 Kotlin build
+roots safe to select explicitly. This tranche consumes the shared discovery
+registry, recognizes only exact `packages|programs/<language>` buckets,
+preserves `<language>/programs/<name>` identities, and derives CLI choices from
+the canonical registry. Canonical-CBOR lane children remain ready, but each
+advances only one dependency of the twelve-child completion umbrella.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

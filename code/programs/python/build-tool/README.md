@@ -33,6 +33,11 @@ build-tool --jobs 4
 
 # Only build Python packages
 build-tool --language python
+
+# Safely plan the field-aware Haskell and JVM lanes
+build-tool --language haskell --dry-run
+build-tool --language java --dry-run
+build-tool --language kotlin --dry-run
 ```
 
 ## How it fits in the stack
@@ -41,6 +46,13 @@ This is a standalone program (not a library) that orchestrates builds across
 the entire coding-adventures monorepo. It understands the recursive `BUILD`
 discovery convention used throughout the repository and orchestrates every
 language listed by `build-tool --help`.
+
+Discovery infers a language only from an exact `packages/<language>` or
+`programs/<language>` bucket. Package identities use `<language>/<name>`;
+program identities preserve their role as `<language>/programs/<name>`, so a
+package and program with the same basename never collide. Haskell, Java, and
+Kotlin are available as explicit filters because their manifest resolvers are
+field-aware.
 
 Lua rockspec metadata is decoded as strict UTF-8. Invalid text fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic rather than using a host locale or

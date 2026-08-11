@@ -240,8 +240,11 @@ Required behavior:
 
 The bucket component immediately below `packages` or `programs` is the sole
 language discriminator; canonical words later in a path do not change the
-language. The canonical discovery registry classifies all established implementation
-lanes (`csharp`, `dart`, `elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`,
+language. A package root has qualified identity `<language>/<basename>`, while
+a program root has qualified identity `<language>/programs/<basename>` so a
+package and program with the same basename remain distinct. The canonical
+discovery registry classifies all established implementation lanes (`csharp`,
+`dart`, `elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`,
 `lua`, `perl`, `python`, `ruby`, `rust`, `swift`, and `typescript`), emerging
 implementation lanes (`c`, `cpp`, and `ocaml`), the `wasm` execution target,
 the `mosaic` and `twig` domain languages, and the `starlark` build language.
