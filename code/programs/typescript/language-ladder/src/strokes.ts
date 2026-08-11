@@ -1138,6 +1138,67 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: hebrewAlphabetSource("ע"),
   },
+  // Printed Pe draws the outer top, right side, and returning base in one run,
+  // then lifts once for its short inner curl. The adjacent cursive form instead
+  // coils inward as one rounded spiral.
+  [ductusKey("hebrew", "פ")]: {
+    script: "hebrew",
+    glyph: "פ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the outer top from left to right",
+            path: [
+              { x: 150, y: 560 },
+              { x: 220, y: 570 },
+              { x: 286, y: 565 },
+              { x: 365, y: 535 },
+              { x: 430, y: 475 },
+            ],
+          },
+          {
+            label: "turn down the right side without lifting",
+            path: [
+              { x: 430, y: 475 },
+              { x: 475, y: 410 },
+              { x: 505, y: 330 },
+              { x: 505, y: 260 },
+              { x: 480, y: 185 },
+              { x: 435, y: 120 },
+              { x: 370, y: 75 },
+            ],
+          },
+          {
+            label: "return left along the base without lifting",
+            path: [
+              { x: 370, y: 75 },
+              { x: 300, y: 45 },
+              { x: 220, y: 35 },
+              { x: 140, y: 38 },
+              { x: 70, y: 38 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the short inner curl from left to right",
+            path: [
+              { x: 95, y: 400 },
+              { x: 98, y: 350 },
+              { x: 120, y: 305 },
+              { x: 160, y: 270 },
+              { x: 205, y: 250 },
+              { x: 252, y: 247 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("פ"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",

@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Pe ductus (HL-C09BT)
+
+- Render **פ** in four evidence-aligned frames: draw the top, right side, and
+  returning base in one run, then lift once for the short inner curl.
+- Preserve the adjacent purple cursive form's one-run inward spiral while
+  keeping the printed form's lift explicit.
+- Record that the intervening final Pe is already a form, then queue the later
+  Tsadi demonstration as the next counted inventory entry.
+
 ### Added — cited Hebrew Ayin ductus (HL-C09BS)
 
 - Render **ע** in three evidence-aligned frames: descend the right branch into
