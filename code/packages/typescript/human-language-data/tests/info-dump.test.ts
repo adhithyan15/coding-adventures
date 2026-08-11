@@ -241,7 +241,7 @@ describe("the committed corpus", () => {
 
   it("pins the first measurement", () => {
     const report = measureInfoDump(lessons, budget);
-    expect(report.summary.lessons).toBe(1694);
+    expect(report.summary.lessons).toBe(1695); // +1: ES-C03-vos
 
     // The finding that reframed this gate: the PROSE is fine. Seventeen rule
     // statements across 1,694 lessons is a corpus whose writing is already

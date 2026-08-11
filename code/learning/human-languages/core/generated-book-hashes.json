@@ -3275,13 +3275,14 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:e3b0d5406a5ae90f",
+      "sourceHash": "fnv1a64:5015543f8a700f67",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
         "ES-C03-me-llamo",
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
+        "ES-C03-vos",
         "ES-C03-usted-origin",
         "ES-C03-como",
         "ES-C03-como-acento",
@@ -3297,7 +3298,7 @@
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:f6afd8e58aeaf134",
+      "sourceHash": "fnv1a64:a04fdcf926f11b8a",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",

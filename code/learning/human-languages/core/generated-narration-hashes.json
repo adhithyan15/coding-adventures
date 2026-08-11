@@ -6342,13 +6342,14 @@
     {
       "language": "spanish",
       "chapter": 3,
-      "sourceHash": "fnv1a64:cca681cba079b8ff",
+      "sourceHash": "fnv1a64:c75d827ddf163dc9",
       "lessonIds": [
         "ES-C03-me",
         "ES-C03-llamar",
         "ES-C03-me-llamo",
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
+        "ES-C03-vos",
         "ES-C03-usted-origin",
         "ES-C03-como",
         "ES-C03-como-acento",
@@ -6359,17 +6360,17 @@
         "ES-C03-gusto",
         "ES-C03-practice"
       ],
-      "voiceLessons": 12,
-      "drivablePrefix": 7,
+      "voiceLessons": 13,
+      "drivablePrefix": 8,
       "text": "spanish/narration/ch03.txt",
       "json": "spanish/narration/ch03.json",
-      "textHash": "fnv1a64:00bde6030183469f",
-      "jsonHash": "fnv1a64:edd728e368e918f8"
+      "textHash": "fnv1a64:95bb49af35700dee",
+      "jsonHash": "fnv1a64:6a65e8da2895871d"
     },
     {
       "language": "spanish",
       "chapter": 4,
-      "sourceHash": "fnv1a64:251f36fd9697af71",
+      "sourceHash": "fnv1a64:57b84666fc45f83f",
       "lessonIds": [
         "ES-C04-gracias",
         "ES-C04-de-nada",
@@ -6391,8 +6392,8 @@
       "drivablePrefix": 8,
       "text": "spanish/narration/ch04.txt",
       "json": "spanish/narration/ch04.json",
-      "textHash": "fnv1a64:a22877762cc7017e",
-      "jsonHash": "fnv1a64:372bf305bae9c7cb"
+      "textHash": "fnv1a64:933ad1fc2011fac2",
+      "jsonHash": "fnv1a64:50319f4723a57f23"
     },
     {
       "language": "spanish",

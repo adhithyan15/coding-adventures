@@ -84,6 +84,7 @@
         "ES-C03-me-llamo",
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
+        "ES-C03-vos",
         "ES-C03-usted-origin"
       ],
       "before": [],
@@ -92,7 +93,8 @@
         "ES-EXT-007-REGISTER"
       ],
       "after": [
-        "ES-EXT-007-ETYMOLOGY"
+        "ES-EXT-007-ETYMOLOGY",
+        "ES-EXT-007-VARIETY"
       ]
     },
     {
@@ -1407,6 +1409,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C03-tu-usted-register"
+      ]
+    },
+    {
+      "id": "ES-EXT-007-VARIETY",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "language-specific",
+      "canDo": "I can recognize a regional form of this ability that I am not expected to produce.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C03-vos"
       ]
     },
     {
