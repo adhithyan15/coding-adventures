@@ -1826,21 +1826,19 @@ Synology Surveillance Station server without persisting session material:
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
-The reusable central owner and the discovery service's transactional migration
-are complete. The remaining central-composition backlog takes priority over
-adding another isolated integration or Chief read model:
+The reusable central owner, discovery service transaction migration, and
+production Hue mDNS composition are complete. The remaining
+central-composition backlog takes priority over adding another isolated
+integration or Chief read model:
 
-1. Compose the existing Hue mDNS worker and discovery actor into the local
-   controller so discoveries are visible through the same Home Assistant HTTP
-   runtime.
-2. Migrate Hue pairing and then the remaining pairing/snapshot services so they
+1. Migrate Hue pairing and then the remaining pairing/snapshot services so they
    transact against the same live revision instead of restoring private runtime
    copies.
-3. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
+2. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
    service adapter against the controller authority.
-4. Add provider-neutral model tool declarations/results, authenticated host
+3. Add provider-neutral model tool declarations/results, authenticated host
    tool dispatch, and production Chief daemon injection.
-5. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+4. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those
