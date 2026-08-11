@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.90.0 — 2026-08-11 — array value copies
+
+Array `value` actuals now receive a fresh typed element copy while retaining
+the existing handle, lower-bound, and stride call ABI. Callee writes no longer
+mutate caller storage; name-mode arrays continue to share their caller's
+descriptor and storage. The copy loop uses the shared bounds-checked E5 array
+operations and works for every supported element type and rank.
+
 ## 0.89.0 — 2026-08-11 — split formal specifications
 
 Complementary report-style specification parts now merge before procedure
