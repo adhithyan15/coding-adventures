@@ -70,7 +70,7 @@ describe("book chapter modality projection", () => {
     const ledgers = loadTrackChapters(root);
     // +1: Tamil chapter 39. Its opening renders "first 3 of 4 lessons", because the
     // writing lesson is last in the chapter — the placement rule TA-W19 established.
-    expect(ledgers.flatMap((track) => track.chapters)).toHaveLength(537); // +4: HL-C98
+    expect(ledgers.flatMap((track) => track.chapters)).toHaveLength(542); // +4: HL-C98
     for (const track of ledgers) {
       const path = `${track.language}/book/chapter-modalities.tex`;
       const tex = outputs.get(path);

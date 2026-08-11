@@ -7296,24 +7296,91 @@
     {
       "language": "spanish",
       "chapter": 62,
-      "sourceHash": "fnv1a64:6876d6fbb9aef135",
+      "sourceHash": "fnv1a64:f8e31b54b3640f3f",
       "lessonIds": [
-        "ES-C39-traer",
-        "ES-C39-conseguir",
-        "ES-C39-jugar",
-        "ES-C39-conocer"
+        "ES-C39-traer"
       ],
-      "voiceLessons": 4,
-      "drivablePrefix": 4,
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
       "text": "spanish/narration/ch62.txt",
       "json": "spanish/narration/ch62.json",
-      "textHash": "fnv1a64:17c3dc5df55731ef",
-      "jsonHash": "fnv1a64:2d46316dfa7dd284"
+      "textHash": "fnv1a64:cd1b8a5094f64c0e",
+      "jsonHash": "fnv1a64:c7e98bd49df110a6"
     },
     {
       "language": "spanish",
       "chapter": 63,
-      "sourceHash": "fnv1a64:aeb3c99eeed35055",
+      "sourceHash": "fnv1a64:b8989873efd9e2ba",
+      "lessonIds": [
+        "ES-C39-conseguir"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch63.txt",
+      "json": "spanish/narration/ch63.json",
+      "textHash": "fnv1a64:63f9bf80ceabfb3d",
+      "jsonHash": "fnv1a64:7340041e68c6c414"
+    },
+    {
+      "language": "spanish",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:3bae35f0d7a17284",
+      "lessonIds": [
+        "ES-C39-jugar"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch64.txt",
+      "json": "spanish/narration/ch64.json",
+      "textHash": "fnv1a64:7ebf7f3a5ec059a0",
+      "jsonHash": "fnv1a64:6b576f5d76ebbfe1"
+    },
+    {
+      "language": "spanish",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:ff8f4bd958b3800a",
+      "lessonIds": [
+        "ES-C39-conocer"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch65.txt",
+      "json": "spanish/narration/ch65.json",
+      "textHash": "fnv1a64:165f23caf6201600",
+      "jsonHash": "fnv1a64:55557d307d9d91c2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:226ce3062378ae51",
+      "lessonIds": [
+        "ES-C39-repaso-cambios"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch66.txt",
+      "json": "spanish/narration/ch66.json",
+      "textHash": "fnv1a64:7072f52155a22ba3",
+      "jsonHash": "fnv1a64:6a21dd07dcdd91a7"
+    },
+    {
+      "language": "spanish",
+      "chapter": 67,
+      "sourceHash": "fnv1a64:9b96b130b41e9ccd",
+      "lessonIds": [
+        "ES-C39-sintesis-elegir"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch67.txt",
+      "json": "spanish/narration/ch67.json",
+      "textHash": "fnv1a64:8a68e7668aa7418d",
+      "jsonHash": "fnv1a64:d9d628c7d3519506"
+    },
+    {
+      "language": "spanish",
+      "chapter": 68,
+      "sourceHash": "fnv1a64:3b0dcb605f0dd547",
       "lessonIds": [
         "ES-C40-esperar",
         "ES-C40-contestar",
@@ -7321,15 +7388,15 @@
       ],
       "voiceLessons": 3,
       "drivablePrefix": 3,
-      "text": "spanish/narration/ch63.txt",
-      "json": "spanish/narration/ch63.json",
-      "textHash": "fnv1a64:c6a585cb06932f37",
-      "jsonHash": "fnv1a64:044ba949ad22d442"
+      "text": "spanish/narration/ch68.txt",
+      "json": "spanish/narration/ch68.json",
+      "textHash": "fnv1a64:09e231989395de60",
+      "jsonHash": "fnv1a64:dae15f828c2e8e8b"
     },
     {
       "language": "spanish",
-      "chapter": 64,
-      "sourceHash": "fnv1a64:ddf9b135dcaad948",
+      "chapter": 69,
+      "sourceHash": "fnv1a64:be49a84b8538f7a2",
       "lessonIds": [
         "ES-C41-creer",
         "ES-C41-asi-que",
@@ -7338,10 +7405,10 @@
       ],
       "voiceLessons": 4,
       "drivablePrefix": 4,
-      "text": "spanish/narration/ch64.txt",
-      "json": "spanish/narration/ch64.json",
-      "textHash": "fnv1a64:498b8ac01185d6fd",
-      "jsonHash": "fnv1a64:31af2ff98d8dd52a"
+      "text": "spanish/narration/ch69.txt",
+      "json": "spanish/narration/ch69.json",
+      "textHash": "fnv1a64:b9052e3418bd1e4c",
+      "jsonHash": "fnv1a64:44a3f5818c3a0674"
     },
     {
       "language": "tamil",

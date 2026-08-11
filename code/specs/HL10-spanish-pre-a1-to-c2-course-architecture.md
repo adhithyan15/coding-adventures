@@ -451,9 +451,9 @@ reader and still pay. One verb, one origin, one set of forms.
 
 **Measured 2026-08-10:** 12 of Spanish's 19 verb-teaching chapters break this —
 chapters 47, 48 and 52 each taught **four** verbs. That burn-down is HL-C99;
-its first two slices split chapters 47 and 53 into six apiece (one verb each,
-then a review and a synthesis chapter), leaving **10 of 22** verb chapters
-still crowded.
+its first three slices split chapters 47, 53 and 62 into six apiece (one verb
+each, then a review and a synthesis chapter). **No Spanish chapter now teaches
+four verbs**; 9 of 22 remain crowded, none with more than three.
 
 > **Where a review chapter earns its keep.** In the chapter-53 split, `gustar`
 > sits *after* the review rather than beside the three ordinary verbs. The

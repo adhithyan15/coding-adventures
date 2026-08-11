@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Spanish runs 1..69 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 62 split into six, so
+  old Spanish chapters 63–64 shifted to 68–69.
+- Eager bundle 480,127 / 500,000 bytes.
+
 ### Added — cited Arabic independent-daad ductus (HL-C09AT)
 
 - Render **ض** in four evidence-aligned frames: its clockwise oval, joined
