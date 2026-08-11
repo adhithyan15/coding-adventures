@@ -230,6 +230,40 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
 
+    let (audit_list_status, audit_list_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_update\toutcome=failed",
+    );
+    assert!(
+        audit_list_status.success(),
+        "audit list failed: {audit_list_transcript}"
+    );
+    assert!(audit_list_transcript.contains("action=audit_read\toutcome=succeeded"));
+    assert!(audit_list_transcript.contains("action=vault_verify\toutcome=succeeded"));
+    assert_transcript_excludes_secrets(&audit_list_transcript);
+    let failed_edit_trace = extract_audit_trace(&audit_list_transcript, "item_update");
+
+    let (audit_show_status, audit_show_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "show", &failed_edit_trace],
+        b"action=item_update\toutcome=failed",
+    );
+    assert!(
+        audit_show_status.success(),
+        "audit show failed: {audit_show_transcript}"
+    );
+    assert!(audit_show_transcript.contains(&failed_edit_trace));
+    assert_transcript_excludes_secrets(&audit_show_transcript);
+
+    let (final_audit_status, final_audit_transcript) =
+        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=5");
+    assert!(
+        final_audit_status.success(),
+        "final audit verification failed: {final_audit_transcript}"
+    );
+    assert_transcript_excludes_secrets(&final_audit_transcript);
+
     assert_tree_excludes(&home.0, PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
@@ -373,6 +407,16 @@ fn extract_history_revision(transcript: &str, title: &str) -> String {
         .find(|line| line.contains("\tlive\t") && line.ends_with(&format!("\"{title}\"")))
         .and_then(|line| line.split('\t').next())
         .expect("canonical live history revision")
+        .to_string()
+}
+
+fn extract_audit_trace(transcript: &str, action: &str) -> String {
+    transcript
+        .lines()
+        .map(|line| line.trim_end_matches('\r'))
+        .find(|line| line.contains(&format!("\taction={action}\t")))
+        .and_then(|line| line.split('\t').next())
+        .expect("canonical audit trace")
         .to_string()
 }
 

@@ -6,13 +6,14 @@
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
-    AddItemRandomnessV1, ApplicationError, AuditVerificationV1, AuditedAccessRandomnessV1,
-    BootstrapLocator, DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness,
-    ItemHistoryViewV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1,
-    ReplaceItemRandomnessV1, RestoreItemRandomnessV1, V1ApplicationRepositoryFactory,
-    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
-    AUDITED_ACCESS_RANDOM_BYTES, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    GENERATION_ZERO_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    AddItemRandomnessV1, ApplicationError, AuditEventViewV1, AuditVerificationV1,
+    AuditedAccessRandomnessV1, BootstrapLocator, DeleteItemRandomnessV1, GenerationZeroPolicyV1,
+    GenerationZeroRandomness, ItemHistoryViewV1, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1, LoginEditInputV1, ReplaceItemRandomnessV1, RestoreItemRandomnessV1,
+    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
+    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
+    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, GENERATION_ZERO_RANDOM_BYTES,
+    REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -42,7 +43,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm item add login\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -259,6 +260,10 @@ enum Command {
     },
     AuditEnable,
     AuditVerify,
+    AuditList,
+    AuditShow {
+        trace_id: OperationId,
+    },
     Doctor {
         unlock: bool,
     },
@@ -316,6 +321,11 @@ fn parse_audit(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [action] if action == "enable" => Ok(Command::AuditEnable),
         [action] if action == "verify" => Ok(Command::AuditVerify),
+        [action] if action == "list" => Ok(Command::AuditList),
+        [action, trace] if action == "show" => Ok(Command::AuditShow {
+            trace_id: OperationId::from_user_string(trace)
+                .map_err(|_| CliFailure::InvalidCommand)?,
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -398,6 +408,8 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::Status { json } => status(prepared.paths(), &writer, json),
         Command::AuditEnable => audit_enable(host, prepared.paths(), &writer),
         Command::AuditVerify => audit_verify(host, prepared.paths(), &writer),
+        Command::AuditList => audit_list(host, prepared.paths(), &writer),
+        Command::AuditShow { trace_id } => audit_show(host, prepared.paths(), &writer, trace_id),
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
         Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
         Command::ItemEdit { item_id } => item_edit_login(host, prepared.paths(), &writer, item_id),
@@ -1071,6 +1083,47 @@ fn audit_verify(
     Ok(render_audit(report))
 }
 
+fn audit_list(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+) -> Result<CliOutput, CliFailure> {
+    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let events = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_audit_history(
+            DEFAULT_AUDIT_HISTORY_LIMIT,
+            wall_time_ms,
+            randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(render_audit_events(events))
+}
+
+fn audit_show(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    trace_id: OperationId,
+) -> Result<CliOutput, CliFailure> {
+    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let event = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_audit_event(trace_id, wall_time_ms, randomness, &application_store)
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?
+        .ok_or(CliFailure::NotFound)?;
+    Ok(render_audit_events(vec![event]))
+}
+
 fn doctor(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -1150,6 +1203,35 @@ fn render_audit(report: AuditVerificationV1) -> CliOutput {
         report.item_count(),
         report.audit_event_count(),
     ))
+}
+
+fn render_audit_events(events: Vec<AuditEventViewV1>) -> CliOutput {
+    let mut output = String::new();
+    for event in events {
+        output.push_str(&event.trace_id().to_user_string());
+        output.push_str("\tcounter=");
+        output.push_str(&event.device_counter().to_string());
+        output.push_str("\taction=");
+        output.push_str(event.action().label());
+        output.push_str("\toutcome=");
+        output.push_str(event.outcome().label());
+        output.push_str("\ttime=");
+        output.push_str(&event.timestamp_ms().to_string());
+        if let Some(item_id) = event.item_id() {
+            output.push_str("\titem=");
+            output.push_str(&item_id.to_user_string());
+        }
+        if let Some(revision_id) = event.selected_revision() {
+            output.push_str("\tselected=");
+            output.push_str(&revision_id.to_user_string());
+        }
+        if let Some(revision_id) = event.result_revision() {
+            output.push_str("\tresult=");
+            output.push_str(&revision_id.to_user_string());
+        }
+        output.push('\n');
+    }
+    CliOutput::success(output)
 }
 
 fn render_status_label(label: &str, json: bool) -> CliOutput {
@@ -1438,6 +1520,7 @@ mod tests {
         paths: LocalVaultPaths,
         secrets: Mutex<VecDeque<Vec<u8>>>,
         texts: Mutex<VecDeque<String>>,
+        entropy_seed: u8,
     }
 
     impl TestHost {
@@ -1446,6 +1529,20 @@ mod tests {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(VecDeque::new()),
+                entropy_seed: 1,
+            }
+        }
+
+        fn with_entropy_seed(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            entropy_seed: u8,
+        ) -> Self {
+            Self {
+                paths,
+                secrets: Mutex::new(secrets.into_iter().collect()),
+                texts: Mutex::new(VecDeque::new()),
+                entropy_seed,
             }
         }
 
@@ -1458,6 +1555,7 @@ mod tests {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(texts.into_iter().collect()),
+                entropy_seed: 1,
             }
         }
 
@@ -1514,7 +1612,9 @@ mod tests {
 
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
             for (index, byte) in output.iter_mut().enumerate() {
-                *byte = u8::try_from(index % 251).unwrap().wrapping_add(1);
+                *byte = u8::try_from(index % 251)
+                    .unwrap()
+                    .wrapping_add(self.entropy_seed);
             }
             Ok(())
         }
@@ -1554,6 +1654,9 @@ mod tests {
             vec!["audit"],
             vec!["audit", "enable", "extra"],
             vec!["audit", "verify", "extra"],
+            vec!["audit", "list", "extra"],
+            vec!["audit", "show", "not-a-trace"],
+            vec!["audit", "show", "not-a-trace", "extra"],
             vec!["item", "add", "login", "--password", "secret"],
             vec!["item", "edit", "not-an-item-id"],
             vec!["item", "delete", "not-an-item-id"],
@@ -1598,6 +1701,45 @@ mod tests {
     }
 
     #[test]
+    fn audit_history_is_trace_selectable_and_logs_missing_lookups() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"traceable audit passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let list_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 2);
+        let listed = run(["audit", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        let rows = listed.stdout().lines().collect::<Vec<_>>();
+        assert_eq!(rows.len(), 2, "{listed:?}");
+        assert!(rows[0].contains("\tcounter=3\taction=audit_read\toutcome=succeeded\t"));
+        assert!(rows[1].contains("\tcounter=2\taction=audit_epoch_start\toutcome=succeeded\t"));
+        let listed_trace = rows[0].split('\t').next().unwrap();
+        assert!(OperationId::from_user_string(listed_trace).is_ok());
+        assert!(!listed.stdout().contains("traceable audit passphrase"));
+        assert!(!listed.stdout().contains("personal"));
+
+        let show_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 3);
+        let shown = run(["audit", "show", listed_trace], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(shown.stdout(), format!("{}\n", rows[0]));
+
+        let missing_trace = OperationId::new([0xff; 32]).to_user_string();
+        let missing_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 4);
+        let missing = run(["audit", "show", missing_trace.as_str()], &missing_host);
+        assert_eq!(missing.exit_code(), ExitCode::NotFound, "{missing:?}");
+        assert!(missing.stdout().is_empty());
+        assert_eq!(missing.stderr(), "vault-pm: not found\n");
+
+        let verify_host = TestHost::with_entropy_seed(paths, [passphrase], 5);
+        let verified = run(["audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+        assert!(verified.stdout().contains("audit_events=4"), "{verified:?}");
+    }
+
+    #[test]
     fn item_identity_parsers_require_the_canonical_item_id() {
         let item_id = ItemId::new([0x5a; 16]);
         let canonical = item_id.to_user_string();
@@ -1637,6 +1779,20 @@ mod tests {
                 canonical.as_str(),
                 revision.to_lowercase().as_str(),
             ]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
+    fn audit_show_parser_requires_the_canonical_trace_id() {
+        let trace_id = OperationId::new([0x7c; 32]);
+        let canonical = trace_id.to_user_string();
+        assert_eq!(
+            parse(["audit", "show", canonical.as_str()]),
+            Ok(Command::AuditShow { trace_id })
+        );
+        assert_eq!(
+            parse(["audit", "show", canonical.to_lowercase().as_str()]),
             Err(CliFailure::InvalidCommand)
         );
     }
@@ -2217,6 +2373,29 @@ mod tests {
 
         let audit_host = TestHost::new(paths, [passphrase]);
         let output = run(["audit", "verify"], &audit_host);
+        assert_eq!(output.exit_code(), ExitCode::Integrity, "{output:?}");
+        assert!(output.stdout().is_empty());
+        assert_eq!(output.stderr(), "vault-pm: integrity check failed\n");
+    }
+
+    #[test]
+    fn audit_history_fails_closed_without_output_on_repository_tampering() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audit history tamper passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let object = first_storage_record_with_body_magic(paths.object_root(), b"VPO1")
+            .expect("encrypted repository object after audit activation");
+        let mut bytes = fs::read(&object).unwrap();
+        let last = bytes.last_mut().expect("non-empty storage record");
+        *last ^= 0x01;
+        fs::write(object, bytes).unwrap();
+
+        let audit_host = TestHost::new(paths, [passphrase]);
+        let output = run(["audit", "list"], &audit_host);
         assert_eq!(output.exit_code(), ExitCode::Integrity, "{output:?}");
         assert!(output.stdout().is_empty());
         assert_eq!(output.stderr(), "vault-pm: integrity check failed\n");

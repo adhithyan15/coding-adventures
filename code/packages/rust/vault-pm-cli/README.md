@@ -3,14 +3,14 @@
 This crate is the first real composition layer for the local-first password
 manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit enable` and
-`audit verify`, and opt-in full `doctor --unlock` workflows. It now also owns the first usable item
-vertical: authenticated login creation plus durable redacted list/show. The
-same one-shot boundary now supports revision-safe login replacement. The
+`audit verify`, explicit `audit list`/`audit show TRACE`, and opt-in full
+`doctor --unlock` workflows. It now also owns the first usable item vertical:
+authenticated login creation plus durable redacted list/show. The same
+one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
-same selectors now support reversible `item delete ITEM` and
-`history restore ITEM REVISION`. The executable is a thin caller of this
-package.
+same selectors now support reversible `item delete ITEM` and `history restore
+ITEM REVISION`. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -27,14 +27,14 @@ publishing the configuration that makes the random locator discoverable. A
 restart with a prepared journal collects the existing passphrase and resumes
 the exact journal without generating new identities or ciphertext.
 
-Status and plain doctor do not prompt or unlock. `audit enable`, `audit verify`, and
-`doctor --unlock` collect the existing passphrase through the controlling
-terminal, open the storage-neutral repository for one read-only action, and
-synchronously drop the live session before rendering. Their projections contain
-only closed labels or aggregate verification counts, including the number of
-fully authenticated encrypted operation events (zero for pre-audit vaults),
-with no paths, locators, providers, identities, or cryptographic details. No command accepts a
-passphrase through argv, stdin, environment, configuration, or URL.
+Status and plain doctor do not prompt or unlock. Authenticated audit and doctor
+commands collect the existing passphrase through the controlling terminal,
+open the storage-neutral repository for one action, and synchronously drop the
+live session before rendering. Verification and diagnostic projections contain
+only closed labels or aggregate counts, including the number of fully
+authenticated encrypted operation events (zero for pre-audit vaults), with no
+paths, locators, providers, identities, or cryptographic details. No command
+accepts a passphrase through argv, stdin, environment, configuration, or URL.
 
 `audit enable` is the explicit one-time boundary between a vault's declared
 unlogged historical prefix and its signed operation-event epoch. It consumes
@@ -44,11 +44,22 @@ state are durable. Repeating the command is a no-write success. Once enabled,
 the epoch cannot be disabled or silently bypassed by an authenticated item or
 verification command.
 
+`audit list` is the explicit authenticated exception to default identity
+redaction. It publishes its own successful `AuditRead`, fully verifies the
+newly advanced signed chain, and renders at most 100 newest-first rows. Each row
+contains the canonical trace, device-local counter, closed action/outcome,
+advisory time, and only the item/revision selectors structurally present in the
+event. `audit show TRACE` strictly parses one canonical trace, records another
+`AuditRead`, and returns exactly the matching row or a durable `not found`.
+Neither command emits vault/device identities, heads, signatures, storage
+details, record metadata, or secret data.
+
 When an audit epoch already exists, `audit verify`, `doctor --unlock`, `item
 list`, `item show`, and `history list` consume the unlocked session through the
 application's signed publish-before-release boundary. Output is constructed
 only after the event and next owner state are durable. Pre-audit vaults retain
-their prior read behavior until the all-command migration cutover is exposed.
+their backward-compatible ordinary read behavior until explicit `audit enable`;
+the audit-history surface itself requires that epoch.
 
 `item add login` unlocks once, collects bounded fields from the controlling
 terminal, obtains fresh mutation and metadata identities from OS entropy, and

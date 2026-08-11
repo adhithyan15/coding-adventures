@@ -12,6 +12,8 @@ vault-pm init [--vault NAME] [--storage NAME]
 vault-pm status [--json]
 vault-pm audit enable
 vault-pm audit verify
+vault-pm audit list
+vault-pm audit show TRACE
 vault-pm doctor [--unlock]
 vault-pm item add login
 vault-pm item edit ITEM
@@ -30,8 +32,10 @@ echoed, restart the process for durable item add/edit/list/show, inject decoy
 bytes through stdin, verify redacted canonical history across another fresh
 process, delete to a causal tombstone, restore an exact live ancestor into a
 new revision, activate the signed audit epoch, force an invalid edit prompt in
-a later process, verify that failure event from another process, and inspect the
-isolated filesystem tree for plaintext secret bytes.
+a later process, verify that failure event from another process, inspect the
+same verified history in newest-first order, select the failed edit by its
+canonical trace in another process, verify both history accesses became
+durable, and inspect the isolated filesystem tree for plaintext secret bytes.
 
 ## Verification
 

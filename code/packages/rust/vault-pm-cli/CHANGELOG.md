@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added authenticated `audit list` and canonical `audit show TRACE`; both
+  publish one durable `AuditRead` before rendering verified trace-aware rows.
+- Added closed canonical trace parsing, bounded newest-first output, audited
+  missing-trace results, tamper rejection, and ambiguous-provider recovery
+  coverage for the explicit audit surface.
 - Exposed idempotent authenticated `audit enable`, installing the one durable
   `AuditEpochStart` migration event before any active-epoch command can run.
 - Route `item edit ITEM` through an opaque application-owned preparation so

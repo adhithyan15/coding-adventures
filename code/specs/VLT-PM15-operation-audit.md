@@ -252,6 +252,21 @@ An audit-history command logs its own access first and then reads from the new
 active state, so the returned view may include the access event that authorized
 that view. This is one event, not recursive self-auditing.
 
+`audit list` requires an active audit epoch and renders at most 100 verified
+events newest first. `audit show TRACE` requires one exact canonical trace and
+returns one matching event; an absent trace still records the successful
+history access before returning the closed not-found exit. Both commands use
+one line grammar:
+
+```text
+TRACE\tcounter=N\taction=LABEL\toutcome=LABEL\ttime=MS[\titem=ITEM][\tselected=REVISION][\tresult=REVISION]
+```
+
+Optional selectors appear only when structurally present in the signed event.
+This explicit authenticated surface may expose those canonical selectors, but
+never renders vault/device identities, repository heads, signatures, provider
+details, record metadata, or secret data.
+
 ## 11. Delivery slices
 
 The security track is deliberately split into reviewable PRs:

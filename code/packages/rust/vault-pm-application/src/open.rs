@@ -3307,7 +3307,7 @@ mod tests {
     }
 
     #[test]
-    fn audited_list_withholds_result_during_ambiguous_provider_failure() {
+    fn audited_list_and_history_withhold_results_during_ambiguous_provider_failure() {
         let passphrase = b"active passphrase";
         let prepared = prepare_generation_zero(
             Zeroizing::new(passphrase.to_vec()),
@@ -3399,6 +3399,61 @@ mod tests {
         assert_eq!(report.commit_count(), 3);
         assert_eq!(report.catalog_count(), 1);
         assert_eq!(report.audit_event_count(), 2);
+        assert_eq!(backend.pending_faults().unwrap(), 0);
+        drop(reopened);
+
+        let session = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        backend
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::CommitPutThenNetwork,
+            })
+            .unwrap();
+        assert!(matches!(
+            session.audited_audit_history(100, 711, audited_access_randomness(0xb4), &local),
+            Err(ApplicationError::StorageUnavailable)
+        ));
+        assert!(matches!(
+            LocalVaultStateV1::decode(&local.0.lock().unwrap().clone().unwrap()).unwrap(),
+            LocalVaultStateV1::PendingPublication { .. }
+        ));
+
+        recover_pending_publication(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let reopened = open_active_vault(
+            Zeroizing::new(passphrase.to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let report = reopened.audit_verify().unwrap();
+        assert_eq!(report.commit_count(), 4);
+        assert_eq!(report.catalog_count(), 1);
+        assert_eq!(report.audit_event_count(), 3);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::AuditRead,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
         assert_eq!(backend.pending_faults().unwrap(), 0);
     }
 

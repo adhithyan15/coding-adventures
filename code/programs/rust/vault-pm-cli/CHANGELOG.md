@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed authenticated `audit list` and `audit show TRACE`, and extended the
+  real-process PTY suite through trace selection plus later verification that
+  both audit-history accesses became durable.
 - Exposed `audit enable` and extended the real-process PTY suite through audit
   activation, an invalid edit prompt, and later verification of its event.
 - Exposed reversible item delete/restore and extended the real-process PTY
