@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.32.0
+
+- Decode Mermaid 11.16.1 YAML/JSON-schema escapes in quoted sequence participant configuration values.
+
 ## 0.31.0
 
 - Preserve commas inside quoted sequence participant configuration aliases.
