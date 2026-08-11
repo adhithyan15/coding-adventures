@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C38-imperfecto
 spine_node: SPINE-NARRATE-EVENTS
 sequence: 1790
-chapter: 68
+chapter: 70
 type: word
 headword: llovía / llovió
 gloss: the same rain in two tenses — how a story uses the imperfect for the scene and the preterite for the events

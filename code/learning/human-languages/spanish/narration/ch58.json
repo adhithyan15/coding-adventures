@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 58,
-  "title": "Review --- Four Verbs of the Mind",
+  "title": "Leer — Reading Is Gathering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:73b5a46b6e044598",
+  "sourceHash": "fnv1a64:6b0f7c81467e38e6",
   "lessons": [
     {
-      "id": "ES-C34-repaso-mente",
-      "sequence": 1643,
-      "title": "Review — four verbs of the mind",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
+      "id": "ES-C34-leer",
+      "sequence": 1630,
+      "title": "leer — \"to read\", and before that, \"to gather\"",
+      "headword": "leer",
+      "romanization": "leer",
+      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ac5ab6835bd4ca9",
+      "sourceHash": "fnv1a64:461595468e658b08",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,90 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
+              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the thing none of the four chapters could show you on its own."
+              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
             },
             {
               "kind": "speech",
-              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
-            },
-            {
-              "kind": "speech",
-              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
-            },
-            {
-              "kind": "speech",
-              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
-            },
-            {
-              "kind": "speech",
-              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
-            },
-            {
-              "kind": "speech",
-              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
-            },
-            {
-              "kind": "speech",
-              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
-            },
-            {
-              "kind": "speech",
-              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
+              "text": "leo is likewise two beats, LE-o."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart: leer",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
+              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
+            },
+            {
+              "kind": "speech",
+              "text": "That gathering root runs through an enormous amount of English:"
+            },
+            {
+              "kind": "speech",
+              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
+            },
+            {
+              "kind": "speech",
+              "text": "diligent and elegant, both of which meant \"picking carefully\"."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a plain -er verb, with a mouthful",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "said"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: leo. said: LE-o.",
+                "person: tú. form: lees. said: LE-es.",
+                "person: él/ella/usted. form: lee. said: LE-e.",
+                "person: nosotros. form: leemos. said: le-E-mos.",
+                "person: ellos/ustedes. form: leen. said: LE-en."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,87 +131,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four verbs in order — to read, to think, to understand, to write",
+              "instruction": "\"leer\" — le-ER, two beats",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
+              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "for each one, the body word underneath it",
+              "instruction": "\"Leo un libro\" — I read a book",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: for each one, the body word underneath it]"
+              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-weigh",
-              "prompt": "Which of the four verbs originally meant to weigh?",
-              "assesses": [
-                "ES-ETYMON-PENSAR-02"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "pensar",
-                "pensar (to think)",
-                "think"
-              ],
-              "feedback": {
-                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
-                "incorrect": "pensar, from pensare, to weigh."
-              }
+              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-gather",
-              "prompt": "Which one meant to gather or pick out?",
-              "assesses": [
-                "ES-ETYMON-LEER-06"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "leer",
-                "leer (to read)",
-                "read"
-              ],
-              "feedback": {
-                "correct": "Yes — legere, the root inside collect, select and intellect.",
-                "incorrect": "leer, from legere, to gather."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C34-repaso-mente-scratch",
-              "prompt": "And which one meant to scratch?",
-              "assesses": [
-                "ES-ETYMON-ESCRIBIR-08"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "escribir",
-                "escribir (to write)",
-                "write"
-              ],
-              "feedback": {
-                "correct": "Yes — scribere. Writing was scratching a surface.",
-                "incorrect": "escribir, from scribere, to scratch."
-              }
+              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
+              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
             }
           ]
         }

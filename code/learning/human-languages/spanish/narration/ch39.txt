@@ -1,300 +1,324 @@
-Spanish, chapter 39: The Subjunctive --- the Mood of the Not-Yet-Real.
-9 lessons. All 9 can be done entirely by ear.
+Spanish, chapter 39: The Imperfect --- the Past That Kept Going.
+8 lessons. All 8 can be done entirely by ear.
 
 
-Lesson 1 of 9.
-Hablas español, Quiero que hables español — fact or wanted event?
+Lesson 1 of 8.
+hablaba — let a past action stay open.
 
 Warm-up.
 [pause 2 seconds]
-Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+Hablé español presents speaking as a completed past event. A different past, the imperfect, can leave the action open: Hablaba español — “I was speaking Spanish” or “I used to speak Spanish.” The sentence does not say where the action ended.
 
-Grammar Lens: count the doers.
-[a table of 2 rows, read aloud]
-meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
-meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
-With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
+Grammar Lens: three familiar persons.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: hablaba.
+person: tú. open or habitual past: hablabas.
+person: él / ella / usted. open or habitual past: hablaba.
+Say hablaba, hablabas, hablaba. The first and third forms are identical; the surrounding conversation or an explicit person tells you who is speaking. Plural persons wait.
+
+The ending, taken apart.
+Spanish -aba continues the Latin imperfect family in -ābam. Historical sound change reshaped the complete Latin forms, but the b remains a useful audible bridge between -ābam and Spanish -aba.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Hablas español.”]
+[your turn — say: “hablaba, hablabas, hablaba”]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero hablar español.”]
+[your turn — say: “Hablé español. Hablaba español.”]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero que hables español.”]
+[your turn — say: “-ābam and -aba share b”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Which form asserts that one friend speaks: hablas or hables?
-[question — say your answer, then pause 8 seconds]
-Say 'I want to speak Spanish' in Spanish.
 [question — say your answer, then pause 9 seconds]
-Say 'I want you to speak Spanish' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.
-
-
-Lesson 2 of 9.
-hable, hables, hable — the singular -ar row.
-
-Warm-up.
-[pause 2 seconds]
-You already used hables for one friend. Today add only the other two singular slots:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: hable.
-person: tú. present subjunctive: hables.
-person: él / ella / usted. present subjunctive: hable.
-Plural forms wait. Say the small row: hable, hables, hable.
-
-Grammar Lens: the yo stem, then a vowel swap.
-Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
-
-The name, taken apart.
-Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
-
-Guided Practice.
-[pause 1 second]
-Build each answer only from the learned singular row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which present form gives the stem for regular hable: hablo or habla?
+Give the learned singular imperfect forms of hablar: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 7 seconds]
-What joining idea sits inside the Latin source of subjuntivo?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
-
-
-Lesson 3 of 9.
-coma, comas, coma — let -er cross to a.
-
-Warm-up.
-[pause 2 seconds]
-Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: coma.
-person: tú. present subjunctive: comas.
-person: él / ella / usted. present subjunctive: coma.
-Say only the singular row: coma, comas, coma.
-
-Grammar Lens: meaning before machinery.
-Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
-
-Guided Practice.
-[pause 1 second]
-Keep comer inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
+Which form leaves 'I spoke' open or habitual: hablé or hablaba?
 [question — say your answer, then pause 6 seconds]
-Which form belongs after quiero que for one friend: comes or comas?
-[question — say your answer, then pause 8 seconds]
-Say 'I want you to eat' to one friend.
+Which consonant links Latin -ābam with Spanish -aba?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
+Give the three learned forms. (Hablaba, hablabas, hablaba.) What can the imperfect do? (Leave a past action ongoing or habitual.) Which Latin family stands behind -aba? (-ābam.) Next: build the same gentle frame with comer.
 
 
-Lesson 4 of 9.
-viva, vivas, viva — -ir joins -er.
+Lesson 2 of 8.
+comía — hear both vowels.
 
 Warm-up.
 [pause 2 seconds]
-Start from vivo, remove -o, then add the same a endings you just used with comer:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: viva.
-person: tú. present subjunctive: vivas.
-person: él / ella / usted. present subjunctive: viva.
-Regular -er and -ir match in this singular row:
-comer: coma, comas, coma.
-vivir: viva, vivas, viva.
-Plural differences wait.
+Comí presents eating as completed. Comía leaves it open or habitual: “I was eating” or “I used to eat.” One accent separates the two forms in writing and in sound.
 
-Grammar Lens: meaning in a known frame.
-Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
+Grammar Lens: the singular -er row.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: comía.
+person: tú. open or habitual past: comías.
+person: él / ella / usted. open or habitual past: comía.
+Say comía, comías, comía. As with hablaba, the first and third forms match. Plural persons wait.
+
+Grammar Lens: co-mí-a.
+The accent in -ía keeps i and a in separate syllables: co-mí-a, three beats. It appears in every form learned here. Compare final stress in comí with the middle stress and extra syllable in comía.
+
+The ending, taken apart.
+The -er imperfect continues a Romance reshaping of Latin -ēbam material. Among the changes, an intervocalic b was lost; later Spanish spelling marks the stressed í that keeps i-a apart. This is a layered history, not a single instruction to delete one letter.
 
 Guided Practice.
 [pause 1 second]
-Keep vivir inside the learned singular frame.
+[your turn — say: “comía, comías, comía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Comí. Comía.”]
+[pause 8 seconds for the answer]
+[your turn — say: “co-mí-a”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
+Give the learned singular imperfect forms of comer: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 7 seconds]
-Which two regular verb families share -a, -as, -a here?
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to live in Madrid' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)
-
-
-Lesson 5 of 9.
-quiera, quieras, quiera — keep the change you know.
-
-Warm-up.
-[pause 2 seconds]
-Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: quiera.
-person: tú. present subjunctive: quieras.
-person: él / ella / usted. present subjunctive: quiera.
-Say only this bounded singular row: quiera, quieras, quiera.
-
-Grammar Lens: one known verb, one inherited stem.
-You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
-
-Guided Practice.
-[pause 1 second]
-Carry only the known quier- stem into this row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem quier-?
+Which form means 'I was eating': comí or comía?
 [question — say your answer, then pause 7 seconds]
-Complete 'Quiero que ___ hablar español' for one friend.
+Write comía with syllable breaks.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
+Give the three learned forms. (Comía, comías, comía.) What does the accent do? (Keeps i and a apart.) Which Latin family lies behind the ending? (-ēbam, reshaped through Romance.) Next: test whether vivir can reuse this row.
 
 
-Lesson 6 of 9.
-pueda, puedas, pueda — one more known stem change.
+Lesson 3 of 8.
+vivía — reuse the complete -er row.
 
 Warm-up.
 [pause 2 seconds]
-Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
+Chapter 15 let comer and vivir share one completed-past row. They converge again here. Replace com- in comía, comías, comía with viv-.
+
+Grammar Lens: one row reused.
 [a table of 3 rows, read aloud]
-person: yo. present subjunctive: pueda.
-person: tú. present subjunctive: puedas.
-person: él / ella / usted. present subjunctive: pueda.
-Say pueda, puedas, pueda. No other poder forms enter today.
+person: yo. comer: comía. vivir: vivía.
+person: tú. comer: comías. vivir: vivías.
+person: él / ella / usted. comer: comía. vivir: vivía.
+Say vivía, vivías, vivía. -er and -ir share -ía, -ías, -ía. The accent still keeps i-a apart. Plural persons wait.
 
-Grammar Lens: use it immediately.
-Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
+Grammar Lens: one known contrast.
+Viví en Madrid. — presents living there as a completed stretch.
+Vivía en Madrid. — puts us inside that past stretch or treats it as background.
+Both are past. The speaker chooses how to frame the event.
+
+The verb, taken apart.
+Vivir continues Latin vīvere. Its infinitive belongs to the Spanish -ir class, but the imperfect has converged with -er. That shared row is a reliable fact about these learned forms, not a claim that the two conjugations are identical everywhere.
 
 Guided Practice.
 [pause 1 second]
-Carry only the known pued- stem into this row.
+[your turn — say: “vivía, vivías, vivía”]
+[pause 8 seconds for the answer]
+[your turn — say: “comía and vivía share -ía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viví en Madrid. Vivía en Madrid.”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem pued-?
-[question — say your answer, then pause 10 seconds]
-Say 'I want you to be able to speak Spanish' to one friend.
+Give the learned singular imperfect forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which two infinitive classes share the learned imperfect endings -ía, -ías, -ía?
+[question — say your answer, then pause 7 seconds]
+Say 'I was living in Madrid' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
+Give the three vivir forms. (Vivía, vivías, vivía.) Which class shares them? (-er.) What contrast can viví / vivía make? (Completed stretch versus an open or background past.) Next: learn ver before asking it to enter this tense.
 
 
-Lesson 7 of 9.
-haga, hagas, haga — hago lends its stem.
+Lesson 4 of 8.
+ver — learn the verb before its past.
 
 Warm-up.
 [pause 2 seconds]
-The known present yo form is hago. Remove -o and keep hag-:
+Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver.
+
+Grammar Lens: three present forms.
 [a table of 3 rows, read aloud]
-person: yo. present subjunctive: haga.
-person: tú. present subjunctive: hagas.
-person: él / ella / usted. present subjunctive: haga.
-Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
+person: yo. present: veo.
+person: tú. present: ves.
+person: él / ella / usted. present: ve.
+The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”
 
-Grammar Lens: spend the new form.
-Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
-
-Guided Practice.
-[pause 1 second]
-Carry only the known hag- stem into this row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem hag-?
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to make coffee' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)
-
-
-Lesson 8 of 9.
-ojalá + subjunctive — a wish borrowed through Arabic.
-
-Warm-up.
-[pause 2 seconds]
-Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:
-Ojalá + subjunctive.
-That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary.
-
-The wish-word, taken apart.
-The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences.
+The word, taken apart.
+Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson.
 
 Guided Practice.
 [pause 1 second]
-Use only modern ojalá as the Spanish trigger.
-[question — say your answer, then pause 9 seconds]
-Say 'I hope you speak Spanish' to one friend using ojalá.
+[your turn — say: “ver — to see”]
+[pause 8 seconds for the answer]
+[your turn — say: “veo, ves, ve”]
+[pause 8 seconds for the answer]
+[your turn — say: “ver comes through veer from vidēre”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 5 seconds]
-Does the learned ojalá frame require que before hables? Answer yes or no.
-[question — say your answer, then pause 7 seconds]
-Through which historical language variety did Spanish receive ojalá?
+What does Spanish ver mean?
+[question — say your answer, then pause 8 seconds]
+Give the learned present forms of ver: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which Latin verb stands behind Spanish ver: vidēre or īre?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)
+What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past.
 
 
-Lesson 9 of 9.
-Practice — assert the event or want it.
+Lesson 5 of 8.
+era — an old root in an open past.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned.
+You know present soy, eres, es and completed-past fui, fuiste, fue. The open or background past of ser uses a different short stem: era.
 
-Grammar Lens: the bounded map.
-[a table of 6 rows, read aloud]
-verb: hablar. yo / él / ella / usted: hable. tú: hables.
-verb: comer. yo / él / ella / usted: coma. tú: comas.
-verb: vivir. yo / él / ella / usted: viva. tú: vivas.
-verb: querer. yo / él / ella / usted: quiera. tú: quieras.
-verb: poder. yo / él / ella / usted: pueda. tú: puedas.
-verb: hacer. yo / él / ella / usted: haga. tú: hagas.
-The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits.
+Grammar Lens: the singular ser row.
+[a table of 3 rows, read aloud]
+person: yo. open or background past: era.
+person: tú. open or background past: eras.
+person: él / ella / usted. open or background past: era.
+Say era, eras, era. The first and third forms match, just as they did in the regular imperfect rows. ¿Era usted? asks “Was it you?” without adding a new noun. Plural persons wait.
 
-Grammar Lens: two safe triggers.
-Same doer: Quiero hablar español.
-Different doer: Quiero que hables español.
-Wish by itself: Ojalá hables español.
-Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons.
+The root, taken apart.
+Era continues Latin eram, an old form in the esse family. That is the family already connected to Spanish ser and English essence. The preterite fue comes from another historical set, so era / fue is a real contrast inside one modern verb.
 
 Guided Practice.
 [pause 1 second]
-Decide the meaning first; then retrieve only the learned form.
-[question — say your answer, then pause 5 seconds]
-Choose the wanted-event form: hablas or hables.
-[question — say your answer, then pause 11 seconds]
-Give the pair 'I want to speak Spanish; I want you to speak Spanish.'
-[question — say your answer, then pause 9 seconds]
-Give the tú subjunctive forms of hablar, comer, and vivir, in that order.
+[your turn — say: “era, eras, era”]
+[pause 8 seconds for the answer]
+[your turn — say: “¿Era usted?”]
+[pause 8 seconds for the answer]
+[your turn — say: “era comes from Latin eram”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned singular imperfect forms of ser: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which ser form presents a background past: era or fue?
 [question — say your answer, then pause 6 seconds]
-Which present-person form supplies the stem in this chapter's recipe?
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive row of querer.
-[question — say your answer, then pause 10 seconds]
-Say 'I want you to be able to speak Spanish' to one friend.
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to make coffee' to one friend.
-[question — say your answer, then pause 9 seconds]
-Say 'I hope you live in Madrid' to one friend using ojalá.
-[question — say your answer, then pause 7 seconds]
-What does the Latin source subiūnctīvus help you picture?
-[question — say your answer, then pause 7 seconds]
-Name the historical language variety through which ojalá entered Spanish.
+Which Latin form stands directly behind Spanish era: eram or ībam?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)
+Give the three learned ser forms. (Era, eras, era.) Which past form supplies background, era or fue? (Era.) Which Latin form stands behind it? (Eram.) Next: follow ir back toward its own older verb.
+
+
+Lesson 6 of 8.
+iba — ir returns to its inherited past.
+
+Warm-up.
+[pause 2 seconds]
+Present voy and completed-past fui came from different historical sets. For an open or habitual past, ir gives you iba — “I was going” or “I used to go.”
+
+Grammar Lens: the singular ir row.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: iba.
+person: tú. open or habitual past: ibas.
+person: él / ella / usted. open or habitual past: iba.
+Say iba, ibas, iba. Reuse the destination frame: Iba a Madrid — “I was going to Madrid” or “I used to go to Madrid.” Plural persons wait.
+
+The word, taken apart.
+Iba continues Latin ībam, from īre, the inherited verb behind the Spanish infinitive ir. Present voy contains material associated with vādere, while preterite fui comes from the Latin “be” perfect family. These sources help explain the three learned sets; they do not mean that every form in every tense can be assigned to one source by a three-box rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “iba, ibas, iba”]
+[pause 8 seconds for the answer]
+[your turn — say: “Fui a Madrid. Iba a Madrid.”]
+[pause 8 seconds for the answer]
+[your turn — say: “iba continues ībam from īre”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned singular imperfect forms of ir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I was going to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Which inherited Latin verb stands behind iba: īre or vidēre?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Iba, ibas, iba.) Say “I was going to Madrid.” (Iba a Madrid.) Which Latin form stands behind iba? (Ībam, from īre.) Next: put newly learned ver into the same past.
+
+
+Lesson 7 of 8.
+veía — keep the extra e you already met.
+
+Warm-up.
+[pause 2 seconds]
+You learned ver before its past: veo, ves, ve. Its imperfect keeps ve- and adds the familiar -ía row. That gives veía — “I was seeing” or “I used to see.”
+
+Grammar Lens: the singular ver row.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: veía.
+person: tú. open or habitual past: veías.
+person: él / ella / usted. open or habitual past: veía.
+Say veía, veías, veía. Keep í-a in separate syllables. Plural persons wait.
+
+The extra e, taken apart.
+Old Spanish veer displays the ve- shape clearly. The imperfect veía preserves that vowel before the familiar -ía material. It is useful to call this an exceptional learned row, but not to pretend that ver was already known before this chapter or that the history is merely “regular plus one letter.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “veía, veías, veía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Veo café. Veía café.”]
+[pause 8 seconds for the answer]
+[your turn — say: “veer helps explain ve-”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned singular imperfect forms of ver: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which sentence means 'I was seeing coffee': Veo café or Veía café?
+[question — say your answer, then pause 6 seconds]
+Which earlier Spanish form makes the extra e of veía easier to see: veer or ir?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Veía, veías, veía.) Which vowel stays before -ía? (e.) Which earlier form displays it? (Veer.) Next: retrieve every Chapter 16 row and make a few bounded contrasts.
+
+
+Lesson 8 of 8.
+Practice — keep the past open or close it.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit.
+
+Grammar Lens: the complete Chapter 16 frame.
+Regular rows:
+yo: hablaba, comía, vivía.
+tú: hablabas, comías, vivías.
+él / ella / usted: hablaba, comía, vivía.
+The three special rows:
+yo: era, iba, veía.
+tú: eras, ibas, veías.
+él / ella / usted: era, iba, veía.
+The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint.
+
+Grammar Lens: one scene, two frames.
+Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking.
+Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch.
+Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual.
+The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint.
+
+The histories, taken apart.
+-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hablaba, comía, vivía”]
+[pause 8 seconds for the answer]
+[your turn — say: “era, iba, veía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hablé / hablaba, viví / vivía, fui / iba”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the imperfect yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the imperfect yo forms of ser, ir, and ver, in that order.
+[question — say your answer, then pause 7 seconds]
+Say 'I was speaking Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was living in Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was going to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Choose the open past: comí or comía.
+[question — say your answer, then pause 10 seconds]
+Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here.

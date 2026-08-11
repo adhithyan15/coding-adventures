@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 27,
-  "title": "Going, and the Future You Can Already Say",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:164a91f1e4eaccc5",
+  "title": "Numbers, and How Old You Are",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:787bf0b1591a15c0",
   "lessons": [
     {
-      "id": "ES-C10-ir",
-      "sequence": 880,
-      "title": "ir — “to go,” from more than one historical stem",
-      "headword": "ir",
-      "romanization": "ir",
-      "gloss": "to go — with the three singular present forms voy, vas, and va",
+      "id": "ES-C08-numeros-1-5",
+      "sequence": 780,
+      "title": "uno, dos, tres, cuatro, cinco — counting to five",
+      "headword": "uno, dos, tres, cuatro, cinco",
+      "romanization": "uno, dos, tres, cuatro, cinco",
+      "gloss": "the numbers 1–5",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea193d879392d97d",
+      "sourceHash": "fnv1a64:f43990601b51a2a7",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms."
+              "text": "Numbers are among the most reusable words in any language. Spanish keeps them close enough to Latin that English cousins can help you remember them. This lesson asks for only five: uno, dos, tres, cuatro, cinco."
             }
           ]
         },
@@ -46,59 +46,62 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-i — ir is one clear syllable, like ear without a glide."
+              "text": "diphthong-ue — cuatro begins KWA-."
             },
             {
               "kind": "speech",
-              "text": "diphthong-oy — voy ends with the sound in English boy."
+              "text": "r-tap — give tres and cuatro one light tap, not an English r."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The numbers, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family."
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "Latin source",
+                "English memory hook"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Spanish: uno (1). Latin source: ūnus. English memory hook: unit, unique.",
+                "Spanish: dos (2). Latin source: duo. English memory hook: duo, dual.",
+                "Spanish: tres (3). Latin source: trēs. English memory hook: trio, triple.",
+                "Spanish: cuatro (4). Latin source: quattuor. English memory hook: quart, quarter.",
+                "Spanish: cinco (5). Latin source: quīnque. English memory hook: quintet, quintuplet."
+              ]
             },
             {
               "kind": "speech",
-              "text": "One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend."
+              "text": "The spellings changed, but the family resemblance remains. Cinco and quintet both descend from quīnque; Spanish changed the opening sound while English borrowed a more visibly Latin form."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: only three forms today",
+          "title": "Grammar Lens: uno becomes un or una",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present of ir"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of ir: voy.",
-                "person: tú. present of ir: vas.",
-                "person: él / ella / usted. present of ir: va."
-              ]
+              "kind": "speech",
+              "text": "When uno stands alone, it means “one.” Before a noun it shortens:"
             },
             {
               "kind": "speech",
-              "text": "Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson."
+              "text": "un before a masculine noun: un café — one coffee / a coffee."
             },
             {
               "kind": "speech",
-              "text": "The known question word now gives you a useful prompt:"
+              "text": "una before a feminine noun: una noche — one night / a night."
             },
             {
               "kind": "speech",
-              "text": "¿Dónde va usted? — “Where are you going?”"
+              "text": "This shortening is called apocope: the end drops away. Spanish uses the same forms for “one” and “a/an”; context supplies the difference."
             }
           ]
         },
@@ -116,69 +119,66 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ir — voy, vas, va”",
+              "instruction": "“uno, dos, tres, cuatro, cinco” — once up, once down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ir — voy, vas, va”]"
+              "source": "[YOU SAY: “uno, dos, tres, cuatro, cinco” — once up, once down]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿Dónde va usted?”",
+              "instruction": "“uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Dónde va usted?”]"
+              "source": "[YOU SAY: “uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“īre gives ir; vādere gives the present set”",
+              "instruction": "“un café, una noche” — hear uno shorten",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “īre gives ir; vādere gives the present set”]"
+              "source": "[YOU SAY: “un café, una noche” — hear *uno* shorten]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-ir-singular-forms",
-              "prompt": "Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.",
+              "id": "ES-C08-numeros-1-5-count",
+              "prompt": "Write the Spanish numbers 1 through 5 in order.",
               "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
+                "ES-LEX-NUMBERS-1-5"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
+                "uno, dos, tres, cuatro, cinco",
+                "uno dos tres cuatro cinco"
               ],
               "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Use the three singular forms: voy, vas, va."
+                "correct": "Right: uno, dos, tres, cuatro, cinco.",
+                "incorrect": "Count in order: uno, dos, tres, cuatro, cinco."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-ir-formal-question",
-              "prompt": "Complete the formal question: ¿Dónde ___ usted?",
+              "id": "ES-C08-numeros-1-5-coffee",
+              "prompt": "Say 'one coffee' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
+                "ES-GRAMMAR-UNO-APOCOPE",
+                "ES-LEX-CAFE",
+                "ES-GRAMMAR-CAFE-MASCULINE"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "va",
-                "¿dónde va usted?",
-                "donde va usted?"
+                "un café",
+                "un cafe"
               ],
               "feedback": {
-                "correct": "Right: usted takes va — ¿Dónde va usted?",
-                "incorrect": "Usted uses the third-person singular form va."
+                "correct": "Right: uno shortens to un before the masculine noun café.",
+                "incorrect": "Shorten uno to un: un café."
               }
             }
           ]
@@ -196,26 +196,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming."
+              "text": "Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) Which English word helps you remember cinco? (Quintet, through Latin quīnque.) What happens to uno before a noun? (It becomes un or una.) Next: six through ten."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-ir-a-futuro",
-      "sequence": 890,
-      "title": "voy a + infinitive — moving toward the near future",
-      "headword": "voy a + infinitive",
-      "romanization": "voy a + infinitive",
-      "gloss": "I am going to… — the near future with ir, a, and a known infinitive",
+      "id": "ES-C08-numeros-6-10",
+      "sequence": 790,
+      "title": "seis, siete, ocho, nueve, diez — and the calendar's old count",
+      "headword": "seis, siete, ocho, nueve, diez",
+      "romanization": "seis, siete, ocho, nueve, diez",
+      "gloss": "the numbers 6–10 and the old counting hidden in month names",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1063fc6372f15570",
+      "sourceHash": "fnv1a64:87bded6b2cbba115",
       "notice": null,
       "blocks": [
         {
@@ -231,232 +231,425 @@
             },
             {
               "kind": "speech",
-              "text": "You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word."
+              "text": "You can count to five. Add one small set and you reach ten: seis, siete, ocho, nueve, diez. Four English month names will help hold the last four in memory."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — a",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance."
+              "text": "diphthong-ie — siete begins SYE-."
             },
             {
               "kind": "speech",
-              "text": "Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar."
+              "text": "diphthong-ue — nueve begins NWE-."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: ir + a + an unchanged infinitive",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "near-future frame",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. near-future frame: voy a hablar. meaning: I am going to speak.",
-                "person: tú. near-future frame: vas a comer. meaning: you are going to eat.",
-                "person: usted. near-future frame: va a vivir. meaning: you are going to live."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“voy a hablar”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“vas a comer”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “vas a comer”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“va a vivir”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “va a vivir”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-voy-hablar",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + the unchanged infinitive hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-vas-comer",
-              "prompt": "Say 'You are going to eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vas a comer.",
-                "vas a comer"
-              ],
-              "feedback": {
-                "correct": "Right: Vas a comer.",
-                "incorrect": "Use the tú form vas, then a, then comer."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C10-mi-tu-su",
-      "sequence": 900,
-      "title": "mi, tu, su — whose café?",
-      "headword": "mi, tu, su",
-      "romanization": "mi, tu, su",
-      "gloss": "my, your informal, and your formal or his or her — before a singular noun",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:601794c24c6f1659",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun."
-            }
-          ]
-        },
-        {
-          "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart",
+          "title": "The numbers, taken apart",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "Spanish",
                 "Latin source",
-                "meaning in today's frame"
+                "English memory hook"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 5,
               "utterances": [
-                "Spanish: mi. Latin source: meus. meaning in today's frame: my.",
-                "Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.",
-                "Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her."
+                "Spanish: seis (6). Latin source: sex. English memory hook: sextet.",
+                "Spanish: siete (7). Latin source: septem. English memory hook: September, septet.",
+                "Spanish: ocho (8). Latin source: octō. English memory hook: October, octave.",
+                "Spanish: nueve (9). Latin source: novem. English memory hook: November.",
+                "Spanish: diez (10). Latin source: decem. English memory hook: December, decimal."
               ]
             },
             {
               "kind": "speech",
-              "text": "English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent."
+              "text": "Say the chain aloud: siete–September, ocho–October, nueve–November, diez–December. It is a memory path, not a second list to memorize."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: why September says “seven”",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The month names preserve an old Roman count in which March was first: September through December occupied positions seven through ten. When January and February stood before March, those names shifted to positions nine through twelve but kept their old numbers."
+            },
+            {
+              "kind": "speech",
+              "text": "One tempting story is wrong: July and August were not new months inserted into the middle. The existing months Quintilis and Sextilis were later renamed for Julius Caesar and Augustus. The calendar moved; the numbered names stayed."
+            },
+            {
+              "kind": "speech",
+              "text": "Numbers above ten belong to a later chapter. For now, stop cleanly at diez."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "count from uno through diez",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: count from *uno* through *diez*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“siete/September, ocho/October, nueve/November, diez/December”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “siete/September, ocho/October, nueve/November, diez/December”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-numeros-6-10-count",
+              "prompt": "Write the Spanish numbers 6 through 10 in order.",
+              "assesses": [
+                "ES-LEX-NUMBERS-6-10"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "seis, siete, ocho, nueve, diez",
+                "seis siete ocho nueve diez"
+              ],
+              "feedback": {
+                "correct": "Right: seis, siete, ocho, nueve, diez.",
+                "incorrect": "Count in order: seis, siete, ocho, nueve, diez."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-numeros-6-10-month-change",
+              "prompt": "Were July and August inserted into the Roman calendar or were older months renamed?",
+              "assesses": [
+                "ES-CULTURE-ROMAN-MONTH-NAMES",
+                "ES-ETYMON-NUMBERS-6-10"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "older months were renamed",
+                "renamed",
+                "they were renamed",
+                "the older months were renamed"
+              ],
+              "feedback": {
+                "correct": "Right: Quintilis and Sextilis were renamed; they were not inserted.",
+                "incorrect": "They were existing months renamed for Julius Caesar and Augustus."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give 6–10. (Seis, siete, ocho, nueve, diez.) Why does December carry the old word for ten? (The month names preserve a March-first count.) What happened to Quintilis and Sextilis? (They were renamed July and August.) Next: the verb tener, “to have.”"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C08-tener",
+      "sequence": 800,
+      "title": "tener — “to have,” with two visible changes",
+      "headword": "tener",
+      "romanization": "tener",
+      "gloss": "to have — a common verb with two visible changes",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dde00039e27fd30a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Regular comer gave you como, comes, come. The common verb tener, “to have,” belongs to the same -er family, but its three singular forms change in two places. Learn only those three today."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-ie — tienes begins TYE-."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — one light tap at the end of tener."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tener descends from Latin tenēre, “to hold or keep.” Having is, at root, holding. English borrowed the same root many times:"
+            },
+            {
+              "kind": "speech",
+              "text": "tenant, tenure, tenacious — holding land, office, or position."
+            },
+            {
+              "kind": "speech",
+              "text": "contain, retain, maintain, sustain — holding together, back, in hand, or up."
+            },
+            {
+              "kind": "speech",
+              "text": "When you see -tain in English, think of Spanish tener."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the three singular forms",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "regular comer",
+                "irregular tener"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. regular comer: como. irregular tener: tengo.",
+                "person: tú. regular comer: comes. irregular tener: tienes.",
+                "person: él / ella / usted. regular comer: come. irregular tener: tiene."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two small changes do all the work:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo adds g: tengo, not teno."
+            },
+            {
+              "kind": "speech",
+              "text": "The other two singular forms change e becomes ie: tienes, tiene."
+            },
+            {
+              "kind": "speech",
+              "text": "Later chapters will expand both patterns. For now, hold only tengo, tienes, tiene — the same three-person frame you already use for regular verbs."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tener — tengo, tienes, tiene”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tener — tengo, tienes, tiene”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tener / tenant / retain” — the shared idea is hold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tener / tenant / retain” — the shared idea is *hold*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "compare “como, comes, come” with “tengo, tienes, tiene”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: compare “como, comes, come” with “tengo, tienes, tiene”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C08-tener-singular-forms",
+              "prompt": "Give the yo, tú, and él/ella forms of tener, in that order.",
+              "assesses": [
+                "ES-LEX-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tengo, tienes, tiene",
+                "tengo tienes tiene",
+                "tengo / tienes / tiene"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, tienes, tiene.",
+                "incorrect": "Use the -g yo form, then the two e becomes ie forms: tengo, tienes, tiene."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin tenēre mean? (“To hold.”) Give the three singular forms. (Tengo, tienes, tiene.) What are the two changes? (g appears in tengo; e becomes ie in tienes/tiene.) Next: use them to ask and answer about age."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C08-cuantos-anos",
+      "sequence": 810,
+      "title": "¿Cuántos años tienes? — asking age",
+      "headword": "¿Cuántos años tienes?",
+      "romanization": "¿Cuántos años tienes?",
+      "gloss": "how old are you? — literally, how many years do you have?",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4decd9483a767315",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You now have tengo, tienes, tiene and the numbers one through ten. Put them together and you can ask or answer age. Spanish frames age as something you have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¿Cuántos años tienes? “How old are you?” — literally, “How many years do you have?”"
+            },
+            {
+              "kind": "speech",
+              "text": "cuántos means “how many.” Latin quantus, “how much,” also gives English quantity, quantum, quantify."
+            },
+            {
+              "kind": "speech",
+              "text": "años means “years.” Latin annus also gives annual and anniversary. Its doubled nn became Spanish ñ, exactly as your script lesson showed."
+            },
+            {
+              "kind": "speech",
+              "text": "tienes is the tú form of tener."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the marks visible: opening ¿, the accent in cuántos, and the letter ñ in años each carries information."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: put the ownership word before the noun",
+          "title": "Grammar Lens: Spanish “has” years",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "phrase",
-                "meaning"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "mi café means my coffee.",
-                "tu café means your coffee, informal.",
-                "su café means your coffee, formal; or his or her coffee."
-              ]
+              "kind": "speech",
+              "text": "English says “I am ten years old.” Spanish says:"
             },
             {
               "kind": "speech",
-              "text": "The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here."
+              "text": "— ¿Cuántos años tienes? — Tengo diez años."
+            },
+            {
+              "kind": "speech",
+              "text": "The reusable frame is Tengo + number + años. Use a number you already know: Tengo ocho años, Tengo nueve años, Tengo diez años. Larger numbers wait until their own lesson; the grammar does not change."
             }
           ]
         },
@@ -474,69 +667,63 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“mi café”",
+              "instruction": "“¿Cuántos años tienes?”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café”]"
+              "source": "[YOU SAY: “¿Cuántos años tienes?”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tu café” to tú",
+              "instruction": "“Tengo ocho años. Tengo nueve años. Tengo diez años.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tu café” to *tú*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“su café” to usted",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “su café” to *usted*]"
+              "source": "[YOU SAY: “Tengo ocho años. Tengo nueve años. Tengo diez años.”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-mi-tu-su-my-coffee",
-              "prompt": "Say 'my coffee' in Spanish.",
+              "id": "ES-C08-cuantos-anos-ask",
+              "prompt": "Ask one friend 'How old are you?' in Spanish.",
               "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE"
+                "ES-LEX-CUANTOS-ANOS",
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "mi café",
-                "mi cafe"
+                "¿cuántos años tienes?",
+                "cuántos años tienes?",
+                "¿cuántos años tienes",
+                "cuantos anos tienes?"
               ],
               "feedback": {
-                "correct": "Right: mi café.",
-                "incorrect": "Put mi before the known noun café."
+                "correct": "Right: ¿Cuántos años tienes?",
+                "incorrect": "Use cuántos años plus the tú form tienes: ¿Cuántos años tienes?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-mi-tu-su-formal-your-coffee",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
+              "id": "ES-C08-cuantos-anos-eight",
+              "prompt": "Answer 'I am eight years old' using the Spanish age frame.",
               "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-LEX-NUMBERS-6-10"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "su café",
-                "su cafe"
+                "tengo ocho años.",
+                "tengo ocho años",
+                "tengo ocho anos",
+                "tengo ocho anos."
               ],
               "feedback": {
-                "correct": "Right: formal usted pairs here with su café.",
-                "incorrect": "For formal usted, put su before café."
+                "correct": "Right: Spanish has years — Tengo ocho años.",
+                "incorrect": "Use tengo plus the number and años: Tengo ocho años."
               }
             }
           ]
@@ -554,26 +741,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun."
+              "text": "What does the question literally ask? (“How many years do you have?”) Which verb carries age? (Tener.) How do cuántos and años connect to English? (Quantus becomes quantity; annus becomes annual.) Next: combine counting, tener, and age in one short exchange."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-practice",
-      "sequence": 910,
-      "title": "Practice — going, approaching events, and ownership",
+      "id": "ES-C08-practice",
+      "sequence": 820,
+      "title": "Practice — counting, having, and age",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "singular ir, the near future, and mi, tu, or su before café",
+      "gloss": "counting, having, and asking or answering age",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d141a253c55ee32",
+      "sourceHash": "fnv1a64:21e462a34e14b6c0",
       "notice": null,
       "blocks": [
         {
@@ -589,54 +776,77 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café."
+              "text": "This checkpoint asks for three small moves: count to ten, choose the right singular form of tener, and use the age frame. Everything here has already appeared."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
+          "title": "Grammar Lens: count and conjugate",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir, singular: voy, vas, va."
+              "text": "Count: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez."
             },
             {
               "kind": "speech",
-              "text": "near future: voy a hablar, vas a comer, va a vivir."
+              "text": "Change person: tengo, tienes, tiene."
             },
             {
               "kind": "speech",
-              "text": "ownership before one singular known noun: mi café, tu café, su café."
+              "text": "Remember the roots: quīnque helps with cinco; decem helps with diez; tenēre, “hold,” helps with tener."
             },
             {
               "kind": "speech",
-              "text": "Plural person forms of ir and possessives before plural nouns remain deferred."
+              "text": "Keep the calendar correction: July and August were renamed, not inserted."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — retrieve the history",
+          "type": "input",
+          "title": "The exchange — use only what you know",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir continues Latin īre, while voy, vas, va continue vādere."
+              "text": "— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Cuántos años tienes? — Tengo diez años. ¿Y tú? — Tengo nueve años."
             },
             {
               "kind": "speech",
-              "text": "a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event."
-            },
-            {
-              "kind": "speech",
-              "text": "mi, tu, su continue Latin meus, tuus, suus."
+              "text": "The exchange reuses the name question you already know, then adds exactly one new capability: age with tener."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uno through diez, with Latin and English hooks instead of an isolated list."
+            },
+            {
+              "kind": "speech",
+              "text": "un / una before a noun, where standalone uno shortens."
+            },
+            {
+              "kind": "speech",
+              "text": "tengo, tienes, tiene, the three singular forms of tener."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Cuántos años tienes? — Tengo … años, with quantus/quantity and annus/annual showing where the words came from."
+            },
+            {
+              "kind": "speech",
+              "text": "Numbers above ten and the plural forms of tener remain deliberately deferred."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -649,29 +859,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy, vas, va”",
+              "instruction": "count 1–10 up, then down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy, vas, va”]"
+              "source": "[YOU SAY: count 1–10 up, then down]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar, vas a comer, va a vivir”",
+              "instruction": "“tengo, tienes, tiene”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar, vas a comer, va a vivir”]"
+              "source": "[YOU SAY: “tengo, tienes, tiene”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“mi café, tu café, su café”",
+              "instruction": "ask and answer age with a number from 1–10",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café, tu café, su café”]"
+              "source": "[YOU SAY: ask and answer age with a number from 1–10]"
             },
             {
               "kind": "repeat",
@@ -680,95 +890,73 @@
             },
             {
               "kind": "speech",
-              "text": "“Voy a hablar. Su café.”"
+              "text": "“¿Cuántos años tienes? — Tengo nueve años.”"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-practice-ir-forms",
-              "prompt": "Give the learned singular forms of ir: yo, tú, then usted.",
+              "id": "ES-C08-practice-count-ten",
+              "prompt": "Write the Spanish numbers 1 through 10 in order.",
               "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
+                "ES-LEX-NUMBERS-1-5",
+                "ES-LEX-NUMBERS-6-10"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 15,
               "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
+                "uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez",
+                "uno dos tres cuatro cinco seis siete ocho nueve diez"
               ],
               "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Retrieve only the learned singular set: voy, vas, va."
+                "correct": "Right: you counted from uno through diez.",
+                "incorrect": "Build the two learned sets: uno–cinco, then seis–diez."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-practice-formal-going",
-              "prompt": "Ask formal you 'Where are you going?' in Spanish.",
+              "id": "ES-C08-practice-tener-singular",
+              "prompt": "Give the three learned singular forms of tener: yo, tú, then él/ella.",
               "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
+                "ES-LEX-TENER",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "¿dónde va usted?",
-                "dónde va usted?",
-                "donde va usted?",
-                "¿donde va usted?"
+                "tengo, tienes, tiene",
+                "tengo tienes tiene",
+                "tengo / tienes / tiene"
               ],
               "feedback": {
-                "correct": "Right: ¿Dónde va usted?",
-                "incorrect": "Use dónde with the usted form va."
+                "correct": "Right: tengo, tienes, tiene.",
+                "incorrect": "Recall the g in tengo and e becomes ie in tienes/tiene."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C10-practice-near-future",
-              "prompt": "Say 'I am going to speak' in Spanish.",
+              "id": "ES-C08-practice-age-nine",
+              "prompt": "Answer ¿Cuántos años tienes? with nine years.",
               "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
+                "ES-LEX-CUANTOS-ANOS",
+                "ES-GRAMMAR-AGE-WITH-TENER",
+                "ES-LEX-NUMBERS-6-10"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
+                "tengo nueve años.",
+                "tengo nueve años",
+                "tengo nueve anos",
+                "tengo nueve anos."
               ],
               "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-possessive",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: su café.",
-                "incorrect": "Formal usted uses su before café."
+                "correct": "Right: Tengo nueve años.",
+                "incorrect": "Use tengo + number + años: Tengo nueve años."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -780,7 +968,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier."
+              "text": "Count to ten. Give the three singular forms of tener. Ask “How old are you?” and answer with a number you learned. You can now move from a name exchange into one concrete personal detail. Next: the two Spanish ways to say “to be,” introduced one contrast at a time."
             }
           ]
         }

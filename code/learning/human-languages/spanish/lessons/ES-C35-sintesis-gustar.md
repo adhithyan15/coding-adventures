@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C35-sintesis-gustar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1684
-chapter: 65
+chapter: 67
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — saying what you like, in a language that refuses to let you own it

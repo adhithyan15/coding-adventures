@@ -430,31 +430,62 @@
     },
     {
       "chapter": 20,
-      "title": "More -ar Verbs",
-      "label": "ch:more-ar-verbs",
-      "canDo": "I can use several -ar verbs and say that I speak Spanish.",
+      "title": "Trabajar --- Work, and the Torture Device Behind It",
+      "label": "ch:spanish-trabajar",
+      "canDo": "I can say what I do for work with a second regular -ar verb.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-trabajar",
+        "kind": "task",
+        "summary": "tripalium, a three-stake device, is why work and travail are the same word.",
+        "assesses": [
+          "ES-LEX-TRABAJAR",
+          "ES-ETYMON-TRIPALIUM"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Estudiar --- Studying Is Being Eager",
+      "label": "ch:spanish-estudiar",
+      "canDo": "I can say what I study, with a third regular -ar verb and no new pattern.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-estudiar",
+        "kind": "task",
+        "summary": "studere, to be eager - the root under student, studio and studious.",
+        "assesses": [
+          "ES-LEX-ESTUDIAR",
+          "ES-ETYMON-STUDERE"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Espanol, and Your First Built Sentence",
+      "label": "ch:spanish-espanol",
+      "canDo": "I can name the language and build a whole sentence from parts I chose myself.",
       "spineNodes": [
         "SPINE-POLITE-REQUEST-REPAIR"
       ],
       "payoff": {
         "lesson": "ES-C06-practice",
         "kind": "dialogue",
-        "summary": "More -ar Verbs — the chapter run end to end.",
+        "summary": "Hispania to espanol, and the first sentence assembled rather than memorised.",
         "assesses": [
-          "ES-LEX-TRABAJAR",
-          "ES-ETYMON-TRIPALIUM",
-          "ES-LEX-ESTUDIAR",
-          "ES-ETYMON-STUDERE",
           "ES-LEX-ESPANOL",
           "ES-ETYMON-HISPANIA",
           "ES-LEX-HABLO-ESPANOL",
-          "ES-GRAMMAR-BARE-LANGUAGE",
-          "ES-GRAMMAR-NO-02"
+          "ES-GRAMMAR-BARE-LANGUAGE"
         ]
       }
     },
     {
-      "chapter": 21,
+      "chapter": 23,
       "title": "Comer --- the Second Verb Family, One Slot at a Time",
       "label": "ch:spanish-comer",
       "canDo": "I can use all three singular forms of a regular -er verb, having built each one separately.",
@@ -476,7 +507,7 @@
       }
     },
     {
-      "chapter": 22,
+      "chapter": 24,
       "title": "Vivir --- the Family That Costs Nothing",
       "label": "ch:spanish-vivir",
       "canDo": "I can use the singular of a regular -ir verb, and say why it asked me to learn no new form.",
@@ -495,7 +526,7 @@
       }
     },
     {
-      "chapter": 23,
+      "chapter": 25,
       "title": "Beber, and Two Ways to Ask",
       "label": "ch:spanish-beber-preguntas",
       "canDo": "I can say what I drink, and ask what and where with que and donde.",
@@ -515,7 +546,7 @@
       }
     },
     {
-      "chapter": 24,
+      "chapter": 26,
       "title": "Synthesis --- Asking, and Answering",
       "label": "ch:spanish-synthesis-three-families",
       "canDo": "I can hold a short exchange about what someone drinks and where they live, using all three verb families.",
@@ -534,7 +565,7 @@
       }
     },
     {
-      "chapter": 25,
+      "chapter": 27,
       "title": "Numbers, and How Old You Are",
       "label": "ch:numbers-and-age",
       "canDo": "I can count from one through ten and use singular forms of tener to ask and answer age with a number I know.",
@@ -563,7 +594,7 @@
       }
     },
     {
-      "chapter": 26,
+      "chapter": 28,
       "title": "Ser and Estar --- Two Ways to Be",
       "label": "ch:ser-y-estar",
       "canDo": "I can identify someone, state origin, check wellbeing, and give a location by choosing a learned singular form of ser or estar.",
@@ -591,7 +622,7 @@
       }
     },
     {
-      "chapter": 27,
+      "chapter": 29,
       "title": "Going, and the Future You Can Already Say",
       "label": "ch:ir-y-futuro",
       "canDo": "I can ask where someone is going, say what a singular person is going to do, and mark a known singular noun with mi, tu, or su.",
@@ -619,7 +650,7 @@
       }
     },
     {
-      "chapter": 28,
+      "chapter": 30,
       "title": "Verbs That Break in the Middle --- the Stem Changers",
       "label": "ch:stem-changes",
       "canDo": "I can express singular wanting and ability, compare the learned e-to-ie and o-to-ue changes, and say our with a known singular noun.",
@@ -649,7 +680,7 @@
       }
     },
     {
-      "chapter": 29,
+      "chapter": 31,
       "title": "Hacer, Decir, and the -go Verb Club",
       "label": "ch:yo-go-verbs",
       "canDo": "I can use the three learned singular forms of hacer and decir and compare tengo, hago, and digo without predicting unseen verbs.",
@@ -674,7 +705,7 @@
       }
     },
     {
-      "chapter": 30,
+      "chapter": 32,
       "title": "Poner --- Putting, and the Root Under Position",
       "label": "ch:spanish-poner",
       "canDo": "I can say what I put, with the -go yo form and regular forms elsewhere.",
@@ -693,7 +724,7 @@
       }
     },
     {
-      "chapter": 31,
+      "chapter": 33,
       "title": "Salir --- Leaving",
       "label": "ch:spanish-salir",
       "canDo": "I can say that I leave, and use the regular forms for anyone else.",
@@ -711,7 +742,7 @@
       }
     },
     {
-      "chapter": 32,
+      "chapter": 34,
       "title": "Venir --- Coming",
       "label": "ch:spanish-venir",
       "canDo": "I can say that I come, and hear the stem break in the other two forms.",
@@ -729,7 +760,7 @@
       }
     },
     {
-      "chapter": 33,
+      "chapter": 35,
       "title": "Review --- Six Verbs, One Ending",
       "label": "ch:spanish-review-yo-go",
       "canDo": "I can name all six -go verbs and say why the list is closed.",
@@ -747,7 +778,7 @@
       }
     },
     {
-      "chapter": 34,
+      "chapter": 36,
       "title": "Synthesis --- You, and Somebody Else",
       "label": "ch:spanish-synthesis-yo-go",
       "canDo": "I can say the same thing about myself and about someone else, and know which of the two is irregular.",
@@ -765,7 +796,7 @@
       }
     },
     {
-      "chapter": 35,
+      "chapter": 37,
       "title": "The Preterite --- Your First Past Tense",
       "label": "ch:preterite",
       "canDo": "I can use the singular completed past of ser or ir and the known regular -ar verb hablar.",
@@ -788,7 +819,7 @@
       }
     },
     {
-      "chapter": 36,
+      "chapter": 38,
       "title": "Completing the Preterite --- Three Families, One Question",
       "label": "ch:completing-preterite",
       "canDo": "I can form the singular completed past of regular -er/-ir verbs and the known strong verbs tener, hacer, and estar.",
@@ -817,7 +848,7 @@
       }
     },
     {
-      "chapter": 37,
+      "chapter": 39,
       "title": "The Imperfect --- the Past That Kept Going",
       "label": "ch:imperfect",
       "canDo": "I can use the Spanish imperfect for past habits, background, and actions in progress.",
@@ -846,7 +877,7 @@
       }
     },
     {
-      "chapter": 38,
+      "chapter": 40,
       "title": "The Future and the Conditional --- One Weld, Twice",
       "label": "ch:future-conditional",
       "canDo": "I can form the Spanish future and conditional from the infinitive and use each for its core meaning.",
@@ -875,7 +906,7 @@
       }
     },
     {
-      "chapter": 39,
+      "chapter": 41,
       "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
       "label": "ch:subjunctive",
       "canDo": "I can distinguish an asserted event from a wanted one and use the learned singular present-subjunctive forms after quiero que or ojalá.",
@@ -904,7 +935,7 @@
       }
     },
     {
-      "chapter": 40,
+      "chapter": 42,
       "title": "Lo Siento",
       "label": "ch:spanish-sorry",
       "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
@@ -925,7 +956,7 @@
       }
     },
     {
-      "chapter": 41,
+      "chapter": 43,
       "title": "Days of the Week",
       "label": "ch:spanish-days-of-the-week",
       "canDo": "I can name all seven days of the week in Spanish and say why the last two broke away from the planet names.",
@@ -945,7 +976,7 @@
       }
     },
     {
-      "chapter": 42,
+      "chapter": 44,
       "title": "Black, White, Red, and Blue",
       "label": "ch:spanish-black-white-red-blue",
       "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
@@ -967,7 +998,7 @@
       }
     },
     {
-      "chapter": 43,
+      "chapter": 45,
       "title": "Parents and Siblings",
       "label": "ch:spanish-family",
       "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
@@ -987,7 +1018,7 @@
       }
     },
     {
-      "chapter": 44,
+      "chapter": 46,
       "title": "Head and Hand",
       "label": "ch:spanish-head-and-hand",
       "canDo": "I can name the head and the hand in Spanish and get la mano's gender right despite its -o ending.",
@@ -1007,7 +1038,7 @@
       }
     },
     {
-      "chapter": 45,
+      "chapter": 47,
       "title": "The Seasons",
       "label": "ch:spanish-seasons",
       "canDo": "I can name the four seasons in Spanish and explain how verano moved from spring to summer.",
@@ -1026,7 +1057,7 @@
       }
     },
     {
-      "chapter": 46,
+      "chapter": 48,
       "title": "Water, Wine, and Bread",
       "label": "ch:spanish-water-wine-bread",
       "canDo": "I can name water, wine and bread in Spanish and say why a compañero is someone who shares bread with me.",
@@ -1045,7 +1076,7 @@
       }
     },
     {
-      "chapter": 47,
+      "chapter": 49,
       "title": "The Months",
       "label": "ch:spanish-months",
       "canDo": "I can name the twelve months in Spanish and explain why diciembre carries the Latin word for ten.",
@@ -1065,7 +1096,7 @@
       }
     },
     {
-      "chapter": 48,
+      "chapter": 50,
       "title": "Noon and Midnight",
       "label": "ch:spanish-noon-midnight",
       "canDo": "I can say that it is noon or midnight in Spanish and break both words into their two living halves.",
@@ -1083,7 +1114,7 @@
       }
     },
     {
-      "chapter": 49,
+      "chapter": 51,
       "title": "Telling Time",
       "label": "ch:spanish-telling-time",
       "canDo": "I can tell the time in Spanish and choose correctly between es la una and son las dos.",
@@ -1102,7 +1133,7 @@
       }
     },
     {
-      "chapter": 50,
+      "chapter": 52,
       "title": "The Weather",
       "label": "ch:spanish-weather",
       "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
@@ -1125,7 +1156,7 @@
       }
     },
     {
-      "chapter": 51,
+      "chapter": 53,
       "title": "Numbers Eleven to Twenty",
       "label": "ch:spanish-numbers-eleven-to-twenty",
       "canDo": "I can count from eleven to twenty in Spanish and say where the fused Latin teens stop and the ten-and-X ones begin.",
@@ -1148,7 +1179,7 @@
       }
     },
     {
-      "chapter": 52,
+      "chapter": 54,
       "title": "Dog and Cat",
       "label": "ch:spanish-dog-and-cat",
       "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
@@ -1168,7 +1199,7 @@
       }
     },
     {
-      "chapter": 53,
+      "chapter": 55,
       "title": "Green and Yellow",
       "label": "ch:spanish-green-and-yellow",
       "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
@@ -1188,7 +1219,7 @@
       }
     },
     {
-      "chapter": 54,
+      "chapter": 56,
       "title": "Pensar — Thinking Is Weighing",
       "label": "ch:spanish-pensar",
       "canDo": "I can say what I think, and break pensar's stem the way a stem-changer requires.",
@@ -1206,7 +1237,7 @@
       }
     },
     {
-      "chapter": 55,
+      "chapter": 57,
       "title": "Entender — Understanding Is Stretching Toward",
       "label": "ch:spanish-entender",
       "canDo": "I can say what I understand, and see the verb inside the no entiendo I have used since chapter 14.",
@@ -1225,7 +1256,7 @@
       }
     },
     {
-      "chapter": 56,
+      "chapter": 58,
       "title": "Leer — Reading Is Gathering",
       "label": "ch:spanish-leer",
       "canDo": "I can say what I read, with a verb whose stem does not break.",
@@ -1243,7 +1274,7 @@
       }
     },
     {
-      "chapter": 57,
+      "chapter": 59,
       "title": "Escribir — Writing Is Scratching",
       "label": "ch:spanish-escribir",
       "canDo": "I can say what I write, and explain the propped-up e- in front of it.",
@@ -1261,7 +1292,7 @@
       }
     },
     {
-      "chapter": 58,
+      "chapter": 60,
       "title": "Review --- Four Verbs of the Mind",
       "label": "ch:spanish-review-verbs-of-mind",
       "canDo": "I can hold all four mind-verbs at once and name the physical act inside each one.",
@@ -1281,7 +1312,7 @@
       }
     },
     {
-      "chapter": 59,
+      "chapter": 61,
       "title": "Synthesis --- What You Understand, and What You Don't",
       "label": "ch:spanish-synthesis-verbs-of-mind",
       "canDo": "I can report which part of what I heard landed and which did not, instead of only signalling that I am lost.",
@@ -1300,7 +1331,7 @@
       }
     },
     {
-      "chapter": 60,
+      "chapter": 62,
       "title": "Tomar — Taking, and a Word With No Past",
       "label": "ch:spanish-tomar",
       "canDo": "I can say what I take, and explain why this everyday verb has no agreed origin.",
@@ -1318,7 +1349,7 @@
       }
     },
     {
-      "chapter": 61,
+      "chapter": 63,
       "title": "Preguntar — Asking, and Sounding a Depth",
       "label": "ch:spanish-preguntar",
       "canDo": "I can ask a question with preguntar, and choose it over pedir.",
@@ -1336,7 +1367,7 @@
       }
     },
     {
-      "chapter": 62,
+      "chapter": 64,
       "title": "Ayudar — the Same Word as Aid",
       "label": "ch:spanish-ayudar",
       "canDo": "I can say that I help, and hear English aid inside the Spanish word.",
@@ -1354,7 +1385,7 @@
       }
     },
     {
-      "chapter": 63,
+      "chapter": 65,
       "title": "Review --- Three Verbs That Behave",
       "label": "ch:spanish-review-ordinary-verbs",
       "canDo": "I can use all three verbs and say what they have in common: the sentence is about the one doing it.",
@@ -1374,7 +1405,7 @@
       }
     },
     {
-      "chapter": 64,
+      "chapter": 66,
       "title": "Gustar — the Verb Built the Other Way Round",
       "label": "ch:spanish-gustar",
       "canDo": "I can build a gustar sentence the way Spanish builds it, with the thing liked as the subject.",
@@ -1393,7 +1424,7 @@
       }
     },
     {
-      "chapter": 65,
+      "chapter": 67,
       "title": "Synthesis --- What You Like, and Who Does the Liking",
       "label": "ch:spanish-synthesis-gustar",
       "canDo": "I can say what I like without translating I like word by word, and hear mucho gusto as the same word.",
@@ -1412,7 +1443,7 @@
       }
     },
     {
-      "chapter": 66,
+      "chapter": 68,
       "title": "Hearing, Sleeping, Walking, Running",
       "label": "ch:spanish-hear-sleep-walk-run",
       "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
@@ -1442,7 +1473,7 @@
       }
     },
     {
-      "chapter": 67,
+      "chapter": 69,
       "title": "Opening, Closing, Sitting Down, Standing Up",
       "label": "ch:spanish-open-close-sit-stand",
       "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
@@ -1473,7 +1504,7 @@
       }
     },
     {
-      "chapter": 68,
+      "chapter": 70,
       "title": "Telling What Happened",
       "label": "ch:spanish-narrating",
       "canDo": "I can tell a short connected story about something that happened — ordering the events with luego, giving a reason with porque, and choosing the imperfect for the scene and the preterite for the events.",
@@ -1497,7 +1528,7 @@
       }
     },
     {
-      "chapter": 69,
+      "chapter": 71,
       "title": "Traer --- Bringing, and Latin for Dragging",
       "label": "ch:spanish-traer",
       "canDo": "I can say what I bring, and choose traer over llevar by where I am standing.",
@@ -1516,7 +1547,7 @@
       }
     },
     {
-      "chapter": 70,
+      "chapter": 72,
       "title": "Conseguir --- Getting Is Following Until You Have It",
       "label": "ch:spanish-conseguir",
       "canDo": "I can say what I get, and make the e-to-i stem change.",
@@ -1535,7 +1566,7 @@
       }
     },
     {
-      "chapter": 71,
+      "chapter": 73,
       "title": "Jugar --- Playing Was Joking",
       "label": "ch:spanish-jugar",
       "canDo": "I can say what I play, with the only u-to-ue verb in Spanish.",
@@ -1554,7 +1585,7 @@
       }
     },
     {
-      "chapter": 72,
+      "chapter": 74,
       "title": "Conocer --- Coming to Know",
       "label": "ch:spanish-conocer",
       "canDo": "I can say who and what I am acquainted with, and choose conocer over saber.",
@@ -1573,7 +1604,7 @@
       }
     },
     {
-      "chapter": 73,
+      "chapter": 75,
       "title": "Review --- All Four Stem Changes",
       "label": "ch:spanish-review-stem-changes",
       "canDo": "I can name all four stem-change patterns and the single verb that owns one of them.",
@@ -1592,7 +1623,7 @@
       }
     },
     {
-      "chapter": 74,
+      "chapter": 76,
       "title": "Synthesis --- The Choices English Never Makes You Make",
       "label": "ch:spanish-synthesis-verb-splits",
       "canDo": "I can choose correctly between three verb pairs where English offers only one word.",
@@ -1611,7 +1642,7 @@
       }
     },
     {
-      "chapter": 75,
+      "chapter": 77,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
       "canDo": "I can say I wait, answer and buy in Spanish — three verbs whose endings never surprise me — and I know that esperar alone carries wait, hope and expect, so context does the work English hands to three separate verbs.",
@@ -1646,7 +1677,7 @@
       }
     },
     {
-      "chapter": 76,
+      "chapter": 78,
       "title": "Saying Why",
       "label": "ch:spanish-giving-reasons",
       "canDo": "I can give a reason for what I think and what I plan — stating an opinion with creo que, running forward to its consequence with así que, and naming an obligation with debo.",

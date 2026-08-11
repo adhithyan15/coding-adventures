@@ -1,175 +1,187 @@
-Spanish, chapter 68: Telling What Happened.
+Spanish, chapter 68: Hearing, Sleeping, Walking, Running.
 4 lessons. All 4 can be done entirely by ear.
 
 
 Lesson 1 of 4.
-luego — a word you already have, doing a job you have not seen it do.
+oír — "to hear", and the y that appears from nowhere.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new to learn here — you have said luego every time you said hasta luego. What is new is that it can stand alone, between two events, and put them in order.
+Say Me gusta el café once — the coffee is pleasing to me, and the coffee is the subject. Now a verb about the ears, and one of the most bent-out-of-shape words in the language.
 
 Sounds you'll need.
-diphthong-ue — ue is one glide, not two syllables.
-g-soft-gw — between vowels the g softens; luego is LWEH-gho, not the hard stop English puts in go.
+accent-i — the accent on í keeps the vowels apart: o-EER, two beats.
+y-glide — the y in oyes is the consonant of English yes: O-yes.
 
-The word, taken apart: luego.
-You already know where it comes from: Latin locō, the ablative of locus, "place" — "in that place", a word about where that slid into a word about when. That is why hasta luego is "until later".
-What you have not been shown is how much else locus is holding up. It gives local, locate, location, locus, allocate, dislocate. And through French lieu, "place", it gives lieutenant — literally the officer holding the place of another.
-A leftover worth knowing. Desde luego means "of course". It was built on an older sense of luego, "immediately", so its literal force was nearer "from this moment on". The bare word has since drifted to "later"; the phrase kept the old sense.
+The word, taken apart: oír.
+oír ("to hear") from Latin audīre, "to hear". Spanish wore it right down: the d between vowels dropped away and au- collapsed to o-.
+English never inherited it but borrowed it repeatedly, and the family keeps the aud- Spanish threw away: audio, audible, audition, auditorium, audit, audience — the people doing the hearing.
+Then the surprise. Obey is Latin oboedīre, ob- ("toward") + audīre: obeying is literally listening toward someone. Obedient comes with it.
 
-Grammar Lens: luego between two events.
-Out of the farewell, luego is not glued to a verb. It marks the join between two events and sits at the front of the second:
-[a table of 3 rows, read aloud]
-Me siento. Luego leo., I sit down. Then I read.
-Bebo café y luego escribo., I drink coffee and then I write.
-Me levanto y luego corro., I get up and then I run.
-Two events, in order, with one word doing the ordering — and it is a word you have been saying since chapter five.
+Why it's said this way: hearing is not listening.
+Spanish splits what English leaves joined. Oír is what your ears do whether you meant it or not. Escuchar is on purpose.
+Escuchar has its own root: Latin auscultāre, "to listen to", built on auris, "ear". A doctor auscultates a chest; and when Old French wore auscultāre down to escouter, English borrowed it as scout — one sent out to listen. English can draw the line when it wants. Spanish makes you.
+
+Grammar Lens: the -go yo-form, and a spelling rule.
+[a table of 5 rows, read aloud]
+person: yo. form: oigo.
+person: tú. form: oyes.
+person: él/ella/usted. form: oye.
+person: nosotros. form: oímos.
+person: ellos/ustedes. form: oyen.
+Two separate things. The yo-form grows the hard -g- you know from tengo, hago and digo; oír joins that club.
+The rest is spelling, not sound. Spanish will not write an unstressed i stranded between two vowels, so oi-es is impossible and the letter becomes y: oyes, oye, oyen. Oímos keeps its accent because there the i is stressed.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hasta luego" then just "luego" — same word, standing alone]
+[your turn — say: "oigo, oyes, oye, oímos, oyen"]
 [pause 8 seconds for the answer]
-[your turn — say: "Me siento. Luego leo."]
+[your turn — say: "¿Me oyes?" — can you hear me?]
 [pause 8 seconds for the answer]
-[your turn — say: "Me levanto y luego corro."]
+[your turn — say: "Me gusta oír" — hearing is pleasing to me]
 [pause 8 seconds for the answer]
-[your turn — say: "luego" then English "local, locate, lieutenant"]
+[your turn — say: "oír" then English "audio, audience, obey"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What job does luego do here that it does not do in hasta luego? (It joins two events in order, instead of sitting inside a fixed farewell.) Which English officer's title hides the same locus? (Lieutenant — the one holding another's place.) Which older sense of luego is frozen inside desde luego? (Immediately — not "later".)
+Which Latin verb is behind oír, and what has obey to do with it? (Audīre; oboedīre is "to listen toward".) Why oyes and not oies? (Spanish will not leave an unstressed i between two vowels.) Which of oír and escuchar do you choose to do? (Escuchar.) And in me gusta el café, what is the subject? (El café.)
 
 
 Lesson 2 of 4.
-porque — "because", and the reason a sequence turns into a story.
+dormir — "to sleep", and the boot's other vowel.
 
 Warm-up.
 [pause 2 seconds]
-With luego you can put two events in order. But order is not yet a story. I sat down, then I read tells nobody why. One more word closes that gap, and it is two words wearing a single coat.
+Run oír once more: oigo, oyes, oye, oímos, oyen — and remember that the y in oyes is a spelling rule, not a new sound. Now a verb whose stem cracks the way pensar's did, but on a different vowel.
 
 Sounds you'll need.
-k-hard — qu before e is a plain k; the u is silent. porque = POR-keh.
-r-tap — a single flick of the tongue, not the rolled rr.
+diphthong-ue — under stress the o breaks open: duermo = DWER-mo.
+r-tap — one soft flick of the tongue in dormir, nothing like an English r.
 
-The word, taken apart: porque.
-porque = por + que, fused.
-por descends from Latin prō, "for, in front of, on behalf of" — the same prō standing at the front of provide, proceed, protect, propose, and surviving whole in the English phrase quid pro quo.
-que descends from Latin quid, "what" — and then quietly took over every job Latin had given quod, without taking its form.
-And this is the good part. That Latin qu- is one branch of the Proto-Indo-European interrogative root kʷo-. The other branch went into Germanic, where kʷ- softened to hw- — Grimm's Law turning a stop into a breath — and came out as English who, what, when, where, why.
-So Spanish que and English what are not borrowed from one another. They are siblings — the same ancient question-word, walked down two different roads. Quid pro quo puts both Latin halves of porque side by side in an English sentence.
+The word, taken apart: dormir.
+dormir ("to sleep") from Latin dormīre, "to sleep" — one of the rare verbs Spanish inherited almost untouched. English took the root only through French and Latin, and every borrowing still points at a bed:
+dormitory, and its clipped dorm — the room where sleeping is done.
+dormant — from the French participle dormant, "sleeping". A dormant volcano is a sleeping one.
+dormer — the window let into a roof, named for the sleeping-loft behind it.
+Spanish keeps its own branch: el dormitorio for the bedroom, and la bella durmiente for Sleeping Beauty.
+The dormouse looks like the obvious member of this family, and careful dictionaries will not commit. An Anglo-Norman dormeus, "sleepy", is the best guess, but the trail goes cold. Treat it as likely rather than proved.
 
-Grammar Lens: porque, por qué, el porqué.
-Three spellings, three jobs, and they are genuinely distinct in writing:
-[a table of 3 rows, read aloud]
-written: porque. stress: one word, no accent. job: because — gives the reason.
-written: por qué. stress: two words, accent on qué. job: why — asks for the reason.
-written: el porqué. stress: one word, accent, with el. job: the reason — a noun.
-¿Por qué te levantas? — Why do you get up? Me levanto porque corro. — I get up because I run. No entiendo el porqué. — I don't understand the reason.
-The accent is not decoration. It marks qué as the questioning one, exactly as it does on other question words.
+Grammar Lens: the boot again, with o becomes ue.
+[a table of 5 rows, read aloud]
+person: yo. form: duermo. stem: broken.
+person: tú. form: duermes. stem: broken.
+person: él/ella/usted. form: duerme. stem: broken.
+person: nosotros. form: dormimos. stem: plain.
+person: ellos/ustedes. form: duermen. stem: broken.
+Pensar broke e becomes ie under stress. Dormir breaks o becomes ue under exactly the same condition, and for exactly the same reason: the stress falls on the stem in four of these forms and on the ending in dormimos, so only dormimos keeps its plain o.
+That is the whole of the rule. Spanish has two stressed vowels that will not sit still — e becomes ie, o becomes ue — and once you can hear where the stress lands, you can predict which forms crack without memorising a list.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "porque" — POR-keh, silent u]
+[your turn — say: "duermo, duermes, duerme, dormimos, duermen"]
 [pause 8 seconds for the answer]
-[your turn — say: "Me siento porque leo." — I sit down because I read.]
+[your turn — say: "pienso" then "duermo" — e to ie, o to ue, one rule]
 [pause 8 seconds for the answer]
-[your turn — say: "Me levanto y luego corro, porque hace sol."]
+[your turn — say: "No duermo bien" — I don't sleep well]
 [pause 8 seconds for the answer]
-[your turn — say: the three shapes — "porque, por qué, el porqué"]
+[your turn — say: "dormir" then English "dormitory, dormant, dormer" — the sleeping family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two Latin words are fused inside porque? (prō and quid.) Are Spanish que and English what parent and child, or siblings? (Siblings — Latin qu- and Germanic wh- from one root, kʷo-.) Which of the three spellings asks a question? (Por qué — two words, accent on qué.)
+Which form of dormir keeps its plain o, and why? (Dormimos — the stress lands on the ending.) Name two English cousins of dormīre. (Dormitory, dormant, dormer.) What did pēnsāre, behind pensar, mean literally? (To weigh.) And what is the yo-form of oír? (Oigo.)
 
 
 Lesson 3 of 4.
-llovía / llovió — the same rain, told two ways.
+caminar — "to walk", from a word Rome borrowed from the Celts.
 
 Warm-up.
 [pause 2 seconds]
-You already have both past tenses. The imperfect — hablaba, comía — came in chapter sixteen, with its three irregulars. Nothing here is a new form. What is new is which one to reach for, and that turns out to be the whole trick of telling a story.
+Duermo, duermes, duerme — the o cracking to ue. Relax: the two verbs here do nothing of the kind. The interest is in where they came from.
 
 Sounds you'll need.
-double-l-y — ll is a y glide: llovía = yo-VEE-a.
-accent-i — the accent splits the vowels: llo-VÍ-a, three beats.
+k-hard — the c before a is a hard k: ka-mi-NAR.
+vowel-a — a short clean a, the same in every syllable.
 
-The word, taken apart: why "imperfect".
-The name is the lesson, and it is worth having.
-Imperfecto is Latin imperfectus: in- ("not") plus perfectus, "carried all the way through" — itself per- ("through") plus facere ("to do, to make"). That facere is everywhere in English: fact, factory, effect, manufacture, and perfect itself, which still means finished through.
-So the imperfect is the not-carried-through tense. Not unfinished in quality — unfinished in time. It shows an action still running, with no edge on it. That is not a label bolted on afterwards; it is a description of the job.
+The word, taken apart: caminar.
+caminar ("to walk") was built on the noun el camino, "the road" — and camino is not a Latin word at all. Latin camminus was a loan from Gaulish, the Celtic language of pre-Roman France, from a word for a step or a way. It stocked the roads of every Romance language: camino, Portuguese caminho, Italian cammino, French chemin.
+Here the cousin web runs out, and that is worth saying plainly: this root reached English only inside borrowed French phrases. The Celtic layer did reach English by other doors — Latin also took Gaulish carrus, a wagon, behind car and cargo. Camminus never crossed.
+A false friend that looks certain. Latin also had camīnus, "hearth", from Greek kaminos — and that gave English chimney. Two nearly identical Latin words, no relation.
 
-Grammar Lens: the scene and the events.
-Take one fact — it rained — and watch the tense decide what kind of fact it is:
-[a table of 2 rows, read aloud]
-Llovía., It was raining. (no edge — the weather that day).
-Llovió., It rained. (edged — a thing that happened).
-Neither is more correct. They answer different questions. A told story needs both, in a division of labour that never varies:
-The imperfect paints the scene — what was going on, what things were like. The preterite drops the events into it — what then happened.
-Llovía. Luego me levanté. — It was raining (scene). Then I got up (event).
-English has no separate form for this, which is the only reason it feels hard. English leans on was ‑ing and used to and lets context carry the rest. Spanish decided it once, in the ending.
+Grammar Lens: two plain verbs, and which to reach for.
+Spanish has a second everyday verb here, andar. Both take ordinary -ar endings and neither breaks its stem.
+[a table of 5 rows, read aloud]
+person: yo. caminar: camino. andar: ando.
+person: tú. caminar: caminas. andar: andas.
+person: él/ella/usted. caminar: camina. andar: anda.
+person: nosotros. caminar: caminamos. andar: andamos.
+person: ellos/ustedes. caminar: caminan. andar: andan.
+Caminar is walking as the thing you are doing. Andar is wider: to go about, and by extension to work at all — no anda, of a machine, means "it isn't running". Either serves for a walk.
+
+Why it's said this way: a verb with no settled past.
+Camino has a clean history. Andar does not. It comes down from Medieval Latin andāre, and where andāre came from is genuinely disputed: ambulāre ("to walk about") and ambitāre ("to go around") are both proposed and neither is proved. If ambulāre is right, amble and ambulance are cousins — but that "if" carries real weight.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pair — "llovía" then "llovió"]
+[your turn — say: "camino, caminas, camina, caminamos, caminan"]
 [pause 8 seconds for the answer]
-[your turn — say: scene, then event — "Llovía. Luego me levanté."]
+[your turn — say: "ando, andas, anda, andamos, andan"]
 [pause 8 seconds for the answer]
-[your turn — say: "No corrí, porque llovía." — the reason is a scene, the running an event]
+[your turn — say: "Camino una hora" — I walk for an hour]
 [pause 8 seconds for the answer]
-[your turn — say: "Comía pan porque llovía."]
+[your turn — say: "el camino" then "camino" — the road, and I walk it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does imperfectus literally say, and which English word shares its second half? (Not carried through; perfect — and fact, factory.) In a story, which tense paints the background and which drops in the events? (Imperfect paints; preterite drops in.) Which of llovía and llovió has an edge on it? (Llovió — a thing that happened.)
+Which language did Latin borrow camminus from? (Gaulish.) Which English word comes from the other Latin camīnus, the hearth? (Chimney — unrelated.) Is andar's origin settled? (No.) Say "I walk for an hour". (Camino una hora.) And the nosotros form of dormir? (Dormimos.)
 
 
 Lesson 4 of 4.
-contar — to tell a story, which is also to count it up.
+correr — "to run", and the root that runs through half of English.
 
 Warm-up.
 [pause 2 seconds]
-Three pieces are in your hands: luego to order events, porque to explain them, the imperfect to hold the background still. This lesson adds no fourth piece — it puts the three together, under the verb that names the act.
+You can walk two ways now — camino and ando. Speed it up. This last verb of the chapter is the plainest to conjugate and the richest to trace.
 
 Sounds you'll need.
-diphthong-ue — the stem breaks under stress: cuento = KWEN-to, but contamos stays plain.
-k-hard — c before o is a hard k.
+rolled-rr — the double r is a full trill: ko-RRER. It is a different letter from a single r, and swapping them swaps words.
+vowel-o — a short pure o, no glide toward English ow.
 
-The word, taken apart: contar.
-contar means to count — and to tell a story. One verb, both jobs, and not a pun.
-It descends from Latin computāre, "to reckon up": com- ("together") plus putāre, which meant "to prune", then "to settle an account", then simply "to reckon". Putāre gives amputate, dispute, deputy; computāre gives count, compute, account.
-English carries the same double sense — to recount an event, to give an account of yourself — but those are the very same word, borrowed through Old French from computāre. Spanish's relatives, not an independent echo.
-The independent echo is tell: Germanic, unrelated, and it also once meant "to count" — hence a bank teller, and all told. Two unrelated languages, one thought: a story is a reckoning-up of events in order.
+The word, taken apart: correr.
+correr ("to run") from Latin currere, "to run". English borrowed this root harder than almost any other, and the descendants have spread so far from running that they no longer look related:
+current — water that runs; currency, money running hand to hand.
+curriculum — a running, a racecourse. A course of study is a track you run.
+courier, a runner; course, cursor, cursive — writing that runs.
+corridor — a place for running along, by way of Italian.
+with prefixes: occur (ob-, to run up against), recur, incur, precursor, excursion.
+And a cousin from the lesson before: Gaulish carrus, behind English car and cargo, comes from the very same Proto-Indo-European root kers-, "to run". Latin took one road and Celtic another; English holds both ends.
 
-Grammar Lens: the backbone of a told story.
-Contar breaks o to ue under stress:
-[a table of 5 rows, read aloud]
-person: yo. form: cuento.
-person: tú. form: cuentas.
-person: él/ella/usted. form: cuenta.
-person: nosotros. form: contamos.
-person: ellos/ustedes. form: cuentan.
-Here is the shape of a told story:
-Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho. Me senté y leí. It was raining. I got up, then I drank coffee. I didn't run, because it was raining hard. I sat down and read.
-Watch the two pasts divide the work. Llovía — imperfect, holding the scene still. Me levanté, bebí, me senté, leí — preterite, dropping events in. Luego orders them; porque explains one.
-That is a narration, and every word in it is one this book has taught you.
+Grammar Lens: a plain -er verb, and four verbs together.
+Correr breaks nothing and grows nothing: corro, corres, corre, corremos, corren. That makes it the clean case the chapter's others stand out against:
+[a table of 4 rows, read aloud]
+verb: correr. what it does to its stem: nothing — corro, corres, corre.
+verb: caminar, andar. what it does to its stem: nothing — camino, ando.
+verb: dormir. what it does to its stem: breaks o to ue under stress — duermo, but dormimos.
+verb: oír. what it does to its stem: grows -g- in oigo, and writes y in oyes, oye, oyen.
+Only two of the four misbehave, and each misbehaves by a rule you can state.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "cuento, cuentas, cuenta, contamos, cuentan"]
+[your turn — say: "corro, corres, corre, corremos, corren"]
 [pause 8 seconds for the answer]
-[your turn — say: "Cuento hasta cinco." — I count to five. Same verb.]
+[your turn — say: "El perro corre" — the dog runs]
 [pause 8 seconds for the answer]
-[your turn — say: the scene, then the event — "Llovía. Luego me levanté."]
+[your turn — say: "Camino, no corro" — I walk, I don't run]
 [pause 8 seconds for the answer]
-[your turn — say: the whole thing — "Llovía. Me levanté, luego bebí café. No corrí, porque llovía mucho."]
+[your turn — say: "Corro el sábado" — I run on Saturday; Spanish uses the bare article where English says on]
 [pause 8 seconds for the answer]
-[your turn — say: "contar" then English "count, account, recount, teller"]
+[your turn — say: "Oigo, duermo, camino, corro" — the whole chapter in four words]
+[pause 8 seconds for the answer]
+[your turn — say: "correr" then English "current, curriculum, corridor" — the running family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Contar does two jobs — which two, and what Latin verb explains both? (Count and tell; computāre, "to reckon up".) Which English word carries the same double sense? (Recount — or an account; and tell itself, as in a bank teller.) In your story, which tense held the rain and which one poured the coffee? (Imperfect llovía; preterite bebí.) Name the two joining words you used. (Luego for order, porque for reason.)
+Name each verb's source in turn: oír, dormir, caminar, correr. (Audīre; dormīre; Gaulish camminus, by way of el camino; currere.) Which of the four leave their stems alone? (Caminar, andar and correr.) Say "the dog runs". (El perro corre.) Two words here have no settled origin — which? (Andar, and perro, whose three proposals all lack the evidence to decide between them.) And which English everyday word is a cousin of correr through Celtic? (Car.)
