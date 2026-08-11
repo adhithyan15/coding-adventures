@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.29.0 - 2026-08-11
+
+- Move destroyed participant footers to their associated message and terminate messages at the footer edge.
+
 ## 0.28.0 - 2026-08-11
 
 - Anchor active self-messages to the outer edge of the current activation stack.

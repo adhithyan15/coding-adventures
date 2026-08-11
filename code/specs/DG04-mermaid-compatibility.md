@@ -123,11 +123,10 @@ branch dividers before existing PaintInstructions render them.
 `par_over` frames retain their distinct semantics by overlaying sibling notes
 at the parallel content origin while preserving the tallest content extent.
 Participant `create` and `destroy` statements lower into lifecycle events;
-layout uses them
-to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Created headers are centered on their associated message line, that
-message terminates at the header edge, and destruction markers terminate the
-lifeline on their associated message line. Lifecycle declarations bind to
+layout uses them to place dynamic participant headers and footers and bound
+lifelines. Created headers and destroyed footers are centered on their
+associated message lines, those messages terminate at the participant edge,
+and destroyed lifelines terminate on that line. Lifecycle declarations bind to
 Mermaid's required following message:
 created participants must receive it, while destroyed participants must send or
 receive it. Created participant IDs must be new, and an existing participant
