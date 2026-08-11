@@ -7,8 +7,8 @@
 //! The import aliases each helper back to the historical `_sir_*` name the
 //! emitter already uses, so `emit.rs` is unchanged — only the *source* of the
 //! helpers moved from an inlined blob to an imported library.  `_sir_plus` etc.
-//! map to the core's clean names (`add`, `sub`, …); `_sir_print` maps to the
-//! core's `sir_print`.
+//! map to the core's clean names (`add`, `sub`, …); `_sir_write` maps to the
+//! core's `sir_write`.
 
 /// The OOP-runtime import header, appended **only** when a module uses an
 /// object-orientation feature (classes/modules/instance vars/class vars/
@@ -117,8 +117,6 @@ from coding_adventures_sir_runtime_core import (
     is_null as _sir_is_null,
     is_number as _sir_is_number,
     is_symbol as _sir_is_symbol,
-    sir_print as _sir_print,
-    sir_puts as _sir_puts,
     sir_write as _sir_write,
     to_display as _sir_to_display,
 )
@@ -176,8 +174,6 @@ mod tests {
             "is_null as _sir_is_null",
             "is_number as _sir_is_number",
             "is_symbol as _sir_is_symbol",
-            "sir_print as _sir_print",
-            "sir_puts as _sir_puts",
             "sir_write as _sir_write",
             "to_display as _sir_to_display",
         ] {
