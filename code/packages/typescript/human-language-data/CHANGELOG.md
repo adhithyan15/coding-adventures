@@ -4,6 +4,15 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Hebrew Lamed (HL-C09BO)
+
+- Verify printed **ל** from HebrewPod101's Lamed/Mem lesson: descend the tall
+  left stroke, continue right along the middle bar, and turn diagonally down-left.
+- Preserve the lesson's rounded looping handwritten alternative while fitting
+  the demonstrated angular print order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 165 entries; Hebrew has 10 outstanding, with
+  the same lesson's Mem demonstration queued next.
+
 ### Added - source-verified Hebrew Kaf (HL-C09BN)
 
 - Verify printed **כ** from HebrewPod101's dedicated Kaf lesson: draw the top

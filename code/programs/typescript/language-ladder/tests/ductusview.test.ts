@@ -101,6 +101,8 @@ const HEBREW_YOD = ductusFor("י", "hebrew")!;
 const hebrewYodOutline = hebrewOutline("י");
 const HEBREW_KAF = ductusFor("כ", "hebrew")!;
 const hebrewKafOutline = hebrewOutline("כ");
+const HEBREW_LAMED = ductusFor("ל", "hebrew")!;
+const hebrewLamedOutline = hebrewOutline("ל");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
 const ARABIC_ALEF = ductusFor("ا", "arabic")!;
@@ -1086,6 +1088,35 @@ describe("Hebrew כ — one continuous sharp-cornered half-circle", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(HEBREW_KAF.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ל — one tall angular run", () => {
+  const steps = ductusSteps(HEBREW_LAMED);
+  const strip = ductusFilmstrip(HEBREW_LAMED, hebrewLamedOutline);
+
+  it("keeps the tall stroke, middle bar, and diagonal lower stroke joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the tall left stroke from top to bottom",
+      "continue right along the middle bar without lifting",
+      "turn diagonally down-left through the lower stroke without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact tall Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewLamedOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_LAMED.strokes[0], 2),
     );
   });
 });

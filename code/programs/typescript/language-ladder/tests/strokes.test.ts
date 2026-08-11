@@ -35,6 +35,7 @@ const HEBREW_HEIT = DUCTUS[ductusKey("hebrew", "ח")];
 const HEBREW_TET = DUCTUS[ductusKey("hebrew", "ט")];
 const HEBREW_YOD = DUCTUS[ductusKey("hebrew", "י")];
 const HEBREW_KAF = DUCTUS[ductusKey("hebrew", "כ")];
+const HEBREW_LAMED = DUCTUS[ductusKey("hebrew", "ל")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
@@ -351,6 +352,22 @@ describe("handwriting ductus", () => {
     expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
     expect(base[0]).toEqual(side.at(-1));
     expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew ל descends, travels right, then turns diagonally down-left", () => {
+    expect(HEBREW_LAMED.script).toBe("hebrew");
+    expect(penLifts(HEBREW_LAMED)).toBe(0);
+    expect(HEBREW_LAMED.strokes).toHaveLength(1);
+    expect(HEBREW_LAMED.strokes[0].segments).toHaveLength(3);
+    const tall = HEBREW_LAMED.strokes[0].segments[0].path;
+    const bar = HEBREW_LAMED.strokes[0].segments[1].path;
+    const lower = HEBREW_LAMED.strokes[0].segments[2].path;
+    expect(tall[0].y).toBeGreaterThan(tall.at(-1)!.y);
+    expect(bar[0]).toEqual(tall.at(-1));
+    expect(bar[0].x).toBeLessThan(bar.at(-1)!.x);
+    expect(lower[0]).toEqual(bar.at(-1));
+    expect(lower[0].y).toBeGreaterThan(lower.at(-1)!.y);
+    expect(lower[0].x).toBeGreaterThan(lower.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -995,6 +1012,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("כ", HEBREW_KAF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
+    expect(verifiedLetterFont("ל", HEBREW_LAMED.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -1148,6 +1168,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /handwritten Kaf.*rounded half-circle.*upper-left.*00:40.2–00:41.4.*half a circle to the right.*upper-left side.*going down.*00:41.8–00:47.0.*printed demonstration.*top bar left-to-right.*right side.*left along the base.*without lifting.*00:51.3–00:53.2.*same but with sharp corners.*00:47.3–00:49.5.*Noto Sans Hebrew.*rounded handwritten variation/i,
+    );
+  });
+
+  it("Hebrew ל traces the tall printed form in one continuous run", () => {
+    const src = HEBREW_LAMED.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=CBU6aSCcPrE");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #8.*Lamed and Mem.*01:22.4–01:23.9.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Lamed.*rounded looping run.*00:52.8–00:53.7.*printed demonstration.*top.*tall left stroke.*descends.*middle junction.*right along the bar.*diagonally down-left.*without lifting.*01:22.4–01:23.9.*printed form is angular.*handwriting is looped and rounded.*Noto Sans Hebrew.*handwritten variation/i,
     );
   });
 
