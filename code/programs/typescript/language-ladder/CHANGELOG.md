@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Hebrew Tet ductus (HL-C09BL)
+
+- Render **ט** in four evidence-aligned frames: descend the left side and turn
+  right along the base, then restart once at the lower-right, climb, and hook inward.
+- Keep the source's printed two-stroke order explicit while preserving its unusual
+  bottom-up, one-run rounded handwritten alternative.
+- Queue the same lesson's Yod demonstration next.
+
 ### Added — cited Hebrew Heit ductus (HL-C09BK)
 
 - Render **ח** in three evidence-aligned frames: draw the top bar left-to-right

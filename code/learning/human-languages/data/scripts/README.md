@@ -354,9 +354,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   right side, lift once, then draw the joined left leg from top to bottom. Its
   three-frame Noto Sans Hebrew path keeps the printed corners sharp while
   preserving the lesson's rounded handwritten form as a documented variation.
-  The remaining **169** prose
+  The Tet/Yod lesson then verifies printed **ט** in two strokes: the left side
+  descends and turns right along the base, then after one lift the right side
+  climbs from the lower-right and turns down-left into the inward hook. Its
+  four-frame Noto Sans Hebrew path preserves the source's unusual bottom-up,
+  single-run rounded handwriting as a documented variation. The remaining **168** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 14,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 13,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
