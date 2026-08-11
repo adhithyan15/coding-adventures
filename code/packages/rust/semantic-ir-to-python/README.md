@@ -65,6 +65,16 @@ Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`, `DefaultParams`
 (and the SIR16/17 expression, mutation, loop, OOP and exception features).
 
+**`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
+"none"|"per_value"|"once", unpack_arrays, ...values)` → `_sir_write(...)`
+— a plain pass-through (no compile-time literal extraction, unlike the
+C/Go/Rust backends): Python branches on the `stream`/`terminator` strings
+at runtime, exactly like `print`/`puts`. `_sir_write` lives in
+`coding-adventures-sir-runtime-core` and generalizes the existing
+`sir_print`/`sir_puts` — still present, still used by bare
+`"print"`/`"puts"` — into one function. Not yet emitted by any frontend —
+see [SIR28](../../../specs/SIR28-syscall-primitives.md).
+
 Rejects: `TailCalls` (CPython has no TCO), `Intrinsics` (empty
 whitelist).
 

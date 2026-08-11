@@ -17,6 +17,7 @@ that SIR-emitted Python calls into.
 from __future__ import annotations
 
 import inspect
+import sys
 from collections.abc import Callable
 from typing import Any
 
@@ -299,6 +300,72 @@ def sir_puts(*args: Any) -> None:
             print()
         else:
             _puts_one(a, seen)
+    return None
+
+
+def _write_puts_one(v: Any, out: Any, seen: set[int]) -> None:
+    """Like :func:`_puts_one`, parameterized by output stream (SIR28 §2.1).
+
+    Array-unpacking + cycle-guard logic mirrors :func:`_puts_one` exactly
+    (same ``seen`` set of list ``id()``s, same ``[...]`` cycle placeholder).
+    """
+    if isinstance(v, list):
+        vid = id(v)
+        if vid in seen:
+            print("[...]", file=out)
+            return None
+        seen.add(vid)
+        for item in v:
+            _write_puts_one(item, out, seen)
+        seen.discard(vid)
+        return None
+    print(values.to_display(v), file=out)
+    return None
+
+
+def sir_write(stream: str, terminator: str, unpack_arrays: bool, *values_: Any) -> None:
+    """SIR28 §2.1: ``__sys_write__``, the console-output primitive
+    :func:`sir_print`/:func:`sir_puts` above generalize into.
+
+    Where those hard-code ONE newline policy each, this is the SAME
+    operation parameterized by policy flags carried as DATA -- the root
+    cause SIR28 exists to fix: real Ruby's ``print`` never newline-
+    terminates, Python's own ``print()`` always does, but both used to
+    lower to the identical ``BuiltinCall("print", ...)`` this backend had
+    no way to tell apart.
+
+    ``stream``: ``"stdout"`` | ``"stderr"``. ``terminator``: ``"none"``
+    (:func:`sir_print`'s behavior) | ``"per_value"`` (:func:`sir_puts`'s
+    array-unpacking behavior, honouring ``unpack_arrays``) | ``"once"``
+    (Python's native ``print(a, b)`` -- space-join every value, one
+    trailing newline). Deliberately does NOT replicate :func:`sir_puts`'s
+    trailing-newline-suppression nuance above (``puts "x\\n"`` prints
+    ``x\\n``, not ``x\\n\\n``) -- that's a pre-existing divergence from the
+    C/Go/Rust backends' own ``puts``, orthogonal to and not fixed by
+    SIR28; ``per_value`` here always appends exactly one newline per
+    value, matching SIR28 §2.1's table and every other backend's
+    ``__sys_write__`` faithfully. (Parameter named ``values_`` with a
+    trailing underscore to avoid shadowing the ``values`` module imported
+    at the top of this file.)
+    """
+    out = sys.stderr if stream == "stderr" else sys.stdout
+    if terminator == "per_value":
+        if not values_:
+            print(file=out)
+            return None
+        seen: set[int] = set()
+        for v in values_:
+            if unpack_arrays:
+                _write_puts_one(v, out, seen)
+            else:
+                print(values.to_display(v), file=out)
+        return None
+    if terminator == "once":
+        print(" ".join(values.to_display(v) for v in values_), file=out)
+        return None
+    # "none"
+    for v in values_:
+        print(values.to_display(v), end="", file=out)
     return None
 
 

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.0 — `sir_write`, the SIR28 console-output primitive
+
+Adds `sir_write(stream, terminator, unpack_arrays, *values)`, generalizing
+the existing `sir_print`/`sir_puts` into one function parameterized by
+`stream` ("stdout"/"stderr"), `terminator` ("none"/"per_value"/"once"),
+and `unpack_arrays` — the policy axes
+[SIR28](../../../specs/SIR28-syscall-primitives.md) §2.1 defines. This is
+the runtime function `semantic-ir-to-python`'s new `__sys_write__` emit
+arm calls.
+
+Deliberately does NOT replicate `sir_puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — a pre-existing
+divergence from the other backends' own `puts`, orthogonal to and not
+fixed by SIR28; `sir_write`'s `per_value` terminator always appends
+exactly one newline per value, matching SIR28 §2.1's table and every
+other backend's `__sys_write__` faithfully.
+
+Adds `import sys` (needed for `sys.stdout`/`sys.stderr`). Purely
+additive: `sir_print`/`sir_puts` and every existing `print`/`puts`-sourced
+program are unchanged.
+
 ## 0.3.0 — `shift_left` (Ruby's `<<` operator)
 
 Part of "Python/JS backends: implement shift-operator runtime dispatch".
