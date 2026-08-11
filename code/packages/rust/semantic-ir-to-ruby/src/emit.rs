@@ -83,8 +83,6 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "pair?",
     "number?",
     "symbol?",
-    "print",
-    "puts",
     "global_get",
     "global_set",
     // SIR17 exceptions (`Feature::Exceptions`): `raise` (re-raise / raise a
@@ -131,8 +129,9 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // are hoisted + registered via `__def_method__`, reusing the slice-2 machinery.
     "__include__",
     "__extend__",
-    // SIR28: `__sys_write__`, the reserved console-output primitive
-    // `print`/`puts` will migrate to. `args = [StrLit(stream),
+    // SIR28: `__sys_write__`, the general console-output primitive every
+    // frontend now emits in place of the old bare `print`/`puts` (SIR28 §7
+    // removed the dead bare-name path). `args = [StrLit(stream),
     // StrLit(terminator), BoolLit(unpack_arrays), ...values]`, already
     // validated by `semantic-ir`'s validator (SIR28 §3.1) against a closed
     // set — routes to the `sir_write` runtime helper, which branches on
@@ -1514,8 +1513,6 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         "pair?" => format!("sir_is_pair({})", arg(&a, 0)),
         "number?" => format!("sir_is_number({})", arg(&a, 0)),
         "symbol?" => format!("sir_is_symbol({})", arg(&a, 0)),
-        "print" => format!("sir_print({})", a.join(", ")),
-        "puts" => format!("sir_puts({})", a.join(", ")),
         // SIR28 §2: `__sys_write__` — every arg (including the
         // stream/terminator/unpack_arrays literals) is already an emitted
         // Ruby expression string in `a`, so this is a plain pass-through to

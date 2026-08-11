@@ -207,14 +207,21 @@ fn run_convert(v: i64, to: IntSpec) -> Option<String> {
         span: Span::synthetic(),
     };
     let puts = Expr::BuiltinCall {
-        name: "puts".into(),
-        args: vec![conv],
+        name: "__sys_write__".into(),
+        args: vec![
+            Expr::StrLit { value: "stdout".into(), span: Span::synthetic() },
+            Expr::StrLit { value: "per_value".into(), span: Span::synthetic() },
+            Expr::BoolLit { value: true, span: Span::synthetic() },
+            conv,
+        ],
         effects: EffectSet::PURE,
         span: Span::synthetic(),
     };
     let module = Module {
         name: "prog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Conversions,
             Feature::SizedIntegers,
             Feature::Unsigned,
@@ -429,8 +436,13 @@ fn local(name: &str) -> Expr {
 fn puts(arg: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![arg],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s2() },
+                Expr::StrLit { value: "per_value".into(), span: s2() },
+                Expr::BoolLit { value: true, span: s2() },
+                arg,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s2(),
         },
@@ -441,7 +453,12 @@ fn puts(arg: Expr) -> Stmt {
 fn seq_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "seqprog".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Loops]),
+        manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
+            Feature::Sequences,
+            Feature::Loops,
+        ]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -574,7 +591,7 @@ fn forrange(var: &str, start: i64, stop: i64, step: i64, body: Vec<Stmt>) -> Stm
 /// A ForRange module needs only Loops; build one so the manifest is minimal.
 fn loops_module(stmts: Vec<Stmt>) -> Module {
     let mut m = seq_module(stmts);
-    m.manifest = FeatureManifest::from_features(&[Feature::Loops]);
+    m.manifest = FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::Loops]);
     m
 }
 
@@ -666,6 +683,7 @@ fn mapget(map: Expr, key: Expr) -> Expr {
 fn map_module(stmts: Vec<Stmt>) -> Module {
     let mut m = seq_module(stmts);
     m.manifest = FeatureManifest::from_features(&[
+        Feature::ConsoleIO,
         Feature::Maps,
         Feature::Sequences,
         Feature::Strings,
@@ -775,7 +793,7 @@ fn bin(name: &str, a: Expr, b: Expr) -> Expr {
 /// which are gated by the builtin allowlist, not by a feature).
 fn float_module(stmts: Vec<Stmt>) -> Module {
     let mut m = seq_module(stmts);
-    m.manifest = FeatureManifest::from_features(&[Feature::Floats]);
+    m.manifest = FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::Floats]);
     m
 }
 fn run_float(stmts: Vec<Stmt>) -> Option<String> {
@@ -904,7 +922,7 @@ fn lor(lhs: Expr, rhs: Expr) -> Expr {
 /// A `main` module declaring only `ShortCircuit`.
 fn sc_module(stmts: Vec<Stmt>) -> Module {
     let mut m = seq_module(stmts);
-    m.manifest = FeatureManifest::from_features(&[Feature::ShortCircuit]);
+    m.manifest = FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::ShortCircuit]);
     m
 }
 fn run_sc(stmts: Vec<Stmt>) -> Option<String> {
@@ -1028,6 +1046,8 @@ fn defparam_module(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) 
     Module {
         name: "defprog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::DefaultParams,
             Feature::DynamicTyping,
         ]),
@@ -1164,6 +1184,8 @@ fn kwarg(name: &str, value: Expr) -> Expr {
 fn kwparam_module(params: Vec<Param>, body_value: Expr, main_stmts: Vec<Stmt>) -> Module {
     let mut m = defparam_module(params, body_value, main_stmts);
     m.manifest = FeatureManifest::from_features(&[
+        Feature::ConsoleIO,
+        Feature::Strings,
         Feature::KeywordParams,
         Feature::DynamicTyping,
     ]);
@@ -1299,7 +1321,7 @@ fn trycatch(body: Vec<Stmt>, rescues: Vec<RescueClause>, ensure_body: Option<Vec
 }
 fn exc_module(stmts: Vec<Stmt>) -> Module {
     let mut m = seq_module(stmts);
-    m.manifest = FeatureManifest::from_features(&[Feature::Exceptions, Feature::Strings]);
+    m.manifest = FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Exceptions, Feature::Strings]);
     m
 }
 fn run_exc(stmts: Vec<Stmt>) -> Option<String> {
@@ -1464,6 +1486,7 @@ fn class_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "clsprog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Classes,
             Feature::Constants,
             Feature::Strings,
@@ -1725,6 +1748,7 @@ fn method_module_fns(stmts: Vec<Stmt>, extra: Vec<Function>) -> Module {
     Module {
         name: "methprog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Classes,
             Feature::Constants,
             Feature::Strings,
@@ -1882,6 +1906,7 @@ fn ivar_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "ivprog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::InstanceVars,
             Feature::MutableBindings,
             Feature::Strings,
@@ -1985,7 +2010,7 @@ fn ivar_read_and_write_emit_verbatim() {
     let m = ivar_module(vec![ivar_assign("@v", ilit(1)), puts(ivar_ref("@v"))]);
     let rb = compile(&m).expect("ivar module compiles").source;
     assert!(rb.contains("@v = 1"), "ivar write verbatim:\n{rb}");
-    assert!(rb.contains("sir_puts(@v)"), "ivar read verbatim:\n{rb}");
+    assert!(rb.contains(r#"sir_write("stdout", "per_value", true, @v)"#), "ivar read verbatim:\n{rb}");
 }
 
 #[test]
@@ -1999,7 +2024,7 @@ fn self_builtin_emits_native_self() {
     };
     let m = ivar_module(vec![puts(self_call)]);
     let rb = compile(&m).expect("self module compiles").source;
-    assert!(rb.contains("sir_puts(self)"), "native self:\n{rb}");
+    assert!(rb.contains(r#"sir_write("stdout", "per_value", true, self)"#), "native self:\n{rb}");
 }
 
 // ---- hand-built: injection (a crafted ivar name cannot inject) ------------
@@ -2280,6 +2305,7 @@ fn classvar_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "cvprog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::ClassVars,
             Feature::MutableBindings,
             Feature::Strings,
@@ -2345,6 +2371,8 @@ fn a_class_body_of_only_classvar_inits_compiles() {
     let m = Module {
         name: "cfgprog".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
+            Feature::Strings,
             Feature::Classes,
             Feature::ClassVars,
             Feature::MutableBindings,
