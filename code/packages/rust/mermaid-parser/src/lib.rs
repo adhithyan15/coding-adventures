@@ -249,7 +249,7 @@ pub fn parse_mermaid_c4_ast(source: &str) -> Result<GrammarASTNode, ParseError> 
 }
 
 pub fn parse_mermaid_sequence_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
-    let preprocessed = preprocess_mermaid_directives(source)?;
+    let preprocessed = preprocess_mermaid_source(source)?;
     let tokens = tokenize_mermaid_sequence(&preprocessed.source);
     let grammar = parse_parser_grammar(SEQUENCE_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse sequence.grammar: {e}"));
@@ -1024,7 +1024,7 @@ fn parse_data_list(s: &str) -> Vec<f64> {
 /// shared sequence IR. Unsupported control blocks fail grammar validation
 /// instead of being silently discarded.
 pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseError> {
-    let preprocessed = preprocess_mermaid_directives(source)?;
+    let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_sequence_ast(&preprocessed.source)?;
 
     let mut cursor = TokenCursor::new(tokenize_mermaid_sequence(&preprocessed.source));
@@ -1062,15 +1062,17 @@ struct PreprocessedMermaid {
     wrap: Option<bool>,
 }
 
-fn preprocess_mermaid_directives(source: &str) -> Result<PreprocessedMermaid, ParseError> {
-    let mut cleaned = source.as_bytes().to_vec();
+fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseError> {
+    let mut cleaned = blank_mermaid_front_matter(source)?;
+    let cleaned_source =
+        String::from_utf8(cleaned.clone()).expect("front matter blanking preserves UTF-8");
     let mut search_from = 0;
     let mut wrap = None;
-    while let Some(relative_start) = source[search_from..].find("%%{") {
+    while let Some(relative_start) = cleaned_source[search_from..].find("%%{") {
         let start = search_from + relative_start;
         let content_start = start + 3;
-        let Some(relative_end) = source[content_start..].find("}%%") else {
-            let line = source[..start]
+        let Some(relative_end) = cleaned_source[content_start..].find("}%%") else {
+            let line = cleaned_source[..start]
                 .bytes()
                 .filter(|byte| *byte == b'\n')
                 .count()
@@ -1082,7 +1084,7 @@ fn preprocess_mermaid_directives(source: &str) -> Result<PreprocessedMermaid, Pa
             });
         };
         let end = content_start + relative_end;
-        let directive = source[content_start..end].trim();
+        let directive = cleaned_source[content_start..end].trim();
         if directive.eq_ignore_ascii_case("wrap") {
             wrap = Some(true);
         } else if directive.eq_ignore_ascii_case("nowrap") {
@@ -1099,6 +1101,45 @@ fn preprocess_mermaid_directives(source: &str) -> Result<PreprocessedMermaid, Pa
         source: String::from_utf8(cleaned).expect("directive blanking preserves UTF-8"),
         wrap,
     })
+}
+
+fn blank_mermaid_front_matter(source: &str) -> Result<Vec<u8>, ParseError> {
+    let mut cleaned = source.as_bytes().to_vec();
+    let mut offset = 0;
+    let mut opening = None;
+
+    for (line_index, line) in source.split_inclusive('\n').enumerate() {
+        let trimmed = line.trim();
+        if let Some((start, _)) = opening {
+            if trimmed == "---" {
+                for byte in &mut cleaned[start..offset + line.len()] {
+                    if !matches!(*byte, b'\r' | b'\n') {
+                        *byte = b' ';
+                    }
+                }
+                return Ok(cleaned);
+            }
+        } else {
+            if trimmed.is_empty() {
+                offset += line.len();
+                continue;
+            }
+            if trimmed != "---" {
+                return Ok(cleaned);
+            }
+            opening = Some((offset, line_index + 1));
+        }
+        offset += line.len();
+    }
+
+    if let Some((_, line)) = opening {
+        return Err(ParseError {
+            message: "unterminated Mermaid YAML front matter".into(),
+            line,
+            col: 1,
+        });
+    }
+    Ok(cleaned)
 }
 
 fn apply_sequence_default_wrap(diagram: &mut SequenceDiagram) {
@@ -3563,6 +3604,36 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
                 ..
             }
         ));
+    }
+
+    #[test]
+    fn sequence_preprocesses_leading_yaml_front_matter() {
+        let diagram = parse_sequence_diagram(
+            "\n---\ntitle: Front matter title\nconfig:\n  theme: neutral\n---\n%%{wrap}%%\nsequenceDiagram\nAlice->>Bob: Request\n",
+        )
+        .expect("front matter should not enter the sequence grammar");
+
+        assert_eq!(diagram.title, None);
+        assert!(matches!(
+            diagram.events[0],
+            SequenceEvent::Message {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_unterminated_yaml_front_matter() {
+        let error = parse_sequence_diagram(
+            "\n---\ntitle: Missing closing delimiter\nsequenceDiagram\nAlice->>Bob: Request\n",
+        )
+        .expect_err("unterminated front matter must not consume the diagram");
+
+        assert!(error
+            .message
+            .contains("unterminated Mermaid YAML front matter"));
+        assert_eq!(error.line, 2);
     }
 
     #[test]
