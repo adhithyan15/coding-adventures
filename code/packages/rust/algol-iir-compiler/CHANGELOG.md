@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.84.0 — 2026-08-11 — block-scoped procedure shadowing
+
+Procedure declarations now receive stable sibling-function identities while a
+nearest-binding map follows ALGOL block scope. A nested declaration may shadow
+an outer procedure, calls inside the block resolve to the nested sibling, and
+leaving the block restores the outer binding. Same-block duplicates remain an
+error, and calls retain the existing fully typed direct IIR ABI.
+
 ## 0.83.0 — 2026-08-11 — real for controlled variables
 
 ALGOL for-clause controlled variables may now be `real` scalars or real array
