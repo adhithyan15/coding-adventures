@@ -456,7 +456,7 @@ mod apple {
                 .map(String::as_str),
             Some("Banking transfer\n  interaction")
         );
-        assert!(scene.instructions.iter().any(|instruction| matches!(
+        assert!(!scene.instructions.iter().any(|instruction| matches!(
             instruction,
             paint_instructions::PaintInstruction::Path(path)
                 if path.stroke.as_deref() == Some("#dc2626")
