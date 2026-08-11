@@ -757,11 +757,13 @@
         "ES-C18-poder-subjuntivo",
         "ES-C18-hacer-subjuntivo",
         "ES-C18-ojala",
-        "ES-C18-practice"
+        "ES-C18-practice",
+        "ES-C18-sintesis-subjuntivo"
       ],
       "before": [],
       "inline": [
-        "ES-EXT-042-LANGUAGE-SPECIFIC"
+        "ES-EXT-042-LANGUAGE-SPECIFIC",
+        "ES-EXT-042-CONSOLIDATION-SUBJ"
       ],
       "after": []
     },
@@ -2399,6 +2401,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C17-sintesis-futuro-condicional"
+      ]
+    },
+    {
+      "id": "ES-EXT-042-CONSOLIDATION-SUBJ",
+      "stage": "A2",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve and combine the Spanish material introduced in this part of the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C18-sintesis-subjuntivo"
       ]
     }
   ]

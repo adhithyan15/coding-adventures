@@ -2,34 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 47,
-  "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2849dcd6ae78444a",
+  "title": "The Subjunctive Built From the Yo Form",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:bc4243d41004e663",
   "lessons": [
     {
-      "id": "ES-C21-lunes-viernes",
-      "sequence": 1320,
-      "title": "lunes to viernes — the planets of the week, worn down",
-      "headword": "lunes, martes, miércoles, jueves, viernes",
-      "romanization": "lunes, martes, miércoles, jueves, viernes",
-      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
+      "id": "ES-C18-querer-subjuntivo",
+      "sequence": 1196,
+      "title": "quiera, quieras, quiera — keep the change you know",
+      "headword": "quiera · quieras · quiera",
+      "romanization": "quiera · quieras · quiera",
+      "gloss": "the singular present subjunctive of querer",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7788e733dde3393f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:c48542a30192f0f9",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,35 +35,36 @@
             },
             {
               "kind": "speech",
-              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
+              "text": "Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: quiera.",
+                "person: tú. present subjunctive: quieras.",
+                "person: él / ella / usted. present subjunctive: quiera."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say only this bounded singular row: quiera, quieras, quiera."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: the planet weekdays",
+          "type": "grammar",
+          "title": "Grammar Lens: one known verb, one inherited stem",
           "segments": [
             {
               "kind": "speech",
-              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "planet-god",
-                "English echo"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
+              "text": "You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form."
             }
           ]
         },
@@ -88,31 +80,67 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
+              "kind": "speech",
+              "text": "Carry only the known quier- stem into this row."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem quier-?",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "quiero"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from quiero.",
+                "incorrect": "Start from the learned yo form quiero."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-querer-subjuntivo-wanted",
+              "prompt": "Complete 'Quiero que ___ hablar español' for one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "quieras"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que quieras hablar español.",
+                "incorrect": "Use the tú subjunctive of querer: quieras."
+              }
             }
           ]
         },
@@ -129,52 +157,27 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the weekday family:"
-            },
-            {
-              "kind": "speech",
-              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
-            },
-            {
-              "kind": "speech",
-              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
+              "text": "Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C21-sabado-domingo",
-      "sequence": 1330,
-      "title": "sábado and domingo — the week's religious edge",
-      "headword": "sábado, domingo",
-      "romanization": "sábado, domingo",
-      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
+      "id": "ES-C18-poder-subjuntivo",
+      "sequence": 1200,
+      "title": "pueda, puedas, pueda — one more known stem change",
+      "headword": "pueda · puedas · pueda",
+      "romanization": "pueda · puedas · pueda",
+      "gloss": "the singular present subjunctive of poder",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22d7d0d2455fbb3c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two days, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:56c96bcce0b58308",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -189,39 +192,36 @@
             },
             {
               "kind": "speech",
-              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
+              "text": "Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: pueda.",
+                "person: tú. present subjunctive: puedas.",
+                "person: él / ella / usted. present subjunctive: pueda."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say pueda, puedas, pueda. No other poder forms enter today."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The two days, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: use it immediately",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "meaning",
-                "note"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
-            },
-            {
               "kind": "speech",
-              "text": "Two different rewrites:"
-            },
-            {
-              "kind": "speech",
-              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
-            },
-            {
-              "kind": "speech",
-              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
+              "text": "Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence."
             }
           ]
         },
@@ -237,31 +237,68 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
+              "kind": "speech",
+              "text": "Carry only the known pued- stem into this row."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "pueda, puedas, pueda",
+                "pueda puedas pueda",
+                "pueda / puedas / pueda"
+              ],
+              "feedback": {
+                "correct": "Right: pueda, puedas, pueda.",
+                "incorrect": "Keep pued- and add -a, -as, -a."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem pued-?",
+              "assesses": [
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "puedo"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from puedo.",
+                "incorrect": "Start from the learned yo form puedo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-poder-subjuntivo-wanted",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then known hablar español."
+              }
             }
           ]
         },
@@ -278,7 +315,165 @@
             },
             {
               "kind": "speech",
-              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
+              "text": "Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-hacer-subjuntivo",
+      "sequence": 1204,
+      "title": "haga, hagas, haga — hago lends its stem",
+      "headword": "haga · hagas · haga",
+      "romanization": "haga · hagas · haga",
+      "gloss": "the singular present subjunctive of hacer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31fcb6cee03e89a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The known present yo form is hago. Remove -o and keep hag-:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present subjunctive"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present subjunctive: haga.",
+                "person: tú. present subjunctive: hagas.",
+                "person: él / ella / usted. present subjunctive: haga."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: spend the new form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Carry only the known hag- stem into this row."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-forms",
+              "prompt": "Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "haga, hagas, haga",
+                "haga hagas haga",
+                "haga / hagas / haga"
+              ],
+              "feedback": {
+                "correct": "Right: haga, hagas, haga.",
+                "incorrect": "Keep hag- from hago and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-stem",
+              "prompt": "Which known present yo form gives the stem hag-?",
+              "assesses": [
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hago"
+              ],
+              "feedback": {
+                "correct": "Right: remove -o from hago.",
+                "incorrect": "The stem comes from the learned yo form hago."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-hacer-subjuntivo-wanted",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then known café."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)"
             }
           ]
         }

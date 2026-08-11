@@ -1,62 +1,98 @@
-Spanish, chapter 46: Lo Siento.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 46: The Subjunctive, Regular.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-lo siento — "I'm sorry," i.e. "I feel it".
-
-Warm-up.
-[pause 2 seconds]
-You already know por favor, "please." The next courtesy phrase is lo siento. Spanish does not say "I am sorry" as an adjective; it says something closer to "I feel this."
-
-The phrase, taken apart.
-lo = "it" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for "the whole business, unnamed."
-siento = "I feel," from sentir, "to feel," from Latin sentīre. That root gave English a whole family: sentiment, sense, consent ("feel together"), resent ("feel back at"), and sentence (originally an opinion, something felt).
-So lo siento is literally "I feel it." You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, "I feel it a lot," works both for stepping on someone's foot and for hearing that their father died.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "siento" — I feel — then "lo siento," I feel it / I'm sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "lo siento mucho" — I'm so sorry]
-[pause 8 seconds for the answer]
-[your turn — say: "siento" then English "sentiment, sense, consent"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does lo siento literally mean? ("I feel it" — siento, "I feel," from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter "it.") Next: Spanish's other word for sorry, and when it is the right one.
-
-
-Lesson 2 of 2.
-perdón — the sorry that asks for something back.
+Lesson 1 of 3.
+hable, hables, hable — the singular -ar row.
 
 Warm-up.
 [pause 2 seconds]
-Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person.
-
-The word, taken apart.
-perdón ("pardon"), from the verb perdonar — Latin per- ("thoroughly") + dōnāre ("to give"). Literally: "to give completely."
-That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect ("thoroughly made") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it.
-
-Why it's said this way: which one to reach for.
-The two are not interchangeable, and the difference follows straight from the etymologies:
+You already used hables for one friend. Today add only the other two singular slots:
 [a table of 3 rows, read aloud]
-literally. lo siento: "I feel it". perdón: "give [it] completely".
-points at. lo siento: your feeling. perdón: their forgiveness.
-use for. lo siento: regret, sympathy. perdón: fault, or getting past someone.
-So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English "excuse me"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward "I'm sorry that happened," including things that are nobody's fault at all.
-Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off.
+person: yo. present subjunctive: hable.
+person: tú. present subjunctive: hables.
+person: él / ella / usted. present subjunctive: hable.
+Plural forms wait. Say the small row: hable, hables, hable.
+
+Grammar Lens: the yo stem, then a vowel swap.
+Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
+
+The name, taken apart.
+Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "perdón" — pardon / excuse me]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — "lo siento" for regret, "perdón" for fault]
-[pause 8 seconds for the answer]
-[your turn — say: "perdón" then English "donate, condone" — the dōnāre root]
-[pause 8 seconds for the answer]
+Build each answer only from the learned singular row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which present form gives the stem for regular hable: hablo or habla?
+[question — say your answer, then pause 7 seconds]
+What joining idea sits inside the Latin source of subjuntivo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do the two halves of perdonar mean? (Per-, "thoroughly," plus dōnāre, "to give" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — "I feel it.")
+Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
+
+
+Lesson 2 of 3.
+coma, comas, coma — let -er cross to a.
+
+Warm-up.
+[pause 2 seconds]
+Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: coma.
+person: tú. present subjunctive: comas.
+person: él / ella / usted. present subjunctive: coma.
+Say only the singular row: coma, comas, coma.
+
+Grammar Lens: meaning before machinery.
+Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
+
+Guided Practice.
+[pause 1 second]
+Keep comer inside the learned singular frame.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which form belongs after quiero que for one friend: comes or comas?
+[question — say your answer, then pause 8 seconds]
+Say 'I want you to eat' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
+
+
+Lesson 3 of 3.
+viva, vivas, viva — -ir joins -er.
+
+Warm-up.
+[pause 2 seconds]
+Start from vivo, remove -o, then add the same a endings you just used with comer:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: viva.
+person: tú. present subjunctive: vivas.
+person: él / ella / usted. present subjunctive: viva.
+Regular -er and -ir match in this singular row:
+comer: coma, comas, coma.
+vivir: viva, vivas, viva.
+Plural differences wait.
+
+Grammar Lens: meaning in a known frame.
+Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
+
+Guided Practice.
+[pause 1 second]
+Keep vivir inside the learned singular frame.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which two regular verb families share -a, -as, -a here?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to live in Madrid' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)
