@@ -7806,6 +7806,12 @@ impl HtmlParser {
                 false
             }
             "button" => {
+                if self.open_html_element_in_scope_index("button").is_some() {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "nested-button-start-tag",
+                        "start tag `<button>` implied the end of an open button in scope",
+                    ));
+                }
                 self.close_open_element_silently("button");
                 false
             }
@@ -31144,6 +31150,48 @@ mod tests {
         let second_nobr = element(&body.children[5]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn reports_repeated_button_starts_only_for_an_authored_button_in_scope() {
+        for (source, expected_count) in [
+            ("<!doctype html><button><button>", 1),
+            ("<!doctype html><p><button><button>", 1),
+            ("<!doctype html><button>x", 0),
+            ("<!doctype html><button></button><button>", 0),
+            ("<!doctype html><button><object><button>", 0),
+            ("<!doctype html><table><tr><td><button>x", 0),
+            ("<!doctype html><table><tr><td><button><button>", 1),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "nested-button-start-tag")
+                    .count(),
+                expected_count,
+                "source {source:?}"
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<button><button>", "div").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-button-start-tag")
+                .count(),
+            1,
+        );
+
+        let synthetic_button =
+            parse_html_fragment_for_context_with_diagnostics("<button>", "button").unwrap();
+        assert!(synthetic_button
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-button-start-tag"));
     }
 
     #[test]
