@@ -1,0 +1,60 @@
+% ============================================================================
+% space-rock-stage — the same rocky object, three different names depending
+% on WHERE it is (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A meteoroid, a meteor, and a meteorite are not three different kinds of
+% object — they are the same rock at three different STAGES of one journey:
+% out in space, burning through the atmosphere, and (if it survives) lying
+% on the ground. Recall is a binding query:
+%
+%     ? space_rock_stage(meteor, $D)
+%       % called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `space_rock_stage(stage, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a space-rock-related term that is not one of
+% these three. The query also runs BACKWARD — bind a description and recall
+% the stage it names:
+%
+%     ? space_rock_stage($S, still_a_rock_in_space)
+%       % meteoroid
+%
+% The three stages, as a little truth table:
+%
+%     stage       description                                                              quote (verbatim)
+%     ----------  -----------------------------------------------------------------------  --------------------------------------------------------------------------------
+%     meteoroid   still_a_rock_in_space                                                     "Meteoroids These rocks still are in space."
+%     meteor      called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere      "When meteoroids enter Earth's atmosphere ... at high speed and burn up, the fireballs or "shooting stars" are called meteors."
+%     meteorite   survives_the_atmosphere_and_hits_the_ground                                "When a meteoroid survives a trip through the atmosphere and hits the ground, it's called a meteorite."
+%
+% Provenance: quoted verbatim from NASA Science's "Meteors & Meteorites"
+% page, section "What's the difference between a meteoroid, a meteor, and a
+% meteorite?", which introduces each of the three stages in its own
+% sentence. WebFetch-verified before writing (twice — the second fetch
+% specifically re-checked the meteoroid sentence's exact wording against
+% its surrounding paragraph, since a first-pass fetch can silently
+% paraphrase a short or awkwardly-worded source sentence). `trust
+% authoritative` — NASA is a primary .gov source, the same tier the
+% sibling `comet-part.adj`/`solar-eclipse-type.adj` (the other libraries in
+% this directory) already use for their NASA citations. A space-rock-related
+% term that is NOT one of these three stages — "asteroid", a real object
+% the same page mentions ("Meteoroids range in size from dust grains to
+% small asteroids") but never defines in a sentence of its own on this
+% page — is deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a description. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table space_rock_stage {
+    columns stage, description
+
+    row (meteoroid, still_a_rock_in_space)
+    row (meteor, called_a_fireball_or_shooting_star_when_it_burns_up_in_the_atmosphere)
+    row (meteorite, survives_the_atmosphere_and_hits_the_ground)
+
+    source "When a meteoroid survives a trip through the atmosphere and hits the ground, it's called a meteorite."
+    locator "https://science.nasa.gov/solar-system/meteors-meteorites/"
+    trust authoritative
+}
