@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-daal ductus (HL-C09AO)
+
+- Render **د** in two evidence-aligned frames: the upper-tip descent through its
+  curved shoulder, then the connected turn left along the baseline.
+- Preserve the source's single pen-down run with zero lifts while fitting the
+  isolated Noto Naskh outline.
+- Keep one-way-connector context and script-scoped Arabic provenance, with the
+  same page's directly linked Raa demonstration queued next.
+
 ### Added — cited Arabic independent-khaa ductus (HL-C09AN)
 
 - Resolve the page's Khaa QuickTime attachment and render **خ** in three

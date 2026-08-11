@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-and Arabic ا and ب have authored pen paths today.**
+and Arabic ا, ب, ت, ج, ح, خ, and د have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -304,7 +304,12 @@ distinct from Jeem's body-first order while fitting the isolated Noto Naskh
 outline. The page's `kha.mov` verifies **خ** independently: its short upper head
 travels left-to-right and continues around the bowl in one run, then one lift
 precedes the dot above. That three-frame filmstrip follows Khaa's own body-first
-evidence rather than copying Haa's restart or merely moving Jeem's dot. The
+evidence rather than copying Haa's restart or merely moving Jeem's dot. The next
+page's `letter-daal-2.mp4` verifies **د** independently: its upper tip descends
+down-right through the curved shoulder, then turns left along the baseline in
+the same pen-down run. The two-frame filmstrip preserves that zero-lift motion,
+one-way-connector context, and Arabic-scoped provenance while fitting the
+isolated Noto Naskh outline. The
 runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
