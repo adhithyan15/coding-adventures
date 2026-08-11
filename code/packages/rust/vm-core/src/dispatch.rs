@@ -1381,6 +1381,19 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
         ))),
     };
     let field_addr = obj.addr() + byte_off;
+    // (AOT00-T10) A `pair_kind`-tagged object's soundness depends entirely on this
+    // tag convention holding for every word ever written to it — a mismatch here
+    // is exactly the kind of type confusion `register_tagged_kind` trusts never
+    // happens. Catch a regression the moment it's introduced (a future edit to the
+    // match arms above that stops applying the tag correctly) rather than letting
+    // it surface later as silent corruption during a compacting collection.
+    debug_assert_eq!(
+        word & FIELD_TAG_MASK == FIELD_TAG_HEAP_REF,
+        matches!(val, Value::HeapRef(_)),
+        "gc_field_store: tagged word must carry FIELD_TAG_HEAP_REF iff the stored \
+         value is a HeapRef — a mismatch here means a future GC compaction could \
+         misinterpret a scalar as a movable pointer, or fail to relocate a real one"
+    );
     // SAFETY: `byte_off + 8 <= size`, bounds-checked above against the
     // object's actual allocated payload size.
     unsafe {
