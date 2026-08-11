@@ -7402,7 +7402,10 @@ impl HtmlParser {
                 }
                 return;
             }
+            let blocked_by_formatting_marker = is_formatting_element(name)
+                && self.has_active_formatting_marker_above(index);
             let stack_displaced_formatting = is_formatting_element(name)
+                && !blocked_by_formatting_marker
                 && self.current_element_is(name)
                 && self.is_stack_displaced_formatting_element(&self.open_elements[index]);
             if stack_displaced_formatting {
@@ -7417,6 +7420,7 @@ impl HtmlParser {
                     .retain(|candidate| candidate != &path);
             }
             if is_formatting_element(name)
+                && !blocked_by_formatting_marker
                 && !self
                     .current_element_name()
                     .is_some_and(|current| current.eq_ignore_ascii_case(name))
@@ -7428,25 +7432,32 @@ impl HtmlParser {
                     ),
                 ));
             }
-            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_paragraph(index)
+            if is_formatting_element(name)
+                && !blocked_by_formatting_marker
+                && self.adopt_formatting_end_tag_across_paragraph(index)
             {
                 return;
             }
             if is_formatting_element(name)
+                && !blocked_by_formatting_marker
                 && self.adopt_formatting_end_tag_across_nested_paragraph(index)
             {
                 return;
             }
-            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_mixed_div(index)
+            if is_formatting_element(name)
+                && !blocked_by_formatting_marker
+                && self.adopt_formatting_end_tag_across_mixed_div(index)
             {
                 return;
             }
             if is_formatting_element(name)
+                && !blocked_by_formatting_marker
                 && self.adopt_formatting_end_tag_across_div(index, true)
             {
                 return;
             }
             if is_formatting_element(name)
+                && !blocked_by_formatting_marker
                 && self.adopt_formatting_end_tag_across_special_block(index)
             {
                 return;
@@ -9154,6 +9165,18 @@ impl HtmlParser {
             .skip(element_index + 1)
             .any(|path| {
                 element_at_path(&self.document, path).is_some_and(is_special_scope_boundary_element)
+            })
+    }
+
+    fn has_active_formatting_marker_above(&self, element_index: usize) -> bool {
+        self.open_elements
+            .iter()
+            .skip(element_index + 1)
+            .any(|path| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.namespace.is_none()
+                        && matches!(element.name.as_str(), "applet" | "marquee" | "object")
+                })
             })
     }
 
@@ -34426,7 +34449,7 @@ mod tests {
 
         for (source, expected_count) in [
             ("<!doctype html><b>1<i>2<p>3</b>4", 1),
-            ("<!doctype html><a><object><div></a>", 1),
+            ("<!doctype html><a><object><div></a>", 0),
             ("<!doctype html><a><p></a>", 0),
             ("<!doctype html></a>", 0),
             ("<!doctype html><table><a><div><p></a>", 0),
@@ -34445,6 +34468,74 @@ mod tests {
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn keeps_marker_blocked_formatting_end_tags_on_generic_recovery() {
+        for marker in ["applet", "marquee", "object"] {
+            let source = format!(
+                "<!doctype html><p><b><div><{marker}></p></b></div>X"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-non-current-formatting-end-tag"
+            }));
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic
+                    == &ParserDiagnostic::new(
+                        "unexpected-non-current-end-tag",
+                        "end tag `</b>` was seen before its open element was current",
+                    )
+            }));
+        }
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<p><b><div><marquee></p></b></div>X",
+            "div",
+        )
+        .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-formatting-end-tag"
+        }));
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-end-tag"
+        }));
+
+        let fostered =
+            parse_html_with_diagnostics("<!doctype html><table><b><marquee></b>").unwrap();
+        assert!(fostered.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-formatting-end-tag"
+        }));
+        assert!(fostered.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-end-tag"
+        }));
+
+        for source in [
+            "<!doctype html><marquee><b><div></b>",
+            "<!doctype html><b><marquee></marquee><div></b>",
+        ] {
+            let eligible = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                eligible
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-non-current-formatting-end-tag"
+                    })
+                    .count(),
+                2,
+                "source {source:?}"
+            );
+        }
+
+        let unmatched =
+            parse_html_with_diagnostics("<!doctype html><marquee><div></b>").unwrap();
+        assert!(unmatched.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-non-current-formatting-end-tag"
+        }));
+        assert!(unmatched.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-end-tag"
+        }));
     }
 
     #[test]
