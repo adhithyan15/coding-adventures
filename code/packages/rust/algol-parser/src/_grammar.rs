@@ -370,7 +370,7 @@ pub fn parser_grammar() -> ParserGrammar {
             name: r#"for_stmt"#.to_string(),
             body: GrammarElement::Sequence { elements: vec![
                 GrammarElement::Literal { value: r#"for"#.to_string() },
-                GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
+                GrammarElement::RuleReference { name: r#"variable"#.to_string() },
                 GrammarElement::TokenReference { name: r#"ASSIGN"#.to_string() },
                 GrammarElement::RuleReference { name: r#"for_list"#.to_string() },
                 GrammarElement::Literal { value: r#"do"#.to_string() },

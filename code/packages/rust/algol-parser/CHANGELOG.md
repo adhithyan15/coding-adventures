@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-08-11
+
+### Added
+
+- **Subscripted for variables.** The checked-in grammar now accepts any ALGOL
+  `variable` as a for-clause controlled variable, including array elements,
+  instead of restricting the position to a bare name.
+
 ## [0.6.0] - 2026-08-11
 
 ### Added

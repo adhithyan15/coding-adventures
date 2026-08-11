@@ -737,7 +737,9 @@ backend immediately) come before the enabler-dependent items.
   `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
   and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
   x86_64 CI). The for-loop sum-of-squares array Prog now runs on LLVM too (the ALGOL-for-loop
-  guard-type fix landed in `algol-iir-compiler` 0.5.1).
+  guard-type fix landed in `algol-iir-compiler` 0.5.1). A for-clause controlled
+  variable may itself be an integer array element; its designator is re-evaluated
+  for each typed, bounds-checked assignment and read.
   **AL-multidim ✅**: `integer array M[1:2, 1:2]` (2D) runs on **all 7 backends**
   via row-major flat index `(i-lo1)*stride + (j-lo2)` computed during declaration; strides
   accumulated right-to-left; `alloc_array`/`array_set`/`array_get` with flat 0-based index;
