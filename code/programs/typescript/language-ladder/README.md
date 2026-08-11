@@ -173,7 +173,7 @@ sitting upside down on a correct letter.
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 and all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —
-and Hebrew א, ב, ג, ד, ה, ו, ז, ח, and ט
+and Hebrew א, ב, ג, ד, ה, ו, ז, ח, ט, and י
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -417,6 +417,10 @@ descends into the rightward base, then one lift precedes the lower-right restart
 bottom-up right side, and inward hook. The source calls that bottom-up movement
 unusual and shows the rounded handwritten form as one continuous run, so the
 learner path keeps the print order on Noto Sans Hebrew without losing the variant.
+The same lesson adds a two-frame printed **י** filmstrip: its tiny head travels
+left-to-right and turns directly down through the short stem without lifting.
+The instructor calls Yod the simplest letter and compares handwriting to a
+little comma; the source note preserves that rounded form and print's small angle.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

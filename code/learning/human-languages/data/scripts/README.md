@@ -358,9 +358,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   descends and turns right along the base, then after one lift the right side
   climbs from the lower-right and turns down-left into the inward hook. Its
   four-frame Noto Sans Hebrew path preserves the source's unusual bottom-up,
-  single-run rounded handwriting as a documented variation. The remaining **168** prose
+  single-run rounded handwriting as a documented variation. The same lesson
+  verifies printed **י** as one tiny run: draw its head left-to-right and turn
+  directly down through the short stem. Its two-frame Noto Sans Hebrew path
+  preserves the comma-like handwritten form and the source's small print angle.
+  The remaining **167** prose
   part orders across seven scripts
-  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 13,
+  (`arabic` 3, `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 12,
   `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
