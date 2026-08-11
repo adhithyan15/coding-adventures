@@ -146,6 +146,10 @@ Prioritized work items:
    mode, matching the focused `template.dat` EOF cases across ordinary,
    nested, table, select, and text-mode contexts. Closed templates and the
    synthetic template fragment context remain quiet.
+   A `template` end tag with no authored HTML template open now reports the
+   in-head parse error and remains ignored, matching WPT `template.dat` while
+   preserving matching HTML-template closure, foreign template-named element
+   closure, and the synthetic template-fragment boundary diagnostic.
    Seeded table and foreign fragment-shell boundaries now report their required
    parse errors.
 2. **Adoption agency and active formatting.** Cover malformed formatting cases
