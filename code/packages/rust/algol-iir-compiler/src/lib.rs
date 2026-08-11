@@ -5964,11 +5964,18 @@ fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
     if tokens.len() == 1 && tokens[0].effective_type_name() == "REAL_LIT" {
         return Some(tokens[0].value.clone());
     }
+
+    let child_nodes = direct_nodes(node);
+    if tokens.len() == 1
+        && child_nodes.len() == 1
+        && matches!(tokens[0].value.as_str(), "+" | "-")
+    {
+        let literal = expr_real_literal_text(child_nodes[0])?;
+        return Some(format!("{}{literal}", tokens[0].value));
+    }
     if !tokens.is_empty() {
         return None;
     }
-
-    let child_nodes = direct_nodes(node);
     if child_nodes.len() == 1 {
         return expr_real_literal_text(child_nodes[0]);
     }
@@ -6800,10 +6807,26 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_signed_real_literal_rejects_without_losing_sign() {
-        let err = compile_source("begin print(-4.25) end", "test")
-            .expect_err("a signed real is an expression, not a direct literal");
+    fn al4_print_computed_real_rejects_literal_fast_path() {
+        let err = compile_source("begin print(2.0 + 2.25) end", "test")
+            .expect_err("binary real arithmetic still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_signed_real_literals_preserve_signs() {
+        let module = compile_source("begin print(-4.25, +2.5) end", "test")
+            .expect("signed real literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["-4.25", "+2.5"]);
     }
 
     #[test]
