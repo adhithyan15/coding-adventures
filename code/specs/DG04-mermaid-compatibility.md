@@ -122,7 +122,10 @@ block events. Sequence layout resolves those events into nested frames and
 branch dividers before existing PaintInstructions render them. Participant
 `create` and `destroy` statements lower into lifecycle events; layout uses them
 to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Lifecycle declarations bind to Mermaid's required following message:
+markers. Created headers are centered on their associated message line, that
+message terminates at the header edge, and destruction markers terminate the
+lifeline on their associated message line. Lifecycle declarations bind to
+Mermaid's required following message:
 created participants must receive it, while destroyed participants must send or
 receive it. Created participant IDs must be new, and an existing participant
 cannot be reassigned between participant boxes. Nested message and statement
