@@ -2,6 +2,22 @@
 
 All notable changes to this package are documented here.
 
+## [0.42.0] - 2026-08-11
+
+### Added
+
+- Add item-bound bounded-history restore boundaries that validate the stable
+  item ID, historical revision, tombstone state, current conflict state, and
+  same-revision guard without exposing a history projection to the host.
+- Add an audited restore variant that durably records failed authenticated
+  selection outcomes before returning their closed error.
+
+### Security
+
+- Publish successful restore events atomically with their new live revision;
+  failed events bind the selected revision only after repository history proves
+  that it belongs to the attempted item.
+
 ## [0.41.0] - 2026-08-11
 
 ### Added

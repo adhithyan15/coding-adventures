@@ -747,31 +747,45 @@ fn history_restore(
     revision_id: RevisionId,
 ) -> Result<CliOutput, CliFailure> {
     let (access, application_store) = authenticated_access(host, paths, writer)?;
-    let selected = access
+    let audit_enabled = access
         .as_unlocked()
         .map_err(map_application)?
-        .item_history(item_id, DEFAULT_ITEM_HISTORY_LIMIT)
-        .map_err(map_application)?
-        .into_iter()
-        .find(|candidate| candidate.revision_id() == revision_id)
-        .ok_or(CliFailure::NotFound)?;
-    if selected.is_deleted() {
-        return Err(CliFailure::InvalidCommand);
-    }
-    drop(selected);
-    let now_ms = host.now_ms().map_err(map_host)?;
+        .audit_enabled();
+    let (now_ms, failure_randomness) = if audit_enabled {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        (wall_time_ms, Some(randomness))
+    } else {
+        (host.now_ms().map_err(map_host)?, None)
+    };
     let mut mutation_random = [0_u8; RESTORE_ITEM_RANDOM_BYTES];
     host.fill_entropy(&mut mutation_random).map_err(map_host)?;
-    access
-        .into_unlocked()
-        .map_err(map_application)?
-        .restore_item(
-            revision_id,
-            now_ms,
-            RestoreItemRandomnessV1::new(mutation_random),
-            &application_store,
-        )
-        .map_err(map_application)?;
+    let session = access.into_unlocked().map_err(map_application)?;
+    if let Some(failure_randomness) = failure_randomness {
+        session
+            .audited_restore_item_for_item(
+                item_id,
+                revision_id,
+                DEFAULT_ITEM_HISTORY_LIMIT,
+                now_ms,
+                RestoreItemRandomnessV1::new(mutation_random),
+                failure_randomness,
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_operation()
+            .map_err(map_application)?;
+    } else {
+        session
+            .restore_item_for_item(
+                item_id,
+                revision_id,
+                DEFAULT_ITEM_HISTORY_LIMIT,
+                now_ms,
+                RestoreItemRandomnessV1::new(mutation_random),
+                &application_store,
+            )
+            .map_err(map_application)?;
+    }
     Ok(CliOutput::success(format!(
         "Item restored: {}\n",
         item_id.to_user_string()
@@ -1705,6 +1719,95 @@ mod tests {
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
         assert!(audit.stdout().contains("commits=5"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
+    }
+
+    #[test]
+    fn active_epoch_restore_binds_item_and_revision_inside_one_mutation() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"audited restore passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"restore secret".to_vec()],
+            [
+                "Restore me".to_owned(),
+                "user@example.test".to_owned(),
+                String::new(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+        let item_id =
+            ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string();
+        let history_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let history = run(["history", "list", item_id.as_str()], &history_host);
+        assert_eq!(history.exit_code(), ExitCode::Success, "{history:?}");
+        let original_revision = history
+            .stdout()
+            .lines()
+            .next()
+            .unwrap()
+            .split('\t')
+            .next()
+            .unwrap()
+            .to_owned();
+        let delete_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(
+            run(["item", "delete", item_id.as_str()], &delete_host).exit_code(),
+            ExitCode::Success
+        );
+        let deleted_history_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let deleted_history = run(["history", "list", item_id.as_str()], &deleted_history_host);
+        assert_eq!(deleted_history.exit_code(), ExitCode::Success);
+        let tombstone_revision = deleted_history
+            .stdout()
+            .lines()
+            .next()
+            .unwrap()
+            .split('\t')
+            .next()
+            .unwrap()
+            .to_owned();
+        activate_test_audit_epoch(&paths, passphrase.clone());
+
+        let tombstone_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let tombstone = run(
+            [
+                "history",
+                "restore",
+                item_id.as_str(),
+                tombstone_revision.as_str(),
+            ],
+            &tombstone_host,
+        );
+        assert_eq!(
+            tombstone.exit_code(),
+            ExitCode::InvalidInput,
+            "{tombstone:?}"
+        );
+
+        let restore_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let restored = run(
+            [
+                "history",
+                "restore",
+                item_id.as_str(),
+                original_revision.as_str(),
+            ],
+            &restore_host,
+        );
+        assert_eq!(restored.exit_code(), ExitCode::Success, "{restored:?}");
+        assert_eq!(restored.stdout(), format!("Item restored: {item_id}\n"));
+
+        let audit_host = TestHost::new(paths, [passphrase]);
+        let audit = run(["audit", "verify"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit.stdout().contains("commits=6"), "{audit:?}");
         assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
     }
 

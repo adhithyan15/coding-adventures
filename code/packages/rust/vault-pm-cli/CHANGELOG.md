@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Collapse active-epoch `history restore ITEM REVISION` into one item-bound
+  audited application mutation, including durable missing, cross-item,
+  tombstone, same-revision, and conflict failures.
 - Collapse active-epoch `item delete ITEM` into one application-selected
   audited mutation: successful tombstones and failed authenticated
   preconditions now become durable before the CLI reveals their outcome.

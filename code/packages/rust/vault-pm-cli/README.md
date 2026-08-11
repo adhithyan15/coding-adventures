@@ -70,11 +70,14 @@ successful delete publishes its signed event atomically with that tombstone;
 missing, already-deleted, and conflicted attempts publish a failed delete event
 before the CLI exposes the closed error. The exact optimistic revision
 capability never crosses into CLI orchestration.
-`history restore ITEM REVISION` first binds the exact canonical live revision
-to that item's bounded redacted history, then consumes the session while the
-application independently authenticates and copies it into a new current
-revision. Neither operation erases history, rewinds repository heads, or emits
-secret-bearing metadata.
+`history restore ITEM REVISION` passes both user selectors into one bounded
+application boundary, which proves the revision belongs to that item's history
+and copies it into a new current revision without returning the history
+projection to CLI orchestration. In an active audit epoch, the successful
+restore event and new revision publish atomically. Missing, cross-item,
+tombstone, same-revision, and conflicted attempts publish a failed restore event
+before their closed error is exposed. Neither operation erases history,
+rewinds repository heads, or emits secret-bearing metadata.
 
 ## Verification
 
