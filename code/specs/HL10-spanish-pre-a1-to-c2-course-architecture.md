@@ -362,6 +362,15 @@ Consequence: the present indicative of *hablar* — the classic "chapter 2" tabl
 is completed around **lesson 380** of this course. Everything before that has been
 saying real things with the cells already held.
 
+**How to tell a recap from a dump, since a gate cannot.** `info-dump.ts` flags
+table *shape*, which is the honest thing for it to measure and means its output
+is a list of candidates, not a list of defects. The test is upstream of the
+table: does a teaching lesson introduce each row separately, and does the lesson
+carrying the table introduce **zero** atoms? A Spanish sweep found 23 tables of
+seven rows or more and **no genuine dump among them** — the six-person future
+and subjunctive grids are terminal checkpoints of chapters that teach one row
+per lesson, and the rest are lists (months, numbers, days), not paradigms.
+
 ### 5.4 The grammar order for Spanish
 
 The full ordering is a DAG; this is its spine, with the stage each rung completes.
