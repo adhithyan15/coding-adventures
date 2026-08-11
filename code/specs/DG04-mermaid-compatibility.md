@@ -188,7 +188,9 @@ values through semantic IR, layout, and shaped Paint labels. Re-enabling a
 paused counter without arguments resumes its current value and increment;
 layout rounds every increment to Mermaid's two-decimal sequence precision.
 Nested `rect` background highlights carry RGB/RGBA fills and normalized HSL/HSLA
-fills through semantic block events, layout frames, and Paint.
+fills through semantic block events, layout frames, and Paint. Empty `rect`
+headers preserve Mermaid's theme-default background intent, and CSS named
+colors remain backend-neutral Paint values.
 Sequence headers, statement keywords, placements, and control words match
 case-insensitively as required by Mermaid 11.16.1's Jison lexer, while actor IDs
 and user-authored text retain their original case through semantic IR and Paint.

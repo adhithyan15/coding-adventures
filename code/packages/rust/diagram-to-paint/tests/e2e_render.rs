@@ -478,4 +478,43 @@ mod apple {
                 if rect.fill.as_deref() == Some("rgba(255, 200, 100, 0.12)")
         )));
     }
+
+    #[test]
+    fn render_mermaid_sequence_default_rect_to_png() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nrect\nAlice->>Bob: Theme default background\nend\n",
+        )
+        .expect("Mermaid sequence default rect parse failed");
+        let layout = layout_sequence_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_sequence(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 17.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_sequence_default_rect_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#fff7ed")
+        )));
+    }
 }
