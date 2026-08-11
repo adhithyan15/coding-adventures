@@ -389,6 +389,13 @@ struct Compiler {
     /// Procedure names declared in each lexical block. The stack distinguishes
     /// legal nested shadowing from duplicate declarations in one block.
     proc_scope_names: Vec<HashSet<String>>,
+    /// Stable identities introduced by each lexical block. Nested identities
+    /// leave the compiler lookup tables at scope exit even though their emitted
+    /// sibling functions remain in the finished module.
+    proc_scope_identities: Vec<Vec<String>>,
+    /// Every direct sibling-function name already emitted or reserved. This
+    /// prevents two disjoint nested blocks from reusing the same IIR name.
+    proc_function_names: HashSet<String>,
     /// Active call-by-name formal substitutions while lowering one specialised
     /// procedure body.
     by_name_bindings: HashMap<String, ByNameBinding>,
@@ -461,6 +468,8 @@ impl Default for Compiler {
             proc_decls: HashMap::new(),
             proc_names: HashMap::new(),
             proc_scope_names: vec![HashSet::new()],
+            proc_scope_identities: vec![Vec::new()],
+            proc_function_names: HashSet::new(),
             by_name_bindings: HashMap::new(),
             procedure_bindings: HashMap::new(),
             suspended_by_name: HashSet::new(),
@@ -566,6 +575,7 @@ impl Compiler {
             self.switch_scope_names.push(HashSet::new());
             self.label_scope_names.push(HashSet::new());
             self.proc_scope_names.push(HashSet::new());
+            self.proc_scope_identities.push(Vec::new());
         }
 
         // Labels have block scope and may be referenced before their textual
@@ -630,6 +640,14 @@ impl Compiler {
                 saved_switch_names.expect("nested block saves switch name bindings");
             self.label_scope_names.pop();
             self.labels = saved_labels.expect("nested block saves label bindings");
+            for stable_name in self
+                .proc_scope_identities
+                .pop()
+                .expect("nested block has procedure identities")
+            {
+                self.proc_sigs.remove(&stable_name);
+                self.proc_decls.remove(&stable_name);
+            }
             self.proc_scope_names.pop();
             self.proc_names = saved_proc_names.expect("nested block saves procedure bindings");
         }
@@ -1393,11 +1411,16 @@ impl Compiler {
                 "duplicate declaration for procedure {name:?}"
             )));
         }
-        let stable_name = if self.proc_sigs.contains_key(&name) {
+        let stable_name = if self.proc_function_names.contains(&name) {
             self.fresh_label(&format!("procedure_{name}"))
         } else {
             name.clone()
         };
+        self.proc_function_names.insert(stable_name.clone());
+        self.proc_scope_identities
+            .last_mut()
+            .expect("compiler always has procedure identities")
+            .push(stable_name.clone());
         self.proc_sigs.insert(
             stable_name.clone(),
             ProcSig {
@@ -6976,6 +6999,46 @@ mod tests {
         assert!(err
             .to_string()
             .contains("duplicate declaration for procedure"));
+    }
+
+    #[test]
+    fn nested_standard_function_override_is_restored_after_scope_exit() {
+        let src = "begin integer result; result := abs(-20); \
+                   begin integer procedure abs(x); value x; integer x; abs := 1; \
+                         result := result + abs(-99) end; \
+                   result := result + abs(-21) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_procedure_is_not_visible_after_scope_exit() {
+        let err = compile_source(
+            "begin integer result; \
+             begin integer procedure hidden; hidden := 42; result := hidden() end; \
+             result := hidden() end",
+            "nested_procedure_visibility",
+        )
+        .expect_err("a nested procedure must leave lookup scope with its block");
+        assert!(err.to_string().contains("call to undeclared procedure"));
+    }
+
+    #[test]
+    fn disjoint_blocks_use_distinct_procedure_identities() {
+        let src = "begin integer result; result := 0; \
+                   begin integer procedure local; local := 20; \
+                         result := result + local() end; \
+                   begin integer procedure local; local := 22; \
+                         result := result + local() end end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "disjoint_procedures").expect("compiles");
+        let local_names: HashSet<&str> = module
+            .functions
+            .iter()
+            .map(|function| function.name.as_str())
+            .filter(|name| name.contains("local"))
+            .collect();
+        assert_eq!(local_names.len(), 2);
     }
 
     #[test]

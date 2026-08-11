@@ -1211,6 +1211,19 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a nested declaration may override a standard function only
+    // within its block. The final `abs` call must resolve back to the built-in,
+    // rather than leaking the nested typed sibling through compiler metadata.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := abs(-20); \
+               begin integer procedure abs(x); value x; integer x; abs := 1; \
+                     result := result + abs(-99) end; \
+               result := result + abs(-21) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — procedures obey block scope like scalar, label, and switch
     // declarations. The nested `choose` resolves to its stable sibling while
     // the call after that block resolves to the restored outer procedure.
@@ -6356,6 +6369,36 @@ fn algol_procedure_shadowing_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but procedure-shadowing execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_function_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure abs(x)")
+                && program.src.contains("result := result + abs(-21)")
+        })
+        .expect("the ALGOL standard-function shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but standard-function shadowing did not complete"
             );
             continue;
         };
