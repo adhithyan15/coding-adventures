@@ -7,6 +7,7 @@
 // static picture of the finished letter cannot show — where it stays down and
 // where (if ever) it lifts.
 
+import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 //
@@ -189,6 +190,14 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
+const arabicAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = arabic.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Arabic ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const persianAlphabetSource = (glyph: string): StrokeSource => {
   const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -216,6 +225,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // glyph (shape) and against `source` (order), not trusted because they look
 // plausible here.
 //
+// Arabic ا opens the smallest remaining starter inventory from the University
+// of Oregon's instructional video: one top-to-bottom movement with no lift.
+// Its scoped key preserves Arabic provenance separately from the Persian and
+// Urdu records for the same Unicode glyph while sharing the Noto Naskh shape.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -337,6 +350,29 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ا"),
+  },
+  [ductusKey("arabic", "ا")]: {
+    script: "arabic",
+    glyph: "ا",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "down",
+            path: [
+              { x: 120, y: 640 },
+              { x: 120, y: 580 },
+              { x: 119, y: 500 },
+              { x: 124, y: 400 },
+              { x: 128, y: 250 },
+              { x: 129, y: 100 },
+              { x: 127, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ا"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",

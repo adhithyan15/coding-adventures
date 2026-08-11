@@ -2,6 +2,15 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Arabic independent-alif ductus (HL-C09AH)
+
+- Verify independent **ا** from the University of Oregon's *Introduction to
+  Arabic* video as one continuous top-to-bottom stroke with zero lifts.
+- Preserve the lesson's one-way-connector context and isolate Arabic provenance
+  from the Persian and Urdu records for the same Unicode glyph.
+- Render a real one-frame filmstrip whose source, prose, Noto Naskh geometry,
+  zero-lift summary, and Arabic-scoped identity agree.
+
 ### Added — cited Urdu independent-baṛī-ye ductus (HL-C09AG)
 
 - Add Urdu independent ے from Northwestern's *Zer o Zabar* animations as one
