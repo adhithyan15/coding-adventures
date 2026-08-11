@@ -197,6 +197,8 @@ real formatting.
 Those supported static standard-function calls may nest and compose with the
 same finite literal-only arithmetic evaluator, while every nested call remains
 subject to the same override, domain, exact-root, and finiteness checks.
+Runtime arithmetic conditionals may select between those validated static
+standard-function expressions, branching directly to each precomputed string.
 
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
