@@ -10,7 +10,8 @@ one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
-ITEM REVISION`. The executable is a thin caller of this package.
+ITEM REVISION`. `export FILE` adds the first encrypted recovery-artifact
+ceremony. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -111,6 +112,17 @@ restore event and new revision publish atomically. Missing, cross-item,
 tombstone, same-revision, and conflicted attempts publish a failed restore event
 before their closed error is exposed. Neither operation erases history,
 rewinds repository heads, or emits secret-bearing metadata.
+
+`export FILE` reserves export and audit entropy before unlock, collects and
+constant-time confirms a distinct export passphrase through two hidden fixed
+prompts, and calls the application's canonical portable-export boundary. In an
+active audit epoch, a prompt failure is durably recorded as failed
+`PortableExport`; success publishes its event before releasing the encrypted
+artifact. The native host then creates the explicit destination without
+following or replacing an existing final path, requests mode `0600` on Unix,
+writes and synchronizes the complete artifact, and returns only a path-free
+success line. A destination write failure occurs after artifact release and
+therefore does not rewrite the truthful successful access event.
 
 ## Verification
 

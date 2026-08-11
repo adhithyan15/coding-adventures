@@ -1525,7 +1525,12 @@ changelog, focused build, and downstream validation.
 9b-3b-1. reversible authenticated item deletion and exact historical restore
          using `VLT-PM14-cli-delete-restore.md`.
 9b-3b-2. explicit authenticated current-conflict resolution.
-9b-4. portable export/import CLI host composition and destination policy.
+9b-4a. completed authenticated encrypted portable export with a separately
+        confirmed hidden passphrase, pre-authentication audit reservation,
+        publish-before-release ordering, and an explicit create-new durable
+        destination policy, using `VLT-PM17-cli-portable-export.md`.
+9b-4b. remaining no-write portable opening plus atomic cross-vault import CLI
+        host composition and independently verified restore ceremony.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
@@ -1587,14 +1592,14 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
   `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
   `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`,
-  `VLT-PM15-operation-audit.md`, and
-  `VLT-PM16-cli-secure-note-create.md` —
+  `VLT-PM15-operation-audit.md`, `VLT-PM16-cli-secure-note-create.md`, and
+  `VLT-PM17-cli-portable-export.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
   first CRUD vertical, revision-safe replacement, redacted history, and
   reversible delete/restore, first-class operation-audit contracts, and
-  secure-note CLI composition.
+  secure-note CLI composition, and audited encrypted recovery-artifact export.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

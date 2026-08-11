@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added `export FILE` with a separately confirmed hidden passphrase, canonical
+  encrypted portable artifact, publish-before-release audit ordering, and an
+  explicit create-new destination that never overwrites an existing path.
+- Reserve export and audit entropy before unlock so active-epoch export prompt
+  failures become durable itemless `PortableExport` events before their CLI
+  error is returned.
 - Added audited `item add secure-note` with a hidden bounded body prompt and
   explicit list/show rendering that never receives or prints body plaintext.
 - Centralized login and secure-note creation on one preflight, durable failure,

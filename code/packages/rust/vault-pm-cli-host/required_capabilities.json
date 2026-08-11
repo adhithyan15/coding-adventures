@@ -16,6 +16,12 @@
       "justification": "Writes fixed secret and item-field prompts plus post-secret newlines directly to the controlling terminal."
     },
     {
+      "category": "fs",
+      "action": "create",
+      "target": "one caller-selected portable-export destination",
+      "justification": "Creates and synchronizes only an already-encrypted portable artifact with create-new semantics and never replaces an existing final path."
+    },
+    {
       "category": "ffi",
       "action": "call",
       "target": "Unix termios and Windows console APIs",
@@ -28,5 +34,5 @@
       "justification": "Fills caller-owned initialization and encryption randomness without a user-space or deterministic fallback."
     }
   ],
-  "justification": "CLI-only host boundary for non-redirectable bounded terminal input and fresh operating-system entropy; it performs no configuration, provider, network, environment, or process access."
+  "justification": "CLI-only host boundary for non-redirectable bounded terminal input, fresh operating-system entropy, and create-new persistence of an already-encrypted portable artifact; it performs no configuration, provider, network, environment, or process access."
 }

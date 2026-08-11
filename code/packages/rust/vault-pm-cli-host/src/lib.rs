@@ -6,6 +6,12 @@ use coding_adventures_csprng::fill_random;
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Display, Formatter};
+use std::fs::{self, OpenOptions};
+use std::io::{self, Write};
+use std::path::Path;
+
+#[cfg(unix)]
+use std::os::unix::fs::OpenOptionsExt;
 
 #[cfg(unix)]
 #[path = "unix.rs"]
@@ -42,6 +48,12 @@ pub enum CliHostError {
     InvalidText,
     /// Two independently collected new-passphrase values did not match.
     SecretMismatch,
+    /// The caller supplied an empty portable-export destination or artifact.
+    InvalidExportDestination,
+    /// The portable-export destination already exists and was not replaced.
+    ExportDestinationExists,
+    /// The portable-export destination could not be durably written.
+    ExportWriteFailed,
     /// The caller requested an empty entropy buffer.
     InvalidEntropyRequest,
     /// The operating-system CSPRNG failed to fill a requested buffer.
@@ -63,6 +75,9 @@ impl Display for CliHostError {
             Self::EmptyText => "vault-pm CLI host: empty text",
             Self::InvalidText => "vault-pm CLI host: invalid text",
             Self::SecretMismatch => "vault-pm CLI host: secrets do not match",
+            Self::InvalidExportDestination => "vault-pm CLI host: invalid export destination",
+            Self::ExportDestinationExists => "vault-pm CLI host: export destination exists",
+            Self::ExportWriteFailed => "vault-pm CLI host: export write failed",
             Self::InvalidEntropyRequest => "vault-pm CLI host: invalid entropy request",
             Self::EntropyUnavailable => "vault-pm CLI host: OS entropy unavailable",
             Self::UnsupportedPlatform => "vault-pm CLI host: unsupported platform",
@@ -118,6 +133,8 @@ pub enum SecretPrompt {
     ConfirmPassphrase,
     /// Protect a portable export with a distinct passphrase.
     ExportPassphrase,
+    /// Confirm the distinct portable-export passphrase.
+    ConfirmExportPassphrase,
     /// Open a portable export using its distinct passphrase.
     ImportPassphrase,
     /// Collect a login item's password without terminal echo.
@@ -133,6 +150,7 @@ impl SecretPrompt {
             Self::NewPassphrase => "New vault passphrase: ",
             Self::ConfirmPassphrase => "Confirm vault passphrase: ",
             Self::ExportPassphrase => "Export passphrase: ",
+            Self::ConfirmExportPassphrase => "Confirm export passphrase: ",
             Self::ImportPassphrase => "Import passphrase: ",
             Self::LoginPassword => "Password: ",
             Self::SecureNoteBody => "Note: ",
@@ -164,6 +182,11 @@ impl ControllingTerminal {
         confirm_new_passphrase(|prompt| self.read_secret(prompt))
     }
 
+    /// Read and constant-time compare a portable-export passphrase and confirmation.
+    pub fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+        confirm_export_passphrase(|prompt| self.read_secret(prompt))
+    }
+
     /// Read one bounded UTF-8 field without changing the terminal's echo mode.
     pub fn read_text(&self, prompt: TextPrompt) -> Result<Zeroizing<String>, CliHostError> {
         #[cfg(any(unix, windows))]
@@ -177,6 +200,34 @@ impl ControllingTerminal {
             Err(CliHostError::UnsupportedPlatform)
         }
     }
+}
+
+/// Durably create one explicit portable-export destination without replacing it.
+///
+/// V1 accepts only a non-empty encrypted artifact and a non-empty path. The
+/// final path is opened with create-new semantics, so an existing file,
+/// directory, or symbolic link is never followed or replaced. Unix hosts also
+/// request owner-read/write mode at creation. If writing or synchronization
+/// fails, the incomplete newly-created file is removed on a best-effort basis.
+pub fn write_portable_export(destination: &Path, artifact: &[u8]) -> Result<(), CliHostError> {
+    if destination.as_os_str().is_empty() || artifact.is_empty() {
+        return Err(CliHostError::InvalidExportDestination);
+    }
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    options.mode(0o600);
+    let mut file = options.open(destination).map_err(map_export_open_error)?;
+    if file
+        .write_all(artifact)
+        .and_then(|()| file.sync_all())
+        .is_err()
+    {
+        drop(file);
+        let _ = fs::remove_file(destination);
+        return Err(CliHostError::ExportWriteFailed);
+    }
+    Ok(())
 }
 
 /// Stateless cryptographic entropy adapter backed by the repository OS CSPRNG.
@@ -230,6 +281,27 @@ where
     }
 }
 
+fn confirm_export_passphrase<F>(mut read: F) -> Result<Zeroizing<Vec<u8>>, CliHostError>
+where
+    F: FnMut(SecretPrompt) -> Result<Zeroizing<Vec<u8>>, CliHostError>,
+{
+    let first = read(SecretPrompt::ExportPassphrase)?;
+    let confirmation = read(SecretPrompt::ConfirmExportPassphrase)?;
+    if ct_eq(&first, &confirmation) {
+        Ok(first)
+    } else {
+        Err(CliHostError::SecretMismatch)
+    }
+}
+
+fn map_export_open_error(error: io::Error) -> CliHostError {
+    if error.kind() == io::ErrorKind::AlreadyExists {
+        CliHostError::ExportDestinationExists
+    } else {
+        CliHostError::ExportWriteFailed
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -248,6 +320,10 @@ mod tests {
         assert_eq!(
             SecretPrompt::ExportPassphrase.message(),
             "Export passphrase: "
+        );
+        assert_eq!(
+            SecretPrompt::ConfirmExportPassphrase.message(),
+            "Confirm export passphrase: "
         );
         assert_eq!(
             SecretPrompt::ImportPassphrase.message(),
@@ -288,6 +364,18 @@ mod tests {
             (
                 CliHostError::SecretMismatch,
                 "vault-pm CLI host: secrets do not match",
+            ),
+            (
+                CliHostError::InvalidExportDestination,
+                "vault-pm CLI host: invalid export destination",
+            ),
+            (
+                CliHostError::ExportDestinationExists,
+                "vault-pm CLI host: export destination exists",
+            ),
+            (
+                CliHostError::ExportWriteFailed,
+                "vault-pm CLI host: export write failed",
             ),
             (
                 CliHostError::TextInputFailed,
@@ -379,6 +467,46 @@ mod tests {
             }),
             Err(CliHostError::SecretMismatch)
         ));
+
+        let mut export_prompts = Vec::new();
+        let export = confirm_export_passphrase(|prompt| {
+            export_prompts.push(prompt);
+            Ok(Zeroizing::new(b"portable secret".to_vec()))
+        })
+        .unwrap();
+        assert_eq!(&*export, b"portable secret");
+        assert_eq!(
+            export_prompts,
+            [
+                SecretPrompt::ExportPassphrase,
+                SecretPrompt::ConfirmExportPassphrase
+            ]
+        );
+    }
+
+    #[test]
+    fn portable_export_writer_is_durable_private_and_never_overwrites() {
+        let destination = std::env::temp_dir().join(format!(
+            "vault-pm-cli-host-export-{}.vpm",
+            std::process::id()
+        ));
+        let _ = fs::remove_file(&destination);
+        write_portable_export(&destination, b"encrypted artifact").unwrap();
+        assert_eq!(fs::read(&destination).unwrap(), b"encrypted artifact");
+        assert_eq!(
+            write_portable_export(&destination, b"replacement").unwrap_err(),
+            CliHostError::ExportDestinationExists
+        );
+        assert_eq!(fs::read(&destination).unwrap(), b"encrypted artifact");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            assert_eq!(
+                fs::metadata(&destination).unwrap().permissions().mode() & 0o777,
+                0o600
+            );
+        }
+        fs::remove_file(destination).unwrap();
     }
 
     #[test]

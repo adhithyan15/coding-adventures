@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed audited encrypted `export FILE` and extended the real-process PTY
+  suite through two hidden export-passphrase prompts and plaintext-tree checks.
 - Exposed secure-note creation and redacted show, with real-process PTY proof
   that the body is hidden during input and absent from the storage tree.
 - Extended the real-process PTY audit ceremony through an invalid item-create
