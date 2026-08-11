@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.23.0
+
+- Distinguish mirrored footer participant boxes in sequence layout IR.
+
 ## 0.22.0
 
 - Preserve ordered sequence autonumber visibility and counter changes as semantic events.

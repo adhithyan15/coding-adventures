@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.0 - 2026-08-11
+
+- Emit mirrored footer participants and terminate active lifelines at their header edge.
+
 ## 0.19.0 - 2026-08-11
 
 - Reserve deterministic sequence header geometry for UML actor symbols.
