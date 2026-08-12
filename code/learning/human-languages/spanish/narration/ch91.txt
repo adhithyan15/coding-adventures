@@ -1,48 +1,41 @@
-Spanish, chapter 91: Review --- Two Systems, Two New Words.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 91: Which One Is the Verb Asking For?.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — two systems, two new words.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Which one is the verb asking for? — how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?
+You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not.
 
-What you've built.
-[a table of 6 rows, read aloud]
-me. direct — what: me. indirect — to whom: me.
-you. direct — what: te. indirect — to whom: te.
-him / her / usted. direct — what: lo, la. indirect — to whom: le.
-us. direct — what: nos. indirect — to whom: nos.
-you all (Spain). direct — what: os. indirect — to whom: os.
-them / ustedes. direct — what: los, las. indirect — to whom: les.
-Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s.
-Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys.
+Grammar Lens: ask the verb one question.
+Does the verb do something to this, or aim something at this?
+That is the whole test.
+Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect.
+Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:
+I speak to her becomes le hablo. Fits.
+I have to the book becomes nonsense. So lo tengo.
+English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le.
 
-Grammar Lens: the one asymmetry.
-Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:
-direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked.
-Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole.
-It is good news. The row that carries all the difficulty in one column carries none in the other.
+Why it's said this way.
+One thing the test will not settle, said now rather than met later as a shock.
+In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it.
+So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the direct six, then the indirect six, and hear how much is the same]
+[your turn — say: "Lo tengo" then "Le hablo" — which question does each answer?]
 [pause 8 seconds for the answer]
-[your turn — say: "lo tengo, le hablo, los tengo, les hablo"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-Until the shared four stop feeling like two separate lists.
+[question — say your answer, then pause 12 seconds]
+State the one-question test in your own words.
+[question — say your answer, then pause 8 seconds]
+Say I speak to her.
 [question — say your answer, then pause 10 seconds]
-Give the six indirect object pronouns.
+Say I have it, about the book, and say which set that is.
 [question — say your answer, then pause 12 seconds]
-Which row is the only one where the two sets differ in shape, and how?
-[question — say your answer, then pause 12 seconds]
-Across both tables, how many distinct word shapes are there in total?
+Somebody in Madrid says le veo for I see him. Has a rule been broken?
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast.
+What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place.

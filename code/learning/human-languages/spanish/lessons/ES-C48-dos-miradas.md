@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C48-dos-miradas
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1380
-chapter: 106
+chapter: 107
 type: grammar
 headword: hablaba / habló
 gloss: the two past tenses are not two times — they are two ways of looking at the same time

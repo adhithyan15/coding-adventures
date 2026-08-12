@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 186,
-  "title": "Hay --- There Is, There Are, Same Word",
+  "title": "Synthesis --- Sentences Worth Saying",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0777fe1867797cb1",
+  "sourceHash": "fnv1a64:7dc22eb5041e3d7f",
   "lessons": [
     {
-      "id": "ES-C54-hay",
-      "sequence": 2206,
-      "title": "hay — \"there is,\" \"there are,\" same word",
-      "headword": "hay",
-      "romanization": "hay",
-      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
+      "id": "ES-C53-sintesis-frases-largas",
+      "sequence": 2205,
+      "title": "Synthesis — sentences worth saying",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the first sentences in this book long enough to be worth saying, and why length is not the same as difficulty",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f684b2d694fd935",
+      "sourceHash": "fnv1a64:4a994a170a759c86",
       "notice": null,
       "blocks": [
         {
@@ -35,45 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
+              "text": "Until this rung, every sentence you could build had one verb in it. Count the verbs in the next one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
+              "text": "— ¿Tienes el libro que compré? — Sí. Lo que no tengo es la comida que haces."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the second line again. It has three verbs in it, and you can build every piece of it:"
+            },
+            {
+              "kind": "speech",
+              "text": "lo que no tengo — the thing I do not have (a noun-shaped hole)."
+            },
+            {
+              "kind": "speech",
+              "text": "es — is."
+            },
+            {
+              "kind": "speech",
+              "text": "la comida que haces — the meal you make (a noun with a sentence hung off it)."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in that sentence is new. What is new is that the pieces are allowed to sit inside each other."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: one form, and it does not count",
+          "title": "Grammar Lens: length is not difficulty",
           "segments": [
             {
               "kind": "speech",
-              "text": "hay — there is, and there are."
+              "text": "Long sentences look like an increase in difficulty and are not."
             },
             {
               "kind": "speech",
-              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
+              "text": "A relative clause does not add grammar. It adds a slot where a whole sentence can go, and you fill it with the same Spanish you were already making. Two short sentences become one long one, and the only new thing is the joint."
             },
             {
               "kind": "speech",
-              "text": "Read those twice. One book or a hundred, hay does not move."
-            },
-            {
-              "kind": "speech",
-              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
-            },
-            {
-              "kind": "speech",
-              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
+              "text": "That is why this is the last structural rung a beginner's course owes you. Not because nothing is left, but because from here the growth is more of what you have, arranged more deeply. What remains genuinely hard is vocabulary and hearing speed, and both are time."
             }
           ]
         },
@@ -91,68 +103,102 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
+              "instruction": "the full two-line exchange",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
+              "source": "[YOU SAY: the full two-line exchange]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-hay-one",
-              "prompt": "Say there is a house.",
-              "assesses": [
-                "ES-LEX-HAY",
-                "ES-LEX-CASA"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the long sentence broken into its three pieces, then whole",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "hay una casa",
-                "hay una casa."
-              ],
-              "feedback": {
-                "correct": "Hay una casa.",
-                "incorrect": "Hay una casa."
-              }
+              "source": "[YOU SAY: the long sentence broken into its three pieces, then whole]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-many",
-              "prompt": "Say there are books.",
+              "id": "ES-C53-sintesis-frases-largas-ask",
+              "prompt": "Ask whether somebody has the book you bought.",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
                 "ES-LEX-LIBRO",
-                "ES-GRAMMAR-BARE-PLURAL-NOUN"
+                "ES-LEX-COMPRAR-07"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "hay libros",
-                "hay libros."
+                "tienes el libro que compre",
+                "¿tienes el libro que compré?"
               ],
               "feedback": {
-                "correct": "The same hay — it never goes plural.",
-                "incorrect": "Hay libros. Hay does not change."
+                "correct": "The que English would have dropped.",
+                "incorrect": "¿Tienes el libro que compre?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-unique",
-              "prompt": "What does hay agree with?",
+              "id": "ES-C53-sintesis-frases-largas-hole",
+              "prompt": "Say the thing I do not have.",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+                "ES-GRAMMAR-LO-QUE",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "nothing",
-                "nothing at all",
-                "it never changes"
+                "lo que no tengo",
+                "lo que no tengo."
               ],
               "feedback": {
-                "correct": "The one common verb form in Spanish that counts nothing.",
-                "incorrect": "Nothing. Not the number, not the person."
+                "correct": "A noun-shaped hole.",
+                "incorrect": "Lo que no tengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-sintesis-frases-largas-full",
+              "prompt": "Say what I do not have is the meal you make.",
+              "assesses": [
+                "ES-GRAMMAR-LO-QUE",
+                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "lo que no tengo es la comida que haces",
+                "lo que no tengo es la comida que haces."
+              ],
+              "feedback": {
+                "correct": "Three verbs, and every piece was already yours.",
+                "incorrect": "Lo que no tengo es la comida que haces."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-sintesis-frases-largas-why",
+              "prompt": "Why is a long sentence not harder than the short ones it is made of?",
+              "assesses": [
+                "ES-GRAMMAR-RELATIVE-QUE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the clause only adds a slot, not new grammar",
+                "it is the same spanish arranged inside itself"
+              ],
+              "feedback": {
+                "correct": "The only new thing is the joint.",
+                "incorrect": "A relative clause adds a slot where a sentence can go — not new grammar."
               }
             }
           ]
@@ -170,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
+              "text": "How many verbs can one sentence hold now? (As many as you can join.) What does a relative clause actually add? (A slot, not new grammar.) And what is genuinely hard from here? (Vocabulary and hearing speed — both of which are time.)"
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 67,
-  "title": "Salir --- Leaving",
+  "title": "Poner --- Putting, and the Root Under Position",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:398c15792e9269f3",
+  "sourceHash": "fnv1a64:a6d7c215aaa6df0c",
   "lessons": [
     {
-      "id": "ES-C13-salir",
-      "sequence": 1160,
-      "title": "salir — leaving with three singular forms",
-      "headword": "salir",
-      "romanization": "salir",
-      "gloss": "to leave or go out — with the singular present forms salgo, sales, and sale",
+      "id": "ES-C13-poner",
+      "sequence": 1150,
+      "title": "poner — putting or placing with three singular forms",
+      "headword": "poner",
+      "romanization": "poner",
+      "gloss": "to put or place — with the singular present forms pongo, pones, and pone",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d0439fe68d7065a",
+      "sourceHash": "fnv1a64:5d0f1dac44209cbd",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”"
+              "text": "You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”"
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The g in salgo is hard. Keep the l clear in every form: salgo, sales, sale."
+              "text": "The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound."
             }
           ]
         },
@@ -57,52 +57,36 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "salir descends from Latin salīre, “to leap” or “to jump.” The older image of leaping outward developed into the everyday meaning “to go out.” English salient first carried the sense “leaping” or “springing,” and a sally is a sudden movement outward. Those cousins preserve the same motion without requiring a long list of uncertain relatives."
+              "text": "poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one more singular set",
+          "title": "Grammar Lens: only the three singular forms",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "present of salir"
+                "present of poner"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present of salir: salgo.",
-                "person: tú. present of salir: sales.",
-                "person: él / ella / usted. present of salir: sale."
+                "person: yo. present of poner: pongo.",
+                "person: tú. present of poner: pones.",
+                "person: él / ella / usted. present of poner: pone."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say salgo, sales, sale. Only the learned yo form contains g. Compare it with pongo because both forms are now known, not because one form could have predicted the other."
+              "text": "Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb."
             },
             {
               "kind": "speech",
-              "text": "Reuse the known word de and the familiar place name Madrid:"
-            },
-            {
-              "kind": "speech",
-              "text": "Salgo de Madrid. — “I leave Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Sales de Madrid. — “You leave Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Sale de Madrid. — “He, she, or formal you leaves Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons, dating expressions, house vocabulary, and the noun for “exit” wait until their own lessons."
+              "text": "For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait."
             }
           ]
         },
@@ -120,68 +104,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“salir — salgo, sales, sale”",
+              "instruction": "“poner — pongo, pones, pone”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “salir — salgo, sales, sale”]"
+              "source": "[YOU SAY: “poner — pongo, pones, pone”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Salgo de Madrid.”",
+              "instruction": "“pōnere — position — poner”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Salgo de Madrid.”]"
+              "source": "[YOU SAY: “pōnere — position — poner”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“salīre — salient — salir”",
+              "instruction": "“a learned comparison, not a prediction rule”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “salīre — salient — salir”]"
+              "source": "[YOU SAY: “a learned comparison, not a prediction rule”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-salir-singular-forms",
-              "prompt": "Give the learned singular present forms of salir: yo, tú, then él/ella/usted.",
+              "id": "ES-C13-poner-singular-forms",
+              "prompt": "Give the learned singular present forms of poner: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-SALIR",
-                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "salgo, sales, sale",
-                "salgo sales sale",
-                "salgo / sales / sale"
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
               ],
               "feedback": {
-                "correct": "Right: salgo, sales, sale.",
-                "incorrect": "Keep the g in the yo form: salgo, sales, sale."
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Keep the g in the yo form: pongo, pones, pone."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-salir-leave-madrid",
-              "prompt": "Say 'I leave Madrid' in Spanish.",
+              "id": "ES-C13-poner-meaning",
+              "prompt": "What two English verbs does poner cover?",
               "assesses": [
-                "ES-LEX-SALIR",
-                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
-                "ES-LEX-DE"
+                "ES-LEX-PONER"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "salgo de madrid.",
-                "salgo de madrid"
+                "to put or to place",
+                "put or place",
+                "to put and to place",
+                "put and place"
               ],
               "feedback": {
-                "correct": "Right: Salgo de Madrid.",
-                "incorrect": "Use salgo, then the known de plus Madrid."
+                "correct": "Right: poner means to put or to place.",
+                "incorrect": "Retrieve the placing pair: to put or to place."
               }
             }
           ]
@@ -199,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does salir mean? (“To leave” or “to go out.”) Give the three learned forms. (Salgo, sales, sale.) What did Latin salīre mean? (“To leap” or “to jump.”) Name one English cousin. (Salient or sally.) Next: add venir and compare it only with already-learned tener."
+              "text": "What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame."
             }
           ]
         }

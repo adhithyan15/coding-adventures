@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 179,
-  "title": "Review --- The Three Se's",
+  "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:82a42c1ce9351cf8",
+  "sourceHash": "fnv1a64:ebf50d1d97b8213d",
   "lessons": [
     {
-      "id": "ES-C52-tres-ses",
-      "sequence": 2199,
-      "title": "Review — the three se's",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the three se's, two of which are one word and one of which is an impostor",
+      "id": "ES-C52-como-se-dice",
+      "sequence": 2198,
+      "title": "¿cómo se dice? — the sentence that unlocks the rest",
+      "headword": "¿cómo se dice?",
+      "romanization": "¿cómo se dice?",
+      "gloss": "the single most useful sentence a learner owns — and it is this chapter's grammar, doing exactly what the chapter said",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aade33d2180464fc",
+      "sourceHash": "fnv1a64:a060e1a3fa87fa55",
       "notice": null,
       "blocks": [
         {
@@ -35,81 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart."
+              "text": "You know cómo. You know the impersonal se. Put them in front of dice and you have the sentence that will teach you more Spanish than this book will."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "input",
+          "title": "The two words",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "example",
-                "what the se is"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "reflexive. example: se llama. what the se is: himself.",
-                "impersonal. example: se habla español. what the se is: nobody named.",
-                "the impostor. example: se lo digo. what the se is: le, in disguise."
-              ]
+              "kind": "speech",
+              "text": "¿Cómo se dice? — How do you say it? / How is it said?"
             },
             {
               "kind": "speech",
-              "text": "And here is the fact that makes this a review rather than a fourth thing to learn:"
+              "text": "Take it apart with what this chapter gave you. Se dice is the impersonal: it asks how a thing gets said, without asking who says it. Not how do you say it, though that is the natural English — Spanish is not pointing at the person you are talking to. It is asking about the language itself."
             },
             {
               "kind": "speech",
-              "text": "The first two are the same word. The third is not."
+              "text": "Which is exactly right, because you are not asking for their personal opinion. You are asking what the word is."
             },
             {
               "kind": "speech",
-              "text": "The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched."
+              "text": "¿Cómo se dice \"book\" en español? — How do you say \"book\" in Spanish? ¿Cómo se dice, por favor?"
             },
             {
               "kind": "speech",
-              "text": "The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish does not have three ses. It has two, and a coincidence."
+              "text": "This is the most valuable sentence in the book, and it is worth saying why. Every other sentence you have learned lets you say something you already know. This one gets you the thing you do not know, from the person in front of you, mid-conversation. A learner with this sentence and some patience out-learns one with twice the vocabulary and no way to ask."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: how to tell them apart in the wild",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You will not have to work this out consciously for long, but while you do:"
-            },
-            {
-              "kind": "speech",
-              "text": "Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them."
-            },
-            {
-              "kind": "speech",
-              "text": "Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien."
-            },
-            {
-              "kind": "speech",
-              "text": "Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta."
-            },
-            {
-              "kind": "speech",
-              "text": "The first test is nearly free, because that direct object pronoun is sitting right there in the open."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,11 +80,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives",
+              "instruction": "\"¿Cómo se dice?\" until it is one word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives]"
+              "source": "[YOU SAY: \"¿Cómo se dice?\" until it is one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cómo se dice en español, por favor?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cómo se dice en español, por favor?\"]"
             },
             {
               "kind": "repeat",
@@ -134,68 +101,73 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "This is the one to over-practise."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-two",
-              "prompt": "Of the three se's, which two are really one word?",
+              "id": "ES-C52-como-se-dice-ask",
+              "prompt": "Ask how something is said.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-LEX-COMO-SE-DICE",
+                "ES-LEX-COMO"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "como se dice",
+                "¿cómo se dice?",
+                "¿como se dice?"
+              ],
+              "feedback": {
+                "correct": "The sentence that repairs every conversation.",
+                "incorrect": "¿Como se dice?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-como-se-dice-full",
+              "prompt": "Ask how something is said in Spanish, politely.",
+              "assesses": [
+                "ES-LEX-COMO-SE-DICE",
+                "ES-LEX-ESPANOL",
+                "ES-LEX-POR-FAVOR"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "the reflexive and the impersonal",
-                "se llama and se habla",
-                "reflexive and impersonal"
+                "como se dice en espanol, por favor",
+                "¿cómo se dice en español, por favor?"
               ],
               "feedback": {
-                "correct": "The impersonal grew out of the reflexive.",
-                "incorrect": "The reflexive and the impersonal. The se of se lo is a different word entirely."
+                "correct": "Ask this all day and the day will teach you.",
+                "incorrect": "¿Como se dice en espanol, por favor?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-test",
-              "prompt": "What single thing right after se tells you it is the impostor?",
-              "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "lo, la, los or las",
-                "a direct object pronoun",
-                "lo or la"
-              ],
-              "feedback": {
-                "correct": "Sitting right there in the open.",
-                "incorrect": "A lo, la, los or las immediately after it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-tres-ses-which",
-              "prompt": "Which se is in como se dice?",
+              "id": "ES-C52-como-se-dice-why",
+              "prompt": "Why is it se dice rather than a form aimed at the person you are asking?",
               "assesses": [
                 "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMO-SE-DICE"
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "the impersonal",
-                "impersonal — nobody is named"
+                "you are asking about the language, not about them",
+                "it is impersonal",
+                "nobody is being named"
               ],
               "feedback": {
-                "correct": "Asking how it gets said, not who says it.",
-                "incorrect": "The impersonal. Nobody is named as the sayer."
+                "correct": "Not their opinion — what the word is.",
+                "incorrect": "Because you are asking how the thing gets said, not what they personally would say."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -207,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it."
+              "text": "Ask how something is said. (¿Cómo se dice?) Which se is that? (The impersonal one — asking about the language, not the person.) Next: the three ses, side by side, for the first time."
             }
           ]
         }

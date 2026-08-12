@@ -1,115 +1,43 @@
-Spanish, chapter 117: The Future --- Saying What Will Happen.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 117: Synthesis --- Two Shores, Two Answers.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-hablaré — keep the infinitive, add the future.
-
-Warm-up.
-[pause 2 seconds]
-Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object.
-
-Grammar Lens: three familiar persons.
-Keep the whole infinitive hablar, then add one ending:
-[a table of 3 rows, read aloud]
-person: yo. simple future: hablaré.
-person: tú. simple future: hablarás.
-person: él / ella / usted. simple future: hablará.
-Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait.
-
-The weld, taken apart.
-Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré.
-That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “hablaré, hablarás, hablará”]
-[pause 8 seconds for the answer]
-[your turn — say: “Voy a hablar español. Hablaré español.”]
-[pause 8 seconds for the answer]
-[your turn — say: “infinitive plus historical habēre material”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I will speak Spanish' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which Latin verb meaning 'to have' contributed material to the Romance future endings?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer.
-
-
-Lesson 2 of 3.
-comeré — the same endings keep -er.
+Lesson 1 of 1.
+Synthesis — two shores, two answers.
 
 Warm-up.
 [pause 2 seconds]
-You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”
+You can now say "I spoke" two ways: hablé and he hablado. The obvious question is which one to use, and it has an unusual answer.
 
-Grammar Lens: the singular -er row.
-[a table of 3 rows, read aloud]
-person: yo. simple future: comeré.
-person: tú. simple future: comerás.
-person: él / ella / usted. simple future: comerá.
-Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait.
+Grammar Lens: what the perfect is for.
+Start with the part everybody agrees on. The perfect reaches into now:
+He comido. — I have eaten. (so I am not hungry) Comí. — I ate. (a finished event, back there).
+The preterite puts an event in the past and leaves it there. The perfect drags it forward and makes it matter now — the tense is telling your listener what to do with the information, not when it happened. English agrees: I have eaten and I ate are not interchangeable for you either.
 
-The ending, taken apart.
-The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “comeré, comerás, comerá”]
-[pause 8 seconds for the answer]
-[your turn — say: “Hablaré. Comeré.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Beberé café.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of comer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Use the learned -er future pattern to say 'I will drink coffee' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which endings do hablaré and comeré share across the learned singular row?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more.
-
-
-Lesson 3 of 3.
-viviré — one future row for three verb families.
-
-Warm-up.
-[pause 2 seconds]
-Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré.
-
-Grammar Lens: the singular -ir row.
-[a table of 3 rows, read aloud]
-person: yo. simple future: viviré.
-person: tú. simple future: vivirás.
-person: él / ella / usted. simple future: vivirá.
-Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait.
-
-Grammar Lens: meaning with known words.
-Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new.
+Why it's said this way.
+Now the part nobody agrees on, and it is worth having straight before you are corrected by two people who contradict each other.
+For something that happened today, Spain and most of Latin America choose differently:
+Hoy he hablado con Ana. — Spain. Hoy hablé con Ana. — most of Latin America.
+Same day, same conversation, both entirely correct. Spain uses the perfect for anything inside the current stretch of time; much of Latin America uses the preterite and saves the perfect for things whose relevance is still open.
+Third split in this book decided by geography rather than meaning, after vosotros and os. There is no version of Spanish that is the real one, and no choice here that will make you wrong.
+A default, if you want one: the Latin American pattern is understood everywhere and is what most learners meet first, so leaning on the preterite for finished events is a safe habit. In Spain you will hear the perfect constantly and pick it up in a week.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “viviré, vivirás, vivirá”]
+[your turn — say: "He comido" then "Comí" — one reaches into now, one does not]
 [pause 8 seconds for the answer]
-[your turn — say: “hablaré, comeré, viviré”]
+[your turn — say: "Hoy he hablado con Ana" then "Hoy hablé con Ana" — two shores]
 [pause 8 seconds for the answer]
-[your turn — say: “Viviré en Madrid.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I will live in Madrid' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Give the future yo forms of hablar, comer, and vivir, in that order.
+[repeat that twice]
+[question — say your answer, then pause 8 seconds]
+Say I have eaten, meaning you are not hungry now.
+[question — say your answer, then pause 14 seconds]
+For something that happened today, which tense would a speaker in Madrid pick, and one in Mexico City?
+[question — say your answer, then pause 12 seconds]
+Two speakers correct you in opposite directions. Which of them is right?
+[question — say your answer, then pause 10 seconds]
+Say we have spoken Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”
+What does the perfect do that the preterite does not? (Reaches into now.) And for something that happened today? (Spain says he hablado; much of Latin America says hablé — and both are right.)

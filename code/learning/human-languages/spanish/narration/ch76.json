@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 76,
-  "title": "Review --- All Four Words for The",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b997c0d0fe12f559",
+  "title": "-es --- The Plural Chapter One Promised",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2b987e97a9b5c415",
   "lessons": [
     {
-      "id": "ES-C44-repaso-articulos",
-      "sequence": 1201,
-      "title": "Review — all four words for \"the\"",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the four words for \"the,\" complete at last, and the two plural rules that feed them",
+      "id": "ES-C44-plural-es",
+      "sequence": 1199,
+      "title": "-es — the plural your first chapter owed you",
+      "headword": "-es",
+      "romanization": "-es",
+      "gloss": "the plural ending for words that end in a consonant — a rule you have been using since you learned ustedes",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9037fdb4938a121",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:15930d9058f468cf",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,67 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Before the table: how many words does Spanish have for \"the\"?"
+              "text": "Say \"you,\" formally. (Usted.) Now say it to a group. (Ustedes.) Hold both of those in your mouth for a moment."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: you have been doing this for fifty chapters",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four. And you have now met every one of them separately, which is why they are allowed to appear together."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "masculine. singular: el libro. plural: los libros.",
-                "feminine. singular: la casa. plural: las casas."
-              ]
+              "text": "Your first chapter gave you half a rule and said the rest was for later. This is later."
             },
             {
               "kind": "speech",
-              "text": "English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid."
+              "text": "A word ending in a vowel adds -s. A word ending in a consonant adds -es."
             },
             {
               "kind": "speech",
-              "text": "The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built."
+              "text": "And you already know the second half, because you have been saying it since the day you learned to address a group:"
+            },
+            {
+              "kind": "speech",
+              "text": "usted becomes ustedes."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a special word. That is the consonant rule, and nobody told you. Here it is again on something you also hold:"
+            },
+            {
+              "kind": "speech",
+              "text": "español becomes españoles — Spanish people, Spanish speakers. los españoles — with the plural article from last chapter."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the two plural rules",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "And underneath the grid, one rule with a repair:"
+              "text": "The extra e is not decoration and not an exception. Try saying usteds out loud. Then españols."
             },
             {
               "kind": "speech",
-              "text": "Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead."
+              "text": "Spanish does not let a word end in that pile of consonants. So when the plural -s would land somewhere unsayable, the language puts in the vowel it needs to get the -s out — and that vowel is e."
             },
             {
               "kind": "speech",
-              "text": "casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s."
-            },
-            {
-              "kind": "speech",
-              "text": "usted becomes ustedes, español becomes españoles — consonants, -es."
-            },
-            {
-              "kind": "speech",
-              "text": "You held the first half from chapter one and the second half from ustedes without knowing it had a name."
+              "text": "Which means the rule is really one rule with a repair attached: add -s; if you cannot say it, make room. That is a better thing to hold than two rules, because it will keep explaining things long after this chapter."
             }
           ]
         },
@@ -120,87 +103,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el, la, los, las\" until the order is automatic",
+              "instruction": "\"usted\" then \"ustedes\" — the rule you already had",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el, la, los, las\" until the order is automatic]"
+              "source": "[YOU SAY: \"usted\" then \"ustedes\" — the rule you already had]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el libro, los libros, la casa, las casas\"",
+              "instruction": "\"los españoles\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el libro, los libros, la casa, las casas\"]"
+              "source": "[YOU SAY: \"los españoles\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the grid is a reflex rather than a lookup."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-repaso-articulos-four",
-              "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
-              "assesses": [
-                "ES-GRAMMAR-DEFINITE-ARTICLES",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "el, la, los, las",
-                "el la los las",
-                "el / la / los / las"
-              ],
-              "feedback": {
-                "correct": "That is the whole set.",
-                "incorrect": "el, la, los, las."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "try \"usteds\" and hear why the e exists",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: try \"usteds\" and hear why the *e* exists]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-repaso-articulos-grid",
-              "prompt": "Say the books and then the houses.",
-              "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
-                "ES-LEX-LIBRO"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "los libros, las casas",
-                "los libros las casas"
-              ],
-              "feedback": {
-                "correct": "Gender picks the row, number picks the column.",
-                "incorrect": "Los libros, las casas."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-repaso-articulos-rule",
-              "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
+              "id": "ES-C44-plural-es-espanol",
+              "prompt": "Make espanol plural.",
               "assesses": [
                 "ES-GRAMMAR-NOUN-PLURAL-ES",
-                "ES-GRAMMAR-NOUN-NUMBER"
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "espanoles",
+                "los espanoles"
+              ],
+              "feedback": {
+                "correct": "Consonant ending, so -es.",
+                "incorrect": "Espanoles — the consonant takes -es."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-plural-es-already",
+              "prompt": "Which word have you been using this rule on since long before this chapter?",
+              "assesses": [
+                "ES-LEX-USTEDES",
+                "ES-LEX-USTED",
+                "ES-GRAMMAR-NOUN-PLURAL-ES"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ustedes",
+                "usted becomes ustedes",
+                "usted"
+              ],
+              "feedback": {
+                "correct": "You had the rule before you had the rule.",
+                "incorrect": "Ustedes — that is usted plus the consonant plural."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-plural-es-why",
+              "prompt": "Why -es rather than plain -s after a consonant?",
+              "assesses": [
+                "ES-GRAMMAR-NOUN-PLURAL-ES"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "add -s, or -es when the bare s would be unsayable",
-                "-s after a vowel and -es after a consonant"
+                "the bare s would be unsayable",
+                "you cannot pronounce it",
+                "spanish needs a vowel to get the s out"
               ],
               "feedback": {
-                "correct": "One rule and a repair.",
-                "incorrect": "Add -s; after a consonant add -es, because the bare -s could not be said."
+                "correct": "One rule and a repair, not two rules.",
+                "incorrect": "Try saying ustedes without the e. The vowel is there to make the -s pronounceable."
               }
             }
           ]
@@ -218,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect."
+              "text": "Vowel ending — which plural? (-s.) Consonant ending? (-es.) And why? (A bare -s there would be unsayable.) Next: the four articles in one place, now that every one of them has been earned."
             }
           ]
         }

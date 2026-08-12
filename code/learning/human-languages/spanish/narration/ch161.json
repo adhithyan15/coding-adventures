@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 161,
-  "title": "Opening, Closing, Sitting Down, Standing Up",
+  "title": "Hearing, Sleeping, Walking, Running",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f2772df1c14af2cd",
+  "sourceHash": "fnv1a64:dfb636095e6dc157",
   "lessons": [
     {
-      "id": "ES-C37-abrir",
-      "sequence": 2010,
-      "title": "abrir — \"to open\", and the one part of it that misbehaves",
-      "headword": "abrir",
-      "romanization": "abrir",
-      "gloss": "to open — a regular -ir verb with one irregular part, the participle abierto",
+      "id": "ES-C36-oir",
+      "sequence": 1970,
+      "title": "oír — \"to hear\", and the y that appears from nowhere",
+      "headword": "oír",
+      "romanization": "oír",
+      "gloss": "to hear — the half of listening you do not choose, and a verb that sprouts a y",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8e068b07e5fc3c5",
+      "sourceHash": "fnv1a64:80d1bd324efa8d48",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say corro and camino once — two verbs that gave you no trouble. This one is nearly as easy, and its one misbehaving piece is a word you will read on a shop door before you ever say it."
+              "text": "Say Me gusta el café once — the coffee is pleasing to me, and the coffee is the subject. Now a verb about the ears, and one of the most bent-out-of-shape words in the language."
             }
           ]
         },
@@ -46,214 +46,52 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "b-soft — between vowels the b barely closes the lips: a-BREER."
+              "text": "accent-i — the accent on í keeps the vowels apart: o-EER, two beats."
             },
             {
               "kind": "speech",
-              "text": "r-tap — a single flick for the final r."
+              "text": "y-glide — the y in oyes is the consonant of English yes: O-yes."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: abrir",
+          "title": "The word, taken apart: oír",
           "segments": [
             {
               "kind": "speech",
-              "text": "abrir (\"to open\") from Latin aperīre, \"to open, to uncover\". The p softened to b between vowels on the way into Spanish — the slide that turned sapere into saber and lupus into lobo."
+              "text": "oír (\"to hear\") from Latin audīre, \"to hear\". Spanish wore it right down: the d between vowels dropped away and au- collapsed to o-."
             },
             {
               "kind": "speech",
-              "text": "English took the root through two doors and does not notice they are one word:"
+              "text": "English never inherited it but borrowed it repeatedly, and the family keeps the aud- Spanish threw away: audio, audible, audition, auditorium, audit, audience — the people doing the hearing."
             },
             {
               "kind": "speech",
-              "text": "straight from Latin apertūra: aperture, the opening a lens makes."
-            },
-            {
-              "kind": "speech",
-              "text": "through French ovrir and its participle overt: overt (\"out in the open\") and overture, an opera's opening."
-            },
-            {
-              "kind": "speech",
-              "text": "aperitif, a drink that opens the appetite; Spanish, el aperitivo."
-            },
-            {
-              "kind": "speech",
-              "text": "The cousin that is not one. April looks like it belongs here — the opening month. That is old folk etymology and is not accepted: the better proposals point at an Etruscan Apru, borrowed from Aphrodite, or at an Italic word meaning \"the next one\". A hook this pretty is the kind to check."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: regular everywhere but the participle",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "In the present, abrir is a plain -ir verb, the family escribir belongs to: abro, abres, abre, abrimos, abren. Nothing breaks, nothing grows."
-            },
-            {
-              "kind": "speech",
-              "text": "The past participle is where the irregularity lives. A regular -ir verb would give abrido. Spanish says abierto, straight down from Latin apertum, keeping the e that broke to ie under stress long ago."
-            },
-            {
-              "kind": "speech",
-              "text": "You will meet that participle long before the tense it belongs to, because it is a word on doors: ABIERTO on the sign, está abierto for \"it is open now\". Escribir does the same with escrito. Both refuse the regular ending because both inherited a Latin participle whole."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"abro, abres, abre, abrimos, abren\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"abro, abres, abre, abrimos, abren\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Abro el libro\" then \"Está abierto\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Abro el libro\" then \"Está abierto\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"abrir\" then English \"aperture, overt, overture\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"abrir\" then English \"aperture, overt, overture\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"correr\" then English \"current, curriculum\" — still there from before",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"correr\" then English \"current, curriculum\" — still there from before]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the past participle of abrir, and what would a regular verb have given? (Abierto; abrido.) Name two English words from aperīre. (Aperture, overt, overture, aperitif.) Is April one? (No — folk etymology.) Which other verb keeps an inherited Latin participle? (Escribir becomes escrito.) And which Latin verb is behind correr? (Currere.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C37-cerrar",
-      "sequence": 2020,
-      "title": "cerrar — \"to close\", from the bar across the door",
-      "headword": "cerrar",
-      "romanization": "cerrar",
-      "gloss": "to close — from the bar dropped across a door, not from the Latin verb English inherited",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f145576d38c02c59",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Abro, abres, abre — and the sign saying ABIERTO. Here is the sign on the other side of the day, and a verb that cracks its stem."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "soft-c — c before e is soft: a th across most of Spain, an s across Latin America."
-            },
-            {
-              "kind": "speech",
-              "text": "rolled-rr — the double r is fully trilled: se-RRAR."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: cerrar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "cerrar (\"to close\") from Late Latin serāre, \"to bolt, to fasten\", from the noun sera: the bar you drop across a door. Closing here is a physical object being put in place, not an abstraction."
-            },
-            {
-              "kind": "speech",
-              "text": "Its Romance siblings kept the pressure: Italian serrare, French serrer, \"to squeeze, to tighten\". English holds one of that branch, serried, as in ranks pressed shut against each other. Reference works generally connect sera to Latin serere, \"to join in a row\", which would make series and insert distant relatives — usual, but not certain."
+              "text": "Then the surprise. Obey is Latin oboedīre, ob- (\"toward\") + audīre: obeying is literally listening toward someone. Obedient comes with it."
             }
           ]
         },
         {
           "index": 3,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: the road Spanish did not take",
+          "title": "Why it's said this way: hearing is not listening",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin had a perfectly good verb for closing: claudere. English is full of it — close, closet, closure, clause, cloister, include, exclude, conclude, recluse."
+              "text": "Spanish splits what English leaves joined. Oír is what your ears do whether you meant it or not. Escuchar is on purpose."
             },
             {
               "kind": "speech",
-              "text": "Spanish let it go. For shutting a door it took serāre instead, and kept claudere only in words scholars borrowed back much later: incluir, excluir, concluir, clausura. That inversion is worth sitting with: the bigger English family belongs to the verb Spanish gave up. A cousin web maps what each language kept, and these two kept opposite halves."
+              "text": "Escuchar has its own root: Latin auscultāre, \"to listen to\", built on auris, \"ear\". A doctor auscultates a chest; and when Old French wore auscultāre down to escouter, English borrowed it as scout — one sent out to listen. English can draw the line when it wants. Spanish makes you."
             }
           ]
         },
         {
           "index": 4,
           "type": "grammar",
-          "title": "Grammar Lens: e becomes ie, and the sign on the door",
+          "title": "Grammar Lens: the -go yo-form, and a spelling rule",
           "segments": [
             {
               "kind": "table",
@@ -264,20 +102,20 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: cierro.",
-                "person: tú. form: cierras.",
-                "person: él/ella/usted. form: cierra.",
-                "person: nosotros. form: cerramos.",
-                "person: ellos/ustedes. form: cierran."
+                "person: yo. form: oigo.",
+                "person: tú. form: oyes.",
+                "person: él/ella/usted. form: oye.",
+                "person: nosotros. form: oímos.",
+                "person: ellos/ustedes. form: oyen."
               ]
             },
             {
               "kind": "speech",
-              "text": "Dormir broke o becomes ue. Cerrar breaks e becomes ie — the same boot, the other vowel, the same trigger: stress on the stem. Cerramos is plain because there the stress moves to the ending."
+              "text": "Two separate things. The yo-form grows the hard -g- you know from tengo, hago and digo; oír joins that club."
             },
             {
               "kind": "speech",
-              "text": "Its participle, unlike abierto, is regular: cerrado. The two signs on one door are built differently — abierto inherited whole from Latin, cerrado made by rule."
+              "text": "The rest is spelling, not sound. Spanish will not write an unstressed i stranded between two vowels, so oi-es is impossible and the letter becomes y: oyes, oye, oyen. Oímos keeps its accent because there the i is stressed."
             }
           ]
         },
@@ -295,38 +133,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"cierro, cierras, cierra, cerramos, cierran\"",
+              "instruction": "\"oigo, oyes, oye, oímos, oyen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"cierro, cierras, cierra, cerramos, cierran\"]"
+              "source": "[YOU SAY: \"oigo, oyes, oye, oímos, oyen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Abro el libro\" then \"Cierro el libro\"",
+              "instruction": "\"¿Me oyes?\" — can you hear me?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Abro el libro\" then \"Cierro el libro\"]"
+              "source": "[YOU SAY: \"¿Me oyes?\" — can you hear me?]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ABIERTO\" then \"CERRADO\" — the two signs",
+              "instruction": "\"Me gusta oír\" — hearing is pleasing to me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ABIERTO\" then \"CERRADO\" — the two signs]"
+              "source": "[YOU SAY: \"Me gusta oír\" — hearing is pleasing to me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"aperīre, aperture\" then \"serāre, serried\" — the two doors' roots",
+              "instruction": "\"oír\" then English \"audio, audience, obey\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"aperīre, aperture\" then \"serāre, serried\" — the two doors' roots]"
+              "source": "[YOU SAY: \"oír\" then English \"audio, audience, obey\"]"
             }
           ]
         },
@@ -343,26 +181,26 @@
             },
             {
               "kind": "speech",
-              "text": "What was a sera, and does cerrar come from claudere? (The bar dropped across a door; and no — Spanish kept claudere only in incluir, excluir, concluir.) Which form of cerrar keeps its plain e, and why? (Cerramos — the stress moves to the ending, as in dormimos.) Which participle is irregular, abierto or cerrado? (Abierto.) And what did intendere, behind entender, mean literally? (To stretch toward.)"
+              "text": "Which Latin verb is behind oír, and what has obey to do with it? (Audīre; oboedīre is \"to listen toward\".) Why oyes and not oies? (Spanish will not leave an unstressed i between two vowels.) Which of oír and escuchar do you choose to do? (Escuchar.) And in me gusta el café, what is the subject? (El café.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C37-sentarse",
-      "sequence": 2030,
-      "title": "sentarse — \"to seat oneself\", which is how Spanish thinks about sitting down",
-      "headword": "sentarse",
-      "romanization": "sentarse",
-      "gloss": "to sit down — literally \"to seat oneself\", the reflexive that lands the action back on you",
+      "id": "ES-C36-dormir",
+      "sequence": 1980,
+      "title": "dormir — \"to sleep\", and the boot's other vowel",
+      "headword": "dormir",
+      "romanization": "dormir",
+      "gloss": "to sleep — and the other half of the boot, where a stressed o breaks to ue",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4186738ca0bfccac",
+      "sourceHash": "fnv1a64:86a7789d3bb925ff",
       "notice": null,
       "blocks": [
         {
@@ -378,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two things in hand. Cierro — the e cracking to ie. And me llamo, \"I call myself\", where the little me bounced the action back onto you. This verb needs both at once."
+              "text": "Run oír once more: oigo, oyes, oye, oímos, oyen — and remember that the y in oyes is a spelling rule, not a new sound. Now a verb whose stem cracks the way pensar's did, but on a different vowel."
             }
           ]
         },
@@ -389,70 +227,257 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ie — the stressed e breaks: me siento = me SYEN-to."
+              "text": "diphthong-ue — under stress the o breaks open: duermo = DWER-mo."
             },
             {
               "kind": "speech",
-              "text": "s-clear — a clean hissing s, never a z buzz."
+              "text": "r-tap — one soft flick of the tongue in dormir, nothing like an English r."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: sentarse",
+          "title": "The word, taken apart: dormir",
           "segments": [
             {
               "kind": "speech",
-              "text": "sentar from Vulgar Latin sedentāre, built not on the Latin verb but on its present participle: sedēns, \"sitting\", from sedēre, \"to sit\". Spanish made a new verb out of being in a sitting state."
+              "text": "dormir (\"to sleep\") from Latin dormīre, \"to sleep\" — one of the rare verbs Spanish inherited almost untouched. English took the root only through French and Latin, and every borrowing still points at a bed:"
             },
             {
               "kind": "speech",
-              "text": "Sedēre is one of the great English suppliers, and hardly any descendant still looks like sitting: sedentary, sediment, sedate; session and siege (an army sitting down outside a city); preside, reside; assess, obsess, possess. By way of Greek hedra, \"seat\", it also gives cathedral and chair."
+              "text": "dormitory, and its clipped dorm — the room where sleeping is done."
             },
             {
               "kind": "speech",
-              "text": "Then the other branch. English sit, seat, settle, saddle and nest come down from the very same root, sed-, through Germanic rather than Latin. Neither borrowed from the other: they are siblings, exactly as padre and father are, each branch reshaping the sounds its own way."
+              "text": "dormant — from the French participle dormant, \"sleeping\". A dormant volcano is a sleeping one."
+            },
+            {
+              "kind": "speech",
+              "text": "dormer — the window let into a roof, named for the sleeping-loft behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish keeps its own branch: el dormitorio for the bedroom, and la bella durmiente for Sleeping Beauty."
+            },
+            {
+              "kind": "speech",
+              "text": "The dormouse looks like the obvious member of this family, and careful dictionaries will not commit. An Anglo-Norman dormeus, \"sleepy\", is the best guess, but the trail goes cold. Treat it as likely rather than proved."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: seating someone, and seating yourself",
+          "title": "Grammar Lens: the boot again, with o becomes ue",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "stem"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: duermo. stem: broken.",
+                "person: tú. form: duermes. stem: broken.",
+                "person: él/ella/usted. form: duerme. stem: broken.",
+                "person: nosotros. form: dormimos. stem: plain.",
+                "person: ellos/ustedes. form: duermen. stem: broken."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Pensar broke e becomes ie under stress. Dormir breaks o becomes ue under exactly the same condition, and for exactly the same reason: the stress falls on the stem in four of these forms and on the ending in dormimos, so only dormimos keeps its plain o."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole of the rule. Spanish has two stressed vowels that will not sit still — e becomes ie, o becomes ue — and once you can hear where the stress lands, you can predict which forms crack without memorising a list."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"duermo, duermes, duerme, dormimos, duermen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"duermo, duermes, duerme, dormimos, duermen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pienso\" then \"duermo\" — e to ie, o to ue, one rule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pienso\" then \"duermo\" — e to ie, o to ue, one rule]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"No duermo bien\" — I don't sleep well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"No duermo bien\" — I don't sleep well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dormir\" then English \"dormitory, dormant, dormer\" — the sleeping family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dormir\" then English \"dormitory, dormant, dormer\" — the sleeping family]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form of dormir keeps its plain o, and why? (Dormimos — the stress lands on the ending.) Name two English cousins of dormīre. (Dormitory, dormant, dormer.) What did pēnsāre, behind pensar, mean literally? (To weigh.) And what is the yo-form of oír? (Oigo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C36-caminar",
+      "sequence": 1990,
+      "title": "caminar — \"to walk\", from a word Rome borrowed from the Celts",
+      "headword": "caminar",
+      "romanization": "caminar",
+      "gloss": "to walk — built on a Celtic word for a path, beside andar, whose own past is unsettled",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2e52a24d0774c2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Duermo, duermes, duerme — the o cracking to ue. Relax: the two verbs here do nothing of the kind. The interest is in where they came from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Plain sentar means to seat somebody else. To sit down yourself, you send the action back with the pronoun that made me llamo \"I call myself\":"
+              "text": "k-hard — the c before a is a hard k: ka-mi-NAR."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-a — a short clean a, the same in every syllable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: caminar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caminar (\"to walk\") was built on the noun el camino, \"the road\" — and camino is not a Latin word at all. Latin camminus was a loan from Gaulish, the Celtic language of pre-Roman France, from a word for a step or a way. It stocked the roads of every Romance language: camino, Portuguese caminho, Italian cammino, French chemin."
+            },
+            {
+              "kind": "speech",
+              "text": "Here the cousin web runs out, and that is worth saying plainly: this root reached English only inside borrowed French phrases. The Celtic layer did reach English by other doors — Latin also took Gaulish carrus, a wagon, behind car and cargo. Camminus never crossed."
+            },
+            {
+              "kind": "speech",
+              "text": "A false friend that looks certain. Latin also had camīnus, \"hearth\", from Greek kaminos — and that gave English chimney. Two nearly identical Latin words, no relation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two plain verbs, and which to reach for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has a second everyday verb here, andar. Both take ordinary -ar endings and neither breaks its stem."
             },
             {
               "kind": "table",
               "headers": [
                 "person",
-                "form"
+                "caminar",
+                "andar"
               ],
-              "columns": 2,
+              "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: me siento.",
-                "person: tú. form: te sientas.",
-                "person: él/ella/usted. form: se sienta.",
-                "person: nosotros. form: nos sentamos.",
-                "person: ellos/ustedes. form: se sientan."
+                "person: yo. caminar: camino. andar: ando.",
+                "person: tú. caminar: caminas. andar: andas.",
+                "person: él/ella/usted. caminar: camina. andar: anda.",
+                "person: nosotros. caminar: caminamos. andar: andamos.",
+                "person: ellos/ustedes. caminar: caminan. andar: andan."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two patterns run at once, and you have both. The pronoun changes with the person — me, te, se, nos, se — and the stem breaks e becomes ie wherever the stress lands on it, leaving nos sentamos plain. The pronoun stands before a conjugated verb and clips onto an infinitive, hence the name sentarse."
-            },
-            {
-              "kind": "speech",
-              "text": "Two verbs, one shape. Me siento is also the yo-form of sentirse, \"to feel\": me siento bien is \"I feel fine\". Only what follows tells them apart."
+              "text": "Caminar is walking as the thing you are doing. Andar is wider: to go about, and by extension to work at all — no anda, of a machine, means \"it isn't running\". Either serves for a walk."
             }
           ]
         },
         {
           "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: a verb with no settled past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Camino has a clean history. Andar does not. It comes down from Medieval Latin andāre, and where andāre came from is genuinely disputed: ambulāre (\"to walk about\") and ambitāre (\"to go around\") are both proposed and neither is proved. If ambulāre is right, amble and ambulance are cousins — but that \"if\" carries real weight."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -465,43 +490,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me siento, te sientas, se sienta, nos sentamos, se sientan\"",
+              "instruction": "\"camino, caminas, camina, caminamos, caminan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me siento, te sientas, se sienta, nos sentamos, se sientan\"]"
+              "source": "[YOU SAY: \"camino, caminas, camina, caminamos, caminan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me llamo\" then \"me siento\" — the same little me, twice",
+              "instruction": "\"ando, andas, anda, andamos, andan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me llamo\" then \"me siento\" — the same little me, twice]"
+              "source": "[YOU SAY: \"ando, andas, anda, andamos, andan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Cierro el libro y me siento\" — I close the book and sit down",
+              "instruction": "\"Camino una hora\" — I walk for an hour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Cierro el libro y me siento\" — I close the book and sit down]"
+              "source": "[YOU SAY: \"Camino una hora\" — I walk for an hour]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sentarse\" then English \"session, sedentary, preside\"",
+              "instruction": "\"el camino\" then \"camino\" — the road, and I walk it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sentarse\" then English \"session, sedentary, preside\"]"
+              "source": "[YOU SAY: \"el camino\" then \"camino\" — the road, and I walk it]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -513,26 +538,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does sentarse say literally, and which Latin form was it built on? (To seat oneself; the participle sedēns.) Are English sit and Latin sedēre parent and child, or siblings? (Siblings — separate branches of one root, like father and padre.) Which form keeps its plain e, and what was a sera? (Nos sentamos; the bar across a door.)"
+              "text": "Which language did Latin borrow camminus from? (Gaulish.) Which English word comes from the other Latin camīnus, the hearth? (Chimney — unrelated.) Is andar's origin settled? (No.) Say \"I walk for an hour\". (Camino una hora.) And the nosotros form of dormir? (Dormimos.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C37-levantarse",
-      "sequence": 2040,
-      "title": "levantarse — \"to raise oneself\", and how Spanish says \"stand\"",
-      "headword": "levantarse",
-      "romanization": "levantarse",
-      "gloss": "to get up, to stand up — \"to raise oneself\", built from a participle exactly as sentarse was",
+      "id": "ES-C36-correr",
+      "sequence": 2000,
+      "title": "correr — \"to run\", and the root that runs through half of English",
+      "headword": "correr",
+      "romanization": "correr",
+      "gloss": "to run — a plain -er verb sitting on one of the largest roots English ever borrowed",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a363c98fd3302c3",
+      "sourceHash": "fnv1a64:adb95a2c33beacf6",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +573,7 @@
             },
             {
               "kind": "speech",
-              "text": "Me siento put you in the chair, the little me bouncing the action back onto you. Now get out of it. The pronoun works the same way; this time the stem does not crack at all."
+              "text": "You can walk two ways now — camino and ando. Speed it up. This last verb of the chapter is the plainest to conjugate and the richest to trace."
             }
           ]
         },
@@ -559,63 +584,76 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "v-b — Spanish v and b are one sound: le-ban-TAR."
+              "text": "rolled-rr — the double r is a full trill: ko-RRER. It is a different letter from a single r, and swapping them swaps words."
             },
             {
               "kind": "speech",
-              "text": "nasal-n — a clean n before the t, not swallowed."
+              "text": "vowel-o — a short pure o, no glide toward English ow."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: levantarse",
+          "title": "The word, taken apart: correr",
           "segments": [
             {
               "kind": "speech",
-              "text": "levantar from Vulgar Latin levantāre, from levāns, the present participle of levāre, \"to raise, to lighten\" — itself from levis, \"light, not heavy\"."
+              "text": "correr (\"to run\") from Latin currere, \"to run\". English borrowed this root harder than almost any other, and the descendants have spread so far from running that they no longer look related:"
             },
             {
               "kind": "speech",
-              "text": "Notice the shape: a Latin present participle, made into a new verb — the identical recipe that gave sentar from sedēns. Spanish built both of its body-position verbs out of a word for the state rather than the act."
+              "text": "current — water that runs; currency, money running hand to hand."
             },
             {
               "kind": "speech",
-              "text": "Levāre is everywhere in English: lever, elevate, elevator for raising; levity, levitate, alleviate, relieve for lightening; leaven, what raises the bread, and levy, a tax raised. And the Levant, from French levant, \"rising\": from western Europe it lay where the sun came up. English light, the opposite of heavy, is the Germanic cousin of levis, as sit is of sedēre."
+              "text": "curriculum — a running, a racecourse. A course of study is a track you run."
+            },
+            {
+              "kind": "speech",
+              "text": "courier, a runner; course, cursor, cursive — writing that runs."
+            },
+            {
+              "kind": "speech",
+              "text": "corridor — a place for running along, by way of Italian."
+            },
+            {
+              "kind": "speech",
+              "text": "with prefixes: occur (ob-, to run up against), recur, incur, precursor, excursion."
+            },
+            {
+              "kind": "speech",
+              "text": "And a cousin from the lesson before: Gaulish carrus, behind English car and cargo, comes from the very same Proto-Indo-European root kers-, \"to run\". Latin took one road and Celtic another; English holds both ends."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: raising a thing, raising yourself, standing still",
+          "title": "Grammar Lens: a plain -er verb, and four verbs together",
           "segments": [
             {
               "kind": "speech",
-              "text": "Levantar on its own raises something else. Levantarse raises you:"
+              "text": "Correr breaks nothing and grows nothing: corro, corres, corre, corremos, corren. That makes it the clean case the chapter's others stand out against:"
             },
             {
               "kind": "table",
               "headers": [
-                "Spanish",
-                "what it means"
+                "verb",
+                "what it does to its stem"
               ],
               "columns": 2,
-              "rowCount": 3,
+              "rowCount": 4,
               "utterances": [
-                "Levanto la mano means I raise my hand.",
-                "Levanto la cabeza means I lift my head.",
-                "Me levanto means I get up, I stand up."
+                "verb: correr. what it does to its stem: nothing — corro, corres, corre.",
+                "verb: caminar, andar. what it does to its stem: nothing — camino, ando.",
+                "verb: dormir. what it does to its stem: breaks o to ue under stress — duermo, but dormimos.",
+                "verb: oír. what it does to its stem: grows -g- in oigo, and writes y in oyes, oye, oyen."
               ]
             },
             {
               "kind": "speech",
-              "text": "The endings are ordinary -ar throughout — me levanto, te levantas, se levanta, nos levantamos, se levantan — and nothing breaks. So the chapter has now shown its two features apart: sentarse is reflexive and a stem-changer; levantarse is reflexive only."
-            },
-            {
-              "kind": "speech",
-              "text": "For standing as a state, Spanish uses no verb. It says estar de pie — \"to be on foot\", el pie being the foot. English's single \"stand\" splits in two: me levanto for getting up, estoy de pie for being up."
+              "text": "Only two of the four misbehave, and each misbehaves by a rule you can state."
             }
           ]
         },
@@ -633,47 +671,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me levanto, te levantas, se levanta, nos levantamos, se levantan\"",
+              "instruction": "\"corro, corres, corre, corremos, corren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me levanto, te levantas, se levanta, nos levantamos, se levantan\"]"
+              "source": "[YOU SAY: \"corro, corres, corre, corremos, corren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Levanto la mano\" then \"Levanto la cabeza\" then \"Me levanto\"",
+              "instruction": "\"El perro corre\" — the dog runs",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Levanto la mano\" then \"Levanto la cabeza\" then \"Me levanto\"]"
+              "source": "[YOU SAY: \"El perro corre\" — the dog runs]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Estoy de pie\" — I am standing",
+              "instruction": "\"Camino, no corro\" — I walk, I don't run",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Estoy de pie\" — I am standing]"
+              "source": "[YOU SAY: \"Camino, no corro\" — I walk, I don't run]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Abro el libro, me siento, cierro el libro, me levanto\"",
+              "instruction": "\"Corro el sábado\" — I run on Saturday; Spanish uses the bare article where English says on",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Abro el libro, me siento, cierro el libro, me levanto\"]"
+              "source": "[YOU SAY: \"Corro el sábado\" — I run on Saturday; Spanish uses the bare article where English says *on*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"levantar\" then English \"lever, elevate, Levant\"",
+              "instruction": "\"Oigo, duermo, camino, corro\" — the whole chapter in four words",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"levantar\" then English \"lever, elevate, Levant\"]"
+              "source": "[YOU SAY: \"Oigo, duermo, camino, corro\" — the whole chapter in four words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"correr\" then English \"current, curriculum, corridor\" — the running family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"correr\" then English \"current, curriculum, corridor\" — the running family]"
             }
           ]
         },
@@ -690,7 +737,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the chapter's four verbs, then say how you are standing. (Abro, cierro, me siento, me levanto; estoy de pie.) What do sentar and levantar share in their making, and which also breaks its stem? (Both from a Latin present participle, sedēns and levāns; sentarse breaks e becomes ie.) Name the two roots on that door, and which participle is irregular. (Aperīre and serāre — not claudere; abierto.) Why la mano? (Manus was feminine in Latin.)"
+              "text": "Name each verb's source in turn: oír, dormir, caminar, correr. (Audīre; dormīre; Gaulish camminus, by way of el camino; currere.) Which of the four leave their stems alone? (Caminar, andar and correr.) Say \"the dog runs\". (El perro corre.) Two words here have no settled origin — which? (Andar, and perro, whose three proposals all lack the evidence to decide between them.) And which English everyday word is a cousin of correr through Celtic? (Car.)"
             }
           ]
         }

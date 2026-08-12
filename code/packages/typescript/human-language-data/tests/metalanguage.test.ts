@@ -239,17 +239,17 @@ describe("the committed corpus", () => {
     const { lessons } = loadEverything();
     const r = measureMetalanguage(lessons, loadMetalanguage());
     expect(r.summary.terms).toBe(54);
-    expect(r.summary.lessonsUsingTerms).toBe(1866); // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6
+    expect(r.summary.lessonsUsingTerms).toBe(1867); // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6
 
     // No lesson declares an introduction yet, so every use is early. The total
     // says how pervasive the assumption is; the technical count says what to fix.
-    expect(r.summary.usesBeforeIntroduction).toBe(8599); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form) // +112: vocabulary wave 5 // +17: HL-C88 slices 5-6
-    expect(r.summary.technicalUsesBeforeIntroduction).toBe(2626); // +4: HL-C98 // +26: vocabulary wave 5 // +7: HL-C88 slices 5-6
-    expect(r.summary.technicalLessons).toBe(1303); // +4: HL-C98 // +21: vocabulary wave 5 // +4: HL-C88 slices 5-6
+    expect(r.summary.usesBeforeIntroduction).toBe(8606); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form) // +112: vocabulary wave 5 // +17: HL-C88 slices 5-6
+    expect(r.summary.technicalUsesBeforeIntroduction).toBe(2628); // +4: HL-C98 // +26: vocabulary wave 5 // +7: HL-C88 slices 5-6
+    expect(r.summary.technicalLessons).toBe(1304); // +4: HL-C98 // +21: vocabulary wave 5 // +4: HL-C88 slices 5-6
 
     expect(r.summary.worstTerms.slice(0, 2)).toEqual([
       { term: "verb", lessons: 890 }, // +4: HL-C98 // +2: HL-C99 // +8: vocabulary wave 5 // +3: HL-C88 slices 5-6
-      { term: "noun", lessons: 437 }, // +1: ES-C02-concordancia names the noun it agrees with // +4: vocabulary wave 5 // +3: HL-C88 slices 5-6
+      { term: "noun", lessons: 438 }, // +1: ES-C02-concordancia names the noun it agrees with // +4: vocabulary wave 5 // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia)
     ]);
   });
 

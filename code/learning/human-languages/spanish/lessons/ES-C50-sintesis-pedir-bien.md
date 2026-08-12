@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C50-sintesis-pedir-bien
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1502
-chapter: 131
+chapter: 132
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a command in Spanish is not the blunt thing a bare English imperative is, and knowing why keeps you from sounding rude by accident

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 115,
-  "title": "Review --- A Tense You Build",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a46b4bb35587da97",
+  "title": "Hecho, Dicho, Visto, Puesto",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:43c13146b9d103b3",
   "lessons": [
     {
-      "id": "ES-C49-repaso-perfecto",
-      "sequence": 1389,
-      "title": "Review — a tense you build",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — a whole tense assembled from two pieces, neither of which changes with the other",
+      "id": "ES-C49-participios-irregulares",
+      "sequence": 1388,
+      "title": "hecho, dicho, visto, puesto",
+      "headword": "hecho · dicho · visto · puesto",
+      "romanization": "hecho · dicho · visto · puesto",
+      "gloss": "four participles that refused the ending — and they are the four verbs you would have guessed",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1fc96eee90a7bada",
-      "notice": null,
+      "sourceHash": "fnv1a64:4386b837a7510e3e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,73 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Two questions: how many words is this tense, and which of them carries the person?"
+              "text": "By the rule, the participle of hacer should be hacido. Say it. Now be told that nobody has ever said it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: four, and you could have guessed which",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Piece one — the person: he, has, ha, hemos, habéis, han."
-            },
-            {
-              "kind": "speech",
-              "text": "Piece two — the meaning: the participle, which never changes."
-            },
-            {
               "kind": "table",
               "headers": [
-                "",
-                "regular",
-                ""
+                "verb",
+                "participle",
+                "in use"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 4,
               "utterances": [
-                "-ar. regular: -ado, hablado.",
-                "-er / -ir. regular: -ido, comido, vivido."
-              ]
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "irregular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "hacer. irregular: hecho, decir becomes dicho.",
-                "ver. irregular: visto, poner becomes puesto."
+                "verb: hacer. participle: hecho. in use: he hecho — I have done.",
+                "verb: decir. participle: dicho. in use: he dicho — I have said.",
+                "verb: ver. participle: visto. in use: he visto — I have seen.",
+                "verb: poner. participle: puesto. in use: he puesto — I have put."
               ]
             },
             {
               "kind": "speech",
-              "text": "Six little words times any participle you can form. That is the whole tense."
+              "text": "Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular."
+            },
+            {
+              "kind": "speech",
+              "text": "You already know this in English. Go/went, see/saw, do/did, put/put — and nobody struggles with them, because you meet them a hundred times a day. The same will happen here."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: why this one was cheap",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another."
+              "text": "These four are not broken. They are older than the rule."
             },
             {
               "kind": "speech",
-              "text": "This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount."
+              "text": "hecho from Latin factum — the thing done. English fact is that same word: a fact is literally a thing that has been done."
             },
             {
               "kind": "speech",
-              "text": "That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did."
+              "text": "dicho from Latin dictum — the thing said. English keeps dictum whole, and dictation, verdict (\"a true saying\"), contradict."
+            },
+            {
+              "kind": "speech",
+              "text": "visto from Latin vīsum — the thing seen. English vision, visible."
+            },
+            {
+              "kind": "speech",
+              "text": "puesto from Latin positum — the thing placed. English position, deposit, compose."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin already had participles for these verbs, and Spanish inherited them intact instead of rebuilding them from the stem. The regular -ado / -ido forms are the newer machinery; these four are what was there before it."
+            },
+            {
+              "kind": "speech",
+              "text": "So an irregular participle is not a form that went wrong. It is a form that was never replaced."
             }
           ]
         },
@@ -119,93 +126,98 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"",
+              "instruction": "\"hecho, dicho, visto, puesto\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"]"
+              "source": "[YOU SAY: \"hecho, dicho, visto, puesto\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the little word arrives without thought."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-pieces",
-              "prompt": "What are the two pieces of this tense, and which carries the person?",
+              "id": "ES-C49-participios-irregulares-four",
+              "prompt": "Give the participles of hacer, decir, ver and poner.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE"
+                "ES-GRAMMAR-IRREGULAR-PARTICIPLES",
+                "ES-LEX-HACER",
+                "ES-LEX-DECIR",
+                "ES-LEX-VER",
+                "ES-LEX-PONER"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "haber and the participle; haber carries the person",
-                "a form of haber plus a participle"
+                "hecho, dicho, visto, puesto",
+                "hecho dicho visto puesto"
               ],
               "feedback": {
-                "correct": "And the participle never moves.",
-                "incorrect": "A form of haber, which carries the person, plus a participle, which carries the meaning."
+                "correct": "The four commonest, as always.",
+                "incorrect": "hecho, dicho, visto, puesto."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-build",
-              "prompt": "Say we have lived.",
+              "id": "ES-C49-participios-irregulares-fact",
+              "prompt": "Which everyday English noun is the same word as hecho?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hemos vivido",
-                "nosotros hemos vivido"
-              ],
-              "feedback": {
-                "correct": "Hemos vivido.",
-                "incorrect": "Hemos vivido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-repaso-perfecto-irreg",
-              "prompt": "Say you have said it, using the participle of decir.",
-              "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+                "ES-ETYMON-FACTUM-DICTUM",
+                "ES-LEX-HACER"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo has dicho",
-                "has dicho"
+                "fact",
+                "fact, from factum"
               ],
               "feedback": {
-                "correct": "Has dicho.",
-                "incorrect": "Lo has dicho — dicho, not decido."
+                "correct": "A fact is a thing that has been done.",
+                "incorrect": "Fact — Latin factum, the thing done."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-cost",
-              "prompt": "Why did this tense cost less than the present or the preterite?",
+              "id": "ES-C49-participios-irregulares-why",
+              "prompt": "Why are these four irregular rather than some other four?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "it is built from two pieces rather than conjugated per verb",
-                "six words once, not endings on every verb"
+                "they are the most used",
+                "because they are the commonest verbs",
+                "frequency"
               ],
               "feedback": {
-                "correct": "A fixed cost instead of a per-verb one.",
-                "incorrect": "Six words learned once, plus one participle per verb — not a new ending set for every family."
+                "correct": "Only frequent words are used enough to survive being irregular.",
+                "incorrect": "They are the commonest verbs — the same four that break every other tense."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-participios-irregulares-use",
+              "prompt": "Say we have seen it, using the participle of ver.",
+              "assesses": [
+                "ES-GRAMMAR-PERFECT-COMPLETE",
+                "ES-LEX-VER"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo hemos visto",
+                "hemos visto"
+              ],
+              "feedback": {
+                "correct": "Hemos visto.",
+                "incorrect": "Lo hemos visto — or just hemos visto."
               }
             }
           ]
@@ -223,7 +235,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
+              "text": "The four? (Hecho, dicho, visto, puesto.) Are they broken forms? (No — they are older than the rule, inherited whole from Latin.) Next: all of it together."
             }
           ]
         }

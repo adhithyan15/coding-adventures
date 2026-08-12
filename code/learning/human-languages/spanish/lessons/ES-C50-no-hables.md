@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C50-no-hables
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1499
-chapter: 128
+chapter: 129
 type: grammar
 headword: no hables
 gloss: telling somebody NOT to do something — and Spanish reaches for the subjunctive, which is exactly the right place to reach

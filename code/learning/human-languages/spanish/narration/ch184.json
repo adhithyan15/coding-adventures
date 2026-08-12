@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 184,
-  "title": "Review --- Three Jobs, No New Words",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:38f6bcd9d9e0805a",
+  "title": "Lo Que --- What, Out of Two Old Words",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6ce0daf82b25462b",
   "lessons": [
     {
-      "id": "ES-C53-repaso-que",
-      "sequence": 2204,
-      "title": "Review — three jobs, no new words",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — a whole grammatical machine assembled from two words you already had",
+      "id": "ES-C53-lo-que",
+      "sequence": 2203,
+      "title": "lo que — \"what,\" out of two old words",
+      "headword": "lo que",
+      "romanization": "lo que",
+      "gloss": "\"what\" — two words you already own, put together to name a thing you cannot name",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32cbeb9da6b06822",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:210668fab80d65ab",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,73 +35,47 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. One question first: how many new words did this rung teach you?"
+              "text": "You have lo. You have que. This chapter puts them next to each other and adds nothing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: a noun-shaped hole",
           "segments": [
             {
               "kind": "speech",
-              "text": "None. Here is the whole rung:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "Spanish",
-                "English"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "joining to a noun. Spanish: el libro que compro. English: the book that I buy.",
-                "the same, with English's that dropped. Spanish: la casa que tengo. English: the house I have.",
-                "no noun to join to. Spanish: lo que digo. English: what I say."
-              ]
+              "text": "lo que — what, in the sense of the thing that."
             },
             {
               "kind": "speech",
-              "text": "Que you have held since quiero que hables. Lo you have held since the object pronouns. This rung put them to work and added nothing."
+              "text": "Lo que digo — what I say. (= the thing that I say) Lo que compro — what I buy."
             },
             {
               "kind": "speech",
-              "text": "That is worth pausing on, because it is the last big structural piece a beginner's course owes you, and it turned out to cost no vocabulary at all. Almost everything in a language is like this eventually: the pieces stop being new and start being rearranged."
+              "text": "Every relative clause so far has hung off a noun: el libro que compro. But sometimes there is no noun, because you do not know or do not care what the thing is. Lo stands in for it — a placeholder with no gender and nothing behind it — and que does its usual job of joining."
+            },
+            {
+              "kind": "speech",
+              "text": "So lo que is a noun-shaped hole with a sentence attached. That is why it translates as English what, which is doing exactly the same thing: what I say is the thing that I say with the word thing taken out."
+            },
+            {
+              "kind": "speech",
+              "text": "Now compare it to the lo you already know:"
+            },
+            {
+              "kind": "speech",
+              "text": "Lo digo. — I say it. (a specific thing, already named) Lo que digo — what I say. (no specific thing at all)."
+            },
+            {
+              "kind": "speech",
+              "text": "Same word. In the first it points at something known; in the second it points at a gap the following clause will fill."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what to actually watch for",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One error will outlive the others, so it gets the last word here."
-            },
-            {
-              "kind": "speech",
-              "text": "English deletes its joint. Spanish never does."
-            },
-            {
-              "kind": "speech",
-              "text": "You will think the book I bought, translate what you thought, and produce el libro compré. It will feel complete because your English was complete."
-            },
-            {
-              "kind": "speech",
-              "text": "The check is mechanical and takes a second: a noun, then a new subject and verb, with nothing in between — that gap needs a que."
-            },
-            {
-              "kind": "speech",
-              "text": "And when there is no noun to begin with, lo supplies one so that que has something to hang from. Which means both chapters were about the same thing: Spanish will not let the joint go missing."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,28 +88,66 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all three rows of the table",
+              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all three rows of the table]"
+              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the missing English that is loud."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lo que compro\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lo que compro\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-repaso-que-none",
-              "prompt": "How many new words did this rung introduce?",
+              "id": "ES-C53-lo-que-say",
+              "prompt": "Say what I say, meaning the thing that I say.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-GRAMMAR-LO-QUE",
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "lo que digo",
+                "lo que yo digo"
+              ],
+              "feedback": {
+                "correct": "A noun-shaped hole with a sentence attached.",
+                "incorrect": "Lo que digo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-lo-que-contrast",
+              "prompt": "What is the difference between lo digo and lo que digo?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-LO-QUE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "lo digo points at a known thing, lo que digo points at no thing",
+                "one is i say it, the other is what i say"
+              ],
+              "feedback": {
+                "correct": "Same word, pointing at something known or at a gap.",
+                "incorrect": "Lo digo = I say it, about something already named. Lo que digo = what I say, with no specific thing."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-lo-que-new",
+              "prompt": "How many new words did this chapter introduce?",
+              "assesses": [
                 "ES-GRAMMAR-LO-QUE"
               ],
               "responseSeconds": 8,
@@ -152,50 +157,14 @@
                 "0"
               ],
               "feedback": {
-                "correct": "Que and lo were both already yours.",
-                "incorrect": "None."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-repaso-que-drop",
-              "prompt": "Say the house I have, and name the trap.",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "la casa que tengo; english drops the that",
-                "la casa que tengo"
-              ],
-              "feedback": {
-                "correct": "You think the English, and the que goes missing with it.",
-                "incorrect": "La casa que tengo. The trap is that English deletes its that."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-repaso-que-hole",
-              "prompt": "When there is no noun to join to, what supplies one?",
-              "assesses": [
-                "ES-GRAMMAR-LO-QUE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "lo",
-                "lo, as in lo que"
-              ],
-              "feedback": {
-                "correct": "So that que has something to hang from.",
-                "incorrect": "Lo — giving que something to attach to."
+                "correct": "Two old words, side by side.",
+                "incorrect": "None. Lo and que were both already yours."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -207,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "New words this rung? (None.) The error that outlives the others? (Dropping que, because English drops that.) Next: sentences long enough to be worth saying."
+              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place."
             }
           ]
         }

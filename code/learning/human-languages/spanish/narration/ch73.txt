@@ -1,33 +1,47 @@
-Spanish, chapter 73: Las --- The Plural Article That Behaves.
+Spanish, chapter 73: La Comida --- A Noun You Can Build.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-las casas — "the houses".
+la comida — "food," built from a verb you have.
 
 Warm-up.
 [pause 2 seconds]
-You learned this in your first chapter: a noun ending in a vowel adds -s. So what is "houses"? (Casas.) Now — what is "the houses"?
+Say "to eat." (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you.
 
-Grammar Lens: the article does what the noun does.
-las — the, for more than one feminine thing.
-la casa becomes las casas — the houses. la comida becomes las comidas — the meals.
-The -s lands on both words. That is not two rules; it is one rule applied where it belongs. You have already seen Spanish do this — buenas noches is buena copying noche's number — and it is the same instinct throughout the language: the words around a noun agree with it, so when the noun goes plural, they follow.
-So las is not a word to memorise. It is la obeying the rule you already hold.
+Sounds you'll need.
+d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d.
+
+The word, taken apart.
+la comida — food, and also a meal.
+Take comer, drop the ending, add -ida:
+comer becomes comida — literally the eaten thing.
+That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do.
+This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word.
+Comer itself comes from Latin comedere — ed- is "eat," the same ancient root as English eat, with com- ("thoroughly") in front. So comida is, at the bottom, "the thoroughly-eaten thing."
+
+Grammar Lens: -ida nouns are feminine.
+Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender.
+la comida — the food. Hago la comida. — I make the meal.
+Set your three nouns side by side and the pattern is doing all the work:
+[a table of 3 rows, read aloud]
+noun: libro. gender: masculine. article: el.
+noun: casa. gender: feminine. article: la.
+noun: comida. gender: feminine. article: la.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la casa" then "las casas" — hear the -s twice]
+[your turn — say: "comer" then "comida" — hear the verb inside the noun]
 [pause 8 seconds for the answer]
-[your turn — say: "las comidas"]
+[your turn — say: "Hago la comida"]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say the houses.
+Build the noun for food from the verb comer.
+[question — say your answer, then pause 10 seconds]
+Say I make the meal.
 [question — say your answer, then pause 8 seconds]
-Say the meals.
-[question — say your answer, then pause 8 seconds]
-How many new rules did this lesson add?
+What gender is any noun built with -ida?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"The houses"? (Las casas.) Where did the -s go? (Both words.) Next: the masculine one, which does not do the obvious thing — and the reason will be familiar.
+What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something.
