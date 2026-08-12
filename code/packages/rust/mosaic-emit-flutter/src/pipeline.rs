@@ -1108,6 +1108,7 @@ pub fn from_pipeline(
     .unwrap();
     let uses_checkbox = layout_contains_tag(&layout.root, "HostCheckbox");
     let uses_radio = layout_contains_tag(&layout.root, "HostRadio");
+    let uses_slider = layout_contains_tag(&layout.root, "HostSlider");
     let uses_tooltip = layout_contains_tag(&layout.root, "HostTooltip");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
@@ -1127,7 +1128,7 @@ pub fn from_pipeline(
     }
     writeln!(
         out,
-        "import 'package:flutter/material.dart' hide Checkbox, Radio, Tooltip;"
+        "import 'package:flutter/material.dart' hide Checkbox, Radio, Slider, Tooltip;"
     )
     .unwrap();
     let mut material_aliases = Vec::new();
@@ -1136,6 +1137,9 @@ pub fn from_pipeline(
     }
     if uses_radio {
         material_aliases.push("Radio");
+    }
+    if uses_slider {
+        material_aliases.push("Slider");
     }
     if uses_tooltip {
         material_aliases.push("Tooltip");
@@ -1904,6 +1908,9 @@ fn emit_widget_tree(
     }
     if node.tag == "HostRadio" {
         return emit_host_radio(node, indent, part_styles, component, emits);
+    }
+    if node.tag == "HostSlider" {
+        return emit_host_slider(node, indent, component, emits);
     }
     if node.tag == "HostScroll" {
         return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
@@ -3054,9 +3061,7 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
     }
 
     let label = match find_prop_value(node, "a11y-label") {
-        Some(LayoutPropValue::String(value)) => {
-            Some(format!("\"{}\"", escape_dart_string(value)))
-        }
+        Some(LayoutPropValue::String(value)) => Some(format!("\"{}\"", escape_dart_string(value))),
         Some(LayoutPropValue::SlotRef(slot)) => Some(to_camel_case_first_lower(slot)),
         _ => None,
     };
@@ -3578,6 +3583,104 @@ fn host_radio_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
                 EmitPayloadType::Text | EmitPayloadType::Color => "v ?? \"\"",
                 EmitPayloadType::Number => "num.tryParse(v ?? \"\") ?? 0",
                 EmitPayloadType::Bool => "(v ?? \"\").isNotEmpty",
+                EmitPayloadType::Component(_) => "throw UnimplementedError()",
+            };
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
+}
+
+/// Lower `HostSlider` to Flutter Material's native adjustable slider.
+///
+/// Flutter already exposes the portable split directly: `onChanged` fires for
+/// every drag tick and `onChangeEnd` carries the final released value. Positive
+/// Mosaic steps become Flutter divisions (intervals, rather than Compose's
+/// interior-stop count); `step: 0` leaves `divisions` unset for continuous
+/// motion.
+fn emit_host_slider(
+    node: &LayoutNode,
+    indent: usize,
+    component: &str,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let number_expr = |name: &str, default: &str| -> Result<String, PipelineEmitError> {
+        match find_prop_value(node, name) {
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                let field = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&field)?;
+                Ok(field)
+            }
+            Some(LayoutPropValue::Number(number)) => Ok(number.to_string()),
+            Some(LayoutPropValue::Expr(expression)) => Ok(expression.clone()),
+            _ => Ok(default.to_string()),
+        }
+    };
+    let value = number_expr("value", "0")?;
+    let min = number_expr("min", "0")?;
+    let max = number_expr("max", "100")?;
+    let disabled = bool_prop_expression(node, "disabled")?.unwrap_or_else(|| "false".into());
+
+    let event_callback = |prop: &str| -> Result<Option<String>, PipelineEmitError> {
+        let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+            return Ok(None);
+        };
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_emit_name(&case)?;
+        let args = emits
+            .iter()
+            .find(|emit| emit.name == *emit_name)
+            .map(host_slider_event_args)
+            .transpose()?
+            .unwrap_or_default();
+        Ok(Some(format!(
+            "(value) {{ dispatch({component}Event{case}({args})); }}"
+        )))
+    };
+    let on_change =
+        event_callback("onChange")?.unwrap_or_else(|| "(value) { /* no onChange bound */ }".into());
+    let on_commit = event_callback("onCommit")?;
+
+    let divisions = match find_prop_value(node, "step") {
+        Some(LayoutPropValue::Number(step)) if *step > 0.0 => {
+            let range = match (find_prop_value(node, "min"), find_prop_value(node, "max")) {
+                (Some(LayoutPropValue::Number(min)), Some(LayoutPropValue::Number(max))) => {
+                    max - min
+                }
+                _ => 100.0,
+            };
+            Some(((range / step).round() as i64).max(1))
+        }
+        Some(LayoutPropValue::Number(_)) => None,
+        _ => Some(100),
+    };
+
+    let mut args = vec![
+        format!("value: ({value}).toDouble()"),
+        format!("min: ({min}).toDouble()"),
+        format!("max: ({max}).toDouble()"),
+        format!("onChanged: {disabled} ? null : {on_change}"),
+    ];
+    if let Some(on_commit) = on_commit {
+        args.push(format!("onChangeEnd: {disabled} ? null : {on_commit}"));
+    }
+    if let Some(divisions) = divisions {
+        args.push(format!("divisions: {divisions}"));
+    }
+    Ok(format!("{pad}material.Slider({})\n", args.join(", ")))
+}
+
+fn host_slider_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            let value = match &param.r#type {
+                EmitPayloadType::Number => "value",
+                EmitPayloadType::Text | EmitPayloadType::Color => "value.toString()",
+                EmitPayloadType::Bool => "value != 0",
                 EmitPayloadType::Component(_) => "throw UnimplementedError()",
             };
             Ok(format!("{field}: {value}"))
@@ -5047,9 +5150,9 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
-        assert!(r
-            .output
-            .contains("import 'package:flutter/material.dart' hide Checkbox, Radio, Tooltip;"));
+        assert!(r.output.contains(
+            "import 'package:flutter/material.dart' hide Checkbox, Radio, Slider, Tooltip;"
+        ));
         assert!(r.output.contains("class X extends StatelessWidget"));
         assert!(r.output.contains("Container("));
         assert!(!r.output.contains("_mosaicTruthy"));
@@ -5871,6 +5974,127 @@ mod tests {
             "expected `Radio<String>(value: \"vanilla\"`, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn host_slider_lowers_native_range_steps_disabled_and_events() {
+        let m = component(
+            "Slider",
+            vec![
+                slot("value", SlotType::Number, true),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![
+                emit(
+                    "onChange",
+                    vec![EmitParam {
+                        name: "value".into(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                ),
+                emit(
+                    "onCommit",
+                    vec![EmitParam {
+                        name: "value".into(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                ),
+            ],
+        );
+        let l = layout(
+            "Slider",
+            node_with(
+                "HostSlider",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::SlotRef("value".into()),
+                    },
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".into(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    LayoutProp {
+                        name: "disabled".into(),
+                        value: LayoutPropValue::SlotRef("disabled".into()),
+                    },
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onChange".into()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".into(),
+                        value: LayoutPropValue::EmitRef("onCommit".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Slider"))
+            .expect("emit native Flutter slider")
+            .output;
+
+        assert!(out.contains("hide Checkbox, Radio, Slider, Tooltip"));
+        assert!(out.contains("as material show Slider;"));
+        assert!(out.contains("material.Slider("));
+        assert!(out.contains("value: (value).toDouble()"));
+        assert!(out.contains("min: (0).toDouble()"));
+        assert!(out.contains("max: (100).toDouble()"));
+        assert!(out.contains("divisions: 20"));
+        assert!(out.contains(
+            "onChanged: _mosaicTruthy(disabled) ? null : (value) { dispatch(SliderEventChange(value: value)); }"
+        ));
+        assert!(out.contains(
+            "onChangeEnd: _mosaicTruthy(disabled) ? null : (value) { dispatch(SliderEventCommit(value: value)); }"
+        ));
+    }
+
+    #[test]
+    fn host_slider_step_zero_is_continuous() {
+        let m = component("Opacity", vec![], vec![]);
+        let l = layout(
+            "Opacity",
+            node_with(
+                "HostSlider",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::Number(0.5),
+                    },
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".into(),
+                        value: LayoutPropValue::Number(1.0),
+                    },
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Opacity"))
+            .expect("emit continuous Flutter slider")
+            .output;
+        let slider = out
+            .lines()
+            .find(|line| line.contains("material.Slider("))
+            .expect("slider line");
+        assert!(slider.contains("onChanged: false ? null"));
+        assert!(!slider.contains("divisions:"));
+        assert!(!slider.contains("onChangeEnd:"));
     }
 
     #[test]

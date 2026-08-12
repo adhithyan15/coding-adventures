@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-pkg-flutter-host-slider-fixture"
+version = "0.1.0"
+description = "Native-complete Flutter HostSlider analysis fixture"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Volume"]
+
+[dependencies]
+
+[kernel]
+version = "1"
