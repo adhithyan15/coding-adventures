@@ -4857,10 +4857,60 @@ impl Compiler {
             ));
         }
 
+        let static_real_value = (!self.static_real_tracking_disabled
+            && target_ty == ScalarType::Real)
+            .then(|| self.static_assigned_real_value(arith_nodes[0]))
+            .flatten()
+            .filter(|value| value.is_finite())
+            .map(|value| value.to_string());
+        let static_integer_value = (!self.static_real_tracking_disabled
+            && target_ty == ScalarType::Integer)
+            .then(|| self.static_assigned_integer_value(arith_nodes[0]))
+            .flatten();
         let value = self.emit_expr(arith_nodes[0])?;
         let value = self.coerce_value(value, target_ty, "single-value for element")?;
         self.emit_for_target_write(target, value)?;
+        self.update_for_target_snapshot(target, static_real_value, static_integer_value)?;
         self.emit_statement(body)
+    }
+
+    fn update_for_target_snapshot(
+        &mut self,
+        target: &GrammarASTNode,
+        static_real_value: Option<String>,
+        static_integer_value: Option<i64>,
+    ) -> Result<(), CompileError> {
+        if array_subscripts(target).is_some() {
+            return Ok(());
+        }
+        let name = self.simple_variable_name(target)?;
+        if self.active_by_name_binding(&name).is_some() {
+            return Ok(());
+        }
+        let binding = self.require_var(&name)?;
+        if binding.is_global {
+            return Ok(());
+        }
+        match binding.ty {
+            ScalarType::Real => match static_real_value {
+                Some(value) => {
+                    self.static_real_slots.insert(binding.slot, value);
+                }
+                None => {
+                    self.static_real_slots.remove(&binding.slot);
+                }
+            },
+            ScalarType::Integer => match static_integer_value {
+                Some(value) => {
+                    self.static_integer_slots.insert(binding.slot, value);
+                }
+                None => {
+                    self.static_integer_slots.remove(&binding.slot);
+                }
+            },
+            _ => {}
+        }
+        Ok(())
     }
 
     fn emit_for_step_until(
@@ -8345,6 +8395,15 @@ mod tests {
             "test",
         )
         .expect("a single-value for list is straight-line for static snapshots");
+    }
+
+    #[test]
+    fn al4_single_value_loop_updates_controlled_variable_snapshot() {
+        compile_source(
+            "begin integer i; real r; for i := 1, 2 do r := i + 4.25; print(r) end",
+            "test",
+        )
+        .expect("each single-value element updates the controlled variable snapshot");
     }
 
     #[test]
