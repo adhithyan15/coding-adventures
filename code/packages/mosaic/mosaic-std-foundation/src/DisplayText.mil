@@ -1,0 +1,5 @@
+// Large display copy. Content retains platform text scaling and is exposed as
+// a native heading on every backend.
+component DisplayText {
+  slot content : text ;
+}

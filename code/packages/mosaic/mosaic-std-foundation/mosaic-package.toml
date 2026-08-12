@@ -1,0 +1,24 @@
+[package]
+name = "mosaic-std-foundation"
+version = "0.1.0"
+description = "Accessible typography, icons, and shared visual tokens for native Mosaic applications"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = [
+  "DisplayText",
+  "HeadingText",
+  "BodyText",
+  "CaptionText",
+  "FoundationIcon",
+]
+
+[dependencies]
+# Foundation is deliberately kernel-only so every higher-level standard
+# package can depend on it without introducing a component cycle.
+
+[styles]
+token_palette = "tokens/foundation.json"
+
+[kernel]
+version = "1"

@@ -1,0 +1,7 @@
+style CaptionText {
+  part caption-text-root {
+    color       : $foundation-color-muted-dark ;
+    font-size   : $foundation-font-caption ;
+    font-weight : 500 ;
+  }
+}

@@ -1,0 +1,4 @@
+// Default readable application copy.
+component BodyText {
+  slot content : text ;
+}

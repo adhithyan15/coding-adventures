@@ -1,0 +1,7 @@
+style DisplayText {
+  part display-text-root {
+    color       : $foundation-color-text-light ;
+    font-size   : $foundation-font-display ;
+    font-weight : 700 ;
+  }
+}

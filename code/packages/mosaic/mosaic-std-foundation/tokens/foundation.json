@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "tokens": {
+    "foundation-color-text-light": "#172033",
+    "foundation-color-text-dark": "#f7f9fc",
+    "foundation-color-muted-light": "#5d6675",
+    "foundation-color-muted-dark": "#c4cad4",
+    "foundation-color-surface-light": "#ffffff",
+    "foundation-color-surface-dark": "#1c2028",
+    "foundation-color-border-light": "#d8dee8",
+    "foundation-color-border-dark": "#3b4350",
+    "foundation-color-accent": "#5b5bd6",
+    "foundation-font-display": "32px",
+    "foundation-font-heading": "24px",
+    "foundation-font-body": "16px",
+    "foundation-font-caption": "13px",
+    "foundation-icon-size": "20px",
+    "foundation-space-xs": "4px",
+    "foundation-space-sm": "8px",
+    "foundation-space-md": "16px",
+    "foundation-space-lg": "24px",
+    "foundation-space-xl": "32px",
+    "foundation-radius-sm": "6px",
+    "foundation-radius-md": "10px",
+    "foundation-radius-lg": "16px"
+  }
+}

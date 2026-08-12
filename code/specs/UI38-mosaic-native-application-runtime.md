@@ -496,6 +496,14 @@ unblocks multiple downstream targets; never count source generation as completio
     libraries carry scoped defaults automatically; dependency defaults are
     overridden by the consuming package and then explicit application input.
 - [ ] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
+  - [x] Ship v0.1 package-owned light/dark tokens plus accessible display,
+    heading, body, caption, and semantic icon components, with dependency
+    inclusion and `native-complete` acceptance across all five native backends.
+  - [ ] Add arbitrary Mosaic child pass-through, then ship reusable surface
+    components that can wrap authored component subtrees without an app-owned
+    native `node` adapter. Flutter's JSON runtime makes a native widget slot an
+    intentionally non-portable substitute, so v0.1 reserves surface tokens but
+    does not claim a text-only surface abstraction.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
