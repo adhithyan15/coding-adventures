@@ -5,6 +5,11 @@ this file.
 
 ## [Unreleased]
 
+### Added - accessible HostSlider names
+
+Literal and slot-backed `HostSlider.a11y-label` values now annotate the native
+Material slider while preserving its adjustable range semantics.
+
 ### Added - native HostSlider
 
 `HostSlider` now lowers to Flutter Material's native adjustable `Slider`, with

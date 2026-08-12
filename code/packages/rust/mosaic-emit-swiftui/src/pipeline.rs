@@ -4539,6 +4539,9 @@ fn emit_host_slider(
         )
         .unwrap();
     }
+    if let Some(label) = swift_accessibility_label(node) {
+        write!(out, ".accessibilityLabel({label})").unwrap();
+    }
     writeln!(out).unwrap();
     Ok(out)
 }
@@ -9555,6 +9558,7 @@ mod tests {
             vec![
                 slot("value", SlotType::Number, true),
                 slot("disabled", SlotType::Bool, true),
+                slot("label", SlotType::Text, true),
             ],
             vec![
                 emit("onChange", vec![param("value", EmitPayloadType::Number)]),
@@ -9580,6 +9584,7 @@ mod tests {
                         value: LayoutPropValue::Number(5.0),
                     },
                     prop_slot_ref("disabled", "disabled"),
+                    prop_slot_ref("a11y-label", "label"),
                     prop_emit_ref("onChange", "onChange"),
                     prop_emit_ref("onCommit", "onCommit"),
                 ],
@@ -9595,6 +9600,7 @@ mod tests {
         assert!(out.contains("maximum: 100,"));
         assert!(out.contains("step: 5,"));
         assert!(out.contains("disabled: disabled,"));
+        assert!(out.contains(".accessibilityLabel(_mosaicText(label))"));
         assert!(out.contains("onChange: { value in dispatch(.change(value: value)) },"));
         assert!(out.contains("onCommit: { value in dispatch(.commit(value: value)) }"));
         assert!(out.contains("if !editing { onCommit?(liveValue) }"));
@@ -9608,16 +9614,23 @@ mod tests {
             "Opacity",
             leaf(
                 "HostSlider",
-                vec![LayoutProp {
-                    name: "step".to_string(),
-                    value: LayoutPropValue::Number(0.0),
-                }],
+                vec![
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Opacity".to_string()),
+                    },
+                ],
             ),
         );
         let out = from_pipeline(&m, &l, &empty_style("Opacity"))
             .expect("emit continuous SwiftUI slider")
             .output;
         assert!(out.contains("step: nil,"));
+        assert!(out.contains(".accessibilityLabel(Text(verbatim: \"Opacity\"))"));
         assert!(out.contains("onChange: nil,"));
         assert!(out.contains("onCommit: nil"));
     }

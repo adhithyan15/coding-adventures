@@ -534,6 +534,9 @@ unblocks multiple downstream targets; never count source generation as completio
       - [x] WinUI `Slider`, including range, discrete or effectively continuous
         step behavior, disabled state, user change dispatch, and exact
         pointer/key/blur commit semantics.
+    - [x] Map literal and slot-backed `HostSlider.a11y-label` values to the
+      native accessibility name on every backend without replacing the
+      adjustable range role.
     - [ ] Export the native-complete standard `Slider` facade with an authored
       accessible label and optional displayed value, so apps do not depend on a
       raw `HostSlider` automation ID as the only human-readable name.

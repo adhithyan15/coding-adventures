@@ -1,5 +1,11 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — accessible HostSlider names
+
+Literal and slot-backed `HostSlider.a11y-label` values now lower to
+`AutomationProperties.Name` on the native WinUI slider while retaining its
+RangeValue automation pattern.
+
 ## [Unreleased] — native HostSlider
 
 `HostSlider` now lowers to a component-scoped WinUI `Slider`, retaining native

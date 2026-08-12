@@ -7682,6 +7682,21 @@ fn emit_host_slider(
             escape_xaml_attr(part_name)
         ));
     }
+    match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{}\"",
+                escape_xaml_attr(label)
+            ));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            attrs.push_str(&format!(
+                " AutomationProperties.Name=\"{{x:Bind {}}}\"",
+                ctx.slot_xbind_path(slot)
+            ));
+        }
+        _ => {}
+    }
 
     for (prop, attr, default) in [
         ("value", "Value", "0"),
@@ -13314,6 +13329,7 @@ mod tests {
             vec![
                 slot("volume", SlotType::Number, true),
                 slot("locked", SlotType::Bool, true),
+                slot("label", SlotType::Text, true),
             ],
             vec![
                 emit("onChange", vec![param("value", EmitPayloadType::Number)]),
@@ -13344,6 +13360,10 @@ mod tests {
                     value: LayoutPropValue::SlotRef("locked".to_string()),
                 },
                 LayoutProp {
+                    name: "a11y-label".to_string(),
+                    value: LayoutPropValue::SlotRef("label".to_string()),
+                },
+                LayoutProp {
                     name: "onChange".to_string(),
                     value: LayoutPropValue::EmitRef("onChange".to_string()),
                 },
@@ -13364,6 +13384,9 @@ mod tests {
         assert!(r
             .xaml
             .contains("AutomationProperties.AutomationId=\"volume-slider\""));
+        assert!(r
+            .xaml
+            .contains("AutomationProperties.Name=\"{x:Bind Label}\""));
         assert!(r.xaml.contains("Value=\"{x:Bind Volume, Mode=OneWay}\""));
         assert!(r.xaml.contains("Minimum=\"-10\""));
         assert!(r.xaml.contains("Maximum=\"10\""));
@@ -13393,14 +13416,21 @@ mod tests {
         let c = component("X", vec![], vec![]);
         let l = slider_in_box(
             None,
-            vec![LayoutProp {
-                name: "step".to_string(),
-                value: LayoutPropValue::Number(0.0),
-            }],
+            vec![
+                LayoutProp {
+                    name: "step".to_string(),
+                    value: LayoutPropValue::Number(0.0),
+                },
+                LayoutProp {
+                    name: "a11y-label".to_string(),
+                    value: LayoutPropValue::String("Opacity".to_string()),
+                },
+            ],
         );
         let r = compile(&c, &l, &empty_style("X"));
 
         assert!(r.xaml.contains("MosaicStep=\"0\""));
+        assert!(r.xaml.contains("AutomationProperties.Name=\"Opacity\""));
         assert!(!r.xaml.contains("MosaicValueChanged=\""));
         assert!(!r.xaml.contains("MosaicValueCommitted=\""));
         assert!(r

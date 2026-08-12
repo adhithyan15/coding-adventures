@@ -1,5 +1,6 @@
 layout Volume {
   HostSlider [ volume ] (
+    a11y-label: slot: label,
     value: slot: value,
     min: 0,
     max: 100,

@@ -3585,6 +3585,9 @@ fn emit_host_slider_qml(
     writeln!(out, "{inner}to: {}", number_expr("max", "100")?).unwrap();
     let step = find_number_prop(node, "step").unwrap_or(1.0);
     writeln!(out, "{inner}stepSize: {step}").unwrap();
+    if let Some(accessible_name) = build_text_accessible_name_attribute(node) {
+        writeln!(out, "{inner}{accessible_name}").unwrap();
+    }
     if step > 0.0 {
         writeln!(out, "{inner}snapMode: MosaicControls.Slider.SnapAlways").unwrap();
     }
@@ -9668,6 +9671,7 @@ mod tests {
             vec![
                 slot("value", SlotType::Number, true),
                 slot("disabled", SlotType::Bool, true),
+                slot("label", SlotType::Text, true),
             ],
             vec![
                 EmitDecl {
@@ -9713,6 +9717,10 @@ mod tests {
                         value: LayoutPropValue::SlotRef("disabled".to_string()),
                     },
                     LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::SlotRef("label".to_string()),
+                    },
+                    LayoutProp {
                         name: "onChange".to_string(),
                         value: LayoutPropValue::EmitRef("onChange".to_string()),
                     },
@@ -9733,6 +9741,7 @@ mod tests {
         assert!(out.contains("from: 0"));
         assert!(out.contains("to: 100"));
         assert!(out.contains("stepSize: 5"));
+        assert!(out.contains("Accessible.name: label"));
         assert!(out.contains("snapMode: MosaicControls.Slider.SnapAlways"));
         assert!(out.contains("enabled: !mosaicRoot.disabled"));
         assert!(out.contains("onMoved: mosaicRoot.change(value)"));
@@ -9747,10 +9756,16 @@ mod tests {
             root: LayoutNode {
                 tag: "HostSlider".to_string(),
                 part_name: None,
-                props: vec![LayoutProp {
-                    name: "step".to_string(),
-                    value: LayoutPropValue::Number(0.0),
-                }],
+                props: vec![
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Opacity".to_string()),
+                    },
+                ],
                 children: vec![],
             },
         };
@@ -9758,6 +9773,7 @@ mod tests {
             .expect("emit continuous Qt slider")
             .output;
         assert!(out.contains("stepSize: 0"));
+        assert!(out.contains("Accessible.name: \"Opacity\""));
         assert!(!out.contains("snapMode:"));
         assert!(!out.contains("onMoved:"));
         assert!(!out.contains("onPressedChanged:"));
