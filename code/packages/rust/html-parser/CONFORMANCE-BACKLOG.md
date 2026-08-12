@@ -304,8 +304,12 @@ Prioritized work items:
    current node is another heading before popping that heading, matching WPT
    `tests1.dat`'s `<h1><h2>` rows. A non-current heading separated by an inline
    or special element remains open, matching the current Standard and browser
-   behavior. Continue the fresh in-body scope and recovery audit beyond active
-   formatting.
+   behavior. Ruby annotation starts now generate the required implied end tags
+   when an authored HTML `ruby` is in scope and report when a non-ruby node
+   remains current, matching WPT `tests19.dat` and `webkit01.dat` while keeping
+   valid annotation transitions, outside-ruby starts, and synthetic ruby
+   fragment contexts quiet. Continue the fresh in-body scope and recovery audit
+   beyond active formatting.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
