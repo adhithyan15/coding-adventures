@@ -860,8 +860,9 @@ backend immediately) come before the enabler-dependent items.
   source reassignment, and tracked locals may feed the bounded finite
   arithmetic and exact standard-function evaluator. Integer literals within
   binary64's exact range may widen into that evaluator; larger values fail
-  closed. Labels, branches, loops, gotos, calls, dynamic
-  reassignment, and captured globals invalidate the tracked value. General computed/runtime
+  closed. Conditional statements intersect equal outgoing snapshots, including
+  the unmodified path when `else` is absent. Labels, loops, gotos, calls, dynamic
+  reassignment, differing branches, and captured globals invalidate the tracked value. General computed/runtime
   `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
