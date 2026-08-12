@@ -7,32 +7,20 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Next up (priority order)
 
-1. **Design-fidelity gap, remaining items.** The clear value mismatches (colors that
-   didn't match a design token, collapsed-to-uniform spacing, drifted shadow alpha
-   values) are closed — see `CHANGELOG.md`'s "re-closed the design-fidelity gap" entry.
-   What's left needs either a product decision or real feature work, not a value fix:
-   - Icon/SVG assets — mostly shipped (see Resolved below): brand mark, progress
-     ring, real theme-toggle icon (now in the topbar, not a floating button), pill
-     status dot, group-count badge, composer "+" icon box. Segmented-switch icons
-     split out as their own Backlog item below (needs iterating six icons together
-     as a matched family, not a capability gap).
-   - Board: a 4th column ("In review" — mock has 4, live has 3), colored top accent bar
-     + card-count badge on each column header, critical cards get a colored left border
-     instead of a text chip.
-   - Richer Gantt — shipped (day-grid, weekend/today shading, milestone
-     diamonds, percent-complete fill, hover tooltips, a legend; see Resolved
-     below). Dependency arrows are the one piece that didn't ship — split out
-     as its own item in the Backlog section below, since it needs either a
-     new kernel primitive or product guidance, not just more layout work.
-   - Richer task rows: labels/priority chips, the dependency list, and the notes
-     paragraph all shipped (see Resolved below). Still missing: critical/slack
-     *chips* — today the detail panel's scheduling prose already says "on the
-     critical path" / states slack in prose, so a dedicated chip would be a
-     value-only restyle, low priority.
-   - Calendar view — shipped since (Phase 7, see Resolved below); the mock's calendar
-     was corroborating evidence for that roadmap phase, not a separate design-fidelity task.
+The design-fidelity gap (see `CHANGELOG.md`'s "re-closed the design-fidelity gap"
+entry, and Resolved below for icon/SVG assets, Board, richer Gantt, and Calendar) is
+now closed except for one low-priority polish item — see the Backlog section below.
+Picking this session's next-highest-priority item needs a fresh pass over
+`code/specs/task-app-super-app.md`'s remaining phases rather than continuing to work
+off this now-mostly-resolved list.
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
+
+- **Richer task-row critical/slack chips.** Split out from the design-fidelity gap
+  (see Resolved below) — labels/priority chips, the dependency list, and the notes
+  paragraph all shipped. Today the detail panel's scheduling prose already says "on
+  the critical path" / states slack in prose, so a dedicated chip would be a
+  value-only restyle — low priority.
 
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
@@ -57,11 +45,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
   the UI35 kernel today; time-blocking needs a time-of-day field on `TaskSchedule` that
   doesn't exist yet, an engine-side gap, not a UI one).
-- **Calendar weekend/out-of-month cell tinting.** Deferred alongside the critical-card border
-  gap below — mosstyle can't vary one part's background per data value, only per branch, and
-  a 4-way branch duplicating the whole drop-target + event-loop wasn't judged worth it for a
-  colour difference. Today's badge shipped (it only needed a small conditional child, the
-  same trick Board's `card-crit` chip already uses).
+- **Calendar weekend/out-of-month cell tinting.** Deferred believing mostyle couldn't vary
+  one part's background per data value, only per branch, and a 4-way branch duplicating the
+  whole drop-target + event-loop wasn't judged worth it for a colour difference. That's now
+  outdated: UI36's `background` binding (extended for the icon-assets progress ring, reused
+  for Board's column accent bar — see both CHANGELOGs) does exactly this, no branch
+  duplication needed. Re-open when picked up — today's count badge already shipped (it only
+  needed a small conditional child).
 - **Notes: a real attachment picker, tags, rich text, search.** Deferred from the
   Phase 8 UI ship — see `code/specs/task-app-notes-ui-v1.md`. A minimal name-matching
   attach-to-task *text field* shipped (see Resolved below); this item is what's still
@@ -83,6 +73,24 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Board design-fidelity: 4th column, accent bars, count badges, critical
+  border.** Closes the Board line of the design-fidelity gap. A real "In
+  review" 4th column, driven by wiring in task-core's previously-dormant
+  `Workflow`/`Status`/`Projections::kanban()` system (nothing ever created a
+  `Workflow`, so `engine.kanban()` always errored — `ensure_default_workflow`
+  seeds one and backfills task status; `set_status` now cascades `completed`
+  across a workflow's `done_status` boundary, matching that field's own doc
+  comment). A colored top accent bar + real card-count badge on each column
+  header (UI36's `background` binding, same mechanism the progress ring
+  uses). Overdue cards get a colored left border instead of the old
+  `card-crit` text chip — a second static part (`board-card-crit`) rather
+  than a conditional style, since `HostDraggable`'s dedicated emitter doesn't
+  support `state-when-` conditional styling. Verified live in both themes:
+  all 4 columns/colors/counts, a card dragged through all 4 columns and back
+  with the completed flag correctly following status, the critical border
+  rendering and swapping cleanly, zero console errors (including a real
+  React dev-mode shorthand/longhand border-property warning caught and fixed
+  during verification — both card variants now declare the same style keys).
 - **Native XAML drag semantics.** WinUI now lowers UI35 to component-scoped
   native drag/drop controls with pointer/touch events, equivalent keyboard
   traversal, authored acceptance/disabled rules, RTL order, lifecycle dispatch,

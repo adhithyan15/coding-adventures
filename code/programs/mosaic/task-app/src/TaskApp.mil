@@ -92,8 +92,22 @@ component TaskApp {
 
   // Board (kanban). `board-mode` is non-empty when the board is showing.
   //
-  //   board-columns : one per status column, [ title, key ]
-  //   board-cards   : one per task,          [ name, column-key, task-id, critical ]
+  //   board-columns : one per status, [ title, key, count, accent-color ]
+  //   board-cards   : one per task,   [ name, column-key, task-id, overdue ]
+  //
+  // `column-key` (both lists) is one of the workflow's real status ids
+  // (task-app-super-app.md's design-fidelity item; see
+  // `ProjectState::ensure_default_workflow` in task-core) — no longer the
+  // old completed/percent-complete heuristic. `count` is the column's real
+  // card count, appended so the header can show it without the layout
+  // doing its own counting. `accent-color` is a UI36-bound value (the
+  // `col[3]` a `For`-loop row can't be resolved by the stylesheet
+  // alone) — the host resolves it to the theme-correct hex per column,
+  // same reasoning as `ring-gradient`. `overdue` — despite its historical
+  // name in this codebase, this is the `OVERDUE` builtin field, not CPM
+  // criticality (Board-tier projects have no CPM data); it drives a
+  // colored left border on the card, not text, per the design-fidelity
+  // item's own wording.
   //
   // A card is placed by comparing its column-key with the column's, rather than by
   // nesting a list inside a list — the layout can express that with a single `If`,

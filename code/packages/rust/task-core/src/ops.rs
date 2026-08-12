@@ -153,8 +153,95 @@ impl ProjectState {
     // ── progress / workflow ──────────────────────────────────────────────────────
 
     /// Set a task's workflow status.
+    ///
+    /// Entering a status that some workflow marks as its `done_status` also sets
+    /// `completed = true`; leaving one does the reverse — see `Workflow::done_status`'s
+    /// own doc comment ("entering this status marks a task `completed`"), which this
+    /// makes real. Looks the status up against every workflow the project has, rather
+    /// than taking a workflow id, so the existing call shape (used by the Sheet's
+    /// editable Status column) doesn't need to change to gain the cascade.
+    ///
+    /// Deliberately one-directional: `set_completed` (the checkbox path) does **not**
+    /// cascade back into `status`. Syncing that direction too would touch a much older,
+    /// far more widely used op for a Board-view fidelity fix — out of scope here, and
+    /// disclosed as a known limitation rather than silently half-done.
     pub fn set_status(&mut self, id: &TaskId, status: Option<StatusId>) -> Result<(), OpError> {
-        self.task_mut(id)?.status = status;
+        let old_status = self.tasks.get(id).ok_or(OpError::NotFound)?.status.clone();
+        let was_done = old_status.as_ref().is_some_and(|s| self.is_done_status(s));
+        let now_done = status.as_ref().is_some_and(|s| self.is_done_status(s));
+        let t = self.task_mut(id)?;
+        t.status = status;
+        if now_done {
+            t.completed = true;
+        } else if was_done {
+            t.completed = false;
+        }
+        Ok(())
+    }
+
+    /// True if `status` is the `done_status` of any workflow this project has.
+    fn is_done_status(&self, status: &StatusId) -> bool {
+        self.workflows.values().any(|w| &w.done_status == status)
+    }
+
+    /// Seed a default 4-status workflow (`Up next` / `In progress` / `In review` /
+    /// `Done`) the first time a project needs one, and backfill any task that has
+    /// never had a status set. Both halves are idempotent, so this is safe to call on
+    /// every Board-view render:
+    ///
+    ///   1. If `self.workflows` is empty, insert one keyed `"default"` — every task's
+    ///      `status: None` at this point, since nothing else in this codebase ever
+    ///      writes to `Task.status` except the Sheet's free-text field and (from here
+    ///      on) Board's drag-and-drop.
+    ///   2. Regardless of step 1, every task with `status.is_none()` gets backfilled
+    ///      from its current `completed`/`percent_complete`, matching exactly what the
+    ///      Board view's old completed/percent-derived column heuristic would have
+    ///      shown it as: `completed` → `"done"`, `percent_complete > 0` → `"doing"`,
+    ///      otherwise `"next"`. A task whose status was already set (manually, or by a
+    ///      previous call to this op) is left alone — this only fills gaps, never
+    ///      overwrites a real choice.
+    pub fn ensure_default_workflow(&mut self) -> Result<(), OpError> {
+        if self.workflows.is_empty() {
+            let mut statuses = BTreeMap::new();
+            for (id, name, category) in [
+                ("next", "Up next", StatusCategory::Todo),
+                ("doing", "In progress", StatusCategory::InProgress),
+                ("review", "In review", StatusCategory::InProgress),
+                ("done", "Done", StatusCategory::Done),
+            ] {
+                statuses.insert(
+                    StatusId::from_raw(id),
+                    Status {
+                        id: StatusId::from_raw(id),
+                        name: name.to_string(),
+                        category,
+                        color: String::new(),
+                    },
+                );
+            }
+            self.workflows.insert(
+                WorkflowId::from_raw("default"),
+                Workflow {
+                    id: WorkflowId::from_raw("default"),
+                    name: "Board".to_string(),
+                    statuses,
+                    transitions: Vec::new(),
+                    done_status: StatusId::from_raw("done"),
+                },
+            );
+        }
+        for t in self.tasks.values_mut() {
+            if t.status.is_some() {
+                continue;
+            }
+            t.status = Some(StatusId::from_raw(if t.completed {
+                "done"
+            } else if t.percent_complete > 0 {
+                "doing"
+            } else {
+                "next"
+            }));
+        }
         Ok(())
     }
 
@@ -883,6 +970,94 @@ mod tests {
         s.create_task(tid("a"), "A", None).unwrap();
         s.set_percent_complete(&tid("a"), 250).unwrap();
         assert_eq!(s.tasks[&tid("a")].percent_complete, 100);
+    }
+
+    #[test]
+    fn ensure_default_workflow_seeds_four_statuses_once() {
+        let mut s = base();
+        s.ensure_default_workflow().unwrap();
+        let wf = &s.workflows[&WorkflowId::from_raw("default")];
+        assert_eq!(wf.statuses.len(), 4);
+        for id in ["next", "doing", "review", "done"] {
+            assert!(wf.statuses.contains_key(&StatusId::from_raw(id)));
+        }
+        assert_eq!(wf.done_status, StatusId::from_raw("done"));
+
+        // A second call must not reset or duplicate the workflow.
+        s.ensure_default_workflow().unwrap();
+        assert_eq!(s.workflows.len(), 1);
+        assert_eq!(s.workflows[&WorkflowId::from_raw("default")].statuses.len(), 4);
+    }
+
+    #[test]
+    fn ensure_default_workflow_backfills_status_from_completed_and_percent() {
+        let mut s = base();
+        s.create_task(tid("done-task"), "Done", None).unwrap();
+        s.set_completed(&tid("done-task"), true).unwrap();
+        s.create_task(tid("doing-task"), "Doing", None).unwrap();
+        s.set_percent_complete(&tid("doing-task"), 40).unwrap();
+        s.create_task(tid("next-task"), "Next", None).unwrap();
+        s.create_task(tid("manual-task"), "Manual", None).unwrap();
+        s.set_status(&tid("manual-task"), Some(StatusId::from_raw("review")))
+            .unwrap();
+
+        s.ensure_default_workflow().unwrap();
+
+        assert_eq!(s.tasks[&tid("done-task")].status, Some(StatusId::from_raw("done")));
+        assert_eq!(s.tasks[&tid("doing-task")].status, Some(StatusId::from_raw("doing")));
+        assert_eq!(s.tasks[&tid("next-task")].status, Some(StatusId::from_raw("next")));
+        // A status set before the backfill is never overwritten.
+        assert_eq!(
+            s.tasks[&tid("manual-task")].status,
+            Some(StatusId::from_raw("review"))
+        );
+    }
+
+    #[test]
+    fn ensure_default_workflow_only_backfills_tasks_missing_a_status() {
+        let mut s = base();
+        s.ensure_default_workflow().unwrap();
+        s.create_task(tid("a"), "A", None).unwrap();
+        s.set_status(&tid("a"), Some(StatusId::from_raw("doing")))
+            .unwrap();
+        // Complete the task without touching status again — status stays manual.
+        s.set_completed(&tid("a"), true).unwrap();
+
+        s.ensure_default_workflow().unwrap();
+        assert_eq!(s.tasks[&tid("a")].status, Some(StatusId::from_raw("doing")));
+    }
+
+    #[test]
+    fn set_status_cascades_completed_across_the_done_boundary() {
+        let mut s = base();
+        s.ensure_default_workflow().unwrap();
+        s.create_task(tid("a"), "A", None).unwrap();
+        assert!(!s.tasks[&tid("a")].completed);
+
+        s.set_status(&tid("a"), Some(StatusId::from_raw("done")))
+            .unwrap();
+        assert!(s.tasks[&tid("a")].completed);
+
+        s.set_status(&tid("a"), Some(StatusId::from_raw("doing")))
+            .unwrap();
+        assert!(!s.tasks[&tid("a")].completed);
+    }
+
+    #[test]
+    fn set_status_leaves_completed_alone_off_the_done_boundary() {
+        let mut s = base();
+        s.ensure_default_workflow().unwrap();
+        s.create_task(tid("a"), "A", None).unwrap();
+        s.set_completed(&tid("a"), true).unwrap();
+
+        // Neither "next" nor "doing" is any workflow's done_status, so a move
+        // between them must not disturb a completed flag set some other way.
+        s.set_status(&tid("a"), Some(StatusId::from_raw("next")))
+            .unwrap();
+        assert!(s.tasks[&tid("a")].completed);
+        s.set_status(&tid("a"), Some(StatusId::from_raw("doing")))
+            .unwrap();
+        assert!(s.tasks[&tid("a")].completed);
     }
 
     #[test]

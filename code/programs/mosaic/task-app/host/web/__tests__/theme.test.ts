@@ -9,7 +9,9 @@
  */
 import { describe, it, expect, afterEach, vi } from "vitest";
 import {
+  boardAccent,
   resolveTheme,
+  ringGradient,
   storeTheme,
   storedTheme,
   systemTheme,
@@ -152,5 +154,36 @@ describe("theme selection", () => {
     watchSystemTheme((t) => seen.push(t))();
     media.fire(true);
     expect(seen).toEqual([]);
+  });
+});
+
+describe("ringGradient", () => {
+  it("fills proportionally to the percent, clamped to 0..100", () => {
+    expect(ringGradient("light", 0)).toBe("conic-gradient(#e0942a 0deg, #e6ded3 0deg)");
+    expect(ringGradient("light", 50)).toBe("conic-gradient(#e0942a 180deg, #e6ded3 180deg)");
+    expect(ringGradient("light", 100)).toBe("conic-gradient(#e0942a 360deg, #e6ded3 360deg)");
+    expect(ringGradient("light", 150)).toBe(ringGradient("light", 100));
+    expect(ringGradient("light", -10)).toBe(ringGradient("light", 0));
+  });
+
+  it("uses the dark theme's own fill/track colours", () => {
+    expect(ringGradient("dark", 25)).toBe("conic-gradient(#eaa63f 90deg, #352e25 90deg)");
+  });
+});
+
+describe("boardAccent", () => {
+  it("returns the right colour for each of the four statuses, per theme", () => {
+    expect(boardAccent("light", "next")).toBe("#9b9289");
+    expect(boardAccent("light", "doing")).toBe("#e0942a");
+    expect(boardAccent("light", "review")).toBe("#5b84ad");
+    expect(boardAccent("light", "done")).toBe("#4f8e6a");
+    expect(boardAccent("dark", "next")).toBe("#867c70");
+    expect(boardAccent("dark", "doing")).toBe("#eaa63f");
+    expect(boardAccent("dark", "review")).toBe("#7fa8d1");
+    expect(boardAccent("dark", "done")).toBe("#6fb489");
+  });
+
+  it("falls back to the 'next' colour for an unrecognised status id", () => {
+    expect(boardAccent("light", "bogus")).toBe(boardAccent("light", "next"));
   });
 });
