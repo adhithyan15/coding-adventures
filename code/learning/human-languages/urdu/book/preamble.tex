@@ -142,6 +142,7 @@
 % etymons carrying macrons that a modern language's hyphenation patterns will
 % not touch. Inside a narrow measure -- a quote block or a list item -- one such
 % token forces the previous line to stretch, and TeX reports an underfull hbox.
+% (The slash lists are handled directly further down; see HL-C109b.)
 %
 % \tolerance and \emergencystretch change how a paragraph is BROKEN, not how it
 % is reported: TeX may accept a looser line early enough to find a break
@@ -151,6 +152,42 @@
 % warnings rather than fix the paragraphs, and the CI log scanner would then be
 % reading a muted log.
 \tolerance=2000
+
+% ---------------------------------------------------------------------------
+% A slash is a place a line may break (HL-C109b).
+%
+% The note above has named slash-separated form lists -- fui/fuiste/fue, or
+% qitt/cattus/gato/chat/Katze -- as an unbreakable token class since it was
+% written, without ever doing anything about it. A run like that is several
+% words wide and TeX treats it as one, so a line holding it has almost nowhere
+% to break and must stretch the few interword spaces it has instead. That is an
+% underfull hbox, and it is the same defect the callout rule above fixes, from a
+% different direction.
+%
+% A slash is a natural break point: readers already parse `fui/fuiste/fue' as
+% three items, and a line that ends after one of them reads correctly. So say so.
+%
+% XeTeX offers exactly the right hook. Every character belongs to an
+% "interchar class", and tokens can be injected at a class BOUNDARY -- here,
+% wherever a slash is followed by anything else. Nothing about the slash itself
+% changes: its catcode stays 12, so \url, \includegraphics and file names are
+% untouched, and the glyph, its kerning and its spacing are identical. All that
+% is added is permission to break.
+%
+% Twenty-one of the twenty-two books paginate identically afterwards; tamil
+% loses a page (249 -> 248), which is the change doing its job -- a slash run
+% that had been forcing a loose line now breaks, the paragraph sets in fewer
+% lines, and the saving reaches the end of the book. Overfull stays at 0 in
+% every track and no glyph goes missing.
+%
+% \allowbreak is invalid in math mode, and $a/b$ is ordinary in these books, so
+% the injection is guarded. Class 0 is "everything else"; class 255 is the
+% boundary class TeX uses at the edges of a paragraph or box.
+\XeTeXinterchartokenstate=1
+\newXeTeXintercharclass\hlslashclass
+\XeTeXcharclass`\/ \hlslashclass
+\XeTeXinterchartoks \hlslashclass 0   = {\ifmmode\else\allowbreak\fi}
+\XeTeXinterchartoks \hlslashclass 255 = {\ifmmode\else\allowbreak\fi}
 
 % Callout boxes are set ragged right (HL-C88).
 %
