@@ -4709,7 +4709,6 @@ impl Compiler {
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
         self.disable_static_real_tracking();
-        let entry_initialized_string_slots = self.initialized_string_slots.clone();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
@@ -4735,9 +4734,15 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
+            let entry_initialized_string_slots = self.initialized_string_slots.clone();
+            let executes_once = !direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step");
             self.emit_for_element(target, var_ty, elem, body)?;
+            if !executes_once {
+                self.initialized_string_slots = entry_initialized_string_slots;
+            }
         }
-        self.initialized_string_slots = entry_initialized_string_slots;
         Ok(())
     }
 
@@ -8307,6 +8312,24 @@ mod tests {
             "test",
         )
         .expect("a string initialized before the loop remains initialized afterward");
+    }
+
+    #[test]
+    fn al4_single_value_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a single-value for element executes its body exactly once");
+    }
+
+    #[test]
+    fn al4_mixed_loop_list_uses_later_definite_initialization() {
+        compile_source(
+            "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a later single-value element executes after a zero-trip element");
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────
