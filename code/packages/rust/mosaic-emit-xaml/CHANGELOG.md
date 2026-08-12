@@ -1,5 +1,14 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — native HostSlider
+
+`HostSlider` now lowers to a component-scoped WinUI `Slider`, retaining native
+range-value UI Automation, touch/pointer input, keyboard controls, platform
+theming, and high-contrast behavior. Generated lifecycle tracking dispatches
+continuous user changes and exact pointer/key/blur commits without app-owned C#
+glue. Positive steps use native snapping; `step: 0` uses sub-pixel pointer
+granularity with a practical keyboard increment.
+
 ## [Unreleased] — portable Text accessibility
 
 `Text` now emits UI Automation names, heading levels, and raw-view hiding from

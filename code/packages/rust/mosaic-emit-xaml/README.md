@@ -32,6 +32,7 @@ mosstyle base styling:
 | `HostSurface` | Styled `<Border>` containing a node-bound `<ContentPresenter>` |
 | `HostCheckbox` | `<CheckBox>` |
 | `HostRadio` | `<RadioButton>` |
+| `HostSlider` | component-scoped native `<Slider>` with change and pointer/key/blur commit events |
 | `HostLink` | `<HyperlinkButton>` or routed `<Button>` |
 | `HostNumberInput` | `<NumberBox>` |
 | `HostScroll` | `<ScrollViewer>` |
@@ -59,6 +60,15 @@ touch, and keyboard paths share the same authored `accepts` filter and accepted
 drop payload; focusable source/target peers publish names, help text, and live UIA
 notifications without changing application state locally.
 
+`HostSlider` uses WinUI's native adjustable control and inherited RangeValue
+automation peer. The generated component-scoped subclass suppresses
+initialization and unfocused controlled updates, keeps live change callbacks
+separate from release/key/blur commits, and preserves native focus, touch,
+keyboard, high-contrast, and platform-theme behavior. Positive `step` values
+map to native snap points. `step: 0` configures enough native stops to remain
+below physical pointer resolution while retaining a usable one-percent keyboard
+increment.
+
 ## MSL states and motion
 
 Native Host controls consume `state-when-*` layout predicates and matching
@@ -79,7 +89,7 @@ driven by application state instead of the pointer.
 
 UI15's built-in `state focused` is also native for focus-capable Host controls
 (`HostInput`, `HostNumberInput`, `HostButton`, `HostCheckbox`, `HostRadio`,
-and `HostLink`). The emitter binds WinUI's `FocusState` through one generated
+`HostSlider`, and `HostLink`). The emitter binds WinUI's `FocusState` through one generated
 converter resource, so pointer, keyboard, and programmatic focus activate the
 same shared MSL properties and transitions. Repeated controls keep their
 VisualStates in the DataTemplate namescope. An explicit

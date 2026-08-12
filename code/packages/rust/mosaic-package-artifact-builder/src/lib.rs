@@ -1122,7 +1122,11 @@ fn collect_native_degradations(
             if backend.is_native()
                 && !matches!(
                     backend,
-                    Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI
+                    Backend::Compose
+                        | Backend::Flutter
+                        | Backend::Qt
+                        | Backend::SwiftUI
+                        | Backend::Xaml
                 ) => Some((
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
@@ -4767,13 +4771,11 @@ layout Volume {
             BuildProfile::NativeComplete,
         )
         .expect("XAML slider capability analysis");
-        assert!(!xaml_report.native_complete, "XAML must remain honest");
-        assert_eq!(xaml_report.degradations.len(), 1);
-        assert_eq!(
-            xaml_report.degradations[0].code,
-            "primitive.slider-unimplemented"
+        assert!(
+            xaml_report.native_complete,
+            "XAML now has a native adjustable slider lowering: {:?}",
+            xaml_report.degradations
         );
-        assert_eq!(xaml_report.degradations[0].layout_path, "root");
     }
 
     #[test]

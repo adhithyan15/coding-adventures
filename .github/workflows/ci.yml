@@ -1398,6 +1398,24 @@ jobs:
             throw "Native-complete XAML WinUI build failed with exit code $strictBuildExitCode"
           }
 
+          $sliderOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-host-slider'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-xaml/fixtures/host-slider --backend xaml --output $sliderOutput --emit-project --profile native-complete --runtime-library $library.Path
+          if ($LASTEXITCODE -ne 0) {
+            throw "Native-complete XAML HostSlider generation failed with exit code $LASTEXITCODE"
+          }
+          $sliderReport = Get-Content (Join-Path $sliderOutput 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$sliderReport.nativeComplete -or $sliderReport.degradations.Count -ne 0) {
+            throw 'Native-complete XAML HostSlider generation reported degradations'
+          }
+          $sliderProject = Join-Path $sliderOutput 'xaml/Volume.csproj'
+          Push-Location (Split-Path -Parent $sliderProject)
+          dotnet build (Split-Path -Leaf $sliderProject) -c Debug -p:Platform=x64 --nologo
+          $sliderBuildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($sliderBuildExitCode -ne 0) {
+            throw "Native-complete XAML HostSlider WinUI build failed with exit code $sliderBuildExitCode"
+          }
+
           $bundledOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-bundled-conformance'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend xaml --output $bundledOutput --emit-project --profile native-complete --runtime-library $library.Path
           if ($LASTEXITCODE -ne 0) {

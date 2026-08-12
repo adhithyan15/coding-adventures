@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - all-five-native HostSlider capability
+
+- Native-complete analysis now accepts `HostSlider` on XAML after its native
+  WinUI adjustable range-control lowering.
+- `HostSlider` is now native-complete on Compose, Flutter, Qt, SwiftUI, and
+  XAML; packages no longer need backend-specific slider implementations.
+
 ## [Unreleased] - SwiftUI HostSlider capability
 
 - Native-complete analysis now accepts `HostSlider` on Compose, Flutter, Qt,
