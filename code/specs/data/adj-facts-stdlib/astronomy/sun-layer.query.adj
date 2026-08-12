@@ -1,0 +1,5 @@
+import "sun-layer.adj"
+
+? sun_layer(photosphere, $D)                                    % expect the_visible_surface_of_the_sun (direct)
+? sun_layer($L, the_suns_outer_atmosphere)                      % expect corona (reverse)
+? sun_layer(chromosphere, $D)                                   % expect abstain -- a real solar layer the same page names, but its sentence bundles position with a temperature range rather than stating one clean fact
