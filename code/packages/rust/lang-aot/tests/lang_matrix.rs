@@ -1384,14 +1384,14 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("4.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — exact local integer snapshots may widen into bounded static
-    // real expressions. Copying preserves the destination when the source is
-    // reassigned; control flow, calls, captures, dynamic values, and integers
-    // outside binary64's exact range still require the deferred formatter.
+    // ALGOL 60 — checked local integer arithmetic snapshots may widen into
+    // bounded static real expressions. Copying preserves the destination when
+    // the source is reassigned; overflow, control flow, calls, captures,
+    // dynamic values, and inexact widening still require the deferred formatter.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin integer n, saved; n := 40; saved := n; n := 9; output(saved + 2.5) end",
+        src: "begin integer n, saved; n := (8 - 1) * 6; saved := n; n := 9; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -6057,16 +6057,16 @@ fn algol_real_literal_output_runs_on_every_available_standard_backend() {
 }
 
 #[test]
-fn algol_static_integer_scalar_widening_runs_on_every_available_standard_backend() {
+fn algol_static_integer_arithmetic_widening_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
             program.lang == Language::Algol60
                 && program
                     .src
-                    .contains("n := 40; saved := n; n := 9; output(saved + 2.5)")
+                    .contains("n := (8 - 1) * 6; saved := n; n := 9; output(saved + 0.5)")
         })
-        .expect("the static integer-scalar program must remain in the matrix");
+        .expect("the static integer-arithmetic program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
         let toolchain_available = match backend {
@@ -6079,7 +6079,7 @@ fn algol_static_integer_scalar_widening_runs_on_every_available_standard_backend
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but static integer-scalar output did not complete"
+                "{backend:?} toolchain is present but static integer-arithmetic output did not complete"
             );
             continue;
         };
