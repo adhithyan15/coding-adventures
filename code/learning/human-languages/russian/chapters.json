@@ -259,6 +259,90 @@
           "RU-ETYMON-LYUBIT-LOVE"
         ]
       }
+    },
+    {
+      "chapter": 11,
+      "title": "Parting Words",
+      "label": "ch:russian-parting-words",
+      "canDo": "I can close a Russian conversation with the parting word that fits how long until I see the person again, and say good night.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "RU-C11-spokoynoy-nochi",
+        "kind": "production",
+        "summary": "The chapter closes on спокойной ночи, the last word of the day and the surest cognate in the chapter: the reader produces all six parting words in order, names ночь and покой's English cousins, and hears the до + genitive pattern that links five of the six. It is the first realization of SPINE-TAKE-LEAVE in this track, closing all six of the node's concepts, and it reaches back to Chapter 6 to rescue ф, х, чай, хлеб and the request pattern, nothing had revisited since.",
+        "assesses": [
+          "RU-LEX-DO-SVIDANIYA",
+          "RU-ETYMON-SVIDANIYA-VIDET",
+          "RU-GRAMMAR-DO-GENITIVE",
+          "RU-LEX-POKA",
+          "RU-ETYMON-POKA-KAKOI",
+          "RU-LEX-DO-SKOROGO",
+          "RU-ETYMON-SKORYI-HURRY",
+          "RU-LEX-DO-ZAVTRA",
+          "RU-ETYMON-ZAVTRA-DAWN",
+          "RU-LEX-DO-VSTRECHI",
+          "RU-ETYMON-VSTRECHA-NO-COUSIN",
+          "RU-LEX-SPOKOYNOY-NOCHI",
+          "RU-ETYMON-NOCH-NIGHT",
+          "RU-ETYMON-POKOY-QUIET"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Mother and Father",
+      "label": "ch:russian-mother-and-father",
+      "canDo": "I can name my mother and father in Russian, in both the affectionate and the formal register, and say which one is a real cousin of the English word and which is not.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "RU-C12-otets",
+        "kind": "production",
+        "summary": "The chapter closes on отец, the surprise of the pair: the reader produces мама, папа, мать and отец, states the natural-gender exception папа tests, and names мать as a secure PIE cousin of mother while отец is not a cousin of father at all. It reaches back to Chapter 8's семья to complete the family it gathers, and rescues four atoms nothing had revisited since Chapters 2, 7 and 8.",
+        "assesses": [
+          "RU-LEX-MAMA",
+          "RU-ETYMON-MAMA-BABBLING",
+          "RU-LEX-PAPA",
+          "RU-GRAMMAR-NATURAL-GENDER-OVERRIDE",
+          "RU-LEX-MAT",
+          "RU-ETYMON-MAT-MOTHER",
+          "RU-LEX-OTETS",
+          "RU-ETYMON-OTETS-ATTA",
+          "RU-LEX-SEMYA",
+          "RU-LEX-SESTRA",
+          "RU-GRAMMAR-OBJECT-PRONOUNS",
+          "RU-GRAMMAR-INDEFINITE-PERSONAL-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Milk, Cheese, Juice, and Soup",
+      "label": "ch:russian-milk-cheese-juice-soup",
+      "canDo": "I can name milk, cheese, juice and soup in Russian with their genders, ask for any of them politely, and say which are inherited and which are borrowed.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "RU-C13-sup",
+        "kind": "production",
+        "summary": "The chapter closes on суп, a French loan that mirrors кофе's story from the opposite direction: the reader produces молоко, сыр, сок and суп with their genders, extends Chapter 6's request pattern to all four, and sorts the set into a hand-motion cousin, a taste cousin, an honest dead end, and a shared loanword. It reaches all the way back to Chapter 2 to rescue the naming-question comparison and я's script warning, the last two atoms in the track that nothing had revisited.",
+        "assesses": [
+          "RU-LEX-MOLOKO",
+          "RU-ETYMON-MOLOKO-MILK",
+          "RU-LEX-SYR",
+          "RU-ETYMON-SYR-SOUR",
+          "RU-LEX-SOK",
+          "RU-ETYMON-SOK-NO-COUSIN",
+          "RU-LEX-SUP",
+          "RU-ETYMON-SUP-FRENCH-LOAN",
+          "RU-COMPARISON-NAMING-QUESTION-FRAMES",
+          "RU-SCRIPT-YA-NOT-R"
+        ]
+      }
     }
   ]
 }

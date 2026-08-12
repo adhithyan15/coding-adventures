@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ad023e2be92c7f9a",
+  "sourceHash": "fnv1a64:8ef1ba54a6242950",
   "summary": {
-    "totalLessons": 1882,
-    "voice": 1272,
-    "sight": 541,
+    "totalLessons": 1896,
+    "voice": 1284,
+    "sight": 543,
     "pen": 69,
-    "drivableLessons": 1272,
+    "drivableLessons": 1284,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 678,
-    "drivablePrefixTotal": 1082,
-    "fullyDrivableChapters": 456,
-    "unstartableChapters": 166,
+    "chapterCount": 681,
+    "drivablePrefixTotal": 1087,
+    "fullyDrivableChapters": 457,
+    "unstartableChapters": 167,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6490,12 +6490,12 @@
     },
     {
       "language": "russian",
-      "lessonCount": 50,
-      "voice": 34,
-      "sight": 11,
+      "lessonCount": 64,
+      "voice": 46,
+      "sight": 13,
       "pen": 5,
-      "drivablePercent": 68,
-      "drivablePrefixTotal": 31,
+      "drivablePercent": 72,
+      "drivablePrefixTotal": 36,
       "modalities": [
         "voice",
         "sight",
@@ -6685,6 +6685,57 @@
           "firstNonVoiceLesson": "RU-C10-serdtse",
           "drivable": false,
           "drivableLessonIds": []
+        },
+        {
+          "chapter": 11,
+          "lessonCount": 6,
+          "voice": 5,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "RU-C11-do-svidaniya",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 12,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "RU-C12-mama",
+            "RU-C12-papa",
+            "RU-C12-mat",
+            "RU-C12-otets"
+          ]
+        },
+        {
+          "chapter": 13,
+          "lessonCount": 4,
+          "voice": 3,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "RU-C13-syr",
+          "drivable": false,
+          "drivableLessonIds": [
+            "RU-C13-moloko"
+          ]
         }
       ]
     },
@@ -34635,6 +34686,258 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "RU-C11-do-svidaniya",
+      "language": "russian",
+      "chapter": 11,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a4951296fa7da8c6"
+    },
+    {
+      "id": "RU-C11-poka",
+      "language": "russian",
+      "chapter": 11,
+      "sequence": 430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3e33307ee77dbe9b"
+    },
+    {
+      "id": "RU-C11-do-skorogo",
+      "language": "russian",
+      "chapter": 11,
+      "sequence": 440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fa5ad4db0e65f619"
+    },
+    {
+      "id": "RU-C11-do-zavtra",
+      "language": "russian",
+      "chapter": 11,
+      "sequence": 450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:59ee75d12179ddd3"
+    },
+    {
+      "id": "RU-C11-do-vstrechi",
+      "language": "russian",
+      "chapter": 11,
+      "sequence": 460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:857b585e6522c6b9"
+    },
+    {
+      "id": "RU-C11-spokoynoy-nochi",
+      "language": "russian",
+      "chapter": 11,
+      "sequence": 470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ff8ce5920969e14c"
+    },
+    {
+      "id": "RU-C12-mama",
+      "language": "russian",
+      "chapter": 12,
+      "sequence": 480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ec96d9b13421a7d1"
+    },
+    {
+      "id": "RU-C12-papa",
+      "language": "russian",
+      "chapter": 12,
+      "sequence": 490,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:52e3fdbb23c5dcaf"
+    },
+    {
+      "id": "RU-C12-mat",
+      "language": "russian",
+      "chapter": 12,
+      "sequence": 500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ee9f18559b6d55a7"
+    },
+    {
+      "id": "RU-C12-otets",
+      "language": "russian",
+      "chapter": 12,
+      "sequence": 510,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14438c50ccb16532"
+    },
+    {
+      "id": "RU-C13-moloko",
+      "language": "russian",
+      "chapter": 13,
+      "sequence": 520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e9ba25614bf54599"
+    },
+    {
+      "id": "RU-C13-syr",
+      "language": "russian",
+      "chapter": 13,
+      "sequence": 530,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6a0dd3d7e96613ef"
+    },
+    {
+      "id": "RU-C13-sok",
+      "language": "russian",
+      "chapter": 13,
+      "sequence": 540,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f552aec6f9a60d35"
+    },
+    {
+      "id": "RU-C13-sup",
+      "language": "russian",
+      "chapter": 13,
+      "sequence": 550,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7f57478fc076953b"
     },
     {
       "id": "SA-C01-am-na",

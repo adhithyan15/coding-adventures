@@ -144,7 +144,12 @@ describe("real curriculum", () => {
       // water/coffee/tea/bread under SPINE-POLITE-REQUEST-REPAIR; 7-8 are
       // friend/siblings/family under SPINE-EXCHANGE-NAMES; 9-10 are the track's
       // first realization of SPINE-CHECK-WELLBEING, ear/nose/mouth/eye then heart.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      // 10 -> 13: the pre-A1 vocabulary program's second Russian tranche. Chapter
+      // 11 is the track's first realization of SPINE-TAKE-LEAVE (all six of the
+      // node's concepts); 12 completes the family Chapter 8 gathered with mother
+      // and father; 13 extends SPINE-POLITE-REQUEST-REPAIR with milk, cheese,
+      // juice and soup.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 

@@ -131,6 +131,32 @@ inside the words that need it; grammar introduced only when a word needs it.
   the same root as English *heart*, Latin *cor/cordis* (→ *cordial*,
   *courage*, *record*), and Greek *kardía* (→ *cardiac*) — with a silent **д**
   and the new letter **ц**.
+- **Chapter 11 — Parting words** ([`lessons/RU-C11-*`](./lessons/)): до
+  свидания (goodbye) → пока (bye) → до скорого (see you soon) → до завтра
+  (see you tomorrow) → до встречи (see you later) → спокойной ночи (good
+  night) — the track's first realization of `SPINE-TAKE-LEAVE`, and the first
+  in the corpus to close all six of the node's concepts. *до свидания* is
+  built on *видеть* (Chapter 3's "to see"), the same move as French *au
+  revoir* and German *auf Wiedersehen*; *пока* shares its root with *как* and
+  the whole English *wh-* family, though its use as a farewell is only
+  20th-century slang; *ночь* and *покой* are two of the surest cognates in
+  the book, matching English *night* and *quiet*/*while*.
+- **Chapter 12 — Mother and Father** ([`lessons/RU-C12-*`](./lessons/)): мама
+  (mom) → папа (dad) → мать (mother, formal) → отец (father, formal) —
+  completing the family Chapter 8's *семья* gathered. *мама* and *папа* are
+  universal infant-babbling words, not true cousins of anything; *мать* is a
+  secure cousin of English *mother*; *отец* is genuinely ancient but is
+  **not** related to English *father* at all — Slavic lost the inherited
+  word and replaced it with a different old nursery root. *папа* is also the
+  book's first live example of natural gender overriding the *-а/-я* ending
+  rule.
+- **Chapter 13 — Milk, Cheese, Juice, and Soup** ([`lessons/RU-C13-*`](./lessons/)):
+  молоко (milk) → сыр (cheese) → сок (juice) → суп (soup), extending Chapter
+  6's drink shelf. *молоко* is a straight cousin of English *milk*, down to
+  the hand motion; *сыр* shares its root with *сырой* ("raw") and English
+  *sour*; *сок* is ancient and reconstructable but has no surviving English
+  cousin; *суп* mirrors *кофе*'s loanword story — an 18th-century borrowing
+  from French that English also independently borrowed.
 
 See [`roadmap.md`](./roadmap.md) for the plan toward B1 and
 [`session-map.md`](./session-map.md) for how the lessons compose into commute
@@ -159,6 +185,24 @@ first-person can-do sentence and the lesson that pays it off.
   One honest caveat remains: Russian has no `core/book-generation.json` targets,
   so the chapter title and label come from
   [`book/chapters/ch02-introducing-yourself.tex`](./book/chapters/ch02-introducing-yourself.tex).
+
+- **Chapter 11** — *"I can close a Russian conversation with the parting word
+  that fits how long until I see the person again, and say good night."*
+  Payoff: [`RU-C11-spokoynoy-nochi`](./lessons/RU-C11-spokoynoy-nochi.md),
+  which produces all six parting words in order and reaches back to Chapter 6
+  to rescue **ф**, **х**, *чай*, *хлеб* and the request pattern.
+- **Chapter 12** — *"I can name my mother and father in Russian, in both the
+  affectionate and the formal register, and say which one is a real cousin
+  of the English word and which is not."* Payoff:
+  [`RU-C12-otets`](./lessons/RU-C12-otets.md), which produces all four family
+  words, states the natural-gender exception *папа* tests, and reaches back
+  to Chapter 8's *семья* to complete the family it gathers.
+- **Chapter 13** — *"I can name milk, cheese, juice and soup in Russian with
+  their genders, ask for any of them politely, and say which are inherited
+  and which are borrowed."* Payoff:
+  [`RU-C13-sup`](./lessons/RU-C13-sup.md), which produces all four
+  drink-shelf words and reaches all the way back to Chapter 2 to rescue the
+  naming-question comparison and *я*'s script warning.
 
 **Chapter 1 is not in the ledger**, and that gap is deliberate: all twelve of its
 lessons are schema v1, so it has no assessable payoff to point at. A placeholder

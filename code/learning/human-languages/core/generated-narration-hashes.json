@@ -6218,6 +6218,59 @@
       "jsonHash": "fnv1a64:069067b21c2a5dcc"
     },
     {
+      "language": "russian",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:f16abf772894f126",
+      "lessonIds": [
+        "RU-C11-do-svidaniya",
+        "RU-C11-poka",
+        "RU-C11-do-skorogo",
+        "RU-C11-do-zavtra",
+        "RU-C11-do-vstrechi",
+        "RU-C11-spokoynoy-nochi"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 0,
+      "text": "russian/narration/ch11.txt",
+      "json": "russian/narration/ch11.json",
+      "textHash": "fnv1a64:6777a81107aa08d8",
+      "jsonHash": "fnv1a64:c37666731784779b"
+    },
+    {
+      "language": "russian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:24208299442caa4a",
+      "lessonIds": [
+        "RU-C12-mama",
+        "RU-C12-papa",
+        "RU-C12-mat",
+        "RU-C12-otets"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "russian/narration/ch12.txt",
+      "json": "russian/narration/ch12.json",
+      "textHash": "fnv1a64:01fb048272f36dc5",
+      "jsonHash": "fnv1a64:266cae639390b4d7"
+    },
+    {
+      "language": "russian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:1cd466b23489a474",
+      "lessonIds": [
+        "RU-C13-moloko",
+        "RU-C13-syr",
+        "RU-C13-sok",
+        "RU-C13-sup"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 1,
+      "text": "russian/narration/ch13.txt",
+      "json": "russian/narration/ch13.json",
+      "textHash": "fnv1a64:16920cd652723f1b",
+      "jsonHash": "fnv1a64:d6590dbc47e4f2df"
+    },
+    {
       "language": "sanskrit",
       "chapter": 1,
       "sourceHash": "fnv1a64:281f1ccd090a19c1",
