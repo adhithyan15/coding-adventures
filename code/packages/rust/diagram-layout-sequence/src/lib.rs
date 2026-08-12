@@ -3,11 +3,12 @@
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceDiagram,
-    SequenceEvent, SequenceNotePlacement, SequenceTextWrap,
+    LayoutedSequenceDiagram, LayoutedSequenceItem, SequenceBlockKind, SequenceCentralConnection,
+    SequenceDiagram, SequenceEvent, SequenceNotePlacement, SequenceParticipantKind,
+    SequenceTextWrap,
 };
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.29.0";
 
 const MARGIN: f64 = 28.0;
 const HEADER_Y: f64 = 42.0;
@@ -16,6 +17,7 @@ const MIN_LANE_W: f64 = 150.0;
 const EVENT_H: f64 = 58.0;
 const NOTE_H: f64 = 38.0;
 const ACTIVATION_W: f64 = 12.0;
+const NESTED_ACTIVATION_OFFSET: f64 = 4.0;
 const BLOCK_HEADER_H: f64 = 48.0;
 const BLOCK_BRANCH_H: f64 = 48.0;
 const BLOCK_BOTTOM_PAD: f64 = 14.0;
@@ -32,24 +34,72 @@ struct BlockFrameState {
     x: f64,
     y: f64,
     width: f64,
+    note_overlay_y: Option<f64>,
 }
 
 /// Lay out an ordered sequence diagram. Participant order is semantic and is
 /// therefore retained exactly rather than optimized by the layout engine.
 pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDiagram {
-    let header_y = HEADER_Y
-        + if diagram.participant_groups.is_empty() {
-            0.0
-        } else {
-            28.0
-        };
     let lane_widths: Vec<f64> = diagram
         .participants
         .iter()
         .map(|participant| {
-            ((participant.label.text.chars().count() as f64 * 8.0) + 36.0).max(MIN_LANE_W)
+            if participant.label_wrap == SequenceTextWrap::Wrap {
+                MIN_LANE_W
+            } else {
+                ((participant.label.text.chars().count() as f64 * 8.0) + 36.0).max(MIN_LANE_W)
+            }
         })
         .collect();
+    let group_labels: HashMap<String, (Option<String>, f64)> = diagram
+        .participant_groups
+        .iter()
+        .map(|group| {
+            let group_width = diagram
+                .participants
+                .iter()
+                .zip(&lane_widths)
+                .filter(|(participant, _)| {
+                    participant.group_id.as_deref() == Some(group.id.as_str())
+                })
+                .map(|(_, width)| *width)
+                .sum::<f64>();
+            let label = group.label.as_ref().map(|label| {
+                wrap_sequence_text(label, &group.label_wrap, (group_width - 24.0).max(1.0))
+            });
+            let label_height = label
+                .as_deref()
+                .map_or(0.0, |label| line_count(label) as f64 * 16.0);
+            (group.id.clone(), (label, label_height))
+        })
+        .collect();
+    let group_header_height = group_labels
+        .values()
+        .map(|(_, height)| *height)
+        .fold(0.0, f64::max);
+    let header_y = HEADER_Y
+        + if diagram.participant_groups.is_empty() {
+            0.0
+        } else {
+            group_header_height + 12.0
+        };
+    let participant_labels: Vec<String> = diagram
+        .participants
+        .iter()
+        .zip(&lane_widths)
+        .map(|(participant, lane_width)| {
+            wrap_sequence_text(
+                &participant.label.text,
+                &participant.label_wrap,
+                (*lane_width - 40.0).max(1.0),
+            )
+        })
+        .collect();
+    let header_height = participant_labels
+        .iter()
+        .zip(&diagram.participants)
+        .map(|(label, participant)| participant_header_height(&participant.kind, line_count(label)))
+        .fold(HEADER_H, f64::max);
     let width = lane_widths.iter().sum::<f64>() + MARGIN * 2.0;
     let created_participants: HashSet<&str> = diagram
         .events
@@ -62,11 +112,17 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     let mut centers = HashMap::new();
     let mut lifeline_starts = HashMap::new();
     let mut lifeline_ends = HashMap::new();
+    let mut footer_positions = HashMap::new();
     let mut items = Vec::new();
     let mut x = MARGIN;
     let mut lane_lefts = Vec::with_capacity(lane_widths.len());
 
-    for (participant, lane_width) in diagram.participants.iter().zip(&lane_widths) {
+    for ((participant, lane_width), label) in diagram
+        .participants
+        .iter()
+        .zip(&lane_widths)
+        .zip(&participant_labels)
+    {
         lane_lefts.push(x);
         let box_width = (*lane_width - 24.0).max(100.0);
         let center = x + *lane_width / 2.0;
@@ -74,7 +130,9 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         if !created_participants.contains(participant.id.as_str()) {
             items.push(LayoutedSequenceItem::ParticipantBox {
                 id: participant.id.clone(),
-                label: participant.label.text.clone(),
+                label: label.clone(),
+                label_height: line_count(label) as f64 * 16.0,
+                mirrored: false,
                 kind: participant.kind.clone(),
                 links: participant.links.clone(),
                 properties: participant.properties.clone(),
@@ -82,21 +140,54 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 x: center - box_width / 2.0,
                 y: header_y,
                 width: box_width,
-                height: HEADER_H,
+                height: header_height,
             });
-            lifeline_starts.insert(participant.id.clone(), header_y + HEADER_H);
+            lifeline_starts.insert(participant.id.clone(), header_y + header_height);
         }
         x += *lane_width;
     }
 
-    let event_start = header_y + HEADER_H + 36.0;
+    let event_start = header_y + header_height + 36.0;
     let mut y = event_start;
-    let mut activation_starts: HashMap<String, Vec<f64>> = HashMap::new();
-    let mut message_number = diagram.auto_number_start;
+    let mut activation_starts: HashMap<String, Vec<(f64, usize)>> = HashMap::new();
+    let has_auto_number_events = diagram
+        .events
+        .iter()
+        .any(|event| matches!(event, SequenceEvent::AutoNumber { .. }));
+    let mut auto_number_visible = if has_auto_number_events {
+        false
+    } else {
+        diagram.auto_number
+    };
+    let mut message_number = if has_auto_number_events {
+        1.0
+    } else {
+        diagram.auto_number_start
+    };
+    let mut message_number_step = if has_auto_number_events {
+        1.0
+    } else {
+        diagram.auto_number_step
+    };
     let mut block_stack: Vec<BlockFrameState> = Vec::new();
 
-    for event in &diagram.events {
+    for (event_index, event) in diagram.events.iter().enumerate() {
         match event {
+            SequenceEvent::AutoNumber {
+                visible,
+                start,
+                step,
+            } => {
+                auto_number_visible = *visible;
+                if *visible {
+                    if let Some(start) = start {
+                        message_number = *start;
+                    }
+                    if let Some(step) = step {
+                        message_number_step = *step;
+                    }
+                }
+            }
             SequenceEvent::Message {
                 from,
                 to,
@@ -109,19 +200,112 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 activate,
                 deactivate,
             } => {
-                let Some(&from_x) = centers.get(from) else {
+                let Some(&from_center_x) = centers.get(from) else {
                     continue;
                 };
-                let Some(&to_x) = centers.get(to) else {
+                let Some(&to_center_x) = centers.get(to) else {
                     continue;
                 };
+                let created_receiver = event_index.checked_sub(1).and_then(|previous_index| {
+                    match &diagram.events[previous_index] {
+                        SequenceEvent::ParticipantCreated { participant } if participant == to => {
+                            Some(participant.as_str())
+                        }
+                        _ => None,
+                    }
+                });
+                let destroyed_participant =
+                    diagram
+                        .events
+                        .get(event_index + 1)
+                        .and_then(|next| match next {
+                            SequenceEvent::ParticipantDestroyed { participant }
+                                if participant == from || participant == to =>
+                            {
+                                Some(participant.as_str())
+                            }
+                            _ => None,
+                        });
                 let label = wrap_sequence_text(
                     label,
                     wrap,
-                    (to_x - from_x).abs().clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
+                    (to_center_x - from_center_x)
+                        .abs()
+                        .clamp(80.0, WRAPPED_TEXT_MAX_WIDTH),
                 );
                 let label_height = 16.0 * label.lines().count().max(1) as f64;
                 let message_y = y + label_height + 6.0;
+                let mut from_x =
+                    activation_endpoint(&activation_starts, from, from_center_x, to_center_x);
+                let mut to_x =
+                    activation_endpoint(&activation_starts, to, to_center_x, from_center_x);
+                if let Some(participant) = created_receiver {
+                    let lane_index = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == participant)
+                        .unwrap_or(0);
+                    let definition = &diagram.participants[lane_index];
+                    let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                    let created_header_height = participant_header_height(
+                        &definition.kind,
+                        line_count(&participant_labels[lane_index]),
+                    );
+                    let box_y = message_y - created_header_height / 2.0;
+                    items.push(LayoutedSequenceItem::ParticipantBox {
+                        id: definition.id.clone(),
+                        label: participant_labels[lane_index].clone(),
+                        label_height: line_count(&participant_labels[lane_index]) as f64 * 16.0,
+                        mirrored: false,
+                        kind: definition.kind.clone(),
+                        links: definition.links.clone(),
+                        properties: definition.properties.clone(),
+                        details_reference: definition.details_reference.clone(),
+                        x: to_center_x - box_width / 2.0,
+                        y: box_y,
+                        width: box_width,
+                        height: created_header_height,
+                    });
+                    lifeline_starts.insert(participant.to_string(), box_y + created_header_height);
+                    to_x = endpoint_at_box_edge(to_center_x, from_center_x, box_width / 2.0 + 3.0);
+                } else if *activate
+                    && activation_starts.get(to).is_none_or(Vec::is_empty)
+                    && from_center_x != to_center_x
+                {
+                    // The opening message points at the bar that starts on this line.
+                    to_x =
+                        endpoint_at_box_edge(to_center_x, from_center_x, ACTIVATION_W / 2.0 - 1.0);
+                }
+                if let Some(participant) = destroyed_participant {
+                    if let Some(lane_index) = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == participant)
+                    {
+                        let definition = &diagram.participants[lane_index];
+                        let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                        let footer_height = participant_header_height(
+                            &definition.kind,
+                            line_count(&participant_labels[lane_index]),
+                        );
+                        footer_positions
+                            .insert(participant.to_string(), message_y - footer_height / 2.0);
+                        if participant == from {
+                            from_x = endpoint_at_box_edge(
+                                from_center_x,
+                                to_center_x,
+                                box_width / 2.0 + 3.0,
+                            );
+                        }
+                        if participant == to {
+                            to_x = endpoint_at_box_edge(
+                                to_center_x,
+                                from_center_x,
+                                box_width / 2.0 + 3.0,
+                            );
+                        }
+                    }
+                }
                 items.push(LayoutedSequenceItem::Message {
                     from_x,
                     to_x,
@@ -132,17 +316,39 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     arrowhead: arrowhead.clone(),
                     bidirectional: *bidirectional,
                     central_connection: central_connection.clone(),
-                    number: diagram.auto_number.then_some(message_number),
+                    number: auto_number_visible.then_some(message_number),
                 });
-                message_number += diagram.auto_number_step;
+                if auto_number_visible {
+                    message_number =
+                        ((message_number + message_number_step) * 100.0).round() / 100.0;
+                }
+                match central_connection {
+                    SequenceCentralConnection::Source => {
+                        open_activation(&mut activation_starts, from, message_y);
+                    }
+                    SequenceCentralConnection::Destination => {
+                        open_activation(&mut activation_starts, to, message_y);
+                    }
+                    SequenceCentralConnection::Both => {
+                        open_activation(&mut activation_starts, from, message_y);
+                        open_activation(&mut activation_starts, to, message_y);
+                    }
+                    SequenceCentralConnection::None => {}
+                }
                 if *activate {
-                    activation_starts
-                        .entry(to.clone())
-                        .or_default()
-                        .push(message_y);
+                    open_activation(&mut activation_starts, to, message_y);
                 }
                 if *deactivate {
-                    close_activation(&mut items, &mut activation_starts, from, from_x, message_y);
+                    close_activation(
+                        &mut items,
+                        &mut activation_starts,
+                        from,
+                        from_center_x,
+                        message_y,
+                    );
+                }
+                if let Some(participant) = destroyed_participant {
+                    lifeline_ends.insert(participant.to_string(), message_y);
                 }
                 y = message_y + EVENT_H;
             }
@@ -154,10 +360,8 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     continue;
                 };
                 if *active {
-                    activation_starts
-                        .entry(participant.clone())
-                        .or_default()
-                        .push(y);
+                    let starts = activation_starts.entry(participant.clone()).or_default();
+                    starts.push((y, starts.len()));
                 } else {
                     close_activation(
                         &mut items,
@@ -167,9 +371,14 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         y,
                     );
                 }
-                y += EVENT_H / 2.0;
             }
             SequenceEvent::ParticipantCreated { participant } => {
+                if matches!(
+                    diagram.events.get(event_index + 1),
+                    Some(SequenceEvent::Message { to, .. }) if to == participant
+                ) {
+                    continue;
+                }
                 if let (Some(&center), Some(definition)) = (
                     centers.get(participant),
                     diagram
@@ -183,9 +392,15 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         .position(|item| item.id == *participant)
                         .unwrap_or(0);
                     let box_width = (lane_widths[lane_index] - 24.0).max(100.0);
+                    let created_header_height = participant_header_height(
+                        &definition.kind,
+                        line_count(&participant_labels[lane_index]),
+                    );
                     items.push(LayoutedSequenceItem::ParticipantBox {
                         id: definition.id.clone(),
-                        label: definition.label.text.clone(),
+                        label: participant_labels[lane_index].clone(),
+                        label_height: line_count(&participant_labels[lane_index]) as f64 * 16.0,
+                        mirrored: false,
                         kind: definition.kind.clone(),
                         links: definition.links.clone(),
                         properties: definition.properties.clone(),
@@ -193,19 +408,35 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                         x: center - box_width / 2.0,
                         y,
                         width: box_width,
-                        height: HEADER_H,
+                        height: created_header_height,
                     });
-                    lifeline_starts.insert(participant.clone(), y + HEADER_H);
+                    lifeline_starts.insert(participant.clone(), y + created_header_height);
+                    y += (created_header_height + 14.0).max(EVENT_H);
+                } else {
+                    y += EVENT_H;
                 }
-                y += EVENT_H;
             }
             SequenceEvent::ParticipantDestroyed { participant } => {
-                if let Some(&center) = centers.get(participant) {
-                    items.push(LayoutedSequenceItem::Destruction {
-                        participant: participant.clone(),
-                        x: center,
-                        y,
-                    });
+                if matches!(
+                    event_index.checked_sub(1).map(|index| &diagram.events[index]),
+                    Some(SequenceEvent::Message { from, to, .. })
+                        if from == participant || to == participant
+                ) {
+                    continue;
+                }
+                if centers.contains_key(participant) {
+                    let footer_height = diagram
+                        .participants
+                        .iter()
+                        .position(|item| item.id == *participant)
+                        .map(|index| {
+                            participant_header_height(
+                                &diagram.participants[index].kind,
+                                line_count(&participant_labels[index]),
+                            )
+                        })
+                        .unwrap_or(header_height);
+                    footer_positions.insert(participant.clone(), y - footer_height / 2.0);
                     lifeline_ends.insert(participant.clone(), y);
                 }
                 y += EVENT_H / 2.0;
@@ -247,14 +478,19 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     SequenceNotePlacement::Over => (min_x + max_x - note_width) / 2.0,
                 }
                 .clamp(MARGIN, (width - MARGIN - note_width).max(MARGIN));
+                let note_height = NOTE_H + 16.0 * line_count.saturating_sub(1) as f64;
+                let note_y = block_stack
+                    .last()
+                    .and_then(|frame| frame.note_overlay_y)
+                    .unwrap_or(y);
                 items.push(LayoutedSequenceItem::Note {
                     x: note_x,
-                    y: y - 10.0,
+                    y: note_y - 10.0,
                     width: note_width,
-                    height: NOTE_H + 16.0 * line_count.saturating_sub(1) as f64,
+                    height: note_height,
                     text,
                 });
-                y += NOTE_H + 16.0 * line_count.saturating_sub(1) as f64 + 20.0;
+                y = y.max(note_y + note_height + 20.0);
             }
             SequenceEvent::BlockStart {
                 kind,
@@ -267,6 +503,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                 let frame_width = (width - x * 2.0).max(120.0);
                 let label = wrap_sequence_text(label, wrap, frame_width - 16.0);
                 let label_height = 16.0 * label.lines().count().max(1) as f64;
+                let content_y = if kind == &SequenceBlockKind::Rect {
+                    y
+                } else {
+                    y + BLOCK_HEADER_H + label_height - 16.0
+                };
                 block_stack.push(BlockFrameState {
                     kind: kind.clone(),
                     label,
@@ -276,10 +517,9 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
                     x,
                     y,
                     width: frame_width,
+                    note_overlay_y: (kind == &SequenceBlockKind::ParOver).then_some(content_y),
                 });
-                if kind != &SequenceBlockKind::Rect {
-                    y += BLOCK_HEADER_H + label_height - 16.0;
-                }
+                y = content_y;
             }
             SequenceEvent::BlockBranch { label, wrap } => {
                 if let Some(frame) = block_stack.last() {
@@ -317,7 +557,40 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         }
     }
 
-    let height = (y + 36.0).max(180.0);
+    let footer_y = (y + 36.0).max(180.0);
+    let height = footer_y + header_height + 28.0;
+    for (((participant, lane_width), label), center) in diagram
+        .participants
+        .iter()
+        .zip(&lane_widths)
+        .zip(&participant_labels)
+        .zip(
+            diagram
+                .participants
+                .iter()
+                .map(|participant| centers[&participant.id]),
+        )
+    {
+        let box_width = (*lane_width - 24.0).max(100.0);
+        let footer_height = participant_header_height(&participant.kind, line_count(label));
+        items.push(LayoutedSequenceItem::ParticipantBox {
+            id: participant.id.clone(),
+            label: label.clone(),
+            label_height: line_count(label) as f64 * 16.0,
+            mirrored: true,
+            kind: participant.kind.clone(),
+            links: participant.links.clone(),
+            properties: participant.properties.clone(),
+            details_reference: participant.details_reference.clone(),
+            x: center - box_width / 2.0,
+            y: footer_positions
+                .get(&participant.id)
+                .copied()
+                .unwrap_or(footer_y),
+            width: box_width,
+            height: footer_height,
+        });
+    }
     for group in &diagram.participant_groups {
         let indexes: Vec<usize> = diagram
             .participants
@@ -330,9 +603,11 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
         if let (Some(first), Some(last)) = (indexes.first(), indexes.last()) {
             let group_x = lane_lefts[*first] + 4.0;
             let group_right = lane_lefts[*last] + lane_widths[*last] - 4.0;
+            let (label, label_height) = group_labels.get(&group.id).cloned().unwrap_or((None, 0.0));
             items.push(LayoutedSequenceItem::ParticipantGroup {
                 id: group.id.clone(),
-                label: group.label.clone(),
+                label,
+                label_height,
                 fill: group.fill.clone(),
                 x: group_x,
                 y: HEADER_Y - 6.0,
@@ -343,25 +618,26 @@ pub fn layout_sequence_diagram(diagram: &SequenceDiagram) -> LayoutedSequenceDia
     }
     for participant in &diagram.participants {
         if let Some(&center) = centers.get(&participant.id) {
+            let lifeline_end = lifeline_ends
+                .get(&participant.id)
+                .copied()
+                .unwrap_or(footer_y);
             items.push(LayoutedSequenceItem::Lifeline {
                 participant: participant.id.clone(),
                 x: center,
                 y1: lifeline_starts
                     .get(&participant.id)
                     .copied()
-                    .unwrap_or(header_y + HEADER_H),
-                y2: lifeline_ends
-                    .get(&participant.id)
-                    .copied()
-                    .unwrap_or(height - 20.0),
+                    .unwrap_or(header_y + header_height),
+                y2: lifeline_end,
             });
             if let Some(starts) = activation_starts.remove(&participant.id) {
-                for start in starts {
+                for (start, depth) in starts {
                     items.push(LayoutedSequenceItem::Activation {
                         participant: participant.id.clone(),
-                        x: center - ACTIVATION_W / 2.0,
+                        x: activation_x(center, depth),
                         y1: start,
-                        y2: height - 20.0,
+                        y2: lifeline_end.max(start + 12.0),
                     });
                 }
             }
@@ -389,6 +665,19 @@ fn wrap_sequence_text(text: &str, wrap: &SequenceTextWrap, max_width: f64) -> St
         .join("\n")
 }
 
+fn line_count(text: &str) -> usize {
+    text.lines().count().max(1)
+}
+
+fn participant_header_height(kind: &SequenceParticipantKind, lines: usize) -> f64 {
+    let base = if kind == &SequenceParticipantKind::Actor {
+        64.0
+    } else {
+        HEADER_H
+    };
+    base + 16.0 * (lines.max(1) as f64 - 1.0)
+}
+
 fn wrap_sequence_line(line: &str, max_chars: usize) -> Vec<String> {
     let mut lines = Vec::new();
     let mut current = String::new();
@@ -413,18 +702,58 @@ fn wrap_sequence_line(line: &str, max_chars: usize) -> Vec<String> {
 
 fn close_activation(
     items: &mut Vec<LayoutedSequenceItem>,
-    starts: &mut HashMap<String, Vec<f64>>,
+    starts: &mut HashMap<String, Vec<(f64, usize)>>,
     participant: &str,
     center: f64,
     y: f64,
 ) {
-    if let Some(start) = starts.get_mut(participant).and_then(Vec::pop) {
+    if let Some((start, depth)) = starts.get_mut(participant).and_then(Vec::pop) {
         items.push(LayoutedSequenceItem::Activation {
             participant: participant.to_string(),
-            x: center - ACTIVATION_W / 2.0,
+            x: activation_x(center, depth),
             y1: start,
-            y2: y,
+            y2: y.max(start + 12.0),
         });
+    }
+}
+
+fn open_activation(starts: &mut HashMap<String, Vec<(f64, usize)>>, participant: &str, y: f64) {
+    let participant_starts = starts.entry(participant.to_string()).or_default();
+    participant_starts.push((y, participant_starts.len()));
+}
+
+fn activation_x(center: f64, depth: usize) -> f64 {
+    center - ACTIVATION_W / 2.0 + depth as f64 * NESTED_ACTIVATION_OFFSET
+}
+
+fn activation_endpoint(
+    starts: &HashMap<String, Vec<(f64, usize)>>,
+    participant: &str,
+    center: f64,
+    other: f64,
+) -> f64 {
+    let Some(depth) = starts
+        .get(participant)
+        .and_then(|participant_starts| participant_starts.len().checked_sub(1))
+    else {
+        return center;
+    };
+    if center < other {
+        activation_x(center, depth) + ACTIVATION_W
+    } else if center > other {
+        activation_x(center, 0)
+    } else {
+        activation_x(center, depth) + ACTIVATION_W
+    }
+}
+
+fn endpoint_at_box_edge(center: f64, other: f64, offset: f64) -> f64 {
+    if other < center {
+        center - offset
+    } else if other > center {
+        center + offset
+    } else {
+        center
     }
 }
 
@@ -440,12 +769,28 @@ mod tests {
         SequenceParticipant {
             id: id.into(),
             label: DiagramLabel::new(id),
+            label_wrap: SequenceTextWrap::Default,
             kind: SequenceParticipantKind::Participant,
             style: None,
             group_id: None,
             links: vec![],
             properties: vec![],
             details_reference: None,
+        }
+    }
+
+    fn message(from: &str, to: &str, label: &str) -> SequenceEvent {
+        SequenceEvent::Message {
+            from: from.into(),
+            to: to.into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
         }
     }
 
@@ -480,6 +825,17 @@ mod tests {
                 .iter()
                 .filter(|item| matches!(item, LayoutedSequenceItem::ParticipantBox { .. }))
                 .count(),
+            4
+        );
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| matches!(
+                    item,
+                    LayoutedSequenceItem::ParticipantBox { mirrored: true, .. }
+                ))
+                .count(),
             2
         );
         assert_eq!(
@@ -500,6 +856,123 @@ mod tests {
     }
 
     #[test]
+    fn applies_ordered_autonumber_toggles_and_resets() {
+        let message = |label: &str| SequenceEvent::Message {
+            from: "Alice".into(),
+            to: "Bob".into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
+        };
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: true,
+            auto_number_start: 20.0,
+            auto_number_step: 5.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: None,
+                    step: None,
+                },
+                message("One"),
+                SequenceEvent::AutoNumber {
+                    visible: false,
+                    start: None,
+                    step: None,
+                },
+                message("Hidden"),
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: Some(20.0),
+                    step: Some(5.0),
+                },
+                message("Twenty"),
+                message("Twenty-five"),
+            ],
+        };
+        let numbers: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message { number, .. } => Some(*number),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(numbers, vec![Some(1.0), None, Some(20.0), Some(25.0)]);
+    }
+
+    #[test]
+    fn resumes_autonumber_without_reset_and_rounds_each_increment() {
+        let message = |label: &str| SequenceEvent::Message {
+            from: "Alice".into(),
+            to: "Bob".into(),
+            label: label.into(),
+            wrap: SequenceTextWrap::Default,
+            line_style: SequenceLineStyle::Solid,
+            arrowhead: SequenceArrowhead::Filled,
+            bidirectional: false,
+            central_connection: SequenceCentralConnection::None,
+            activate: false,
+            deactivate: false,
+        };
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: Some(0.1),
+                    step: Some(0.1),
+                },
+                message("One tenth"),
+                message("Two tenths"),
+                SequenceEvent::AutoNumber {
+                    visible: false,
+                    start: None,
+                    step: None,
+                },
+                message("Hidden"),
+                SequenceEvent::AutoNumber {
+                    visible: true,
+                    start: None,
+                    step: None,
+                },
+                message("Three tenths"),
+                message("Four tenths"),
+            ],
+        };
+        let numbers: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message { number, .. } => Some(*number),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(
+            numbers,
+            vec![Some(0.1), Some(0.2), None, Some(0.3), Some(0.4)]
+        );
+    }
+
+    #[test]
     fn wraps_sequence_text_only_when_requested() {
         let text = "A deliberately long message that must wrap across several native lines";
         let wrapped = wrap_sequence_text(text, &SequenceTextWrap::Wrap, 90.0);
@@ -508,6 +981,70 @@ mod tests {
             wrap_sequence_text(text, &SequenceTextWrap::NoWrap, 90.0),
             text
         );
+    }
+
+    #[test]
+    fn wrapped_participant_alias_expands_all_headers_and_lifelines() {
+        let mut alice = participant("Alice");
+        alice.label =
+            DiagramLabel::new("A deliberately detailed public application programming interface");
+        alice.label_wrap = SequenceTextWrap::Wrap;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![alice, participant("Bob")],
+            participant_groups: vec![],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let boxes: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox {
+                    label,
+                    label_height,
+                    height,
+                    ..
+                } => Some((label, *label_height, *height)),
+                _ => None,
+            })
+            .collect();
+        assert!(boxes[0].0.contains('\n'));
+        assert!(boxes[0].1 > 16.0);
+        assert_eq!(boxes[0].2, boxes[1].2);
+        assert!(boxes[0].2 > HEADER_H);
+    }
+
+    #[test]
+    fn actor_headers_reserve_symbol_geometry() {
+        let mut actor = participant("Alice");
+        actor.kind = SequenceParticipantKind::Actor;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![actor, participant("Service")],
+            participant_groups: vec![],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let heights: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox { height, .. } => Some(*height),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(heights, vec![64.0, 64.0, 64.0, HEADER_H]);
     }
 
     #[test]
@@ -544,6 +1081,15 @@ mod tests {
                 ..
             }
         )));
+        let activated: HashSet<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Activation { participant, .. } => Some(participant.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(activated, HashSet::from(["Alice", "Bob"]));
     }
 
     #[test]
@@ -572,6 +1118,225 @@ mod tests {
         assert!(layout.items.iter().any(
             |item| matches!(item, LayoutedSequenceItem::Activation { y1, y2, .. } if y2 > y1)
         ));
+    }
+
+    #[test]
+    fn activation_statements_do_not_consume_event_rows() {
+        let plain = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![message("Alice", "Bob", "request")],
+        };
+        let active = SequenceDiagram {
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Alice".into(),
+                    active: true,
+                },
+                message("Alice", "Bob", "request"),
+                SequenceEvent::Activation {
+                    participant: "Alice".into(),
+                    active: false,
+                },
+            ],
+            ..plain.clone()
+        };
+        let plain_layout = layout_sequence_diagram(&plain);
+        let active_layout = layout_sequence_diagram(&active);
+        let message_y = |layout: &LayoutedSequenceDiagram| {
+            layout.items.iter().find_map(|item| match item {
+                LayoutedSequenceItem::Message { y, .. } => Some(*y),
+                _ => None,
+            })
+        };
+
+        assert_eq!(message_y(&active_layout), message_y(&plain_layout));
+        assert_eq!(active_layout.height, plain_layout.height);
+    }
+
+    #[test]
+    fn offsets_nested_activation_bars_by_stack_depth() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: false,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: false,
+                },
+            ],
+        };
+        let mut activations: Vec<_> = layout_sequence_diagram(&diagram)
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Activation { x, y1, y2, .. } => Some((*x, *y1, *y2)),
+                _ => None,
+            })
+            .collect();
+        activations.sort_by(|left, right| left.0.total_cmp(&right.0));
+
+        assert_eq!(activations.len(), 2);
+        assert_eq!(
+            activations[1].0 - activations[0].0,
+            NESTED_ACTIVATION_OFFSET
+        );
+        assert_eq!(activations[0].1, activations[1].1);
+        assert_eq!(activations[0].2, activations[1].2);
+    }
+
+    #[test]
+    fn active_messages_terminate_at_activation_edges() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Alice".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Bob".into(),
+                    active: true,
+                },
+                message("Alice", "Bob", "right"),
+                message("Bob", "Alice", "left"),
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let centers: HashMap<_, _> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Lifeline { participant, x, .. } => {
+                    Some((participant.as_str(), *x))
+                }
+                _ => None,
+            })
+            .collect();
+        let messages: HashMap<_, _> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Message {
+                    label,
+                    from_x,
+                    to_x,
+                    ..
+                } => Some((label.as_str(), (*from_x, *to_x))),
+                _ => None,
+            })
+            .collect();
+
+        assert!(messages["right"].0 > centers["Alice"]);
+        assert!(messages["right"].1 < centers["Bob"]);
+        assert!(messages["left"].0 < centers["Bob"]);
+        assert!(messages["left"].1 > centers["Alice"]);
+    }
+
+    #[test]
+    fn opening_message_terminates_at_new_activation_edge() {
+        let mut opening = message("Alice", "Bob", "open");
+        let SequenceEvent::Message { activate, .. } = &mut opening else {
+            unreachable!();
+        };
+        *activate = true;
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![opening],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let bob_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Lifeline { participant, x, .. } if participant == "Bob" => {
+                Some(*x)
+            }
+            _ => None,
+        });
+        let to_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Message { to_x, .. } => Some(*to_x),
+            _ => None,
+        });
+
+        assert_eq!(bob_x.unwrap() - to_x.unwrap(), ACTIVATION_W / 2.0 - 1.0);
+    }
+
+    #[test]
+    fn active_self_messages_anchor_to_the_outer_activation_edge() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Worker")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::Activation {
+                    participant: "Worker".into(),
+                    active: true,
+                },
+                SequenceEvent::Activation {
+                    participant: "Worker".into(),
+                    active: true,
+                },
+                message("Worker", "Worker", "check"),
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let lifeline_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Lifeline { x, .. } => Some(*x),
+            _ => None,
+        });
+        let message_x = layout.items.iter().find_map(|item| match item {
+            LayoutedSequenceItem::Message { from_x, to_x, .. } => {
+                assert_eq!(from_x, to_x);
+                Some(*from_x)
+            }
+            _ => None,
+        });
+
+        assert_eq!(
+            message_x.unwrap() - lifeline_x.unwrap(),
+            ACTIVATION_W / 2.0 + NESTED_ACTIVATION_OFFSET
+        );
     }
 
     #[test]
@@ -649,6 +1414,76 @@ mod tests {
     }
 
     #[test]
+    fn par_over_places_notes_on_the_parallel_content_origin() {
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![participant("Alice"), participant("Bob")],
+            participant_groups: vec![],
+            events: vec![
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::ParOver,
+                    label: "Parallel overlap".into(),
+                    wrap: SequenceTextWrap::Default,
+                    fill: None,
+                },
+                SequenceEvent::Message {
+                    from: "Alice".into(),
+                    to: "Bob".into(),
+                    label: "Message".into(),
+                    wrap: SequenceTextWrap::Default,
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
+                    activate: false,
+                    deactivate: false,
+                },
+                SequenceEvent::Note {
+                    participants: vec!["Alice".into()],
+                    placement: SequenceNotePlacement::LeftOf,
+                    text: "Alice note".into(),
+                    wrap: SequenceTextWrap::Default,
+                },
+                SequenceEvent::Note {
+                    participants: vec!["Bob".into()],
+                    placement: SequenceNotePlacement::RightOf,
+                    text: "Bob note".into(),
+                    wrap: SequenceTextWrap::Default,
+                },
+                SequenceEvent::BlockEnd {
+                    kind: SequenceBlockKind::ParOver,
+                },
+            ],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let message_y = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Message { y, .. } => Some(*y),
+                _ => None,
+            })
+            .unwrap();
+        let note_ys: Vec<_> = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedSequenceItem::Note { y, .. } => Some(*y),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(note_ys.len(), 2);
+        assert_eq!(note_ys[0], note_ys[1]);
+        assert!(note_ys[0] < message_y);
+    }
+
+    #[test]
     fn created_participant_has_bounded_lifeline() {
         let diagram = SequenceDiagram {
             title: None,
@@ -684,6 +1519,18 @@ mod tests {
                     arrowhead: SequenceArrowhead::Filled,
                     bidirectional: false,
                     central_connection: SequenceCentralConnection::None,
+                    activate: true,
+                    deactivate: false,
+                },
+                SequenceEvent::Message {
+                    from: "Worker".into(),
+                    to: "Alice".into(),
+                    label: "Stop".into(),
+                    wrap: SequenceTextWrap::Default,
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Cross,
+                    bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
                     activate: false,
                     deactivate: false,
                 },
@@ -693,11 +1540,28 @@ mod tests {
             ],
         };
         let layout = layout_sequence_diagram(&diagram);
-        let worker_box_y = layout
+        let (worker_box_x, worker_box_y, worker_box_height) = layout
             .items
             .iter()
             .find_map(|item| match item {
-                LayoutedSequenceItem::ParticipantBox { id, y, .. } if id == "Worker" => Some(*y),
+                LayoutedSequenceItem::ParticipantBox {
+                    id,
+                    mirrored: false,
+                    x,
+                    y,
+                    height,
+                    ..
+                } if id == "Worker" => Some((*x, *y, *height)),
+                _ => None,
+            })
+            .unwrap();
+        let (message_to_x, message_y) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Message { label, to_x, y, .. } if label == "Work" => {
+                    Some((*to_x, *y))
+                }
                 _ => None,
             })
             .unwrap();
@@ -714,20 +1578,49 @@ mod tests {
                 _ => None,
             })
             .unwrap();
-        let destruction_y = layout
+        let (footer_x, footer_y, footer_height) = layout
             .items
             .iter()
             .find_map(|item| match item {
-                LayoutedSequenceItem::Destruction { participant, y, .. }
-                    if participant == "Worker" =>
-                {
-                    Some(*y)
-                }
+                LayoutedSequenceItem::ParticipantBox {
+                    id,
+                    mirrored: true,
+                    x,
+                    y,
+                    height,
+                    ..
+                } if id == "Worker" => Some((*x, *y, *height)),
                 _ => None,
             })
             .unwrap();
-        assert_eq!(lifeline_y1, worker_box_y + HEADER_H);
-        assert_eq!(lifeline_y2, destruction_y);
+        let (stop_from_x, stop_y) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::Message {
+                    label, from_x, y, ..
+                } if label == "Stop" => Some((*from_x, *y)),
+                _ => None,
+            })
+            .unwrap();
+        assert_eq!(worker_box_y + worker_box_height / 2.0, message_y);
+        assert_eq!(message_to_x, worker_box_x - 3.0);
+        assert_eq!(lifeline_y1, worker_box_y + worker_box_height);
+        assert_eq!(footer_y + footer_height / 2.0, stop_y);
+        assert_eq!(stop_from_x, footer_x - 3.0);
+        assert_eq!(lifeline_y2, stop_y);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedSequenceItem::Activation {
+                participant,
+                y2,
+                ..
+            } if participant == "Worker" && *y2 == stop_y
+        )));
+        assert!(!layout
+            .items
+            .iter()
+            .any(|item| matches!(item, LayoutedSequenceItem::Destruction { .. })));
         assert!(worker_box_y > HEADER_Y);
     }
 
@@ -748,6 +1641,7 @@ mod tests {
             participant_groups: vec![diagram_ir::SequenceParticipantGroup {
                 id: "client".into(),
                 label: Some("Client tier".into()),
+                label_wrap: SequenceTextWrap::Default,
                 fill: Some("aqua".into()),
             }],
             events: vec![],
@@ -770,5 +1664,51 @@ mod tests {
             })
             .unwrap();
         assert!(group_x + group_width < database_x);
+    }
+
+    #[test]
+    fn wrapped_participant_group_label_reserves_header_space() {
+        let mut alice = participant("Alice");
+        alice.group_id = Some("client".into());
+        let diagram = SequenceDiagram {
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            auto_number: false,
+            auto_number_start: 1.0,
+            auto_number_step: 1.0,
+            participants: vec![alice],
+            participant_groups: vec![diagram_ir::SequenceParticipantGroup {
+                id: "client".into(),
+                label: Some("A deliberately detailed client application tier".into()),
+                label_wrap: SequenceTextWrap::Wrap,
+                fill: None,
+            }],
+            events: vec![],
+        };
+        let layout = layout_sequence_diagram(&diagram);
+        let (label, label_height) = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::ParticipantGroup {
+                    label,
+                    label_height,
+                    ..
+                } => Some((label.as_deref().unwrap(), *label_height)),
+                _ => None,
+            })
+            .unwrap();
+        let participant_y = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedSequenceItem::ParticipantBox { y, .. } => Some(*y),
+                _ => None,
+            })
+            .unwrap();
+        assert!(label.contains('\n'));
+        assert!(label_height > 16.0);
+        assert_eq!(participant_y, HEADER_Y + label_height + 12.0);
     }
 }

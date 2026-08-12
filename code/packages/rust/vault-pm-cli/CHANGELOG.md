@@ -2,6 +2,94 @@
 
 ## Unreleased
 
+- Extended login add/edit to collect zero-to-sixteen ordered URLs plus optional
+  hidden notes, accept existing multi-URL records, replace the complete form,
+  redact notes presence, audit invalid counts before returning, and expose
+  notes only through the separate audited reveal ceremony.
+- Added audited `item add totp` with canonical hidden Base32 seed input, closed
+  algorithm/digits/period validation, metadata-only rendering, durable failure
+  events, and separately authorized publish-before-Base32 reveal.
+- Added audited `item add database-credential` with canonical static engine and
+  port validation, hidden password input, metadata-only rendering, durable
+  failure events, and separate VLT-PM25 password reveal reuse.
+- Added audited `item add api-key` with a hidden token prompt, closed scope and
+  expiry validation, redacted metadata rendering, durable failure events, and
+  separate VLT-PM25 token reveal reuse.
+- Added audited `item add card` with hidden PAN/CVV prompts, closed offline
+  validation, redacted holder/last-four/expiry rendering, durable failure
+  events, and separate VLT-PM25 reveal reuse.
+- Added audit-required `item reveal ITEM FIELD` with exact-`yes` controlling
+  terminal confirmation, application-owned current-revision selection, durable
+  denied/failed/succeeded outcomes, and direct escaped terminal delivery that
+  never enters ordinary CLI output.
+- Added audit-required `conflict list ITEM` and `conflict choose ITEM REVISION`
+  with redacted candidate rows, item-bound selection, durable failed attempts,
+  and atomic choose-existing resolution.
+- Added explicit-named-target `restore FILE`, which opens the artifact once,
+  publishes audited import without intermediate output, independently reopens
+  the durable target, and claims completed-and-verified only after its audited
+  semantic comparison succeeds.
+- Reserve both audit traces before restore mutation and retain standalone
+  `restore verify FILE` as the safe retry after a post-import interruption.
+- Added audit-first `vault create NAME` with a distinct adapter namespace,
+  trace-before-config ordering, exact prepared-journal retry, and no replacement
+  of active targets.
+- Added command-scoped `--vault NAME` selection across existing vault commands;
+  it preserves `default_vault` and routes authenticated operations only through
+  the selected vault's independent state, repository, and audit chain.
+- New `init` operations use audit-first generation zero, making the encrypted
+  signed `VaultInitialize` event the first repository commit and audit head.
+- `audit enable` is an idempotent no-write success on new vaults while the
+  explicit epoch-start migration remains available for legacy pre-audit state.
+- Added retryable audit-required `restore verify FILE`, which authenticates the
+  current target and encrypted artifact independently, prepares the opaque
+  source expectation, and releases aggregate verified counts only after a
+  succeeded `PortableRestoreVerify` event is durable.
+- Record source-read, prompt, artifact-open, expectation, and semantic mismatch
+  failures as failed itemless verification events without path or mismatch
+  detail.
+- Added audit-required `import FILE` with bounded artifact reads, hidden
+  artifact-passphrase input, no-write authentication, count-derived entropy,
+  and atomic cross-vault re-identification into an empty target.
+- Record artifact/host failures as failed itemless `PortableImport` events and
+  retain retry eligibility across audit-only attempts.
+- Added `export FILE` with a separately confirmed hidden passphrase, canonical
+  encrypted portable artifact, publish-before-release audit ordering, and an
+  explicit create-new destination that never overwrites an existing path.
+- Reserve export and audit entropy before unlock so active-epoch export prompt
+  failures become durable itemless `PortableExport` events before their CLI
+  error is returned.
+- Added audited `item add secure-note` with a hidden bounded body prompt and
+  explicit list/show rendering that never receives or prints body plaintext.
+- Centralized login and secure-note creation on one preflight, durable failure,
+  document, and completion path so future record kinds inherit the same audit
+  ordering.
+- Reserve create time, identities, and audit-failure entropy before unlock so
+  active-epoch item prompt failures become durable traceable `ItemCreate`
+  events before their CLI error is returned.
+- Added authenticated `audit list` and canonical `audit show TRACE`; both
+  publish one durable `AuditRead` before rendering verified trace-aware rows.
+- Added closed canonical trace parsing, bounded newest-first output, audited
+  missing-trace results, tamper rejection, and ambiguous-provider recovery
+  coverage for the explicit audit surface.
+- Exposed idempotent authenticated `audit enable`, installing the one durable
+  `AuditEpochStart` migration event before any active-epoch command can run.
+- Route `item edit ITEM` through an opaque application-owned preparation so
+  active-epoch precondition, prompt, entropy, and document-validation failures
+  become durable before their CLI errors, while success stays one atomic
+  `ItemUpdate` mutation.
+- Collapse active-epoch `history restore ITEM REVISION` into one item-bound
+  audited application mutation, including durable missing, cross-item,
+  tombstone, same-revision, and conflict failures.
+- Collapse active-epoch `item delete ITEM` into one application-selected
+  audited mutation: successful tombstones and failed authenticated
+  preconditions now become durable before the CLI reveals their outcome.
+- Route list, show, history list, audit verify, and unlocked doctor through
+  signed publish-before-render access events whenever the vault audit epoch is
+  active, while retaining backward-compatible pre-audit behavior.
+- Added reversible authenticated `item delete ITEM` and
+  `history restore ITEM REVISION` mutations with strict item-bound selectors,
+  causal tombstones, and restore-as-new-revision semantics.
 - Added authenticated `history list ITEM` with canonical revision selectors,
   newest-first causal metadata, and redacted record titles.
 - Added revision-safe `item edit ITEM` for complete login-field replacement
@@ -10,6 +98,8 @@
 - Added controlling-terminal item input, fresh mutation identities, durable
   application publication, escaped redacted rendering, and restart coverage.
 - Added one-shot authenticated `audit verify` with aggregate-only output.
+- Extended that output with a secret-free count of fully authenticated
+  encrypted operation-audit events; pre-audit vaults report zero.
 - Added opt-in full repository health verification through `doctor --unlock`.
 - Added strict parser, wrong-passphrase, synchronous re-lock, and real-process
   controlling-terminal coverage for authenticated verification.

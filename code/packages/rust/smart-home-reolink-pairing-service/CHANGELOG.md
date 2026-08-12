@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Replace the actor's private runtime/store ownership with the shared central
+  controller authority for coherent reads, exact-revision pairing commits,
+  restart recovery, and immediate shared-state publication.
+- Prove central visibility and stale-request rejection before credential input,
+  Reolink verification, Vault, or journal activity after another transaction
+  advances the controller revision.
+
 ## 0.2.0
 
 - Extend exact recoverable credential provisioning to installed Reolink NVRs.

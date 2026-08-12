@@ -215,16 +215,18 @@ mod tests {
 
     #[test]
     fn printf_float_lowers_to_fmt_float_with_precision_and_kind() {
-        // `printf("%.2f\n", x)` → print(fmt_float(x, 2, "f"), "\n").
+        // `printf("%.2f\n", x)` → SIR28's `__sys_write__(stdout, "none",
+        // false, fmt_float(x, 2, "f"), "\n")`.
         let m = lower("int main(void) { double x = 3.14; printf(\"%.2f\\n\", x); return 0; }");
         let text = semantic_ir::print_module(&m);
         assert!(text.contains("fmt_float"), "no fmt_float:\n{text}");
         assert!(text.contains("(int 2)"), "precision not 2:\n{text}");
-        assert!(text.contains("(builtin-call print"), "not a print:\n{text}");
+        assert!(text.contains("(builtin-call __sys_write__"), "not a __sys_write__:\n{text}");
         // The trailing newline is emitted as literal text, not an auto-newline.
         assert!(text.contains("(str \"\\n\")"), "no literal newline:\n{text}");
         // Using a string makes the module declare Strings.
         assert!(m.manifest.contains(semantic_ir::Feature::Strings));
+        assert!(m.manifest.contains(semantic_ir::Feature::ConsoleIO));
     }
 
     #[test]
@@ -242,7 +244,7 @@ mod tests {
         let text = semantic_ir::print_module(&m);
         assert!(!text.contains("fmt_float"), "int used fmt_float:\n{text}");
         assert!(text.contains("(str \"n=\")"), "no literal prefix:\n{text}");
-        assert!(text.contains("(builtin-call print"), "not a print:\n{text}");
+        assert!(text.contains("(builtin-call __sys_write__"), "not a __sys_write__:\n{text}");
     }
 
     #[test]

@@ -33,7 +33,7 @@ function L(language: string, concept: string, chapter: number, id?: string): Les
     script: language,
     etymologyHook: "",
     body: "",
-    activities: [],
+    activities: [], introducesAtoms: [],
     estMinutes: 5,
   };
 }

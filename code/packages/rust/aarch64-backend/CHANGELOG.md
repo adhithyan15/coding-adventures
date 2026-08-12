@@ -1,5 +1,82 @@
 # Changelog — `aarch64-backend`
 
+## 0.38.0 - 2026-08-10 - `array_set` also calls the generational write barrier (AOT00-T8 follow-up)
+
+- **`array_set` now also emits `BL __twig_gc_write_barrier`** after its store,
+  mirroring 0.37.0's `field_store` fix — flagged as an INFO-level follow-up by
+  that PR's own security review (an array element write was the one remaining
+  GC-tracked store site this backend didn't barrier-cover).
+- **`parent` must be the array's exact base handle, not the computed element
+  address** — a real distinction from `field_store`'s otherwise-identical fix.
+  `array_set`'s addressing overwrites X0 with `base + idx*elem_size` (an
+  *interior* pointer) to perform the store; `write_barrier`'s own contract
+  trusts its `parent` argument unconditionally (reads `parent - HEADER_SIZE`
+  with no validation it's actually a base address), so passing the interior
+  element address would read the wrong byte as the generation flag, silently
+  corrupting the remembered set. Fixed by reloading the array's base handle
+  and the stored value fresh from their own stack slots (unaffected by X0/X2
+  having been repurposed for the address computation) immediately before the
+  barrier call.
+- Still inert today: `gc_set_auto_minor` remains unreachable from real Twig
+  source (unchanged from 0.37.0's own finding).
+- 2 new unit tests (relocation-symbol assertions on `compile_with_relocs`'s
+  output, mirroring `field_store`'s own tests), both confirmed load-bearing by
+  reverting the emission and observing the predicted failure.
+- Verification: `cargo build`/`test` clean (80 lib tests, up from 78); `cargo
+  clippy --all-targets -- -D warnings` clean. Same structural limitation as
+  0.37.0 applies — no real compiled-and-executed differential (see
+  `lessons.md`); unit-level relocation tests are the primary evidence.
+
+## 0.37.0 - 2026-08-10 - generational write barrier emission (AOT00-T8 follow-up)
+
+- **`field_store` now also emits `BL __twig_gc_write_barrier`** right after the
+  `STR`, alongside every store — the aarch64 third of the AOT00-T8 follow-up
+  (`iir-to-llvm` did the LLVM third earlier; `x86_64-backend` remains open).
+  Zero register shuffling needed: `ptr`/`value` are already in X0/X1 at that
+  point (the same registers the barrier's `(parent, child)` AAPCS64 call needs),
+  and — like the existing `safepoint` call — no save/restore is needed around
+  it, since the frame allocator has already spilled every live value this
+  instruction doesn't itself own.
+- Unconditional, deliberately: `field_store` carries no static type information
+  distinguishing a reference store from a non-reference one, so there is no way
+  to skip the call only for genuine reference stores. Per the barrier's own
+  contract (`gc_core::FlatHeap::write_barrier`'s doc) that's sound: it never
+  dereferences `child`, only inspects `parent`'s generation.
+- Two new test-only `V1_BUILTINS` table entries, `gc_set_auto_minor` and
+  `gc_collect_minor_precise` (mirroring `iir-to-llvm`'s identically-named
+  `call_builtin`s) — fully generic dispatch, no per-name codegen, resolving to
+  the `__twig_gc_*` symbols `gc-core-capi`'s `twig_compat` already exports
+  (0.24.4/0.24.5).
+- 3 new unit tests: `field_store_calls_the_generational_write_barrier` and
+  `field_store_write_barrier_is_emitted_per_store_not_deduplicated` (relocation-
+  symbol assertions on `compile_with_relocs`'s output — both confirmed
+  load-bearing by reverting the emission and observing the predicted failure),
+  plus `gc_set_auto_minor_and_collect_minor_precise_resolve_generic_dispatch`
+  for the two new builtins.
+- **No real compiled-and-executed differential test** — unlike the LLVM
+  sibling (`lang-aot/tests/llvm_gc_write_barrier.rs`), an attempted real-
+  execution proof for this backend turned out to be structurally unreliable:
+  see `lessons.md`'s new entry ("A 'make it unreachable in a callee, then
+  collect in the caller' GC differential is not reliable on `aarch64-backend`")
+  for the full empirical investigation. In short, `gc-core-capi`'s
+  `precise_walk.rs` conservatively scans `[sp, start_fp)` — "the collector's
+  own frames, below the first walked frame" — by design, and this gap
+  necessarily includes any already-returned callee's now-vacated stack memory
+  (it sits at lower addresses than the caller's own frame), making an object
+  allocated-and-abandoned in a callee spuriously survive regardless of any
+  barrier. Reproduced identically with the **already-shipped**
+  `__gc_collect_precise` in the same shape, with no barrier or `field_store`
+  involved at all — proving this is a pre-existing property of the collector's
+  stack walk, not a defect in this change. The unit-level relocation tests are
+  the primary evidence here; this is a genuine, structural verification gap
+  versus the LLVM sibling PR, not an oversight.
+- Verification: `cargo build`/`test` clean (78 lib tests, up from 75); `cargo
+  clippy --all-targets -- -D warnings` clean. `twig-aot`'s own
+  `macos_arm64_smoke.rs` has several pre-existing, environment-sensitive
+  conservative/precise-differential test failures — confirmed present
+  identically (in fact slightly more of them, run-to-run) on unmodified
+  `origin/main` via `git stash` — unrelated to this change.
+
 ## 0.36.1 - 2026-08-02 - fix stale "no GC" comment on cons-cell allocation
 
 The comment block introducing the heap-cons-cell lowering still described

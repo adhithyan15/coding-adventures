@@ -35,11 +35,29 @@ mosstyle base styling:
 | `HostLink` | `<HyperlinkButton>` or routed `<Button>` |
 | `HostNumberInput` | `<NumberBox>` |
 | `HostScroll` | `<ScrollViewer>` |
-| `HostTable` | structural `<Grid>` |
+| `HostTable` | component-scoped WinUI table controls with native UIA Table/Grid peers for the canonical dynamic shape; structural `<Grid>` fallback otherwise |
+| `HostDraggable` | component-scoped `<ContentControl>` using WinUI `CanDrag`, pointer/touch drag events, keyboard operation, and UIA announcements |
+| `HostDropTarget` | component-scoped `<ContentControl>` using WinUI drop events, authored acceptance filtering, keyboard traversal, and UIA announcements |
 | `HostDialog` | `<ContentDialog>` / `<Flyout>` |
 
 Plus the UI24 event-dispatch contract (one `Dispatch` event per UserControl)
 and slot → `DependencyProperty` translation.
+
+Canonical UI31 tables keep their authored `Grid`/`ItemsRepeater` visuals and
+arbitrary interactive cell subtree, while generated automation peers expose
+table dimensions, header associations, row/column coordinates, accessible cell
+names, and arrow-key navigation. Structurally ambiguous tables retain the visual
+fallback and remain visible to native-completeness reporting rather than claiming
+semantics the emitter cannot prove.
+
+UI35 drag/drop uses WinUI's native `DragStarting`, `DragEnter`, `DragOver`,
+`DragLeave`, `Drop`, and `DropCompleted` lifecycle. Each generated component
+instance owns an isolated target scope, so nested or repeated components cannot
+accept one another's internal drags. Space/Enter grab and drop, arrow keys move
+between eligible targets (including RTL order), and Escape cancels. Pointer,
+touch, and keyboard paths share the same authored `accepts` filter and accepted
+drop payload; focusable source/target peers publish names, help text, and live UIA
+notifications without changing application state locally.
 
 ## MSL states and motion
 

@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.2.0] - 2026-08-11
+
+### Changed — SIR28 Slice 6: `PRINT` lowers to `__sys_write__`
+
+Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
+family — see `code/specs/SIR28-syscall-primitives.md`). All 7 backends
+already implement it (Slice 3); this crate is part of Slice 6, batch 2
+(alongside `matlab-to-semantic-ir`'s/`scilab-to-semantic-ir`'s identical
+`disp` migration — `PRINT`'s single-positional-arg restriction already
+mirrors `disp`'s own).
+
+**Behavior change**: `PRINT, x` no longer lowers to
+`BuiltinCall("print", [x])`. It now lowers to
+`BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("once"),
+BoolLit(false), x])` (SIR28 §2.1's table). `Feature::ConsoleIO` is
+declared whenever `PRINT` is used. Also now sets `Effect::MayPrint`
+(previously unset).
+
+`idl-to-semantic-ir` 0.1.0 -> 0.2.0.
+
 ## [0.1.0] - 2026-07-24
 
 ### Added

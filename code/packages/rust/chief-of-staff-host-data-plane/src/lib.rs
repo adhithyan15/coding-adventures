@@ -12,16 +12,24 @@ use chief_of_staff_channel_endpoints::{
 };
 use chief_of_staff_channel_store::ChannelStore;
 use chief_of_staff_host_control_protocol::{
-    validate_data_plane_response, ChannelBindingAccess, CompletionFinishReason, CompletionProvider,
-    CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneMessage, DataPlaneRequest,
-    DataPlaneResponse, PromptRole, MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES,
+    validate_data_plane_response, ChannelBindingAccess, CompletionCall, CompletionFinishReason,
+    CompletionProvider, CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneMessage,
+    DataPlaneRequest, DataPlaneResponse, ModelToolCall, ModelToolChoice, ModelToolDefinition,
+    ModelToolResult, PromptRole, ToolCompletionCall, ToolCompletionOutput, ToolCompletionResult,
+    MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES,
 };
 use chief_of_staff_pipeline_bindings::{
     HostPipelineBinding, PipelineBindingError, PipelineBindingStore, PipelineId,
 };
 use chief_of_staff_service_registry::HostRegistration;
 use coding_adventures_zeroize::Zeroizing;
-use llm_gateway::{CompletionRequest, FinishReason, LlmClient, Message, MessageContent, Role};
+use llm_gateway::{
+    CompletionRequest, FinishReason, LlmClient, Message, MessageContent,
+    ModelToolCall as GatewayModelToolCall, ModelToolChoice as GatewayModelToolChoice,
+    ModelToolDefinition as GatewayModelToolDefinition, ModelToolResult as GatewayModelToolResult,
+    Role, ToolCompletionOutput as GatewayToolCompletionOutput,
+    ToolCompletionRequest as GatewayToolCompletionRequest,
+};
 use std::collections::{BTreeMap, HashMap};
 use std::sync::{Arc, Mutex};
 use storage_core::StorageBackend;
@@ -72,6 +80,43 @@ impl HostDataPlaneService for UnavailableHostDataPlaneService {
         _binding: &HostPipelineBinding,
         _request: &DataPlaneRequest,
     ) -> Result<DataPlaneResponse, DataPlaneFailure> {
+        Err(DataPlaneFailure::Unavailable)
+    }
+}
+
+/// D18D catalog and execution authority injected into the authenticated model boundary.
+pub trait ModelToolDispatcher: Send + Sync {
+    /// Return the definitions this exact durable host binding may offer to a model.
+    fn definitions(
+        &self,
+        binding: &HostPipelineBinding,
+    ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure>;
+
+    /// Execute one model-returned call through the canonical D18D runtime.
+    fn execute(
+        &self,
+        binding: &HostPipelineBinding,
+        call: &ModelToolCall,
+    ) -> Result<ModelToolResult, DataPlaneFailure>;
+}
+
+/// Fail-closed tool authority used when the daemon installed no D18D catalog.
+#[derive(Default)]
+pub struct UnavailableModelToolDispatcher;
+
+impl ModelToolDispatcher for UnavailableModelToolDispatcher {
+    fn definitions(
+        &self,
+        _binding: &HostPipelineBinding,
+    ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+        Err(DataPlaneFailure::Unavailable)
+    }
+
+    fn execute(
+        &self,
+        _binding: &HostPipelineBinding,
+        _call: &ModelToolCall,
+    ) -> Result<ModelToolResult, DataPlaneFailure> {
         Err(DataPlaneFailure::Unavailable)
     }
 }
@@ -398,6 +443,7 @@ pub struct AuthorityBackedHostDataPlaneService {
     backend: Arc<dyn StorageBackend>,
     key_authority: Arc<dyn ChannelKeyAuthority>,
     model_authority: Arc<dyn ModelProviderAuthority>,
+    model_tools: Arc<dyn ModelToolDispatcher>,
     metadata_source: Arc<dyn MessageMetadataSource>,
     deliveries: Mutex<BTreeMap<DeliveryKey, Sequence>>,
 }
@@ -414,6 +460,25 @@ impl AuthorityBackedHostDataPlaneService {
             backend,
             key_authority,
             model_authority,
+            model_tools: Arc::new(UnavailableModelToolDispatcher),
+            metadata_source,
+            deliveries: Mutex::new(BTreeMap::new()),
+        }
+    }
+
+    /// Compose the data plane with an explicit D18D catalog and execution authority.
+    pub fn with_model_tools(
+        backend: Arc<dyn StorageBackend>,
+        key_authority: Arc<dyn ChannelKeyAuthority>,
+        model_authority: Arc<dyn ModelProviderAuthority>,
+        model_tools: Arc<dyn ModelToolDispatcher>,
+        metadata_source: Arc<dyn MessageMetadataSource>,
+    ) -> Self {
+        Self {
+            backend,
+            key_authority,
+            model_authority,
+            model_tools,
             metadata_source,
             deliveries: Mutex::new(BTreeMap::new()),
         }
@@ -575,37 +640,13 @@ impl AuthorityBackedHostDataPlaneService {
         &self,
         binding: &HostPipelineBinding,
         id: chief_of_staff_host_control_protocol::RequestId,
-        call: &chief_of_staff_host_control_protocol::CompletionCall,
+        call: &CompletionCall,
     ) -> Result<DataPlaneResponse, DataPlaneFailure> {
         let provider = self
             .model_authority
             .resolve(binding, &call.model)
             .map_err(|_| DataPlaneFailure::Unavailable)?;
-        let request = CompletionRequest {
-            model: call.model.clone(),
-            system: call.system.clone(),
-            messages: call
-                .messages
-                .iter()
-                .map(|message| Message {
-                    role: match message.role {
-                        PromptRole::System => Role::System,
-                        PromptRole::User => Role::User,
-                        PromptRole::Assistant => Role::Assistant,
-                    },
-                    content: MessageContent::Text(message.text.clone()),
-                })
-                .collect(),
-            temperature: call.temperature,
-            max_tokens: call.max_tokens.map(|value| value as usize),
-            stop_sequences: call.stop_sequences.clone(),
-            seed: call.seed,
-            metadata: call
-                .metadata
-                .iter()
-                .map(|(key, value)| (key.clone(), value.clone()))
-                .collect::<HashMap<_, _>>(),
-        };
+        let request = gateway_completion_request(call);
         let response = provider
             .complete(request)
             .map_err(|_| DataPlaneFailure::Completion)?;
@@ -634,15 +675,186 @@ impl AuthorityBackedHostDataPlaneService {
                     output_tokens,
                     cached_tokens,
                 },
-                finish_reason: match response.finish_reason {
-                    FinishReason::Stop => CompletionFinishReason::Stop,
-                    FinishReason::MaxTokens => CompletionFinishReason::MaxTokens,
-                    FinishReason::Refusal => CompletionFinishReason::Refusal,
-                    FinishReason::Other => CompletionFinishReason::Other,
-                },
+                finish_reason: gateway_finish_reason(response.finish_reason),
                 latency_ms: response.latency_ms,
             }),
         })
+    }
+
+    fn complete_with_tools(
+        &self,
+        binding: &HostPipelineBinding,
+        id: chief_of_staff_host_control_protocol::RequestId,
+        call: &ToolCompletionCall,
+    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
+        let provider = self
+            .model_authority
+            .resolve(binding, &call.completion.model)
+            .map_err(|_| DataPlaneFailure::Unavailable)?;
+        let installed = self.model_tools.definitions(binding)?;
+        if call.tools != installed {
+            return Err(DataPlaneFailure::Unauthorized);
+        }
+        let response = provider
+            .complete_with_tools(GatewayToolCompletionRequest {
+                completion: gateway_completion_request(&call.completion),
+                tools: call.tools.iter().map(gateway_tool_definition).collect(),
+                choice: match &call.choice {
+                    ModelToolChoice::Auto => GatewayModelToolChoice::Auto,
+                    ModelToolChoice::Required => GatewayModelToolChoice::Required,
+                    ModelToolChoice::Named(name) => GatewayModelToolChoice::Named(name.clone()),
+                },
+                results: call.results.iter().map(gateway_tool_result).collect(),
+            })
+            .map_err(|_| DataPlaneFailure::Completion)?;
+        if !gateway_tool_output_allowed(&response.output, &call.tools, &call.choice) {
+            return Err(DataPlaneFailure::Completion);
+        }
+        let input_tokens =
+            u64::try_from(response.usage.input_tokens).map_err(|_| DataPlaneFailure::Internal)?;
+        let output_tokens =
+            u64::try_from(response.usage.output_tokens).map_err(|_| DataPlaneFailure::Internal)?;
+        let cached_tokens =
+            u64::try_from(response.usage.cached_tokens).map_err(|_| DataPlaneFailure::Internal)?;
+        Ok(DataPlaneResponse::ToolCompleted {
+            id,
+            result: Box::new(ToolCompletionResult {
+                output: match response.output {
+                    GatewayToolCompletionOutput::FinalText(text) => {
+                        ToolCompletionOutput::FinalText(text)
+                    }
+                    GatewayToolCompletionOutput::ToolCall(call) => {
+                        ToolCompletionOutput::ToolCall(protocol_tool_call(call))
+                    }
+                },
+                model: response.model,
+                provider: CompletionProvider {
+                    vendor: response.provider_id.vendor,
+                    model_family: response.provider_id.model_family,
+                    model_version: response.provider_id.model_version,
+                    endpoint: response.provider_id.endpoint,
+                },
+                usage: CompletionUsage {
+                    input_tokens,
+                    output_tokens,
+                    cached_tokens,
+                },
+                finish_reason: gateway_finish_reason(response.finish_reason),
+                latency_ms: response.latency_ms,
+                polyfill_used: response.polyfill_used,
+            }),
+        })
+    }
+
+    fn list_model_tools(
+        &self,
+        binding: &HostPipelineBinding,
+        id: chief_of_staff_host_control_protocol::RequestId,
+    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
+        Ok(DataPlaneResponse::ModelToolsListed {
+            id,
+            tools: self.model_tools.definitions(binding)?,
+        })
+    }
+
+    fn execute_tool(
+        &self,
+        binding: &HostPipelineBinding,
+        id: chief_of_staff_host_control_protocol::RequestId,
+        call: &ModelToolCall,
+    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
+        let result = self.model_tools.execute(binding, call)?;
+        if result.call != *call {
+            return Err(DataPlaneFailure::Internal);
+        }
+        Ok(DataPlaneResponse::ToolExecuted {
+            id,
+            result: Box::new(result),
+        })
+    }
+}
+
+fn gateway_completion_request(call: &CompletionCall) -> CompletionRequest {
+    CompletionRequest {
+        model: call.model.clone(),
+        system: call.system.clone(),
+        messages: call
+            .messages
+            .iter()
+            .map(|message| Message {
+                role: match message.role {
+                    PromptRole::System => Role::System,
+                    PromptRole::User => Role::User,
+                    PromptRole::Assistant => Role::Assistant,
+                },
+                content: MessageContent::Text(message.text.clone()),
+            })
+            .collect(),
+        temperature: call.temperature,
+        max_tokens: call.max_tokens.map(|value| value as usize),
+        stop_sequences: call.stop_sequences.clone(),
+        seed: call.seed,
+        metadata: call
+            .metadata
+            .iter()
+            .map(|(key, value)| (key.clone(), value.clone()))
+            .collect::<HashMap<_, _>>(),
+    }
+}
+
+fn gateway_tool_definition(definition: &ModelToolDefinition) -> GatewayModelToolDefinition {
+    GatewayModelToolDefinition {
+        name: definition.name.clone(),
+        description: definition.description.clone(),
+        input_schema: definition.input_schema.clone(),
+    }
+}
+
+fn gateway_tool_result(result: &ModelToolResult) -> GatewayModelToolResult {
+    GatewayModelToolResult {
+        call: GatewayModelToolCall {
+            call_id: result.call.call_id.clone(),
+            name: result.call.name.clone(),
+            arguments: result.call.arguments.clone(),
+        },
+        output: result.output.clone(),
+        is_error: result.is_error,
+    }
+}
+
+fn protocol_tool_call(call: GatewayModelToolCall) -> ModelToolCall {
+    ModelToolCall {
+        call_id: call.call_id,
+        name: call.name,
+        arguments: call.arguments,
+    }
+}
+
+fn gateway_tool_output_allowed(
+    output: &GatewayToolCompletionOutput,
+    tools: &[ModelToolDefinition],
+    choice: &ModelToolChoice,
+) -> bool {
+    match output {
+        GatewayToolCompletionOutput::FinalText(text) => {
+            !text.is_empty() && matches!(choice, ModelToolChoice::Auto)
+        }
+        GatewayToolCompletionOutput::ToolCall(call) => {
+            tools.iter().any(|tool| tool.name == call.name)
+                && match choice {
+                    ModelToolChoice::Named(name) => name == &call.name,
+                    ModelToolChoice::Auto | ModelToolChoice::Required => true,
+                }
+        }
+    }
+}
+
+fn gateway_finish_reason(reason: FinishReason) -> CompletionFinishReason {
+    match reason {
+        FinishReason::Stop => CompletionFinishReason::Stop,
+        FinishReason::MaxTokens => CompletionFinishReason::MaxTokens,
+        FinishReason::Refusal => CompletionFinishReason::Refusal,
+        FinishReason::Other => CompletionFinishReason::Other,
     }
 }
 
@@ -670,9 +882,19 @@ impl HostDataPlaneService for AuthorityBackedHostDataPlaneService {
                 message_id,
             } => self.acknowledge(binding, *id, *channel_id, *message_id),
             DataPlaneRequest::Complete { id, call } => self.complete(binding, *id, call),
+            DataPlaneRequest::CompleteWithTools { id, call } => {
+                self.complete_with_tools(binding, *id, call)
+            }
+            DataPlaneRequest::ExecuteTool { id, call } => self.execute_tool(binding, *id, call),
+            DataPlaneRequest::ListModelTools { id } => self.list_model_tools(binding, *id),
         }?;
         validate_data_plane_response(&response).map_err(|_| match request {
-            DataPlaneRequest::Complete { .. } => DataPlaneFailure::Completion,
+            DataPlaneRequest::Complete { .. } | DataPlaneRequest::CompleteWithTools { .. } => {
+                DataPlaneFailure::Completion
+            }
+            DataPlaneRequest::ExecuteTool { .. } | DataPlaneRequest::ListModelTools { .. } => {
+                DataPlaneFailure::Internal
+            }
             _ => DataPlaneFailure::Channel,
         })?;
         Ok(response)
@@ -782,6 +1004,17 @@ fn request_is_authorized(binding: &HostPipelineBinding, request: &DataPlaneReque
                     && model.temperature().to_bits() == call.temperature.to_bits()
                     && Some(model.max_tokens()) == call.max_tokens
             }),
+        DataPlaneRequest::CompleteWithTools { call, .. } => binding
+            .launch_bindings()
+            .level_one_model()
+            .is_some_and(|model| {
+                model.model() == call.completion.model
+                    && model.temperature().to_bits() == call.completion.temperature.to_bits()
+                    && Some(model.max_tokens()) == call.completion.max_tokens
+            }),
+        DataPlaneRequest::ExecuteTool { .. } | DataPlaneRequest::ListModelTools { .. } => {
+            binding.launch_bindings().level_one_model().is_some()
+        }
     }
 }
 
@@ -834,7 +1067,10 @@ mod tests {
     use chief_of_staff_service_registry::{
         DesiredState, HostEntry, HostName, PackagePath, RestartPolicy, ServiceRegistry,
     };
-    use llm_gateway::{MockLlmClient, MockResponse, ProviderIdentity};
+    use llm_gateway::{
+        MockLlmClient, MockResponse, ProviderIdentity, RequestFingerprint,
+        ToolCompletionRequest as GatewayToolCompletionRequest,
+    };
     use std::collections::BTreeMap;
     use storage_core::InMemoryStorageBackend;
 
@@ -1104,6 +1340,18 @@ mod tests {
                     id: *id,
                     failure: DataPlaneFailure::Completion,
                 },
+                DataPlaneRequest::CompleteWithTools { id, .. } => DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Completion,
+                },
+                DataPlaneRequest::ExecuteTool { id, .. } => DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Internal,
+                },
+                DataPlaneRequest::ListModelTools { id } => DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Internal,
+                },
             })
         }
     }
@@ -1260,6 +1508,40 @@ mod tests {
     }
 
     #[test]
+    fn tool_outputs_cannot_escape_the_offered_catalog_or_choice() {
+        let tools = vec![ModelToolDefinition {
+            name: "smart_home.list_entities".to_string(),
+            description: "List normalized entities".to_string(),
+            input_schema: serde_json::json!({"type": "object"}),
+        }];
+        let offered = GatewayToolCompletionOutput::ToolCall(GatewayModelToolCall {
+            call_id: "call-1".to_string(),
+            name: "smart_home.list_entities".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        let unoffered = GatewayToolCompletionOutput::ToolCall(GatewayModelToolCall {
+            call_id: "call-2".to_string(),
+            name: "smart_home.command".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        assert!(gateway_tool_output_allowed(
+            &offered,
+            &tools,
+            &ModelToolChoice::Required
+        ));
+        assert!(!gateway_tool_output_allowed(
+            &unoffered,
+            &tools,
+            &ModelToolChoice::Auto
+        ));
+        assert!(!gateway_tool_output_allowed(
+            &GatewayToolCompletionOutput::FinalText("done".to_string()),
+            &tools,
+            &ModelToolChoice::Named("smart_home.list_entities".to_string())
+        ));
+    }
+
+    #[test]
     fn exact_channel_key_authority_is_zeroizing_directional_and_identity_scoped() {
         let backend = InMemoryStorageBackend::new();
         let binding = install_real_binding(&backend);
@@ -1400,16 +1682,88 @@ mod tests {
         ));
     }
 
+    struct FixtureModelTools {
+        definitions: Vec<ModelToolDefinition>,
+    }
+
+    impl ModelToolDispatcher for FixtureModelTools {
+        fn definitions(
+            &self,
+            _binding: &HostPipelineBinding,
+        ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+            Ok(self.definitions.clone())
+        }
+
+        fn execute(
+            &self,
+            _binding: &HostPipelineBinding,
+            call: &ModelToolCall,
+        ) -> Result<ModelToolResult, DataPlaneFailure> {
+            Ok(ModelToolResult {
+                call: call.clone(),
+                output: serde_json::json!({"healthy": true}),
+                is_error: false,
+            })
+        }
+    }
+
     #[test]
     fn authority_backed_service_executes_real_encrypted_turn() {
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         let binding = install_real_binding(backend.as_ref());
+        let DataPlaneRequest::Complete {
+            call: completion_call,
+            ..
+        } = completion(9, "test-model", 0.25, 256)
+        else {
+            unreachable!();
+        };
+        let tool_call = ToolCompletionCall {
+            completion: completion_call,
+            tools: vec![ModelToolDefinition {
+                name: "smart_home.list_entities".to_string(),
+                description: "List normalized entities".to_string(),
+                input_schema: serde_json::json!({
+                    "type": "object",
+                    "additionalProperties": false
+                }),
+            }],
+            choice: ModelToolChoice::Required,
+            results: vec![ModelToolResult {
+                call: ModelToolCall {
+                    call_id: "prior-1".to_string(),
+                    name: "smart_home.list_entities".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+                output: serde_json::json!({"entities": []}),
+                is_error: false,
+            }],
+        };
+        let tool_fingerprint =
+            RequestFingerprint::for_tool_completion(&GatewayToolCompletionRequest {
+                completion: gateway_completion_request(&tool_call.completion),
+                tools: tool_call
+                    .tools
+                    .iter()
+                    .map(gateway_tool_definition)
+                    .collect(),
+                choice: GatewayModelToolChoice::Required,
+                results: tool_call.results.iter().map(gateway_tool_result).collect(),
+            });
         let mut models = ExactModelProviderRegistry::new();
         models
             .register(
                 "test-model",
                 Arc::new(
                     MockLlmClient::new()
+                        .with_response(
+                            tool_fingerprint,
+                            MockResponse::ToolCall(GatewayModelToolCall {
+                                call_id: "next-2".to_string(),
+                                name: "smart_home.list_entities".to_string(),
+                                arguments: serde_json::json!({}),
+                            }),
+                        )
                         .with_default(MockResponse::Text("Bring an umbrella".to_string()))
                         .with_identity(ProviderIdentity {
                             vendor: "fixture".to_string(),
@@ -1420,10 +1774,14 @@ mod tests {
                 ),
             )
             .unwrap();
-        let service = AuthorityBackedHostDataPlaneService::new(
+        let installed_tools = tool_call.tools.clone();
+        let service = AuthorityBackedHostDataPlaneService::with_model_tools(
             Arc::clone(&backend),
             Arc::new(exact_keys(&binding)),
             Arc::new(models),
+            Arc::new(FixtureModelTools {
+                definitions: installed_tools,
+            }),
             Arc::new(FixedMetadata {
                 message_id: uuid_v7(5),
                 timestamp_ns: 11,
@@ -1449,11 +1807,86 @@ mod tests {
         let completed = service
             .execute(&binding, &completion(2, "test-model", 0.25, 256))
             .unwrap();
-        let DataPlaneResponse::Completed { result, .. } = completed else {
+        let DataPlaneResponse::Completed {
+            result: completion_result,
+            ..
+        } = completed
+        else {
             panic!("expected completed response");
         };
-        assert_eq!(result.text, "Bring an umbrella");
-        assert_eq!(result.provider.vendor, "fixture");
+        assert_eq!(completion_result.text, "Bring an umbrella");
+        assert_eq!(completion_result.provider.vendor, "fixture");
+
+        let listed = service
+            .execute(
+                &binding,
+                &DataPlaneRequest::ListModelTools { id: request_id(5) },
+            )
+            .unwrap();
+        let DataPlaneResponse::ModelToolsListed { tools, .. } = listed else {
+            panic!("expected model-tools-listed response");
+        };
+        assert_eq!(tools, tool_call.tools);
+
+        let tool_completed = service
+            .execute(
+                &binding,
+                &DataPlaneRequest::CompleteWithTools {
+                    id: request_id(6),
+                    call: Box::new(tool_call.clone()),
+                },
+            )
+            .unwrap();
+        let DataPlaneResponse::ToolCompleted {
+            result: tool_result,
+            ..
+        } = tool_completed
+        else {
+            panic!("expected tool-completed response");
+        };
+        assert_eq!(tool_result.provider.vendor, "fixture");
+        assert!(!tool_result.polyfill_used);
+        assert_eq!(
+            tool_result.output,
+            ToolCompletionOutput::ToolCall(ModelToolCall {
+                call_id: "next-2".to_string(),
+                name: "smart_home.list_entities".to_string(),
+                arguments: serde_json::json!({}),
+            })
+        );
+
+        let ToolCompletionOutput::ToolCall(model_call) = tool_result.output.clone() else {
+            unreachable!();
+        };
+        let executed = service
+            .execute(
+                &binding,
+                &DataPlaneRequest::ExecuteTool {
+                    id: request_id(7),
+                    call: Box::new(model_call.clone()),
+                },
+            )
+            .unwrap();
+        assert!(matches!(
+            executed,
+            DataPlaneResponse::ToolExecuted { result, .. }
+                if result.call == model_call
+                    && result.output == serde_json::json!({"healthy": true})
+                    && !result.is_error
+        ));
+
+        let mut altered_catalog = tool_call;
+        altered_catalog.tools[0].description = "Escalated definition".to_string();
+        assert_eq!(
+            service.execute(
+                &binding,
+                &DataPlaneRequest::CompleteWithTools {
+                    id: request_id(8),
+                    call: Box::new(altered_catalog),
+                },
+            ),
+            Err(DataPlaneFailure::Unauthorized)
+        );
 
         let published = service
             .execute(
@@ -1462,7 +1895,7 @@ mod tests {
                     id: request_id(3),
                     channel_id: uuid_v7(2),
                     content_type: "text/plain".to_string(),
-                    payload: result.text.into_bytes(),
+                    payload: completion_result.text.into_bytes(),
                 },
             )
             .unwrap();

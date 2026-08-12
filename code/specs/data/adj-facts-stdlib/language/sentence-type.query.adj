@@ -1,0 +1,19 @@
+% ============================================================================
+% sentence-type.query.adj — a worked recall over the sentence-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of sentence
+% is this?": it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `sentence_type` rows and returns the type + the table's own
+% source/locator/trust. An example the table does not carry abstains
+% honestly — the engine never invents a classification.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli sentence-type.query.adj
+% ============================================================================
+
+import "sentence-type.adj"
+
+? sentence_type(bears_dont_eat_when_they_hibernate, $Type)   % expect declarative
+? sentence_type($Example, imperative)                        % expect sweep_the_floor_before_you_mop_it
+? sentence_type(the_cat_sat_on_the_mat, $Type)                % expect abstain — no type is shipped for this sentence

@@ -170,8 +170,12 @@ in font units, and `ductusview.ts` flips them together with exactly **one**
 sitting upside down on a correct letter.
 
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
-all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, and Urdu
-independent ا, ج, ر, س, ش, ک, ل, م, ن, ہ, and ی have authored pen paths today.**
+all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
+thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
+all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
+all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
+מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, and Chinese 人, 亻, 口, 女, 子, 日, 讠, 氵, 宀, 你, 好, 我, 是, 不, 名, 字, 谢, and 请
+have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
@@ -261,10 +265,277 @@ Naskh. Urdu ی adds a two-frame Chapter-4 filmstrip: the pen starts at the upper
 right, descends through the independent S curve, then stays down while it sweeps
 left around the below-baseline bowl to its rising tip. The source note preserves
 the two dots as an initial/medial feature that does not belong to independent
-chhoṭī ye while the zero-lift learner path follows Noto Naskh. The runtime resolves
-each cited path back to the owning script and lazily loads that script's font,
-while Tamil continues to use Noto Sans Tamil. Unverified letters still
-fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
+chhoṭī ye while the zero-lift learner path follows Noto Naskh. Urdu ں adds a
+one-frame Chapter-6 filmstrip: the independent dotless bowl sweeps
+right-to-left below the baseline in the same zero-lift run as ن. The source note
+preserves the initial/medial ordinary-nūn forms, and Noto Naskh verifies that
+U+06BA exactly shares U+0646's body contour with the dot removed. Urdu ے then
+completes the starter inventory with a three-frame Chapter-4 filmstrip: its
+upper-right descent sweeps left across the broad bowl, curls back underneath at
+the far left, and continues right along the lower fold without lifting. The
+source note preserves the distinct initial/medial tooth and independent/final
+sound role while the learner path follows Noto Naskh's folded contour.
+Arabic ا then adds its own one-frame filmstrip from the University of Oregon's
+*Introduction to Arabic* video: independent alif descends top-to-bottom in one
+continuous 00:05–00:07 movement with no lift. The adjacent one-way-connector
+lesson context remains explicit, and script-aware lookup keeps the Arabic source
+separate from the Persian and Urdu records while all three paths are checked
+against the same vendored Noto Naskh outline. Arabic ب adds the adjacent
+two-frame video demonstration: its shallow bowl sweeps continuously from the
+upper-right tip to the turned-up left tip, then one lift precedes the dot below.
+The two-way-connector context stays explicit, while script-aware lookup keeps
+its Arabic source separate from Persian ب and both learner paths stay on the
+same vendored Noto Naskh outline. Arabic ت then adds a three-frame path from the
+book's dedicated ب/ت/ث page. Its Taa clip opens with the bowl already complete,
+so the learner path cites the page's separately demonstrated Baa body for that
+right-to-left sweep, then follows Taa's left and right upper dots as two
+individually lifted strokes. The evidence split, two-way-connector context, and
+Arabic-scoped provenance stay explicit while the path fits the same Noto Naskh
+outline independently of Persian ت. The page's next link is labeled ث, but its
+video visibly writes another two-dot ت; the audit records that source mismatch
+and leaves ث on the conventional fallback. Arabic ج therefore becomes the next
+verified path: its dedicated clip draws the short upper head left-to-right,
+continues down and around the bowl in the same pen-down run, then lifts once for
+the dot below. The resulting three-frame filmstrip stays on the isolated Noto
+Naskh outline, keeps the lesson's two-way-connector context, and remains
+script-scoped separately from Urdu's dot-first ج. The same page does not link
+Haa in its body, but its WordPress attachment ledger exposes `Haa.mov`. That
+clip opens while **ح**'s short left stem is underway, finishes the descender,
+then lifts once and restarts near its top before sweeping continuously around
+the dotless bowl. Its three-frame filmstrip keeps that stem-first evidence
+distinct from Jeem's body-first order while fitting the isolated Noto Naskh
+outline. The page's `kha.mov` verifies **خ** independently: its short upper head
+travels left-to-right and continues around the bowl in one run, then one lift
+precedes the dot above. That three-frame filmstrip follows Khaa's own body-first
+evidence rather than copying Haa's restart or merely moving Jeem's dot. The next
+page's `letter-daal-2.mp4` verifies **د** independently: its upper tip descends
+down-right through the curved shoulder, then turns left along the baseline in
+the same pen-down run. The two-frame filmstrip preserves that zero-lift motion,
+one-way-connector context, and Arabic-scoped provenance while fitting the
+isolated Noto Naskh outline. The same page's `raa.mp4` verifies **ر**
+independently: its upper tip descends through the short stroke, then sweeps left
+through the lower curve in the same pen-down run. The two-frame filmstrip
+preserves that zero-lift motion, one-way-connector context, and Arabic-scoped
+provenance independently of Urdu ر while fitting the same isolated Noto Naskh
+outline. The next page's `FullSizeRender-8.mov` verifies **س** independently:
+it shapes three close teeth right-to-left, then flows directly into the final
+bowl in the same pen-down run. The two-frame filmstrip preserves that zero-lift
+motion, two-way-connector context, and Arabic-scoped provenance independently
+of Persian and Urdu س while fitting the same isolated Noto Naskh outline. The
+page's `FullSizeRender-7.mov` then verifies **ش** independently: it draws the
+same body in one run before separately placing the lower-left, lower-right, and
+centered upper dots. The five-frame filmstrip preserves those three lifts,
+two-way-connector context, and Arabic-scoped provenance independently of Urdu ش
+while fitting the isolated Noto Naskh outline. The page's `FullSizeRender-6.mov`
+then verifies **ص** independently: it closes the oval clockwise and rises into
+the short shoulder in one run, then lifts once and restarts at the baseline
+junction for the trailing bowl. The three-frame filmstrip preserves that
+two-stroke order, two-way-connector context, and Arabic-scoped provenance while
+fitting the isolated Noto Naskh outline. The page's embedded Daad lesson then
+verifies **ض** independently at 00:43.1–00:46.3: it repeats those two body runs,
+lifts a second time, and places the upper dot last. The four-frame filmstrip
+preserves that three-stroke order while explicitly recording that the directly
+linked short MOV returned HTTP 403 during the audit. The
+next page's directly linked `ayn.mov` then verifies **ع** independently at
+00:03.1–00:04.0: it shapes the open head from the upper-right tip and flows
+directly down and around the lower bowl. The two-frame filmstrip preserves that
+one-stroke, zero-lift order and keeps Ayn distinct from adjacent dotted Ghayn.
+The `Alphabet ي ك ل` page's directly linked `kaf.mov` then verifies **ك**
+independently at 00:11.8–00:13.4: its first run descends the main upright and
+turns left along the baseline, then one lift precedes the inner arm drawn from
+upper right down-left. The three-frame filmstrip preserves that two-stroke order
+while keeping Arabic Kaf distinct from Urdu **ک**'s different Unicode glyph and
+source-backed fallback path.
+The same page's directly linked `lam.mov` verifies **ل** independently at
+00:01.9–00:02.4: its tall upright descends directly into the leftward base bowl
+without lifting. The two-frame filmstrip preserves that one-stroke order while
+keeping Arabic Lam's provenance distinct from the Persian and Urdu records for
+the same Unicode glyph.
+The page's directly linked `yaa.mov` verifies independent **ي** at
+00:33.2–00:35.0: descend and sweep left through the shallow bowl in one run,
+then place the lower-left dot and the lower-right dot in separate runs. The
+four-frame filmstrip preserves that three-stroke, two-lift order while keeping
+Arabic Yaa U+064A distinct from Urdu Ye U+06CC, whose independent body has no
+lower dots and its own source-backed provenance.
+The next **ه و ي** page's directly linked `letter-haa.mov` verifies independent
+**ه** at 00:04.9–00:06.0: it closes the lower counter, threads through the centre
+into the upper-right counter, then sweeps left along the baseline without
+lifting. The three-frame filmstrip preserves that one-stroke, zero-lift order,
+fits the compact handwriting to the wider isolated Noto Naskh outline, and keeps
+Arabic provenance separate from Persian **ه** for the same Unicode glyph.
+The same page's directly linked `waw.mov` verifies independent **و** at
+00:45.7–00:46.9: sweep left from the lower-right junction to close the small
+head loop, then continue down and left through the tail without lifting. The
+two-frame filmstrip preserves that one-stroke, zero-lift order, Waw's
+one-way-connector and w/long-ū roles, and Arabic provenance distinct from
+Persian **و** for the same Unicode glyph.
+Hebrew **א** opens the next-smallest remaining inventory with a three-frame
+filmstrip from HebrewPod101's dedicated Alef lesson: draw the main diagonal
+down and right, lift once, then draw the opposing diagonal from the upper right
+through the crossing and down the lower-left leg. The source's compact,
+X-like handwritten form differs from Noto Sans Hebrew's block Alef, so the
+variation note records that adaptation while the same geometry gates keep both
+pen-down runs on the vendored outline.
+The same lesson's second, block-style **ב** adds another three-frame filmstrip:
+its top bar travels left-to-right and turns directly down the right side, then
+one lift precedes the left-to-right baseline. The lesson places an optional
+dagesh afterward, but base U+05D1's path and one-lift count correctly exclude
+that separate sound-changing mark.
+The series' dedicated Gimel/Dalet lesson adds a four-frame printed **ג**
+filmstrip: its short top bar, right stem, and short lower-right leg stay in one
+run, then one lift precedes the longer diagonal leg down-left. The lesson
+explicitly contrasts that angular printed form with a rounded cursive Gimel,
+so the source note preserves both while the learner path follows the vendored
+Noto Sans Hebrew outline.
+The same lesson's cursive **ד** adds a two-frame filmstrip: one broad arch
+curls through a small lower loop and continues directly into its tail. The
+instructor explicitly calls it "just one curve," so the learner path keeps that
+zero-lift order while fitting the movement to Noto Sans Hebrew's angular top
+bar, sharp right heel, and downstroke.
+The dedicated Hei lesson adds a three-frame printed **ה** filmstrip: its top bar
+travels left-to-right and turns directly down the right side, then one lift
+precedes the detached left leg from top to bottom. The lesson explicitly asks
+learners to keep the handwritten form curved but use sharp angles in print, so
+the source note preserves that variation while the learner path follows the
+vendored Noto Sans Hebrew outline.
+The dedicated Vav lesson adds a two-frame printed **ו** filmstrip: its short head
+travels left-to-right and turns directly into the top-to-bottom stem in one
+unbroken stroke. The instructor explicitly calls Vav one stroke from top to
+bottom; the source note preserves its simpler handwritten form and excludes the
+lesson's later Hirik and Shuruk vowel marks from base U+05D5's zero-lift count.
+The Zayin/Heit lesson adds a two-frame **ז** filmstrip from its rounded handwritten
+demonstration: a short rightward rise continues down the outer curve and around
+the base without lifting. The source calls that form handwritten Gimel's mirror
+image and warns against collapsing Zayin into Vav; the learner path fits the
+same continuous order to Noto Sans Hebrew's broader head and curved stem.
+The same lesson adds a three-frame printed **ח** filmstrip: the left-to-right top
+bar continues directly down the right side, then one lift precedes the joined
+left leg from top to bottom. The source explicitly contrasts rounded handwriting
+with sharper print, so the learner path follows the Noto Sans Hebrew block outline
+while preserving the handwritten variation in its citation metadata.
+The Tet/Yod lesson adds a four-frame printed **ט** filmstrip: the left side
+descends into the rightward base, then one lift precedes the lower-right restart,
+bottom-up right side, and inward hook. The source calls that bottom-up movement
+unusual and shows the rounded handwritten form as one continuous run, so the
+learner path keeps the print order on Noto Sans Hebrew without losing the variant.
+The same lesson adds a two-frame printed **י** filmstrip: its tiny head travels
+left-to-right and turns directly down through the short stem without lifting.
+The instructor calls Yod the simplest letter and compares handwriting to a
+little comma; the source note preserves that rounded form and print's small angle.
+The dedicated Kaf lesson adds a three-frame printed **כ** filmstrip: its top bar
+travels left-to-right, rounds down the right side, and turns left along the base
+without lifting. The source calls handwriting half a circle to the right and
+contrasts its rounded sweep with the same printed movement's sharp corners.
+The Lamed/Mem lesson adds a three-frame printed **ל** filmstrip: its tall left
+stroke descends to the middle junction, continues right along the bar, and turns
+diagonally down-left without lifting. The source's earlier handwritten version
+rounds the same one-run idea into a loop, which remains explicit in the citation.
+The same lesson adds a five-frame printed **מ** filmstrip: its detached angled
+left part comes first, then one lift precedes the joined upper shoulder, right
+descent, and leftward base. The source's earlier handwriting
+compresses Mem into a narrow N-like zigzag, which remains explicit in the citation.
+Aural Writing's full-alphabet demonstration adds a three-frame printed **נ**
+filmstrip: its small head travels left-to-right, continues down the right side,
+and turns left along the base without lifting. The adjacent purple cursive Nun
+rounds that hook, while the citation records why an expository video was rejected.
+The same source adds a four-frame printed **ס** filmstrip: its flat top travels
+left-to-right, rounds down the right side, sweeps left along the base, and climbs
+the left side to close in one clockwise run. The adjacent purple cursive Samekh
+keeps the zero-lift loop but rounds it into an oval.
+Its printed **ע** demonstration adds a three-frame filmstrip: the right branch
+descends into the base, sweeps left, then turns back to climb the left branch in
+one run. The adjacent purple cursive Ayin compresses those branches into a loop.
+Its printed **פ** demonstration adds a four-frame filmstrip: the top, right side,
+and returning base stay joined, then one lift precedes the short inner curl. The
+adjacent purple cursive Pe coils inward in one uninterrupted spiral.
+Its printed **צ** demonstration adds a three-frame filmstrip: the long diagonal
+turns left into the base, then one lift precedes the short upper-right arm. The
+adjacent purple cursive Tsadi compresses those branches into one rounded run.
+Its printed **ק** demonstration adds a three-frame filmstrip: the top bar turns
+down-left through the right body, then one lift precedes the separate inner-left
+stem descending below the writing line. The adjacent purple cursive Qof rounds
+those parts into one hooked descent.
+Its printed **ר** demonstration adds a two-frame filmstrip: the top bar travels
+left-to-right, rounds the top-right corner, and continues down the right side in
+one run. The adjacent purple cursive Resh keeps that zero-lift order in a rounder
+hook.
+Its printed **ש** demonstration adds a three-frame filmstrip: the right branch
+descends and rounds left through the base into the climbing left branch, then one
+lift precedes the middle branch's descent. The adjacent purple cursive Shin
+compresses those parts into one rounded loop with a short rightward exit.
+Its printed **ת** demonstration adds a four-frame filmstrip: the top bar travels
+left-to-right and continues down the right side, then one lift precedes the
+separate left leg and its small leftward foot. The adjacent purple cursive Tav
+retraces its left stem and arches into the right side in one continuous run.
+Hanzi Writer Data then opens Chinese with a two-frame **人** filmstrip: its
+pinned, Make Me a Hanzi-derived PRC record orders the left-falling stroke before
+the separately started right-falling stroke. The learner path fits those two
+source medians to Noto Sans SC without changing their direction or one lift.
+The adjacent two-frame **亻** filmstrip uses its own pinned record: a long
+left-falling piě comes first, then one lift precedes the vertical shù from the
+central junction to the baseline. Its narrow Noto Sans SC fit is independent
+of the full 人 proportions.
+The four-frame **口** filmstrip then introduces the joined héngzhé corner:
+descend the left side, lift for a top bar that turns down the right side without
+breaking, then lift and close the bottom left-to-right. The Noto Sans SC fit
+keeps the source's three-run, close-last order explicit.
+The four-frame **女** filmstrip begins with a different kind of join: descend
+left, turn at the lower junction, and sweep down-right without lifting. One
+lift precedes the separately left-falling piě, and a second precedes the middle
+héng from left to right. The Noto Sans SC fit keeps all three pinned medians'
+directions and the first stroke's internal turn explicit.
+The five-frame **子** filmstrip follows with two different joined turns: the top
+héng sweeps down-left without lifting, then a separately started central
+descent hooks left at the base. A second lift precedes the middle héng from left
+to right. The Noto Sans SC fit keeps the two hooked runs and final crossing in
+the pinned source order.
+The five-frame **日** filmstrip returns to the box pattern with an inside bar:
+descend the left side, lift for a top bar that turns down the right side without
+breaking, lift for the middle horizontal, then lift and close the bottom from
+left to right. The Noto Sans SC fit keeps the joined corner and the pinned
+inside-before-close order explicit.
+The four-frame **讠** filmstrip starts with its down-right dot, then lifts once
+for a short horizontal that turns down and rises to the upper right without
+breaking. The Noto Sans SC fit keeps both internal turns inside that one second
+stroke while recording the font's squarer middle geometry.
+The four-frame **氵** filmstrip draws its upper and middle down-right dots as
+separate strokes, then lifts again before the bottom stroke's slight up-left
+turn and long rise to the upper right. The Noto Sans SC fit keeps that final
+turn and rise in one pen-down run while preserving all three sourced strokes.
+The four-frame **宀** filmstrip starts with its top dot, lifts for the down-left
+stroke on the left, then lifts again before crossing the roof left-to-right and
+hooking down-left without breaking. The Noto Sans SC fit preserves the joined
+final hook while recording the font's squarer, more vertical roof geometry.
+The nine-frame **你** filmstrip writes 亻 first, then the five strokes of 尔:
+falling stroke, joined horizontal hook, joined vertical hook, and two separate
+lower dots. The Noto Sans SC fit preserves all seven sourced strokes, both
+internal joins, and six pen lifts.
+The nine-frame **好** filmstrip writes all three strokes of 女 before all three
+strokes of 子. The Noto Sans SC fit preserves the bent 女 sweep, 子's top turn
+and vertical hook, all six sourced strokes, and five pen lifts.
+The nine-frame **我** filmstrip preserves seven sourced strokes and six lifts,
+including the joined vertical hook, long curved slash and its upward hook,
+separate rising slash, and final upper-right dot.
+The ten-frame **是** filmstrip closes 日 in four sourced strokes before drawing
+the five-stroke lower body. Its Noto Sans SC fit preserves the joined top-right
+corner, all nine strokes, and eight pen lifts.
+The four-frame **不** filmstrip draws its top horizontal first, then separately
+places the long falling stroke, central vertical, and right-falling dot. Its
+Noto Sans SC fit preserves all four sourced strokes and three pen lifts.
+The eight-frame **名** filmstrip completes 夕 before drawing 口. Its Noto Sans SC
+fit preserves the joined horizontal-to-down-left sweep, 口's joined top-right
+corner, all six sourced strokes, and five pen lifts.
+The nine-frame **字** filmstrip completes 宀 before drawing 子. Its Noto Sans SC
+fit preserves the roof hook, 子's joined top turn and vertical hook, all six
+sourced strokes, and five pen lifts.
+The seventeen-frame **谢** filmstrip completes 讠 before 身 and 寸. Its Noto Sans
+SC fit preserves all five joined turns, all twelve sourced strokes, and eleven
+pen lifts.
+The fourteen-frame **请** filmstrip completes 讠 before 青. Its Noto Sans SC fit
+preserves all four joined turns, all ten sourced strokes, and nine pen lifts.
+The runtime resolves each cited path back to the owning script and lazily loads that
+script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
+still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
 and it needs a cited source per letter.
 
 ## Where it fits

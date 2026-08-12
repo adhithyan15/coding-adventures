@@ -90,6 +90,10 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // object, `raise`, and ordered rescue-clause class matching come from
     // `coding-adventures-sir-runtime-exceptions`.  Per code/specs/sir-runtime.md.
     Feature::Exceptions,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the general
+    // console-output primitive every frontend now emits in place of the
+    // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
+    Feature::ConsoleIO,
 ];
 
 impl Backend for PythonBackend {
@@ -283,7 +287,7 @@ mod tests {
         // Execution-proof: running it prints the two yielded values, proving the
         // captured block reaches `outer`'s caller block at runtime.
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "1\n2\n", "emitted python printed unexpected output");
+            assert_eq!(stdout, "12", "emitted python printed unexpected output");
         }
     }
 
@@ -299,7 +303,7 @@ mod tests {
         assert!(a.source.contains("def f(*a):"), "got:\n{}", a.source);
         assert!(a.source.contains("a = list(a)"), "rest param must normalize to list; got:\n{}", a.source);
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "3\n", "emitted python printed unexpected output");
+            assert_eq!(stdout, "3", "emitted python printed unexpected output");
         }
     }
 
@@ -352,7 +356,7 @@ mod tests {
 
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(
-                stdout, "6\n10\n",
+                stdout, "610",
                 "Ruby call-time param-scoped default produced wrong output"
             );
         }
@@ -419,7 +423,7 @@ mod tests {
 
         if let Some(stdout) = run_emitted_python(&a.source) {
             assert_eq!(
-                stdout, "hi, world\nhi, ada\n",
+                stdout, "hi, worldhi, ada",
                 "Ruby keyword params/args produced wrong output"
             );
         }
@@ -480,8 +484,13 @@ mod tests {
         };
         let print_call = |inner: Expr| Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![inner],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    inner,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -510,6 +519,8 @@ mod tests {
         let m = Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
+                Feature::Strings,
                 Feature::DefaultParams,
                 Feature::DynamicTyping,
             ]),
@@ -558,7 +569,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "105\n", "emitted python printed unexpected output");
+            assert_eq!(stdout, "105", "emitted python printed unexpected output");
         }
     }
 
@@ -590,8 +601,9 @@ mod tests {
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
             // 15→range(R), "hill"→regex(X), 5→Integer(I), 3.5→else(O).
-            // `_sir_print` terminates each line with a newline.
-            assert_eq!(stdout, "R\nX\nI\nO\n", "case-equality dispatch produced wrong branches");
+            // `print` lowers to `_sir_write(..., "none", ...)`, which does
+            // NOT newline-terminate — the branches concatenate into "RXIO".
+            assert_eq!(stdout, "RXIO", "case-equality dispatch produced wrong branches");
         }
     }
 
@@ -679,8 +691,13 @@ mod tests {
             span: s(),
         };
         let print_stmt = Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![dispatch_speak],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                dispatch_speak,
+            ],
             effects: EffectSet::PURE,
             span: s(),
         };
@@ -707,6 +724,7 @@ mod tests {
         let m = Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
                 Feature::Classes,
                 Feature::Closures,
                 Feature::Strings,
@@ -769,7 +787,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("def add(a, b):"));
         assert!(a.source.contains("_sir_plus(a, b)"));
-        assert!(a.source.contains("_sir_print(add(1, 2))"));
+        // SIR28 §2: `print` lowers to `__sys_write__`, which this backend
+        // maps to `_sir_write(...)`.
+        assert!(a.source.contains("_sir_write(\"stdout\", \"none\", False, add(1, 2))"));
     }
 
     #[test]
@@ -822,10 +842,9 @@ mod tests {
     #[test]
     fn end_to_end_ruby_to_python_puts() {
         // `puts("hello")` → a top-level `main` that calls the `puts`
-        // builtin.  `puts` now maps directly to the variadic runtime helper
-        // `_sir_puts(...)` (like `print` → `_sir_print`), rather than routing
-        // through the generic `_sir_call_builtin` dispatch, now that the
-        // runtime implements Ruby `puts` semantics.
+        // builtin.  SIR28 §2: `puts` now lowers to `__sys_write__`
+        // (`ruby-to-semantic-ir`'s `builtin_call_or_sys_write`), which this
+        // backend maps to the variadic runtime helper `_sir_write(...)`.
         let module = ruby_to_semantic_ir::compile_source("puts(\"hello\")\n", "demo")
             .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
@@ -835,7 +854,7 @@ mod tests {
             a.source
         );
         assert!(
-            a.source.contains("_sir_puts(\"hello\")"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, \"hello\")"),
             "expected the puts call with the string literal; got:\n{}",
             a.source
         );
@@ -870,7 +889,7 @@ mod tests {
             a.source
         );
         assert!(
-            a.source.contains("_sir_puts(add(1, 2))"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, add(1, 2))"),
             "expected puts(add(1, 2)); got:\n{}",
             a.source
         );
@@ -889,7 +908,7 @@ mod tests {
             .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         assert!(
-            a.source.contains("_sir_puts(_sir_shift_left(5, 2))"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, _sir_shift_left(5, 2))"),
             "expected `5 << 2` to lower to _sir_shift_left; got:\n{}",
             a.source
         );
@@ -909,7 +928,7 @@ mod tests {
         .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         assert!(
-            a.source.contains("_sir_puts(_sir_plus(x, y))"),
+            a.source.contains("_sir_write(\"stdout\", \"per_value\", True, _sir_plus(x, y))"),
             "expected puts(x + y) referencing both locals; got:\n{}",
             a.source
         );
@@ -1336,11 +1355,9 @@ mod tests {
         // it via `__class_method__` → `_sir_oop_call_class_method`, and the
         // returned object answers an instance method.
         //
-        // NOTE: `print` (not `puts`) — the `puts` builtin has no runtime
-        // dispatch entry on this branch (a parallel PR adds it), so `puts` in a
-        // *run* execution-proof raises `NameError`.  `print` maps to
-        // `_sir_print`, which is in the core dispatch table and appends a
-        // newline, so `print(c.val)` emits "42\n".
+        // NOTE: `print` (not `puts`) — Ruby's `print` never newline-
+        // terminates (SIR28 §2: `__sys_write__` with `terminator: "none"`),
+        // so `print(c.val)` emits exactly "42" with no trailing newline.
         let module = ruby_to_semantic_ir::compile_source(
             "class Counter\n\
             \x20 def self.zero\n\
@@ -1368,7 +1385,7 @@ mod tests {
             a.source
         );
         if let Some(out) = run_emitted_python(&a.source) {
-            assert_eq!(out, "42\n", "Counter.zero.val must print 42");
+            assert_eq!(out, "42", "Counter.zero.val must print 42");
         }
     }
 
@@ -1414,7 +1431,7 @@ mod tests {
             a.source
         );
         if let Some(out) = run_emitted_python(&a.source) {
-            assert_eq!(out, "41\n", "super (40) + 1 must be 41");
+            assert_eq!(out, "41", "super (40) + 1 must be 41");
         }
     }
 
@@ -1584,9 +1601,10 @@ mod tests {
         .expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         if let Some(stdout) = run_emitted_python(&a.source) {
-            // `print("caught")` emits the string plus a trailing newline.
+            // `print("caught")` emits the string with no trailing newline
+            // (SIR28 §2: `__sys_write__` with `terminator: "none"`).
             assert_eq!(
-                stdout, "caught\n",
+                stdout, "caught",
                 "user subclass should be rescued by its ancestor"
             );
         }
@@ -2062,8 +2080,13 @@ mod tests {
     fn kw_module(main_value_call: Expr) -> Module {
         let print_stmt = semantic_ir::Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![main_value_call],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    main_value_call,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2082,6 +2105,7 @@ mod tests {
         Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
                 Feature::KeywordParams,
                 Feature::DefaultParams,
                 Feature::Strings,
@@ -2164,8 +2188,13 @@ mod tests {
         };
         let print_stmt = semantic_ir::Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![call],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    call,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },
@@ -2184,6 +2213,7 @@ mod tests {
         let m = Module {
             name: "demo".into(),
             manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
                 Feature::KeywordParams,
                 Feature::Strings,
                 Feature::DynamicTyping,
@@ -2351,7 +2381,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "Rex says woof\n", "P1 OOP dispatch produced wrong output");
+            assert_eq!(stdout, "Rex says woof", "P1 OOP dispatch produced wrong output");
         }
     }
 
@@ -2388,7 +2418,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "Tom with 4 legs\n", "P2 inheritance/super produced wrong output");
+            assert_eq!(stdout, "Tom with 4 legs", "P2 inheritance/super produced wrong output");
         }
     }
 
@@ -2424,7 +2454,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "2\n", "P3 attr_accessor/self-chain produced wrong output");
+            assert_eq!(stdout, "2", "P3 attr_accessor/self-chain produced wrong output");
         }
     }
 
@@ -2462,7 +2492,7 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "hi\n", "MX2 include produced wrong output");
+            assert_eq!(stdout, "hi", "MX2 include produced wrong output");
         }
     }
 
@@ -2483,7 +2513,7 @@ mod tests {
         let module = ruby_to_semantic_ir::compile_source(src, "demo").expect("lower ruby");
         let a = compile(&module).expect("compile to python");
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "class\n", "MX2 class-shadows-module produced wrong output");
+            assert_eq!(stdout, "class", "MX2 class-shadows-module produced wrong output");
         }
     }
 
@@ -2508,7 +2538,173 @@ mod tests {
             a.source
         );
         if let Some(stdout) = run_emitted_python(&a.source) {
-            assert_eq!(stdout, "7\n", "MX2 extend produced wrong output");
+            assert_eq!(stdout, "7", "MX2 extend produced wrong output");
+        }
+    }
+
+    // ── SIR28 §2: `__sys_write__` ───────────────────────────────────────
+    //
+    // These hand-build a `Module` directly, one per stream/terminator/
+    // unpack_arrays combination SIR28 §2.1 defines, execute it through a
+    // real interpreter via `run_emitted_python`, and assert stdout/stderr.
+
+    fn str_lit(v: &str) -> Expr {
+        Expr::StrLit { value: v.into(), span: s() }
+    }
+
+    fn bool_lit(v: bool) -> Expr {
+        Expr::BoolLit { value: v, span: s() }
+    }
+
+    fn int_lit(v: i64) -> Expr {
+        Expr::IntLit { value: v, span: s() }
+    }
+
+    fn seq_lit(items: Vec<Expr>) -> Expr {
+        Expr::SeqLit { items, span: s() }
+    }
+
+    fn sys_write_module(
+        stream: &str,
+        terminator: &str,
+        unpack_arrays: bool,
+        values: Vec<Expr>,
+    ) -> Module {
+        let mut args = vec![str_lit(stream), str_lit(terminator), bool_lit(unpack_arrays)];
+        args.extend(values);
+        let call = Expr::BuiltinCall {
+            name: "__sys_write__".into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        Module {
+            name: "prog".into(),
+            manifest: FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
+                Feature::Strings,
+                Feature::Sequences,
+            ]),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block { stmts: vec![], value: call, span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new().with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    /// Run a `sys_write_module` and return (stdout, stderr), or `None` to
+    /// skip when no usable Python interpreter is present. Mirrors
+    /// `run_emitted_python` but also captures stderr, needed for the
+    /// `stream: "stderr"` case.
+    fn run_sys_write(m: &Module) -> Option<(String, String)> {
+        let exe = ["python3", "python"].into_iter().find(|e| python_is_runnable(e))?;
+        let source = compile(m).expect("compile to python").source;
+
+        let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+        let pythonpath = std::env::join_paths([
+            py_root.join("sir-runtime-core/src"),
+            py_root.join("sir-runtime-pairs/src"),
+            py_root.join("sir-runtime-oop/src"),
+            py_root.join("sir-runtime-range/src"),
+            py_root.join("sir-runtime-regex/src"),
+            py_root.join("sir-runtime-exceptions/src"),
+        ])
+        .expect("join PYTHONPATH");
+
+        static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let file =
+            std::env::temp_dir().join(format!("sir_syswrite_{}_{}.py", std::process::id(), nonce));
+        std::fs::write(&file, &source).expect("write temp python");
+        let out = std::process::Command::new(exe)
+            .arg(&file)
+            .env("PYTHONPATH", &pythonpath)
+            .output()
+            .expect("spawn python");
+        let _ = std::fs::remove_file(&file);
+
+        assert!(
+            out.status.success(),
+            "emitted Python failed under {exe}:\n{}\n--- source ---\n{source}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        Some((
+            String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"),
+            String::from_utf8_lossy(&out.stderr).replace("\r\n", "\n"),
+        ))
+    }
+
+    #[test]
+    fn sys_write_terminator_none_writes_values_back_to_back() {
+        let m = sys_write_module("stdout", "none", false, vec![str_lit("a"), str_lit("b")]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "ab");
+        }
+    }
+
+    #[test]
+    fn sys_write_terminator_per_value_writes_one_newline_per_value() {
+        let m = sys_write_module("stdout", "per_value", false, vec![int_lit(1), int_lit(2)]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "1\n2\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_terminator_once_space_joins_with_one_trailing_newline() {
+        let m = sys_write_module("stdout", "once", false, vec![int_lit(1), int_lit(2)]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "1 2\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_per_value_with_unpack_arrays_flattens_nested_array() {
+        let m = sys_write_module(
+            "stdout",
+            "per_value",
+            true,
+            vec![seq_lit(vec![int_lit(1), seq_lit(vec![int_lit(2), int_lit(3)]), int_lit(4)])],
+        );
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "1\n2\n3\n4\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_per_value_without_unpack_arrays_bracket_displays_array() {
+        let m =
+            sys_write_module("stdout", "per_value", false, vec![seq_lit(vec![int_lit(1), int_lit(2)])]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "[1, 2]\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_stream_stderr_writes_to_stderr_not_stdout() {
+        let m = sys_write_module("stderr", "once", false, vec![str_lit("oops")]);
+        if let Some((out, err)) = run_sys_write(&m) {
+            assert_eq!(out, "");
+            assert_eq!(err, "oops\n");
+        }
+    }
+
+    #[test]
+    fn sys_write_per_value_with_zero_values_writes_a_single_blank_line() {
+        let m = sys_write_module("stdout", "per_value", false, vec![]);
+        if let Some((out, _)) = run_sys_write(&m) {
+            assert_eq!(out, "\n");
         }
     }
 }

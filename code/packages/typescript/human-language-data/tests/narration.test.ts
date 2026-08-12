@@ -609,7 +609,8 @@ describe("the whole corpus", () => {
     // Chapter 1 (Mandarin Chinese and Japanese) while this branch waited to merge, and
     // the Latin core-verb chapter (chapter 37, eight verb lessons) added one more.
     // 497 -> 513: vocabulary wave 4 (marathi/punjabi/sanskrit/urdu), 16 new chapters.
-    expect(chapters).toHaveLength(513);
+    // +1: Tamil chapter 39.
+    expect(chapters).toHaveLength(663);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {
@@ -652,6 +653,6 @@ describe("the whole corpus", () => {
     // singular comparisons. Publishing Chapters 7-18 from the canonical AST
     // also replaces the Chapter-15 and Chapter-16 terminal recap tables with
     // speakable person rows. Chapter 18 removes its remaining refused wide table.
-    expect(refusals).toBe(63);
+    expect(refusals).toBe(64);
   });
 });

@@ -64,6 +64,10 @@ pub struct DispatchCtx<'a> {
     /// The shared GC engine `gc_alloc`'d objects live on. See
     /// [`crate::core::VMCore`]'s `heap` field.
     pub heap: &'a mut gc_core::FlatHeap,
+    /// **(AOT00-T10)** The tagged kind id `handle_gc_alloc` allocates its default
+    /// 16-byte shape under. See [`crate::core::VMCore`]'s `pair_kind` field for the
+    /// full soundness argument. Plain `Copy`, like `u8_wrap`/`max_frames` below.
+    pub pair_kind: u16,
     /// Live count of `gc_alloc`'d objects — the aggregate-cap input
     /// `handle_gc_alloc` enforces against `max_memory_entries`. See
     /// [`crate::core::VMCore`]'s `gc_object_count` field for why this exists.
@@ -1113,14 +1117,35 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 // on any backend today, so this is pre-existing unsupported territory, not
 // a regression.
 //
-// Objects here are allocated at kind `0` (opaque/conservative): every payload
-// word is a mark candidate, which is always sound (a look-alike integer that
-// isn't really a live heap address is filtered out by `find_header`, not
-// followed) even though it is less precise than a registered kind's exact
-// ref-field map. A future rung could register a kind per object shape for
-// full precision; kind 0 is the safe, always-correct default this additive
-// path starts from — exactly gc-core's own "unregistered kind falls back to
-// conservative" invariant.
+// **(AOT00-T10) Objects here are allocated under a TAGGED kind, not kind 0.**
+// A field here holds a *tagged word*, not always a boxed reference (the
+// comment above this one explains the tag scheme) — a raw `Value::Int` is a
+// completely legitimate thing to store in, say, a cons cell's car/cdr. This
+// was investigated and found to make a naive `{0,8}`-style *boxed* kind
+// registration (mirroring native-AOT's `__dyn_cons`, via `register_kind`)
+// UNSOUND during AOT00-T9 PR-5 follow-up scouting: marking tolerates a
+// look-alike int fine (`mark_word` tag-strips and validates against
+// `find_header` — safe over-approximation), but *compaction* does not —
+// `fixup_ref_fields`'s `forwarded()` rewrites a precise field's bits whenever
+// they match a key in the `forward` map of relocated addresses, with no way
+// under boxed mode to tell "this word is really a reference" from "this word
+// is really an int that coincidentally matches" (see lessons.md "vm-core kind
+// registration soundness note" for the full original trace).
+//
+// AOT00-T10 closes this properly instead of routing around it: `gc-core`
+// gained a second, **tagged** field-encoding mode
+// (`FlatHeap::register_tagged_kind`) that trusts a slot's own low 3 bits
+// exactly — a reference *iff* the tag equals `NAN_BOX_REF_TAG`, provably not
+// one otherwise — which is exactly the ground truth `handle_gc_field_store`
+// already computes for every store. `VMCore::new()` registers `pair_kind`
+// against this mode for the default 2-field shape (see that field's own doc);
+// `handle_gc_alloc` below uses it whenever `bytes == 16`. This makes
+// `gc_alloc`'d pairs genuinely **movable** for the first time:
+// `classify_mobility`'s `movable = precise ∧ ¬pinned ∧ kind≠0` rule no longer
+// pins them, so `collect_compacting`/`collect_minor_compacting` (AOT00-T9
+// PR-5's pacing) actually relocate them, not just degrade to non-moving.
+// One shared `gc-core` mechanism serves both native-AOT's boxed kinds and
+// vm-core's tagged ones — see `code/specs/AOT00-T10-tagged-field-kinds.md`.
 
 /// `gc_alloc [<size_bytes>] -> dest` — allocate a GC-managed heap object on
 /// the shared `FlatHeap` collector, returning a `Value::HeapRef`. Also the
@@ -1133,7 +1158,10 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 /// `srcs[0]` is an optional compile-time byte count; defaults to 16 (two
 /// 8-byte words, matching the native backends' default pair size). Traced,
 /// reclaimed, and — once a `safepoint` runs a compacting cycle — relocated
-/// by the real collector.
+/// by the real collector. **(AOT00-T10)** The default 16-byte shape is traced
+/// *precisely* (via `ctx.pair_kind`, a tagged kind — see `VMCore::pair_kind`'s
+/// own doc) and is genuinely movable; any other `bytes` value falls back to
+/// kind 0 (conservative, always sound, just not movable).
 fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let bytes = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -1177,7 +1205,14 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
             ctx.max_gc_heap_bytes
         )));
     }
-    let ptr = ctx.heap.alloc(bytes as usize, 0);
+    // (AOT00-T10) `ctx.pair_kind` is only sound for exactly the 2-field {0,8} shape
+    // it was registered against (see `VMCore::pair_kind`'s own doc) — every current
+    // `alloc`/`gc_alloc` emission site passes zero operands (always the 16-byte
+    // default below), but this op's own `bytes` operand is still general-purpose,
+    // so any other size falls back to kind 0: unconditionally sound (`FlatHeap`'s
+    // "unregistered kind falls back to conservative" invariant), just less precise.
+    let kind = if bytes == 16 { ctx.pair_kind } else { 0 };
+    let ptr = ctx.heap.alloc(bytes as usize, kind);
     if ptr.is_null() {
         return Err(VMError::Custom("gc_alloc: allocation failed".into()));
     }
@@ -1198,15 +1233,20 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
 /// bits, decided at store time from the real `Value` and read back at load
 /// time regardless of what the load's type_hint says — the same shape
 /// `iir-builtin-lowering::dyn_repr`'s NaN-boxing convention uses for the
-/// native/LLVM backends (`n << 3` for an int, low bits `111` for a pointer),
-/// adapted here for vm-core's own, independent `FlatHeap` object layout
-/// (nothing else reads vm-core's heap, so there is no cross-backend layout
-/// constraint to match bit-for-bit). `FlatHeap::alloc` guarantees a
-/// 16-byte-aligned payload — 4 low bits free — so a `HeapRef`'s address
-/// always has its low 3 bits clear, making tag `0b111` unambiguous.
-const FIELD_TAG_BITS: u32 = 3;
-const FIELD_TAG_MASK: i64 = 0b111;
-const FIELD_TAG_HEAP_REF: i64 = 0b111;
+/// native/LLVM backends (`n << 3` for an int, low bits `111` for a pointer).
+/// `FlatHeap::alloc` guarantees a 16-byte-aligned payload — 4 low bits free —
+/// so a `HeapRef`'s address always has its low 3 bits clear, making tag
+/// `0b111` unambiguous.
+///
+/// **(AOT00-T10)** This is the *exact* tag convention `gc_core::FlatHeap::
+/// register_tagged_kind` trusts — `VMCore::new()` registers `pair_kind`
+/// against it (see that field's own doc), so these local constants are
+/// derived from `gc_core`'s own canonical `NAN_BOX_*` constants rather than
+/// independent literals: one tag convention, defined once, not two that
+/// could silently drift apart.
+const FIELD_TAG_BITS: u32 = gc_core::NAN_BOX_TAG_BITS;
+const FIELD_TAG_MASK: i64 = gc_core::NAN_BOX_TAG_MASK as i64;
+const FIELD_TAG_HEAP_REF: i64 = gc_core::NAN_BOX_REF_TAG as i64;
 
 /// `gc_field_load dest <- obj, idx` — read the `idx`-th 8-byte word from a
 /// `gc_alloc`'d object's payload.
@@ -1341,6 +1381,19 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
         ))),
     };
     let field_addr = obj.addr() + byte_off;
+    // (AOT00-T10) A `pair_kind`-tagged object's soundness depends entirely on this
+    // tag convention holding for every word ever written to it — a mismatch here
+    // is exactly the kind of type confusion `register_tagged_kind` trusts never
+    // happens. Catch a regression the moment it's introduced (a future edit to the
+    // match arms above that stops applying the tag correctly) rather than letting
+    // it surface later as silent corruption during a compacting collection.
+    debug_assert_eq!(
+        word & FIELD_TAG_MASK == FIELD_TAG_HEAP_REF,
+        matches!(val, Value::HeapRef(_)),
+        "gc_field_store: tagged word must carry FIELD_TAG_HEAP_REF iff the stored \
+         value is a HeapRef — a mismatch here means a future GC compaction could \
+         misinterpret a scalar as a movable pointer, or fail to relocate a real one"
+    );
     // SAFETY: `byte_off + 8 <= size`, bounds-checked above against the
     // object's actual allocated payload size.
     unsafe {
@@ -1424,18 +1477,30 @@ fn collect_now(ctx: &mut DispatchCtx) {
 ///
 /// When due, further upgrades to a **minor** (young-generation-only) cycle
 /// whenever `ctx.heap.should_collect_minor()` says the survival-ratio signal
-/// warrants it, or a **compacting** cycle whenever `ctx.heap.should_compact()`
-/// says fragmentation warrants it — the same shared policy `gc-core-capi`'s
-/// `__gc_safepoint` consults (minor checked first, matching `AdaptivePolicy`'s
-/// own priority order), so the two automatic-collection call sites can't
-/// drift apart. `VMCore::new()` attests `set_auto_minor(true)` once at
-/// construction (vm-core's `handle_gc_field_store` calls the generational
-/// write barrier on every store, so `should_collect_minor` is sound to honor
-/// here — see that attestation's own doc comment). `collect_compacting`'s
-/// root-slot rewrite (see `gc_core::HeapRef::as_mut_ptr`) transparently
-/// updates every `Value::HeapRef` in `build_roots`' root set in place, so
-/// vm-core needs no fixup logic of its own beyond passing the same roots;
-/// `collect_minor_mixed` never relocates, so no rewrite applies there either.
+/// warrants it — itself further upgraded to a **moving** minor cycle
+/// (`collect_minor_compacting`) whenever `ctx.heap.should_compact_minor()`
+/// also fires (AOT00-T9 §5, PR-5) — or a **compacting** cycle whenever
+/// `ctx.heap.should_compact()` says fragmentation warrants it — the same
+/// shared policy `gc-core-capi`'s `__gc_safepoint` consults (minor scope
+/// checked first, matching `AdaptivePolicy`'s own priority order for that
+/// choice; moving-vs-plain decided independently within whichever scope
+/// won, per `should_compact_minor`'s own doc for why that's not another
+/// rung of the same priority ladder), so the two automatic-collection call
+/// sites can't drift apart. `VMCore::new()` attests `set_auto_minor(true)`
+/// once at construction (vm-core's `handle_gc_field_store` calls the
+/// generational write barrier on every store, so `should_collect_minor` is
+/// sound to honor here — see that attestation's own doc comment; the same
+/// attestation flag now also gates the moving-minor branch, which carries a
+/// *strictly stronger* barrier-fidelity requirement per
+/// `collect_minor_compacting`'s own Safety doc — vm-core's every-store
+/// coverage meets that bar too, since it barriers unconditionally, not just
+/// "most" stores). `collect_compacting`'s root-slot rewrite (see
+/// `gc_core::HeapRef::as_mut_ptr`) transparently updates every
+/// `Value::HeapRef` in `build_roots`' root set in place, so vm-core needs no
+/// fixup logic of its own beyond passing the same roots;
+/// `collect_minor_compacting` shares that same root-rewrite mechanism (the
+/// moving-minor analogue), and `collect_minor_mixed` never relocates, so no
+/// rewrite applies there either.
 fn run_safepoint(ctx: &mut DispatchCtx) {
     if !ctx.heap.should_collect() {
         return;
@@ -1446,7 +1511,11 @@ fn run_safepoint(ctx: &mut DispatchCtx) {
     // duration of this call.
     let stats = unsafe {
         if ctx.heap.should_collect_minor() {
-            ctx.heap.collect_minor_mixed(&roots, &[])
+            if ctx.heap.should_compact_minor() {
+                ctx.heap.collect_minor_compacting(&roots, &[])
+            } else {
+                ctx.heap.collect_minor_mixed(&roots, &[])
+            }
         } else if ctx.heap.should_compact() {
             ctx.heap.collect_compacting(&roots, &[])
         } else {

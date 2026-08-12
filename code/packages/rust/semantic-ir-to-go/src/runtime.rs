@@ -880,98 +880,80 @@ func _sir_is_symbol(args []Value) Value {
 	return ok
 }
 
-func _sir_print(args []Value) Value {
-	fmt.Println(_sir_format(args[0]))
-	return nil
-}
-
-// ── puts (Ruby semantics) ──────────────────────────────────────
+// ── write (SIR28 §2.1) ────────────────────────────────────────
 //
-// Ruby's `puts` is THE common output method and is deceptively subtle:
+// `__sys_write__` is the general console-output primitive every frontend
+// lowers `print`/`puts`/`console.log`/etc. to (SIR28 §2). It generalizes
+// what used to be several backend-hardcoded newline policies into ONE
+// operation parameterized by policy flags carried as DATA -- the root
+// cause SIR28 exists to fix: real Ruby's `print` never newline-terminates,
+// Python's `print()`/JS's `console.log` always do, but before SIR28 all
+// three lowered to the identical `BuiltinCall("print", ...)` this backend
+// had no way to tell apart.
 //
-//   - `puts`            → one newline.
-//   - `puts x`          → `x.to_s` then a newline, UNLESS `x.to_s` already
-//                         ends in "\n" (then no second newline is added):
-//                         `puts "x\n"` prints `x\n`, not `x\n\n`.
-//   - `puts a, b`       → each argument on its own line, in order.
-//   - `puts nil`        → a blank line (`nil.to_s` is "", then the newline).
-//   - `puts []`         → a single newline (an argument that flattens to
-//                         nothing still prints a blank line).
-//   - `puts [1,[2,3]]`  → each ELEMENT on its own line, arrays flattened
-//                         recursively: `1\n2\n3\n`.
-//
-// `puts` is variadic, so it takes the whole `[]Value` (unlike the fixed-arity
-// `_sir_print`).  We write raw bytes with `fmt.Print`/`os.Stdout` rather than
-// `fmt.Println` so the trailing-newline-suppression rule can be honoured.
-func _sir_puts(args []Value) Value {
-	if len(args) == 0 {
-		// No arguments: exactly one newline.
-		fmt.Print("\n")
-		return nil
+// `terminator`: "none" (write every value back-to-back, no newline —
+// matches Ruby's `print`) | "per_value" (one newline per value, honouring
+// `unpackArrays` to flatten nested arrays — matches Ruby's `puts`) |
+// "once" (space-join every value, one trailing newline — matches Python's
+// `print()`/JS's `console.log`). Deliberately does NOT replicate Ruby
+// `puts`'s trailing-newline-suppression nuance (`puts "x\n"` prints
+// `x\n`, not `x\n\n`) -- that's a pre-existing, orthogonal divergence
+// between backends' own historical `puts` implementations that SIR28
+// does not fix or replicate; `per_value` here always appends exactly one
+// newline per value, matching SIR28 §2.1's table and every other
+// backend's `__sys_write__` faithfully.
+func _sir_write(stream string, terminator string, unpackArrays bool, args []Value) Value {
+	out := os.Stdout
+	if stream == "stderr" {
+		out = os.Stderr
 	}
-	// A `*Seq` is a shared, mutable handle, so a program can build a
-	// *cyclic* array (`a = []; a << a`).  The element-per-line flatten below
-	// recurses through nested arrays, so — like `_sir_format` — it MUST be
-	// cycle-guarded or a self-referential array overflows the Go stack (a
-	// DoS: CWE-674, uncontrolled recursion).  We thread a `visited` set of
-	// the `*Seq` pointers on the active flatten path; the top-level args each
-	// share one set (a handle removed on exit still prints in full via a
-	// sibling path — only a true self-cycle is short-circuited).
-	visited := make(map[Value]bool)
-	for _, a := range args {
-		// `puts []` (empty array arg) still writes one blank line — Ruby
-		// prints a line when an argument flattens to nothing.  A recursive
-		// flatten of an empty seq writes nothing, so detect it here.
-		if s, ok := a.(*Seq); ok && len(s.Items) == 0 {
-			fmt.Print("\n")
-			continue
+	switch terminator {
+	case "per_value":
+		if len(args) == 0 {
+			fmt.Fprint(out, "\n")
+			return nil
 		}
-		_sir_puts_one(a, visited)
+		visited := make(map[Value]bool)
+		for _, a := range args {
+			_sir_write_one(out, a, unpackArrays, visited)
+		}
+	case "once":
+		parts := make([]string, len(args))
+		for i, a := range args {
+			parts[i] = _sir_format(a)
+		}
+		fmt.Fprint(out, strings.Join(parts, " ")+"\n")
+	default:
+		for _, a := range args {
+			fmt.Fprint(out, _sir_format(a))
+		}
 	}
 	return nil
 }
 
-// Emit a single `puts` argument.  Arrays recurse (element-per-line, nested
-// arrays flattened); everything else renders via `_sir_format` then a
-// newline — suppressed when the text already ends in one.  `nil` is a blank
-// line (`_sir_format(nil)` is "nil" for `print`, but `puts nil` is a blank
-// line, so nil is special-cased).
-//
-// Cycle safety: `visited` holds the `*Seq` pointers currently on the active
-// flatten path.  A seq ALREADY on the path is a cycle (`a = []; a << a`):
-// rather than recurse forever we write Ruby's `[...]` placeholder then a
-// newline, matching real Ruby (`puts a` on a self-referential array prints
-// `[...]` and terminates).  (We emit the literal placeholder rather than
-// `_sir_format(v)`: that formatter starts a fresh visited set, so it would
-// render the *containing* level too — `[[...]]` for `a = [a]` — whereas Ruby
-// prints a bare `[...]`.)  A seq reached twice by *sibling* (non-cyclic) paths
-// is fully flattened both times, because each is removed from `visited` on
-// exit — only a handle re-appearing *within its own subtree* is short-
-// circuited.  Non-cyclic output is unchanged (`puts [1,[2,3]]` still prints
-// `1\n2\n3\n`).
-func _sir_puts_one(v Value, visited map[Value]bool) {
-	if s, ok := v.(*Seq); ok {
-		if visited[v] {
-			fmt.Print("[...]\n")
+// Emit a single `_sir_write` argument under the `per_value` terminator:
+// arrays recurse (element-per-line, nested arrays flattened) when
+// `unpackArrays` is set (Ruby `puts`'s behavior), everything else renders
+// via `_sir_format` then a newline. A `visited` map keyed by the `*Seq`
+// handle cycle-guards the recursion — a self-referential array renders
+// Ruby's `[...]` placeholder and terminates, rather than overflowing the
+// Go stack (CWE-674, uncontrolled recursion).
+func _sir_write_one(out *os.File, v Value, unpackArrays bool, visited map[Value]bool) {
+	if unpackArrays {
+		if s, ok := v.(*Seq); ok {
+			if visited[v] {
+				fmt.Fprint(out, "[...]\n")
+				return
+			}
+			visited[v] = true
+			for _, item := range s.Items {
+				_sir_write_one(out, item, unpackArrays, visited)
+			}
+			delete(visited, v)
 			return
 		}
-		visited[v] = true
-		for _, item := range s.Items {
-			_sir_puts_one(item, visited)
-		}
-		delete(visited, v)
-		return
 	}
-	if v == nil {
-		fmt.Print("\n")
-		return
-	}
-	text := _sir_format(v)
-	if strings.HasSuffix(text, "\n") {
-		fmt.Print(text)
-	} else {
-		fmt.Print(text + "\n")
-	}
+	fmt.Fprint(out, _sir_format(v)+"\n")
 }
 
 // ── format (cycle-safe) ────────────────────────────────────────
@@ -1392,10 +1374,6 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_is_number(args)
 	case "symbol?":
 		return _sir_is_symbol(args)
-	case "print":
-		return _sir_print(args)
-	case "puts":
-		return _sir_puts(args)
 	case "global_set":
 		return _sir_global_set(args[0], args[1])
 	case "global_get":
@@ -2234,8 +2212,8 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 		// `*Seq` is a shared, mutable handle, so a program can build a *cyclic*
 		// array (`a = []; a << a`); an unguarded recursive flatten would
 		// overflow the Go stack (CWE-674).  We thread a `visited` set of the
-		// `*Seq` pointers on the active flatten path — exactly as `_sir_puts`
-		// does — and skip a handle already on its own path (a self-cycle
+		// `*Seq` pointers on the active flatten path — exactly as `_sir_write`'s
+		// `per_value` terminator does — and skip a handle already on its own path (a self-cycle
 		// contributes nothing, terminating the recursion).  Non-cyclic nested
 		// arrays flatten in full because each handle is removed from `visited`
 		// on exit, so sibling occurrences are unaffected.
@@ -2419,7 +2397,7 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 // leaf (non-`*Seq`) elements of `seq` to `*out` in order, recursing into
 // nested `*Seq` handles.  `visited` holds the `*Seq` pointers currently on the
 // active recursion path; a handle already present is a self-cycle and is
-// skipped rather than recursed into (mirrors `_sir_puts_one`'s guard).
+// skipped rather than recursed into (mirrors `_sir_write_one`'s guard).
 func _sir_flatten_into(out *[]Value, seq *Seq, visited map[Value]bool) {
 	if visited[Value(seq)] {
 		return
@@ -4718,8 +4696,10 @@ mod tests {
     fn runtime_uses_fmt_and_strconv() {
         // The emitter always emits `import ("fmt"; "math"; "strconv")`
         // so all three must be referenced in the runtime to satisfy
-        // Go's unused-import rule.
-        assert!(RUNTIME.contains("fmt.Println"));
+        // Go's unused-import rule. `fmt.Println` (from the now-removed
+        // bare `print`/`puts`, SIR28 §2) is gone; `_sir_write` uses
+        // `fmt.Fprint` instead.
+        assert!(RUNTIME.contains("fmt.Fprint"));
         assert!(RUNTIME.contains("fmt.Sprintf"));
         assert!(RUNTIME.contains("strconv.FormatInt"));
         assert!(RUNTIME.contains("strconv.FormatFloat"));
@@ -4861,7 +4841,7 @@ mod tests {
             "_sir_eq", "_sir_lt", "_sir_gt",
             "_sir_cons", "_sir_car", "_sir_cdr",
             "_sir_is_null", "_sir_is_pair", "_sir_is_number", "_sir_is_symbol",
-            "_sir_print", "_sir_puts", "_sir_global_set", "_sir_global_get",
+            "_sir_write", "_sir_global_set", "_sir_global_get",
             "_sir_apply", "_sir_make_closure", "_sir_intern", "_sir_truthy",
             "_sir_format", "_sir_builtin_closure", "_sir_call_builtin_by_name",
             // E3 exception helpers.

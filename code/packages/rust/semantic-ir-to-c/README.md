@@ -273,6 +273,23 @@ implementation so far; Python/JS/Go/Rust/Ruby accept it at emit time but
 raise a clean runtime error (the same shape of gap as `[]`/`[]=`),
 tracked as its own follow-up.
 
+And SIR28 `ConsoleIO` — `__sys_write__`, the ONLY console-output primitive
+the backend emits (bare `"print"`/`"puts"` `BuiltinCall`s and the
+`_sir_print_v`/`_sir_puts_v`/`_sir_print`/`_sir_puts` runtime functions
+that used to implement them were removed once every frontend finished
+migrating to `__sys_write__`, SIR28 §7): `BuiltinCall("__sys_write__",
+[StrLit(stream), StrLit(terminator), BoolLit(unpack_arrays), ...values])`
+lowers to `_sir_write(stream_code, terminator_code, unpack_arrays, argc,
+values...)`, a single runtime function parameterized by policy flags
+instead of separate hard-coded behaviors per source language. Its
+`per_value` terminator (under `unpack_arrays`) shares `_sir_puts_one` —
+the ONE array-flattening helper this backend has ever had for `puts`
+semantics, kept exactly as-is. `stream`/`terminator` are always
+compile-time `StrLit`s from a closed set (validated by `semantic-ir`'s
+validator before this backend ever sees them) baked in as C int constants —
+never source-derived text reaching a dynamic file-handle lookup. See
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
+
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
 `Intrinsics`, a `class << self` singleton, and
 every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected

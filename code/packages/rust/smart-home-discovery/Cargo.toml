@@ -6,6 +6,7 @@ description = "Transport-neutral smart-home bridge discovery records"
 license = "MIT"
 
 [dependencies]
+serde = { version = "1", features = ["derive"] }
 smart-home-core = { path = "../smart-home-core" }
 smart-home-integration-catalog = { path = "../smart-home-integration-catalog" }
 udp-client = { path = "../udp-client" }

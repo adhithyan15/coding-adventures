@@ -25,15 +25,14 @@ conditionals, state styles, native control flags, and read-only/disabled state.
 Native text inputs dispatch either parameterless commit events or a declared
 single payload containing the current controlled value.
 
-The same output ships unmodified to:
-
-- **Android** (Jetpack Compose for Android)
-- **Desktop** (Compose for Desktop on macOS / Linux / Windows)
-- **iOS** (Compose Multiplatform for iOS — EAP)
-- **Web** (Compose Multiplatform for Web — Wasm target)
-
-That's the whole point: one `.kt` file, every Compose-supported
-platform, no per-target codegen fork.
+The generated project shell targets **Compose Desktop/JVM** on macOS, Linux,
+and Windows. That is also the target of Mosaic's standard JNA Rust runtime
+binding and the backend's native-complete CI gate. Most emitted primitives use
+common Compose APIs and can be reused in Android/iOS/Web source sets, but UI35
+drag payload transport is deliberately desktop-specific (`AWT Transferable`).
+Other Compose targets need their platform transfer adapter before the exact
+generated file can be shared unchanged; the emitter does not pretend that
+adapter exists.
 
 ## Integration
 
@@ -65,15 +64,21 @@ wants the strict-Flux store/dispatcher contract.
 | Row          | `Row { ... }`                             |
 | Column       | `Column { ... }`                          |
 | Text         | `Text(text = ...)`                        |
+| Icon         | native font glyph / progress indicator    |
 | Spacer       | `Spacer(modifier = Modifier.weight(1f))`  |
 | HostInput    | `BasicTextField(value, onValueChange...)` |
 | Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
+| HostLink     | native annotated text link                |
+| HostDialog   | native `Dialog` / non-modal `Popup`       |
+| HostDraggable / HostDropTarget | native Compose Desktop drag/drop plus keyboard and accessibility controller |
 
-The emitter also lowers `For`, `If`/`Else`, table structure, buttons, checkbox
-and radio controls, number inputs, links, native accessible tooltip wrappers, and the
-current drag/drop degradation path. Unsupported primitives still return a
-clear `UnknownPrimitive` error instead of silently disappearing.
+The emitter also lowers `For`, `If`/`Else`, table structure with native
+collection/header/cell accessibility semantics for the canonical dynamic Grid
+shape, buttons, checkbox and radio controls, number inputs, links, accessible
+dialog and tooltip overlays, and native Compose Desktop drag/drop. Unsupported
+primitives still return a clear `UnknownPrimitive` error instead of silently
+disappearing.
 
 ## Style handling
 
@@ -84,6 +89,8 @@ their own `MaterialTheme` for platform-level theming.
 
 ## Tests
 
-`cargo test -p mosaic-emit-compose` runs 39 focused emitter tests. The
+`cargo test -p mosaic-emit-compose` runs focused emitter tests. The
 package-expanded TaskApp is also exercised as a real Compose Desktop project:
-Kotlin compilation, native macOS distribution packaging, and process launch.
+strict zero-degradation analysis, Kotlin compilation, and native Linux
+distribution packaging with its selected Rust engine. The standard binding is
+then exercised against that packaged engine without a global-library fallback.

@@ -1,0 +1,51 @@
+# @version 16
+# @case_insensitive true
+# Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
+
+case_sensitive: false
+
+skip:
+  WHITESPACE = /[ \t]+/
+  COMMENT    = /%%[^\r\n]*/
+
+NEWLINE      = /\r?\n/
+SEMICOLON    = ";"
+HEADER       = /stateDiagram(?:-v2)?/
+ACC_DESCR_START = /accDescr[ \t]*\{/
+ACC_TITLE    = /accTitle[ \t]*:/
+ACC_DESCR    = /accDescr[ \t]*:/
+END_NOTE     = /end[ \t]+note(?:\r?\n|;|$)/
+ARROW        = "-->"
+CONCURRENT   = "--"
+HIDE_EMPTY   = /hide[ \t]+empty[ \t]+description/
+EDGE_STATE   = "[*]"
+CHOICE       = /(?:<<choice>>|\[\[choice\]\])/
+FORK_JOIN    = /(?:<<(?:fork|join)>>|\[\[(?:fork|join)\]\])/
+STYLE_SEPARATOR = ":::"
+COLON        = ":"
+COMMA        = ","
+LBRACE       = "{"
+RBRACE       = "}"
+ENTITY       = /#(?:[0-9]+|[A-Za-z][A-Za-z0-9]+);/
+HASH_COLOR   = /#[0-9A-Fa-f]{3,8}/
+STRING       = /"[^"\r\n]*"/
+DIRECTION    = /TB|BT|LR|RL/
+ID           = /[A-Za-z_][A-Za-z0-9_-]*/
+WORD         = /[^ \t\r\n;:,]+/
+
+keywords:
+  scale
+  width
+  title
+  state
+  style
+  classDef
+  class
+  note
+  click
+  href
+  left
+  right
+  of
+  direction
+  as

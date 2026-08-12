@@ -85,10 +85,13 @@ adapter supplies bytes separately. A storage factory receives only the selected
 typed declaration and explicit host credentials; application and repository
 packages never receive the complete config document.
 
-For the Phase 1A local CLI, the configured `local_store` is `filesystem`, its
-location is the platform-resolved encrypted-object root from VLT-PM06, and its
-credential reference is `none`. Local owner state remains fixed to VLT-PM06's
-application-state root and is not selected by this config.
+For the first Phase 1A local CLI vault, the configured `local_store` is
+`filesystem`, its location is the platform-resolved encrypted-object root from
+VLT-PM06, and its credential reference is `none`. VLT-PM22 named targets each
+receive a distinct filesystem declaration at a locator-derived child root; one
+adapter root must not be shared across repository locators. Local owner state
+remains fixed to VLT-PM06's application-state root and is not selected by this
+config.
 
 ## 6. Acceptance tests
 

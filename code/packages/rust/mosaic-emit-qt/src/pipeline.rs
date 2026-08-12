@@ -36,24 +36,24 @@
 //! | `Text`        | `Text { text: "..." }` or `Text { text: slotName }` for slot-ref content    |
 //! | `Spacer`      | `Item { Layout.fillWidth: true; Layout.fillHeight: true }`                  |
 //! | `Image`       | `Image { source: "..." }`                                                   |
+//! | `Icon`        | `BusyIndicator` for `spinner`; accessible semantic `Label` otherwise         |
 //! | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
 //! | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
 //! | `HostInput`   | `TextInput { ... }` or `TextField { ...; placeholderText: ... }`            |
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
 //! | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (Controls 2.15) |
-//! | `HostTable`   | `ColumnLayout { ... }` of `RowLayout` rows (first-cut shape — see `emit_host_table_qml` for the deferred true-`TableView` lowering) |
+//! | `HostTable`   | Canonical dynamic Grid shapes use `TableView` + `HorizontalHeaderView`; other shapes retain the structural layout fallback |
 //! | `For`         | `Repeater { model: <coll>; delegate: Item { property var <as>: modelData; <children> } }` — see `emit_for_qml` |
 //! | `If`/`Else`   | `Loader { active: <cond>; sourceComponent: Component { ... } }` pairs — see `emit_if_qml` |
 //!
 //! ## What this emitter does NOT yet do
 //!
 //! See the module-level doc on the crate root (`src/lib.rs`). The short list:
-//! Cell/data-Column/Grid v3 primitives (UI28 §2); `connects` wiring from
-//! `EmitRef` props to `signal` emissions inside the tree; and mosstyle
-//! inlining into element attributes. `HostTable` lowers to a structural
-//! `ColumnLayout`+`RowLayout` shape today (true `TableView` +
-//! `QAbstractTableModel` integration is a follow-up).
+//! Cell/data-Column/Grid v3 primitives (UI28 §2) outside the canonical Grid
+//! package shape, and general `connects` wiring from `EmitRef` props to signal
+//! emissions on arbitrary non-host nodes. Canonical dynamic HostTable layouts
+//! use a generated `QAbstractTableModel` shell and native QML `TableView`.
 //!
 //! ## Why the root is always `Item`
 //!
@@ -69,7 +69,9 @@
 //! 2. **`Item` is the lightest QML element**: zero painting, no layout
 //!    behaviour. It costs nothing at runtime and disappears visually.
 
+use std::cell::Cell;
 use std::fmt::Write as _;
+use std::rc::Rc;
 
 use std::collections::{HashMap, HashSet};
 
@@ -171,9 +173,8 @@ pub struct EmitOptions {
 
     /// Pinned Qt6 version constraint to write into `CMakeLists.txt`'s
     /// `find_package(Qt6 REQUIRED ...)`. UI32 spec §3.6.3 requires
-    /// exact pinning. Default `"6.7"` — a known-good 6.7 LTS.
-    /// CMake accepts `6.7` as a major.minor constraint that resolves
-    /// to any installed 6.7.x.
+    /// exact pinning. Default `"6.8"`, the first Qt release with native
+    /// assistive-technology announcements used by UI35 drag/drop.
     pub pinned_qt_version: String,
 
     /// Pinned CMake minimum-required version. Default `"3.21"` — the
@@ -189,7 +190,7 @@ impl Default for EmitOptions {
         Self {
             emit_project: false,
             require_runtime: false,
-            pinned_qt_version: "6.7".to_string(),
+            pinned_qt_version: "6.8".to_string(),
             pinned_cmake_min: "3.21".to_string(),
             pinned_cxx_standard: "17".to_string(),
         }
@@ -219,7 +220,7 @@ pub struct ProjectFiles {
     /// a mosaic-package.toml so we can't use the artifact-builder's
     /// `qmldir_module_name` helper directly).
     pub qmldir: String,
-    /// `README.md` — prereqs (Qt6 6.7+, CMake 3.21+, a C++17
+    /// `README.md` — prereqs (Qt6 6.8+, CMake 3.21+, a C++17
     /// compiler), build + run commands, file map.
     pub readme: String,
 }
@@ -248,6 +249,7 @@ pub fn from_pipeline_with_options(
         Some(build_qt_project_files(
             &component.component_name,
             &interface.slots,
+            count_native_table_models(&layout.root),
             options,
         ))
     } else {
@@ -268,7 +270,12 @@ pub fn from_pipeline_with_options(
 /// `validate_component_name` upstream as ASCII identifier shape).
 /// The qmldir module name follows the QML PascalCase convention,
 /// which the upstream-validated component name already satisfies.
-fn build_qt_project_files(name: &str, slots: &[SlotDecl], options: &EmitOptions) -> ProjectFiles {
+fn build_qt_project_files(
+    name: &str,
+    slots: &[SlotDecl],
+    native_table_count: usize,
+    options: &EmitOptions,
+) -> ProjectFiles {
     // Single-component QML module name: `Mosaic.<Component>`.
     // (The artifact-builder's `qmldir_module_name` derives from
     // package name; the single-component CLI path has no package
@@ -276,7 +283,13 @@ fn build_qt_project_files(name: &str, slots: &[SlotDecl], options: &EmitOptions)
     let module_name = format!("Mosaic.{name}");
     ProjectFiles {
         cmake_lists: build_cmake_lists(name, &module_name, options),
-        main_cpp: build_main_cpp(name, &module_name, slots, options.require_runtime),
+        main_cpp: build_main_cpp(
+            name,
+            &module_name,
+            slots,
+            native_table_count,
+            options.require_runtime,
+        ),
         qmldir: build_qmldir(name, &module_name),
         readme: build_qt_readme(name, &module_name, options.require_runtime),
     }
@@ -313,10 +326,132 @@ fn build_cmake_lists(name: &str, module_name: &str, options: &EmitOptions) -> St
     )
 }
 
+fn push_native_table_model_includes(out: &mut String, native_table_count: usize) {
+    if native_table_count == 0 {
+        return;
+    }
+    out.push_str("#include <QAbstractTableModel>\n");
+    out.push_str("#include <QByteArray>\n");
+    out.push_str("#include <QHash>\n");
+    out.push_str("#include <QModelIndex>\n");
+    out.push_str("#include <QVariantList>\n");
+    out.push_str("#include <QVariantMap>\n");
+}
+
+fn push_native_table_model_class(out: &mut String, native_table_count: usize) {
+    if native_table_count == 0 {
+        return;
+    }
+    out.push_str(
+        r#"
+class MosaicTableModel final : public QAbstractTableModel
+{
+  Q_OBJECT
+  Q_PROPERTY(QVariantList headers READ headers WRITE setHeaders NOTIFY headersChanged)
+  Q_PROPERTY(QVariantList rows READ rows WRITE setRows NOTIFY rowsChanged)
+
+public:
+  explicit MosaicTableModel(QObject *parent = nullptr) : QAbstractTableModel(parent) {}
+
+  QVariantList headers() const { return headers_; }
+  QVariantList rows() const { return rows_; }
+
+  void setHeaders(const QVariantList &headers)
+  {
+    if (headers_ == headers) return;
+    beginResetModel();
+    headers_ = headers;
+    endResetModel();
+    emit headersChanged();
+  }
+
+  void setRows(const QVariantList &rows)
+  {
+    if (rows_ == rows) return;
+    beginResetModel();
+    rows_ = rows;
+    endResetModel();
+    emit rowsChanged();
+  }
+
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override
+  {
+    return parent.isValid() ? 0 : rows_.size();
+  }
+
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override
+  {
+    return parent.isValid() ? 0 : headers_.size();
+  }
+
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+  {
+    if (!index.isValid() || role != Qt::DisplayRole || index.row() >= rows_.size()) return {};
+    const QVariantList row = rows_.at(index.row()).toList();
+    return index.column() < row.size() ? row.at(index.column()) : QVariant{};
+  }
+
+  QVariant headerData(int section, Qt::Orientation orientation,
+                      int role = Qt::DisplayRole) const override
+  {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole && section < headers_.size()) {
+      return headers_.at(section);
+    }
+    return QAbstractTableModel::headerData(section, orientation, role);
+  }
+
+  QHash<int, QByteArray> roleNames() const override
+  {
+    return {{Qt::DisplayRole, QByteArrayLiteral("display")}};
+  }
+
+signals:
+  void headersChanged();
+  void rowsChanged();
+
+private:
+  QVariantList headers_;
+  QVariantList rows_;
+};
+
+"#,
+    );
+}
+
+fn push_native_table_model_setup(out: &mut String, indent: &str, native_table_count: usize) {
+    if native_table_count == 0 {
+        return;
+    }
+    writeln!(out, "{indent}QVariantList mosaicNativeTableModels;").unwrap();
+    writeln!(
+        out,
+        "{indent}mosaicNativeTableModels.reserve({native_table_count});"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{indent}for (int index = 0; index < {native_table_count}; ++index) {{"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{indent}  mosaicNativeTableModels.append(QVariant::fromValue(static_cast<QObject *>(new MosaicTableModel(&view))));"
+    )
+    .unwrap();
+    writeln!(out, "{indent}}}").unwrap();
+}
+
+fn push_main_moc(out: &mut String, native_table_count: usize) {
+    if native_table_count > 0 {
+        out.push_str("\n#include \"main.moc\"\n");
+    }
+}
+
 fn build_main_cpp(
     name: &str,
     module_name: &str,
     slots: &[SlotDecl],
+    native_table_count: usize,
     require_runtime: bool,
 ) -> String {
     let module_name_slash = module_name.replace('.', "/");
@@ -325,6 +460,7 @@ fn build_main_cpp(
     if require_runtime {
         out.push_str("#include \"MosaicHost.h\"\n\n");
         out.push_str("#include <QApplication>\n");
+        push_native_table_model_includes(&mut out, native_table_count);
         out.push_str("#include <QDebug>\n");
         out.push_str("#include <QQuickItem>\n");
         out.push_str("#include <QQuickStyle>\n");
@@ -335,6 +471,7 @@ fn build_main_cpp(
         out.push_str("#include <QtGlobal>\n\n");
         out.push_str("#include <cstdlib>\n");
         out.push_str("#include <stdexcept>\n\n");
+        push_native_table_model_class(&mut out, native_table_count);
         out.push_str("int main(int argc, char *argv[])\n{\n");
         out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
         out.push_str("    QQuickStyle::setStyle(QStringLiteral(\"Basic\"));\n  }\n");
@@ -367,8 +504,12 @@ fn build_main_cpp(
         out.push_str("    view.setResizeMode(QQuickView::SizeRootObjectToView);\n");
         writeln!(out, "    view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
         out.push_str("    view.resize(1100, 800);\n");
+        push_native_table_model_setup(&mut out, "    ", native_table_count);
         out.push_str("    auto initialProperties = mosaicHost.propsRequired();\n");
         out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicHost\"), QVariant::fromValue(static_cast<QObject *>(&mosaicHost)));\n");
+        if native_table_count > 0 {
+            out.push_str("    initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        }
         out.push_str("    view.setInitialProperties(initialProperties);\n");
         writeln!(
             out,
@@ -386,9 +527,11 @@ fn build_main_cpp(
         out.push_str("  } catch (const std::exception &exception) {\n");
         out.push_str("    qCritical().noquote() << exception.what();\n");
         out.push_str("    return EXIT_FAILURE;\n  }\n}\n");
+        push_main_moc(&mut out, native_table_count);
         return out;
     }
     out.push_str("#include <QApplication>\n");
+    push_native_table_model_includes(&mut out, native_table_count);
     out.push_str("#include <QMetaObject>\n");
     out.push_str("#include <QObject>\n");
     out.push_str("#include <QQuickItem>\n");
@@ -403,6 +546,7 @@ fn build_main_cpp(
     out.push_str("#else\n");
     out.push_str("#define MOSAIC_HAS_HOST 0\n");
     out.push_str("#endif\n\n");
+    push_native_table_model_class(&mut out, native_table_count);
     out.push_str("int main(int argc, char *argv[])\n");
     out.push_str("{\n");
     out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
@@ -416,6 +560,12 @@ fn build_main_cpp(
     out.push_str("  view.setResizeMode(QQuickView::SizeRootObjectToView);\n");
     writeln!(out, "  view.setTitle(QStringLiteral(\"{name}\"));").unwrap();
     out.push_str("  view.resize(1100, 800);\n\n");
+    push_native_table_model_setup(&mut out, "  ", native_table_count);
+    if native_table_count > 0 {
+        out.push_str("  QVariantMap initialProperties;\n");
+        out.push_str("  initialProperties.insert(QStringLiteral(\"mosaicNativeTableModels\"), mosaicNativeTableModels);\n");
+        out.push_str("  view.setInitialProperties(initialProperties);\n\n");
+    }
     out.push_str("  // Load the Item component into a visible Qt Quick view from the\n");
     out.push_str("  // embedded module. The qrc:// path is set up by qt_add_qml_module in\n");
     writeln!(
@@ -452,6 +602,7 @@ fn build_main_cpp(
     out.push_str("  view.show();\n");
     out.push_str("  return app.exec();\n");
     out.push_str("}\n");
+    push_main_moc(&mut out, native_table_count);
     out
 }
 
@@ -466,7 +617,7 @@ fn build_qt_readme(name: &str, module_name: &str, require_runtime: bool) -> Stri
         ""
     };
     format!(
-        "{BANNER_MD}# {name} — Qt6 + CMake desktop shell\n\nAuto-generated by `mosaic-compile --backend qt --emit-project`.\n\n## Prerequisites\n\n- Qt6 ≥ 6.7 (install via the official installer or your package manager).\n- CMake ≥ 3.21.\n- A C++17 compiler (GCC ≥ 9, Clang ≥ 10, MSVC 2019+).\n\n## Build + run\n\n```sh\ncmake -B build\ncmake --build build\n./build/{name}            # macOS / Linux\nbuild\\\\{name}.exe          # Windows\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{name}.qml` | The Mosaic-compiled QML component. |\n| `CMakeLists.txt` | CMake build definition. Pinned Qt6 + CMake versions per UI32 spec §3.6.3. |\n| `main.cpp` | `QGuiApplication` + `QQmlApplicationEngine` loading the component as root QML. |\n| `qmldir` | QML module descriptor. Module URI: `{module_name}`. |\n| `README.md` | This file. |\n\n## Editing\n\nEvery file except `{name}.qml` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {name} — Qt6 + CMake desktop shell\n\nAuto-generated by `mosaic-compile --backend qt --emit-project`.\n\n## Prerequisites\n\n- Qt6 ≥ 6.8 (install via the official installer or your package manager).\n- CMake ≥ 3.21.\n- A C++17 compiler (GCC ≥ 9, Clang ≥ 10, MSVC 2019+).\n\n## Build + run\n\n```sh\ncmake -B build\ncmake --build build\n./build/{name}            # macOS / Linux\nbuild\\\\{name}.exe          # Windows\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `{name}.qml` | The Mosaic-compiled QML component. |\n| `CMakeLists.txt` | CMake build definition. Pinned Qt6 + CMake versions per UI32 spec §3.6.3. |\n| `main.cpp` | `QGuiApplication` + `QQmlApplicationEngine` loading the component as root QML. |\n| `qmldir` | QML module descriptor. Module URI: `{module_name}`. |\n| `README.md` | This file. |\n\n## Editing\n\nEvery file except `{name}.qml` carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
     .replace(
         "`QGuiApplication` + `QQmlApplicationEngine` loading the component as root QML.",
@@ -585,6 +736,14 @@ struct EmitCtx<'a> {
     /// own content size (which also avoids a `Text.fill` anchor loop
     /// against a content-sized `Loader`). Cleared one level down.
     cell_fill_children: bool,
+    /// Monotonic ids for generated drag-source/target QML objects. MIL has no
+    /// way to author a QML `id`, so this namespace cannot collide with slots,
+    /// emits, part names, or expressions.
+    next_drag_id: Rc<Cell<usize>>,
+    /// Monotonic index into the native table-model list installed by the
+    /// generated Qt shell. Only canonical dynamic HostTable shapes consume an
+    /// index; unsupported shapes retain the structural fallback.
+    next_table_id: Rc<Cell<usize>>,
 }
 
 /// Table-level style defaults that cascade down to cells (the `sheet`
@@ -1042,7 +1201,7 @@ fn emit_styled_layout_container_qml(
     ctx: &EmitCtx,
     element_name: &'static str,
 ) -> Result<Option<String>, PipelineEmitError> {
-    if node.tag != "Row" && node.tag != "Column" {
+    if node.tag != "Row" && node.tag != "Column" && node.tag != "Stack" {
         return Ok(None);
     }
     let Some(props) = part_style_props(node, ctx) else {
@@ -1118,7 +1277,7 @@ fn emit_styled_layout_container_qml(
     out.push_str(&emit_qml_children(
         &node.children,
         depth + 2,
-        /* is_stack = */ false,
+        node.tag == "Stack",
         ctx,
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
@@ -1187,24 +1346,26 @@ fn from_pipeline_with_runtime_policy(
     }
 
     let name = &interface.component;
+    let native_table_count = count_native_table_models(&layout.root);
     let signal_names = allocate_qml_signal_names(interface)?;
     let mut out = String::new();
 
-    // 2. File header — banner + imports. Both QtQuick 2.15 and
-    // QtQuick.Layouts 1.15 ship with Qt 6 by default and are version-
+    // 2. File header — banner + imports. Both QtQuick and
+    // QtQuick.Layouts ship with Qt 6 by default and are version-
     // pinned so the generated file is reproducible.
     //
-    // `QtQuick.Controls 2.15` is added conditionally: only when the
+    // `QtQuick.Controls` is added conditionally: only when the
     // layout tree references a primitive that lowers to a Controls
     // element (today: `HostButton` → `Button`, `HostScroll` →
     // `ScrollView`). Importing Controls unconditionally is harmless at
     // runtime but adds a noticeable startup cost on resource-constrained
     // platforms, so we keep the import set minimal.
     writeln!(out, "// Auto-generated by mosaic-emit-qt. Do not edit.").unwrap();
-    writeln!(out, "import QtQuick 2.15").unwrap();
-    writeln!(out, "import QtQuick.Layouts 1.15").unwrap();
+    writeln!(out, "pragma ComponentBehavior: Bound").unwrap();
+    writeln!(out, "import QtQuick").unwrap();
+    writeln!(out, "import QtQuick.Layouts").unwrap();
     if tree_needs_controls_import(&layout.root) {
-        writeln!(out, "import QtQuick.Controls 2.15").unwrap();
+        writeln!(out, "import QtQuick.Controls").unwrap();
     }
     writeln!(out).unwrap();
 
@@ -1217,6 +1378,9 @@ fn from_pipeline_with_runtime_policy(
         writeln!(out, "    required property var mosaicHost").unwrap();
     } else {
         writeln!(out, "    property var mosaicHost: null").unwrap();
+    }
+    if native_table_count > 0 {
+        writeln!(out, "    property var mosaicNativeTableModels: []").unwrap();
     }
     writeln!(out, "    property var lastHostIntent: null").unwrap();
     writeln!(out).unwrap();
@@ -1246,6 +1410,45 @@ fn from_pipeline_with_runtime_policy(
     writeln!(out, "        }}").unwrap();
     writeln!(out, "        applyMosaicProps(response);").unwrap();
     writeln!(out, "    }}").unwrap();
+    if layout_contains_tag(&layout.root, "Icon") {
+        writeln!(out).unwrap();
+        writeln!(out, "    function mosaicIconGlyph(name) {{").unwrap();
+        writeln!(
+            out,
+            "        switch (String(name).trim().toLowerCase().replace(/_/g, \"-\")) {{"
+        )
+        .unwrap();
+        writeln!(out, "        case \"add\": case \"plus\": return \"+\";").unwrap();
+        writeln!(
+            out,
+            "        case \"close\": case \"dismiss\": case \"x\": return \"\\u00d7\";"
+        )
+        .unwrap();
+        writeln!(out, "        case \"home\": return \"\\u2302\";").unwrap();
+        writeln!(
+            out,
+            "        case \"refresh\": case \"reload\": return \"\\u21bb\";"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"settings\": case \"gear\": return \"\\u2699\";"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"star\": case \"favorite\": return \"\\u2605\";"
+        )
+        .unwrap();
+        writeln!(out, "        default: return \"?\";").unwrap();
+        writeln!(out, "        }}").unwrap();
+        writeln!(out, "    }}").unwrap();
+    }
+    if layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget")
+    {
+        out.push_str(&emit_drag_scope_qml());
+    }
 
     // 4. Properties — one `property` declaration per slot.
     if !interface.slots.is_empty() {
@@ -1296,6 +1499,8 @@ fn from_pipeline_with_runtime_policy(
         text_style: None,
         inherited: InheritedStyle::default(),
         cell_fill_children: false,
+        next_drag_id: Rc::new(Cell::new(0)),
+        next_table_id: Rc::new(Cell::new(0)),
     };
     writeln!(out).unwrap();
     out.push_str(&emit_qml_tree(&layout.root, 1, &ctx)?);
@@ -1430,6 +1635,9 @@ fn emit_qml_tree(
         "HostButton" => return emit_host_button_qml(node, depth, ctx),
         "HostDialog" => return emit_host_dialog_qml(node, depth, ctx),
         "HostSurface" => return emit_host_surface_qml(node, depth, ctx),
+        "Icon" => return emit_icon_qml(node, depth, ctx),
+        "HostDraggable" => return emit_host_draggable_qml(node, depth, ctx),
+        "HostDropTarget" => return emit_host_drop_target_qml(node, depth, ctx),
 
         // UI29-2 kernel — `HostCheckbox` and `HostRadio` lower to
         // QtQuick.Controls 2 `CheckBox` and `RadioButton`. Both
@@ -1595,6 +1803,23 @@ fn emit_qml_tree(
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
+        if let Some(line) = build_text_accessible_name_attribute(node) {
+            writeln!(out, "{pad}    {line}").unwrap();
+        }
+        match find_keyword_prop(node, "a11y-role") {
+            Some("heading") => {
+                writeln!(out, "{pad}    Accessible.role: Accessible.Heading").unwrap();
+            }
+            Some("none") => {
+                writeln!(out, "{pad}    Accessible.ignored: true").unwrap();
+            }
+            _ => {}
+        }
+        if matches!(find_keyword_prop(node, "a11y-hidden"), Some("true"))
+            && !matches!(find_keyword_prop(node, "a11y-role"), Some("none"))
+        {
+            writeln!(out, "{pad}    Accessible.ignored: true").unwrap();
+        }
     }
 
     // Image primitive: emit a `source: ...` line.
@@ -1754,16 +1979,6 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
             is_text: false,
             is_image: false,
         },
-        // UI35 — the drag family. This backend does not implement dragging yet, so
-        // both lower to a ColumnLayout: the content still renders, it just isn't
-        // draggable here. Erroring instead would mean a layout using drag cannot be
-        // emitted to this backend AT ALL. See UI35-host-drag-drop.md.
-        "HostDraggable" | "HostDropTarget" => QmlElement {
-            element_name: "ColumnLayout",
-            builtin_lines: vec![],
-            is_text: false,
-            is_image: false,
-        },
         "Text" => QmlElement {
             element_name: "Text",
             builtin_lines: vec![],
@@ -1788,11 +2003,7 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         },
         "Divider" => QmlElement {
             element_name: "Rectangle",
-            builtin_lines: vec![
-                "height: 1",
-                "color: \"#888\"",
-                "Layout.fillWidth: true",
-            ],
+            builtin_lines: vec!["height: 1", "color: \"#888\"", "Layout.fillWidth: true"],
             is_text: false,
             is_image: false,
         },
@@ -1820,7 +2031,7 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         // of the lower-level `Flickable` because the wrapper is simpler
         // and the spec table calls it out as the preferred mapping.
         //
-        // The `QtQuick.Controls 2.15` import is added conditionally at
+        // The `QtQuick.Controls` import is added conditionally at
         // the top of the file (see `tree_needs_controls_import`).
         "HostScroll" => QmlElement {
             element_name: "ScrollView",
@@ -1833,11 +2044,702 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         // their own emitters earlier in `emit_qml_tree`; reaching this
         // branch would be an internal logic error.
         "Input" | "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio"
-        | "HostLink" | "HostTooltip" | "HostNumberInput" => unreachable!(
-            "Input/HostInput/HostButton/HostDialog/HostCheckbox/HostRadio/HostLink/HostTooltip/HostNumberInput are handled by dedicated emitters; should not reach primitive_to_qml"
-        ),
+        | "HostLink" | "HostTooltip" | "HostNumberInput" | "HostDraggable" | "HostDropTarget" => {
+            unreachable!(
+                "host primitives with dedicated emitters should not reach primitive_to_qml"
+            )
+        }
         other => return Err(PipelineEmitError::UnknownPrimitive(other.to_string())),
     })
+}
+
+fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
+    node.tag == tag
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_tag(child, tag))
+}
+
+/// Capability predicate shared with the package degradation analyzer.
+/// Keeping the report coupled to the same tag family as the emitter prevents
+/// Qt from being declared complete if this lowering is ever narrowed again.
+pub fn host_drag_drop_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+}
+
+/// Emit one controller per generated component instance for UI35 drag/drop.
+///
+/// Pointer and keyboard drops both call `accept`, which is the only function
+/// that invokes a target's authored `onDrop` payload. The target registry is a
+/// child of the generated component, so two mounted component instances never
+/// share keyboard cursors or announcements.
+fn emit_drag_scope_qml() -> String {
+    r#"
+    Item {
+        id: mosaicDragAnnouncer
+        width: 0
+        height: 0
+        Accessible.role: Accessible.AlertMessage
+        Accessible.name: "Drag and drop ready."
+        function announce(message) {
+            Accessible.name = message
+            Accessible.announce(message, Accessible.Polite)
+        }
+    }
+    QtObject {
+        id: mosaicDragScope
+        property var targets: []
+        property var activeSource: null
+        property var activeTarget: null
+        property var pointerSource: null
+        property var acceptedPointer: null
+        property string announcement: "Drag and drop ready."
+
+        function announce(message) {
+            announcement = message
+            mosaicDragAnnouncer.announce(message)
+        }
+        function registerTarget(target) {
+            if (targets.indexOf(target) < 0)
+                targets = targets.concat([target])
+        }
+        function unregisterTarget(target) {
+            var next = targets.slice()
+            var index = next.indexOf(target)
+            if (index >= 0) next.splice(index, 1)
+            targets = next
+            if (activeTarget === target) activeTarget = null
+        }
+        function canAccept(target, source) {
+            if (!target || !source || source.mosaicDragOwner !== mosaicDragScope)
+                return false
+            if (target.mosaicDropDisabled) return false
+            var kinds = target.mosaicAcceptsKinds
+            return kinds === null || kinds === undefined || kinds.indexOf(source.mosaicDragKind) >= 0
+        }
+        function accept(target, source, position) {
+            if (!canAccept(target, source)) return false
+            acceptedPointer = source
+            target.mosaicDropAccepted(source, position)
+            announce("Dropped " + source.mosaicDragLabel + " on " + target.mosaicDropKey + ".")
+            return true
+        }
+        function startPointer(source) {
+            if (activeSource !== null) cancel()
+            pointerSource = source
+            acceptedPointer = null
+            source.mosaicDragStarted()
+            announce("Grabbed " + source.mosaicDragLabel + ".")
+        }
+        function finishPointer(source) {
+            var dropped = acceptedPointer === source
+            acceptedPointer = null
+            pointerSource = null
+            if (!dropped) announce("Cancelled drag.")
+            source.mosaicDragEnded(dropped)
+            return dropped
+        }
+        function grab(source) {
+            if (activeSource !== null || pointerSource !== null) return false
+            activeSource = source
+            activeTarget = null
+            source.mosaicDragStarted()
+            announce("Grabbed " + source.mosaicDragLabel + ". Use arrow keys to choose a target, then press Space or Enter to drop.")
+            return true
+        }
+        function step(delta) {
+            if (activeSource === null) return false
+            var eligible = []
+            for (var i = 0; i < targets.length; ++i) {
+                if (canAccept(targets[i], activeSource)) eligible.push(targets[i])
+            }
+            if (eligible.length === 0) {
+                announce("No available drop targets.")
+                return true
+            }
+            var previous = activeTarget
+            var index = previous === null ? -1 : eligible.indexOf(previous)
+            index = (index + delta + eligible.length) % eligible.length
+            var next = eligible[index]
+            if (previous !== next) {
+                if (previous !== null) previous.mosaicDragLeave(activeSource)
+                next.mosaicDragEnter(activeSource)
+            }
+            next.mosaicDropHover(activeSource, "into")
+            activeTarget = next
+            announce("Move to " + next.mosaicDropKey + ", position " + (index + 1) + " of " + eligible.length + ".")
+            return true
+        }
+        function drop() {
+            if (activeSource === null || activeTarget === null) return false
+            var source = activeSource
+            if (!accept(activeTarget, source, "into")) return false
+            activeSource = null
+            activeTarget = null
+            acceptedPointer = null
+            source.mosaicDragEnded(true)
+            return true
+        }
+        function toggle(source) {
+            if (activeSource === null) return grab(source)
+            if (drop()) return true
+            return cancel()
+        }
+        function cancel() {
+            if (activeSource !== null) {
+                var source = activeSource
+                if (activeTarget !== null) activeTarget.mosaicDragLeave(source)
+                activeSource = null
+                activeTarget = null
+                acceptedPointer = null
+                announce("Cancelled drag.")
+                source.mosaicDragEnded(false)
+                return true
+            }
+            if (pointerSource !== null) {
+                pointerSource.mosaicCancelPointerDrag()
+                return true
+            }
+            return false
+        }
+    }
+"#
+    .to_string()
+}
+
+fn next_drag_id(ctx: &EmitCtx<'_>, stem: &str) -> String {
+    let value = ctx.next_drag_id.get();
+    ctx.next_drag_id.set(value + 1);
+    format!("mosaic{stem}{value}")
+}
+
+/// Native Qt Quick drag source. `DragHandler` observes mouse, touch, and pen
+/// input and drives a one-pixel proxy carrying Qt's `Drag` attached object.
+/// The wrapper remains in layout, so dragging never mutates application data.
+fn emit_host_draggable_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let source_id = next_drag_id(ctx, "DragSource");
+    let content_id = format!("{source_id}Content");
+    let proxy_id = format!("{source_id}Proxy");
+    let handler_id = format!("{source_id}Handler");
+    let key = qml_drag_text_expr(node, "drag-key", "\"\"")?;
+    let kind = qml_drag_text_expr(node, "drag-kind", "\"\"")?;
+    let label = qml_drag_text_expr(node, "drag-label", &key)?;
+    let disabled = qml_drag_disabled_expr(node, "drag-disabled")?;
+    let start = qml_drag_event_call(
+        node,
+        "onDragStart",
+        ctx,
+        &[("key", "mosaicDragKey"), ("kind", "mosaicDragKind")],
+    )?
+    .unwrap_or_default();
+    let end = qml_drag_event_call(
+        node,
+        "onDragEnd",
+        ctx,
+        &[
+            ("key", "mosaicDragKey"),
+            ("kind", "mosaicDragKind"),
+            ("dropped", "dropped"),
+        ],
+    )?
+    .unwrap_or_default();
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Item {{").unwrap();
+    writeln!(out, "{inner}id: {source_id}").unwrap();
+    writeln!(out, "{inner}implicitWidth: {content_id}.implicitWidth").unwrap();
+    writeln!(out, "{inner}implicitHeight: {content_id}.implicitHeight").unwrap();
+    writeln!(out, "{inner}property var mosaicDragOwner: mosaicDragScope").unwrap();
+    writeln!(out, "{inner}property string mosaicDragKey: String({key})").unwrap();
+    writeln!(out, "{inner}property string mosaicDragKind: String({kind})").unwrap();
+    writeln!(
+        out,
+        "{inner}property string mosaicDragLabel: String({label})"
+    )
+    .unwrap();
+    writeln!(out, "{inner}property bool mosaicDragDisabled: {disabled}").unwrap();
+    writeln!(out, "{inner}activeFocusOnTab: !mosaicDragDisabled").unwrap();
+    writeln!(out, "{inner}Accessible.role: Accessible.Button").unwrap();
+    writeln!(out, "{inner}Accessible.name: mosaicDragLabel").unwrap();
+    writeln!(
+        out,
+        "{inner}Accessible.description: mosaicDragScope.announcement"
+    )
+    .unwrap();
+    writeln!(out, "{inner}Accessible.focusable: !mosaicDragDisabled").unwrap();
+    writeln!(
+        out,
+        "{inner}Accessible.onPressAction: mosaicDragScope.toggle({source_id})"
+    )
+    .unwrap();
+    writeln!(out, "{inner}function mosaicDragStarted() {{ {start} }}").unwrap();
+    writeln!(out, "{inner}function mosaicDragEnded(dropped) {{ {end} }}").unwrap();
+    writeln!(
+        out,
+        "{inner}function mosaicCancelPointerDrag() {{ {proxy_id}.Drag.cancel() }}"
+    )
+    .unwrap();
+    writeln!(out, "{inner}Keys.onPressed: function(event) {{").unwrap();
+    writeln!(out, "{nested}var handled = false").unwrap();
+    writeln!(
+        out,
+        "{nested}if (event.key === Qt.Key_Escape) handled = mosaicDragScope.cancel()"
+    )
+    .unwrap();
+    writeln!(out, "{nested}else if (event.key === Qt.Key_Space || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) handled = !mosaicDragDisabled && mosaicDragScope.toggle({source_id})").unwrap();
+    writeln!(
+        out,
+        "{nested}else if (event.key === Qt.Key_Down) handled = mosaicDragScope.step(1)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{nested}else if (event.key === Qt.Key_Up) handled = mosaicDragScope.step(-1)"
+    )
+    .unwrap();
+    writeln!(out, "{nested}else if (event.key === Qt.Key_Right) handled = mosaicDragScope.step(LayoutMirroring.enabled ? -1 : 1)").unwrap();
+    writeln!(out, "{nested}else if (event.key === Qt.Key_Left) handled = mosaicDragScope.step(LayoutMirroring.enabled ? 1 : -1)").unwrap();
+    writeln!(out, "{nested}if (handled) event.accepted = true").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}ColumnLayout {{").unwrap();
+    writeln!(out, "{nested}id: {content_id}").unwrap();
+    writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}Item {{").unwrap();
+    writeln!(out, "{nested}id: {proxy_id}").unwrap();
+    writeln!(out, "{nested}width: 1").unwrap();
+    writeln!(out, "{nested}height: 1").unwrap();
+    writeln!(out, "{nested}opacity: 0").unwrap();
+    writeln!(out, "{nested}Drag.dragType: Drag.Automatic").unwrap();
+    writeln!(out, "{nested}Drag.active: {handler_id}.active").unwrap();
+    writeln!(out, "{nested}Drag.source: {source_id}").unwrap();
+    writeln!(out, "{nested}Drag.keys: [{source_id}.mosaicDragKind]").unwrap();
+    writeln!(out, "{nested}Drag.supportedActions: Qt.MoveAction").unwrap();
+    writeln!(out, "{nested}Drag.mimeData: ({{ \"application/x-mosaic-drag-key\": {source_id}.mosaicDragKey, \"application/x-mosaic-drag-kind\": {source_id}.mosaicDragKind }})").unwrap();
+    writeln!(
+        out,
+        "{nested}Drag.onDragStarted: mosaicDragScope.startPointer({source_id})"
+    )
+    .unwrap();
+    writeln!(out, "{nested}Drag.onDragFinished: function(action) {{ mosaicDragScope.finishPointer({source_id}); x = 0; y = 0 }}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}DragHandler {{").unwrap();
+    writeln!(out, "{nested}id: {handler_id}").unwrap();
+    writeln!(out, "{nested}target: {proxy_id}").unwrap();
+    writeln!(out, "{nested}enabled: !{source_id}.mosaicDragDisabled").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Native Qt Quick drop sink. Pointer and keyboard releases both route through
+/// `mosaicDragScope.accept`, so payload construction and accepted state cannot
+/// diverge.
+fn emit_host_drop_target_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let target_id = next_drag_id(ctx, "DropTarget");
+    let content_id = format!("{target_id}Content");
+    let target_key = qml_drag_text_expr(node, "drop-key", "\"\"")?;
+    let disabled = qml_drag_disabled_expr(node, "drop-disabled")?;
+    let accepts = qml_drag_accepts_expr(node)?.unwrap_or_else(|| "null".to_string());
+    let enter_values = [
+        ("key", "source.mosaicDragKey"),
+        ("kind", "source.mosaicDragKind"),
+    ];
+    let drop_values = [
+        ("key", "source.mosaicDragKey"),
+        ("kind", "source.mosaicDragKind"),
+        ("targetKey", "mosaicDropKey"),
+        ("position", "position"),
+    ];
+    let enter = qml_drag_event_call(node, "onDragEnter", ctx, &enter_values)?.unwrap_or_default();
+    let leave = qml_drag_event_call(node, "onDragLeave", ctx, &enter_values)?.unwrap_or_default();
+    let hover = qml_drag_event_call(node, "onDropHover", ctx, &drop_values)?.unwrap_or_default();
+    let drop_call = qml_drag_event_call(node, "onDrop", ctx, &drop_values)?.unwrap_or_default();
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Item {{").unwrap();
+    writeln!(out, "{inner}id: {target_id}").unwrap();
+    writeln!(out, "{inner}implicitWidth: {content_id}.implicitWidth").unwrap();
+    writeln!(out, "{inner}implicitHeight: {content_id}.implicitHeight").unwrap();
+    writeln!(
+        out,
+        "{inner}property string mosaicDropKey: String({target_key})"
+    )
+    .unwrap();
+    writeln!(out, "{inner}property var mosaicAcceptsKinds: {accepts}").unwrap();
+    writeln!(out, "{inner}property bool mosaicDropDisabled: {disabled}").unwrap();
+    writeln!(out, "{inner}Accessible.role: Accessible.Grouping").unwrap();
+    writeln!(out, "{inner}Accessible.name: mosaicDropKey").unwrap();
+    writeln!(
+        out,
+        "{inner}Accessible.description: mosaicDragScope.announcement"
+    )
+    .unwrap();
+    writeln!(out, "{inner}function mosaicDragEnter(source) {{ {enter} }}").unwrap();
+    writeln!(out, "{inner}function mosaicDragLeave(source) {{ {leave} }}").unwrap();
+    writeln!(
+        out,
+        "{inner}function mosaicDropHover(source, position) {{ {hover} }}"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}function mosaicDropAccepted(source, position) {{ {drop_call} }}"
+    )
+    .unwrap();
+    writeln!(out, "{inner}function mosaicPointerPosition(y) {{").unwrap();
+    writeln!(out, "{nested}if (height <= 0) return \"into\"").unwrap();
+    writeln!(out, "{nested}var ratio = y / height").unwrap();
+    writeln!(
+        out,
+        "{nested}return ratio < (1 / 3) ? \"before\" : (ratio > (2 / 3) ? \"after\" : \"into\")"
+    )
+    .unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(
+        out,
+        "{inner}Component.onCompleted: mosaicDragScope.registerTarget({target_id})"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}Component.onDestruction: mosaicDragScope.unregisterTarget({target_id})"
+    )
+    .unwrap();
+    writeln!(out, "{inner}ColumnLayout {{").unwrap();
+    writeln!(out, "{nested}id: {content_id}").unwrap();
+    writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    out.push_str(&emit_qml_children(&node.children, depth + 2, false, ctx)?);
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}DropArea {{").unwrap();
+    writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    writeln!(out, "{nested}onEntered: function(drag) {{").unwrap();
+    writeln!(out, "{nested}    if (!mosaicDragScope.canAccept({target_id}, drag.source)) {{ drag.accepted = false; return }}").unwrap();
+    writeln!(out, "{nested}    drag.acceptProposedAction()").unwrap();
+    writeln!(out, "{nested}    {target_id}.mosaicDragEnter(drag.source)").unwrap();
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(
+        out,
+        "{nested}onExited: {{ if (drag.source) {target_id}.mosaicDragLeave(drag.source) }}"
+    )
+    .unwrap();
+    writeln!(out, "{nested}onPositionChanged: function(drag) {{").unwrap();
+    writeln!(out, "{nested}    if (!mosaicDragScope.canAccept({target_id}, drag.source)) {{ drag.accepted = false; return }}").unwrap();
+    writeln!(out, "{nested}    drag.acceptProposedAction()").unwrap();
+    writeln!(out, "{nested}    {target_id}.mosaicDropHover(drag.source, {target_id}.mosaicPointerPosition(drag.y))").unwrap();
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{nested}onDropped: function(drop) {{").unwrap();
+    writeln!(
+        out,
+        "{nested}    var position = {target_id}.mosaicPointerPosition(drop.y)"
+    )
+    .unwrap();
+    writeln!(out, "{nested}    if (mosaicDragScope.accept({target_id}, drop.source, position)) drop.accept(Qt.MoveAction)").unwrap();
+    writeln!(out, "{nested}    else drop.accepted = false").unwrap();
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+fn qml_drag_text_expr(
+    node: &LayoutNode,
+    name: &str,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(value) = node
+        .props
+        .iter()
+        .find(|prop| prop.name == name)
+        .map(|prop| &prop.value)
+    else {
+        return Ok(fallback.to_string());
+    };
+    Ok(match value {
+        LayoutPropValue::String(value) => format!("\"{}\"", escape_qml_string(value)),
+        LayoutPropValue::SlotRef(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("mosaicRoot.{field}")
+        }
+        LayoutPropValue::Keyword(value) => format!("\"{}\"", escape_qml_string(value)),
+        LayoutPropValue::Expr(expression) => format!("({})", expression.trim()),
+        LayoutPropValue::Number(value) => format!("\"{value}\""),
+        LayoutPropValue::EmitRef(_) => fallback.to_string(),
+    })
+}
+
+fn qml_drag_disabled_expr(node: &LayoutNode, specific: &str) -> Result<String, PipelineEmitError> {
+    let value = node
+        .props
+        .iter()
+        .find(|prop| prop.name == specific)
+        .or_else(|| node.props.iter().find(|prop| prop.name == "disabled"))
+        .map(|prop| &prop.value);
+    Ok(match value {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("Boolean(mosaicRoot.{field})")
+        }
+        Some(LayoutPropValue::Keyword(value)) if value == "true" || value == "false" => {
+            value.clone()
+        }
+        Some(LayoutPropValue::Expr(expression)) => format!("Boolean({})", expression.trim()),
+        _ => "false".to_string(),
+    })
+}
+
+fn qml_drag_accepts_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = node
+        .props
+        .iter()
+        .find(|prop| prop.name == "accepts")
+        .map(|prop| &prop.value)
+    else {
+        return Ok(None);
+    };
+    Ok(Some(match value {
+        LayoutPropValue::String(kind) => format!("[\"{}\"]", escape_qml_string(kind)),
+        LayoutPropValue::SlotRef(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("mosaicRoot.{field}")
+        }
+        LayoutPropValue::Expr(expression) => format!("({})", expression.trim()),
+        LayoutPropValue::Keyword(kind) => format!("[\"{}\"]", escape_qml_string(kind)),
+        LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => "[]".to_string(),
+    }))
+}
+
+fn qml_drag_event_call(
+    node: &LayoutNode,
+    prop: &str,
+    ctx: &EmitCtx<'_>,
+    values: &[(&str, &str)],
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+        return Ok(None);
+    };
+    let signal = qml_signal_name(emit_name, ctx.signal_names)?;
+    let Some(emit) = ctx.emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(Some(format!("{signal}()")));
+    };
+    let args = emit
+        .params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(values
+                .iter()
+                .find_map(|(name, value)| (*name == field).then_some(*value))
+                .map(str::to_string)
+                .unwrap_or_else(|| match &param.r#type {
+                    EmitPayloadType::Text | EmitPayloadType::Color => "\"\"".to_string(),
+                    EmitPayloadType::Number => "0".to_string(),
+                    EmitPayloadType::Bool => "false".to_string(),
+                    EmitPayloadType::Component(_) => "null".to_string(),
+                }))
+        })
+        .collect::<Result<Vec<_>, PipelineEmitError>>()?;
+    Ok(Some(format!("{signal}({})", args.join(", "))))
+}
+
+/// Lower Mosaic's semantic icon vocabulary to Qt Quick Controls.
+///
+/// The loading glyph uses Qt's native indeterminate `BusyIndicator`. Other
+/// semantic names use a `Label` with a compact, cross-font Unicode mapping.
+/// Both shapes carry an explicit accessible role and name. Runtime glyphs
+/// render both controls in a small wrapper and switch visibility through a
+/// property binding, preserving live host updates without rebuilding QML.
+fn emit_icon_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let glyph_value = node
+        .props
+        .iter()
+        .find(|prop| matches!(prop.name.as_str(), "glyph" | "source" | "name"))
+        .map(|prop| &prop.value);
+    let glyph = qml_icon_text_expression(glyph_value, "star")?;
+    let literal_glyph = match glyph_value {
+        Some(LayoutPropValue::String(value)) => Some(value.as_str()),
+        _ => None,
+    };
+    let default_name = match literal_glyph {
+        Some(value) if value.eq_ignore_ascii_case("spinner") => "\"Loading\"".to_string(),
+        Some(value) => format!("\"{}\"", escape_qml_string(value)),
+        None => format!(
+            "(String({glyph}).trim().toLowerCase() === \"spinner\" ? \"Loading\" : String({glyph}))"
+        ),
+    };
+    let name_value = node
+        .props
+        .iter()
+        .find(|prop| matches!(prop.name.as_str(), "aria-label" | "content-description"))
+        .map(|prop| &prop.value);
+    let accessible_name = qml_icon_accessible_name(name_value, &default_name)?;
+    let style = part_style_props(node, ctx);
+
+    if literal_glyph.is_some_and(|value| value.eq_ignore_ascii_case("spinner")) {
+        let mut out = String::new();
+        writeln!(out, "{pad}BusyIndicator {{").unwrap();
+        writeln!(out, "{inner}running: true").unwrap();
+        emit_busy_indicator_style(&mut out, &inner, style);
+        writeln!(out, "{inner}Accessible.role: Accessible.ProgressBar").unwrap();
+        writeln!(out, "{inner}Accessible.name: {accessible_name}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        return Ok(out);
+    }
+
+    if literal_glyph.is_some() {
+        let mut out = String::new();
+        writeln!(out, "{pad}Label {{").unwrap();
+        writeln!(out, "{inner}text: mosaicRoot.mosaicIconGlyph({glyph})").unwrap();
+        if let Some(props) = style {
+            for line in qml_text_part_style_lines(props) {
+                writeln!(out, "{inner}{line}").unwrap();
+            }
+        }
+        writeln!(out, "{inner}Accessible.role: Accessible.StaticText").unwrap();
+        writeln!(out, "{inner}Accessible.name: {accessible_name}").unwrap();
+        writeln!(out, "{pad}}}").unwrap();
+        return Ok(out);
+    }
+
+    let mut out = String::new();
+    writeln!(out, "{pad}Item {{").unwrap();
+    writeln!(out, "{inner}property string mosaicGlyphName: {glyph}").unwrap();
+    writeln!(
+        out,
+        "{inner}property string mosaicAccessibleName: {accessible_name}"
+    )
+    .unwrap();
+    if let Some(props) = style {
+        for line in qml_icon_wrapper_size_lines(props) {
+            writeln!(out, "{inner}{line}").unwrap();
+        }
+    }
+    writeln!(out, "{inner}BusyIndicator {{").unwrap();
+    writeln!(out, "{nested}anchors.fill: parent").unwrap();
+    writeln!(
+        out,
+        "{nested}visible: parent.mosaicGlyphName.trim().toLowerCase() === \"spinner\""
+    )
+    .unwrap();
+    writeln!(out, "{nested}running: visible").unwrap();
+    emit_busy_indicator_style(&mut out, &nested, style);
+    writeln!(out, "{nested}Accessible.role: Accessible.ProgressBar").unwrap();
+    writeln!(out, "{nested}Accessible.name: parent.mosaicAccessibleName").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}Label {{").unwrap();
+    writeln!(out, "{nested}anchors.centerIn: parent").unwrap();
+    writeln!(
+        out,
+        "{nested}visible: parent.mosaicGlyphName.trim().toLowerCase() !== \"spinner\""
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{nested}text: mosaicRoot.mosaicIconGlyph(parent.mosaicGlyphName)"
+    )
+    .unwrap();
+    if let Some(props) = style {
+        for line in qml_text_part_style_lines(props) {
+            writeln!(out, "{nested}{line}").unwrap();
+        }
+    }
+    writeln!(out, "{nested}Accessible.role: Accessible.StaticText").unwrap();
+    writeln!(out, "{nested}Accessible.name: parent.mosaicAccessibleName").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+fn qml_icon_text_expression(
+    value: Option<&LayoutPropValue>,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    Ok(match value {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            field
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        Some(LayoutPropValue::Keyword(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        _ => format!("\"{}\"", escape_qml_string(fallback)),
+    })
+}
+
+fn qml_icon_accessible_name(
+    value: Option<&LayoutPropValue>,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    Ok(match value {
+        Some(LayoutPropValue::String(value)) if value.is_empty() => fallback.to_string(),
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("({field}.length > 0 ? {field} : {fallback})")
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        Some(LayoutPropValue::Keyword(value)) => {
+            format!("\"{}\"", escape_qml_string(value))
+        }
+        _ => fallback.to_string(),
+    })
+}
+
+fn qml_icon_wrapper_size_lines(props: &[StyleProp]) -> Vec<String> {
+    let Some(size) = style_prop(props, "font-size").and_then(qml_font_pixel_size) else {
+        return Vec::new();
+    };
+    vec![
+        format!("implicitWidth: {size}"),
+        format!("implicitHeight: {size}"),
+        format!("Layout.preferredWidth: {size}"),
+        format!("Layout.preferredHeight: {size}"),
+    ]
+}
+
+fn emit_busy_indicator_style(out: &mut String, pad: &str, props: Option<&[StyleProp]>) {
+    let Some(props) = props else { return };
+    for line in qml_icon_wrapper_size_lines(props) {
+        writeln!(out, "{pad}{line}").unwrap();
+    }
+    if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
+        writeln!(out, "{pad}palette.highlight: \"{color}\"").unwrap();
+    }
 }
 
 /// Build the `text: ...` attribute for a Text primitive, if a `content`
@@ -1874,6 +2776,21 @@ fn build_text_attribute(node: &LayoutNode) -> Option<String> {
         // this branch used to emit before §3.4 made scope rules explicit.
         LayoutPropValue::Expr(text) => format!("text: {text}"),
     })
+}
+
+fn build_text_accessible_name_attribute(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "a11y-label")?;
+    match &prop.value {
+        LayoutPropValue::String(label) => Some(format!(
+            "Accessible.name: \"{}\"",
+            escape_qml_string(label)
+        )),
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            is_safe_identifier(&camel).then(|| format!("Accessible.name: {camel}"))
+        }
+        _ => None,
+    }
 }
 
 /// Build the `source: ...` attribute for an Image primitive, if a `source`
@@ -2199,7 +3116,7 @@ fn host_button_style_qml_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> 
 
 /// Lower a `HostButton` node to a QML `Button { ... }` block.
 ///
-/// `Button` lives in `QtQuick.Controls 2.15`, which we import only when
+/// `Button` lives in `QtQuick.Controls`, which we import only when
 /// the layout tree references a primitive that needs it (see
 /// `tree_needs_controls_import`).
 ///
@@ -2302,7 +3219,7 @@ fn host_button_signal_args(emit_name: &str, ctx: &EmitCtx) -> Option<String> {
 /// Lower a `HostDialog` node (UI29-1, the 16th kernel primitive) to a
 /// QML `Popup { ... }` block.
 ///
-/// `Popup` lives in `QtQuick.Controls 2.15`. With `modal: true` it
+/// `Popup` lives in `QtQuick.Controls`. With `modal: true` it
 /// installs a focus trap and a backdrop dim automatically; with
 /// `modal: false` it behaves as an in-flow popover.
 ///
@@ -2425,7 +3342,7 @@ fn emit_host_dialog_qml(
 // =====================================================================
 
 /// Lower a `HostCheckbox` node (UI29-2, 17th kernel primitive) to a
-/// QtQuick.Controls 2.15 `CheckBox { ... }` block.
+/// QtQuick.Controls `CheckBox { ... }` block.
 ///
 /// ## Property handling
 ///
@@ -2506,7 +3423,7 @@ fn emit_host_checkbox_qml(
 }
 
 /// Lower a `HostRadio` node (UI29-2, 18th kernel primitive) to a
-/// QtQuick.Controls 2.15 `RadioButton { ... }` block.
+/// QtQuick.Controls `RadioButton { ... }` block.
 ///
 /// ## Property handling
 ///
@@ -2839,7 +3756,7 @@ fn emit_host_tooltip_qml(
 }
 
 /// Lower a `HostNumberInput` node (UI29-4, 21st kernel primitive)
-/// to a QtQuick.Controls 2.15 `TextField` with a `DoubleValidator`.
+/// to a QtQuick.Controls `TextField` with a `DoubleValidator`.
 /// This preserves decimal `number` payloads for scheduler options such
 /// as ease factors and interval multipliers.
 ///
@@ -2989,10 +3906,14 @@ fn build_dialog_title_text_line(node: &LayoutNode) -> Option<String> {
 /// `HostButton` → `Button`, `HostScroll` → `ScrollView`,
 /// `HostDialog` → `Popup`, `HostCheckbox` → `CheckBox`,
 /// `HostRadio` → `RadioButton`, `HostTooltip` → `ToolTip` attached
-/// property, `HostNumberInput` → `TextField`. `HostLink` is intentionally
+/// property, `HostNumberInput` → `TextField`, `Icon` → `BusyIndicator` or
+/// `Label`. `HostLink` is intentionally
 /// NOT here because it lowers to a plain `Text` element with rich-
 /// text + onLinkActivated, not a QtQuick.Controls widget.
 fn tree_needs_controls_import(node: &LayoutNode) -> bool {
+    if node.tag == "HostTable" && host_table_has_native_semantics(node) {
+        return true;
+    }
     if node.tag == "Input"
         && (find_keyword_prop(node, "multiline") == Some("true")
             || build_placeholder_text_attribute(node).is_some())
@@ -3011,7 +3932,467 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
             | "HostRadio"
             | "HostTooltip"
             | "HostNumberInput"
+            | "Icon"
     ) || node.children.iter().any(tree_needs_controls_import)
+}
+
+/// The exact dynamic table shape emitted by the reusable Mosaic Grid package.
+///
+/// Keeping this structural match conservative is important: the artifact
+/// builder uses the same predicate to decide whether Qt has native table
+/// semantics, so an unsupported author-defined HostTable must retain its
+/// accessibility degradation instead of silently clearing it.
+struct QtNativeTableShape<'a> {
+    header_collection: String,
+    header_alias: String,
+    header_index: String,
+    header_cell: &'a LayoutNode,
+    row_collection: String,
+    row_alias: String,
+    row_index: String,
+    cell_alias: String,
+    cell_index: String,
+    body_cell: &'a LayoutNode,
+}
+
+fn qml_table_collection_expr(node: &LayoutNode) -> Option<String> {
+    let value = &node.props.iter().find(|prop| prop.name == "each")?.value;
+    match value {
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let identifier = to_camel_case_first_lower(slot);
+            is_safe_identifier(&identifier).then_some(identifier)
+        }
+        LayoutPropValue::Expr(expression) => Some(format!("({})", expression.trim())),
+        LayoutPropValue::String(_) | LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => {
+            None
+        }
+    }
+}
+
+fn qml_table_binding(node: &LayoutNode, prop: &str) -> Option<String> {
+    let identifier = to_camel_case_first_lower(find_keyword_prop(node, prop)?);
+    is_safe_identifier(&identifier).then_some(identifier)
+}
+
+fn qt_native_table_shape(host_table: &LayoutNode) -> Option<QtNativeTableShape<'_>> {
+    if host_table.tag != "HostTable"
+        || host_table.children.iter().any(|child| {
+            !matches!(
+                child.tag.as_str(),
+                "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+            )
+        })
+    {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    let [header_cell] = header_cells.children.as_slice() else {
+        return None;
+    };
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    let [body_cell] = body_cells.children.as_slice() else {
+        return None;
+    };
+
+    if header_row.tag != "Row"
+        || header_cells.tag != "For"
+        || header_cell.tag != "Box"
+        || body_rows.tag != "For"
+        || body_row.tag != "Row"
+        || body_cells.tag != "For"
+        || body_cell.tag != "Box"
+        || layout_contains_tag(header_cell, "HostTable")
+        || layout_contains_tag(body_cell, "HostTable")
+    {
+        return None;
+    }
+
+    let header_collection = qml_table_collection_expr(header_cells)?;
+    let header_alias = qml_table_binding(header_cells, "as")?;
+    let header_index = qml_table_binding(header_cells, "index")?;
+    let row_collection = qml_table_collection_expr(body_rows)?;
+    let row_alias = qml_table_binding(body_rows, "as")?;
+    let row_index = qml_table_binding(body_rows, "index")?;
+    let cell_alias = qml_table_binding(body_cells, "as")?;
+    let cell_index = qml_table_binding(body_cells, "index")?;
+
+    // The inner loop must iterate the outer row. A different collection may
+    // look similar but cannot be represented by the generated 2-D model.
+    let inner_collection = qml_table_collection_expr(body_cells)?;
+    if inner_collection != row_alias {
+        return None;
+    }
+
+    let delegate_bindings = [
+        header_alias.as_str(),
+        header_index.as_str(),
+        row_index.as_str(),
+        cell_alias.as_str(),
+        cell_index.as_str(),
+    ];
+    if delegate_bindings.iter().any(|binding| {
+        matches!(
+            *binding,
+            "row" | "column" | "display" | "model" | "modelData" | "nativeModel" | "mosaicRoot"
+        )
+    }) || matches!(
+        row_alias.as_str(),
+        "column" | "display" | "model" | "modelData" | "nativeModel" | "mosaicRoot"
+    ) {
+        return None;
+    }
+
+    Some(QtNativeTableShape {
+        header_collection,
+        header_alias,
+        header_index,
+        header_cell,
+        row_collection,
+        row_alias,
+        row_index,
+        cell_alias,
+        cell_index,
+        body_cell,
+    })
+}
+
+/// Returns whether Qt can lower this HostTable to a real TableView backed by
+/// QAbstractTableModel. Package capability analysis calls this same predicate.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    qt_native_table_shape(host_table).is_some()
+}
+
+fn count_native_table_models(node: &LayoutNode) -> usize {
+    usize::from(node.tag == "HostTable" && host_table_has_native_semantics(node))
+        + node
+            .children
+            .iter()
+            .map(count_native_table_models)
+            .sum::<usize>()
+}
+
+fn emit_table_direction_qml(out: &mut String, node: &LayoutNode, pad: &str) {
+    if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_identifier(&camel) {
+            writeln!(out, "{pad}LayoutMirroring.enabled: {camel}").unwrap();
+            writeln!(out, "{pad}LayoutMirroring.childrenInherit: true").unwrap();
+        }
+    } else if let Some(kw) = find_keyword_prop(node, "dir") {
+        match kw {
+            "rtl" => {
+                writeln!(out, "{pad}LayoutMirroring.enabled: true").unwrap();
+                writeln!(out, "{pad}LayoutMirroring.childrenInherit: true").unwrap();
+            }
+            "ltr" => {
+                writeln!(out, "{pad}LayoutMirroring.enabled: false").unwrap();
+            }
+            "auto" => {}
+            _ => {}
+        }
+    }
+}
+
+fn qml_table_payload_expr(node: &LayoutNode, name: &str) -> Option<String> {
+    let value = &node.props.iter().find(|prop| prop.name == name)?.value;
+    match value {
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let identifier = to_camel_case_first_lower(slot);
+            is_safe_identifier(&identifier).then_some(identifier)
+        }
+        LayoutPropValue::Expr(expression) => Some(format!("({})", expression.trim())),
+        LayoutPropValue::String(value) => Some(format!("\"{}\"", escape_qml_string(value))),
+        LayoutPropValue::Number(value) => Some(value.to_string()),
+        LayoutPropValue::EmitRef(_) => None,
+    }
+}
+
+fn qml_table_cell_activation(
+    node: &LayoutNode,
+    ctx: &EmitCtx,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) =
+        find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
+    else {
+        return Ok(None);
+    };
+    let Some(emit) = ctx.emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(None);
+    };
+    let mut args = Vec::with_capacity(emit.params.len());
+    for param in &emit.params {
+        let Some(value) = qml_table_payload_expr(node, &param.name) else {
+            return Ok(None);
+        };
+        args.push(value);
+    }
+    Ok(Some(format!(
+        "{}({})",
+        qml_signal_name(emit_name, ctx.signal_names)?,
+        args.join(", ")
+    )))
+}
+
+fn emit_native_host_table_qml(
+    node: &LayoutNode,
+    shape: QtNativeTableShape<'_>,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    let table_index = ctx.next_table_id.get();
+    ctx.next_table_id.set(table_index + 1);
+    let table_id = format!("mosaicTable{table_index}");
+    let view_id = format!("mosaicTableView{table_index}");
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let nested = "    ".repeat(depth + 2);
+    let delegate = "    ".repeat(depth + 3);
+    let delegate_inner = "    ".repeat(depth + 4);
+    let component_inner = "    ".repeat(depth + 5);
+    let width_slot = discover_col_widths_slot(node);
+    let width_expr = width_slot
+        .as_deref()
+        .map(|slot| format!("({slot}.length > column && Number({slot}[column]) > 0 ? Number({slot}[column]) : 120)"))
+        .unwrap_or_else(|| "120".to_string());
+
+    let inherited = match &node.part_name {
+        Some(part) => {
+            let sheet: &[StyleProp] = ctx
+                .part_styles
+                .get(part)
+                .map(|v| v.as_slice())
+                .unwrap_or(&[]);
+            InheritedStyle {
+                background: style_prop(sheet, "background")
+                    .or_else(|| style_prop(sheet, "background-color"))
+                    .and_then(qml_hex_color_or_none),
+                color: style_prop(sheet, "color").and_then(qml_hex_color_or_none),
+                font_family_mono: style_prop(sheet, "font-family")
+                    .map(|v| v.trim() == "monospace")
+                    .unwrap_or(false),
+                font_pixel_size: style_prop(sheet, "font-size").and_then(qml_font_pixel_size),
+            }
+        }
+        None => ctx.inherited.clone(),
+    };
+    let table_ctx = EmitCtx {
+        col_widths_slot: width_slot,
+        inherited,
+        ..ctx.clone()
+    };
+    let body_activation = qml_table_cell_activation(shape.body_cell, ctx)?;
+
+    let mut out = String::new();
+    writeln!(out, "{pad}ColumnLayout {{").unwrap();
+    writeln!(out, "{inner}id: {table_id}").unwrap();
+    writeln!(out, "{inner}spacing: 0").unwrap();
+    writeln!(out, "{inner}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{inner}property var nativeModel: mosaicRoot.mosaicNativeTableModels.length > {table_index} ? mosaicRoot.mosaicNativeTableModels[{table_index}] : null").unwrap();
+    emit_table_direction_qml(&mut out, node, &inner);
+    writeln!(out, "{inner}Binding {{").unwrap();
+    writeln!(out, "{nested}target: {table_id}.nativeModel").unwrap();
+    writeln!(out, "{nested}property: \"headers\"").unwrap();
+    writeln!(out, "{nested}value: {}", shape.header_collection).unwrap();
+    writeln!(out, "{nested}when: {table_id}.nativeModel !== null").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{inner}Binding {{").unwrap();
+    writeln!(out, "{nested}target: {table_id}.nativeModel").unwrap();
+    writeln!(out, "{nested}property: \"rows\"").unwrap();
+    writeln!(out, "{nested}value: {}", shape.row_collection).unwrap();
+    writeln!(out, "{nested}when: {table_id}.nativeModel !== null").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+
+    writeln!(out, "{inner}Loader {{").unwrap();
+    writeln!(out, "{nested}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{nested}active: {table_id}.nativeModel !== null").unwrap();
+    writeln!(out, "{nested}sourceComponent: Component {{").unwrap();
+    writeln!(out, "{delegate}ColumnLayout {{").unwrap();
+    writeln!(out, "{delegate_inner}spacing: 0").unwrap();
+    writeln!(out, "{delegate_inner}HorizontalHeaderView {{").unwrap();
+    writeln!(out, "{component_inner}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{component_inner}syncView: {view_id}").unwrap();
+    writeln!(out, "{component_inner}delegate: Item {{").unwrap();
+    writeln!(out, "{component_inner}    required property int column").unwrap();
+    writeln!(out, "{component_inner}    required property var display").unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property var {}: display",
+        shape.header_alias
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property int {}: column",
+        shape.header_index
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}    implicitWidth: {width_expr}").unwrap();
+    writeln!(
+        out,
+        "{component_inner}    implicitHeight: Math.max(36, childrenRect.height)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    Accessible.role: Accessible.ColumnHeader"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}    Accessible.name: String(display)").unwrap();
+    out.push_str(&emit_qml_tree(
+        shape.header_cell,
+        depth + 6,
+        &table_ctx.with_for(shape.header_alias.clone(), Some(shape.header_index.clone())),
+    )?);
+    writeln!(out, "{component_inner}}}").unwrap();
+    writeln!(out, "{delegate_inner}}}").unwrap();
+    writeln!(out, "{delegate_inner}TableView {{").unwrap();
+    writeln!(out, "{component_inner}id: {view_id}").unwrap();
+    writeln!(out, "{component_inner}Layout.fillWidth: true").unwrap();
+    writeln!(
+        out,
+        "{component_inner}implicitHeight: Math.max(36, {}.length * 36)",
+        shape.row_collection
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}clip: true").unwrap();
+    writeln!(
+        out,
+        "{component_inner}boundsBehavior: Flickable.StopAtBounds"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}keyNavigationEnabled: true").unwrap();
+    writeln!(out, "{component_inner}model: {table_id}.nativeModel").unwrap();
+    writeln!(
+        out,
+        "{component_inner}columnWidthProvider: function(column) {{ return {width_expr}; }}"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}Accessible.role: Accessible.Table").unwrap();
+    writeln!(out, "{component_inner}delegate: Item {{").unwrap();
+    writeln!(out, "{component_inner}    required property int row").unwrap();
+    writeln!(out, "{component_inner}    required property int column").unwrap();
+    writeln!(out, "{component_inner}    required property var display").unwrap();
+    if shape.row_alias != "row" {
+        writeln!(
+            out,
+            "{component_inner}    property var {}: {}[row]",
+            shape.row_alias, shape.row_collection
+        )
+        .unwrap();
+    }
+    writeln!(
+        out,
+        "{component_inner}    property int {}: row",
+        shape.row_index
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property var {}: display",
+        shape.cell_alias
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    property int {}: column",
+        shape.cell_index
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    implicitWidth: {view_id}.columnWidthProvider(column)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{component_inner}    implicitHeight: Math.max(36, childrenRect.height)"
+    )
+    .unwrap();
+    writeln!(out, "{component_inner}    activeFocusOnTab: true").unwrap();
+    writeln!(out, "{component_inner}    Accessible.role: Accessible.Cell").unwrap();
+    writeln!(out, "{component_inner}    Accessible.name: String(display)").unwrap();
+    writeln!(out, "{component_inner}    Accessible.focusable: true").unwrap();
+    if let Some(activation) = &body_activation {
+        writeln!(
+            out,
+            "{component_inner}    Accessible.onPressAction: {{ {activation} }}"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{component_inner}    Keys.onReturnPressed: {{ {activation}; event.accepted = true }}"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{component_inner}    Keys.onEnterPressed: {{ {activation}; event.accepted = true }}"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "{component_inner}    Keys.onSpacePressed: {{ {activation}; event.accepted = true }}"
+        )
+        .unwrap();
+        writeln!(out, "{component_inner}    TapHandler {{").unwrap();
+        writeln!(
+            out,
+            "{component_inner}        onTapped: {{ parent.forceActiveFocus(); {activation} }}"
+        )
+        .unwrap();
+        writeln!(out, "{component_inner}    }}").unwrap();
+    }
+    let body_ctx = table_ctx
+        .with_for(shape.row_alias.clone(), Some(shape.row_index.clone()))
+        .with_for(shape.cell_alias.clone(), Some(shape.cell_index.clone()));
+    out.push_str(&emit_qml_tree(shape.body_cell, depth + 6, &body_ctx)?);
+    writeln!(out, "{component_inner}}}").unwrap();
+    writeln!(out, "{delegate_inner}}}").unwrap();
+    writeln!(out, "{delegate}}}").unwrap();
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+
+    // A component-only QML preview has no C++ shell and therefore no model.
+    // Keep the established structural rendering available in that environment.
+    writeln!(out, "{inner}Loader {{").unwrap();
+    writeln!(out, "{nested}Layout.fillWidth: true").unwrap();
+    writeln!(out, "{nested}active: {table_id}.nativeModel === null").unwrap();
+    writeln!(out, "{nested}sourceComponent: Component {{").unwrap();
+    out.push_str(&emit_host_table_fallback_qml(node, depth + 3, ctx)?);
+    writeln!(out, "{nested}}}").unwrap();
+    writeln!(out, "{inner}}}").unwrap();
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
 }
 
 /// Lower a `HostTable` node to a QML `ColumnLayout` of `RowLayout` rows.
@@ -3061,6 +4442,17 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
 /// styling integration for table parts is a follow-up. Tests assert
 /// that its presence does not break emission.
 fn emit_host_table_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    if let Some(shape) = qt_native_table_shape(node) {
+        return emit_native_host_table_qml(node, shape, depth, ctx);
+    }
+    emit_host_table_fallback_qml(node, depth, ctx)
+}
+
+fn emit_host_table_fallback_qml(
     node: &LayoutNode,
     depth: usize,
     ctx: &EmitCtx,
@@ -3132,30 +4524,7 @@ fn emit_host_table_qml(
     // attribute position because it never reaches the format string.
     // Slot refs run through `is_safe_identifier` so the binding
     // identifier stays syntactically clean QML.
-    if let Some(slot) = find_slot_ref_prop(node, "dir") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_identifier(&camel) {
-            writeln!(out, "{inner_pad}LayoutMirroring.enabled: {camel}").unwrap();
-            writeln!(out, "{inner_pad}LayoutMirroring.childrenInherit: true").unwrap();
-        }
-    } else if let Some(kw) = find_keyword_prop(node, "dir") {
-        match kw {
-            "rtl" => {
-                writeln!(out, "{inner_pad}LayoutMirroring.enabled: true").unwrap();
-                writeln!(out, "{inner_pad}LayoutMirroring.childrenInherit: true").unwrap();
-            }
-            "ltr" => {
-                writeln!(out, "{inner_pad}LayoutMirroring.enabled: false").unwrap();
-            }
-            // `auto` is the spec-mandated "let the host decide"
-            // keyword. QML has no `auto` enum — the right behaviour
-            // is to NOT emit the attached property so any ancestor's
-            // `LayoutMirroring` (typically the Window root's) flows
-            // through unchanged.
-            "auto" => {}
-            _ => {}
-        }
-    }
+    emit_table_direction_qml(&mut out, node, &inner_pad);
 
     // Track whether we've already emitted the head→body divider. The
     // divider sits between head and the first non-head section (body or
@@ -3272,8 +4641,8 @@ fn emit_table_section_rows(
 /// |---|---|
 /// | `each: slot: <name>`      | `model: <camelName>` — bare-identifier binding              |
 /// | `each: <expr>`            | `model: <expr-verbatim>` — passed through to QML            |
-/// | `as: <NAME>`              | `property var <NAME>: modelData` on the delegate `Item`     |
-/// | `index: <NAME>` (optional)| `property int <NAME>: index` on the delegate `Item`         |
+/// | `as: <NAME>`              | required `modelData`, re-exported as `<NAME>` on the delegate |
+/// | `index: <NAME>` (optional)| required `index`, re-exported as `<NAME>` on the delegate     |
 ///
 /// ## QML repeater shape — and why the delegate is an `Item`
 ///
@@ -3290,6 +4659,8 @@ fn emit_table_section_rows(
 /// Repeater {
 ///   model: viewportRows
 ///   delegate: Item {
+///     required property var modelData
+///     required property int index
 ///     property var row: modelData
 ///     property int r: index
 ///     // any descendant can now refer to `row` or `r` like a slot
@@ -3332,8 +4703,15 @@ fn emit_for_qml(
     writeln!(out, "{pad}Repeater {{").unwrap();
     writeln!(out, "{delegate_pad}model: {model_expr}").unwrap();
     writeln!(out, "{delegate_pad}delegate: Item {{").unwrap();
+    // `pragma ComponentBehavior: Bound` intentionally prevents delegates from
+    // reaching into an outer creation context. Repeater's `modelData` and `index`
+    // therefore need to be explicit required delegate properties; Qt supplies them
+    // from the model. Without these declarations every non-empty generated `For`
+    // fails at runtime even though an empty-model launch looks healthy.
+    writeln!(out, "{prop_pad}required property var modelData").unwrap();
     writeln!(out, "{prop_pad}property var {as_name}: modelData").unwrap();
     if let Some(idx) = &index_name {
+        writeln!(out, "{prop_pad}required property int index").unwrap();
         writeln!(out, "{prop_pad}property int {idx}: index").unwrap();
     }
     // The delegate `Item` carries no intrinsic size, but it IS a layout
@@ -4269,8 +5647,9 @@ mod tests {
         assert!(result
             .output
             .starts_with("// Auto-generated by mosaic-emit-qt"));
-        assert!(result.output.contains("import QtQuick 2.15"));
-        assert!(result.output.contains("import QtQuick.Layouts 1.15"));
+        assert!(result.output.contains("pragma ComponentBehavior: Bound"));
+        assert!(result.output.contains("import QtQuick"));
+        assert!(result.output.contains("import QtQuick.Layouts"));
         assert!(result.output.contains("Item {"));
         // The Box lowering → child Item.
         let item_count = result.output.matches("Item {").count();
@@ -4647,6 +6026,52 @@ mod tests {
         );
     }
 
+    #[test]
+    fn text_accessibility_metadata_lowers_to_qml_accessible_properties() {
+        let m = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "Title".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Visible title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::SlotRef("spoken-title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-role".to_string(),
+                        value: LayoutPropValue::Keyword("heading".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Title"))
+            .unwrap()
+            .output;
+        assert!(out.contains("Accessible.name: spokenTitle"));
+        assert!(out.contains("Accessible.role: Accessible.Heading"));
+
+        let mut hidden = l;
+        hidden.root.props = vec![LayoutProp {
+            name: "a11y-hidden".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }];
+        let hidden_out = from_pipeline(&m, &hidden, &empty_style("Title"))
+            .unwrap()
+            .output;
+        assert!(hidden_out.contains("Accessible.ignored: true"));
+    }
+
     // -------- Test 10: Image source binding --------
 
     /// `Image { source: "/path/img.png" }` lowers to `Image { source:
@@ -4686,6 +6111,100 @@ mod tests {
         };
         let r_slot = from_pipeline(&m, &l_slot, &empty_style("X")).unwrap();
         assert!(r_slot.output.contains("source: photoUrl"));
+    }
+
+    #[test]
+    fn spinner_icon_uses_native_busy_indicator_with_accessible_name() {
+        let m = component(
+            "Spinner",
+            vec![slot("aria-label", SlotType::Text, false)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "Spinner".to_string(),
+            root: LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "glyph".to_string(),
+                        value: LayoutPropValue::String("spinner".to_string()),
+                    },
+                    LayoutProp {
+                        name: "aria-label".to_string(),
+                        value: LayoutPropValue::SlotRef("aria-label".to_string()),
+                    },
+                ],
+                children: vec![],
+            },
+        };
+        let output = from_pipeline(&m, &layout, &empty_style("Spinner"))
+            .unwrap()
+            .output;
+        assert!(output.contains("import QtQuick.Controls"));
+        assert!(output.contains("BusyIndicator {"));
+        assert!(output.contains("running: true"));
+        assert!(output.contains("Accessible.role: Accessible.ProgressBar"));
+        assert!(
+            output.contains("Accessible.name: (ariaLabel.length > 0 ? ariaLabel : \"Loading\")")
+        );
+    }
+
+    #[test]
+    fn semantic_icon_uses_accessible_native_label_mapping() {
+        let m = component("Favorite", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "Favorite".to_string(),
+            root: LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::String("favorite".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let output = from_pipeline(&m, &layout, &empty_style("Favorite"))
+            .unwrap()
+            .output;
+        assert!(output.contains("function mosaicIconGlyph(name)"));
+        assert!(output.contains("Label {"));
+        assert!(output.contains("text: mosaicRoot.mosaicIconGlyph(\"favorite\")"));
+        assert!(output.contains("Accessible.role: Accessible.StaticText"));
+        assert!(output.contains("Accessible.name: \"favorite\""));
+    }
+
+    #[test]
+    fn runtime_icon_switches_between_progress_and_semantic_label() {
+        let m = component(
+            "RuntimeIcon",
+            vec![slot("icon-name", SlotType::Text, true)],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "RuntimeIcon".to_string(),
+            root: LayoutNode {
+                tag: "Icon".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "glyph".to_string(),
+                    value: LayoutPropValue::SlotRef("icon-name".to_string()),
+                }],
+                children: vec![],
+            },
+        };
+        let output = from_pipeline(&m, &layout, &empty_style("RuntimeIcon"))
+            .unwrap()
+            .output;
+        assert!(output.contains("property string mosaicGlyphName: iconName"));
+        assert!(output.contains("BusyIndicator {"));
+        assert!(output.contains("Label {"));
+        assert!(output.contains("=== \"spinner\""));
+        assert!(output.contains("!== \"spinner\""));
+        assert!(output.contains(
+            "property string mosaicAccessibleName: (String(iconName).trim().toLowerCase() === \"spinner\" ? \"Loading\" : String(iconName))"
+        ));
     }
 
     // -------- Test 11: Spacer carries fillWidth + fillHeight --------
@@ -4842,10 +6361,10 @@ mod tests {
     fn imports_precede_root_item() {
         let m = component("X", vec![], vec![]);
         let result = from_pipeline(&m, &single_box_layout("X"), &empty_style("X")).unwrap();
-        let qq = result.output.find("import QtQuick 2.15").expect("qtquick");
+        let qq = result.output.find("import QtQuick").expect("qtquick");
         let qql = result
             .output
-            .find("import QtQuick.Layouts 1.15")
+            .find("import QtQuick.Layouts")
             .expect("qtquick.layouts");
         let item = result.output.find("Item {").expect("Item");
         assert!(qq < item && qql < item, "imports must precede Item");
@@ -5075,7 +6594,7 @@ mod tests {
         };
 
         let result = from_pipeline(&m, &l, &empty_style("Notes")).unwrap();
-        assert!(result.output.contains("import QtQuick.Controls 2.15"));
+        assert!(result.output.contains("import QtQuick.Controls"));
         assert!(result.output.contains("TextArea {"));
         assert!(result.output.contains("objectName: \"notes-body-input\""));
         assert!(result.output.contains("text: bodyValue"));
@@ -5110,7 +6629,7 @@ mod tests {
         };
 
         let result = from_pipeline(&m, &l, &empty_style("Search")).unwrap();
-        assert!(result.output.contains("import QtQuick.Controls 2.15"));
+        assert!(result.output.contains("import QtQuick.Controls"));
         assert!(result.output.contains("TextField {"));
         assert!(result.output.contains("placeholderText: \"Search\""));
         assert!(!result.output.contains("TextArea {"));
@@ -5597,7 +7116,7 @@ mod tests {
     // -------- Test 22: HostButton with label + onTap --------
 
     /// `HostButton` lowers to `Button { text: ...; onClicked: ... }`
-    /// from `QtQuick.Controls 2.15`. The `label` prop maps to QML's
+    /// from `QtQuick.Controls`. The `label` prop maps to QML's
     /// `text` (the canonical Button label property in Controls 2.x);
     /// `onTap` maps to `onClicked`.
     #[test]
@@ -5850,7 +7369,7 @@ mod tests {
 
     // -------- Test 25: QtQuick.Controls import added when needed --------
 
-    /// The `QtQuick.Controls 2.15` import is added conditionally:
+    /// The `QtQuick.Controls` import is added conditionally:
     /// only when the layout tree references a primitive that lowers
     /// to a Controls element. `HostButton` triggers it; a tree
     /// without any Host*-Controls primitive should NOT emit the
@@ -5873,7 +7392,7 @@ mod tests {
         };
         let r_with = from_pipeline(&m, &l_with, &empty_style("X")).unwrap();
         assert!(
-            r_with.output.contains("import QtQuick.Controls 2.15"),
+            r_with.output.contains("import QtQuick.Controls"),
             "Controls import missing when HostButton present in:\n{}",
             r_with.output
         );
@@ -5894,9 +7413,7 @@ mod tests {
         };
         let r_placeholder = from_pipeline(&m, &l_placeholder, &empty_style("X")).unwrap();
         assert!(
-            r_placeholder
-                .output
-                .contains("import QtQuick.Controls 2.15"),
+            r_placeholder.output.contains("import QtQuick.Controls"),
             "Controls import missing when HostInput uses placeholder/TextField:\n{}",
             r_placeholder.output
         );
@@ -5961,6 +7478,105 @@ mod tests {
         }
     }
 
+    fn canonical_native_table_layout() -> LayoutDef {
+        let for_node =
+            |each: LayoutPropValue, as_name: &str, index: &str, child: LayoutNode| LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: each,
+                    },
+                    LayoutProp {
+                        name: "as".to_string(),
+                        value: LayoutPropValue::Keyword(as_name.to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword(index.to_string()),
+                    },
+                ],
+                children: vec![child],
+            };
+        let header_cell = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("h".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        };
+        let body_cell = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "onClick".to_string(),
+                    value: LayoutPropValue::EmitRef("onNavigate".to_string()),
+                },
+                LayoutProp {
+                    name: "row".to_string(),
+                    value: LayoutPropValue::Expr("r".to_string()),
+                },
+                LayoutProp {
+                    name: "col".to_string(),
+                    value: LayoutPropValue::Expr("c".to_string()),
+                },
+            ],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("v".to_string()),
+                }],
+                children: Vec::new(),
+            }],
+        };
+        let header_for = for_node(
+            LayoutPropValue::SlotRef("headers".to_string()),
+            "h",
+            "ch",
+            header_cell,
+        );
+        let body_cells = for_node(
+            LayoutPropValue::Keyword("row".to_string()),
+            "v",
+            "c",
+            body_cell,
+        );
+        let body_rows = for_node(
+            LayoutPropValue::SlotRef("rows".to_string()),
+            "row",
+            "r",
+            LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![body_cells],
+            },
+        );
+        host_table(vec![
+            section(
+                "HostTableHead",
+                vec![LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: None,
+                    props: Vec::new(),
+                    children: vec![header_for],
+                }],
+            ),
+            section("HostTableBody", vec![body_rows]),
+        ])
+    }
+
     /// Count substring occurrences (helper for "exactly N divider Rectangles"
     /// style assertions).
     fn count_occurrences(s: &str, needle: &str) -> usize {
@@ -5998,6 +7614,106 @@ mod tests {
             "unexpected divider in empty HostTable:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn canonical_host_table_emits_native_model_semantics_and_activation() {
+        let m = component(
+            "X",
+            vec![
+                slot(
+                    "headers",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+            ],
+            vec![emit_decl(
+                "onNavigate",
+                vec![
+                    param("row", EmitPayloadType::Number),
+                    param("col", EmitPayloadType::Number),
+                ],
+            )],
+        );
+        let layout = canonical_native_table_layout();
+        assert!(host_table_has_native_semantics(&layout.root));
+
+        let result = from_pipeline_with_options(
+            &m,
+            &layout,
+            &empty_style("X"),
+            &EmitOptions {
+                emit_project: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(result.output.contains("import QtQuick.Controls"));
+        assert!(result.output.contains("HorizontalHeaderView {"));
+        assert!(result.output.contains("TableView {"));
+        assert!(result.output.contains("Accessible.role: Accessible.Table"));
+        assert!(result.output.contains("Accessible.role: Accessible.Cell"));
+        assert!(result.output.contains("Keys.onReturnPressed:"));
+        assert!(result.output.contains("TapHandler {"));
+        assert!(result.output.contains("navigate((r), (c))"));
+        assert!(result
+            .output
+            .contains("active: mosaicTable0.nativeModel === null"));
+
+        let project = result.project.expect("project files");
+        assert!(project.main_cpp.contains("class MosaicTableModel final"));
+        assert!(project.main_cpp.contains("QAbstractTableModel"));
+        assert!(project.main_cpp.contains("headerData("));
+        assert!(project
+            .main_cpp
+            .contains("mosaicNativeTableModels.reserve(1)"));
+        assert!(project.main_cpp.contains("#include \"main.moc\""));
+    }
+
+    #[test]
+    fn native_host_table_shape_rejects_unsupported_foot_and_inner_collection() {
+        let mut with_foot = canonical_native_table_layout();
+        with_foot
+            .root
+            .children
+            .push(section("HostTableFoot", Vec::new()));
+        assert!(!host_table_has_native_semantics(&with_foot.root));
+
+        let mut wrong_inner_collection = canonical_native_table_layout();
+        let inner_for =
+            &mut wrong_inner_collection.root.children[1].children[0].children[0].children[0];
+        inner_for
+            .props
+            .iter_mut()
+            .find(|prop| prop.name == "each")
+            .unwrap()
+            .value = LayoutPropValue::SlotRef("headers".to_string());
+        assert!(!host_table_has_native_semantics(
+            &wrong_inner_collection.root
+        ));
+
+        let m = component("X", vec![], vec![]);
+        let result = from_pipeline_with_options(
+            &m,
+            &host_table(Vec::new()),
+            &empty_style("X"),
+            &EmitOptions {
+                emit_project: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(!result.output.contains("mosaicNativeTableModels"));
+        assert!(!result
+            .project
+            .unwrap()
+            .main_cpp
+            .contains("QAbstractTableModel"));
     }
 
     // -------- Test 28: HostTableHead emits bold RowLayout cells --------
@@ -6529,6 +8245,11 @@ mod tests {
             result.output
         );
         assert!(
+            result.output.contains("required property var modelData"),
+            "Bound delegate must declare Repeater modelData explicitly:\n{}",
+            result.output
+        );
+        assert!(
             result.output.contains("property var row: modelData"),
             "missing as-binding property in:\n{}",
             result.output
@@ -6557,6 +8278,11 @@ mod tests {
         assert!(
             result.output.contains("property int r: index"),
             "missing index-binding in:\n{}",
+            result.output
+        );
+        assert!(
+            result.output.contains("required property int index"),
+            "Bound delegate must declare Repeater index explicitly:\n{}",
             result.output
         );
 
@@ -7281,10 +9007,10 @@ mod tests {
         );
     }
 
-    // -------- Test 54: HostDialog triggers QtQuick.Controls 2.15 import --------
+    // -------- Test 54: HostDialog triggers QtQuick.Controls import --------
 
     /// `HostDialog` lowers to `Popup`, which lives in
-    /// `QtQuick.Controls 2.15`. Using a dialog must add the conditional
+    /// `QtQuick.Controls`. Using a dialog must add the conditional
     /// Controls import — same gate as `HostButton` / `HostScroll`.
     #[test]
     fn host_dialog_triggers_qtquick_controls_import() {
@@ -7292,7 +9018,7 @@ mod tests {
         let l = dialog_layout(vec![], vec![]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            result.output.contains("import QtQuick.Controls 2.15"),
+            result.output.contains("import QtQuick.Controls"),
             "Controls import missing when HostDialog used in:\n{}",
             result.output
         );
@@ -7368,14 +9094,14 @@ mod tests {
     }
 
     /// UI29-2 Qt test 2 — bare `HostCheckbox` triggers the
-    /// QtQuick.Controls 2.15 import (CheckBox lives in Controls 2).
+    /// QtQuick.Controls import (CheckBox lives in Controls 2).
     #[test]
     fn host_checkbox_triggers_qtquick_controls_import() {
         let m = component("X", vec![], vec![]);
         let l = checkbox_layout(vec![]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            result.output.contains("import QtQuick.Controls 2.15"),
+            result.output.contains("import QtQuick.Controls"),
             "expected QtQuick.Controls import, got:\n{}",
             result.output
         );
@@ -7888,7 +9614,7 @@ mod tests {
             r.output
         );
         assert!(
-            r.output.contains("import QtQuick.Controls 2.15"),
+            r.output.contains("import QtQuick.Controls"),
             "expected QtQuick.Controls import, got:\n{}",
             r.output
         );
@@ -7986,6 +9712,234 @@ mod tests {
     }
 
     // =================================================================
+    // UI35 — native Qt drag/drop
+
+    fn drag_prop(name: &str, value: LayoutPropValue) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value,
+        }
+    }
+
+    fn drag_family_fixture() -> (MosmodelComponent, LayoutDef) {
+        let iface = component(
+            "Board",
+            vec![
+                slot("drag-key", SlotType::Text, true),
+                slot("drag-disabled", SlotType::Bool, true),
+                slot(
+                    "accepted-kinds",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+            ],
+            vec![
+                emit_decl(
+                    "onDragStart",
+                    vec![
+                        param("key", EmitPayloadType::Text),
+                        param("kind", EmitPayloadType::Text),
+                    ],
+                ),
+                emit_decl(
+                    "onDragEnd",
+                    vec![
+                        param("key", EmitPayloadType::Text),
+                        param("kind", EmitPayloadType::Text),
+                        param("dropped", EmitPayloadType::Bool),
+                    ],
+                ),
+                emit_decl(
+                    "onDragEnter",
+                    vec![
+                        param("key", EmitPayloadType::Text),
+                        param("kind", EmitPayloadType::Text),
+                    ],
+                ),
+                emit_decl(
+                    "onDragLeave",
+                    vec![
+                        param("key", EmitPayloadType::Text),
+                        param("kind", EmitPayloadType::Text),
+                    ],
+                ),
+                emit_decl(
+                    "onDropHover",
+                    vec![
+                        param("key", EmitPayloadType::Text),
+                        param("kind", EmitPayloadType::Text),
+                        param("targetKey", EmitPayloadType::Text),
+                        param("position", EmitPayloadType::Text),
+                    ],
+                ),
+                emit_decl(
+                    "onDrop",
+                    vec![
+                        param("key", EmitPayloadType::Text),
+                        param("kind", EmitPayloadType::Text),
+                        param("targetKey", EmitPayloadType::Text),
+                        param("position", EmitPayloadType::Text),
+                    ],
+                ),
+            ],
+        );
+        let source = LayoutNode {
+            tag: "HostDraggable".to_string(),
+            part_name: Some("card".to_string()),
+            props: vec![
+                drag_prop("drag-key", LayoutPropValue::SlotRef("drag-key".to_string())),
+                drag_prop("drag-kind", LayoutPropValue::String("task".to_string())),
+                drag_prop(
+                    "drag-label",
+                    LayoutPropValue::String("Write spec".to_string()),
+                ),
+                drag_prop(
+                    "drag-disabled",
+                    LayoutPropValue::SlotRef("drag-disabled".to_string()),
+                ),
+                drag_prop(
+                    "onDragStart",
+                    LayoutPropValue::EmitRef("onDragStart".to_string()),
+                ),
+                drag_prop(
+                    "onDragEnd",
+                    LayoutPropValue::EmitRef("onDragEnd".to_string()),
+                ),
+            ],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![drag_prop(
+                    "content",
+                    LayoutPropValue::String("Write spec".to_string()),
+                )],
+                children: vec![],
+            }],
+        };
+        let target = LayoutNode {
+            tag: "HostDropTarget".to_string(),
+            part_name: Some("lane".to_string()),
+            props: vec![
+                drag_prop("drop-key", LayoutPropValue::String("done".to_string())),
+                drag_prop(
+                    "accepts",
+                    LayoutPropValue::SlotRef("accepted-kinds".to_string()),
+                ),
+                drag_prop(
+                    "onDragEnter",
+                    LayoutPropValue::EmitRef("onDragEnter".to_string()),
+                ),
+                drag_prop(
+                    "onDragLeave",
+                    LayoutPropValue::EmitRef("onDragLeave".to_string()),
+                ),
+                drag_prop(
+                    "onDropHover",
+                    LayoutPropValue::EmitRef("onDropHover".to_string()),
+                ),
+                drag_prop("onDrop", LayoutPropValue::EmitRef("onDrop".to_string())),
+            ],
+            children: vec![LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![drag_prop(
+                    "content",
+                    LayoutPropValue::String("Done".to_string()),
+                )],
+                children: vec![],
+            }],
+        };
+        (
+            iface,
+            LayoutDef {
+                component_name: "Board".to_string(),
+                root: LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: None,
+                    props: vec![],
+                    children: vec![source, target],
+                },
+            },
+        )
+    }
+
+    #[test]
+    fn drag_family_emits_native_pointer_touch_keyboard_and_accessibility_contract() {
+        let (iface, layout) = drag_family_fixture();
+        let out = from_pipeline(&iface, &layout, &empty_style("Board"))
+            .expect("emit Qt drag family")
+            .output;
+
+        for required in [
+            "DragHandler {",
+            "Drag.dragType: Drag.Automatic",
+            "Drag.mimeData:",
+            "DropArea {",
+            "Keys.onPressed: function(event)",
+            "Qt.Key_Escape",
+            "Qt.Key_Space",
+            "Qt.Key_Right",
+            "LayoutMirroring.enabled ? -1 : 1",
+            "Accessible.onPressAction:",
+            "Accessible.announce(message, Accessible.Polite)",
+            "property var mosaicDragOwner: mosaicDragScope",
+            "source.mosaicDragOwner !== mosaicDragScope",
+            "Component.onCompleted: mosaicDragScope.registerTarget",
+            "Component.onDestruction: mosaicDragScope.unregisterTarget",
+        ] {
+            assert!(out.contains(required), "missing {required:?} in:\n{out}");
+        }
+        assert_eq!(out.matches("id: mosaicDragScope").count(), 1);
+        assert_eq!(out.matches("id: mosaicDragAnnouncer").count(), 1);
+        assert!(out.contains("property bool mosaicDragDisabled: Boolean(mosaicRoot.dragDisabled)"));
+        assert!(out.contains("property var mosaicAcceptsKinds: mosaicRoot.acceptedKinds"));
+    }
+
+    #[test]
+    fn drag_family_constructs_lifecycle_payloads_once_through_accepted_drop() {
+        let (iface, layout) = drag_family_fixture();
+        let out = from_pipeline(&iface, &layout, &empty_style("Board"))
+            .expect("emit Qt drag lifecycle")
+            .output;
+
+        for required in [
+            "dragStart(mosaicDragKey, mosaicDragKind)",
+            "dragEnd(mosaicDragKey, mosaicDragKind, dropped)",
+            "dragEnter(source.mosaicDragKey, source.mosaicDragKind)",
+            "dragLeave(source.mosaicDragKey, source.mosaicDragKind)",
+            "dropHover(source.mosaicDragKey, source.mosaicDragKind, mosaicDropKey, position)",
+            "drop(source.mosaicDragKey, source.mosaicDragKind, mosaicDropKey, position)",
+            "if (!accept(activeTarget, source, \"into\")) return false",
+            "if (mosaicDragScope.accept(mosaicDropTarget1, drop.source, position))",
+            "var dropped = acceptedPointer === source",
+            "if (target.mosaicDropDisabled) return false",
+            "kinds.indexOf(source.mosaicDragKind) >= 0",
+        ] {
+            assert!(out.contains(required), "missing {required:?} in:\n{out}");
+        }
+        assert_eq!(
+            out.matches(
+                "drop(source.mosaicDragKey, source.mosaicDragKind, mosaicDropKey, position)"
+            )
+            .count(),
+            1,
+            "onDrop payload must be constructed by exactly one target callback:\n{out}"
+        );
+    }
+
+    #[test]
+    fn non_drag_component_omits_drag_controller() {
+        let out = from_pipeline(
+            &component("Plain", vec![], vec![]),
+            &single_box_layout("Plain"),
+            &empty_style("Plain"),
+        )
+        .unwrap()
+        .output;
+        assert!(!out.contains("mosaicDragScope"));
+        assert!(!out.contains("Accessible.announce"));
+    }
+
     // UI32-K-qt — `--emit-project` Qt6 + CMake shell tests
     //
     // Covers UI32 spec §3.1-§3.8 per-PR gates:
@@ -8160,8 +10114,8 @@ mod tests {
             "expected CMake minimum 3.21"
         );
         assert!(
-            proj.cmake_lists.contains("find_package(Qt6 6.7 REQUIRED"),
-            "expected Qt6 6.7 pin"
+            proj.cmake_lists.contains("find_package(Qt6 6.8 REQUIRED"),
+            "expected Qt6 6.8 pin"
         );
         assert!(
             proj.cmake_lists.contains("set(CMAKE_CXX_STANDARD 17)"),
@@ -8398,7 +10352,7 @@ mod tests {
         );
         assert!(
             proj.cmake_lists.contains(
-                "find_package(Qt6 6.7 REQUIRED COMPONENTS Quick QuickControls2 QmlImportScanner Widgets)"
+                "find_package(Qt6 6.8 REQUIRED COMPONENTS Quick QuickControls2 QmlImportScanner Widgets)"
             ),
             "CMake should resolve QuickControls2 plus QtWidgets host support:\n{}",
             proj.cmake_lists

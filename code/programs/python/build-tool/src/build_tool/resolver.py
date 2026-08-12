@@ -4,8 +4,9 @@ resolver.py -- Dependency Resolution from Package Metadata
 
 This module reads package metadata files (pyproject.toml for Python, .gemspec
 for Ruby, go.mod for Go, package.json for TypeScript, Cargo.toml for Rust,
-Package.swift for Swift) and extracts internal dependencies. It builds a
-directed graph where edges represent "A depends on B".
+Package.swift for Swift, and root project files for C# and F#) and extracts
+internal dependencies. It builds a directed graph where edges represent
+"A depends on B".
 
 Dependency mapping conventions
 ------------------------------
@@ -39,6 +40,7 @@ skipped.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -317,7 +319,6 @@ def _parse_go_deps(package: Package, known_names: dict[str, str]) -> list[str]:
 # ---------------------------------------------------------------------------
 # Elixir dependency parsing
 # ---------------------------------------------------------------------------
-
 def _parse_elixir_deps(package: Package, known_names: dict[str, str]) -> list[str]:
     """Extract internal dependencies from an Elixir mix.exs file."""
     mix_exs = package.path / "mix.exs"
@@ -624,33 +625,208 @@ def _parse_perl_deps(package: Package, known_names: dict[str, str]) -> list[str]
 # ---------------------------------------------------------------------------
 
 
+def _find_cabal_file(package_path: Path) -> Path | None:
+    """Return the sole root Cabal manifest, rejecting ambiguous packages."""
+    try:
+        manifests = sorted(
+            path
+            for path in package_path.iterdir()
+            if path.is_file() and path.suffix.lower() == ".cabal"
+        )
+    except OSError:
+        return None
+    return manifests[0] if len(manifests) == 1 else None
+
+
+def _read_cabal_package_name(package_path: Path) -> str | None:
+    """Read the declared name from an unambiguous root Cabal manifest."""
+    manifest = _find_cabal_file(package_path)
+    if manifest is None:
+        return None
+    match = re.search(
+        r"(?mi)^\s*name\s*:\s*([a-z0-9][a-z0-9-]*)\s*$",
+        manifest.read_text(encoding="utf-8"),
+    )
+    return match.group(1).lower() if match else None
+
+
 def _parse_haskell_deps(package: Package, known_names: dict[str, str]) -> list[str]:
-    """Extract internal dependencies from a Haskell package's .cabal file."""
-    cabal_files = list(package.path.glob("*.cabal"))
-    if not cabal_files:
+    """Read only ``build-depends`` fields from one root Cabal manifest."""
+    manifest = _find_cabal_file(package.path)
+    if manifest is None:
         return []
 
-    text = cabal_files[0].read_text(encoding="utf-8")
-    internal_deps: list[str] = []
+    name_pattern = re.compile(r"^([a-z0-9][a-z0-9-]*)", re.IGNORECASE)
+    field_pattern = re.compile(r"^[a-z][a-z0-9-]*\s*:", re.IGNORECASE)
+    internal_deps: set[str] = set()
+    in_build_depends = False
 
-    pattern = re.compile(r"coding-adventures-([a-z0-9-]+)")
-    for match in pattern.finditer(text):
-        dep_name = f"coding-adventures-{match.group(1).lower()}"
-        if dep_name in known_names and known_names[dep_name] != package.name:
-            internal_deps.append(known_names[dep_name])
+    for raw_line in manifest.read_text(encoding="utf-8").splitlines():
+        line = raw_line.split("--", 1)[0].strip()
+        if line.lower().startswith("build-depends:"):
+            in_build_depends = True
+            line = line[len("build-depends:") :].strip()
+        elif in_build_depends and (
+            not line
+            or field_pattern.match(line)
+            or (raw_line and raw_line[0] not in " \t")
+        ):
+            in_build_depends = False
 
-    return internal_deps
+        if not in_build_depends:
+            continue
+        for piece in line.split(","):
+            match = name_pattern.match(piece.strip())
+            if not match:
+                continue
+            dependency = known_names.get(match.group(1).lower())
+            if dependency is not None and dependency != package.name:
+                internal_deps.add(dependency)
+
+    return sorted(internal_deps)
 
 
 # ---------------------------------------------------------------------------
 # Gradle (Java / Kotlin) dependency parsing
 # ---------------------------------------------------------------------------
+def _skip_gradle_string(source: str | list[str], index: int) -> int:
+    """Return the first character after one double-quoted Kotlin string."""
+    index += 1
+    while index < len(source):
+        if source[index] == "\\":
+            index += 2
+        elif source[index] == '"':
+            return index + 1
+        else:
+            index += 1
+    return index
 
-# Regex for Gradle composite build includes: includeBuild("../logic-gates")
-_GRADLE_INCLUDE_BUILD_RE = re.compile(r'includeBuild\s*\(\s*"\.\.\/([^"]+)"\s*\)')
+
+def _strip_gradle_comments(source: str) -> str:
+    """Blank nested block and line comments while preserving offsets."""
+    visible = list(source)
+    block_depth = 0
+    index = 0
+    while index < len(visible):
+        pair = "".join(visible[index : index + 2])
+        if block_depth:
+            if pair == "/*":
+                visible[index : index + 2] = [" ", " "]
+                block_depth += 1
+                index += 2
+            elif pair == "*/":
+                visible[index : index + 2] = [" ", " "]
+                block_depth -= 1
+                index += 2
+            else:
+                if visible[index] not in "\r\n":
+                    visible[index] = " "
+                index += 1
+            continue
+
+        if visible[index] == '"':
+            index = _skip_gradle_string(visible, index)
+        elif pair == "//":
+            while index < len(visible) and visible[index] not in "\r\n":
+                visible[index] = " "
+                index += 1
+        elif pair == "/*":
+            visible[index : index + 2] = [" ", " "]
+            block_depth = 1
+            index += 2
+        else:
+            index += 1
+    return "".join(visible)
 
 
-def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[str]:
+def _skip_gradle_whitespace(source: str, index: int) -> int:
+    while index < len(source) and source[index] in " \t\r\n":
+        index += 1
+    return index
+
+
+def _gradle_identifier_at(source: str, index: int, identifier: str) -> bool:
+    if not source.startswith(identifier, index):
+        return False
+    identifier_chars = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    if index and source[index - 1] in identifier_chars:
+        return False
+    end = index + len(identifier)
+    return end == len(source) or source[end] not in identifier_chars
+
+
+def _parse_gradle_include_build(
+    source: str, index: int
+) -> tuple[str | None, int]:
+    index = _skip_gradle_whitespace(source, index)
+    if index >= len(source) or source[index] != "(":
+        return None, index
+    index = _skip_gradle_whitespace(source, index + 1)
+    if index >= len(source) or source[index] != '"':
+        return None, index
+
+    start = index + 1
+    index = start
+    while index < len(source):
+        if source[index] == "\\":
+            index += 2
+            continue
+        if source[index] != '"':
+            index += 1
+            continue
+        path = source[start:index]
+        next_index = _skip_gradle_whitespace(source, index + 1)
+        if next_index >= len(source) or source[next_index] != ")":
+            return None, next_index
+        return path, next_index + 1
+    return None, index
+
+
+def _gradle_include_build_paths(source: str) -> list[str]:
+    visible = _strip_gradle_comments(source)
+    paths: list[str] = []
+    index = 0
+    while index < len(visible):
+        if visible[index] == '"':
+            index = _skip_gradle_string(visible, index)
+            continue
+        if _gradle_identifier_at(visible, index, "includeBuild"):
+            path, next_index = _parse_gradle_include_build(
+                visible, index + len("includeBuild")
+            )
+            if path is not None:
+                paths.append(path)
+                index = next_index
+                continue
+        index += 1
+    return paths
+
+
+def _portable_path_is_absolute(path: str) -> bool:
+    return bool(
+        path
+        and (
+            path[0] in "/\\"
+            or (len(path) >= 2 and path[0].isalpha() and path[1] == ":")
+        )
+    )
+
+
+def _normalized_gradle_package_path(path: Path | str) -> str:
+    return os.path.normcase(os.path.normpath(str(path))).lower()
+
+
+def _build_known_gradle_paths_for_language(
+    packages: list[Package], language: str
+) -> dict[str, str]:
+    return {
+        _normalized_gradle_package_path(package.path): package.name
+        for package in packages
+        if package.language == language
+    }
+
+
+def _parse_gradle_deps(package: Package, known_paths: dict[str, str]) -> list[str]:
     """Extract internal dependencies from a Gradle settings.gradle.kts file.
 
     Both Java and Kotlin packages use Gradle as their build system. In this
@@ -666,7 +842,7 @@ def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[st
 
     Args:
         package: The Java or Kotlin package to inspect.
-        known_names: Mapping from directory name to package name.
+        known_paths: Mapping from normalized discovered roots to package names.
 
     Returns:
         List of internal dependency package names.
@@ -676,22 +852,209 @@ def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[st
         return []
 
     text = settings_file.read_text(encoding="utf-8")
-    internal_deps: list[str] = []
-
-    for line in text.splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("//"):
+    internal_deps: set[str] = set()
+    for relative_path in _gradle_include_build_paths(text):
+        if (
+            not relative_path
+            or "\\" in relative_path
+            or "$" in relative_path
+            or _portable_path_is_absolute(relative_path)
+        ):
             continue
-        match = _GRADLE_INCLUDE_BUILD_RE.search(stripped)
-        if match:
-            dep_dir = match.group(1).lower()
-            # Guard against path traversal.
-            if "/" in dep_dir or "\\" in dep_dir or dep_dir == "..":
-                continue
-            if dep_dir in known_names:
-                internal_deps.append(known_names[dep_dir])
+        target = _normalized_gradle_package_path(
+            os.path.join(package.path, relative_path.replace("/", os.sep))
+        )
+        dependency = known_paths.get(target)
+        if dependency is not None and dependency != package.name:
+            internal_deps.add(dependency)
 
-    return internal_deps
+    return sorted(internal_deps)
+
+
+# ---------------------------------------------------------------------------
+# .NET (C# / F#) dependency parsing
+# ---------------------------------------------------------------------------
+
+
+def _root_dotnet_project_files(root: Path) -> list[Path]:
+    """Return only C# and F# project files directly inside a package root."""
+    try:
+        return sorted(
+            (
+                entry
+                for entry in root.iterdir()
+                if entry.is_file() and entry.suffix.lower() in {".csproj", ".fsproj"}
+            ),
+            key=lambda path: path.name.lower(),
+        )
+    except OSError:
+        return []
+
+
+def _skip_xml_markup(source: str, index: int, terminator: str) -> int:
+    relative = source.find(terminator, index)
+    if relative < 0:
+        return len(source)
+    return relative + len(terminator)
+
+
+def _is_xml_name_character(character: str) -> bool:
+    return character.isascii() and (character.isalnum() or character in ":_-.")
+
+
+def _parse_xml_start_tag(source: str, index: int) -> tuple[str | None, str, int]:
+    if (
+        index >= len(source)
+        or source[index] != "<"
+        or index + 1 >= len(source)
+        or source[index + 1] == "/"
+    ):
+        return None, "", index
+
+    name_start = index + 1
+    name_end = name_start
+    while name_end < len(source) and _is_xml_name_character(source[name_end]):
+        name_end += 1
+    if name_end == name_start:
+        return None, "", index
+
+    quote: str | None = None
+    end = name_end
+    while end < len(source):
+        character = source[end]
+        if quote is not None:
+            if character == quote:
+                quote = None
+        elif character in {"'", '"'}:
+            quote = character
+        elif character == ">":
+            return source[name_start:name_end], source[name_end:end], end + 1
+        end += 1
+    return None, "", len(source)
+
+
+def _skip_xml_whitespace(source: str, index: int) -> int:
+    while index < len(source) and source[index] in " \t\r\n":
+        index += 1
+    return index
+
+
+def _xml_literal_attribute(attributes: str, wanted: str) -> str | None:
+    index = 0
+    while index < len(attributes):
+        index = _skip_xml_whitespace(attributes, index)
+        if index >= len(attributes) or attributes[index] == "/":
+            return None
+
+        name_start = index
+        while index < len(attributes) and _is_xml_name_character(attributes[index]):
+            index += 1
+        if index == name_start:
+            index += 1
+            continue
+        name = attributes[name_start:index]
+
+        index = _skip_xml_whitespace(attributes, index)
+        if index >= len(attributes) or attributes[index] != "=":
+            continue
+        index = _skip_xml_whitespace(attributes, index + 1)
+        if index >= len(attributes) or attributes[index] not in {"'", '"'}:
+            continue
+
+        quote = attributes[index]
+        value_start = index + 1
+        index = value_start
+        while index < len(attributes) and attributes[index] != quote:
+            index += 1
+        if index >= len(attributes):
+            return None
+        value = attributes[value_start:index]
+        index += 1
+        if name == wanted:
+            return value
+    return None
+
+
+def _dotnet_project_reference_includes(source: str) -> list[str]:
+    """Read literal Include attributes from unqualified start elements."""
+    includes: list[str] = []
+    index = 0
+    while index < len(source):
+        index = source.find("<", index)
+        if index < 0:
+            break
+        if source.startswith("<!--", index):
+            index = _skip_xml_markup(source, index + 4, "-->")
+            continue
+        if source.startswith("<![CDATA[", index):
+            index = _skip_xml_markup(source, index + 9, "]]>")
+            continue
+        if source.startswith("<?", index):
+            index = _skip_xml_markup(source, index + 2, "?>")
+            continue
+        if source.startswith("<!", index):
+            index = _skip_xml_markup(source, index + 2, ">")
+            continue
+
+        name, attributes, next_index = _parse_xml_start_tag(source, index)
+        if name is None:
+            index += 1
+            continue
+        index = next_index
+        if name != "ProjectReference":
+            continue
+        include = _xml_literal_attribute(attributes, "Include")
+        if include is not None:
+            includes.append(include)
+    return includes
+
+
+def _normalized_dotnet_project_path(path: Path | str) -> str:
+    return os.path.normcase(os.path.normpath(str(path))).lower()
+
+
+def _dotnet_project_reference_path(project_file: Path, include: str) -> str | None:
+    if (
+        not include
+        or any(character in include for character in "*?#&")
+        or "$(" in include
+        or _portable_path_is_absolute(include)
+    ):
+        return None
+    portable = include.replace("/", os.sep).replace("\\", os.sep)
+    return _normalized_dotnet_project_path(project_file.parent / portable)
+
+
+def _build_known_dotnet_project_paths(
+    packages: list[Package],
+) -> dict[str, str]:
+    known: dict[str, str] = {}
+    for package in packages:
+        if not _in_dependency_scope(package.language, "dotnet"):
+            continue
+        for project_file in _root_dotnet_project_files(package.path):
+            known[_normalized_dotnet_project_path(project_file)] = package.name
+    return known
+
+
+def _parse_dotnet_deps(
+    package: Package, known_project_paths: dict[str, str]
+) -> list[str]:
+    """Resolve literal root ProjectReference paths without opening targets."""
+    dependencies: set[str] = set()
+    for project_file in _root_dotnet_project_files(package.path):
+        try:
+            source = project_file.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            continue
+        for include in _dotnet_project_reference_includes(source):
+            target = _dotnet_project_reference_path(project_file, include)
+            if target is None:
+                continue
+            dependency = known_project_paths.get(target)
+            if dependency is not None and dependency != package.name:
+                dependencies.add(dependency)
+    return sorted(dependencies)
 
 
 # ---------------------------------------------------------------------------
@@ -699,7 +1062,48 @@ def _parse_gradle_deps(package: Package, known_names: dict[str, str]) -> list[st
 # ---------------------------------------------------------------------------
 
 
-def _build_known_names(packages: list[Package]) -> dict[str, str]:
+_BUILD_TOOL_DEPS_RE = re.compile(
+    r"(?m)^[ \t]*#\s*build-tool:\s*deps\s*=\s*(.+)$"
+)
+
+
+def _parse_build_tool_deps(
+    package: Package, known_package_names: set[str]
+) -> list[str]:
+    """Read exact qualified cross-ecosystem dependencies from BUILD comments."""
+    if not package.build_content:
+        return []
+
+    dependencies: set[str] = set()
+    for match in _BUILD_TOOL_DEPS_RE.finditer(package.build_content):
+        for raw in re.split(r"[,\t ]+", match.group(1)):
+            dependency = raw.strip()
+            if (
+                dependency
+                and dependency != package.name
+                and dependency in known_package_names
+            ):
+                dependencies.add(dependency)
+    return sorted(dependencies)
+
+
+def _dependency_scope(language: str) -> str:
+    """Return the ecosystem scope used for ordinary manifest aliases."""
+    if language in {"csharp", "fsharp", "dotnet"}:
+        return "dotnet"
+    return language
+
+
+def _in_dependency_scope(package_language: str, scope: str) -> bool:
+    """Whether a package may contribute aliases to one resolver scope."""
+    if scope == "dotnet":
+        return package_language in {"csharp", "fsharp", "dotnet"}
+    return package_language == scope
+
+
+def _build_known_names_for_language(
+    packages: list[Package], language: str
+) -> dict[str, str]:
     """Build a mapping from ecosystem-specific dependency names to package names.
 
     For Python:     "coding-adventures-logic-gates" -> "python/logic-gates"
@@ -714,19 +1118,38 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
     resolving the dep to itself and creating a self-loop.
     """
     known: dict[str, str] = {}
+    known_paths: dict[str, Path] = {}
+    known_languages: dict[str, str] = {}
+    scope = _dependency_scope(language)
 
     def _set_known(key: str, value: str, pkg_path: Path) -> None:
         """Insert key→value, letting library packages overwrite programs."""
+        package_language = value.split("/", 1)[0]
         if key not in known:
             known[key] = value
+            known_paths[key] = pkg_path
+            known_languages[key] = package_language
             return
-        # Key already set. Allow overwrite only if the current pkg is a
-        # library (not a program) — i.e., when the existing entry came from
-        # a program and we now have the definitive library entry.
-        if "/programs/" not in str(pkg_path).replace("\\", "/"):
+        existing_is_program = "/programs/" in str(known_paths[key]).replace("\\", "/")
+        current_is_program = "/programs/" in str(pkg_path).replace("\\", "/")
+        if existing_is_program and not current_is_program:
             known[key] = value
+            known_paths[key] = pkg_path
+            known_languages[key] = package_language
+            return
+        if not existing_is_program and current_is_program:
+            return
+        if scope == "dotnet":
+            if known_languages[key] == language:
+                return
+            if package_language == language:
+                known[key] = value
+                known_paths[key] = pkg_path
+                known_languages[key] = package_language
 
     for pkg in packages:
+        if not _in_dependency_scope(pkg.language, scope):
+            continue
         if pkg.language == "python":
             # Convert package dir name to pypi name: "logic-gates" -> "coding-adventures-logic-gates"
             pypi_name = f"coding-adventures-{pkg.path.name}".lower()
@@ -800,9 +1223,14 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             _set_known(dir_base, pkg.name, pkg.path)
 
         elif pkg.language == "haskell":
-            # Haskell Cabal package names use hyphens: "logic-gates" → "coding-adventures-logic-gates"
-            cabal_name = f"coding-adventures-{pkg.path.name}".lower()
-            _set_known(cabal_name, pkg.name, pkg.path)
+            # Register modern directory names, the legacy prefix, and the
+            # declared name from the sole root manifest.
+            dir_base = pkg.path.name.lower()
+            _set_known(dir_base, pkg.name, pkg.path)
+            _set_known(f"coding-adventures-{dir_base}", pkg.name, pkg.path)
+            declared_name = _read_cabal_package_name(pkg.path)
+            if declared_name is not None:
+                _set_known(declared_name, pkg.name, pkg.path)
 
         elif pkg.language in ("java", "kotlin"):
             # Java and Kotlin packages use Gradle composite builds. Dependencies
@@ -811,6 +1239,27 @@ def _build_known_names(packages: list[Package]) -> dict[str, str]:
             dir_base = pkg.path.name.lower()
             _set_known(dir_base, pkg.name, pkg.path)
 
+        elif pkg.language in ("csharp", "fsharp", "dotnet"):
+            # C#, F#, and shared dotnet programs form one MSBuild scope.
+            dir_base = pkg.path.name.lower()
+            _set_known(dir_base, pkg.name, pkg.path)
+
+    return known
+
+
+def _build_known_names(packages: list[Package]) -> dict[str, str]:
+    """Build the legacy unscoped alias view used by mapping unit tests.
+
+    Dependency resolution does not consume this view. It builds one table per
+    ecosystem so same-spelled aliases from another language cannot redirect an
+    edge.
+    """
+    known: dict[str, str] = {}
+    for language in dict.fromkeys(package.language for package in packages):
+        for alias, package_name in _build_known_names_for_language(
+            packages, language
+        ).items():
+            known.setdefault(alias, package_name)
     return known
 
 
@@ -835,11 +1284,22 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
     for pkg in packages:
         graph.add_node(pkg.name)
 
-    # Build the name-mapping table (single global map for cross-language deps).
-    known_names = _build_known_names(packages)
+    # Ordinary manifest aliases are ecosystem-local. Exact qualified BUILD
+    # comments are the portable escape hatch for intentional cross-lane edges.
+    known_names_by_language = {
+        language: _build_known_names_for_language(packages, language)
+        for language in dict.fromkeys(pkg.language for pkg in packages)
+    }
+    known_gradle_paths_by_language = {
+        language: _build_known_gradle_paths_for_language(packages, language)
+        for language in ("java", "kotlin")
+    }
+    known_dotnet_project_paths = _build_known_dotnet_project_paths(packages)
+    known_package_names = {pkg.name for pkg in packages}
 
     # Parse dependencies for each package.
     for pkg in packages:
+        known_names = known_names_by_language[pkg.language]
         if pkg.language == "python":
             deps = _parse_python_deps(pkg, known_names)
         elif pkg.language == "ruby":
@@ -861,11 +1321,17 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
         elif pkg.language == "haskell":
             deps = _parse_haskell_deps(pkg, known_names)
         elif pkg.language in ("java", "kotlin"):
-            deps = _parse_gradle_deps(pkg, known_names)
+            deps = _parse_gradle_deps(
+                pkg, known_gradle_paths_by_language[pkg.language]
+            )
+        elif pkg.language in ("csharp", "fsharp", "dotnet"):
+            deps = _parse_dotnet_deps(pkg, known_dotnet_project_paths)
         else:
             deps = []
 
-        for dep_name in deps:
+        deps.extend(_parse_build_tool_deps(pkg, known_package_names))
+
+        for dep_name in sorted(set(deps)):
             # Edge direction: dep -> pkg means "dep must be built before pkg".
             # This makes independent_groups() produce the correct build order:
             # nodes with zero in-degree (no dependencies) come first.

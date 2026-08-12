@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-gracias
 spine_node: SPINE-COURTESY-THANK
 sequence: 270
-chapter: 4
+chapter: 7
 type: word
 headword: gracias
 gloss: thank you

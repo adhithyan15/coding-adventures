@@ -1,0 +1,76 @@
+% ============================================================================
+% metamorphism-cause — what causes a rock to become metamorphic, and what
+% that process does to it (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% `rock-types.adj` (shipped earlier in this stdlib) names WHICH family a rock
+% belongs to and gives ONE combined phrase for how metamorphic rock forms
+% ("heat_and_pressure"). This is a DIFFERENT, finer-grained axis: not which
+% rock type results, but each individual CAUSE of metamorphism and the
+% EFFECT it has on the rock. A primary source names THREE distinct causes —
+% heat, pressure, and hot mineral-rich fluids — and states one shared effect
+% for all three: the rock becomes denser and more compact. Recall is a
+% binding query:
+%
+%     ? metamorphism_cause(heat, $Effect)   % denser_more_compact_rock
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `metamorphism_cause(cause, effect)` carrying the USGS citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% effect WITH its source, on the CPU, with zero model calls. It abstains on
+% anything the source does not name as a cause of metamorphism.
+%
+% The three causes and their shared effect, as a truth table:
+%
+%     cause                    effect                      the source's own word
+%     -----------------------  --------------------------  ------------------------
+%     heat                     denser_more_compact_rock     "high heat"
+%     pressure                 denser_more_compact_rock     "high pressure"
+%     hot_mineral_rich_fluids  denser_more_compact_rock     "hot mineral-rich fluids"
+%
+% The query also runs BACKWARD — bind the effect and enumerate every cause
+% that produces it:
+%
+%     ? metamorphism_cause($Cause, denser_more_compact_rock)
+%
+% Something the source does NOT name as a cause of metamorphism — `sunlight`,
+% `cold` — has no row, so a recall on it ABSTAINS rather than inventing a
+% cause. That honest-abstention property is what makes the table safe to
+% reason from.
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% All three rows come from ONE pair of sentences in the U.S. Geological
+% Survey's (USGS) "What are metamorphic rocks?" FAQ page, a primary U.S.
+% government geology source, quoted here character-for-character:
+%
+%   "Metamorphic rocks form when rocks are subjected to high heat, high
+%    pressure, hot mineral-rich fluids or, more commonly, some combination
+%    of these factors."
+%
+%   "The process of metamorphism does not melt the rocks, but instead
+%    transforms them into denser, more compact rocks."
+%
+% The first sentence names the three causes (`heat`, `pressure`,
+% `hot_mineral_rich_fluids`); the second sentence states the shared effect
+% (`denser_more_compact_rock`) all three produce. An ADJ `table` carries ONE
+% provenance envelope, so the `source`/`locator`/`trust` below hold the
+% cause-naming sentence, with the effect sentence quoted above for full
+% auditability. `trust authoritative` — USGS/usgs.gov is a U.S. government
+% (.gov) primary reference, the same tier `rock-types.adj` already
+% established for its own NPS citation.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table metamorphism_cause {
+    columns cause, effect
+
+    row (heat, denser_more_compact_rock)
+    row (pressure, denser_more_compact_rock)
+    row (hot_mineral_rich_fluids, denser_more_compact_rock)
+
+    source "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors."
+    locator "https://www.usgs.gov/faqs/what-are-metamorphic-rocks"
+    trust authoritative
+}

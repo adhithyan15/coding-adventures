@@ -1,0 +1,20 @@
+% ============================================================================
+% part-of-speech.query.adj — a worked recall over the part-of-speech
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what part of speech is
+% this word?": it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `part_of_speech` rows and returns the category + the table's
+% own source/locator/trust. A word the table does not carry abstains
+% honestly — the engine never invents a classification.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli part-of-speech.query.adj
+% ============================================================================
+
+import "part-of-speech.adj"
+
+? part_of_speech(queen, $Category)     % expect noun
+? part_of_speech($Word, verb)          % expect run
+? part_of_speech(slowly, $Category)    % expect abstain — no category is shipped for this word

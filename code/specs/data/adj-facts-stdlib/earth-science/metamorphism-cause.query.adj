@@ -1,0 +1,20 @@
+% ============================================================================
+% metamorphism-cause.query.adj — a worked recall over the metamorphism-cause
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does heat do to
+% rock?": it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `metamorphism_cause` rows and returns the effect + the table's own
+% source/locator/trust. A cause the table does not carry abstains
+% honestly — the engine never invents a cause of metamorphism.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli metamorphism-cause.query.adj
+% ============================================================================
+
+import "metamorphism-cause.adj"
+
+? metamorphism_cause(heat, $Effect)                       % expect denser_more_compact_rock
+? metamorphism_cause($Cause, denser_more_compact_rock)    % expect heat, pressure, hot_mineral_rich_fluids
+? metamorphism_cause(sunlight, $Effect)                    % expect abstain — no cause is shipped for sunlight

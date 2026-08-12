@@ -209,11 +209,12 @@ int64_t __gc_collect_precise(void);
  * __gc_collect_minor. Returns objects freed. Same threading contract as
  * __gc_collect_precise.
  *
- * UNLIKE __gc_safepoint, this is always directly callable regardless of
- * __gc_set_auto_minor — the attestation gate applies only to __gc_safepoint's
- * AUTOMATIC choice to run a minor cycle, not to this explicit entry. Calling this
- * directly still requires every old->young reference store to have gone through
- * __gc_write_barrier; the caller (not gc-core) is responsible for that. */
+ * REQUIRES __gc_set_auto_minor(1) attestation, same as __gc_safepoint's AUTOMATIC
+ * minor path — this direct entry is gated identically (security-review hardening:
+ * an earlier version let a direct caller bypass the attestation gate entirely).
+ * Unattested, this is a safe no-op: collects nothing and returns 0. Calling this
+ * after attesting still requires every old->young reference store to have gone
+ * through __gc_write_barrier; the caller (not gc-core) is responsible for that. */
 int64_t __gc_collect_minor_precise(void);
 
 /* Full **moving/compacting** collection rooted PRECISELY at this thread's stack — the
@@ -230,6 +231,28 @@ int64_t __gc_collect_minor_precise(void);
  * dead only — a relocated object is a survivor, not a free). For precision + safety the image
  * must be built with frame pointers. Same threading contract as __gc_collect_precise. */
 int64_t __gc_collect_compacting(void);
+
+/* Minor (young-generation-only) collection rooted PRECISELY at this thread's stack
+ * that also COMPACTS — evacuates its young survivors into a compact arena instead of
+ * sweeping them in place (AOT00-T9 §5, PR-5). The moving-minor cell in the same
+ * moving x generational-scope 2x2 the three collectors above fill the other three
+ * cells of; shares __gc_collect_minor_precise's identical frame-pointer walk.
+ *
+ * REQUIRES __gc_set_auto_minor(1) attestation, same as __gc_collect_minor_precise —
+ * and for a STRICTLY STRONGER reason: a non-moving minor cycle tolerates an
+ * occasional missed __gc_write_barrier call as long as the child it would have
+ * recorded is independently reachable; a moving minor cycle does not have that
+ * slack (see gc_core::FlatHeap::collect_minor_compacting's own Safety doc). Gating
+ * on the same auto_minor flag does not by itself prove an attesting embedder's
+ * coverage meets this stronger bar -- that responsibility still rests with whoever
+ * calls __gc_set_auto_minor. Unattested, this is a safe no-op: collects nothing and
+ * returns 0.
+ *
+ * With no stack maps registered nothing is precisely reachable and therefore
+ * nothing is movable, so this degrades to exactly __gc_collect_minor_precise.
+ * Returns objects reclaimed (genuinely dead only; a relocated survivor is not a
+ * free). Same threading contract as __gc_collect_minor_precise. */
+int64_t __gc_collect_minor_compacting(void);
 
 /* ── Incremental (bounded-pause) collection ─────────────────────────────────
  * A three-call cooperative cycle (spec AOT00-T4-incremental-collector.md §6) that

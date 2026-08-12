@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.35.0";
 
 use std::collections::HashMap;
 
@@ -36,7 +36,7 @@ use diagram_ir::{
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
-    TaskStatus, TextAlign as GeoTextAlign,
+    SequenceProperty, TaskStatus, TextAlign as GeoTextAlign,
 };
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
@@ -118,7 +118,44 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_dash_offset: None,
             })
         }
-        DiagramShape::Rect => PaintInstruction::Rect(PaintRect {
+        DiagramShape::Note => {
+            let fold = 12.0_f64.min(node.width / 4.0).min(node.height / 4.0);
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo {
+                        x: node.x,
+                        y: node.y,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x + node.width - fold,
+                        y: node.y,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x + node.width,
+                        y: node.y + fold,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x + node.width,
+                        y: node.y + node.height,
+                    },
+                    PathCommand::LineTo {
+                        x: node.x,
+                        y: node.y + node.height,
+                    },
+                    PathCommand::Close,
+                ],
+                fill: Some(node.style.fill.clone()),
+                fill_rule: None,
+                stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })
+        }
+        DiagramShape::Rect | DiagramShape::Bar => PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
             x: node.x,
             y: node.y,
@@ -324,24 +361,60 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
 
-    // ── 1. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
+    // ── 1. Composite groups — drawn behind edges and member nodes ────────────
+    for group in &diagram.groups {
+        instructions.push(PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: group.x,
+            y: group.y,
+            width: group.width,
+            height: group.height,
+            fill: Some(group.style.fill.clone()),
+            stroke: Some(group.style.stroke.clone()),
+            stroke_width: Some(group.style.stroke_width),
+            corner_radius: Some(group.style.corner_radius),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+        for divider_y in &group.divider_y {
+            instructions.push(PaintInstruction::Path(line_path(
+                &[
+                    Point {
+                        x: group.x,
+                        y: *divider_y,
+                    },
+                    Point {
+                        x: group.x + group.width,
+                        y: *divider_y,
+                    },
+                ],
+                &group.style.stroke,
+                group.style.stroke_width,
+            )));
+        }
+    }
+
+    // ── 2. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
     for edge in &diagram.edges {
-        instructions.push(PaintInstruction::Path(line_path(
-            &edge.points,
-            &edge.style.stroke,
-            edge.style.stroke_width,
-        )));
+        let mut path = line_path(&edge.points, &edge.style.stroke, edge.style.stroke_width);
+        if edge.kind == EdgeKind::NoteAssociation {
+            path.stroke_dash = Some(vec![4.0, 4.0]);
+        }
+        instructions.push(PaintInstruction::Path(path));
         if let Some(tip) = arrowhead(edge) {
             instructions.push(PaintInstruction::Path(tip));
         }
     }
 
-    // ── 2. Node shapes — drawn over edges so endpoints are hidden ─────────────
+    // ── 3. Node shapes — drawn over edges so endpoints are hidden ─────────────
     for node in &diagram.nodes {
+        if diagram.hide_empty_descriptions && node.label.text.is_empty() {
+            continue;
+        }
         instructions.push(node_shape_instruction(node));
     }
 
-    // ── 3. Text — all labels routed through layout-to-paint ───────────────────
+    // ── 4. Text — all labels routed through layout-to-paint ───────────────────
     //
     // Build one PositionedNode per text item, collect them as children of a
     // transparent synthetic root spanning the full canvas, then call
@@ -352,6 +425,18 @@ where
     let title_size = title_font.size;
 
     let mut text_children: Vec<PositionedNode> = Vec::new();
+
+    for group in &diagram.groups {
+        text_children.push(text_node_no_wrap(
+            &group.label.text,
+            group.x + 12.0,
+            group.y + 8.0,
+            group.width - 24.0,
+            label_size * 1.2,
+            label_font.clone(),
+            css_to_color(&group.style.text_color),
+        ));
+    }
 
     // Title (if present) — centred at the top of the canvas.
     if let Some(title) = &diagram.title {
@@ -392,12 +477,17 @@ where
 
     // Node labels — vertically centred inside each node bounding box.
     for node in &diagram.nodes {
-        text_children.push(text_node(
+        if diagram.hide_empty_descriptions && node.label.text.is_empty() {
+            continue;
+        }
+        let line_count = node.label.text.lines().count().max(1) as f64;
+        let text_height = line_count * label_size * 1.2;
+        text_children.push(text_node_no_wrap(
             &node.label.text,
             node.x,
-            node.y + (node.height - label_size) / 2.0,
+            node.y + (node.height - text_height) / 2.0,
             node.width,
-            label_size * 1.2,
+            text_height,
             {
                 let mut f = label_font.clone();
                 f.size = node.style.font_size;
@@ -443,6 +533,27 @@ where
     let text_scene = layout_to_paint(&text_root, &text_opts);
     instructions.extend(text_scene.instructions);
 
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
+    for link in &diagram.links {
+        let prefix = format!("graph.node.{}.link", link.node_id);
+        metadata.insert(format!("{prefix}.url"), link.url.clone());
+        if let Some(tooltip) = &link.tooltip {
+            metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
+            metadata.insert(
+                format!("{prefix}.bounds"),
+                format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+            );
+        }
+    }
+
     let bg = options.background;
     PaintScene {
         width: diagram.width,
@@ -455,7 +566,7 @@ where
         },
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
     }
 }
 
@@ -1116,6 +1227,7 @@ where
     for item in &diagram.items {
         if let LayoutedSequenceItem::ParticipantGroup {
             label,
+            label_height,
             fill,
             x,
             y,
@@ -1138,12 +1250,12 @@ where
                 stroke_dash_offset: None,
             }));
             if let Some(label) = label {
-                text_children.push(text_node(
+                text_children.push(text_node_no_wrap(
                     label,
                     *x + 8.0,
                     *y + 6.0,
                     *width - 16.0,
-                    20.0,
+                    (*label_height + 4.0).max(20.0),
                     label_font.clone(),
                     text_color,
                 ));
@@ -1247,185 +1359,177 @@ where
         }
     }
 
-    // Lifelines and messages sit behind activation bars, notes, and headers.
+    // Lifelines sit behind activation bars. Messages are painted afterward so
+    // arrowheads remain visible where they meet an activation edge.
     for item in &diagram.items {
-        match item {
-            LayoutedSequenceItem::Lifeline { x, y1, y2, .. } => {
-                instructions.push(PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo { x: *x, y: *y1 },
-                        PathCommand::LineTo { x: *x, y: *y2 },
-                    ],
-                    fill: None,
-                    fill_rule: None,
-                    stroke: Some("#94a3b8".into()),
-                    stroke_width: Some(1.25),
-                    stroke_cap: Some(StrokeCap::Round),
-                    stroke_join: None,
-                    stroke_dash: Some(vec![5.0, 5.0]),
-                    stroke_dash_offset: None,
-                }));
-            }
-            LayoutedSequenceItem::Message {
-                from_x,
-                to_x,
-                y,
-                label,
-                label_height,
-                line_style,
-                arrowhead,
-                bidirectional,
-                central_connection,
-                number,
-            } => {
-                let (commands, start, end, label_x, label_width) = if (*from_x - *to_x).abs() < 0.1
-                {
-                    let loop_width = 46.0;
-                    (
-                        vec![
-                            PathCommand::MoveTo { x: *from_x, y: *y },
-                            PathCommand::LineTo {
-                                x: *from_x + loop_width,
-                                y: *y,
-                            },
-                            PathCommand::LineTo {
-                                x: *from_x + loop_width,
-                                y: *y + 26.0,
-                            },
-                            PathCommand::LineTo {
-                                x: *from_x,
-                                y: *y + 26.0,
-                            },
-                        ],
-                        Point {
+        if let LayoutedSequenceItem::Lifeline { x, y1, y2, .. } = item {
+            instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: *x, y: *y1 },
+                    PathCommand::LineTo { x: *x, y: *y2 },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#94a3b8".into()),
+                stroke_width: Some(1.25),
+                stroke_cap: Some(StrokeCap::Round),
+                stroke_join: None,
+                stroke_dash: Some(vec![5.0, 5.0]),
+                stroke_dash_offset: None,
+            }));
+        }
+    }
+
+    for item in &diagram.items {
+        if let LayoutedSequenceItem::Activation { x, y1, y2, .. } = item {
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: *x,
+                y: *y1,
+                width: 12.0,
+                height: (*y2 - *y1).max(4.0),
+                fill: Some("#dbeafe".into()),
+                stroke: Some("#2563eb".into()),
+                stroke_width: Some(1.0),
+                corner_radius: Some(1.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
+        }
+    }
+
+    for item in &diagram.items {
+        if let LayoutedSequenceItem::Message {
+            from_x,
+            to_x,
+            y,
+            label,
+            label_height,
+            line_style,
+            arrowhead,
+            bidirectional,
+            central_connection,
+            number,
+        } = item
+        {
+            let (
+                commands,
+                source_previous,
+                source_tip,
+                destination_previous,
+                destination_tip,
+                label_x,
+                label_width,
+            ) = if (*from_x - *to_x).abs() < 0.1 {
+                let loop_width = 46.0;
+                (
+                    vec![
+                        PathCommand::MoveTo { x: *from_x, y: *y },
+                        PathCommand::LineTo {
+                            x: *from_x + loop_width,
+                            y: *y,
+                        },
+                        PathCommand::LineTo {
                             x: *from_x + loop_width,
                             y: *y + 26.0,
                         },
-                        Point {
+                        PathCommand::LineTo {
                             x: *from_x,
                             y: *y + 26.0,
                         },
-                        *from_x + 8.0,
-                        loop_width + 80.0,
-                    )
-                } else {
-                    let left = from_x.min(*to_x);
-                    (
-                        vec![
-                            PathCommand::MoveTo { x: *from_x, y: *y },
-                            PathCommand::LineTo { x: *to_x, y: *y },
-                        ],
-                        Point { x: *from_x, y: *y },
-                        Point { x: *to_x, y: *y },
-                        left,
-                        (*to_x - *from_x).abs(),
-                    )
-                };
-                instructions.push(PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands,
-                    fill: None,
-                    fill_rule: None,
-                    stroke: Some("#334155".into()),
-                    stroke_width: Some(1.5),
-                    stroke_cap: Some(StrokeCap::Round),
-                    stroke_join: Some(StrokeJoin::Round),
-                    stroke_dash: match line_style {
-                        SequenceLineStyle::Solid => None,
-                        SequenceLineStyle::Dotted => Some(vec![5.0, 4.0]),
+                    ],
+                    Point {
+                        x: *from_x + loop_width,
+                        y: *y,
                     },
-                    stroke_dash_offset: None,
-                }));
-                let reverse = matches!(
+                    Point { x: *from_x, y: *y },
+                    Point {
+                        x: *from_x + loop_width,
+                        y: *y + 26.0,
+                    },
+                    Point {
+                        x: *from_x,
+                        y: *y + 26.0,
+                    },
+                    *from_x + 8.0,
+                    loop_width + 80.0,
+                )
+            } else {
+                let left = from_x.min(*to_x);
+                (
+                    vec![
+                        PathCommand::MoveTo { x: *from_x, y: *y },
+                        PathCommand::LineTo { x: *to_x, y: *y },
+                    ],
+                    Point { x: *to_x, y: *y },
+                    Point { x: *from_x, y: *y },
+                    Point { x: *from_x, y: *y },
+                    Point { x: *to_x, y: *y },
+                    left,
+                    (*to_x - *from_x).abs(),
+                )
+            };
+            instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands,
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#334155".into()),
+                stroke_width: Some(1.5),
+                stroke_cap: Some(StrokeCap::Round),
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: match line_style {
+                    SequenceLineStyle::Solid => None,
+                    SequenceLineStyle::Dotted => Some(vec![5.0, 4.0]),
+                },
+                stroke_dash_offset: None,
+            }));
+            let reverse = matches!(
+                arrowhead,
+                SequenceArrowhead::ReverseFilledTop
+                    | SequenceArrowhead::ReverseFilledBottom
+                    | SequenceArrowhead::ReverseStickTop
+                    | SequenceArrowhead::ReverseStickBottom
+            );
+            if reverse {
+                instructions.extend(sequence_arrowhead(&source_previous, &source_tip, arrowhead));
+            } else {
+                instructions.extend(sequence_arrowhead(
+                    &destination_previous,
+                    &destination_tip,
                     arrowhead,
-                    SequenceArrowhead::ReverseFilledTop
-                        | SequenceArrowhead::ReverseFilledBottom
-                        | SequenceArrowhead::ReverseStickTop
-                        | SequenceArrowhead::ReverseStickBottom
-                );
-                if reverse {
-                    instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
-                } else {
-                    instructions.extend(sequence_arrowhead(&start, &end, arrowhead));
-                }
-                if *bidirectional {
-                    instructions.extend(sequence_arrowhead(&end, &start, arrowhead));
-                }
-                for point in match central_connection {
-                    SequenceCentralConnection::None => vec![],
-                    SequenceCentralConnection::Source => vec![start],
-                    SequenceCentralConnection::Destination => vec![end],
-                    SequenceCentralConnection::Both => vec![start, end],
-                } {
-                    central_markers.push(point);
-                }
-                let rendered_label = match number {
-                    Some(number) => format!("{}. {label}", format_sequence_number(*number)),
-                    None => label.clone(),
-                };
-                text_children.push(text_node_no_wrap(
-                    &rendered_label,
-                    label_x,
-                    *y - *label_height - 6.0,
-                    label_width.max(80.0),
-                    *label_height,
-                    label_font.clone(),
-                    text_color,
                 ));
             }
-            _ => {}
+            if *bidirectional {
+                instructions.extend(sequence_arrowhead(&source_previous, &source_tip, arrowhead));
+            }
+            for point in match central_connection {
+                SequenceCentralConnection::None => vec![],
+                SequenceCentralConnection::Source => vec![source_tip],
+                SequenceCentralConnection::Destination => vec![destination_tip],
+                SequenceCentralConnection::Both => vec![source_tip, destination_tip],
+            } {
+                central_markers.push(point);
+            }
+            let rendered_label = match number {
+                Some(number) => format!("{}. {label}", format_sequence_number(*number)),
+                None => label.clone(),
+            };
+            text_children.push(text_node_no_wrap(
+                &rendered_label,
+                label_x,
+                *y - *label_height - 6.0,
+                label_width.max(80.0),
+                *label_height,
+                label_font.clone(),
+                text_color,
+            ));
         }
     }
 
     for item in &diagram.items {
         match item {
-            LayoutedSequenceItem::Activation { x, y1, y2, .. } => {
-                instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
-                    x: *x,
-                    y: *y1,
-                    width: 12.0,
-                    height: (*y2 - *y1).max(4.0),
-                    fill: Some("#dbeafe".into()),
-                    stroke: Some("#2563eb".into()),
-                    stroke_width: Some(1.0),
-                    corner_radius: Some(1.0),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
-            }
-            LayoutedSequenceItem::Destruction { x, y, .. } => {
-                instructions.push(PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo {
-                            x: *x - 7.0,
-                            y: *y - 7.0,
-                        },
-                        PathCommand::LineTo {
-                            x: *x + 7.0,
-                            y: *y + 7.0,
-                        },
-                        PathCommand::MoveTo {
-                            x: *x + 7.0,
-                            y: *y - 7.0,
-                        },
-                        PathCommand::LineTo {
-                            x: *x - 7.0,
-                            y: *y + 7.0,
-                        },
-                    ],
-                    fill: None,
-                    fill_rule: None,
-                    stroke: Some("#dc2626".into()),
-                    stroke_width: Some(2.0),
-                    stroke_cap: Some(StrokeCap::Round),
-                    stroke_join: None,
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
-            }
             LayoutedSequenceItem::Note {
                 x,
                 y,
@@ -1459,6 +1563,8 @@ where
             LayoutedSequenceItem::ParticipantBox {
                 id,
                 label,
+                label_height,
+                mirrored,
                 kind,
                 links,
                 properties,
@@ -1469,53 +1575,55 @@ where
                 height,
                 ..
             } => {
-                for link in links {
-                    scene_metadata.insert(
-                        format!("sequence.participant.{id}.link.{}", link.label),
-                        link.url.clone(),
-                    );
-                }
-                for property in properties {
-                    scene_metadata.insert(
-                        format!("sequence.participant.{id}.property.{}", property.name),
-                        property.value_json.clone(),
-                    );
-                }
-                if let Some(reference) = details_reference {
-                    scene_metadata.insert(
-                        format!("sequence.participant.{id}.details_reference"),
-                        reference.clone(),
-                    );
+                if !mirrored {
+                    for link in links {
+                        scene_metadata.insert(
+                            format!("sequence.participant.{id}.link.{}", link.label),
+                            link.url.clone(),
+                        );
+                    }
+                    for property in properties {
+                        scene_metadata.insert(
+                            format!("sequence.participant.{id}.property.{}", property.name),
+                            property.value_json.clone(),
+                        );
+                    }
+                    if let Some(reference) = details_reference {
+                        scene_metadata.insert(
+                            format!("sequence.participant.{id}.details_reference"),
+                            reference.clone(),
+                        );
+                    }
                 }
                 let specialized = !matches!(
                     kind,
                     SequenceParticipantKind::Participant | SequenceParticipantKind::Actor
                 );
-                instructions.push(PaintInstruction::Rect(PaintRect {
-                    base: PaintBase::default(),
-                    x: *x,
-                    y: *y,
-                    width: *width,
-                    height: *height,
-                    fill: Some(match kind {
-                        SequenceParticipantKind::Participant => "#eff6ff".into(),
-                        SequenceParticipantKind::Actor => "#f0fdf4".into(),
-                        _ => "#f0fdfa".into(),
-                    }),
-                    stroke: Some(match kind {
-                        SequenceParticipantKind::Participant => "#2563eb".into(),
-                        SequenceParticipantKind::Actor => "#16a34a".into(),
-                        _ => "#0f766e".into(),
-                    }),
-                    stroke_width: Some(1.5),
-                    corner_radius: Some(match kind {
-                        SequenceParticipantKind::Participant => 5.0,
-                        SequenceParticipantKind::Actor => *height / 2.0,
-                        _ => 5.0,
-                    }),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
+                if kind == &SequenceParticipantKind::Actor {
+                    instructions.extend(sequence_actor_symbol(*x + *width / 2.0, *y + 19.0));
+                } else {
+                    instructions.push(PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: *x,
+                        y: *y,
+                        width: *width,
+                        height: *height,
+                        fill: Some(if kind == &SequenceParticipantKind::Participant {
+                            "#eff6ff".into()
+                        } else {
+                            "#f0fdfa".into()
+                        }),
+                        stroke: Some(if kind == &SequenceParticipantKind::Participant {
+                            "#2563eb".into()
+                        } else {
+                            "#0f766e".into()
+                        }),
+                        stroke_width: Some(1.5),
+                        corner_radius: Some(5.0),
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                }
                 if specialized {
                     instructions.extend(sequence_participant_icon(
                         kind,
@@ -1523,12 +1631,26 @@ where
                         *y + height / 2.0,
                     ));
                 }
-                text_children.push(text_node(
+                let embedded_icon = sequence_embedded_icon_name(properties);
+                if let Some(icon) = embedded_icon {
+                    instructions.extend(sequence_embedded_icon(
+                        icon,
+                        *x + *width - 17.0,
+                        *y + 16.0,
+                    ));
+                }
+                text_children.push(text_node_no_wrap(
                     label,
                     *x + if specialized { 44.0 } else { 8.0 },
-                    *y + 11.0,
-                    *width - if specialized { 50.0 } else { 16.0 },
-                    *height - 12.0,
+                    if kind == &SequenceParticipantKind::Actor {
+                        *y + *height - *label_height - 4.0
+                    } else {
+                        *y + 11.0
+                    },
+                    *width
+                        - if specialized { 50.0 } else { 16.0 }
+                        - if embedded_icon.is_some() { 20.0 } else { 0.0 },
+                    (*label_height + 4.0).min(*height - 12.0),
                     label_font.clone(),
                     text_color,
                 ));
@@ -1623,6 +1745,50 @@ fn sequence_block_name(kind: &SequenceBlockKind) -> &'static str {
         SequenceBlockKind::Critical => "critical",
         SequenceBlockKind::Break => "break",
     }
+}
+
+fn sequence_actor_symbol(cx: f64, cy: f64) -> Vec<PaintInstruction> {
+    vec![
+        PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx,
+            cy: cy - 10.0,
+            rx: 5.0,
+            ry: 5.0,
+            fill: Some("#ffffff".into()),
+            stroke: Some("#16a34a".into()),
+            stroke_width: Some(1.5),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: cx, y: cy - 5.0 },
+                PathCommand::LineTo { x: cx, y: cy + 8.0 },
+                PathCommand::MoveTo { x: cx - 9.0, y: cy },
+                PathCommand::LineTo { x: cx + 9.0, y: cy },
+                PathCommand::MoveTo { x: cx, y: cy + 8.0 },
+                PathCommand::LineTo {
+                    x: cx - 8.0,
+                    y: cy + 17.0,
+                },
+                PathCommand::MoveTo { x: cx, y: cy + 8.0 },
+                PathCommand::LineTo {
+                    x: cx + 8.0,
+                    y: cy + 17.0,
+                },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#16a34a".into()),
+            stroke_width: Some(1.5),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }),
+    ]
 }
 
 fn sequence_participant_icon(
@@ -1750,6 +1916,89 @@ fn sequence_participant_icon(
             stroke_dash_offset: None,
         })],
         SequenceParticipantKind::Participant | SequenceParticipantKind::Actor => vec![],
+    }
+}
+
+fn sequence_embedded_icon_name(properties: &[SequenceProperty]) -> Option<&str> {
+    properties
+        .iter()
+        .find(|property| property.name == "icon")
+        .and_then(|property| {
+            property
+                .value_json
+                .strip_prefix('"')
+                .and_then(|value| value.strip_suffix('"'))
+        })
+        .and_then(|value| value.strip_prefix('@'))
+        .filter(|value| matches!(*value, "clock" | "computer"))
+}
+
+fn sequence_embedded_icon(name: &str, cx: f64, cy: f64) -> Vec<PaintInstruction> {
+    let path = |commands| {
+        PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands,
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#475569".into()),
+            stroke_width: Some(1.25),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })
+    };
+    match name {
+        "clock" => vec![
+            PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx,
+                cy,
+                rx: 7.0,
+                ry: 7.0,
+                fill: Some("#ffffff".into()),
+                stroke: Some("#475569".into()),
+                stroke_width: Some(1.25),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            path(vec![
+                PathCommand::MoveTo { x: cx, y: cy - 4.0 },
+                PathCommand::LineTo { x: cx, y: cy },
+                PathCommand::LineTo {
+                    x: cx + 3.0,
+                    y: cy + 2.0,
+                },
+            ]),
+        ],
+        "computer" => vec![
+            PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: cx - 8.0,
+                y: cy - 6.0,
+                width: 16.0,
+                height: 11.0,
+                fill: Some("#ffffff".into()),
+                stroke: Some("#475569".into()),
+                stroke_width: Some(1.25),
+                corner_radius: Some(1.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            path(vec![
+                PathCommand::MoveTo { x: cx, y: cy + 5.0 },
+                PathCommand::LineTo { x: cx, y: cy + 8.0 },
+                PathCommand::MoveTo {
+                    x: cx - 5.0,
+                    y: cy + 8.0,
+                },
+                PathCommand::LineTo {
+                    x: cx + 5.0,
+                    y: cy + 8.0,
+                },
+            ]),
+        ],
+        _ => vec![],
     }
 }
 
@@ -2662,7 +2911,13 @@ mod tests {
     fn simple_layout() -> LayoutedGraphDiagram {
         LayoutedGraphDiagram {
             direction: DiagramDirection::Lr,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             width: 400.0,
             height: 200.0,
             nodes: vec![
@@ -2702,7 +2957,95 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.19.0");
+        assert_eq!(crate::VERSION, "0.35.0");
+    }
+
+    #[test]
+    fn sequence_messages_paint_above_activation_bars() {
+        let diagram = LayoutedSequenceDiagram {
+            width: 240.0,
+            height: 140.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            // Deliberately put the message first: layer order must not depend on
+            // semantic item order.
+            items: vec![
+                LayoutedSequenceItem::Message {
+                    from_x: 40.0,
+                    to_x: 194.0,
+                    y: 72.0,
+                    label: "Request".into(),
+                    label_height: 16.0,
+                    line_style: SequenceLineStyle::Solid,
+                    arrowhead: SequenceArrowhead::Filled,
+                    bidirectional: false,
+                    central_connection: SequenceCentralConnection::None,
+                    number: None,
+                },
+                LayoutedSequenceItem::Activation {
+                    participant: "Service".into(),
+                    x: 194.0,
+                    y1: 52.0,
+                    y2: 112.0,
+                },
+            ],
+        };
+        let (shaper, metrics, resolver) = (FakeShaper, FakeMetrics, FakeResolver);
+        let scene = diagram_to_paint_sequence(&diagram, &make_opts(&shaper, &metrics, &resolver));
+        let activation_index = scene
+            .instructions
+            .iter()
+            .position(|instruction| {
+                matches!(instruction, PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe"))
+            })
+            .unwrap();
+        let message_index = scene
+            .instructions
+            .iter()
+            .position(|instruction| {
+                matches!(instruction, PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#334155"))
+            })
+            .unwrap();
+
+        assert!(activation_index < message_index);
+    }
+
+    #[test]
+    fn sequence_self_connection_markers_use_lifeline_endpoints() {
+        let diagram = LayoutedSequenceDiagram {
+            width: 180.0,
+            height: 140.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            items: vec![LayoutedSequenceItem::Message {
+                from_x: 64.0,
+                to_x: 64.0,
+                y: 60.0,
+                label: "self".into(),
+                label_height: 16.0,
+                line_style: SequenceLineStyle::Solid,
+                arrowhead: SequenceArrowhead::Filled,
+                bidirectional: false,
+                central_connection: SequenceCentralConnection::Both,
+                number: None,
+            }],
+        };
+        let (shaper, metrics, resolver) = (FakeShaper, FakeMetrics, FakeResolver);
+        let scene = diagram_to_paint_sequence(&diagram, &make_opts(&shaper, &metrics, &resolver));
+        let markers: Vec<_> = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::Ellipse(ellipse) if ellipse.rx == 5.0 && ellipse.ry == 5.0 => {
+                    Some((ellipse.cx, ellipse.cy))
+                }
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(markers, vec![(64.0, 60.0), (64.0, 86.0)]);
     }
 
     #[test]
@@ -2718,6 +3061,38 @@ mod tests {
         for kind in kinds {
             assert!(!sequence_participant_icon(&kind, 20.0, 20.0).is_empty());
         }
+    }
+
+    #[test]
+    fn sequence_actor_emits_backend_neutral_stick_figure_geometry() {
+        let instructions = sequence_actor_symbol(20.0, 24.0);
+        assert!(matches!(instructions[0], PaintInstruction::Ellipse(_)));
+        assert!(matches!(instructions[1], PaintInstruction::Path(_)));
+        let PaintInstruction::Path(path) = &instructions[1] else {
+            unreachable!();
+        };
+        assert_eq!(path.commands.len(), 8);
+    }
+
+    #[test]
+    fn sequence_embedded_property_icons_emit_backend_neutral_geometry() {
+        let properties = vec![SequenceProperty {
+            name: "icon".into(),
+            value_json: "\"@clock\"".into(),
+        }];
+        assert_eq!(sequence_embedded_icon_name(&properties), Some("clock"));
+
+        let clock = sequence_embedded_icon("clock", 20.0, 20.0);
+        assert!(matches!(
+            clock.as_slice(),
+            [PaintInstruction::Ellipse(_), PaintInstruction::Path(_)]
+        ));
+
+        let computer = sequence_embedded_icon("computer", 20.0, 20.0);
+        assert!(matches!(
+            computer.as_slice(),
+            [PaintInstruction::Rect(_), PaintInstruction::Path(_)]
+        ));
     }
 
     #[test]
@@ -2893,6 +3268,132 @@ mod tests {
             !diamond_paths.is_empty(),
             "expected a diamond PaintPath with 5 commands"
         );
+    }
+
+    #[test]
+    fn note_node_and_association_use_backend_neutral_paths() {
+        let mut layout = simple_layout();
+        layout.nodes[0].shape = DiagramShape::Note;
+        layout.edges[0].kind = EdgeKind::NoteAssociation;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.commands.len() == 6)
+        }));
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
+        }));
+    }
+
+    #[test]
+    fn graph_accessibility_metadata_reaches_paint_scene() {
+        let mut layout = simple_layout();
+        layout.accessibility_title = Some("State lifecycle".into());
+        layout.accessibility_description = Some("Ready transitions to running".into());
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+
+        assert_eq!(metadata["accessibility.title"], "State lifecycle");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Ready transitions to running"
+        );
+    }
+
+    #[test]
+    fn graph_node_links_reach_paint_scene_hit_test_metadata() {
+        let mut layout = simple_layout();
+        layout.links.push(diagram_ir::GraphLink {
+            node_id: "A".into(),
+            url: "https://example.com/ready".into(),
+            tooltip: Some("Open ready state".into()),
+        });
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+
+        assert_eq!(
+            metadata["graph.node.A.link.url"],
+            "https://example.com/ready"
+        );
+        assert_eq!(metadata["graph.node.A.link.tooltip"], "Open ready state");
+        assert!(metadata.contains_key("graph.node.A.link.bounds"));
+    }
+
+    #[test]
+    fn graph_groups_lower_to_background_rectangles() {
+        let mut layout = simple_layout();
+        layout.groups.push(diagram_ir::LayoutedGraphGroup {
+            id: "Processing".into(),
+            label: DiagramLabel::new("Processing"),
+            parent_id: None,
+            x: 8.0,
+            y: 8.0,
+            width: 340.0,
+            height: 100.0,
+            divider_y: vec![58.0],
+            direction: None,
+            style: ResolvedDiagramStyle {
+                fill: "#fef3c7".into(),
+                stroke: "#b45309".into(),
+                stroke_width: 3.0,
+                text_color: "#78350f".into(),
+                font_size: 14.0,
+                corner_radius: 8.0,
+            },
+        });
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Rect(rect)
+                if rect.width == 340.0
+                    && rect.fill.as_deref() == Some("#fef3c7")
+                    && rect.stroke.as_deref() == Some("#b45309")
+                    && rect.stroke_width == Some(3.0))
+        }));
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke.as_deref() == Some("#b45309")
+                    && path.stroke_width == Some(3.0))
+        }));
+    }
+
+    #[test]
+    fn hide_empty_descriptions_omits_unlabeled_state_geometry() {
+        let mut layout = simple_layout();
+        layout.hide_empty_descriptions = true;
+        layout.nodes[0].label = DiagramLabel::new("");
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+
+        let rectangles = scene
+            .instructions
+            .iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_)))
+            .count();
+        assert_eq!(rectangles, 1);
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
     }
 
     #[test]

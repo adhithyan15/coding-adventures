@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.1.2] - 2026-08-11
+
+### Changed (test-only — `src/lower.rs` unchanged)
+
+SIR28 §7 removed `semantic-ir-to-javascript`'s dead bare `print`/`puts`
+handling now that every frontend emits `__sys_write__` instead — this
+crate's own lowering never emitted either, but two test-only harness
+helpers hand-built bare `print(...)` `BuiltinCall`s purely to make an
+otherwise-discarded computed value observable on stdout, which would no
+longer reach `semantic-ir-to-javascript`'s SIR23 evaluator special-case
+once that backend's dead-code cleanup landed. Both now build
+`__sys_write__(stdout, once, false, expr)` instead and declare
+`Feature::ConsoleIO`/`Feature::Strings` on the module (both are
+validator-enforced for `__sys_write__`, unlike the old unguarded bare
+`"print"`):
+
+- `tests/e2e_node.rs`'s `wrap_whole_statement_in_print`, renamed
+  `wrap_whole_statement_in_sys_write`.
+- `tests/oracle.rs`'s `wrap_axiom_top_level_for_observation` (name
+  unchanged — it does more than just print-wrapping, see its own doc
+  comment for the `CompoundExpression`-unrolling it also performs).
+
+`src/lower.rs` is completely unchanged.
+
 ## [0.1.1] - 2026-07-30
 
 ### Added

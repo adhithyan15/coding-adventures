@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 22,
-  "title": "Black, White, Red, and Blue",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7ce9af6cb50c3202",
+  "title": "Espanol, and Your First Built Sentence",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:ae8b60d00038d8c5",
   "lessons": [
     {
-      "id": "ES-C22-negro-blanco",
-      "sequence": 1340,
-      "title": "negro, blanco — two colours, and one of their histories",
-      "headword": "negro, blanco",
-      "romanization": "negro, blanco",
-      "gloss": "black and white — the two words, and the straight-line Latin history of the first one",
+      "id": "ES-C06-espanol",
+      "sequence": 530,
+      "title": "español — the word for the language",
+      "headword": "español",
+      "romanization": "español",
+      "gloss": "\"Spanish\" — the language, the people, and the Roman name for the peninsula underneath it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db51bf774d990900",
+      "sourceHash": "fnv1a64:c38028d6a3cfde1d",
       "notice": null,
       "blocks": [
         {
@@ -35,42 +35,35 @@
             },
             {
               "kind": "speech",
-              "text": "Two colours you can put to work immediately. One of them has the most ordinary history imaginable. The other does not — which is why it gets its own lesson next."
+              "text": "You have practised writing this word's ñ. Now find out what is inside it — because español is not a Spanish-made word at all."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: negro",
+          "title": "The word, taken apart — español",
           "segments": [
             {
               "kind": "speech",
-              "text": "negro (\"black\") from Latin niger. Nothing surprising: the same Latin root gives English denigrate (\"to blacken someone's name\") and the rest of the Romance family's words for black — French noir, Italian nero, Portuguese negro. Latin's word for black stayed put, in every daughter language."
+              "text": "español = \"Spanish\" — both the language and a Spaniard — from Hispania, the Roman name for the Iberian peninsula. The path Hispania becomes hispaniolus becomes español wore the word down, and there is the ñ again, exactly the -ni- squeeze you met in the writing lesson (Hispaniolus becomes españ-ol). Say it es-pa-NYOL."
             },
             {
               "kind": "speech",
-              "text": "Hold that in mind as the baseline. It is what a colour word normally does."
+              "text": "Two footnotes worth having:"
+            },
+            {
+              "kind": "speech",
+              "text": "English Spanish, Hispanic and Hispania are all the same root, so the English and Spanish names for the language are cousins, not translations of each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Hispania itself may go back through Latin to a Phoenician name for the coast, often read as \"land of hyraxes\" (or rabbits) — the Phoenicians having met an unfamiliar animal and reached for the nearest word they had."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The two words in use",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "blanco (\"white\") is the pair to it: el gato negro, el gato blanco. Both behave like any Spanish adjective — they follow the noun and agree with it (la casa blanca)."
-            },
-            {
-              "kind": "speech",
-              "text": "But hear what you would have expected and did not get. Latin's word for white was albus, and by the negro pattern Spanish \"white\" should be something like albo. It is not. Where blanco actually came from — and what became of albus — is the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -83,34 +76,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro, blanco\"",
+              "instruction": "\"español\" — es-pa-NYOL",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro, blanco\"]"
+              "source": "[YOU SAY: \"español\" — *es-pa-NYOL*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "with a noun — \"el gato negro, la casa blanca\"",
+              "instruction": "the path — \"Hispania, hispaniolus, español\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: with a noun — \"el gato negro, la casa blanca\"]"
+              "source": "[YOU SAY: the path — \"Hispania, hispaniolus, español\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"negro\" then English \"denigrate\" — the niger root",
+              "instruction": "\"español\" then English \"Hispanic\" — same root",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"negro\" then English \"denigrate\" — the *niger* root]"
+              "source": "[YOU SAY: \"español\" then English \"Hispanic\" — same root]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -122,26 +115,26 @@
             },
             {
               "kind": "speech",
-              "text": "Say black and white. (Negro, blanco.) Where does negro come from, and what English word shares it? (Latin niger — denigrate.) What would you have expected Spanish's \"white\" to be, given Latin albus? (Something like albo — and it isn't. That is next lesson's puzzle.)"
+              "text": "Where does español come from? (Hispania, the Roman name for Iberia.) What letter does its ending bring back, and from what Latin sequence? (ñ, from -ni- in Hispaniolus.) Next: put it behind a verb and build your first sentence."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C22-blanco-germanico",
-      "sequence": 1350,
-      "title": "blanco — the colour Spanish did not inherit",
-      "headword": "blanco ← *blank",
-      "romanization": "blanco ← *blank",
-      "gloss": "white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour",
+      "id": "ES-C06-hablo-espanol",
+      "sequence": 532,
+      "title": "Hablo español — your first real sentence",
+      "headword": "Hablo español",
+      "romanization": "Hablo español",
+      "gloss": "your first sentence built from parts — and the rule that languages take no article",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6fe8636baaf2417",
+      "sourceHash": "fnv1a64:917176c3997dd95f",
       "notice": null,
       "blocks": [
         {
@@ -157,73 +150,62 @@
             },
             {
               "kind": "speech",
-              "text": "Negro came straight down from Latin, like almost every other everyday word you have met. Blanco did not come down at all. It walked in."
+              "text": "This is the moment this book has been building to. You take a verb you conjugated yourself and a noun you took apart yourself, and make a sentence nobody handed you pre-assembled."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "notice",
+          "title": "What you've built — the sentence assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "negro, blanco — the two colour words."
+              "text": "Snap two things you already own together:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo (I speak, from hablar) + español (Spanish) = Hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a complete, grammatical Spanish sentence, and notice what is not in it: no separate subject word. The -o of hablo already says \"I\" — the pro-drop you just learned, doing real work in a real sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Now swap the pieces and watch it generate:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudio español. — \"I study Spanish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Trabajo. — \"I work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablas español? — \"Do you speak Spanish?\" (the ¿? pair opening and closing the question, as in the writing lesson)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: blanco",
+          "type": "grammar",
+          "title": "Grammar Lens: languages go bare",
           "segments": [
             {
               "kind": "speech",
-              "text": "blanco comes from Germanic blank — \"shining, gleaming.\" It is a loan, traditionally attributed to contact with the Visigoths, the Germanic people who ruled Spain for centuries after Rome collapsed."
+              "text": "One more thing missing from hablo español: no \"the,\" no \"a.\" After a verb like hablar or estudiar, a language name takes no article — hablo español, never hablo el español."
             },
             {
               "kind": "speech",
-              "text": "Be careful how firmly you hold that last part: no surviving Gothic text actually preserves this word, so the Visigothic route is a plausible traditional account, not a documented one. What is well attested is the parallel case next door — French took the very same Germanic word (blanc) from a different Germanic people, the Franks. Two Romance sisters, the same borrowed word for white, two separate borrowings."
-            },
-            {
-              "kind": "speech",
-              "text": "Why would a borrowed word beat Latin's own? Because blank was not a pale word: it meant bright, gleaming. Colour terms lose out to vivid ones all the time — English's own bright is doing the same job in \"bright white.\""
+              "text": "This matters because Spanish otherwise loves its articles far more than English does (me gusta el café, \"I like coffee\"). So this is a genuine exception you have to hold onto, and the rule of thumb is narrow: right after hablar, the language goes bare."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: where albus went",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's white did not vanish. It stopped being the everyday word and survived in corners:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "word",
-                "meaning",
-                "the white inside"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "word: alba. meaning: dawn. the white inside: the sky going white.",
-                "word: albo (rare, poetic). meaning: white, pale. the white inside: a fossil, mostly literary now.",
-                "word: álbum (Eng. album). meaning: album. the white inside: a blank white tablet.",
-                "word: albino. meaning: albino. the white inside: white-skinned."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "That is the normal fate of a displaced word: not death, but retreat into technical and poetic corners. El alba is still every Spanish speaker's word for dawn."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -236,29 +218,48 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pairing — \"negro from Latin, blanco from Germanic\"",
+              "instruction": "\"Hablo español\" — AH-bloh es-pa-NYOL",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pairing — \"negro from Latin, blanco from Germanic\"]"
+              "source": "[YOU SAY: \"Hablo español\" — *AH-bloh es-pa-NYOL*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el alba\" — dawn — and hear the old Latin white inside it",
+              "instruction": "swap the verb — \"Estudio español\", \"Trabajo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el alba\" — dawn — and hear the old Latin white inside it]"
+              "source": "[YOU SAY: swap the verb — \"Estudio español\", \"Trabajo\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"blanco\" then French \"blanc\" — the same loan, twice over",
+              "instruction": "ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"blanco\" then French \"blanc\" — the same loan, twice over]"
+              "source": "[YOU SAY: ask it — \"¿Hablas español?\" (raise the pitch; ¿ opens it)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met no long ago as the answer. It has a second job, and now you have a sentence to try it on: put no directly in front of the verb and the whole thing flips."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español becomes No hablo español."
+            },
+            {
+              "kind": "speech",
+              "text": "That is all there is to it. English needs a helper — do not — and Spanish needs nothing: one small word, in front, and the sentence means its opposite."
             }
           ]
         },
@@ -275,240 +276,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does blanco come from, and what did it mean? (Germanic blank, \"shining\" — traditionally linked to the Visigoths, though not directly attested.) Which other language borrowed the same word, from whom? (French blanc, from the Franks.) Where did Latin's albus end up? (In alba \"dawn,\" álbum, albino — no longer the everyday colour word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-rojo",
-      "sequence": 1360,
-      "title": "rojo — the same family as red, by a different branch",
-      "headword": "rojo",
-      "romanization": "rojo",
-      "gloss": "red — a cousin of French rouge and English red, but by a different branch of the same very old family",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:95fcef898178289a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So far the sorting has been simple: negro inherited, blanco borrowed. Rojo needs a third box — inherited, yes, but not from the word you would guess."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: rojo",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "rojo (\"red\") from Latin russus, an everyday, expressive Latin word for red. That is a different specific Latin word from the one behind French rouge ( from rubeus). Latin had several reds and the daughter languages did not all pick the same one."
-            },
-            {
-              "kind": "speech",
-              "text": "Both russus and rubeus, though, descend from the very same ancient root: PIE h₁rewdʰ- — which is also the root of English red, rust, ruddy, and of Latin ruber itself (English rubric, once written in red ink)."
-            },
-            {
-              "kind": "speech",
-              "text": "So rojo, rouge and red are cousins, not copies: three descendants of one very old family, arriving by three different branches. Nobody borrowed this one from anybody."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rojo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rojo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"rojo, rouge, red\", three branches, one root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"rojo · rouge · red\", three branches, one root]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three so far — \"negro inherited, blanco borrowed, rojo cousin\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three so far — \"negro inherited, blanco borrowed, rojo cousin\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is rojo from the same Latin word as French rouge? (No — rojo from russus, rouge from rubeus.) Are they related at all? (Yes — cousins, via the shared PIE root h₁rewdʰ-, which also gives English red.) Next: the one colour in this chapter that came from outside Europe entirely."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C22-azul",
-      "sequence": 1370,
-      "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
-      "headword": "azul",
-      "romanization": "azul",
-      "gloss": "blue — an Arabic loan that became the plain everyday word, where French's cousin stayed poetic",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:93ee0709ae2c9910",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three colours in, three different histories: inherited, borrowed from a neighbour, inherited by a different branch. The fourth comes from outside the Indo-European family altogether."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: azul",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "azul (\"blue\") from Arabic لازورد (lāzaward), \"lapis lazuli\" — the deep blue stone, mined for centuries in what is now Afghanistan and ground into the most expensive pigment in the medieval world. Spanish picked the word up during the centuries of Arabic-speaking rule in Iberia (al-Andalus). English has the same source at one more remove, in azure, and the stone keeps its own name: lazuli."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's word for blue is, underneath, the name of a rock — which is common for blue. Blue is the last basic colour term most languages acquire, and when they do, they usually name it after the thing that was reliably that colour."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: everyday here, poetic there",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here is the contrast worth keeping. French has azur too — but only as a secondary, poetic word (the sky's blue, the Côte d'Azur); its everyday blue is the Germanic loan bleu. In Spanish it is the reverse: azul is the plain, unremarkable, everyday word, with no Germanic rival competing for the job at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Same borrowed word, two languages, opposite outcomes — a reminder that where a word came from tells you nothing about how ordinary it now feels."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"negro, blanco, rojo, azul\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"negro, blanco, rojo, azul\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sort them — \"negro inherited, blanco Germanic, rojo cousin of red, azul Arabic\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"azul\" then English \"azure\" — the same lapis lazuli",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"azul\" then English \"azure\" — the same lapis lazuli]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name the four colours and sort them by origin. (Negro — Latin niger; blanco — Germanic blank; rojo — Latin russus, cousin of red; azul — Arabic lāzaward.) What did lāzaward actually name? (Lapis lazuli, the stone.) How does azul's role differ from French azur's? (Azul is Spanish's everyday blue; French's azur is only poetic, with bleu doing the daily work.)"
+              "text": "Say \"I speak Spanish,\" then \"I study Spanish.\" (Hablo español; estudio español.) Why is there no separate subject word? (The -o ending carries \"I.\") Why no \"the\" before español? (Languages take no article after a verb like hablar.) You just built a sentence from parts — that is the whole game from here."
             }
           ]
         }

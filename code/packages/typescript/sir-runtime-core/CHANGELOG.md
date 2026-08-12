@@ -2,6 +2,70 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.4.0] - 2026-08-11
+
+### Removed — SIR28 §7: dead `print`/`puts`/`putsOne`
+
+Every SIR frontend now emits `__sys_write__` (`write` below) instead of
+bare `print`/`puts` (SIR28 Slices 4-6, all merged), so `print`, `putsOne`,
+and `puts` were fully dead. `writeOne` — `write`'s `per_value` terminator
+dependency — is a fully independent duplicate (confirmed via grep that
+nothing else called `putsOne`), so this is a straight deletion, not a
+refactor; the array-flatten + cycle-guard documentation that lived on
+`putsOne` moved onto `writeOne`.
+
+Also removed: `"print"`/`"puts"` from the `callBuiltin` dispatch table,
+and the `print`/`puts` public exports from `index.ts`.
+
+This is a breaking change for anything importing `print`/`puts` directly
+— nothing in this monorepo does, as of SIR28 Slice 6. Requires
+`semantic-ir-to-typescript` >= 0.12.0 (which stops importing the removed
+names).
+
+Test suite: the dedicated `print`/`puts` unit tests are removed outright
+(equivalent coverage — array-flattening, cycle-termination, newline
+policy — already exists in the `write` test section, since every
+scenario they exercised has a `terminator`-parameterized equivalent
+there).
+
+## [0.3.0] - 2026-08-10
+
+### Added — `write` (SIR28 §2.1: `__sys_write__`, the console-output primitive)
+
+`print`/`puts` above are each ONE fixed newline/stream policy. Real
+Ruby's `print` never newline-terminates, `puts` newline-terminates
+per-value (unpacking arrays), and Python's `print()`/JS's
+`console.log()` space-join everything with one trailing newline — three
+policies that used to lower to the *same* `BuiltinCall("print"/"puts",
+...)` name, so a backend built to match one source language's semantics
+silently disagreed with another's. `write(stream, terminator,
+unpackArrays, ...values)` is the same underlying operation, generalized:
+the newline/stream policy is carried as explicit data instead of being
+implied by which frontend emitted the call.
+
+- `stream`: `"stdout"` or `"stderr"`.
+- `terminator`: `"none"` (old `print`'s behavior — write every value
+  back-to-back, no newline) | `"per_value"` (old `puts`'s behavior — one
+  newline per value, honoring `unpackArrays`) | `"once"` (space-join
+  every value, one trailing newline — Python `print()`/JS
+  `console.log()`).
+- `unpackArrays`: when true and a value is an array, `per_value`
+  recursively flattens it (one line per leaf) instead of printing the
+  array as one value; a self-referential array prints `[...]` rather
+  than looping forever.
+
+Deliberately does NOT replicate `puts`'s trailing-newline-suppression
+nuance (real Ruby: `puts "x\n"` prints `x\n`, not `x\n\n`) — that's a
+pre-existing, orthogonal divergence between backends' own `puts`
+implementations that SIR28 does not fix or replicate, to keep
+`write` behaviorally consistent and spec-faithful across every backend.
+See [SIR28](../../../specs/SIR28-syscall-primitives.md).
+
+`semantic-ir-to-typescript` now routes `__sys_write__` to this function
+(`"__sys_write__" => "__Sir.write"` in its emitter), but no frontend
+emits `__sys_write__` yet — that's later SIR28 slices, so this is not
+yet reachable from a real compiled program.
+
 ## Unreleased
 
 ### Fixed

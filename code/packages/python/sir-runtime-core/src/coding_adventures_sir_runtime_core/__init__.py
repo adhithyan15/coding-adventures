@@ -8,7 +8,7 @@ and are imported by the emitted module:
     import coding_adventures_sir_runtime_core as _sir
     _sir.truthy(x)        # SIR truthiness: only False / nil are falsy
     _sir.cons(a, b)       # cons pairs
-    _sir.print(v)         # SIR display + newline
+    _sir.sir_write("stdout", "once", False, v)  # SIR28 console output
 
 This library implements **SIR** semantics (not any one source language's),
 so a Ruby frontend today and a JavaScript or Python frontend tomorrow all
@@ -31,8 +31,7 @@ from .runtime import (
     global_get_static,
     global_set,
     make_closure,
-    sir_print,
-    sir_puts,
+    sir_write,
 )
 from .symbols import Symbol, intern
 from .values import (
@@ -50,11 +49,6 @@ from .values import (
 # so a ``Pair`` renders as a Lisp list (``(1 2 3)``, ``#t``/``nil``/symbols)
 # rather than via plain ``str``.  Done once at import time; see ``pairs`` shim.
 _set_pairs_display(to_display)
-
-# ``print`` is exposed as an attribute alias so emitted code can call
-# ``_sir.print(v)`` (mirroring the old ``_sir_print`` name) without
-# shadowing the builtin inside this package.
-print = sir_print
 
 __all__ = [
     # values
@@ -94,9 +88,7 @@ __all__ = [
     "global_set",
     "global_get",
     "global_get_static",
-    "sir_print",
-    "sir_puts",
-    "print",
+    "sir_write",
     "call_builtin",
     "builtin_closure",
 ]

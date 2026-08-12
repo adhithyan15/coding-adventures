@@ -6,19 +6,21 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.26.0";
+pub const VERSION: &str = "0.66.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GraphDiagram, GraphEdge, GraphNode,
+    DiagramDirection, DiagramLabel, DiagramShape, DiagramStyle, EdgeKind, GraphDiagram, GraphEdge,
+    GraphGroup, GraphLink, GraphNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
+    tokenize_mermaid_state,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -32,6 +34,8 @@ const ER_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermai
 const C4_PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.grammar");
 const SEQUENCE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sequence.grammar");
+const STATE_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/state.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -249,9 +253,23 @@ pub fn parse_mermaid_c4_ast(source: &str) -> Result<GrammarASTNode, ParseError> 
 }
 
 pub fn parse_mermaid_sequence_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
-    let tokens = tokenize_mermaid_sequence(source);
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens = tokenize_mermaid_sequence(&preprocessed.source);
     let grammar = parse_parser_grammar(SEQUENCE_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse sequence.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
+pub fn parse_mermaid_state_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens = tokenize_mermaid_state(&preprocessed.source);
+    let grammar = parse_parser_grammar(STATE_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse state.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
     parser.parse().map_err(|e| ParseError {
         message: e.message,
@@ -276,7 +294,13 @@ pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
 
     Ok(GraphDiagram {
         direction,
+        requested_width: None,
+        hide_empty_descriptions: false,
         title: None,
+        accessibility_title: None,
+        accessibility_description: None,
+        links: Vec::new(),
+        groups: Vec::new(),
         nodes: builder.nodes,
         edges: builder.edges,
     })
@@ -540,6 +564,7 @@ impl MermaidDiagramType {
                 | Self::GitGraph
                 | Self::Pie
                 | Self::Sequence
+                | Self::State
                 | Self::Sankey
                 | Self::XyChart
         )
@@ -562,9 +587,11 @@ pub enum MermaidDiagram {
 /// unsupported by [`parse_any_mermaid`] while its semantic IR is implemented.
 pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseError> {
     let first = first_keyword(source);
+    if first.eq_ignore_ascii_case("sequenceDiagram") {
+        return Ok(MermaidDiagramType::Sequence);
+    }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
-        "sequenceDiagram" => MermaidDiagramType::Sequence,
         "classDiagram" | "classDiagram-v2" => MermaidDiagramType::Class,
         "stateDiagram" | "stateDiagram-v2" => MermaidDiagramType::State,
         "erDiagram" => MermaidDiagramType::Er,
@@ -624,6 +651,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Sequence => {
             parse_sequence_diagram(source).map(MermaidDiagram::Sequence)
         }
+        MermaidDiagramType::State => parse_state_diagram(source).map(MermaidDiagram::Graph),
         MermaidDiagramType::Sankey => parse_sankey(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::GitGraph => parse_gitgraph(source).map(|git| {
             MermaidDiagram::Temporal(TemporalDiagram {
@@ -1015,15 +1043,828 @@ fn parse_data_list(s: &str) -> Vec<f64> {
         .collect()
 }
 
+// ── state parser ─────────────────────────────────────────────────────────
+
+/// Parse the graph-compatible core of Mermaid state diagrams.
+///
+/// The supported state slice lowers flat declarations, transitions,
+/// pseudostates, composite groups, notes, metadata, and styles into graph IR.
+pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_state_ast(&preprocessed.source)?;
+    let mut cursor = TokenCursor::new(tokenize_mermaid_state(&preprocessed.source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected stateDiagram header"))?;
+    cursor.skip_terminators();
+
+    let mut direction = DiagramDirection::Tb;
+    let mut requested_width = None;
+    let mut hide_empty_descriptions = false;
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
+    let mut nodes = Vec::new();
+    let mut node_indices = HashMap::new();
+    let mut edges = Vec::new();
+    let mut links = Vec::new();
+    let mut groups = Vec::new();
+    let mut group_stack: Vec<String> = Vec::new();
+    let mut pseudo_index = 0;
+    let mut note_index = 0;
+    let mut class_styles: HashMap<String, DiagramStyle> = HashMap::new();
+    let mut pending_classes: Vec<(Vec<String>, String)> = Vec::new();
+    let mut membership_cursor = 0;
+
+    while !cursor.at_eof() {
+        record_new_state_group_members(&group_stack, &mut groups, &nodes, membership_cursor);
+        membership_cursor = nodes.len();
+        if cursor.consume_if("RBRACE").is_some() {
+            let group_id = group_stack.pop().ok_or_else(|| {
+                token_error(cursor.current(), "unexpected composite state closing brace")
+            })?;
+            let group = groups
+                .iter()
+                .find(|group| group.id == group_id)
+                .expect("open composite group must exist");
+            if group.regions.len() > 1 && group.regions.last().is_some_and(Vec::is_empty) {
+                return Err(token_error(
+                    cursor.current(),
+                    "concurrent state region cannot be empty",
+                ));
+            }
+            cursor.skip_terminators();
+            continue;
+        }
+        if cursor.consume_if("CONCURRENT").is_some() {
+            let group_id = group_stack.last().ok_or_else(|| {
+                token_error(
+                    cursor.current(),
+                    "concurrent state divider requires a composite state",
+                )
+            })?;
+            let group = groups
+                .iter_mut()
+                .find(|group| &group.id == group_id)
+                .expect("open composite group must exist");
+            if group.regions.last().is_none_or(Vec::is_empty) {
+                return Err(token_error(
+                    cursor.current(),
+                    "concurrent state region cannot be empty",
+                ));
+            }
+            group.regions.push(Vec::new());
+            cursor.skip_terminators();
+            continue;
+        } else if cursor.consume_if("HIDE_EMPTY").is_some() {
+            hide_empty_descriptions = true;
+        } else if cursor.current().value.eq_ignore_ascii_case("scale") {
+            cursor.advance();
+            let width =
+                cursor.advance().value.parse::<f64>().map_err(|_| {
+                    token_error(cursor.current(), "expected numeric state scale width")
+                })?;
+            if width <= 0.0 {
+                return Err(token_error(
+                    cursor.current(),
+                    "state scale width must be positive",
+                ));
+            }
+            if !cursor.current().value.eq_ignore_ascii_case("width") {
+                return Err(token_error(
+                    cursor.current(),
+                    "expected width after state scale value",
+                ));
+            }
+            cursor.advance();
+            requested_width = Some(width);
+        } else if cursor.current().value.eq_ignore_ascii_case("title") {
+            cursor.advance();
+            cursor.consume_if("COLON");
+            title = Some(take_state_text(&mut cursor));
+        } else if token_name(cursor.current()) == "ACC_TITLE" {
+            cursor.advance();
+            accessibility_title = Some(take_state_text(&mut cursor));
+        } else if token_name(cursor.current()) == "ACC_DESCR" {
+            cursor.advance();
+            accessibility_description = Some(take_state_text(&mut cursor));
+        } else if token_name(cursor.current()) == "ACC_DESCR_START" {
+            cursor.advance();
+            cursor.consume_if("NEWLINE").ok_or_else(|| {
+                token_error(
+                    cursor.current(),
+                    "expected newline before multiline accessibility description",
+                )
+            })?;
+            accessibility_description = Some(take_state_multiline_accessibility_text(&mut cursor)?);
+        } else if cursor.current().value.eq_ignore_ascii_case("direction") {
+            cursor.advance();
+            let token = cursor
+                .consume_if("DIRECTION")
+                .ok_or_else(|| token_error(cursor.current(), "expected state direction"))?;
+            let parsed_direction = match token.value.to_ascii_uppercase().as_str() {
+                "TB" => DiagramDirection::Tb,
+                "BT" => DiagramDirection::Bt,
+                "LR" => DiagramDirection::Lr,
+                "RL" => DiagramDirection::Rl,
+                _ => unreachable!("state.tokens restricts direction values"),
+            };
+            if let Some(group_id) = group_stack.last() {
+                groups
+                    .iter_mut()
+                    .find(|group| &group.id == group_id)
+                    .expect("open composite group must exist")
+                    .direction = Some(parsed_direction);
+            } else {
+                direction = parsed_direction;
+            }
+        } else if cursor.current().value.eq_ignore_ascii_case("click") {
+            cursor.advance();
+            let node_id = take_state_ref(&mut cursor)?;
+            if cursor.current().value.eq_ignore_ascii_case("href") {
+                cursor.advance();
+            }
+            if token_name(cursor.current()) != "STRING" {
+                return Err(token_error(cursor.current(), "expected state click URL"));
+            }
+            let url = strip_state_string(&cursor.advance().value);
+            let tooltip = if token_name(cursor.current()) == "STRING" {
+                Some(strip_state_string(&cursor.advance().value))
+            } else {
+                None
+            };
+            if !node_indices.contains_key(&node_id) {
+                upsert_state_node(
+                    &mut nodes,
+                    &mut node_indices,
+                    node_id.clone(),
+                    node_id.clone(),
+                );
+            }
+            links.retain(|link: &GraphLink| link.node_id != node_id);
+            links.push(GraphLink {
+                node_id,
+                url,
+                tooltip,
+            });
+        } else if cursor.current().value.eq_ignore_ascii_case("classDef") {
+            cursor.advance();
+            let class_name = take_state_ref(&mut cursor)?;
+            let mut style = DiagramStyle::default();
+            parse_state_style_assignments(&mut cursor, &mut style)?;
+            class_styles.insert(class_name, style);
+        } else if cursor.current().value.eq_ignore_ascii_case("class") {
+            cursor.advance();
+            let mut ids = vec![take_state_ref(&mut cursor)?];
+            while cursor.consume_if("COMMA").is_some() {
+                ids.push(take_state_ref(&mut cursor)?);
+            }
+            let class_name = take_state_ref(&mut cursor)?;
+            for id in &ids {
+                if !node_indices.contains_key(id) && !groups.iter().any(|group| &group.id == id) {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+                }
+            }
+            for id in ids {
+                apply_or_defer_state_class(
+                    &id,
+                    class_name.clone(),
+                    &mut nodes,
+                    &node_indices,
+                    &mut groups,
+                    &class_styles,
+                    &mut pending_classes,
+                );
+            }
+        } else if cursor.current().value.eq_ignore_ascii_case("note") {
+            cursor.advance();
+            if token_name(cursor.current()) == "STRING" {
+                let text = strip_state_string(&cursor.advance().value);
+                if !cursor.current().value.eq_ignore_ascii_case("as") {
+                    return Err(token_error(
+                        cursor.current(),
+                        "expected as before floating state note identifier",
+                    ));
+                }
+                cursor.advance();
+                let note_id = take_state_ref(&mut cursor)?;
+                upsert_state_note_node(&mut nodes, &mut node_indices, note_id, text);
+                cursor.skip_terminators();
+                continue;
+            }
+            let note_is_left = if cursor.current().value.eq_ignore_ascii_case("left") {
+                cursor.advance();
+                true
+            } else if cursor.current().value.eq_ignore_ascii_case("right") {
+                cursor.advance();
+                false
+            } else {
+                return Err(token_error(
+                    cursor.current(),
+                    "expected left or right state note placement",
+                ));
+            };
+            if !cursor.current().value.eq_ignore_ascii_case("of") {
+                return Err(token_error(
+                    cursor.current(),
+                    "expected of after note placement",
+                ));
+            }
+            cursor.advance();
+            let state_id = take_state_ref(&mut cursor)?;
+            let text = if cursor.consume_if("COLON").is_some() {
+                take_state_text(&mut cursor)
+            } else {
+                cursor.consume_if("NEWLINE").ok_or_else(|| {
+                    token_error(
+                        cursor.current(),
+                        "expected ':' or newline before state note text",
+                    )
+                })?;
+                take_state_multiline_note_text(&mut cursor)?
+            };
+            if !node_indices.contains_key(&state_id) {
+                upsert_state_node(
+                    &mut nodes,
+                    &mut node_indices,
+                    state_id.clone(),
+                    state_id.clone(),
+                );
+            }
+            let note_id = format!("__state_note_{note_index}");
+            note_index += 1;
+            upsert_state_note_node(&mut nodes, &mut node_indices, note_id.clone(), text);
+            let (from, to) = if note_is_left {
+                (note_id, state_id)
+            } else {
+                (state_id, note_id)
+            };
+            edges.push(GraphEdge {
+                id: None,
+                from,
+                to,
+                label: None,
+                kind: EdgeKind::NoteAssociation,
+                style: Some(DiagramStyle {
+                    stroke: Some("#a16207".into()),
+                    stroke_width: Some(1.5),
+                    ..Default::default()
+                }),
+            });
+        } else if cursor.current().value.eq_ignore_ascii_case("style") {
+            cursor.advance();
+            let mut ids = vec![take_state_ref(&mut cursor)?];
+            while token_name(cursor.current()) == "COMMA"
+                && !state_comma_starts_style_assignment(&cursor)
+            {
+                cursor.advance();
+                ids.push(take_state_ref(&mut cursor)?);
+            }
+            let mut style = DiagramStyle::default();
+            parse_state_style_assignments(&mut cursor, &mut style)?;
+            for id in ids {
+                if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+                    merge_state_style(group.style.get_or_insert_default(), &style);
+                    continue;
+                }
+                if !node_indices.contains_key(&id) {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+                }
+                merge_state_style(
+                    nodes[node_indices[&id]].style.get_or_insert_default(),
+                    &style,
+                );
+            }
+        } else if cursor.current().value.eq_ignore_ascii_case("state") {
+            cursor.advance();
+            let (id, label) = if token_name(cursor.current()) == "STRING" {
+                let label = strip_state_string(&cursor.advance().value);
+                if !cursor.current().value.eq_ignore_ascii_case("as") {
+                    return Err(token_error(
+                        cursor.current(),
+                        "expected state alias keyword as",
+                    ));
+                }
+                cursor.advance();
+                (take_state_ref(&mut cursor)?, label)
+            } else {
+                let id = take_state_ref(&mut cursor)?;
+                if cursor.consume_if("LBRACE").is_some() {
+                    groups.push(GraphGroup {
+                        id: id.clone(),
+                        label: DiagramLabel::new(id.clone()),
+                        parent_id: group_stack.last().cloned(),
+                        node_ids: Vec::new(),
+                        regions: vec![Vec::new()],
+                        direction: None,
+                        style: None,
+                    });
+                    group_stack.push(id);
+                    cursor.skip_terminators();
+                    continue;
+                }
+                if cursor.consume_if("CHOICE").is_some() {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), String::new());
+                    let node = &mut nodes[node_indices[&id]];
+                    node.label = DiagramLabel::new("");
+                    node.shape = Some(DiagramShape::Diamond);
+                    cursor.skip_terminators();
+                    continue;
+                }
+                if cursor.consume_if("FORK_JOIN").is_some() {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), String::new());
+                    let node = &mut nodes[node_indices[&id]];
+                    node.label = DiagramLabel::new("");
+                    node.shape = Some(DiagramShape::Bar);
+                    node.style = Some(DiagramStyle {
+                        fill: Some("#111827".into()),
+                        stroke: Some("#111827".into()),
+                        ..Default::default()
+                    });
+                    cursor.skip_terminators();
+                    continue;
+                }
+                let label = if cursor.consume_if("COLON").is_some() {
+                    take_state_text(&mut cursor)
+                } else {
+                    id.clone()
+                };
+                (id, label)
+            };
+            if cursor.consume_if("LBRACE").is_some() {
+                groups.push(GraphGroup {
+                    id: id.clone(),
+                    label: DiagramLabel::new(label),
+                    parent_id: group_stack.last().cloned(),
+                    node_ids: Vec::new(),
+                    regions: vec![Vec::new()],
+                    direction: None,
+                    style: None,
+                });
+                group_stack.push(id);
+                cursor.skip_terminators();
+                continue;
+            }
+            upsert_state_node(&mut nodes, &mut node_indices, id, label);
+        } else {
+            let from_is_edge_state = token_name(cursor.current()) == "EDGE_STATE";
+            let from = take_state_endpoint(
+                &mut cursor,
+                true,
+                &mut pseudo_index,
+                &mut nodes,
+                &mut node_indices,
+            )?;
+            let from_class = take_state_class_suffix(&mut cursor)?;
+            if !from_is_edge_state && from_class.is_none() && cursor.consume_if("COLON").is_some() {
+                let label = take_state_text(&mut cursor);
+                append_state_description(&mut nodes, &mut node_indices, from, label);
+                cursor.skip_terminators();
+                continue;
+            }
+            if let Some(class_name) = from_class {
+                apply_or_defer_state_class(
+                    &from,
+                    class_name,
+                    &mut nodes,
+                    &node_indices,
+                    &mut groups,
+                    &class_styles,
+                    &mut pending_classes,
+                );
+                if matches!(
+                    token_name(cursor.current()),
+                    "NEWLINE" | "SEMICOLON" | "EOF"
+                ) {
+                    cursor.skip_terminators();
+                    continue;
+                }
+            }
+            cursor
+                .consume_if("ARROW")
+                .ok_or_else(|| token_error(cursor.current(), "expected state transition arrow"))?;
+            let to = take_state_endpoint(
+                &mut cursor,
+                false,
+                &mut pseudo_index,
+                &mut nodes,
+                &mut node_indices,
+            )?;
+            if let Some(class_name) = take_state_class_suffix(&mut cursor)? {
+                apply_or_defer_state_class(
+                    &to,
+                    class_name,
+                    &mut nodes,
+                    &node_indices,
+                    &mut groups,
+                    &class_styles,
+                    &mut pending_classes,
+                );
+            }
+            let label = cursor
+                .consume_if("COLON")
+                .map(|_| DiagramLabel::new(take_state_text(&mut cursor)));
+            edges.push(GraphEdge {
+                id: None,
+                from,
+                to,
+                label,
+                kind: EdgeKind::Directed,
+                style: None,
+            });
+        }
+        cursor.skip_terminators();
+    }
+
+    record_new_state_group_members(&group_stack, &mut groups, &nodes, membership_cursor);
+    if !group_stack.is_empty() {
+        return Err(token_error(
+            cursor.current(),
+            "unterminated composite state group",
+        ));
+    }
+
+    let group_ids: std::collections::HashSet<_> =
+        groups.iter().map(|group| group.id.as_str()).collect();
+    nodes.retain(|node| !group_ids.contains(node.id.as_str()));
+    node_indices = nodes
+        .iter()
+        .enumerate()
+        .map(|(index, node)| (node.id.clone(), index))
+        .collect();
+
+    for (ids, class_name) in pending_classes {
+        let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
+            message: format!("unknown state style class {class_name:?}"),
+            line: 1,
+            col: 1,
+        })?;
+        for id in ids {
+            if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+                merge_state_style(group.style.get_or_insert_default(), class_style);
+            } else {
+                merge_state_style(
+                    nodes[node_indices[&id]].style.get_or_insert_default(),
+                    class_style,
+                );
+            }
+        }
+    }
+
+    Ok(GraphDiagram {
+        direction,
+        requested_width,
+        hide_empty_descriptions,
+        title,
+        accessibility_title,
+        accessibility_description,
+        links,
+        groups,
+        nodes,
+        edges,
+    })
+}
+
+fn take_state_ref(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if matches!(token_name(cursor.current()), "ID" | "WORD") {
+        Ok(cursor.advance().value.clone())
+    } else {
+        Err(token_error(cursor.current(), "expected state identifier"))
+    }
+}
+
+fn take_state_class_suffix(cursor: &mut TokenCursor) -> Result<Option<String>, ParseError> {
+    if cursor.consume_if("STYLE_SEPARATOR").is_some() {
+        take_state_ref(cursor).map(Some)
+    } else {
+        Ok(None)
+    }
+}
+
+fn take_state_endpoint(
+    cursor: &mut TokenCursor,
+    source: bool,
+    pseudo_index: &mut usize,
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+) -> Result<String, ParseError> {
+    if cursor.consume_if("EDGE_STATE").is_some() {
+        let role = if source { "start" } else { "end" };
+        let id = format!("__state_{role}_{}", *pseudo_index);
+        *pseudo_index += 1;
+        upsert_state_node(nodes, node_indices, id.clone(), String::new());
+        nodes[node_indices[&id]].shape = Some(DiagramShape::Ellipse);
+        Ok(id)
+    } else {
+        let id = take_state_ref(cursor)?;
+        if !node_indices.contains_key(&id) {
+            upsert_state_node(nodes, node_indices, id.clone(), id.clone());
+        }
+        Ok(id)
+    }
+}
+
+fn upsert_state_node(
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+    id: String,
+    label: String,
+) {
+    if let Some(&index) = node_indices.get(&id) {
+        if !label.is_empty() {
+            nodes[index].label = DiagramLabel::new(label);
+        }
+        return;
+    }
+    node_indices.insert(id.clone(), nodes.len());
+    nodes.push(GraphNode {
+        id,
+        label: DiagramLabel::new(label),
+        shape: Some(DiagramShape::RoundedRect),
+        style: None,
+    });
+}
+
+fn append_state_description(
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+    id: String,
+    description: String,
+) {
+    if let Some(&index) = node_indices.get(&id) {
+        let label = &mut nodes[index].label.text;
+        if label == &id {
+            label.clear();
+        }
+        if !label.is_empty() {
+            label.push('\n');
+        }
+        label.push_str(&description);
+    } else {
+        upsert_state_node(nodes, node_indices, id, description);
+    }
+}
+
+fn record_new_state_group_members(
+    group_stack: &[String],
+    groups: &mut [GraphGroup],
+    nodes: &[GraphNode],
+    node_count_before: usize,
+) {
+    let Some(group_id) = group_stack.last() else {
+        return;
+    };
+    let Some(group) = groups.iter_mut().find(|group| &group.id == group_id) else {
+        return;
+    };
+    for node in &nodes[node_count_before..] {
+        if !group.node_ids.contains(&node.id) {
+            group.node_ids.push(node.id.clone());
+        }
+        let region = group
+            .regions
+            .last_mut()
+            .expect("composite groups always have a current region");
+        if !region.contains(&node.id) {
+            region.push(node.id.clone());
+        }
+    }
+}
+
+fn upsert_state_note_node(
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+    id: String,
+    text: String,
+) {
+    upsert_state_node(nodes, node_indices, id.clone(), text);
+    let note = &mut nodes[node_indices[&id]];
+    note.shape = Some(DiagramShape::Note);
+    note.style = Some(DiagramStyle {
+        fill: Some("#fff7cc".into()),
+        stroke: Some("#a16207".into()),
+        text_color: Some("#713f12".into()),
+        corner_radius: Some(0.0),
+        ..Default::default()
+    });
+}
+
+fn apply_state_style(
+    style: &mut DiagramStyle,
+    property: &str,
+    value: &Token,
+) -> Result<(), ParseError> {
+    match property.to_ascii_lowercase().as_str() {
+        "fill" => style.fill = Some(value.value.clone()),
+        "stroke" => style.stroke = Some(value.value.clone()),
+        "color" => style.text_color = Some(value.value.clone()),
+        "stroke-width" => {
+            let width = value
+                .value
+                .strip_suffix("px")
+                .unwrap_or(&value.value)
+                .parse::<f64>()
+                .map_err(|_| token_error(value, "invalid state stroke width"))?;
+            style.stroke_width = Some(width);
+        }
+        _ => {
+            return Err(token_error(
+                value,
+                format!("unsupported state style property {property:?}"),
+            ))
+        }
+    }
+    Ok(())
+}
+
+fn parse_state_style_assignments(
+    cursor: &mut TokenCursor,
+    style: &mut DiagramStyle,
+) -> Result<(), ParseError> {
+    loop {
+        let property = take_state_ref(cursor)?;
+        cursor.consume_if("COLON").ok_or_else(|| {
+            token_error(cursor.current(), "expected ':' in state style assignment")
+        })?;
+        let value = cursor.advance().clone();
+        if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD") {
+            return Err(token_error(&value, "expected state style value"));
+        }
+        apply_state_style(style, &property, &value)?;
+        if cursor.consume_if("COMMA").is_none() {
+            return Ok(());
+        }
+    }
+}
+
+fn state_comma_starts_style_assignment(cursor: &TokenCursor) -> bool {
+    cursor
+        .tokens
+        .get(cursor.index + 2)
+        .is_some_and(|token| token_name(token) == "COLON")
+}
+
+fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
+    if source.fill.is_some() {
+        target.fill.clone_from(&source.fill);
+    }
+    if source.stroke.is_some() {
+        target.stroke.clone_from(&source.stroke);
+    }
+    if source.stroke_width.is_some() {
+        target.stroke_width = source.stroke_width;
+    }
+    if source.text_color.is_some() {
+        target.text_color.clone_from(&source.text_color);
+    }
+}
+
+fn apply_or_defer_state_class(
+    id: &str,
+    class_name: String,
+    nodes: &mut [GraphNode],
+    node_indices: &HashMap<String, usize>,
+    groups: &mut [GraphGroup],
+    class_styles: &HashMap<String, DiagramStyle>,
+    pending_classes: &mut Vec<(Vec<String>, String)>,
+) {
+    if let Some(class_style) = class_styles.get(&class_name) {
+        if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+            merge_state_style(group.style.get_or_insert_default(), class_style);
+        } else {
+            merge_state_style(
+                nodes[node_indices[id]].style.get_or_insert_default(),
+                class_style,
+            );
+        }
+    } else {
+        pending_classes.push((vec![id.to_string()], class_name));
+    }
+}
+
+fn take_state_text(cursor: &mut TokenCursor) -> String {
+    let mut text = String::new();
+    while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
+        let token = cursor.advance();
+        let value = if token_name(token) == "STRING" {
+            strip_state_string(&token.value)
+        } else if token_name(token) == "ENTITY" {
+            decode_mermaid_entity(&token.value)
+        } else {
+            token.value.clone()
+        };
+        if token_name(token) == "COMMA" {
+            text.push(',');
+        } else {
+            if !text.is_empty() && !text.ends_with(',') {
+                text.push(' ');
+            }
+            text.push_str(&value);
+        }
+    }
+    decode_state_line_breaks(text)
+}
+
+fn decode_mermaid_entity(value: &str) -> String {
+    let inner = value.trim_start_matches('#').trim_end_matches(';');
+    let html_entity = if inner.chars().all(|character| character.is_ascii_digit()) {
+        format!("&#{inner};")
+    } else {
+        format!("&{inner};")
+    };
+    commonmark_parser::entities::decode_entity(&html_entity)
+}
+
+fn decode_state_line_breaks(text: String) -> String {
+    text.replace("<br/>", "\n")
+        .replace("<br />", "\n")
+        .replace("<br>", "\n")
+        .split('\n')
+        .map(str::trim)
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let mut lines = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "END_NOTE" {
+        if cursor.consume_if("NEWLINE").is_some() {
+            lines.push(String::new());
+            continue;
+        }
+        let mut line = String::new();
+        while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "END_NOTE") {
+            let token = cursor.advance();
+            let value = if token_name(token) == "STRING" {
+                strip_state_string(&token.value)
+            } else if token_name(token) == "ENTITY" {
+                decode_mermaid_entity(&token.value)
+            } else {
+                token.value.clone()
+            };
+            if token_name(token) == "COMMA" {
+                line.push(',');
+            } else {
+                if !line.is_empty() && !line.ends_with(',') {
+                    line.push(' ');
+                }
+                line.push_str(&value);
+            }
+        }
+        lines.push(decode_state_line_breaks(line));
+        cursor.consume_if("NEWLINE");
+    }
+    cursor
+        .consume_if("END_NOTE")
+        .ok_or_else(|| token_error(cursor.current(), "expected end note terminator"))?;
+    while lines.last().is_some_and(String::is_empty) {
+        lines.pop();
+    }
+    Ok(lines.join("\n"))
+}
+
+fn take_state_multiline_accessibility_text(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    let mut lines = Vec::new();
+    while !cursor.at_eof() && token_name(cursor.current()) != "RBRACE" {
+        if cursor.consume_if("NEWLINE").is_some() {
+            lines.push(String::new());
+            continue;
+        }
+        let line = take_state_text(cursor);
+        lines.push(line);
+        cursor.consume_if("NEWLINE");
+    }
+    cursor.consume_if("RBRACE").ok_or_else(|| {
+        token_error(
+            cursor.current(),
+            "expected '}' after accessibility description",
+        )
+    })?;
+    while lines.last().is_some_and(String::is_empty) {
+        lines.pop();
+    }
+    Ok(lines.join("\n"))
+}
+
+fn strip_state_string(value: &str) -> String {
+    value
+        .strip_prefix('"')
+        .and_then(|value| value.strip_suffix('"'))
+        .unwrap_or(value)
+        .to_string()
+}
+
 // ── sequence parser ──────────────────────────────────────────────────────
 
 /// Parse the grammar-backed core of Mermaid sequence diagrams into the
 /// shared sequence IR. Unsupported control blocks fail grammar validation
 /// instead of being silently discarded.
 pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseError> {
-    parse_mermaid_sequence_ast(source)?;
+    let preprocessed = preprocess_mermaid_source(source)?;
+    parse_mermaid_sequence_ast(&preprocessed.source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_sequence(source));
+    let mut cursor = TokenCursor::new(tokenize_mermaid_sequence(&preprocessed.source));
     cursor.skip_terminators();
     cursor
         .consume_if("HEADER")
@@ -1044,8 +1885,249 @@ pub fn parse_sequence_diagram(source: &str) -> Result<SequenceDiagram, ParseErro
     let mut participant_indices: HashMap<String, usize> = HashMap::new();
 
     parse_sequence_body(&mut cursor, &mut diagram, &mut participant_indices, &[])?;
+    bind_sequence_lifecycle_events(&mut diagram, cursor.current())?;
+    validate_sequence_activation_balance(&diagram, cursor.current())?;
+    if preprocessed.wrap == Some(true) {
+        apply_sequence_default_wrap(&mut diagram);
+    }
 
     Ok(diagram)
+}
+
+struct PreprocessedMermaid {
+    source: String,
+    wrap: Option<bool>,
+}
+
+fn preprocess_mermaid_source(source: &str) -> Result<PreprocessedMermaid, ParseError> {
+    let mut cleaned = blank_mermaid_front_matter(source)?;
+    let cleaned_source =
+        String::from_utf8(cleaned.clone()).expect("front matter blanking preserves UTF-8");
+    let mut search_from = 0;
+    let mut wrap = None;
+    while let Some(relative_start) = cleaned_source[search_from..].find("%%{") {
+        let start = search_from + relative_start;
+        let content_start = start + 3;
+        let Some(relative_end) = cleaned_source[content_start..].find("}%%") else {
+            let line = cleaned_source[..start]
+                .bytes()
+                .filter(|byte| *byte == b'\n')
+                .count()
+                + 1;
+            return Err(ParseError {
+                message: "unterminated Mermaid directive".into(),
+                line,
+                col: 1,
+            });
+        };
+        let end = content_start + relative_end;
+        let directive = cleaned_source[content_start..end].trim();
+        if directive.eq_ignore_ascii_case("wrap") {
+            wrap = Some(true);
+        } else if directive.eq_ignore_ascii_case("nowrap") {
+            wrap = Some(false);
+        }
+        for byte in &mut cleaned[start..end + 3] {
+            if !matches!(*byte, b'\r' | b'\n') {
+                *byte = b' ';
+            }
+        }
+        search_from = end + 3;
+    }
+    Ok(PreprocessedMermaid {
+        source: String::from_utf8(cleaned).expect("directive blanking preserves UTF-8"),
+        wrap,
+    })
+}
+
+fn blank_mermaid_front_matter(source: &str) -> Result<Vec<u8>, ParseError> {
+    let mut cleaned = source.as_bytes().to_vec();
+    let mut offset = 0;
+    let mut opening = None;
+
+    for (line_index, line) in source.split_inclusive('\n').enumerate() {
+        let trimmed = line.trim();
+        if let Some((start, _)) = opening {
+            if trimmed == "---" {
+                for byte in &mut cleaned[start..offset + line.len()] {
+                    if !matches!(*byte, b'\r' | b'\n') {
+                        *byte = b' ';
+                    }
+                }
+                return Ok(cleaned);
+            }
+        } else {
+            if trimmed.is_empty() {
+                offset += line.len();
+                continue;
+            }
+            if trimmed != "---" {
+                return Ok(cleaned);
+            }
+            opening = Some((offset, line_index + 1));
+        }
+        offset += line.len();
+    }
+
+    if let Some((_, line)) = opening {
+        return Err(ParseError {
+            message: "unterminated Mermaid YAML front matter".into(),
+            line,
+            col: 1,
+        });
+    }
+    Ok(cleaned)
+}
+
+fn apply_sequence_default_wrap(diagram: &mut SequenceDiagram) {
+    for participant in &mut diagram.participants {
+        if participant.label_wrap == SequenceTextWrap::Default {
+            participant.label_wrap = SequenceTextWrap::Wrap;
+        }
+    }
+    for group in &mut diagram.participant_groups {
+        if group.label_wrap == SequenceTextWrap::Default {
+            group.label_wrap = SequenceTextWrap::Wrap;
+        }
+    }
+    for event in &mut diagram.events {
+        let wrap = match event {
+            SequenceEvent::Message { wrap, .. }
+            | SequenceEvent::Note { wrap, .. }
+            | SequenceEvent::BlockStart { wrap, .. }
+            | SequenceEvent::BlockBranch { wrap, .. } => Some(wrap),
+            _ => None,
+        };
+        if let Some(wrap) = wrap {
+            if *wrap == SequenceTextWrap::Default {
+                *wrap = SequenceTextWrap::Wrap;
+            }
+        }
+    }
+}
+
+fn validate_sequence_activation_balance(
+    diagram: &SequenceDiagram,
+    eof: &Token,
+) -> Result<(), ParseError> {
+    let mut active: HashMap<&str, usize> = HashMap::new();
+    for event in &diagram.events {
+        match event {
+            SequenceEvent::Message {
+                from,
+                to,
+                activate,
+                deactivate,
+                central_connection,
+                ..
+            } => {
+                if *deactivate {
+                    deactivate_sequence_participant(&mut active, from, eof)?;
+                }
+                match central_connection {
+                    SequenceCentralConnection::Source => {
+                        *active.entry(from).or_default() += 1;
+                    }
+                    SequenceCentralConnection::Destination => {
+                        *active.entry(to).or_default() += 1;
+                    }
+                    SequenceCentralConnection::Both => {
+                        *active.entry(from).or_default() += 1;
+                        *active.entry(to).or_default() += 1;
+                    }
+                    SequenceCentralConnection::None => {}
+                }
+                if *activate {
+                    *active.entry(to).or_default() += 1;
+                }
+            }
+            SequenceEvent::Activation {
+                participant,
+                active: true,
+            } => *active.entry(participant).or_default() += 1,
+            SequenceEvent::Activation {
+                participant,
+                active: false,
+            } => deactivate_sequence_participant(&mut active, participant, eof)?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+fn deactivate_sequence_participant<'a>(
+    active: &mut HashMap<&'a str, usize>,
+    participant: &'a str,
+    token: &Token,
+) -> Result<(), ParseError> {
+    let count = active.entry(participant).or_default();
+    if *count == 0 {
+        return Err(token_error(
+            token,
+            format!("trying to deactivate inactive sequence participant {participant:?}"),
+        ));
+    }
+    *count -= 1;
+    Ok(())
+}
+
+fn bind_sequence_lifecycle_events(
+    diagram: &mut SequenceDiagram,
+    eof: &Token,
+) -> Result<(), ParseError> {
+    let mut bound = Vec::with_capacity(diagram.events.len());
+    let mut pending: Option<SequenceEvent> = None;
+    for event in diagram.events.drain(..) {
+        match &event {
+            SequenceEvent::ParticipantCreated { .. }
+            | SequenceEvent::ParticipantDestroyed { .. } => {
+                if pending.is_some() {
+                    return Err(token_error(
+                        eof,
+                        "sequence lifecycle declaration requires an associated message",
+                    ));
+                }
+                pending = Some(event);
+            }
+            SequenceEvent::Message { from, to, .. } => match pending.take() {
+                Some(SequenceEvent::ParticipantCreated { participant }) => {
+                    if to != &participant {
+                        return Err(token_error(
+                            eof,
+                            format!(
+                                "created participant {participant:?} must receive the next message"
+                            ),
+                        ));
+                    }
+                    bound.push(SequenceEvent::ParticipantCreated { participant });
+                    bound.push(event);
+                }
+                Some(SequenceEvent::ParticipantDestroyed { participant }) => {
+                    if from != &participant && to != &participant {
+                        return Err(token_error(
+                            eof,
+                            format!(
+                                "destroyed participant {participant:?} must be part of the next message"
+                            ),
+                        ));
+                    }
+                    bound.push(event);
+                    bound.push(SequenceEvent::ParticipantDestroyed { participant });
+                }
+                None => bound.push(event),
+                Some(_) => unreachable!("pending lifecycle event has a constrained variant"),
+            },
+            _ => bound.push(event),
+        }
+    }
+    if pending.is_some() {
+        return Err(token_error(
+            eof,
+            "sequence lifecycle declaration requires an associated message",
+        ));
+    }
+    diagram.events = bound;
+    Ok(())
 }
 
 fn parse_sequence_body(
@@ -1116,10 +2198,22 @@ fn parse_sequence_body(
                 if cursor.current().value == "off" {
                     diagram.auto_number = false;
                     cursor.advance();
+                    diagram.events.push(SequenceEvent::AutoNumber {
+                        visible: false,
+                        start: None,
+                        step: None,
+                    });
                 } else {
                     diagram.auto_number = true;
-                    diagram.auto_number_start = take_sequence_number(cursor)?.unwrap_or(1.0);
-                    diagram.auto_number_step = take_sequence_number(cursor)?.unwrap_or(1.0);
+                    let start = take_sequence_number(cursor)?;
+                    let step = take_sequence_number(cursor)?.or(start.map(|_| 1.0));
+                    diagram.auto_number_start = start.unwrap_or(1.0);
+                    diagram.auto_number_step = step.unwrap_or(1.0);
+                    diagram.events.push(SequenceEvent::AutoNumber {
+                        visible: true,
+                        start,
+                        step,
+                    });
                 }
             }
             "loop" | "rect" | "opt" | "alt" | "par" | "par_over" | "critical" | "break" => {
@@ -1137,6 +2231,18 @@ fn take_sequence_number(cursor: &mut TokenCursor) -> Result<Option<f64>, ParseEr
         return Ok(None);
     }
     let token = cursor.advance().clone();
+    if let Some(next) = cursor.tokens.get(cursor.index) {
+        let token_end_column = token.column + token.value.chars().count();
+        if token.line == next.line
+            && token_end_column == next.column
+            && token_name(next) == "NUMBER"
+        {
+            return Err(token_error(
+                &token,
+                "autonumber decimals support at most two fractional digits and values require whitespace separation",
+            ));
+        }
+    }
     let value = token
         .value
         .parse::<f64>()
@@ -1275,6 +2381,12 @@ fn parse_sequence_participant(
         }
     };
     let id = take_sequence_actor_ref(cursor)?;
+    if created && participant_indices.contains_key(&id) {
+        return Err(token_error(
+            &declaration,
+            format!("cannot create duplicate sequence participant {id:?}"),
+        ));
+    }
     let mut inline_alias = None;
     if token_name(cursor.current()) == "CONFIG" {
         let config = cursor.advance().clone();
@@ -1284,13 +2396,23 @@ fn parse_sequence_participant(
         }
         inline_alias = parsed.1;
     }
-    let label = if cursor.current().value == "as" {
+    let (label, label_wrap) = if cursor.current().value == "as" {
         cursor.advance();
-        take_sequence_line_text(cursor)
+        take_sequence_wrapped_text(cursor)
     } else {
-        inline_alias.unwrap_or_else(|| id.clone())
+        (
+            inline_alias.unwrap_or_else(|| id.clone()),
+            SequenceTextWrap::Default,
+        )
     };
-    upsert_sequence_participant(diagram, participant_indices, id.clone(), label, kind);
+    upsert_sequence_participant(
+        diagram,
+        participant_indices,
+        id.clone(),
+        label,
+        label_wrap,
+        kind,
+    );
     if created {
         diagram.events.push(SequenceEvent::ParticipantCreated {
             participant: id.clone(),
@@ -1309,7 +2431,7 @@ fn parse_sequence_participant_config(
         .ok_or_else(|| token_error(token, "invalid sequence participant configuration"))?;
     let mut kind = None;
     let mut alias = None;
-    for field in inner.split(',') {
+    for field in split_sequence_config_fields(inner) {
         let field = field.trim();
         if field.is_empty() {
             continue;
@@ -1317,9 +2439,9 @@ fn parse_sequence_participant_config(
         let (key, value) = field.split_once(':').ok_or_else(|| {
             token_error(token, "participant configuration fields require key: value")
         })?;
-        let key = trim_sequence_config_string(key);
-        let value = trim_sequence_config_string(value);
-        match key {
+        let key = parse_sequence_config_scalar(token, key)?;
+        let value = parse_sequence_config_scalar(token, value)?;
+        match key.as_str() {
             "type" => {
                 kind = Some(match value.to_ascii_lowercase().as_str() {
                     "participant" => SequenceParticipantKind::Participant,
@@ -1338,17 +2460,72 @@ fn parse_sequence_participant_config(
                     }
                 });
             }
-            "alias" => alias = Some(value.to_string()),
+            "alias" => alias = Some(value),
             _ => {}
         }
     }
     Ok((kind, alias))
 }
 
-fn trim_sequence_config_string(value: &str) -> &str {
-    value
-        .trim()
-        .trim_matches(|character| matches!(character, '\'' | '"'))
+fn split_sequence_config_fields(input: &str) -> Vec<&str> {
+    let mut fields = Vec::new();
+    let mut start = 0;
+    let mut quote = None;
+    let mut escaped = false;
+    let mut depth = 0_u32;
+    for (index, character) in input.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        if quote.is_some() && character == '\\' {
+            escaped = true;
+            continue;
+        }
+        if let Some(delimiter) = quote {
+            if character == delimiter {
+                quote = None;
+            }
+            continue;
+        }
+        match character {
+            '\'' | '"' => quote = Some(character),
+            '{' | '[' | '(' => depth += 1,
+            '}' | ']' | ')' => depth = depth.saturating_sub(1),
+            ',' if depth == 0 => {
+                fields.push(&input[start..index]);
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    fields.push(&input[start..]);
+    fields
+}
+
+fn parse_sequence_config_scalar(token: &Token, value: &str) -> Result<String, ParseError> {
+    let value = value.trim();
+    if value.starts_with('"') {
+        return serde_json::from_str(value).map_err(|error| {
+            token_error(
+                token,
+                format!("invalid double-quoted participant configuration value: {error}"),
+            )
+        });
+    }
+    if let Some(inner) = value
+        .strip_prefix('\'')
+        .and_then(|value| value.strip_suffix('\''))
+    {
+        return Ok(inner.replace("''", "'"));
+    }
+    if value.starts_with('\'') || value.ends_with('\'') {
+        return Err(token_error(
+            token,
+            "invalid single-quoted participant configuration value",
+        ));
+    }
+    Ok(value.to_string())
 }
 
 fn parse_sequence_participant_box(
@@ -1357,11 +2534,12 @@ fn parse_sequence_participant_box(
     participant_indices: &mut HashMap<String, usize>,
 ) -> Result<(), ParseError> {
     cursor.advance();
-    let (fill, label) = parse_sequence_box_header(&take_sequence_line_text(cursor));
+    let (fill, label, label_wrap) = parse_sequence_box_header(&take_sequence_line_text(cursor));
     let group_id = format!("box-{}", diagram.participant_groups.len() + 1);
     diagram.participant_groups.push(SequenceParticipantGroup {
         id: group_id.clone(),
         label,
+        label_wrap,
         fill,
     });
     cursor.skip_terminators();
@@ -1374,6 +2552,14 @@ fn parse_sequence_participant_box(
         }
         let id = parse_sequence_participant(cursor, diagram, participant_indices, false)?;
         let index = participant_indices[&id];
+        if let Some(existing_group) = diagram.participants[index].group_id.as_deref() {
+            if existing_group != group_id {
+                return Err(token_error(
+                    cursor.current(),
+                    format!("sequence participant {id:?} cannot belong to multiple boxes"),
+                ));
+            }
+        }
         diagram.participants[index].group_id = Some(group_id.clone());
         cursor.skip_terminators();
     }
@@ -1384,10 +2570,10 @@ fn parse_sequence_participant_box(
     Ok(())
 }
 
-fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
+fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>, SequenceTextWrap) {
     let raw = raw.trim();
     if raw.is_empty() {
-        return (None, None);
+        return (None, None, SequenceTextWrap::Default);
     }
     let lower = raw.to_ascii_lowercase();
     let function_color = ["rgb(", "rgba(", "hsl(", "hsla("]
@@ -1422,12 +2608,23 @@ fn parse_sequence_box_header(raw: &str) -> (Option<String>, Option<String>) {
             | "yellow"
     );
     if function_color || is_named_color {
-        let label = raw[split..].trim();
+        let (label, wrap) = split_sequence_wrap_directive(raw[split..].trim());
         let fill =
             (!first.eq_ignore_ascii_case("transparent")).then(|| normalize_sequence_color(first));
-        (fill, (!label.is_empty()).then(|| label.to_string()))
+        (fill, (!label.is_empty()).then(|| label.to_string()), wrap)
     } else {
-        (None, Some(raw.to_string()))
+        let (label, wrap) = split_sequence_wrap_directive(raw);
+        (None, (!label.is_empty()).then(|| label.to_string()), wrap)
+    }
+}
+
+fn split_sequence_wrap_directive(raw: &str) -> (&str, SequenceTextWrap) {
+    if let Some(label) = raw.strip_prefix("nowrap:") {
+        (label.trim(), SequenceTextWrap::NoWrap)
+    } else if let Some(label) = raw.strip_prefix("wrap:") {
+        (label.trim(), SequenceTextWrap::Wrap)
+    } else {
+        (raw, SequenceTextWrap::Default)
     }
 }
 
@@ -1529,7 +2726,7 @@ fn parse_sequence_control_block(
         (
             String::new(),
             SequenceTextWrap::Default,
-            Some(normalize_sequence_color(&color)),
+            (!color.is_empty()).then(|| normalize_sequence_color(&color)),
         )
     } else {
         let (label, wrap) = take_sequence_wrapped_text(cursor);
@@ -1806,23 +3003,29 @@ fn take_sequence_actor_ref(cursor: &mut TokenCursor) -> Result<String, ParseErro
 }
 
 fn take_sequence_line_text(cursor: &mut TokenCursor) -> String {
-    let mut words = Vec::new();
+    let mut text = String::new();
+    let mut previous_end_column = None;
     while !cursor.at_eof() && !matches!(token_name(cursor.current()), "NEWLINE" | "SEMICOLON") {
         let token = cursor.advance();
-        if token_name(token) == "ENTITY" {
+        if let Some(previous_end) = previous_end_column {
+            let gap = token.column.saturating_sub(previous_end);
+            text.extend(std::iter::repeat_n(' ', gap));
+        }
+        let value = if token_name(token) == "ENTITY" {
             let inner = token.value.trim_start_matches('#').trim_end_matches(';');
             let html_entity = if inner.chars().all(|character| character.is_ascii_digit()) {
                 format!("&#{inner};")
             } else {
                 format!("&{inner};")
             };
-            words.push(commonmark_parser::entities::decode_entity(&html_entity));
+            commonmark_parser::entities::decode_entity(&html_entity)
         } else {
-            words.push(token.value.clone());
-        }
+            token.value.clone()
+        };
+        text.push_str(&value);
+        previous_end_column = Some(token.column + token.value.chars().count());
     }
-    let text = words
-        .join(" ")
+    let text = text
         .replace("<br/>", "\n")
         .replace("<br />", "\n")
         .replace("<br>", "\n");
@@ -1857,6 +3060,7 @@ fn ensure_sequence_participant(
             participant_indices,
             id.to_string(),
             id.to_string(),
+            SequenceTextWrap::Default,
             SequenceParticipantKind::Participant,
         );
     }
@@ -1867,10 +3071,12 @@ fn upsert_sequence_participant(
     participant_indices: &mut HashMap<String, usize>,
     id: String,
     label: String,
+    label_wrap: SequenceTextWrap,
     kind: SequenceParticipantKind,
 ) {
     if let Some(&index) = participant_indices.get(&id) {
         diagram.participants[index].label = DiagramLabel::new(label);
+        diagram.participants[index].label_wrap = label_wrap;
         diagram.participants[index].kind = kind;
         return;
     }
@@ -1878,6 +3084,7 @@ fn upsert_sequence_participant(
     diagram.participants.push(SequenceParticipant {
         id,
         label: DiagramLabel::new(label),
+        label_wrap,
         kind,
         style: None,
         group_id: None,
@@ -3156,18 +4363,22 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.participants[0].label.text, "Alice");
         assert!(matches!(
             &diagram.events[0],
+            SequenceEvent::AutoNumber { visible: true, .. }
+        ));
+        assert!(matches!(
+            &diagram.events[1],
             SequenceEvent::Message { from, to, activate: true, .. }
                 if from == "A" && to == "Bob"
         ));
         assert!(matches!(
-            &diagram.events[1],
+            &diagram.events[2],
             SequenceEvent::Note {
                 placement: SequenceNotePlacement::RightOf,
                 ..
             }
         ));
         assert!(matches!(
-            &diagram.events[2],
+            &diagram.events[3],
             SequenceEvent::Activation { participant, active: false } if participant == "Bob"
         ));
     }
@@ -3178,6 +4389,500 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             MermaidDiagram::Sequence(diagram) => assert_eq!(diagram.events.len(), 1),
             _ => panic!("expected Sequence"),
         }
+    }
+
+    #[test]
+    fn state_parses_graph_compatible_core() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\ndirection LR\nstate \"Still waiting\" as Still\n[*] --> Still\nStill --> Moving: begin motion\nMoving: In motion\nMoving --> [*]: stop\n",
+        )
+        .expect("state core should parse");
+
+        assert_eq!(diagram.direction, DiagramDirection::Lr);
+        assert_eq!(diagram.nodes.len(), 4);
+        assert_eq!(diagram.edges.len(), 3);
+        assert_eq!(
+            diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == "Still")
+                .unwrap()
+                .label
+                .text,
+            "Still waiting"
+        );
+        assert_eq!(
+            diagram.edges[1].label.as_ref().unwrap().text,
+            "begin motion"
+        );
+        assert_eq!(
+            diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == "Moving")
+                .unwrap()
+                .label
+                .text,
+            "In motion"
+        );
+        assert_eq!(
+            diagram
+                .nodes
+                .iter()
+                .filter(|node| node.shape == Some(DiagramShape::Ellipse))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn dispatch_state_to_graph_ir() {
+        match parse_any_mermaid("stateDiagram\nReady --> Running").unwrap() {
+            MermaidDiagram::Graph(diagram) => assert_eq!(diagram.edges.len(), 1),
+            _ => panic!("expected graph-compatible state diagram"),
+        }
+    }
+
+    #[test]
+    fn state_parses_choice_pseudostates() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate First <<choice>>\nstate Second [[choice]]\nReady --> First\nFirst --> Second: continue\n",
+        )
+        .expect("choice pseudostates should parse");
+
+        for id in ["First", "Second"] {
+            let node = diagram.nodes.iter().find(|node| node.id == id).unwrap();
+            assert_eq!(node.shape, Some(DiagramShape::Diamond));
+            assert_eq!(node.label.text, "");
+        }
+    }
+
+    #[test]
+    fn state_parses_fork_and_join_pseudostates() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate WorkFork <<fork>>\nstate WorkJoin [[join]]\nReady --> WorkFork\nWorkFork --> Running\nRunning --> WorkJoin\n",
+        )
+        .expect("fork and join pseudostates should parse");
+
+        for id in ["WorkFork", "WorkJoin"] {
+            let node = diagram.nodes.iter().find(|node| node.id == id).unwrap();
+            assert_eq!(node.shape, Some(DiagramShape::Bar));
+            assert_eq!(
+                node.style.as_ref().unwrap().fill.as_deref(),
+                Some("#111827")
+            );
+        }
+    }
+
+    #[test]
+    fn state_parses_inline_styles() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px\n",
+        )
+        .expect("state inline styles should parse");
+        let style = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Ready")
+            .unwrap()
+            .style
+            .as_ref()
+            .unwrap();
+
+        assert_eq!(style.fill.as_deref(), Some("#fee2e2"));
+        assert_eq!(style.stroke.as_deref(), Some("#991b1b"));
+        assert_eq!(style.text_color.as_deref(), Some("#111827"));
+        assert_eq!(style.stroke_width, Some(3.0));
+    }
+
+    #[test]
+    fn state_resolves_reusable_style_classes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclass Ready,Waiting warning\nclassDef warning fill:#fef3c7,stroke:#92400e,color:#451a03,stroke-width:2px\nReady --> Waiting\n",
+        )
+        .expect("state style classes should parse");
+
+        for id in ["Ready", "Waiting"] {
+            let style = diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == id)
+                .unwrap()
+                .style
+                .as_ref()
+                .unwrap();
+            assert_eq!(style.fill.as_deref(), Some("#fef3c7"));
+            assert_eq!(style.stroke.as_deref(), Some("#92400e"));
+            assert_eq!(style.text_color.as_deref(), Some("#451a03"));
+            assert_eq!(style.stroke_width, Some(2.0));
+        }
+    }
+
+    #[test]
+    fn state_rejects_unknown_style_classes() {
+        let error = parse_state_diagram("stateDiagram-v2\nclass Ready missing\n")
+            .expect_err("unknown state classes should fail");
+
+        assert!(error.message.contains("unknown state style class"));
+    }
+
+    #[test]
+    fn state_resolves_inline_class_shorthand() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef quiet fill:#f8fafc,stroke:#64748b\nclassDef active fill:#dcfce7,color:#14532d\n[*]:::quiet --> Still:::quiet\nStill --> Moving:::active\nCrash:::active\n",
+        )
+        .expect("state inline class shorthand should parse");
+
+        let still = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Still")
+            .unwrap();
+        assert_eq!(
+            still.style.as_ref().unwrap().fill.as_deref(),
+            Some("#f8fafc")
+        );
+        for id in ["Moving", "Crash"] {
+            let style = diagram
+                .nodes
+                .iter()
+                .find(|node| node.id == id)
+                .unwrap()
+                .style
+                .as_ref()
+                .unwrap();
+            assert_eq!(style.fill.as_deref(), Some("#dcfce7"));
+            assert_eq!(style.text_color.as_deref(), Some("#14532d"));
+        }
+        assert!(diagram.nodes.iter().any(|node| {
+            node.shape == Some(DiagramShape::Ellipse)
+                && node
+                    .style
+                    .as_ref()
+                    .and_then(|style| style.stroke.as_deref())
+                    == Some("#64748b")
+        }));
+    }
+
+    #[test]
+    fn state_parses_attached_notes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady --> Running\nnote left of Ready: Waiting for work\nnote right of Running: Work is active\n",
+        )
+        .expect("attached state notes should parse");
+
+        let notes: Vec<_> = diagram
+            .nodes
+            .iter()
+            .filter(|node| node.shape == Some(DiagramShape::Note))
+            .collect();
+        assert_eq!(notes.len(), 2);
+        assert_eq!(notes[0].label.text, "Waiting for work");
+        assert_eq!(notes[1].label.text, "Work is active");
+        let note_edges: Vec<_> = diagram
+            .edges
+            .iter()
+            .filter(|edge| edge.kind == EdgeKind::NoteAssociation)
+            .collect();
+        assert_eq!(note_edges.len(), 2);
+        assert_eq!(note_edges[0].to, "Ready");
+        assert_eq!(note_edges[1].from, "Running");
+    }
+
+    #[test]
+    fn state_parses_multiline_and_floating_notes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady --> Running\nnote right of Running\nFirst line\nSecond line\nend note\nnote \"Detached reminder\" as Reminder\n",
+        )
+        .expect("multiline and floating state notes should parse");
+
+        let attached = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id.starts_with("__state_note_"))
+            .unwrap();
+        assert_eq!(attached.label.text, "First line\nSecond line");
+        let floating = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Reminder")
+            .unwrap();
+        assert_eq!(floating.shape, Some(DiagramShape::Note));
+        assert_eq!(floating.label.text, "Detached reminder");
+        assert_eq!(
+            diagram
+                .edges
+                .iter()
+                .filter(|edge| edge.kind == EdgeKind::NoteAssociation)
+                .count(),
+            1
+        );
+    }
+
+    #[test]
+    fn state_preserves_accessibility_metadata() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\naccTitle: State lifecycle\naccDescr {\nReady transitions to running\nAcross two lines\n}\nReady --> Running\n",
+        )
+        .expect("state accessibility metadata should parse");
+
+        assert_eq!(
+            diagram.accessibility_title.as_deref(),
+            Some("State lifecycle")
+        );
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Ready transitions to running\nAcross two lines")
+        );
+    }
+
+    #[test]
+    fn state_preserves_click_links_and_tooltips() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclick Ready \"https://example.com/ready\" \"Open ready state\"\nclick Running href \"https://example.com/run\"\nReady --> Running\n",
+        )
+        .expect("state click links should parse");
+
+        assert_eq!(diagram.links.len(), 2);
+        assert_eq!(diagram.links[0].node_id, "Ready");
+        assert_eq!(diagram.links[0].url, "https://example.com/ready");
+        assert_eq!(
+            diagram.links[0].tooltip.as_deref(),
+            Some("Open ready state")
+        );
+        assert_eq!(diagram.links[1].node_id, "Running");
+        assert_eq!(diagram.links[1].tooltip, None);
+    }
+
+    #[test]
+    fn state_parses_nested_composite_groups() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Outer {\nA --> B\nstate Inner {\nC --> D\n}\n}\n",
+        )
+        .expect("nested composite states should parse");
+
+        assert_eq!(diagram.groups.len(), 2);
+        assert_eq!(diagram.groups[0].id, "Outer");
+        assert_eq!(diagram.groups[0].node_ids, vec!["A", "B"]);
+        assert_eq!(diagram.groups[1].id, "Inner");
+        assert_eq!(diagram.groups[1].parent_id.as_deref(), Some("Outer"));
+        assert_eq!(diagram.groups[1].node_ids, vec!["C", "D"]);
+    }
+
+    #[test]
+    fn state_preserves_composite_aliases_and_styles() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef phase fill:#ecfccb,stroke:#3f6212,color:#365314\nstate \"Processing Queue\" as Processing {\nA --> B\n}\nclass Processing phase\nstyle Processing stroke-width:3px\n",
+        )
+        .expect("styled aliased composite state should parse");
+        let group = &diagram.groups[0];
+
+        assert_eq!(group.id, "Processing");
+        assert_eq!(group.label.text, "Processing Queue");
+        assert_eq!(
+            group.style.as_ref().and_then(|style| style.fill.as_deref()),
+            Some("#ecfccb")
+        );
+        assert_eq!(
+            group.style.as_ref().and_then(|style| style.stroke_width),
+            Some(3.0)
+        );
+        assert!(!diagram.nodes.iter().any(|node| node.id == "Processing"));
+    }
+
+    #[test]
+    fn state_preserves_concurrent_region_membership() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Active {\nOff --> On\n--\nIdle --> Busy\n}\n",
+        )
+        .expect("concurrent state regions should parse");
+        let group = &diagram.groups[0];
+
+        assert_eq!(group.regions, vec![vec!["Off", "On"], vec!["Idle", "Busy"]]);
+    }
+
+    #[test]
+    fn state_transitions_keep_composite_group_endpoints() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Active {\nIdle --> Busy\n}\nReady --> Active\nActive --> Done\n",
+        )
+        .expect("composite transition endpoints should parse");
+
+        assert_eq!(diagram.edges[1].to, "Active");
+        assert_eq!(diagram.edges[2].from, "Active");
+        assert!(!diagram.nodes.iter().any(|node| node.id == "Active"));
+    }
+
+    #[test]
+    fn state_preserves_modern_and_legacy_titles() {
+        let modern = parse_state_diagram("stateDiagram-v2\ntitle Native lifecycle\nA --> B\n")
+            .expect("modern state title");
+        let legacy = parse_state_diagram("stateDiagram-v2\ntitle: Legacy lifecycle\nA --> B\n")
+            .expect("legacy state title");
+
+        assert_eq!(modern.title.as_deref(), Some("Native lifecycle"));
+        assert_eq!(legacy.title.as_deref(), Some("Legacy lifecycle"));
+    }
+
+    #[test]
+    fn state_accumulates_repeated_description_lines() {
+        let diagram =
+            parse_state_diagram("stateDiagram-v2\nActive: First detail\nActive: Second detail\n")
+                .expect("repeated state descriptions");
+
+        assert_eq!(diagram.nodes[0].label.text, "First detail\nSecond detail");
+    }
+
+    #[test]
+    fn state_preserves_composite_local_direction() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\ndirection TB\nstate Active {\ndirection LR\nIdle --> Busy\n}\n",
+        )
+        .expect("composite local direction");
+
+        assert_eq!(diagram.direction, DiagramDirection::Tb);
+        assert_eq!(diagram.groups[0].direction, Some(DiagramDirection::Lr));
+    }
+
+    #[test]
+    fn state_preserves_requested_scale_width() {
+        let diagram = parse_state_diagram("stateDiagram-v2\nscale 640 width\nA --> B\n")
+            .expect("state scale width");
+
+        assert_eq!(diagram.requested_width, Some(640.0));
+    }
+
+    #[test]
+    fn state_preserves_hide_empty_description_directive() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nhide empty description\nstate Junction <<choice>>\n",
+        )
+        .expect("hide empty description directive");
+
+        assert!(diagram.hide_empty_descriptions);
+        assert!(diagram.nodes[0].label.text.is_empty());
+    }
+
+    #[test]
+    fn state_decodes_entities_and_line_breaks() {
+        let diagram =
+            parse_state_diagram("stateDiagram-v2\nReady: Metal #9829;<br/>native & shaped\n")
+                .expect("state text entities and line breaks");
+
+        assert_eq!(diagram.nodes[0].label.text, "Metal ♥\nnative & shaped");
+    }
+
+    #[test]
+    fn state_applies_inline_style_to_multiple_targets() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Active {\nA --> B\n}\nstyle A,B,Active fill:#dcfce7,stroke:#166534\n",
+        )
+        .expect("multi-target state style");
+
+        assert_eq!(
+            diagram.nodes[0].style.as_ref().unwrap().fill.as_deref(),
+            Some("#dcfce7")
+        );
+        assert_eq!(
+            diagram.nodes[1].style.as_ref().unwrap().stroke.as_deref(),
+            Some("#166534")
+        );
+        assert_eq!(
+            diagram.groups[0].style.as_ref().unwrap().fill.as_deref(),
+            Some("#dcfce7")
+        );
+    }
+
+    #[test]
+    fn sequence_parses_case_insensitive_keywords() {
+        let diagram = parse_any_mermaid(
+            "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
+        )
+        .expect("mixed-case sequence syntax should parse");
+        let MermaidDiagram::Sequence(diagram) = diagram else {
+            panic!("expected sequence diagram");
+        };
+
+        assert_eq!(diagram.participants[0].label.text, "Alice");
+        assert!(matches!(
+            diagram.events[1],
+            SequenceEvent::Activation { active: true, .. }
+        ));
+        assert!(matches!(
+            diagram.events[2],
+            SequenceEvent::Note {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+        assert!(matches!(
+            diagram.events[3],
+            SequenceEvent::Activation { active: false, .. }
+        ));
+    }
+
+    #[test]
+    fn sequence_preprocesses_init_and_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "%%{init: {'logLevel': 0}}%%\nsequenceDiagram\n%%{wrap}%%\nparticipant Alice as Primary client\nAlice->>Bob: A deliberately long request\nnote right of Bob: A deliberately long note\n",
+        )
+        .expect("preprocessor directives should not enter the sequence grammar");
+
+        assert_eq!(diagram.participants[0].label_wrap, SequenceTextWrap::Wrap);
+        assert!(matches!(
+            diagram.events[0],
+            SequenceEvent::Message {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+        assert!(matches!(
+            diagram.events[1],
+            SequenceEvent::Note {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn sequence_preprocesses_leading_yaml_front_matter() {
+        let diagram = parse_sequence_diagram(
+            "\n---\ntitle: Front matter title\nconfig:\n  theme: neutral\n---\n%%{wrap}%%\nsequenceDiagram\nAlice->>Bob: Request\n",
+        )
+        .expect("front matter should not enter the sequence grammar");
+
+        assert_eq!(diagram.title, None);
+        assert!(matches!(
+            diagram.events[0],
+            SequenceEvent::Message {
+                wrap: SequenceTextWrap::Wrap,
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_unterminated_yaml_front_matter() {
+        let error = parse_sequence_diagram(
+            "\n---\ntitle: Missing closing delimiter\nsequenceDiagram\nAlice->>Bob: Request\n",
+        )
+        .expect_err("unterminated front matter must not consume the diagram");
+
+        assert!(error
+            .message
+            .contains("unterminated Mermaid YAML front matter"));
+        assert_eq!(error.line, 2);
+    }
+
+    #[test]
+    fn sequence_rejects_unterminated_directives() {
+        let error = parse_sequence_diagram(
+            "%%{init: {'logLevel': 0}\nsequenceDiagram\nAlice->>Bob: Request\n",
+        )
+        .expect_err("unterminated directives must not be silently discarded");
+        assert!(error.message.contains("unterminated Mermaid directive"));
+        assert_eq!(error.line, 1);
     }
 
     #[test]
@@ -3217,7 +4922,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn sequence_parses_participant_lifecycle_events() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant A as Alice\nA->>B: Start\ncreate actor Worker as Background Worker\nB->>Worker: Run\ndestroy Worker\n",
+            "sequenceDiagram\nparticipant A as Alice\nA->>B: Start\ncreate actor Worker as Background Worker\nB->>Worker: Run\ndestroy Worker\nWorker-->>B: Stop\n",
         )
         .unwrap();
         let worker = diagram
@@ -3235,6 +4940,52 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             event,
             SequenceEvent::ParticipantDestroyed { participant } if participant == "Worker"
         )));
+        let destroy_index = diagram
+            .events
+            .iter()
+            .position(|event| matches!(event, SequenceEvent::ParticipantDestroyed { .. }))
+            .unwrap();
+        assert!(matches!(
+            diagram.events[destroy_index - 1],
+            SequenceEvent::Message { ref from, .. } if from == "Worker"
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_unassociated_lifecycle_declarations() {
+        let create_error = parse_sequence_diagram(
+            "sequenceDiagram\ncreate participant Worker\nA->>B: Wrong target\n",
+        )
+        .expect_err("created participant must receive the associated message");
+        assert!(create_error.message.contains("must receive"));
+
+        let destroy_error =
+            parse_sequence_diagram("sequenceDiagram\ndestroy Worker\nA->>B: Wrong participants\n")
+                .expect_err("destroyed participant must join the associated message");
+        assert!(destroy_error.message.contains("must be part"));
+    }
+
+    #[test]
+    fn sequence_rejects_duplicate_created_participants() {
+        let error = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant Worker\ncreate actor Worker\nA->>Worker: Start\n",
+        )
+        .expect_err("create cannot reuse an existing participant ID");
+
+        assert!(error.message.contains("duplicate sequence participant"));
+    }
+
+    #[test]
+    fn sequence_rejects_activation_underflow() {
+        let statement_error =
+            parse_sequence_diagram("sequenceDiagram\nparticipant Worker\ndeactivate Worker\n")
+                .expect_err("explicit deactivation requires an active participant");
+        assert!(statement_error.message.contains("deactivate inactive"));
+
+        let message_error =
+            parse_sequence_diagram("sequenceDiagram\nA->>-B: Invalid sender deactivation\n")
+                .expect_err("message deactivation requires an active sender");
+        assert!(message_error.message.contains("deactivate inactive"));
     }
 
     #[test]
@@ -3262,6 +5013,40 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn sequence_rejects_participants_in_multiple_boxes() {
+        let error = parse_sequence_diagram(
+            "sequenceDiagram\nbox First\nparticipant API\nend\nbox Second\nparticipant API\nend\n",
+        )
+        .expect_err("a participant cannot move between boxes");
+
+        assert!(error.message.contains("cannot belong to multiple boxes"));
+    }
+
+    #[test]
+    fn sequence_preserves_participant_box_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nbox hsl(180, 100%, 50%) wrap: A deliberately detailed client application tier\nparticipant API\nend\nbox nowrap: Core services\nparticipant DB\nend\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participant_groups[0].label.as_deref(),
+            Some("A deliberately detailed client application tier")
+        );
+        assert_eq!(
+            diagram.participant_groups[0].label_wrap,
+            SequenceTextWrap::Wrap
+        );
+        assert_eq!(
+            diagram.participant_groups[1].label.as_deref(),
+            Some("Core services")
+        );
+        assert_eq!(
+            diagram.participant_groups[1].label_wrap,
+            SequenceTextWrap::NoWrap
+        );
+    }
+
+    #[test]
     fn sequence_rejects_messages_inside_participant_boxes() {
         let error = parse_sequence_diagram(
             "sequenceDiagram\nbox Services\nparticipant API\nAPI->>DB: Query\nend\n",
@@ -3273,7 +5058,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn sequence_parses_participant_stereotypes_and_alias_precedence() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: 'Ledger' }\nparticipant L@{ type: collections }\nparticipant Q@{ type: queue }\n",
+            "sequenceDiagram\nparticipant API@{ \"type\": \"boundary\", \"alias\": \"Internal\" } as Public API\nparticipant C@{ type: control }\nparticipant E@{ type: entity }\nparticipant DB@{ type: 'database', alias: \"Ledger, \\\"primary\\\"\" }\nparticipant L@{ type: collections, alias: 'Collector''s lane' }\nparticipant Q@{ type: queue }\n",
         )
         .unwrap();
         assert_eq!(
@@ -3293,11 +5078,12 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             diagram.participants[3].kind,
             SequenceParticipantKind::Database
         );
-        assert_eq!(diagram.participants[3].label.text, "Ledger");
+        assert_eq!(diagram.participants[3].label.text, "Ledger, \"primary\"");
         assert_eq!(
             diagram.participants[4].kind,
             SequenceParticipantKind::Collections
         );
+        assert_eq!(diagram.participants[4].label.text, "Collector's lane");
         assert_eq!(diagram.participants[5].kind, SequenceParticipantKind::Queue);
     }
 
@@ -3360,6 +5146,26 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_central_connections_open_endpoint_activations() {
+        parse_sequence_diagram(
+            "sequenceDiagram\nAlice()->>Bob: source\ndeactivate Alice\nAlice->>()Bob: destination\ndeactivate Bob\nAlice()->>()Bob: both\ndeactivate Alice\ndeactivate Bob\n",
+        )
+        .expect("central endpoint activations should balance explicit deactivations");
+    }
+
+    #[test]
+    fn sequence_rejects_activation_suffixes_on_central_connections() {
+        for source in [
+            "sequenceDiagram\nAlice()->>+Bob: invalid source suffix\n",
+            "sequenceDiagram\nAlice->>()-Bob: invalid destination suffix\n",
+            "sequenceDiagram\nAlice()->>()+Bob: invalid dual suffix\n",
+        ] {
+            parse_sequence_diagram(source)
+                .expect_err("central connections have their own activation semantics");
+        }
+    }
+
+    #[test]
     fn sequence_parses_autonumber_start_and_increment() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nautonumber 10.5 2.25\nAlice->>Bob: First\nBob->>Alice: Second\n",
@@ -3368,6 +5174,68 @@ B//-A: reverse stick top
         assert!(diagram.auto_number);
         assert_eq!(diagram.auto_number_start, 10.5);
         assert_eq!(diagram.auto_number_step, 2.25);
+        assert!(matches!(
+            diagram.events.first(),
+            Some(SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(10.5),
+                step: Some(2.25),
+            })
+        ));
+    }
+
+    #[test]
+    fn sequence_autonumber_start_defaults_increment_to_one() {
+        let diagram =
+            parse_sequence_diagram("sequenceDiagram\nautonumber 20\nAlice->>Bob: First\n").unwrap();
+
+        assert!(matches!(
+            diagram.events[0],
+            SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(20.0),
+                step: Some(1.0),
+            }
+        ));
+    }
+
+    #[test]
+    fn sequence_rejects_autonumber_thousandths_and_unseparated_values() {
+        let precision_error =
+            parse_sequence_diagram("sequenceDiagram\nautonumber 10.001\nAlice->>Bob: First\n")
+                .expect_err("thousandths must not split into start and step values");
+        assert!(precision_error.message.contains("at most two"));
+
+        let separation_error =
+            parse_sequence_diagram("sequenceDiagram\nautonumber 10.1.01\nAlice->>Bob: First\n")
+                .expect_err("start and step values require whitespace");
+        assert!(separation_error.message.contains("whitespace"));
+    }
+
+    #[test]
+    fn sequence_preserves_ordered_autonumber_toggles() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nautonumber\nA->>B: One\nautonumber off\nA->>B: Hidden\nautonumber 20 5\nA->>B: Twenty\n",
+        )
+        .unwrap();
+        let controls: Vec<_> = diagram
+            .events
+            .iter()
+            .filter(|event| matches!(event, SequenceEvent::AutoNumber { .. }))
+            .collect();
+        assert_eq!(controls.len(), 3);
+        assert!(matches!(
+            controls[1],
+            SequenceEvent::AutoNumber { visible: false, .. }
+        ));
+        assert!(matches!(
+            controls[2],
+            SequenceEvent::AutoNumber {
+                visible: true,
+                start: Some(20.0),
+                step: Some(5.0)
+            }
+        ));
     }
 
     #[test]
@@ -3392,6 +5260,28 @@ B//-A: reverse stick top
             fills,
             vec!["rgba(0, 0, 255, .1)", "rgba(255, 128, 0, 0.25)"]
         );
+    }
+
+    #[test]
+    fn sequence_parses_default_and_named_rect_backgrounds() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nrect\nAlice->>Bob: Default\nend\nrect green\nBob->>Alice: Named\nend\n",
+        )
+        .unwrap();
+        let fills: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::BlockStart {
+                    kind: SequenceBlockKind::Rect,
+                    fill,
+                    ..
+                } => Some(fill.as_deref()),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(fills, vec![None, Some("green")]);
     }
 
     #[test]
@@ -3477,6 +5367,42 @@ B//-A: reverse stick top
     }
 
     #[test]
+    fn sequence_ignores_hash_comments_around_semantic_text() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\n# participant setup\nparticipant A # declaration comment\nA->>B: Hello # message comment\n",
+        )
+        .unwrap();
+        assert_eq!(diagram.participants.len(), 2);
+        assert!(matches!(
+            &diagram.events[0],
+            SequenceEvent::Message { label, .. } if label == "Hello"
+        ));
+    }
+
+    #[test]
+    fn sequence_preserves_punctuation_and_keywords_in_semantic_text() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nAlice->Bob: -:<>, end + @value\nnote right of Bob: -:<>, end\nloop -:<>, end\nBob-->Alice: retry->now\nend\n",
+        )
+        .unwrap();
+        let labels: Vec<_> = diagram
+            .events
+            .iter()
+            .filter_map(|event| match event {
+                SequenceEvent::Message { label, .. }
+                | SequenceEvent::Note { text: label, .. }
+                | SequenceEvent::BlockStart { label, .. } => Some(label.as_str()),
+                _ => None,
+            })
+            .collect();
+
+        assert_eq!(
+            labels,
+            vec!["-:<>, end + @value", "-:<>, end", "-:<>, end", "retry->now"]
+        );
+    }
+
+    #[test]
     fn sequence_converts_html_breaks_to_semantic_newlines() {
         let diagram = parse_sequence_diagram(
             "sequenceDiagram\nAlice->>Bob: First line<br/>Second line\nnote over Alice,Bob: Note one<br />Note two\n",
@@ -3508,6 +5434,21 @@ B//-A: reverse stick top
             SequenceEvent::Note { text, wrap: SequenceTextWrap::NoWrap, .. }
                 if text == "A deliberately long note"
         ));
+    }
+
+    #[test]
+    fn sequence_preserves_participant_alias_wrap_directives() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nparticipant API as wrap: A deliberately detailed public application programming interface\nactor User as nowrap: Banking User\n",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.participants[0].label.text,
+            "A deliberately detailed public application programming interface"
+        );
+        assert_eq!(diagram.participants[0].label_wrap, SequenceTextWrap::Wrap);
+        assert_eq!(diagram.participants[1].label.text, "Banking User");
+        assert_eq!(diagram.participants[1].label_wrap, SequenceTextWrap::NoWrap);
     }
 
     #[test]
@@ -3557,7 +5498,7 @@ B//-A: reverse stick top
     #[test]
     fn sequence_preserves_hyphenated_actor_identifiers() {
         let diagram = parse_sequence_diagram(
-            "sequenceDiagram\nparticipant Customer-Portal as Customer\nparticipant Order-Service\nCustomer-Portal->>Order-Service: Submit\nnote over Customer-Portal,Order-Service: Accepted\nOrder-Service-->>-Customer-Portal: Done\nactivate Order-Service\ndeactivate Order-Service\n",
+            "sequenceDiagram\nparticipant Customer-Portal as Customer\nparticipant Order-Service\nCustomer-Portal->>+Order-Service: Submit\nnote over Customer-Portal,Order-Service: Accepted\nOrder-Service-->>-Customer-Portal: Done\nactivate Order-Service\ndeactivate Order-Service\n",
         )
         .unwrap();
         assert_eq!(diagram.participants[0].id, "Customer-Portal");
@@ -3623,7 +5564,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.26.0");
+        assert_eq!(crate::VERSION, "0.66.0");
     }
 
     #[test]

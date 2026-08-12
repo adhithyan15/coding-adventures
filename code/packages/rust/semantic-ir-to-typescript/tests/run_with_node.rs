@@ -187,6 +187,7 @@ fn exc_module(name: &str, superclass: &str, rescued: &str) -> Module {
     Module {
         name: "excmod".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Exceptions,
             Feature::Classes,
             Feature::Constants,
@@ -271,6 +272,7 @@ fn e2_no_register_ancestry_without_superclass_ts() {
     let module = Module {
         name: "excmod".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Exceptions,
             Feature::Classes,
             Feature::Constants,
@@ -369,12 +371,15 @@ const SIR_OOP_DISPATCH_STUB: &str = r#"const __SirOop = (() => {
 
 /// A `__Sir` stub carrying a `Closure` + `apply` (the emitted `MakeClosure`
 /// renders `new __Sir.Closure(...)`, and the OOP stub applies method closures
-/// through `__Sir.apply`), plus `print`/`toDisplay`.
+/// through `__Sir.apply`), plus `write`/`toDisplay`.
 const SIR_CLOSURE_STUB: &str = r#"const __Sir = {
   Closure: class { constructor(fn) { this.fn = fn; } },
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
-  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+  write: (stream, terminator, unpackArrays, ...values) => {
+    console.log(values.map((v) => __Sir.toDisplay(v)).join(" "));
+    return null;
+  },
 };
 "#;
 
@@ -469,6 +474,7 @@ fn end_to_end_oop_new_and_dispatch_executes_ts() {
     let module = Module {
         name: "oopmod".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Classes,
             Feature::Closures,
             Feature::Strings,
@@ -538,7 +544,10 @@ fn node_available() -> bool {
 /// writes one line to stdout.
 const SIR_STUB: &str = r#"const __Sir = {
   toDisplay: (v) => (v === null ? "nil" : String(v)),
-  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+  write: (stream, terminator, unpackArrays, ...values) => {
+    console.log(values.map((v) => __Sir.toDisplay(v)).join(" "));
+    return null;
+  },
 };
 "#;
 
@@ -614,8 +623,13 @@ fn kw_arg(name: &str, value: Expr) -> Expr {
 fn print(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: sp() },
+                Expr::StrLit { value: "once".into(), span: sp() },
+                Expr::BoolLit { value: false, span: sp() },
+                expr,
+            ],
             effects: EffectSet::PURE,
             span: sp(),
         },
@@ -684,6 +698,7 @@ fn greet_module() -> Module {
     Module {
         name: "kwgreet".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::KeywordParams,
             Feature::StringInterpolation,
             Feature::Strings,
@@ -798,6 +813,7 @@ fn positional_and_keyword_mix_binds_both() {
     let module = Module {
         name: "kwmix".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::KeywordParams,
             Feature::StringInterpolation,
             Feature::Strings,
@@ -893,12 +909,26 @@ const SIR_OOP_P1_STUB: &str = r#"const __SirOop = (() => {
 "#;
 
 /// A `__Sir` stub carrying `Closure` + `apply` (for method closures) plus a
-/// Ruby-flavoured `toDisplay` (strings verbatim, `null`→`nil`) and `print`.
+/// Ruby-flavoured `toDisplay` (strings verbatim, `null`→`nil`) and `write`.
 const SIR_CLOSURE_P1_STUB: &str = r#"const __Sir = {
   Closure: class { constructor(fn) { this.fn = fn; } },
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
-  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
+  // SIR28 §7: `print`/`puts` are gone — every frontend emits `__sys_write__`.
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      for (const v of values) { out.write(__Sir.toDisplay(v) + "\n"); }
+      return null;
+    }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
+    return null;
+  },
 };
 "#;
 
@@ -967,24 +997,44 @@ fn end_to_end_ruby_oop_new_and_dispatch_executes_ts() {
 
 // ── End-to-end: Ruby `puts` → TypeScript → node ────────────────────────
 //
-// Proves the Ruby frontend's `puts` (a `BuiltinCall("puts", …)`) drives the
-// runtime-core `puts` through the TypeScript backend end-to-end.  As with the
-// other node proofs, the workspace runtime package can't be resolved under
-// bare `node`, so the runtime import is swapped for a faithful inline stub
-// implementing Ruby `puts` semantics (string+newline, no-arg → one newline).
+// Proves the Ruby frontend's `puts` (a `BuiltinCall("puts", …)`, since SIR28
+// §2 lowered to `__sys_write__`) drives the runtime-core `write` through the
+// TypeScript backend end-to-end.  As with the other node proofs, the
+// workspace runtime package can't be resolved under bare `node`, so the
+// runtime import is swapped for a faithful inline stub implementing Ruby
+// `puts` semantics (string+newline, no-arg → one newline) via `write`'s
+// `per_value` terminator.
 
-/// A `__Sir` stub whose `puts` mirrors the real runtime-core: variadic,
-/// writes each string arg + "\n" via process.stdout.write (so the exact byte
-/// stream — including a trailing blank line — is observable), and a no-arg
-/// `puts` writes one newline.
+/// A `__Sir` stub whose `write` mirrors the real runtime-core: transcribes
+/// the real `runtime.ts` `write`/`writeOne` (variadic, writes each string
+/// arg + "\n" via process.stdout.write so the exact byte stream — including
+/// a trailing blank line — is observable, and zero values write one
+/// newline).
 const SIR_PUTS_STUB: &str = r#"const __Sir = {
   toDisplay: (v) => (v === null ? "nil" : String(v)),
-  puts: (...args) => {
-    if (args.length === 0) { process.stdout.write("\n"); return null; }
-    for (const a of args) {
-      const t = __Sir.toDisplay(a);
-      process.stdout.write(t.endsWith("\n") ? t : t + "\n");
+  writeOne: (out, v, unpackArrays, seen) => {
+    if (unpackArrays && Array.isArray(v)) {
+      if (seen.has(v)) { out.write("[...]\n"); return; }
+      seen.add(v);
+      for (const item of v) { __Sir.writeOne(out, item, unpackArrays, seen); }
+      seen.delete(v);
+      return;
     }
+    out.write(__Sir.toDisplay(v) + "\n");
+  },
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      const seen = new Set();
+      for (const v of values) { __Sir.writeOne(out, v, unpackArrays, seen); }
+      return null;
+    }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
     return null;
   },
 };
@@ -1010,10 +1060,11 @@ fn end_to_end_ruby_puts_executes_ts() {
         .expect("lower ruby");
     let artifact = compile(&module).expect("compile to typescript");
 
-    // Shape: `puts` maps to the variadic `__Sir.puts(...)` helper.
+    // Shape: `puts` now lowers to `__sys_write__` (SIR28 §2), which this
+    // backend maps to `__Sir.write(...)`.
     assert!(
-        artifact.source.contains("__Sir.puts(\"hi\")"),
-        "expected puts to map to __Sir.puts; got:\n{}",
+        artifact.source.contains("__Sir.write(\"stdout\", \"per_value\", true, \"hi\")"),
+        "expected puts to map to __Sir.write; got:\n{}",
         artifact.source
     );
 
@@ -1071,13 +1122,20 @@ fn end_to_end_ruby_puts_executes_ts() {
 /// `ZeroDivisionError` through `__SirExc` before dividing.
 const SIR_T2_STUB: &str = r#"const __Sir = {
   toDisplay: (v) => (v === null ? "nil" : String(v)),
-  print: (v) => { console.log(__Sir.toDisplay(v)); return null; },
-  puts: (...args) => {
-    if (args.length === 0) { process.stdout.write("\n"); return null; }
-    for (const a of args) {
-      const t = __Sir.toDisplay(a);
-      process.stdout.write(t.endsWith("\n") ? t : t + "\n");
+  // SIR28 §7: `print`/`puts` are gone — every frontend emits `__sys_write__`,
+  // which lowers to `__Sir.write(...)` below.
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      for (const v of values) { out.write(__Sir.toDisplay(v) + "\n"); }
+      return null;
     }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
     return null;
   },
   div: (...args) => {
@@ -1326,6 +1384,7 @@ fn t2_index_ops_still_return_nil_no_overraise_ts() {
     let module = Module {
         name: "t2nil".into(),
         manifest: FeatureManifest::from_features(&[
+            Feature::ConsoleIO,
             Feature::Sequences,
             Feature::Maps,
             Feature::Strings,
@@ -1460,17 +1519,24 @@ const SIR_OOP_MIXIN_STUB: &str = r#"const __SirOop = (() => {
 "#;
 
 /// A `__Sir` stub carrying `Closure` + `apply` (for method closures) plus a
-/// Ruby-flavoured `puts` (string+newline; the MX3 programs print via `puts`).
+/// Ruby-flavoured `write` (string+newline; the MX3 programs print via
+/// `puts`, which SIR28 §2 lowers to `__sys_write__`).
 const SIR_CLOSURE_MIXIN_STUB: &str = r#"const __Sir = {
   Closure: class { constructor(fn) { this.fn = fn; } },
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
-  puts: (...args) => {
-    if (args.length === 0) { process.stdout.write("\n"); return null; }
-    for (const a of args) {
-      const t = __Sir.toDisplay(a);
-      process.stdout.write(t.endsWith("\n") ? t : t + "\n");
+  write: (stream, terminator, unpackArrays, ...values) => {
+    const out = stream === "stderr" ? process.stderr : process.stdout;
+    if (terminator === "per_value") {
+      if (values.length === 0) { out.write("\n"); return null; }
+      for (const v of values) { out.write(__Sir.toDisplay(v) + "\n"); }
+      return null;
     }
+    if (terminator === "once") {
+      out.write(values.map((v) => __Sir.toDisplay(v)).join(" ") + "\n");
+      return null;
+    }
+    for (const v of values) { out.write(__Sir.toDisplay(v)); }
     return null;
   },
 };

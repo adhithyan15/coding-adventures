@@ -129,6 +129,13 @@ package builder: it requires `MosaicHost.loadRequired()`, waits for the first
 Rust props envelope, exposes an accessible startup indicator, and fails on
 missing required props instead of synthesizing sample values.
 
+Every emitted project also owns `analysis_options.yaml` and
+`test/widget_test.dart`, with the matching `flutter_lints` development
+dependency. Running the documented `flutter create` command therefore keeps a
+Mosaic app smoke test that imports the actual generated pub package instead of
+installing Flutter's stock `MyApp` counter test. `flutter analyze` checks the
+complete shell, test, host binding, and every package export.
+
 Mosaic conditions pass through a generated value-truthiness helper before they
 enter Dart's statically typed boolean positions. Text-input change and commit
 handlers synthesize their declared zero- or one-value event constructors, so a
@@ -142,10 +149,18 @@ See `CHANGELOG.md` for the full feature matrix. The headline:
   Spacer / Divider / Icon), and the most-used host primitives
   (HostInput / HostButton / HostCheckbox / HostRadio / HostScroll)
   are wired with a passing test each.
-- ✅ HostTable and For/If/Else lower to native Flutter widget trees; Mosaic
-  truthiness is normalized for Dart boolean positions.
-- 🚧 Rich dialog behavior, native drag/drop, and multi-field payload synthesis
-  from a single text-input callback remain follow-up work.
+- ✅ Canonical UI31 HostTable compositions lower dynamic `For`-driven headers,
+  rows, and cells to Flutter's native `DataTable` family; unsupported table
+  shapes keep an explicitly reported visual fallback. For/If/Else lower to
+  native Flutter widget trees, and Mosaic truthiness is normalized for Dart
+  boolean positions.
+- ✅ HostDraggable and HostDropTarget lower to Flutter's native
+  `Draggable`/`DragTarget` widgets with touch/pointer input, Space/Enter grab and
+  drop, arrow-key target movement, Escape cancellation, screen-reader
+  announcements, disabled/accepted-kind filtering, and the complete lifecycle
+  event payloads.
+- 🚧 Rich dialog behavior and multi-field payload synthesis from a single
+  text-input callback remain follow-up work.
 
 ## Versioning
 

@@ -38,11 +38,12 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.12.0";
 
 use diagram_ir::{
-    DiagramDirection, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
-    LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style, resolve_style_with_base,
+    DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
+    LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style,
+    resolve_style_with_base,
 };
 use directed_graph::Graph;
 use layout_ir::{FontSpec, TextMeasurer};
@@ -127,6 +128,36 @@ fn node_width(label: &str, opts: &Opts, measurer: Option<&dyn TextMeasurer>) -> 
     text_width.max(opts.min_node_width)
 }
 
+fn node_dimensions(
+    node: &diagram_ir::GraphNode,
+    opts: &Opts,
+    measurer: Option<&dyn TextMeasurer>,
+) -> (f64, f64) {
+    match node.shape {
+        Some(DiagramShape::Bar) => (64.0, 8.0),
+        Some(DiagramShape::Note) => {
+            let line_count = node.label.text.lines().count().max(1) as f64;
+            let width = node
+                .label
+                .text
+                .lines()
+                .map(|line| node_width(line, opts, measurer))
+                .fold(opts.min_node_width, f64::max);
+            (width, (24.0 + line_count * 18.0).max(opts.node_height))
+        }
+        _ => {
+            let width = node
+                .label
+                .text
+                .lines()
+                .map(|line| node_width(line, opts, measurer))
+                .fold(opts.min_node_width, f64::max);
+            let line_count = node.label.text.lines().count().max(1) as f64;
+            (width, opts.node_height.max(24.0 + line_count * 18.0))
+        }
+    }
+}
+
 // ============================================================================
 // Rank assignment (topological)
 // ============================================================================
@@ -144,12 +175,18 @@ fn node_width(label: &str, opts: &Opts, measurer: Option<&dyn TextMeasurer>) -> 
 /// declaration order.
 fn assign_ranks(diagram: &GraphDiagram) -> Vec<Vec<String>> {
     let mut g = Graph::new_allow_self_loops();
+    let node_ids: std::collections::HashSet<_> =
+        diagram.nodes.iter().map(|node| node.id.as_str()).collect();
     for node in &diagram.nodes {
         g.add_node(&node.id);
     }
     for edge in &diagram.edges {
         // Ignore self-loops for rank assignment (they don't change depth).
-        if edge.from != edge.to {
+        if edge.from != edge.to
+            && edge.kind != diagram_ir::EdgeKind::NoteAssociation
+            && node_ids.contains(edge.from.as_str())
+            && node_ids.contains(edge.to.as_str())
+        {
             let _ = g.add_edge(&edge.from, &edge.to);
         }
     }
@@ -226,7 +263,7 @@ fn place_nodes(
             rank.iter()
                 .map(|id| {
                     let node = diagram.nodes.iter().find(|n| n.id == *id).unwrap();
-                    node_width(&node.label.text, opts, measurer)
+                    node_dimensions(node, opts, measurer).0
                 })
                 .fold(0.0_f64, f64::max)
         })
@@ -239,8 +276,7 @@ fn place_nodes(
     for (rank_index, rank) in ranks.iter().enumerate() {
         for (item_index, node_id) in rank.iter().enumerate() {
             let node = diagram.nodes.iter().find(|n| n.id == *node_id).unwrap();
-            let width  = node_width(&node.label.text, opts, measurer);
-            let height = opts.node_height;
+            let (width, height) = node_dimensions(node, opts, measurer);
 
             // For BT/RL, reverse the rank axis so rank 0 appears at the
             // "start" of the reversed direction.
@@ -345,7 +381,12 @@ fn route_edge(
     let from_node = nodes_by_id[&edge.from];
     let to_node   = nodes_by_id[&edge.to];
 
-    let (start, end) = edge_endpoints(direction, from_node, to_node);
+    let edge_direction = if edge.kind == diagram_ir::EdgeKind::NoteAssociation {
+        &DiagramDirection::Lr
+    } else {
+        direction
+    };
+    let (start, end) = edge_endpoints(edge_direction, from_node, to_node);
 
     // Self-loops use a 5-point detour that loops above the node.
     let points = if from_node.id == to_node.id {
@@ -392,6 +433,165 @@ fn route_edge(
 // Public API
 // ============================================================================
 
+fn stack_concurrent_regions(diagram: &GraphDiagram, nodes: &mut [LayoutedGraphNode], gap: f64) {
+    for group in &diagram.groups {
+        if group.regions.len() < 2 {
+            continue;
+        }
+        let Some(mut next_top) = nodes
+            .iter()
+            .filter(|node| group.node_ids.contains(&node.id))
+            .map(|node| node.y)
+            .reduce(f64::min)
+        else {
+            continue;
+        };
+        for region in &group.regions {
+            let indices: Vec<_> = nodes
+                .iter()
+                .enumerate()
+                .filter(|(_, node)| region.contains(&node.id))
+                .map(|(index, _)| index)
+                .collect();
+            let Some(min_y) = indices.iter().map(|index| nodes[*index].y).reduce(f64::min) else {
+                continue;
+            };
+            let max_y = indices
+                .iter()
+                .map(|index| nodes[*index].y + nodes[*index].height)
+                .reduce(f64::max)
+                .unwrap_or(min_y);
+            let shift = next_top - min_y;
+            for index in indices {
+                nodes[index].y += shift;
+            }
+            next_top += max_y - min_y + gap;
+        }
+    }
+}
+
+fn apply_group_directions(diagram: &GraphDiagram, nodes: &mut [LayoutedGraphNode], gap: f64) {
+    for group in &diagram.groups {
+        let Some(direction) = &group.direction else {
+            continue;
+        };
+        for region in &group.regions {
+            let indices: Vec<_> = region
+                .iter()
+                .filter_map(|id| nodes.iter().position(|node| &node.id == id))
+                .collect();
+            let (Some(min_x), Some(min_y)) = (
+                indices.iter().map(|index| nodes[*index].x).reduce(f64::min),
+                indices.iter().map(|index| nodes[*index].y).reduce(f64::min),
+            ) else {
+                continue;
+            };
+            let mut offset = 0.0;
+            for index in indices {
+                let node = &mut nodes[index];
+                match direction {
+                    DiagramDirection::Lr | DiagramDirection::Rl => {
+                        node.x = min_x + offset;
+                        node.y = min_y;
+                        offset += node.width + gap;
+                    }
+                    DiagramDirection::Tb | DiagramDirection::Bt => {
+                        node.x = min_x;
+                        node.y = min_y + offset;
+                        offset += node.height + gap;
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<LayoutedGraphGroup> {
+    let mut computed: std::collections::HashMap<String, LayoutedGraphGroup> =
+        std::collections::HashMap::new();
+    for group in diagram.groups.iter().rev() {
+        let member_nodes: Vec<_> = nodes
+            .iter()
+            .filter(|node| group.node_ids.contains(&node.id))
+            .collect();
+        let child_groups: Vec<_> = computed
+            .values()
+            .filter(|child| child.parent_id.as_deref() == Some(&group.id))
+            .collect();
+        let min_x = member_nodes
+            .iter()
+            .map(|node| node.x)
+            .chain(child_groups.iter().map(|child| child.x))
+            .reduce(f64::min)
+            .unwrap_or(24.0);
+        let min_y = member_nodes
+            .iter()
+            .map(|node| node.y)
+            .chain(child_groups.iter().map(|child| child.y))
+            .reduce(f64::min)
+            .unwrap_or(48.0);
+        let max_x = member_nodes
+            .iter()
+            .map(|node| node.x + node.width)
+            .chain(child_groups.iter().map(|child| child.x + child.width))
+            .reduce(f64::max)
+            .unwrap_or(min_x + 96.0);
+        let max_y = member_nodes
+            .iter()
+            .map(|node| node.y + node.height)
+            .chain(child_groups.iter().map(|child| child.y + child.height))
+            .reduce(f64::max)
+            .unwrap_or(min_y + 52.0);
+        let divider_y = group
+            .regions
+            .windows(2)
+            .filter_map(|regions| {
+                let upper = nodes
+                    .iter()
+                    .filter(|node| regions[0].contains(&node.id))
+                    .map(|node| node.y + node.height)
+                    .reduce(f64::max)?;
+                let lower = nodes
+                    .iter()
+                    .filter(|node| regions[1].contains(&node.id))
+                    .map(|node| node.y)
+                    .reduce(f64::min)?;
+                Some((upper + lower) / 2.0)
+            })
+            .collect();
+        computed.insert(
+            group.id.clone(),
+            LayoutedGraphGroup {
+                id: group.id.clone(),
+                label: group.label.clone(),
+                parent_id: group.parent_id.clone(),
+                x: min_x - 24.0,
+                y: min_y - 40.0,
+                width: max_x - min_x + 48.0,
+                height: max_y - min_y + 64.0,
+                divider_y,
+                direction: group.direction.clone(),
+                style: resolve_style_with_base(
+                    group.style.as_ref(),
+                    ResolvedDiagramStyle {
+                        fill: "#f8fafc".into(),
+                        stroke: "#64748b".into(),
+                        stroke_width: 1.5,
+                        text_color: "#334155".into(),
+                        font_size: 14.0,
+                        corner_radius: 8.0,
+                    },
+                ),
+            },
+        );
+    }
+    diagram
+        .groups
+        .iter()
+        .filter_map(|group| computed.remove(&group.id))
+        .collect()
+}
+
 /// Lay out a [`GraphDiagram`] and return a [`LayoutedGraphDiagram`] with
 /// absolute geometry for every node and edge.
 ///
@@ -404,7 +604,13 @@ fn route_edge(
 ///
 /// let diagram = GraphDiagram {
 ///     direction: DiagramDirection::Lr,
+///     requested_width: None,
+///     hide_empty_descriptions: false,
 ///     title: None,
+///     accessibility_title: None,
+///     accessibility_description: None,
+///     links: Vec::new(),
+///     groups: Vec::new(),
 ///     nodes: vec![
 ///         GraphNode { id: "A".into(), label: DiagramLabel::new("A"),
 ///                     shape: None, style: None },
@@ -429,10 +635,96 @@ pub fn layout_graph_diagram(
     measurer: Option<&dyn TextMeasurer>,
 ) -> LayoutedGraphDiagram {
     let opts = Opts::from(options);
-    let (nodes, width, height) = place_nodes(diagram, &opts, measurer);
+    let (mut nodes, _, _) = place_nodes(diagram, &opts, measurer);
 
-    let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> =
-        nodes.iter().map(|n| (n.id.clone(), n)).collect();
+    for edge in diagram
+        .edges
+        .iter()
+        .filter(|edge| edge.kind == diagram_ir::EdgeKind::NoteAssociation)
+    {
+        let (note_id, state_id, note_is_left) = if diagram
+            .nodes
+            .iter()
+            .any(|node| node.id == edge.from && node.shape == Some(DiagramShape::Note))
+        {
+            (&edge.from, &edge.to, true)
+        } else {
+            (&edge.to, &edge.from, false)
+        };
+        let Some(note_index) = nodes.iter().position(|node| &node.id == note_id) else {
+            continue;
+        };
+        let Some(state_index) = nodes.iter().position(|node| &node.id == state_id) else {
+            continue;
+        };
+        let state = nodes[state_index].clone();
+        let note = &mut nodes[note_index];
+        note.x = if note_is_left {
+            state.x - opts.node_gap - note.width
+        } else {
+            state.x + state.width + opts.node_gap
+        };
+        note.y = state.y + (state.height - note.height) / 2.0;
+    }
+
+    apply_group_directions(diagram, &mut nodes, opts.node_gap);
+    stack_concurrent_regions(diagram, &mut nodes, opts.node_gap);
+    let mut groups = layout_groups(diagram, &nodes);
+
+    let min_x = nodes
+        .iter()
+        .map(|node| node.x)
+        .chain(groups.iter().map(|group| group.x))
+        .fold(opts.margin, f64::min);
+    let min_y = nodes
+        .iter()
+        .map(|node| node.y)
+        .chain(groups.iter().map(|group| group.y))
+        .fold(opts.margin, f64::min);
+    let shift_x = (opts.margin - min_x).max(0.0);
+    let shift_y = (opts.margin - min_y).max(0.0);
+    for node in &mut nodes {
+        node.x += shift_x;
+        node.y += shift_y;
+    }
+    for group in &mut groups {
+        group.x += shift_x;
+        group.y += shift_y;
+        for divider_y in &mut group.divider_y {
+            *divider_y += shift_y;
+        }
+    }
+    let width = nodes
+        .iter()
+        .map(|node| node.x + node.width)
+        .chain(groups.iter().map(|group| group.x + group.width))
+        .fold(0.0, f64::max)
+        + opts.margin;
+    let height = nodes
+        .iter()
+        .map(|node| node.y + node.height)
+        .chain(groups.iter().map(|group| group.y + group.height))
+        .fold(0.0, f64::max)
+        + opts.margin;
+
+    let group_anchors: Vec<_> = groups
+        .iter()
+        .map(|group| LayoutedGraphNode {
+            id: group.id.clone(),
+            label: group.label.clone(),
+            shape: DiagramShape::RoundedRect,
+            x: group.x,
+            y: group.y,
+            width: group.width,
+            height: group.height,
+            style: group.style.clone(),
+        })
+        .collect();
+    let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> = nodes
+        .iter()
+        .chain(group_anchors.iter())
+        .map(|node| (node.id.clone(), node))
+        .collect();
 
     let edges = diagram
         .edges
@@ -446,14 +738,59 @@ pub fn layout_graph_diagram(
         })
         .collect();
 
-    LayoutedGraphDiagram {
+    let mut layout = LayoutedGraphDiagram {
         direction: diagram.direction.clone(),
+        requested_width: diagram.requested_width,
+        hide_empty_descriptions: diagram.hide_empty_descriptions,
         title:     diagram.title.clone(),
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        links: diagram.links.clone(),
+        groups,
         width,
         height,
         nodes,
         edges,
+    };
+    if let Some(target_width) = diagram.requested_width {
+        let factor = target_width / layout.width;
+        layout.width = target_width;
+        layout.height *= factor;
+        for node in &mut layout.nodes {
+            node.x *= factor;
+            node.y *= factor;
+            node.width *= factor;
+            node.height *= factor;
+            node.style.stroke_width *= factor;
+            node.style.font_size *= factor;
+            node.style.corner_radius *= factor;
+        }
+        for group in &mut layout.groups {
+            group.x *= factor;
+            group.y *= factor;
+            group.width *= factor;
+            group.height *= factor;
+            group.style.stroke_width *= factor;
+            group.style.font_size *= factor;
+            group.style.corner_radius *= factor;
+            for divider_y in &mut group.divider_y {
+                *divider_y *= factor;
+            }
+        }
+        for edge in &mut layout.edges {
+            for point in &mut edge.points {
+                point.x *= factor;
+                point.y *= factor;
+            }
+            if let Some(position) = &mut edge.label_position {
+                position.x *= factor;
+                position.y *= factor;
+            }
+            edge.style.stroke_width *= factor;
+            edge.style.font_size *= factor;
+        }
     }
+    layout
 }
 
 // ============================================================================
@@ -488,7 +825,13 @@ mod tests {
     fn two_node_diagram(dir: DiagramDirection) -> GraphDiagram {
         GraphDiagram {
             direction: dir,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B")],
         }
@@ -496,7 +839,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.1.0");
+        assert_eq!(VERSION, "0.12.0");
     }
 
     #[test]
@@ -551,7 +894,13 @@ mod tests {
     fn self_loop_has_five_points() {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A")],
             edges: vec![directed_edge("A", "A")],
         };
@@ -578,7 +927,13 @@ mod tests {
         // A -> B -> A: cycle — should not panic.
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "A")],
         };
@@ -594,7 +949,13 @@ mod tests {
     fn node_width_respects_label_length() {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![
                 simple_node("A"),
                 GraphNode {
@@ -616,7 +977,13 @@ mod tests {
     fn three_rank_chain_has_increasing_y_in_tb() {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![simple_node("A"), simple_node("B"), simple_node("C")],
             edges: vec![directed_edge("A", "B"), directed_edge("B", "C")],
         };
@@ -625,5 +992,147 @@ mod tests {
         let yb = l.nodes.iter().find(|n| n.id == "B").unwrap().y;
         let yc = l.nodes.iter().find(|n| n.id == "C").unwrap().y;
         assert!(ya < yb && yb < yc, "TB chain should have A above B above C");
+    }
+
+    #[test]
+    fn bar_nodes_use_compact_geometry() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.nodes[0].shape = Some(DiagramShape::Bar);
+        d.nodes[0].label = DiagramLabel::new("");
+        let l = layout_graph_diagram(&d, None, None);
+        let bar = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        assert_eq!((bar.width, bar.height), (64.0, 8.0));
+    }
+
+    #[test]
+    fn note_nodes_reserve_multiline_geometry() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.nodes[0].shape = Some(DiagramShape::Note);
+        d.nodes[0].label = DiagramLabel::new("first line\nsecond line");
+        let l = layout_graph_diagram(&d, None, None);
+        let note = l.nodes.iter().find(|node| node.id == "A").unwrap();
+
+        assert!(note.height >= 60.0);
+        assert!(note.width >= 96.0);
+    }
+
+    #[test]
+    fn note_associations_place_notes_beside_states() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.nodes[0].shape = Some(DiagramShape::Note);
+        d.edges[0].kind = EdgeKind::NoteAssociation;
+        let l = layout_graph_diagram(&d, None, None);
+        let note = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let state = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(note.x + note.width < state.x);
+        assert_eq!(l.edges[0].points[0].y, note.y + note.height / 2.0);
+    }
+
+    #[test]
+    fn composite_groups_bound_their_members() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Processing".into(),
+            label: DiagramLabel::new("Processing"),
+            parent_id: None,
+            node_ids: vec!["A".into(), "B".into()],
+            regions: vec![vec!["A".into(), "B".into()]],
+            direction: None,
+            style: Some(diagram_ir::DiagramStyle {
+                fill: Some("#fef3c7".into()),
+                stroke_width: Some(3.0),
+                ..Default::default()
+            }),
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let group = &l.groups[0];
+
+        for node in &l.nodes {
+            assert!(node.x >= group.x && node.x + node.width <= group.x + group.width);
+            assert!(node.y >= group.y && node.y + node.height <= group.y + group.height);
+        }
+        assert_eq!(group.style.fill, "#fef3c7");
+        assert_eq!(group.style.stroke_width, 3.0);
+    }
+
+    #[test]
+    fn concurrent_regions_stack_with_a_horizontal_divider() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Active".into(),
+            label: DiagramLabel::new("Active"),
+            parent_id: None,
+            node_ids: vec!["A".into(), "B".into()],
+            regions: vec![vec!["A".into()], vec!["B".into()]],
+            direction: None,
+            style: None,
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let group = &l.groups[0];
+        let a = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let b = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(a.y + a.height < group.divider_y[0]);
+        assert!(group.divider_y[0] < b.y);
+    }
+
+    #[test]
+    fn transitions_attach_to_composite_group_boundaries() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.edges[0].to = "Active".into();
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Active".into(),
+            label: DiagramLabel::new("Active"),
+            parent_id: None,
+            node_ids: vec!["B".into()],
+            regions: vec![vec!["B".into()]],
+            direction: None,
+            style: None,
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let group = &l.groups[0];
+        let edge = &l.edges[0];
+
+        assert_eq!(edge.to_node_id, "Active");
+        assert_eq!(edge.points.last().unwrap().x, group.x);
+    }
+
+    #[test]
+    fn composite_direction_overrides_document_direction() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Active".into(),
+            label: DiagramLabel::new("Active"),
+            parent_id: None,
+            node_ids: vec!["A".into(), "B".into()],
+            regions: vec![vec!["A".into(), "B".into()]],
+            direction: Some(DiagramDirection::Lr),
+            style: None,
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let a = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let b = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(a.x < b.x);
+        assert_eq!(a.y, b.y);
+        assert_eq!(l.groups[0].direction, Some(DiagramDirection::Lr));
+    }
+
+    #[test]
+    fn requested_width_scales_canvas_geometry_and_styles() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        let baseline = layout_graph_diagram(&d, None, None);
+        d.requested_width = Some(640.0);
+        let scaled = layout_graph_diagram(&d, None, None);
+        let factor = 640.0 / baseline.width;
+
+        assert_eq!(scaled.width, 640.0);
+        assert_eq!(scaled.height, baseline.height * factor);
+        assert_eq!(scaled.nodes[0].width, baseline.nodes[0].width * factor);
+        assert_eq!(
+            scaled.nodes[0].style.stroke_width,
+            baseline.nodes[0].style.stroke_width * factor
+        );
     }
 }

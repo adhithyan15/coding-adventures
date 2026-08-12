@@ -132,105 +132,86 @@ def test_display_convention_ruby_booleans() -> None:
     assert sir.to_display(True) == "#t"
 
 
-def test_print_uses_display(capsys: pytest.CaptureFixture[str]) -> None:
-    assert sir.print(None) is None
-    out = capsys.readouterr().out
-    assert out == "nil\n"
+# --- sir_write (SIR28 §2.1: __sys_write__) ----------------------------------
+#
+# SIR28 §7: the old `sir_print`/`sir_puts` functions (and their dedicated
+# tests) are gone — every frontend now emits `__sys_write__`, which this
+# package implements as `sir_write` below. `test_write_terminator_none_*`
+# covers `print`'s old shape (`terminator: "none"`); `test_write_terminator_
+# per_value_*`/`test_write_per_value_*`/`test_write_self_referential_array_
+# terminates` cover `puts`'s old shape (`terminator: "per_value"`,
+# `unpack_arrays: True`), including its array-flattening and cycle-safety
+# behavior.
 
 
-# --- puts (Ruby semantics) -------------------------------------------------
-
-
-def test_puts_no_args_prints_single_newline(
+def test_write_terminator_none_writes_values_back_to_back(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    assert sir.sir_puts() is None
+    assert sir.sir_write("stdout", "none", False, "a", "b") is None
+    assert capsys.readouterr().out == "ab"
+
+
+def test_write_terminator_per_value_writes_one_newline_per_value(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", False, 1, 2)
+    assert capsys.readouterr().out == "1\n2\n"
+
+
+def test_write_terminator_once_space_joins_with_one_trailing_newline(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "once", False, 1, 2)
+    assert capsys.readouterr().out == "1 2\n"
+
+
+def test_write_per_value_with_unpack_arrays_flattens_nested_array(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", True, [1, [2, 3], 4])
+    assert capsys.readouterr().out == "1\n2\n3\n4\n"
+
+
+def test_write_per_value_without_unpack_arrays_bracket_displays_array(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", False, [1, 2])
+    assert capsys.readouterr().out == "[1, 2]\n"
+
+
+def test_write_stream_stderr_writes_to_stderr_not_stdout(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stderr", "once", False, "oops")
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err == "oops\n"
+
+
+def test_write_per_value_with_zero_values_writes_a_single_blank_line(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    sir.sir_write("stdout", "per_value", False)
     assert capsys.readouterr().out == "\n"
 
 
-def test_puts_string_appends_newline(capsys: pytest.CaptureFixture[str]) -> None:
-    sir.sir_puts("hello")
-    assert capsys.readouterr().out == "hello\n"
-
-
-def test_puts_does_not_double_trailing_newline(
+def test_write_does_not_suppress_trailing_newline_unlike_puts(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    # Ruby: a value already ending in "\n" is not double-spaced.
-    sir.sir_puts("x\n")
-    assert capsys.readouterr().out == "x\n"
+    # Deliberate divergence from sir_puts: __sys_write__ always appends
+    # exactly one newline per value under "per_value", even when the
+    # value's display form already ends in one (SIR28 §2.1's table, not
+    # sir_puts's extra suppression nuance).
+    sir.sir_write("stdout", "per_value", False, "x\n")
+    assert capsys.readouterr().out == "x\n\n"
 
 
-def test_puts_multiple_args_one_per_line(
+def test_write_self_referential_array_terminates(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    sir.sir_puts("a", "b")
-    assert capsys.readouterr().out == "a\nb\n"
-
-
-def test_puts_array_flattens_one_element_per_line(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    sir.sir_puts([1, 2, 3])
-    assert capsys.readouterr().out == "1\n2\n3\n"
-    # Nested arrays are flattened recursively.
-    sir.sir_puts([1, [2, 3]])
-    assert capsys.readouterr().out == "1\n2\n3\n"
-
-
-def test_puts_empty_array_prints_single_newline(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    sir.sir_puts([])
-    assert capsys.readouterr().out == "\n"
-
-
-def test_puts_nil_prints_blank_line(capsys: pytest.CaptureFixture[str]) -> None:
-    # `puts nil` is a blank line — NOT the display form "nil".
-    sir.sir_puts(None)
-    assert capsys.readouterr().out == "\n"
-
-
-def test_puts_reference_program(capsys: pytest.CaptureFixture[str]) -> None:
-    # The canonical execution-proof program: `puts "hello"; puts; puts [1,2,3]`
-    sir.sir_puts("hello")
-    sir.sir_puts()
-    sir.sir_puts([1, 2, 3])
-    assert capsys.readouterr().out == "hello\n\n1\n2\n3\n"
-
-
-def test_puts_routes_through_call_builtin(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    # The backends dispatch `puts` by name through `call_builtin`.
-    assert sir.call_builtin("puts", ["hi"]) is None
-    assert capsys.readouterr().out == "hi\n"
-
-
-def test_puts_self_referential_array_terminates(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    # Regression (security, CWE-674 uncontrolled recursion): `a = []; a << a;
-    # puts a` in Ruby prints `[...]` and terminates.  Without the cycle guard
-    # the element-per-line flatten recurses forever and raises RecursionError
-    # (a DoS).  The guard must terminate AND render the cycle as Ruby's
-    # `[...]`.
     a: list = []
     a.append(a)
-    assert sir.sir_puts(a) is None
-    assert capsys.readouterr().out == "[...]\n"
-
-
-def test_puts_mutually_recursive_arrays_terminate(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    # A cycle through two arrays (a -> b -> a) is still a cycle on the flatten
-    # path.  `puts a` flattens a's element (b, not yet seen), then b's element
-    # (a, already on the path) → `[...]`.  Terminates rather than diverging.
-    a: list = []
-    b: list = [a]
-    a.append(b)
-    assert sir.sir_puts(a) is None
+    assert sir.sir_write("stdout", "per_value", True, a) is None
     assert capsys.readouterr().out == "[...]\n"
 
 
@@ -516,7 +497,6 @@ def test_global_get_undefined_errors() -> None:
 
 def test_call_builtin() -> None:
     assert sir.call_builtin("+", [1, 2, 3]) == 6
-    assert sir.call_builtin("print", [None]) is None
 
 
 def test_call_unknown_builtin_errors() -> None:

@@ -240,8 +240,11 @@ Required behavior:
 
 The bucket component immediately below `packages` or `programs` is the sole
 language discriminator; canonical words later in a path do not change the
-language. The canonical discovery registry classifies all established implementation
-lanes (`csharp`, `dart`, `elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`,
+language. A package root has qualified identity `<language>/<basename>`, while
+a program root has qualified identity `<language>/programs/<basename>` so a
+package and program with the same basename remain distinct. The canonical
+discovery registry classifies all established implementation lanes (`csharp`,
+`dart`, `elixir`, `fsharp`, `go`, `haskell`, `java`, `kotlin`,
 `lua`, `perl`, `python`, `ruby`, `rust`, `swift`, and `typescript`), emerging
 implementation lanes (`c`, `cpp`, and `ocaml`), the `wasm` execution target,
 the `mosaic` and `twig` domain languages, and the `starlark` build language.
@@ -377,12 +380,18 @@ nested test or tool directories, absolute paths, unknown targets, and every
 other XML element or attribute. Duplicate and self references do not create
 additional edges.
 
-For Cabal manifests, dependency candidates come only from each
-`build-depends:` field and its indented comma-separated continuation lines.
-Resolvers ignore Cabal comments, package identity and descriptive metadata,
-source directories, compiler options, and every other field. A new stanza may
-introduce another `build-depends:` field; reaching a sibling field or stanza
-ends the current field before scanning continues.
+For Cabal manifests, a package must have exactly one `.cabal` file directly in
+its root; zero manifests contribute no dependencies, and multiple manifests
+are ambiguous and therefore contribute neither a manifest-declared alias nor
+manifest dependencies. Directory-derived aliases still come from discovery.
+Dependency candidates come only from each `build-depends:` field and its
+indented comma-separated continuation lines. Resolvers match candidates
+case-insensitively against a discovered Haskell package's directory name,
+legacy `coding-adventures-<directory>` alias, and the sole manifest's declared
+top-level `name:` field. Resolvers ignore Cabal comments, package identity and
+descriptive metadata, source directories, compiler options, and every other
+field. A new stanza may introduce another `build-depends:` field; reaching a
+sibling field or stanza ends the current field before scanning continues.
 
 For Python `pyproject.toml` manifests, dependency candidates come only from the
 PEP 621 `[project]` table's `dependencies = [...]` array. Resolvers ignore

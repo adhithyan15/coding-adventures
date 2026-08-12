@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10317,
+  "active_pr": 10936,
   "last_inventory": {
-    "revision": "61cdb3ef1465c6c652d0d734d3c862b669b3adfb",
+    "revision": "7bb2b558c85133d0724b1fac3c115ba76f1c4a12",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1286,
-    "implementation_package_slots": 4442,
+    "implementation_identities": 1302,
+    "implementation_package_slots": 4458,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 836,
-    "singleton_missing_slots": 11704,
-    "rust_singletons": 640,
+    "singleton_packages": 852,
+    "singleton_missing_slots": 11928,
+    "rust_singletons": 656,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -416,21 +416,34 @@
     {
       "id": "build-file-lua-json-value-transitive-closure",
       "title": "Close the Lua JSON value parser prerequisites",
-      "status": "pending",
+      "status": "merged",
       "depends_on": ["build-file-standalone-integrity-lua", "build-file-lua-parser-lexer-transitive-closure"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/lua-json-value-transitive-closure",
+      "pr_number": 10521,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10521",
+      "pr_opened_at": "2026-08-11T00:43:10Z",
+      "implementation_revision": "ddeafb9752194b716045cfca7856f58df239d10e",
+      "merged_at": "2026-08-11T03:38:26Z",
+      "merge_revision": "3add9a1b954d495a0038c59ebc215aee996c6bc6",
+      "merge_notes": "External review merged PR #10521 after every required check reached a terminal green state; this item legally transitioned from pr-open to merged and no parity PR remains active.",
+      "selection_revision": "5415ba120d1a25eb11302909eee1addeb8f1e0fe",
+      "selection_notes": "Selected after external merge of PR #10317 and the collision-checked ownership refresh. Both prerequisites are merged; this one-package Unix/Windows closure is the smallest audited unblocked successor, while data-store remains clock-blocked and the new Vault application chain remains dependency-blocked.",
+      "validation_notes": "Fresh isolated generic and Windows LuaRocks homes each installed the exact eight-rock chain with dependency fetching disabled, passed 91 json_value tests, and passed the source-path-free installed runtime smoke. Source suites pass 43 json_lexer, 44 json_parser, 91 json_value, and 107 downstream json_serializer cases; neutral-directory installed json_value and json_serializer smokes pass. LuaCov reports 96.55% lexer, 90.32% parser, and 85.41% value production coverage. Changed Lua files pass luacheck; Python build-tool passes 353 tests at 85.19%; Lua build-tool passes 61 cases; Go build-tool test, vet, module verification, and trimpath build pass. Reporter and taxonomy tests pass 17 tests and 676 subtests. The collision report remains at 1,298 identities, 4,454 slots, zero collisions, and zero unknown buckets. All 258 Lua BUILD files validate; the full 4,862-package audit retains the exact unrelated 17 Perl, Python, and Swift diagnostics with zero Lua findings.",
+      "publication_notes": "Ready-for-review PR #10521 opened after a final origin/main fetch confirmed the branch was one commit ahead with no base drift. The first implementation commit is recorded above; this state-only follow-up keeps the active-PR invariant durable on the same branch.",
       "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. json_value bootstraps grammar-tools and json-parser but omits directed-graph, state-machine, lexer, json-lexer, and parser from the clean-tree transitive closure."
     },
     {
       "id": "build-file-lua-lattice-transitive-closure",
       "title": "Close the Lua Lattice parser and transpiler prerequisites",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-file-standalone-integrity-lua"],
       "branch": "codex/lua-lattice-transitive-closure",
       "pr_number": 10317,
       "selection_revision": "c12372bc87848013a25b49dbea21e9eac28d8d23",
       "selection_notes": "Selected after PR #10264 merged and the collision-checked ownership refresh. One coherent Lattice chain repairs three successive packages and six Unix/Windows front doors, the largest actual fanout among the remaining audited Lua closures.",
+      "merged_at": "2026-08-10T05:06:15Z",
+      "merge_revision": "75861d6a838a12b84f188f1a3995f9fd6f03d033",
+      "merge_notes": "External review merged PR #10317; this item legally transitioned from pr-open to merged and no parity PR remains active.",
       "notes": "Discovered by the complete canonical Lua sibling-bootstrap audit for the selected Unix closure tranche. lattice_parser, lattice_ast_to_css, and lattice_transpiler omit shared directed-graph, state-machine, lexer, lattice-lexer, parser, and lattice-parser prerequisites at successive points in one dependency chain. Selected at c12372bc8784 after recording six new Rust singleton identities and their portable or dependency-blocked wrapper/native owners. The three-package Lattice chain closes six standalone build front doors, while JSON value remains a one-package follow-up behind the now-merged parser/lexer prerequisite and data-store remains blocked on its newly recorded clock-authority mismatch. Clean-tree red baselines across all six recipes failed at their first omitted unpublished prerequisite. The implementation installs every exact sibling rock leaf-to-root with dependency fetching disabled. A neutral-directory smoke then exposed that the installed lexer and parser still searched outside the LuaRocks tree for repository grammar files; generated Lua payloads now project the canonical lattice.tokens and lattice.grammar bytes into the deployed rocks, byte-for-byte drift tests keep those projections aligned, and both package capability profiles are empty because runtime grammar loading is authority-free. Final local validation passed all six fresh-tree build front doors with 95 Busted cases per platform and neutral-directory installed-runtime smokes, plus 84 lexer and 46 parser source cases. LuaCov measured lexer 96.55%, parser 90.32%, AST-to-CSS 76.77%, and transpiler 91.67%; generated single-return payload artifacts are byte-locked rather than behavior branches. Build-tool validation passed Python 353 tests at 85.26% coverage, Lua 61 tests at 73.95% weighted production coverage, and Go test, vet, module verification, and trimpath build. Reporter tests passed 10 cases, capability taxonomy passed 7, collision reporting stayed clean, and the full 4,847-package validator retained exactly 17 known non-Lua diagnostics with zero Lua diagnostics. The final security pass added the transpiler's directly imported parser to its declared dependencies. After rebasing, a brand-new isolated tree rebuilt all nine rocks with dependency fetching disabled, the deployed transpiler passed 16 cases plus its end-to-end smoke, Lua resolver/discovery UTF-8 planning passed 37 focused cases, and the Python and Go build-tool gates remained green. Final base 61cdb3ef14 retained the collision-clean 1,286-identity inventory. Ready-for-review PR #10317 opened with the complete validation summary; this item legally transitioned from in-progress to pr-open and is now the sole active parity PR."
     },
     {
@@ -446,11 +459,21 @@
     {
       "id": "build-tool-python-ecosystem-scoped-alias-resolution",
       "title": "Scope Python build-tool dependency aliases by ecosystem",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Discovered while independently checking the Lua closure graph. Python build-tool resolution constructs one global alias map for every ecosystem, so later Python, Perl, Haskell, and other package aliases overwrite Lua rock aliases; on the 4,829-package repository snapshot, 251 of 258 canonical Lua rock names resolve to a non-Lua identity. Define language-neutral collision fixtures, preserve intentional explicitly qualified cross-language edges, scope ordinary manifest aliases to their owning ecosystem, and compare complete real-lane graphs with the canonical Go oracle in a separate build-tool tranche."
+      "branch": "codex/python-ecosystem-scoped-alias-resolution",
+      "pr_number": 10564,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10564",
+      "pr_opened_at": "2026-08-11T04:24:44Z",
+      "implementation_revision": "0935487257e5b6d16acdc66a6c8468408828c62b",
+      "merged_at": "2026-08-11T06:08:32Z",
+      "merge_revision": "ded37da774f13dda0755bde4da2751184732a361",
+      "merge_notes": "External review merged ready-for-review PR #10564 after every required check passed; this item legally transitioned from pr-open to merged and no parity PR remains active.",
+      "selection_revision": "e45fc12d4517084705ccbf4ecad26d314bbab56d",
+      "selection_notes": "Selected after external merge of PR #10521 and the collision-clean identity-neutral inventory refresh. The global alias table is a high-severity dependency-confusion boundary that can route an edge to another ecosystem and schedule the wrong local shell BUILD; this pure, dependency-free repair also makes later language-filter expansion safe.",
+      "validation_notes": "The new 58th language-neutral resolution case is consumed by Python and Go and proves same-spelled Lua, Perl, Python, and Haskell aliases stay ecosystem-local while one exact qualified BUILD edge crosses lanes. Python passes its real BUILD_windows front door and 357 tests at 87%+ coverage; focused Ruff, MyPy, and Bandit checks pass. The full Ruff command retains the exact pre-existing 86-diagnostic baseline, full MyPy retains six unrelated diagnostics, and full Bandit retains eight low plus one existing shell-execution finding without any resolver finding. Go passes all tests, vet, module verification, and trimpath build. The 58-case/235-file corpus passes 17 schema and 42 runner tests. A full 4,864-package Python plan contains 7,212 edges and exactly two cross-language edges, both exact checked-in BUILD declarations. All 258 Lua identities and all 384 canonicalized Lua edges match the Go oracle. The latest schema-3 inventory remains 1,298 identities, 4,454 slots, 848 singletons, 11,872 singleton gaps, 652 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10564 opened after the fully validated implementation commit was pushed. GitHub reports the PR open, non-draft, and mergeable; this state-only follow-up records the sole active parity PR without changing implementation behavior.",
+      "notes": "Discovered while independently checking the Lua closure graph. Python build-tool resolution constructs one global alias map for every ecosystem, so later Python, Perl, Haskell, and other package aliases overwrite Lua rock aliases; on the audited repository snapshot, 251 of 258 canonical Lua rock names resolve to a non-Lua identity. Define language-neutral adversarial collision fixtures, preserve explicitly qualified cross-language BUILD edges and within-ecosystem library-over-program priority, scope ordinary manifest aliases to their owning ecosystem, prove wrong BUILD files are never selected, and compare complete real-lane graphs with the canonical Go oracle."
     },
     {
       "id": "typescript-starlark-interpreter-strict-build",
@@ -904,12 +927,63 @@
     },
     {
       "id": "build-tool-python-haskell-language-filter",
-      "title": "Expose Haskell in the Python build-tool language filter",
+      "title": "Expose Haskell, Java, and Kotlin in Python build-tool filtering",
+      "status": "merged",
+      "depends_on": ["build-tool-lua-rockspec-encoding", "build-tool-python-ecosystem-scoped-alias-resolution", "build-tool-python-haskell-gradle-field-aware-resolution"],
+      "branch": "codex/python-haskell-jvm-language-filter",
+      "pr_number": 10828,
+      "selection_revision": "a4ad42e1f71ad146af212817ef72c7154af83a9b",
+      "selection_notes": "Selected after PR #10751 merged externally and the collision-clean refresh classified smart-home-controller-runtime. This bounded follow-up exposes 206 Haskell, 129 Java, and 133 Kotlin build roots only after their resolver graphs became field-aware, while also making their package/program identities follow the shared discovery contract. Canonical-CBOR lane children remain ready but none independently unlocks the twelve-child completion umbrella.",
+      "implementation_revision": "f3be67ab1be17c6294f20b01b72e66732c7e1cc1",
+      "merged_head_revision": "deec18ffb68e6cb951f25478f5e481db2153361c",
+      "merged_at": "2026-08-12T02:14:46Z",
+      "merge_revision": "399a87fff348db21258b14a6410fef6612d4ed41",
+      "validation_notes": "Both Python BUILD front doors pass 379 tests with 89.23% total coverage and 96% discovery coverage under Python 3.13.14; focused discovery and filter coverage passes 70 tests. The 58-case language-neutral corpus validates 243 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened discovery fixture. With real Cabal output still present and excluded, exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges/3 programs, 129 Java nodes/186 edges/1 program, and 133 Kotlin nodes/166 edges/7 programs. Native GHC 9.4.8/Cabal tests pass for Haskell logic-gates (6 examples) and its arithmetic downstream (5 examples); Temurin 21.0.12 and Gradle 8.11.1 pass Java and Kotlin algol-lexer plus each algol-parser downstream. Scoped Ruff safety rules, discovery MyPy, Bandit, Go vet, state-graph, strict-JSON, credential-pattern, diff, and collision gates pass. The repository's pre-existing full Ruff debt decreases from 19 to 14 findings; the one pre-existing CLI MyPy nullable-length finding remains outside this tranche. The collision-clean report remains 1,301 identities, 4,457 slots, 851 singletons, 11,914 singleton gaps, 655 Rust singletons, zero collisions, and zero unknown buckets. Reusing an existing Windows plan filename reproduced the separately tracked atomic-overwrite owner; fresh output paths pass all real plan comparisons.",
+      "publication_notes": "Ready-for-review PR #10828 opened from f3be67ab1b and merged externally as 399a87fff3 after all 20 required, neutral, and expected skipped checks reached terminal success with no failures.",
+      "notes": "Discovered while validating the full Python build-tool scan. Haskell resolver branches exist but discovery omits the lane, while Java and Kotlin are discoverable and resolvable but absent from ALL_LANGUAGES and argparse choices. Add the focused discovery, filter, and dry-run contract only after ecosystem-scoped aliases and field-aware Cabal/Gradle resolution make default all-language planning safe."
+    },
+    {
+      "id": "build-tool-python-haskell-gradle-field-aware-resolution",
+      "title": "Make Python Cabal and Gradle resolution field-aware",
+      "status": "merged",
+      "depends_on": ["build-tool-python-ecosystem-scoped-alias-resolution"],
+      "branch": "codex/python-haskell-gradle-field-aware-resolution",
+      "pr_number": 10751,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10751",
+      "pr_opened_at": "2026-08-11T16:24:56Z",
+      "selection_revision": "96f58be046bb130d59e988f6199c4bb819533156",
+      "selection_notes": "Selected after PR #10612 merged externally and a collision-clean refresh classified the new Frigate snapshot host. Although canonical-CBOR became dependency-ready, its fourteen-lane umbrella needs decomposition before review. This bounded, authority-free resolver repair closes a real affected-plan trust boundary and directly unlocks safe Haskell, Java, and Kotlin filtering.",
+      "implementation_revision": "af71eed4c2f54765220147a71b27db45b1b50a9a",
+      "merged_at": "2026-08-11T19:44:49Z",
+      "merge_revision": "c4e8e8399f1a102651cec4002cde84ca1c1aa133",
+      "validation_notes": "After rebasing onto identity-neutral 44dc4b563e, Python passes 364 tests with 89.18% total coverage and 91% resolver coverage under Python 3.12.13 through both identical BUILD front doors. The changed resolver passes MyPy, scoped Ruff, and Bandit; the repository's pre-existing full Python lint and Bandit findings remain outside this tranche. The schema and runner pass 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened Haskell/Gradle fixture consumers. Exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges, 129 Java nodes/186 edges, and 133 Kotlin nodes/166 edges; focused affected-closure tests reject comment, string, cross-lane, absolute, interpolated, ambiguous-manifest, duplicate, and self-selection paths. State graph, credential-pattern, diff, and collision gates pass at 1,300 identities, 4,456 slots, 850 singletons, 11,900 singleton gaps, 654 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10751 opened from af71eed4c2 and merged externally as c4e8e8399f after all 20 checks reached terminal success, neutral, or expected skip states with no failures.",
+      "notes": "Discovered in the post-#10564 security review. Python currently scans whole Cabal files and line-matches Gradle, so comments, descriptive fields, block-comment examples, and multiline includeBuild declarations can create or hide dependency edges even though the shared Haskell, Java, and Kotlin field-aware fixtures already define the closed behavior. Consume those fixtures, register plain directory and declared Cabal aliases, reject ambiguous manifests, and prove exact graph equality with the Go oracle before exposing these lanes through the Python language filter."
+    },
+    {
+      "id": "build-tool-python-dotnet-field-aware-resolution-and-filter",
+      "title": "Add field-aware C# and F# support to the Python build tool",
+      "status": "pr-open",
+      "depends_on": ["build-tool-python-haskell-language-filter"],
+      "branch": "codex/python-dotnet-field-aware-filter",
+      "pr_number": 10936,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10936",
+      "pr_opened_at": "2026-08-12T02:44:59Z",
+      "selection_revision": "399a87fff348db21258b14a6410fef6612d4ed41",
+      "selection_notes": "Selected after PR #10828 merged externally, the collision-clean refresh classified task-mosaic-app, and a dependency/leverage pass compared all newly ready work. The shared .NET project-reference grammar closes 198 C# roots with 238 edges and 197 F# roots with 239 edges in one bounded standard-library tranche. Dart remains a separate 83-root manifest family; the Windows plan-overwrite fix remains a separate atomic-write owner; and no individual canonical-CBOR lane child unlocks its twelve-child completion umbrella.",
+      "implementation_revision": "6e4889def9e35ba60cd83aabcc61fff1c268ace1",
+      "validation_notes": "Both Python BUILD front doors pass 394 tests with 89.31% total coverage, 91% resolver coverage, and 96% discovery coverage under Python 3.13.14; focused discovery, resolver, CLI, and toolchain tests pass 141 tests. The 58-case language-neutral corpus validates 247 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, a trimpath build, and the expanded discovery fixture. Unique Windows plan paths avoid the separately owned atomic-overwrite debt while exact Python-versus-Go equality holds for 198 C# nodes/238 edges/1 program and 197 F# nodes/239 edges/1 program. Native .NET 9 tests pass C# logic-gates (5 tests, 100% line coverage) and arithmetic downstream (20 tests, 99%), plus F# logic-gates (5 tests, 91.17%) and arithmetic downstream (18 tests, 92.42%). Both real filter dry runs and BUILD-file validation pass. Scoped Ruff safety and unused-import checks, MyPy, Bandit, strict JSON, state-graph, credential-pattern, diff, and collision gates pass. The collision-clean report remains 1,302 identities, 4,458 slots, 852 singletons, 11,928 singleton gaps, 656 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10936 opened from 6e4889def9. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
+      "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established C# and F# package roots as unknown, has no project-file resolver branch, and omits both filters even though the shared C#, F#, and cross-language .NET fixtures define authoritative project references. Consume those fixtures, preserve package/program identities and the reviewed shared dotnet toolchain mapping, compare complete graphs with Go, then expose both lanes without widening the Haskell/JVM tranche."
+    },
+    {
+      "id": "build-tool-python-dart-field-aware-resolution-and-filter",
+      "title": "Add field-aware Dart support to the Python build tool",
       "status": "pending",
-      "depends_on": ["build-tool-lua-rockspec-encoding"],
+      "depends_on": ["build-tool-python-haskell-language-filter"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered while validating the full Python build-tool scan. ALL_LANGUAGES and the resolver include Haskell, but argparse omits it from --language choices, so users cannot select the established Haskell lane even though all-language mode discovers it. Add the focused CLI contract and regression test in a separate build-tool parity slice."
+      "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established Dart package roots as unknown, has no pubspec resolver branch, and omits the Dart filter even though the shared field-aware Dart fixture defines the closed dependency grammar. Consume that fixture, preserve package/program identities, prove complete graph equality with Go, and expose Dart in its own manifest-shaped tranche."
     },
     {
       "id": "build-tool-python-plan-atomic-overwrite-windows",
@@ -1430,7 +1504,7 @@
       "depends_on": ["smart-home-camera-media-security-boundary-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator. Merged PR #10225 preserves this portable policy boundary by injecting one native media executor; endpoint validation, grant and lease state, bounds, authentication choice, response classification, image-signature checks, and redaction remain fixture-owned here while transport stays native. Merged PR #10229 adds fixtures for authorization before Vault resolution or network I/O, entity, purpose, TTL, and endpoint validation, lease issue and redemption, and credential cleanup on every return path. Merged PRs #10237, #10248, #10255, and #10267 add deterministic ZoneMinder, Synology, Axis, and Reolink evidence for exact grant-before-Vault-and-network ordering, installed-entity and endpoint validation, generation-bound camera-media lease issuance and redemption, bounded snapshot delivery, and cleanup on every result."
+      "notes": "Extract and fixture deterministic grant decisions, generation-bound lease state, TTLs, quotas, audit projection, and error classification behind injected authenticated context, time, nonce, and media transport. Expand only this authority-free core through established lanes; keep native media I/O and session hosting outside the denominator. Merged PR #10225 preserves this portable policy boundary by injecting one native media executor; endpoint validation, grant and lease state, bounds, authentication choice, response classification, image-signature checks, and redaction remain fixture-owned here while transport stays native. Merged PR #10229 adds fixtures for authorization before Vault resolution or network I/O, entity, purpose, TTL, and endpoint validation, lease issue and redemption, and credential cleanup on every return path. Merged PRs #10237, #10248, #10255, and #10267 add deterministic ZoneMinder, Synology, Axis, and Reolink evidence for exact grant-before-Vault-and-network ordering, installed-entity and endpoint validation, generation-bound camera-media lease issuance and redemption, bounded snapshot delivery, and cleanup on every result. Merged PR #10602 adds the Frigate snapshot host's deterministic approval-before-secret-and-network ordering, installed-camera and reviewed-origin validation, bounded JPEG envelope, explicit logout, cleanup, and stable error evidence; transport, TLS, credentials, Vault, time, entropy, and runtime approval remain native-authority concerns."
     },
     {
       "id": "smart-home-onvif-portable-core-conformance",
@@ -2057,7 +2131,18 @@
       "depends_on": ["rust-network-substrate-capability-truthfulness", "smart-home-lan-http-native-executor-consolidation"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 7eb07ead inventory after smart-home-frigate-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP and platform-TLS transport, credential-referenced authenticated HTTPS login, bounded JWT-cookie handling, Vault identity, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Frigate response validation, health projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 7eb07ead inventory after smart-home-frigate-integration landed as a Rust-only production NVR adapter. The crate owns concrete TCP and platform-TLS transport, credential-referenced authenticated HTTPS login, bounded JWT-cookie handling, Vault identity, endpoint policy, and SmartHomeRuntime authorization, so it is not an all-language portable target. Merged PR #10602 adds deterministic installed-camera, request, ordering, bounds, cleanup, and error evidence that belongs in the shared camera-media core while leaving transport, TLS, credential, Vault, clock, entropy, and runtime approval authority native. Review the minimum truthful connect/TLS/credential/runtime authority and platform evidence; keep bounded Frigate response validation, health projection, request planning, and redaction semantics in shared portable contracts where reusable; and record the residual adapter as a native-runtime exception. This review is excluded from autonomous delivery selection by parity policy."
+    },
+    {
+      "id": "smart-home-frigate-snapshot-host-native-authority-review",
+      "title": "Review the authorized Frigate snapshot host native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-camera-media-portable-core-conformance", "smart-home-frigate-native-authority-review", "vault-leases-native-authority-review", "vault-sealed-store-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 96f58be inventory after merged PR #10602 added the Rust-only smart-home-frigate-snapshot-host without required_capabilities.json. The concrete D23 host composes Human Approval, Vault and SealedStore secret reads, SystemTime, OS CSPRNG, reviewed-address-pinned TCP/TLS, login-cookie-JPEG-logout sequencing, credential custody, and cleanup, so it is not an all-language portable target. Review truthful Vault, time, entropy, network, TLS, credential, runtime, origin-pinning, cleanup, zeroization, redaction, and platform evidence. Keep deterministic installed-identity, request, envelope, ordering, bounds, and stable error behavior in the camera-media portable core."
     },
     {
       "id": "chief-daemon-keyring-native-authority-review",
@@ -2451,13 +2536,13 @@
       "depends_on": ["state-machine-tokenizer-and-markup-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Merged PRs #10262, #10268, #10273, #10278, #10283, #10291, and #10295 expand exact post-head, table hidden-input, head-content, select, template-text, fostered-formatting, and seeded fragment-context recovery diagnostics without adding identities. Merged PR #10302 extends the tokenizer/markup seam with exact script end-tag EOF diagnostics and remains owned here through the explicit state-machine tokenizer dependency; merged PR #10311 adds exact plaintext insertion diagnostics without adding an identity. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
+      "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Merged PRs #10262, #10268, #10273, #10278, #10283, #10291, and #10295 expand exact post-head, table hidden-input, head-content, select, template-text, fostered-formatting, and seeded fragment-context recovery diagnostics without adding identities. Merged PR #10302 extends the tokenizer/markup seam with exact script end-tag EOF diagnostics and remains owned here through the explicit state-machine tokenizer dependency; merged PR #10311 adds exact plaintext insertion diagnostics without adding an identity. Later merged slices add generic fostered starts, fostered list items and images, generic and center table ends, EOF table recovery, mismatched template ends, template colgroup starts, and template-column text diagnostics without new identities. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
     },
     {
       "id": "vault-pm-format-portable-conformance",
       "title": "Fixture and port the Vault password-manager format",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["canonical-cbor-established-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-checked 5e1304f064 inventory after merged PR #10260 added Rust vault-pm-format as the sole new identity. The package has an empty capability manifest and deliberately owns no storage, clock, entropy, key derivation, encryption, or signature authority. Define language-neutral fixtures and established-lane implementations for strict V1 bootstrap, device-certificate, commit, announcement, AEAD-envelope, recovery-wrap, and object-frame codecs; canonical CBOR field ordering and rejection; domain-separated identifiers and signing preimages; exact version and suite gates; duplicate, unknown, truncation, overflow, and trailing-byte failures; and explicit collection and ciphertext bounds. Reuse the pure canonical-CBOR and SHA-256 behavior contracts as language-neutral prerequisites. Key derivation, encryption, signing, secret custody, persistence, and synchronization remain injected native consumers."
@@ -2469,7 +2554,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PRs #10236, #10242, #10247, and #10253 materialized Rust diagram-layout-sequence as a new authority-free identity without a capability manifest. Merged PRs #10259, #10263, #10269, #10274, #10280, #10286, #10293, and #10298 extend the same Mermaid lexer/parser, diagram-IR, layout, and diagram-to-paint seam with participant stereotypes, half arrows, central connections, autonumber ranges, rect colors, actor links, actor properties, and details references without adding identities. Merged PRs #10305 and #10310 add accessibility title and description metadata, including multiline parsing and paint projection, through that same deterministic parse, IR, layout, and paint seam. Define language-neutral fixtures and established-lane implementations for deterministic participant headers, stereotypes and groups, lifelines, messages and links, notes, activation bars, nested control frames and branches, explicit create/destroy lifecycles, numbering, styling, ordering, geometry, accessibility metadata, and stable validation failures. Paint backends and rendering remain separate consumers."
+      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PRs #10236, #10242, #10247, and #10253 materialized Rust diagram-layout-sequence as a new authority-free identity without a capability manifest. Merged PRs #10259, #10263, #10269, #10274, #10280, #10286, #10293, and #10298 extend the same Mermaid lexer/parser, diagram-IR, layout, and diagram-to-paint seam with participant stereotypes, half arrows, central connections, autonumber ranges, rect colors, actor links, actor properties, and details references without adding identities. Merged PRs #10305 and #10310 add accessibility title and description metadata, including multiline parsing and paint projection, through that same deterministic parse, IR, layout, and paint seam. Later merged slices add box wrapping, autonumber event preservation and resumed counters, actor symbols, hash comments, mirrored participants, comma and escaped aliases, and case-insensitive sequence syntax without adding identities. Define language-neutral fixtures and established-lane implementations for deterministic participant headers, stereotypes and groups, lifelines, messages and links, notes, activation bars, nested control frames and branches, explicit create/destroy lifecycles, numbering, styling, ordering, geometry, accessibility metadata, and stable validation failures. Paint backends and rendering remain separate consumers."
     },
     {
       "id": "mosaic-app-runtime-portable-conformance",
@@ -2518,7 +2603,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-axis-snapshot-host-native-authority-review",
@@ -2571,7 +2656,7 @@
       "id": "vault-records-portable-conformance",
       "title": "Fixture and port canonical Vault record envelopes",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["canonical-cbor-established-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Newly surfaced while classifying merged PR #10285's redaction hardening of the existing empty-capability Rust vault-records singleton. Define language-neutral fixtures and established-lane implementations for canonical typed record envelopes, exact content-type and version handling, opaque forward compatibility, strict bounded decoding, deterministic canonical-CBOR encoding, value-redacted summaries and diagnostic formatting, secret-field zeroization hooks, and stable attacker-input-free failures. Encryption, storage, credential custody, and host rendering remain outside this pure record contract."
@@ -2633,13 +2718,372 @@
       "notes": "Discovered in the collision-checked d46de7b34e inventory after merged PR #10307 added the empty-capability Rust vault-pm-repository identity and language-neutral VLT-PM04 contract. Define established-lane implementations and fixtures for domain-separated opaque addressing, dependency-ordered immutable publication and read-back, mandatory injected commit and announcement verification, exact object-ID checks, bounded DAG reconstruction, caller-pinned heads, deterministic ancestry history, withholding and device-counter equivocation detection, ambiguous-write retry, and conservative plan-only garbage collection with closed redacted errors. Reuse the portable format and storage contracts plus established pure HMAC-SHA256 and SHA-256 behavior. Filesystem, provider clients, clocks, entropy, device keys, decryption, signature authority, physical deletion, and unlocked-host policy remain injected or native."
     },
     {
-      "id": "lua-in-memory-data-store-engine-clock-authority-truthfulness",
-      "title": "Inject clock authority into the Lua data-store engine",
+      "id": "mosaic-app-conformance-native-fixture-review",
+      "title": "Review the Mosaic real-engine native ABI fixture",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10382 added Rust mosaic-app-conformance. The crate is a cdylib/rlib fixture that exposes the real deterministic Mosaic runtime through the reviewed C ABI to Compose, Flutter, Qt, SwiftUI, and XAML conformance harnesses. Require an explicit empty capability profile plus platform evidence for dynamic-library lifecycle, opaque handles, returned buffers, snapshots, and teardown. Keep runtime semantics in the portable owner and ABI or generated-host behavior in the existing wrapper reviews; do not manufacture fifteen implementations of this native fixture."
+    },
+    {
+      "id": "task-mosaic-app-native-abi-review",
+      "title": "Review the TaskApp Mosaic application adapter applicability exception",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 399a87fff3 inventory after merged PR #10859 added Rust-only task-mosaic-app. The crate is a TaskApp-specific cdylib/rlib adapter: it maps the authored TaskApp MIL slot/event vocabulary and presentation cursor to the separately owned pure task-core engine, provides transactional no-mutation dispatch failures and versioned snapshots through mosaic-app-runtime, and exports the reviewed fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, and SwiftUI hosts. Review exact complete slot/event coverage, deterministic startup/dispatch/snapshot/restore behavior, stable payload-free errors, dynamic-library symbols and buffer/lifetime/panic containment through the existing Mosaic ABI owners, platform packaging/launch evidence, and add explicit empty capability metadata. Do not manufacture fifteen implementations of this application-specific native ABI adapter; reusable runtime semantics remain in mosaic-app-runtime, domain behavior in task-core, and host bindings in mosaic-app-bindings. This wrapper-applicability item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "smart-home-axis-pairing-service-native-authority-review",
+      "title": "Review the Axis pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-axis-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10328 added Rust smart-home-axis-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, Axis transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-onvif-pairing-service-native-authority-review",
+      "title": "Review the ONVIF pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-onvif-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10309 added Rust smart-home-onvif-pairing-service without a capability manifest. This concrete excluded ONVIF host composes owner-only credential-file reads, OS entropy, sealed Vault writes, authenticated vendor effects, recoverable pairing transactions, actor execution, and runtime mutation. Keep request validation and transaction recovery in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-reolink-pairing-service-native-authority-review",
+      "title": "Review the Reolink pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-reolink-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10340 added Rust smart-home-reolink-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, Reolink transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-synology-pairing-service-native-authority-review",
+      "title": "Review the Synology pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-synology-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10349 added Rust smart-home-synology-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, Synology transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "smart-home-zoneminder-pairing-service-native-authority-review",
+      "title": "Review the ZoneMinder pairing-service native-authority exception",
+      "status": "pending",
+      "depends_on": ["smart-home-pairing-transaction-portable-conformance", "chief-daemon-secret-file-native-authority-review", "vault-sealed-store-native-authority-review", "smart-home-zoneminder-snapshot-host-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10318 added Rust smart-home-zoneminder-pairing-service without a capability manifest. This concrete host composes owner-only credential-file reads, OS entropy, sealed Vault writes, ZoneMinder transport and snapshot authority, actor effects, recoverable pairing transactions, and runtime mutation. Keep transaction recovery and deterministic vendor validation in portable owners; review the minimum filesystem, entropy, credential, Vault, network, actor, and runtime authority with cleanup, redaction, and platform evidence."
+    },
+    {
+      "id": "semantic-ir-sys-write-portable-conformance",
+      "title": "Fixture and port Semantic IR system-write semantics",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked post-#10564 identity-neutral audit. SIR28 now owns a closed stream, terminator, and recursive-unpack contract across the validator, Feature::ConsoleIO, seven backend emit/runtime implementations, TypeScript sir-runtime-core, and migrated Ruby, Python, JavaScript, APL, J, Q, IDL, MATLAB, Scilab, and C frontends. Define neutral stdout, stderr, newline, recursive-array, ordering, and invalid-shape fixtures and remove legacy bare print or puts paths. PR #10604 completed the externally delivered frontend catch-up without adding another identity, leaving this portable cross-backend conformance owner eligible after the active canonical-CBOR tranche."
+    },
+    {
+      "id": "gc-core-portable-conformance",
+      "title": "Fixture and port the portable garbage-collector core",
       "status": "pending",
       "depends_on": ["capability-schema-category-action-constraints"],
       "branch": null,
       "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked post-#10564 identity-neutral audit after AOT00 T9/T10 added the Rust GC core and tagged-field design. Own FlatHeap moving-minor pacing, remembered-set and write-barrier semantics, tagged-kind layouts, relocation and fixup safety, deterministic adversarial fixtures, and truthful empty capability metadata. PR #10593 merged the tagged-kind tranche; retain the temporary selection block while open PR #10607 continues to overlap the collector and VM integration."
+    },
+    {
+      "id": "gc-core-capi-native-abi-review",
+      "title": "Review the garbage-collector C ABI boundary",
+      "status": "pending",
+      "depends_on": ["gc-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review the gc-core staticlib and cdylib C ABI, stack-scan and Twig compatibility, opaque ownership, panic containment, symbol stability, and platform ABI evidence after the portable collector contract is fixed. Do not manufacture one native ABI wrapper in every established implementation lane."
+    },
+    {
+      "id": "vm-core-gc-integration-portable-conformance",
+      "title": "Fixture and port VM-to-GC integration semantics",
+      "status": "pending",
+      "depends_on": ["gc-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own deterministic VM allocation pacing, tagged-field registration, write-barrier wiring, root retention, relocation, and fixup behavior over the portable collector core. Native stack scanning and target ABI linkage remain outside this contract."
+    },
+    {
+      "id": "iir-to-llvm-gc-runtime-bridge-native-review",
+      "title": "Review the IIR-to-LLVM GC runtime bridge",
+      "status": "pending",
+      "depends_on": ["gc-core-portable-conformance", "gc-core-capi-native-abi-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review target-specific LLVM barrier emission, runtime symbol linkage, calling convention, object layout, and applicable-platform evidence after the portable collector and C ABI contracts are fixed. This native bridge is excluded from autonomous all-language parity selection."
+    },
+    {
+      "id": "canonical-cbor-language-neutral-conformance",
+      "title": "Define language-neutral canonical CBOR conformance",
+      "status": "merged",
+      "depends_on": [],
+      "branch": "codex/canonical-cbor-language-neutral-conformance",
+      "pr_number": 10612,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/10612",
+      "pr_opened_at": "2026-08-11T07:19:38Z",
+      "merged_at": "2026-08-11T15:54:23Z",
+      "merge_revision": "431a8fcc829724507cc50f707ec9b7c0f8c39824",
+      "implementation_revision": "b79cf1b87f1a22359880d34b21aaed6b34fca794",
+      "selection_revision": "2a6dab3ae0d871aaef97c656c90a90fd6715d3f4",
+      "selection_notes": "Selected after external merge of PR #10564, a collision-clean identity-neutral refresh, and classification of the SIR28 and GC work. This dependency-free pure contract has the highest bounded leverage: it unlocks fourteen-lane canonical-CBOR parity, both Vault format roots, and the wider Vault application and CLI chain without overlapping any live PR.",
+      "security_findings": "The reference encoders sort but retain duplicate encoded map keys and recurse without encode-side depth or output-size bounds, so a fixture-only change would bless behavior their own decoders reject. Harden the C, C++, and Rust oracles with fallible, static, payload-free duplicate-key, encode-depth, and encode-size failures in this same tranche.",
+      "validation_notes": "The 55-case neutral corpus passes its Draft 2020-12 schema, closed generated-case grammar, exact C-header drift gate, and all 14 stable error-ID coverage checks. Rust passes 50 unit tests, the portable consumer, doctest, rustfmt, Clippy with warnings denied, and direct LLVM coverage at 95.99% production-line coverage; vault-records, vault-pm-format, and vault-pm-application pass 151 downstream tests. C and C++ pass 597 existing-plus-portable checks under strict GCC, Clang, G++, Clang++, and MSVC builds. The C portable consumer also passes Clang AddressSanitizer and UndefinedBehaviorSanitizer. Windows Clang's sanitizer runtime cannot safely unwind the repository's pre-existing C++ exception suite; the unchanged original C++ suite reproduces the same runtime failure, while ordinary strict builds pass on all five compilers. Ruff, MyPy, Bandit, RustSec, capability taxonomy, cross-language fixture, diff, state-graph, and collision gates pass. RustSec reports only the repository's two allowed unmaintained warnings. The late refresh reports 1,299 established identities and 4,455 slots with 849 singletons, 11,886 singleton gaps, 653 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #10612 opened from exact implementation head b79cf1b87f after a stable final rebase and push. GitHub reports the PR open, non-draft, and mergeable; required CI checks are queued, so the loop is now monitor-only until they finish. The late inventory refresh classified vault-pm-audit before publication and raised the collision-clean totals to 1,299 identities and 4,455 slots.",
+      "notes": "Discovered while auditing the Vault password-manager dependency graph after PR #10521 merged. CBR01 defines deterministic RFC 8949 length-first canonical CBOR, but no closed language-neutral fixture owns exact encodings, rejection classes, stable payload-blind errors, or depth and length bounds. Rust is the only established lane implementation; emerging C and C++ provide independent references. Specify and cross-check the neutral contract and repair the three reference oracles before any established-lane parity claim."
+    },
+    {
+      "id": "canonical-cbor-established-lane-parity",
+      "title": "Port canonical CBOR across established lanes",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-dotnet-lane-parity", "canonical-cbor-dart-lane-parity", "canonical-cbor-elixir-lane-parity", "canonical-cbor-go-lane-parity", "canonical-cbor-haskell-lane-parity", "canonical-cbor-jvm-lane-parity", "canonical-cbor-lua-lane-parity", "canonical-cbor-perl-lane-parity", "canonical-cbor-python-lane-parity", "canonical-cbor-ruby-lane-parity", "canonical-cbor-swift-lane-parity", "canonical-cbor-typescript-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella for the fourteen established lanes that currently lack canonical CBOR. The post-#10612 security review found this too broad for one review unit, so selectable per-lane children now own delivery; paired .NET and JVM children share their toolchain and fixture harness. This umbrella unblocks only after every child merges, then releases both Vault format roots and the wider Vault application and CLI chain."
+    },
+    {
+      "id": "canonical-cbor-dotnet-lane-parity",
+      "title": "Port canonical CBOR to the C# and F# lanes",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired .NET lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
+    },
+    {
+      "id": "canonical-cbor-dart-lane-parity",
+      "title": "Port canonical CBOR to Dart",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Dart and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-elixir-lane-parity",
+      "title": "Port canonical CBOR to Elixir",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Elixir and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-go-lane-parity",
+      "title": "Port canonical CBOR to Go",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Go and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-haskell-lane-parity",
+      "title": "Port canonical CBOR to Haskell",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Haskell and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-jvm-lane-parity",
+      "title": "Port canonical CBOR to the Java and Kotlin lanes",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement CBR01 and the closed canonical-cbor-v1 corpus for the paired JVM lanes with native tests, build metadata, documentation, capability metadata, and exact cross-lane output equality."
+    },
+    {
+      "id": "canonical-cbor-lua-lane-parity",
+      "title": "Port canonical CBOR to Lua",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Lua and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-perl-lane-parity",
+      "title": "Port canonical CBOR to Perl",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Perl and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-python-lane-parity",
+      "title": "Port canonical CBOR to Python",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Python and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-ruby-lane-parity",
+      "title": "Port canonical CBOR to Ruby",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Ruby and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-swift-lane-parity",
+      "title": "Port canonical CBOR to Swift",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in Swift and consume every language-neutral case."
+    },
+    {
+      "id": "canonical-cbor-typescript-lane-parity",
+      "title": "Port canonical CBOR to TypeScript",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the closed canonical-CBOR contract in TypeScript and consume every language-neutral case."
+    },
+    {
+      "id": "vault-pm-audit-portable-conformance",
+      "title": "Fixture and port the Vault password-manager operation-audit primitive",
+      "status": "pending",
+      "depends_on": ["canonical-cbor-established-lane-parity", "vault-pm-domain-portable-conformance", "vault-pm-format-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 6c3b19b27b inventory after merged PR #10599 added the empty-capability Rust vault-pm-audit singleton and VLT-PM15. Define a closed language-neutral fixture and established-lane implementations for the operation registry, structural event rules, canonical signed bytes, certified-device verification, privacy-safe projections, exact payload-free failures, and fixed collection and input bounds over caller-provided time, trace randomness, identities, heads, and signing material. Reuse canonical CBOR, Vault domain/format, Ed25519, and zeroization contracts. Persistence, encryption at rest, clocks, entropy, repository publication, CLI disclosure ordering, and native key custody remain injected or separately owned. Open PR #10608 extends the existing application owner with encrypted audit objects and temporarily overlaps that downstream integration; it does not overlap this primitive contract."
+    },
+    {
+      "id": "vault-pm-application-portable-conformance",
+      "title": "Fixture and port the Vault password-manager application core",
+      "status": "pending",
+      "depends_on": ["vault-pm-format-portable-conformance", "vault-pm-storage-portable-conformance", "vault-pm-domain-portable-conformance", "vault-pm-repository-portable-conformance", "vault-records-portable-conformance", "vault-pm-audit-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10321 added empty-capability Rust vault-pm-application and later Vault slices expanded it. Define language-neutral fixtures and established-lane implementations for the VLT-PM05 host-neutral application state machine, bootstrap and unlock verification, repository workflows, item operations, stable redacted errors, and no-mutation failures over injected stores, keys, time, and entropy. Native persistence, clocks, entropy, terminal I/O, credential custody, and process authority remain injected."
+    },
+    {
+      "id": "vault-pm-application-storage-core-portable-conformance",
+      "title": "Fixture and port the Vault application storage-core adapters",
+      "status": "pending",
+      "depends_on": ["vault-pm-application-portable-conformance", "vault-pm-format-portable-conformance", "vault-pm-storage-storage-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10412 added empty-capability Rust vault-pm-application-storage-core. Define language-neutral fixtures and established-lane adapters for bootstrap and local-state records over an injected storage-core backend, including exact framing, bounded decode, immutable writes, corruption classification, revisions, and closed payload-free errors. Concrete filesystem, provider, durability, locking, and retry authority remain native."
+    },
+    {
+      "id": "vault-pm-config-portable-conformance",
+      "title": "Fixture and port the Vault password-manager configuration contract",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10422 added empty-capability Rust vault-pm-config. Define language-neutral fixtures and established-lane implementations for the bounded VLT-PM07 TOML parser, exact version and field validation, deterministic defaults, canonical rendering, round trips, hostile input bounds, and stable payload-free errors. Filesystem paths, environment lookup, file permissions, and atomic persistence belong to the native local host."
+    },
+    {
+      "id": "vault-pm-cli-host-native-authority-review",
+      "title": "Review the Vault CLI terminal and entropy host",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10434 added Rust vault-pm-cli-host. Review its controlling-terminal reads and writes, Unix termios and Windows console FFI, echo restoration, OS CSPRNG, bounded secret buffers, zeroization, redacted failures, and exact structured capability profile. Do not manufacture an all-language privileged terminal or entropy host."
+    },
+    {
+      "id": "vault-pm-local-host-native-authority-review",
+      "title": "Review the Vault local filesystem host",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "security_findings": "The current manifest omits effective fs:delete authority even though Unix and Windows cleanup paths remove staging files; the review must reconcile the structured profile before approval.",
+      "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10417 added Rust vault-pm-local-host. Review environment and path resolution, no-follow owner-private directory and file creation, exact reads and writes, locks, atomic replacement, Unix and Windows FFI, race resistance, cleanup, redacted failures, and truthful structured capabilities. Keep deterministic path and config semantics in portable owners; do not manufacture all-language privileged filesystem hosts."
+    },
+    {
+      "id": "vault-pm-cli-portable-command-conformance",
+      "title": "Fixture and port the Vault CLI command contract",
+      "status": "pending",
+      "depends_on": ["vault-pm-application-portable-conformance", "vault-pm-application-storage-core-portable-conformance", "vault-pm-config-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered while classifying the package and program forms of the normalized Rust vault-pm-cli identity added by merged PR #10439. Extract language-neutral fixtures and established-lane implementations for strict argv parsing, command planning, stable exit classes, payload-redacted rendering, injected workflow ordering, and deterministic no-effect failures. Terminal, entropy, wall-clock, environment, filesystem, locking, and executable composition remain native-host concerns."
+    },
+    {
+      "id": "vault-pm-cli-native-authority-review",
+      "title": "Review the Vault CLI native composition boundary",
+      "status": "pending",
+      "depends_on": ["vault-pm-cli-portable-command-conformance", "vault-pm-cli-host-native-authority-review", "vault-pm-local-host-native-authority-review", "vault-pm-storage-storage-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "security_findings": "The current top-level profile does not express the effective terminal, entropy, environment, and FFI authority constructed through its concrete hosts; retain the block until composed authority is truthful.",
+      "notes": "Review the normalized Rust vault-pm-cli package and program composition after its deterministic command contract is extracted. Require exact filesystem read/write/create, wall-clock, terminal, entropy, storage-adapter, process-exit, secret-custody, cleanup, redaction, and platform evidence with a truthful capability profile. Do not replicate native composition in every lane; keep portable command behavior in the separate fixture owner."
+    },
+    {
+      "id": "smart-home-controller-runtime-portable-conformance",
+      "title": "Fixture and port transactional smart-home controller ownership",
+      "status": "pending",
+      "depends_on": ["rust-singletons-20260730-classification", "smart-home-runtime-command-effect-lifecycle"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean a4ad42e1f7 inventory after merged PR #10791 added Rust-only smart-home-controller-runtime. Production code is authority-free over an injected StorageBackend and caller-supplied timestamps; it serializes clone-mutate-persist-publish transactions, atomically owns runtime plus automation state, and exposes stable revision and rollback semantics. Define language-neutral fixtures for empty and restored startup, mutation, persistence, and CAS failures without publication, combined snapshots, serialized no-lost-update behavior, automation evaluation and ticks, adapter callbacks, revision metadata, and stable redacted errors; add explicit empty capability metadata. Local-folder storage, HTTP serving, worker scheduling, and other concrete host effects remain native consumers."
+    },
+    {
+      "id": "in-memory-data-store-clock-language-neutral-conformance",
+      "title": "Define language-neutral data-store clock conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the post-#10564 security review. Define one deterministic injected-clock fixture for TTL, EXPIREAT, PTTL, lazy expiry, reset behavior, and provider consistency before any lane-specific ambient-clock remediation. The contract must preserve pure caller-controlled time and must not autonomously add signed wall-clock authority."
+    },
+    {
+      "id": "lua-in-memory-data-store-engine-clock-authority-truthfulness",
+      "title": "Inject clock authority into the Lua data-store engine",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints", "in-memory-data-store-clock-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
       "notes": "Discovered during the post-#10264 security audit of the pending Lua HyperLogLog build closure. in_memory_data_store_engine defaults directly to os.time() while its capability manifest is empty, and the facade claims no clock access; tests mask both the missing HyperLogLog rock and the ambient clock through source-path injection. Make time fully caller-injected or declare a truthful structured clock boundary, add deterministic time and neutral installed-runtime fixtures, and only then unblock the standalone HyperLogLog closure. Network, filesystem, process, and credential authority remain absent."
+    },
+    {
+      "id": "in-memory-data-store-engine-clock-authority-cross-lane-truthfulness",
+      "title": "Make data-store clock authority truthful across established lanes",
+      "status": "pending",
+      "depends_on": ["capability-schema-category-action-constraints", "in-memory-data-store-clock-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#10521 cross-language security audit. C#, F#, Go, Haskell, Java, Kotlin, Perl, Python, and TypeScript data-store engines, plus affected facades, read ambient wall time while their capability profiles are empty, legacy, or absent; Rust alone truthfully declares time authority. Consume the shared deterministic clock fixture and move portable implementations to caller-injected clocks rather than autonomously adding signed time authority. Preserve the separately truthful Rust boundary and close provenance gaps in installed-runtime recipes before cross-lane parity claims."
     }
   ]
 }

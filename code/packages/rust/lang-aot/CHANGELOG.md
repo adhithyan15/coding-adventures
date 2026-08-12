@@ -1,5 +1,315 @@
 # Changelog — `lang-aot`
 
+## 0.220.99 - 2026-08-11 (ALGOL controlled-variable snapshots — seven backends)
+
+The single-value loop snapshot regression now explicitly depends on successive
+controlled-variable values, proving that body metadata advances with each
+emitted list-element assignment.
+
+## 0.220.98 - 2026-08-11 (ALGOL single-value loop snapshots — seven backends)
+
+The LANG matrix now proves that an all-single-value `for` list retains its
+final static real assignment for portable output on all seven standard
+backends.
+
+## 0.220.97 - 2026-08-11 (ALGOL single-value loop initialization — seven backends)
+
+The LANG matrix now proves that a guaranteed single-value `for` list element
+establishes scalar-string initialization after an earlier zero-trip `while`
+element on all seven standard backends.
+
+## 0.220.96 - 2026-08-11 (ALGOL loop string initialization — seven backends)
+
+The LANG matrix now proves that a preinitialized scalar string remains
+printable after a zero-trip runtime loop on all seven standard backends.
+
+## 0.220.95 - 2026-08-11 (ALGOL conditional string initialization — seven backends)
+
+The LANG matrix now proves that a scalar string initialized on both runtime
+statement branches remains printable on all seven standard backends.
+
+## 0.220.94 - 2026-08-11 (ALGOL statement snapshot joins — seven backends)
+
+The LANG matrix now proves that equal integer and real assignments on both
+runtime statement branches retain path-independent snapshots on all seven
+standard backends.
+
+## 0.220.93 - 2026-08-11 (ALGOL conditional snapshots — seven backends)
+
+The LANG matrix now proves that equal integer and real branches preserve
+path-independent assignment snapshots while their runtime conditions still
+execute on all seven standard backends.
+
+## 0.220.92 - 2026-08-11 (ALGOL static integer functions — seven backends)
+
+The LANG matrix now snapshots composed `abs`, `sign`, and `entier` results and
+widens the saved integer into mixed real output on all seven standard backends.
+
+## 0.220.91 - 2026-08-11 (ALGOL static integer powers — seven backends)
+
+The LANG matrix now snapshots a checked integer power expression and widens
+the saved value into mixed real output on all seven standard backends.
+
+## 0.220.90 - 2026-08-11 (ALGOL static integer arithmetic — seven backends)
+
+The LANG matrix now computes a checked local integer expression, snapshots it,
+reassigns the source, and widens the saved value into mixed real output on all
+seven standard backends.
+
+## 0.220.89 - 2026-08-11 (ALGOL static integer scalar widening — seven backends)
+
+The LANG matrix now copies an exact local integer snapshot, reassigns its
+source, and widens the unchanged destination into mixed real output on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.88 - 2026-08-11 (ALGOL static mixed numeric output — seven backends)
+
+The LANG matrix now widens an exact integer literal into a tracked real scalar,
+copies its snapshot, and composes it with a real literal before printing on all
+seven standard backends.
+
+## 0.220.87 - 2026-08-11 (ALGOL static real scalar expressions — seven backends)
+
+The LANG matrix now composes a copied static real local with additional finite
+arithmetic before printing on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.86 - 2026-08-11 (ALGOL static real scalar copies — seven backends)
+
+The LANG matrix now copies a tracked static real local, reassigns its source,
+and prints the unchanged destination snapshot on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT.
+
+## 0.220.85 - 2026-08-11 (ALGOL static real scalar output — seven backends)
+
+The LANG matrix now assigns a finite static real expression to a local scalar
+and prints its canonical value on Native AOT, LLVM, WASM, JVM, CLR, VM, and
+JIT. The frontend invalidates this formatter-free shortcut at runtime control
+flow, calls, captured state, or dynamic reassignment.
+
+## 0.220.84 - 2026-08-11 (ALGOL integer-function real composition — seven backends)
+
+The LANG matrix now composes `sign` and `entier` results with literal-only real
+arithmetic on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. Exact-range guards
+keep the formatter-free widening deterministic.
+
+## 0.220.83 - 2026-08-11 (canonical ALGOL transcendental output — seven backends)
+
+The LANG matrix now prints exact zero/one identities for `sin`, `cos`, `ln`,
+`exp`, and `arctan` through shared static strings on Native AOT, LLVM, WASM,
+JVM, CLR, VM, and JIT, without runtime math or f64 formatting.
+
+## 0.220.82 - 2026-08-11 (conditional ALGOL static real functions — seven backends)
+
+The LANG matrix now lets a runtime boolean select between formatter-free
+`abs` and exact-`sqrt` expressions on Native AOT, LLVM, WASM, JVM, CLR, VM, and
+JIT. The selected branch prints through shared strings without runtime f64
+formatting.
+
+## 0.220.81 - 2026-08-11 (composed ALGOL static real functions — seven backends)
+
+The LANG matrix now nests formatter-free `abs` and exact `sqrt` calls and
+combines their values with literal-only addition, subtraction, and
+multiplication on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.80 - 2026-08-11 (ALGOL static real standard functions — seven backends)
+
+The LANG matrix now proves formatter-free `abs` and exact `sqrt` output over
+literal-only real arithmetic on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+The frontend still defers inexact roots, invalid domains, runtime values, and
+user-overridden standard-function names to the unsupported runtime formatter.
+
+## 0.220.79 - 2026-08-11 (ALGOL static integral exponent chains — seven backends)
+
+The LANG matrix now proves right-associated real and mixed integral-literal
+exponent chains on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. The frontend
+checks every computed exponent against the fixed cap before deterministic
+repeated multiplication and shared string output.
+
+## 0.220.78 - 2026-08-11 (ALGOL static integral-real exponent output — seven backends)
+
+The LANG matrix now proves positive and negative integral real-literal
+exponents on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. Exact integrality
+and the existing exponent cap select repeated arithmetic; fractional and
+oversized real exponents remain outside the formatter-free path.
+
+## 0.220.77 - 2026-08-11 (ALGOL static real signed-power output — seven backends)
+
+The LANG matrix now proves positive and negative signed integer-literal powers
+of real literals on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. The frontend
+uses capped repeated multiplication or division and emits only shared strings;
+zero-base negative powers and broader exponent forms remain rejected.
+
+## 0.220.76 - 2026-08-11 (ALGOL static real integer-power output — seven backends)
+
+The LANG matrix now proves finite real literal bases with capped nonnegative
+integer-literal exponent chains on Native AOT, LLVM, WASM, JVM, CLR, VM, and
+JIT. Frontend repeated multiplication preserves right associativity without a
+runtime formatter or platform-dependent compile-time `pow` call.
+
+## 0.220.75 - 2026-08-11 (ALGOL static real division output — seven backends)
+
+The LANG matrix now proves finite literal-only real division and multiplicative
+left associativity on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. Zero
+divisors and non-finite quotients remain explicit compile errors, preserving the
+formatter-free runtime boundary.
+
+## 0.220.74 - 2026-08-11 (ALGOL static real multiplication output — seven backends)
+
+The LANG matrix now proves finite literal-only real multiplication, including
+normal operator precedence, on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+The frontend emits the finite result through shared string output without
+adding a runtime formatter; division and runtime operands remain unsupported.
+
+## 0.220.73 - 2026-08-11 (ALGOL static additive real output — seven backends)
+
+The LANG matrix now proves finite literal-only real addition and subtraction on
+Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. The frontend evaluates the
+bounded expression at compile time and emits only shared string output; runtime
+operands and non-additive arithmetic remain unsupported.
+
+## 0.220.72 - 2026-08-11 (ALGOL parenthesized real-literal output — seven backends)
+
+The LANG matrix now proves that exact parentheses around signed direct real
+literals preserve their source spelling on Native AOT, LLVM, WASM, JVM, CLR,
+VM, and JIT. Parenthesized arithmetic remains outside the bounded path.
+
+## 0.220.71 - 2026-08-11 (ALGOL conditional real-literal output — seven backends)
+
+The LANG matrix now proves runtime selection between signed real-literal output
+leaves on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. ALGOL lowers the
+condition to typed control flow and each selected leaf to shared string output,
+avoiding a runtime f64 formatter while computed or runtime leaves fail closed.
+
+## 0.220.70 - 2026-08-11 (ALGOL signed real-literal output — seven backends)
+
+An ALGOL `output(-4.25, +2.5)` matrix cell now prints `-4.25+2.5` on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT. Exact unary signs remain attached to
+the parser-validated literal spelling; binary expressions do not enter this
+bounded source-spelling path.
+
+## 0.220.69 - 2026-08-11 (ALGOL real-literal output — seven-backend matrix)
+
+An ALGOL `output(4.25)` matrix cell now prints `4.25` on Native AOT, LLVM,
+WASM, JVM, CLR, VM, and JIT. The compiler preserves the direct literal's source
+spelling and reuses `str_const` plus `print_str`; runtime real formatting remains
+explicitly unsupported rather than introducing a partial `f64` formatter ABI.
+
+## 0.220.68 - 2026-08-11 (ALGOL boolean output — seven-backend matrix)
+
+An ALGOL `output(flag and true, flag and false)` matrix cell now prints
+`truefalse` on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. The frontend
+branches on each typed boolean and reuses the existing `str_const` and
+`print_str` substrate on both paths.
+
+## 0.220.67 - 2026-08-11 (ALGOL integer output — seven-backend matrix)
+
+An ALGOL `output(n + 2)` matrix cell now prints `42` on Native AOT, LLVM, WASM,
+JVM, CLR, VM, and JIT through the existing shared `print_i64` builtin. No
+ALGOL-specific backend hook or procedure ABI change is required.
+
+## 0.220.66 - 2026-08-11 (ALGOL fail-closed array extents — seven-backend matrix)
+
+The matrix now evaluates a reversed ALGOL array bound pair from run-time scalar
+variables and proves that Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT all trap
+before allocation. Compiler tests also guard extent and row-major product
+overflow without changing the array descriptor ABI.
+
+## 0.220.65 - 2026-08-11 (ALGOL multidimensional coordinate bounds — seven-backend matrix)
+
+The matrix now proves that an out-of-range second coordinate cannot alias the
+next valid row after row-major flattening. Native AOT, LLVM, WASM, JVM, CLR,
+VM, and JIT all fail closed through their existing array bounds traps.
+
+## 0.220.64 - 2026-08-11 (ALGOL array value copies — seven-backend matrix)
+
+One- and two-dimensional boolean-array matrix cells now prove true ALGOL
+call-by-value isolation: each callee observes its own writes while the caller's
+initialized cells remain unchanged on Native AOT, LLVM, WASM, JVM, CLR, VM,
+and JIT. Nested forwarding tests use name-mode sibling formals where shared
+mutation is intentional.
+
+## 0.220.63 - 2026-08-11 (ALGOL split formal specifications — seven-backend matrix)
+
+The matrix now merges separate type and kind parts for integer array and typed
+procedure formals, then executes their existing descriptor and direct-call
+specialization paths on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.62 - 2026-08-11 (ALGOL procedure heading validation — seven-backend matrix)
+
+The matrix now runs a typed ALGOL procedure whose formals are partitioned
+across integer and real specification groups on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT. The frontend rejects malformed value and specification lists
+before backend lowering.
+
+## 0.220.61 - 2026-08-11 (ALGOL typed formal procedures — seven-backend matrix)
+
+The matrix now passes a declared integer procedure through a report-style
+`integer procedure` formal and executes the statically specialized call on
+Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.60 - 2026-08-11 (canonical ALGOL grammar — seven-backend matrix)
+
+The matrix now proves recursively nested conditional expression and
+designational branches from the canonical generated ALGOL grammar on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.59 - 2026-08-11 (ALGOL nested procedure visibility — seven-backend matrix)
+
+The matrix now proves that a nested typed `abs` override applies only inside
+its block and that standard-function lookup is restored afterward on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.58 - 2026-08-11 (ALGOL procedure shadowing — seven-backend matrix)
+
+The matrix now proves that a nested typed procedure shadows an outer procedure
+inside its block and that the outer binding is restored afterward on Native
+AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.57 - 2026-08-11 (ALGOL real for variables — seven-backend matrix)
+
+The matrix now runs an ALGOL step/until loop controlled by a real array element
+on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT. Integer loop bounds widen to
+the existing typed `f64` lowering.
+
+## 0.220.56 - 2026-08-11 (ALGOL array-controlled for — seven-backend matrix)
+
+The matrix now runs an ALGOL step/until loop whose controlled variable is an
+integer array element on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.55 - 2026-08-11 (ALGOL report-style go to — seven-backend matrix)
+
+The matrix now proves that two-word `go to` with a runtime-selected conditional
+designator runs on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.54 - 2026-08-11 (ALGOL dummy statements — seven-backend matrix)
+
+The matrix now proves that leading, consecutive, trailing, conditional, loop,
+and labeled ALGOL dummy statements are no-ops on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT.
+
+## 0.220.53 - 2026-08-11 (ALGOL multiple labels — seven-backend matrix)
+
+The matrix now proves that two labels attached to one ALGOL conditional share
+the same target on Native AOT, LLVM, WASM, JVM, CLR, VM, and JIT.
+
+## 0.220.52 - 2026-08-11 (ALGOL lexical nested switches — seven-backend matrix)
+
+The matrix now proves that an ALGOL switch may forward-reference another switch
+in the same block and that a nested switch with the same spelling cannot
+retarget the stored outer switch graph on any standard backend.
+
+## 0.220.51 - 2026-08-11 (ALGOL label shadowing — seven-backend matrix)
+
+The matrix now proves lexical label shadowing on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT. A nested `outer` label receives the nearest forward jump,
+then scope exit restores the enclosing `outer`, producing 42 everywhere.
+
+## 0.220.50 - 2026-08-11 (ALGOL switch shadowing — seven-backend matrix)
+
+The matrix now proves lexical switch shadowing on Native AOT, LLVM, WASM, JVM,
+CLR, VM, and JIT. A nested `s` selects its local target, then scope exit restores
+the outer `s`, producing 42 on every standard backend.
+
 ## 0.220.49 - 2026-08-09 (ALGOL mutual recursive formal procedures — seven-backend matrix)
 
 The matrix now mutually forwards `twice` through ALGOL `procedure` formals on

@@ -2,7 +2,16 @@
 
 ## Unreleased
 
+### Fixed
+
+- Preserve default `text`, `number`, and `bool` MIL slot values while inlining
+  package components; explicit call-site bindings continue to take precedence.
+
 ### Added
+- Default UI29-2 authored children are spliced into a dependency component's
+  typed child mount during package expansion. Caller-owned slot bindings retain
+  consumer scope, empty mounts disappear, and passing children to a component
+  without a mount fails instead of silently discarding content.
 - Registered `HostSurface` as a kernel primitive so package resolution
   preserves typed host-owned `node` mount points instead of treating them as
   missing userland component dependencies.

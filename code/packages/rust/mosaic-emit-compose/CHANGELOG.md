@@ -5,8 +5,44 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve literal `HostInput` values and read-only state, and render its
+  placeholder through `BasicTextField`'s native decoration slot.
+
 ### Added
 
+- `Text` now lowers literal or slot-backed accessible names, heading roles,
+  and intentional hiding through Compose semantics. Replacement labels clear
+  the built-in text semantics so assistive technology does not announce both
+  the visible content and its authored accessible name.
+
+- Canonical dynamic `HostTable`/UI31 Grid layouts now expose Compose's native
+  collection semantics: total row/column counts on the table, heading metadata
+  on header cells, and stable row/column coordinates on every body cell.
+  Unsupported table shapes keep their visual fallback and remain explicit
+  native-complete degradations.
+- `HostDraggable` and `HostDropTarget` now lower to Compose Desktop's native
+  drag source/target modifiers. Generated components add an instance-scoped
+  target registry, kind filtering, disabled-state enforcement, pointer
+  before/into/after hit testing, focus and Space/Enter/arrow/Escape operation,
+  RTL-aware horizontal navigation, live-region state, and shared event payload
+  construction for pointer and keyboard drops.
+- `Icon` now lowers through a dependency-free native font-glyph vocabulary,
+  including runtime glyph and accessibility-label slots, MSL color/size/test
+  tags, and a visible fallback. The semantic `spinner` glyph becomes Compose's
+  indeterminate `CircularProgressIndicator` with a default "Loading"
+  description, allowing all 23 toolkit components to emit on this backend.
+- `HostDialog` now lowers modal content to Compose's native `Dialog` and the
+  contract's non-modal form to `Popup`. Generated overlays honor controlled
+  visibility and interactive-dismiss policy, dispatch open/close events, render
+  a semantic heading, preserve nested Mosaic content and styles, and provide
+  useful Material surface chrome without application-owned dialog glue.
+- `HostLink` now lowers to Compose's native annotated-text link API. External
+  links open through the platform `UriHandler`; internal links retain link
+  semantics while dispatching Mosaic events, including item/index payloads
+  inside `For`. Generated links receive theme-aware visible styling and need no
+  application-owned URL adapter.
 - `Stack` now lowers to Compose's `Box` — the layering container it already
   uses for the `Box` primitive itself, since Compose's `Box` natively stacks
   its children. Found while wiring `task-app`'s icon assets (progress ring,
@@ -31,6 +67,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Text expressions that index a collection with an enclosing Mosaic `For`
+  index now use Compose's internal Kotlin `Int` shadow. This keeps numeric loop
+  comparisons type-correct while allowing toolkit patterns such as
+  `bodies[i]` to compile as `Text(String)`.
 - Mosaic text, number, collection, and nullable values now lower through a
   generated Kotlin truthiness helper anywhere Compose requires a Boolean,
   including `If`, state styles, checked/selected controls, disabled controls,

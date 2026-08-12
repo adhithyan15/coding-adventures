@@ -30,8 +30,8 @@ use std::collections::HashMap;
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, IntSpec, IntWidth, Metadata,
-    Module, Overflow, Param, ParamKind, Scope, SirType, Span, Stmt, CURRENT_SIR_VERSION,
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, IntSpec, IntWidth,
+    Metadata, Module, Overflow, Param, ParamKind, Scope, SirType, Span, Stmt, CURRENT_SIR_VERSION,
 };
 
 /// A positioned lowering error.
@@ -457,6 +457,9 @@ struct Lowerer {
     /// format literals / `fmt_float`) is emitted, so the module declares
     /// [`Feature::Strings`] only when it actually uses strings.
     uses_strings: bool,
+    /// Set once `printf` lowers to SIR28's `__sys_write__` primitive, so the
+    /// module declares [`Feature::ConsoleIO`] only when it actually prints.
+    uses_console_io: bool,
 }
 
 pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowerError> {
@@ -471,6 +474,7 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
         uses_arrays: false,
         array_elems_total: 0,
         uses_strings: false,
+        uses_console_io: false,
     };
 
     // Pre-pass: collect function signatures.
@@ -523,6 +527,11 @@ pub fn compile(tree: &GrammarASTNode, module_name: &str) -> Result<Module, CLowe
     // that never prints stays string-free.
     if lo.uses_strings {
         features.push(Feature::Strings);
+    }
+    // SIR28 §2: `printf` lowers to `__sys_write__`. Declared conditionally
+    // so a program that never prints stays console-io-free.
+    if lo.uses_console_io {
+        features.push(Feature::ConsoleIO);
     }
     let manifest = FeatureManifest::from_features(&features);
 
@@ -2065,17 +2074,20 @@ impl Lowerer {
     ///
     /// The format string is parsed (in the frontend, so no source text ever
     /// reaches a backend's `printf`) into a sequence of literal chunks and
-    /// typed conversions.  The result is a single `print(seg₀, seg₁, …)`:
+    /// typed conversions.  The result is a single SIR28 §2 `__sys_write__`
+    /// call — `__sys_write__(stdout, "none", false, seg₀, seg₁, …)`:
     ///
     /// - a **literal chunk** becomes a `StrLit` (C escapes already decoded, so
     ///   the backend re-escapes correctly);
     /// - `%d`/`%i`/`%u` pass the (already width-correct) integer value straight
-    ///   through — `print` renders an int as decimal, which is what `%d` wants;
+    ///   through — `__sys_write__`'s `"none"` terminator renders an int as
+    ///   decimal with no separator, which is what `%d` wants;
     /// - `%f`/`%e`/`%g` (with optional `.precision`) become a `fmt_float`
     ///   builtin that formats the `double` exactly as C's `printf` does.
     ///
-    /// `print` concatenates its arguments with no separator and adds no trailing
-    /// newline, so a `\n` in the format is emitted as literal text — matching C.
+    /// `__sys_write__`'s `"none"` terminator concatenates its arguments with
+    /// no separator and adds no trailing newline, so a `\n` in the format is
+    /// emitted as literal text — matching C.
     fn lower_printf(
         &mut self,
         args: &[&GrammarASTNode],
@@ -2139,7 +2151,31 @@ impl Lowerer {
                 "printf has more arguments than conversions".into(),
             ));
         }
-        Ok((builtin("print", parts), i32_ct()))
+        // SIR28 §2: `printf` lowers to `__sys_write__`, not a bare
+        // `BuiltinCall("print", ...)`. `terminator: "none"` (write every
+        // value back-to-back, no added newline, no added separator) is the
+        // exact fit for `parts`: printf never implicitly newline-terminates
+        // (a `\n` only appears if the format string itself contains one,
+        // which is already baked into `parts` as a `StrLit` chunk), and
+        // `__sys_write__`'s `"none"` terminator concatenates its values with
+        // nothing in between — identical to C's own `printf` semantics.
+        self.uses_strings = true;
+        self.uses_console_io = true;
+        let mut sys_args = vec![
+            str_lit("stdout".to_string()),
+            str_lit("none".to_string()),
+            Expr::BoolLit { value: false, span: sp() },
+        ];
+        sys_args.extend(parts);
+        Ok((
+            Expr::BuiltinCall {
+                name: "__sys_write__".to_string(),
+                args: sys_args,
+                effects: EffectSet::PURE.with(Effect::MayPrint),
+                span: sp(),
+            },
+            i32_ct(),
+        ))
     }
 
     fn lower_call(

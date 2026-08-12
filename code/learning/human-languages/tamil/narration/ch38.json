@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Keeping Well, and Leaving",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7e4402eac9febba1",
+  "sourceHash": "fnv1a64:095ab5ecf8193caf",
   "lessons": [
     {
       "id": "TA-C38-udambu",
@@ -567,7 +567,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2ef84654a6ca9fcb",
+      "sourceHash": "fnv1a64:fe1014ace1a33e35",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -661,7 +661,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three pieces, one new sign. மூன்று (mūṉṟu) is \"three\" — a word you have counted with since chapter 7, and now one you can read. It joins இரண்டு, நான்கு, ஆறு, எட்டு and பத்து, whose letters the strand has already given you; ஒன்று, ஐந்து, ஏழு and ஒன்பது still wait on letters this book has not taught."
+              "text": "Three pieces, one new sign. மூன்று (mūṉṟu) is \"three\" — a word you have counted with since chapter 7, and now one you can read. It joins இரண்டு, நான்கு, ஆறு, எட்டு and பத்து, whose letters the strand has already given you; ஐந்து and ஏழு still wait on letters this book has not taught, and ஒன்று and ஒன்பது wait on one it is about to."
             }
           ]
         },
@@ -727,7 +727,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read மூன்று (mūṉṟu). Which sign is ூ's short partner, and which letter is its standing form? (ு, and ஊ.) Name the four corners of that family. (உ ஊ standing, ு ூ riding.) What is the dot on ன் doing? (Removing the built-in a.)"
+              "text": "Read மூன்று (mūṉṟu). Which sign is ூ's short partner, and which letter is its standing form? (ு, and ஊ.) Name the four corners of that family. (உ ஊ standing, ு ூ riding.) What is the dot on ன் doing? (Removing the built-in a.) Next: asking for what you want."
             }
           ]
         }

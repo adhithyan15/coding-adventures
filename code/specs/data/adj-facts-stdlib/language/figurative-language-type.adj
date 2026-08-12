@@ -1,0 +1,67 @@
+% ============================================================================
+% figurative-language-type — three named figures of speech and what each
+% actually does (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Writers reach for different figures of speech to do different jobs: a
+% metaphor makes an implicit comparison, personification hands human traits
+% to something that isn't human, hyperbole exaggerates for effect. Recall
+% is a binding query:
+%
+%     ? figurative_language_type(metaphor, $D)
+%       % describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `figurative_language_type(type, description)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query
+% — the engine returns the description WITH its source, on the CPU, with
+% zero model calls, and abstains on a figurative-language term that is
+% not one of these three. The query also runs BACKWARD — bind a
+% description and recall the type it names:
+%
+%     ? figurative_language_type($T, gives_human_characteristics_to_nonhuman_or_abstract_things)
+%       % personification
+%
+% The three figures of speech, as a little truth table:
+%
+%     type              description                                                                  quote (verbatim)
+%     ----------------  -------------------------------------------------------------------------    --------------------------------------------------------------------------------
+%     metaphor           describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison    "A metaphor describes an object or action in a way that isn't literally true but helps explain an idea or make a comparison."
+%     personification     gives_human_characteristics_to_nonhuman_or_abstract_things                   "Personification means giving human characteristics to nonhuman or abstract things."
+%     hyperbole           a_great_exaggeration_used_to_add_emphasis                                    "Hyperbole is a great exaggeration, often unrealistic, to add emphasis to a sentiment."
+%
+% Provenance: quoted verbatim from Grammarly's "Figurative Language
+% Examples: 6 Common Types and Definitions" article, which introduces each
+% of these under its own "Definition:"-labeled sentence. WebFetch-verified
+% before writing (twice — the second pass specifically confirmed each
+% sentence's exact wording and that it stands alone as a complete
+% definition before any follow-up example sentence). `trust consensus` —
+% Grammarly is a reputable secondary reference, the same tier the sibling
+% `noun-type.adj`/`verb-type.adj`/`pronoun-type.adj`/`preposition-type.adj`/
+% `conjunction-type.adj`/`determiner-type.adj`/`end-punctuation-mark.adj`
+% (the other libraries in this directory) already use for their Grammarly
+% citations. A figure of speech that is NOT one of these three —
+% "allusion", a real device the same page also names with its own clean
+% defining sentence, but one that works by referencing an external work,
+% person, or event rather than by comparison, exaggeration, or
+% personification — a different rhetorical mechanism than the three
+% tabled here — is deliberately NOT a row, so a recall ABSTAINS on it
+% rather than inventing a description. Simile and idiom, also named on
+% the same page, are deliberately excluded too: both are already
+% grounded as their own separately-shipped libraries in this directory
+% (`simile-meaning.adj`, `idiom-meaning.adj`), so tabling them again here
+% under a different predicate would duplicate coverage rather than add
+% to it. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table figurative_language_type {
+    columns type, description
+
+    row (metaphor, describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison)
+    row (personification, gives_human_characteristics_to_nonhuman_or_abstract_things)
+    row (hyperbole, a_great_exaggeration_used_to_add_emphasis)
+
+    source "A metaphor describes an object or action in a way that isn't literally true but helps explain an idea or make a comparison."
+    locator "https://www.grammarly.com/blog/writing-tips/figurative-language/"
+    trust consensus
+}

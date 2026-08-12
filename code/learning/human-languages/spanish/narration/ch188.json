@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 188,
+  "title": "Hay Que --- Somebody Has To, and Nobody in Particular",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:61c62d4bf1205b69",
+  "lessons": [
+    {
+      "id": "ES-C54-hay-que",
+      "sequence": 2208,
+      "title": "hay que — somebody has to, and nobody in particular",
+      "headword": "hay que",
+      "romanization": "hay que",
+      "gloss": "\"one must\" — obligation with nobody obliged, and the second of Spanish's two ways to leave a person out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1768de87a8ce7b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Se habla español left the person out. So did every sign you read. Here is the other way Spanish does that — and this one is about obligation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: an obligation with nobody in it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hay que + a plain infinitive — one must, you have to, it is necessary to."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay que hablar español. — You have to speak Spanish. Hay que comer. — One must eat."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words you already own, and no new grammar: hay, que, and a verb in its dictionary form."
+            },
+            {
+              "kind": "speech",
+              "text": "What it produces is an obligation with nobody obliged. Hay que hablar español does not say who has to — not you, not me, not them. It says the requirement exists, the way a sign says a thing is forbidden without saying who forbids it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same move as the impersonal se, and now you have both:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "Spanish",
+                "leaves out"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "something happens. Spanish: se habla español. leaves out: who does it.",
+                "something must happen. Spanish: hay que hablar español. leaves out: who must."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two constructions, one habit: Spanish is comfortable saying that something is the case without saying who is behind it. English needs a vague you or they or a passive to manage the same thing, and always sounds slightly like it is avoiding the question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hay que hablar español\" then \"Se habla español\" — both with nobody in them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hay que hablar español\" then \"Se habla español\" — both with nobody in them]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-que-say",
+              "prompt": "Say you have to speak Spanish, without naming anybody.",
+              "assesses": [
+                "ES-GRAMMAR-HAY-QUE",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hay que hablar espanol",
+                "hay que hablar español"
+              ],
+              "feedback": {
+                "correct": "An obligation with nobody obliged.",
+                "incorrect": "Hay que hablar espanol."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-que-form",
+              "prompt": "What form of the verb follows hay que?",
+              "assesses": [
+                "ES-GRAMMAR-HAY-QUE",
+                "ES-LEX-QUE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the infinitive",
+                "the dictionary form",
+                "the plain infinitive"
+              ],
+              "feedback": {
+                "correct": "No conjugation at all — there is nobody to conjugate for.",
+                "incorrect": "The infinitive, the dictionary form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-que-pair",
+              "prompt": "Name the other Spanish construction that leaves the person out.",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-GRAMMAR-HAY-QUE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the impersonal se",
+                "se habla espanol",
+                "the se of se habla"
+              ],
+              "feedback": {
+                "correct": "One says something happens; the other says something must.",
+                "incorrect": "The impersonal se — se habla espanol."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"One must eat\"? (Hay que comer.) Who must? (Nobody named.) And which other construction does the same? (The impersonal se.) Next: all of it in one place."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

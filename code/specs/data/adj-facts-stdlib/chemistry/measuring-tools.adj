@@ -1,0 +1,71 @@
+% ============================================================================
+% measuring-tools — each common measuring tool and the ONE quantity it
+% measures (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A genuinely new axis in the "observation and measurement" gap ADJ-STDLIB-
+% COVERAGE.md 5.1 names as a Major Gap for K-8 science — distinct from the
+% sibling `lab-equipment.adj`'s `equipment_use(equipment, purpose)` table
+% (which maps a tool to a one-word JOB verb, e.g. beaker → hold). This table
+% maps a tool to the QUANTITY it measures: `measuring_tool(tool, quantity)`.
+% Recall is a binding query:
+%
+%     ? measuring_tool(thermometer, $Q)   % temperature
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `measuring_tool(tool, quantity)` carrying the LibreTexts citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% quantity WITH its source, on the CPU, with zero model calls, and abstains
+% on a tool not one of the four the cited lab-manual page names. The query
+% also runs BACKWARD — bind a quantity and recall the tool that measures it:
+%
+%     ? measuring_tool($T, volume)   % graduated_cylinder
+%
+% The four tools and the quantity each one measures, as a little truth table:
+%
+%     tool                  quantity      unit named by the source
+%     -------------------   -----------   -------------------------
+%     ruler                 length        centimeters (cm)
+%     graduated_cylinder    volume        milliliters (mL)
+%     balance               mass          grams (g)
+%     thermometer           temperature   degrees Celsius (°C)
+%
+% Provenance: quoted verbatim from a Chemistry LibreTexts introductory lab
+% manual, "Introducing Measurements in the Laboratory", which walks a
+% four-part lab exercise, one tool per part, each part's opening sentence
+% naming the tool and the quantity/unit it measures. WebFetch-verified TWICE
+% for consistency before writing. The exact sentences:
+%
+%   ruler → length:
+%     "In Part A of this lab, a metric ruler will be used to measure length
+%      in centimeters (cm)."
+%   graduated_cylinder → volume:
+%     "In Part B, a beaker and a graduated cylinder will be used to measure
+%      liquid volume in milliliters (mL)."
+%   balance → mass:
+%     "In Part C, an electronic balance and a triple-beam balance will be
+%      [used] to measure mass in grams (g)."
+%   thermometer → temperature:
+%     "In Part D, a thermometer will be used to measure temperature in
+%      degrees Celsius (°C)."
+%
+% `trust consensus` — LibreTexts is an openly-licensed college teaching
+% resource (a secondary reference, not a primary standards body), the same
+% tier `lab-equipment.adj`'s sibling LibreTexts source earned. A tool that is
+% not one of these four — a microscope, a stopwatch, a compass — has no row,
+% so a recall on it ABSTAINS rather than inventing a quantity. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table measuring_tool {
+    columns tool, quantity
+
+    row (ruler, length)
+    row (graduated_cylinder, volume)
+    row (balance, mass)
+    row (thermometer, temperature)
+
+    source "In Part A of this lab, a metric ruler will be used to measure length in centimeters (cm)."
+    locator "https://chem.libretexts.org/Courses/BethuneCookman_University/B-CU:_CHL-141_General_Chemistry_1_Lab/Labs/1:_Introducing_Measurements_in_the_Laboratory_(Experiment)"
+    trust consensus
+}

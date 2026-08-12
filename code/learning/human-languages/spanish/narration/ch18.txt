@@ -1,300 +1,40 @@
-Spanish, chapter 18: The Subjunctive --- the Mood of the Not-Yet-Real.
-9 lessons. All 9 can be done entirely by ear.
+Spanish, chapter 18: He, She, and the Polite You.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 9.
-Hablas español, Quiero que hables español — fact or wanted event?
+Lesson 1 of 1.
+habla — "he speaks," and the polite "you speak".
 
 Warm-up.
 [pause 2 seconds]
-Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+Two forms so far. Which means I speak? (Hablo.) Which is you speak, to a friend? (Hablas.)
 
-Grammar Lens: count the doers.
-[a table of 2 rows, read aloud]
-meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
-meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
-With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
+Grammar Lens: take the -s away again.
+Drop the -ar, add just -a:
+hablar becomes habla — he speaks, she speaks.
+That is the third form, and the third ending: -o, -as, -a.
+
+Grammar Lens: the same form does a second job.
+Back when you met usted, you were told it takes the he/she form of the verb. Here is the first verb where you can actually see it happen.
+usted habla — you speak, politely.
+The same word, habla, covers he speaks, she speaks, and the respectful you speak. Nothing extra to learn — it is one form doing three jobs, and that is a gift, not a complication.
+Why? Because usted was never a word for you to begin with. It grew out of vuestra merced, "your grace" — and your grace is a thing you talk about, not a person you talk to. You would say "your grace speaks," not "your grace speak." The verb form is a fossil of that politeness.
+
+The word, taken apart.
+Latin's ending here was -at: hablat, "he speaks." Spanish let the final -t fall away, as it let most final consonants fall away, and the bare -a is what was left standing.
+French did the same thing and went further — it writes parle but the ending is now silent. Italian kept more: parla. Three languages, one Latin ending, three degrees of wear.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Hablas español.”]
+[your turn — say: "habla"]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero hablar español.”]
+[your turn — say: it for a friend's brother, then for a stranger you are being polite to — same word both times]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero que hables español.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Which form asserts that one friend speaks: hablas or hables?
 [question — say your answer, then pause 8 seconds]
-Say 'I want to speak Spanish' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to speak Spanish' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.
-
-
-Lesson 2 of 9.
-hable, hables, hable — the singular -ar row.
-
-Warm-up.
-[pause 2 seconds]
-You already used hables for one friend. Today add only the other two singular slots:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: hable.
-person: tú. present subjunctive: hables.
-person: él / ella / usted. present subjunctive: hable.
-Plural forms wait. Say the small row: hable, hables, hable.
-
-Grammar Lens: the yo stem, then a vowel swap.
-Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
-
-The name, taken apart.
-Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
-
-Guided Practice.
-[pause 1 second]
-Build each answer only from the learned singular row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which present form gives the stem for regular hable: hablo or habla?
-[question — say your answer, then pause 7 seconds]
-What joining idea sits inside the Latin source of subjuntivo?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
-
-
-Lesson 3 of 9.
-coma, comas, coma — let -er cross to a.
-
-Warm-up.
-[pause 2 seconds]
-Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: coma.
-person: tú. present subjunctive: comas.
-person: él / ella / usted. present subjunctive: coma.
-Say only the singular row: coma, comas, coma.
-
-Grammar Lens: meaning before machinery.
-Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
-
-Guided Practice.
-[pause 1 second]
-Keep comer inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which form belongs after quiero que for one friend: comes or comas?
-[question — say your answer, then pause 8 seconds]
-Say 'I want you to eat' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
-
-
-Lesson 4 of 9.
-viva, vivas, viva — -ir joins -er.
-
-Warm-up.
-[pause 2 seconds]
-Start from vivo, remove -o, then add the same a endings you just used with comer:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: viva.
-person: tú. present subjunctive: vivas.
-person: él / ella / usted. present subjunctive: viva.
-Regular -er and -ir match in this singular row:
-comer: coma, comas, coma.
-vivir: viva, vivas, viva.
-Plural differences wait.
-
-Grammar Lens: meaning in a known frame.
-Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
-
-Guided Practice.
-[pause 1 second]
-Keep vivir inside the learned singular frame.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Which two regular verb families share -a, -as, -a here?
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to live in Madrid' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)
-
-
-Lesson 5 of 9.
-quiera, quieras, quiera — keep the change you know.
-
-Warm-up.
-[pause 2 seconds]
-Present quiero already carries the stressed e becomes ie change. Remove -o to get quier-, then add the -er/-ir subjunctive endings:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: quiera.
-person: tú. present subjunctive: quieras.
-person: él / ella / usted. present subjunctive: quiera.
-Say only this bounded singular row: quiera, quieras, quiera.
-
-Grammar Lens: one known verb, one inherited stem.
-You are not learning a new list of stem-changing verbs. You are carrying one known change into one known row. Quiero que quieras hablar español means “I want you to want to speak Spanish.” The sentence is deliberately narrow: no new person noun, object, or plural form.
-
-Guided Practice.
-[pause 1 second]
-Carry only the known quier- stem into this row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of querer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem quier-?
-[question — say your answer, then pause 7 seconds]
-Complete 'Quiero que ___ hablar español' for one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Quiera, quieras, quiera.) Which old change stays visible? (e becomes ie.) Where did the stem come from? (Known quiero, minus -o.)
-
-
-Lesson 6 of 9.
-pueda, puedas, pueda — one more known stem change.
-
-Warm-up.
-[pause 2 seconds]
-Present puedo already carries o becomes ue. Remove -o to get pued-, then add the same a row:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: pueda.
-person: tú. present subjunctive: puedas.
-person: él / ella / usted. present subjunctive: pueda.
-Say pueda, puedas, pueda. No other poder forms enter today.
-
-Grammar Lens: use it immediately.
-Quiero que puedas hablar español means “I want you to be able to speak Spanish.” Every word was already known except the single form puedas. This is the gentle pattern: learn one row, then spend it in the next sentence.
-
-Guided Practice.
-[pause 1 second]
-Carry only the known pued- stem into this row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of poder: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem pued-?
+Turn hablar into he speaks.
 [question — say your answer, then pause 10 seconds]
-Say 'I want you to be able to speak Spanish' to one friend.
+Which form goes with usted: hablas or habla?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Pueda, puedas, pueda.) Which old change stays visible? (o becomes ue.) Which form addresses one friend after quiero que? (Puedas.)
-
-
-Lesson 7 of 9.
-haga, hagas, haga — hago lends its stem.
-
-Warm-up.
-[pause 2 seconds]
-The known present yo form is hago. Remove -o and keep hag-:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: haga.
-person: tú. present subjunctive: hagas.
-person: él / ella / usted. present subjunctive: haga.
-Say haga, hagas, haga. Only hacer enters this lesson; other special stems wait for later chapters.
-
-Grammar Lens: spend the new form.
-Haces café can assert “you make coffee.” Quiero que hagas café says “I want you to make coffee.” The g is not a fresh exception: it was already in hago, the present form that supplied the stem.
-
-Guided Practice.
-[pause 1 second]
-Carry only the known hag- stem into this row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of hacer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which known present yo form gives the stem hag-?
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to make coffee' to one friend.
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Haga, hagas, haga.) Where does hag- come from? (Known hago, minus -o.) Say the wanted event. (Quiero que hagas café.)
-
-
-Lesson 8 of 9.
-ojalá + subjunctive — a wish borrowed through Arabic.
-
-Warm-up.
-[pause 2 seconds]
-Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:
-Ojalá + subjunctive.
-That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary.
-
-The wish-word, taken apart.
-The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences.
-
-Guided Practice.
-[pause 1 second]
-Use only modern ojalá as the Spanish trigger.
-[question — say your answer, then pause 9 seconds]
-Say 'I hope you speak Spanish' to one friend using ojalá.
-[question — say your answer, then pause 5 seconds]
-Does the learned ojalá frame require que before hables? Answer yes or no.
-[question — say your answer, then pause 7 seconds]
-Through which historical language variety did Spanish receive ojalá?
-
-Wrap-up Recall.
-[pause 3 seconds]
-What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)
-
-
-Lesson 9 of 9.
-Practice — assert the event or want it.
-
-Warm-up.
-[pause 2 seconds]
-This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned.
-
-Grammar Lens: the bounded map.
-[a table of 6 rows, read aloud]
-verb: hablar. yo / él / ella / usted: hable. tú: hables.
-verb: comer. yo / él / ella / usted: coma. tú: comas.
-verb: vivir. yo / él / ella / usted: viva. tú: vivas.
-verb: querer. yo / él / ella / usted: quiera. tú: quieras.
-verb: poder. yo / él / ella / usted: pueda. tú: puedas.
-verb: hacer. yo / él / ella / usted: haga. tú: hagas.
-The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits.
-
-Grammar Lens: two safe triggers.
-Same doer: Quiero hablar español.
-Different doer: Quiero que hables español.
-Wish by itself: Ojalá hables español.
-Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons.
-
-Guided Practice.
-[pause 1 second]
-Decide the meaning first; then retrieve only the learned form.
-[question — say your answer, then pause 5 seconds]
-Choose the wanted-event form: hablas or hables.
-[question — say your answer, then pause 11 seconds]
-Give the pair 'I want to speak Spanish; I want you to speak Spanish.'
-[question — say your answer, then pause 9 seconds]
-Give the tú subjunctive forms of hablar, comer, and vivir, in that order.
-[question — say your answer, then pause 6 seconds]
-Which present-person form supplies the stem in this chapter's recipe?
-[question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive row of querer.
-[question — say your answer, then pause 10 seconds]
-Say 'I want you to be able to speak Spanish' to one friend.
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to make coffee' to one friend.
-[question — say your answer, then pause 9 seconds]
-Say 'I hope you live in Madrid' to one friend using ojalá.
-[question — say your answer, then pause 7 seconds]
-What does the Latin source subiūnctīvus help you picture?
-[question — say your answer, then pause 7 seconds]
-Name the historical language variety through which ojalá entered Spanish.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)
+What is "he speaks"? (Habla.) Which form does usted take, and why? (Habla — because usted began as vuestra merced, "your grace," something you talk about.) What did Latin's -at lose? (Its -t.) Next chapter is a review — no new words at all.

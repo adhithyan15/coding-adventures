@@ -4,10 +4,18 @@ import {
   defaultCurriculumRoot as defaultRoot,
   loadChapterPolicy,
   loadEverything,
+  loadGrammarSlots,
+  loadMetalanguage,
   loadTrackChapters,
+  loadTrackGrammarCells,
 } from "./loader.js";
 import { policyTableWidth } from "./narration-cli.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "./report.js";
+import { renderStrandSummary, summarizeStrands } from "./strands.js";
+import { cellCoverage, renderCellCoverage } from "./grammar-cells.js";
+import { buildRootLedger, renderRootLedger } from "./root-ledger.js";
+import { measureInfoDump, renderInfoDump } from "./info-dump.js";
+import { measureMetalanguage, renderMetalanguage } from "./metalanguage.js";
 
 interface ReportOptions {
   root?: string;
@@ -59,8 +67,53 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     curricula,
     spine,
   });
-  const json = `${JSON.stringify(report, null, 2)}\n`;
-  const text = renderCurriculumGapReport(report);
+  // HL10 §2 and §5, both report-only. Appended rather than folded into
+  // CurriculumGapReport because they measure the SPINE and the GRAMMAR
+  // inventory, not the lesson corpus; merging them in would make a spine defect
+  // look like a lesson defect.
+  const policy = loadChapterPolicy(options.root);
+  const strands = summarizeStrands(spine, policy.maxNewAtomsPerChapter);
+  const slots = loadGrammarSlots(options.root);
+  const spanishCells = loadTrackGrammarCells("spanish", options.root);
+  // The cell budget measures a burden the atom budget cannot see: three cells in
+  // one lesson is three atoms and looks compliant, while being the six-form
+  // table arriving all at once.
+  const cells = cellCoverage(
+    spanishCells,
+    lessons.filter((lesson) => lesson.language === "spanish"),
+    policy.maxNewGrammarCellsPerLesson,
+  );
+
+  // HL10 §6.2. Etymology is the corpus's signature, but a root is only useful
+  // if it is spent again -- so the ledger counts payoffs, not mentions.
+  const rootLedger = buildRootLedger(lessons, policy.rootLedgerMinReuse ?? 3);
+
+  // HL10 §7.3. The owner's "never info dump" made checkable. The prose turned
+  // out to be fine; the dumps live in paradigm tables.
+  const infoDump = measureInfoDump(lessons, policy.maxRuleStatementsPerLesson ?? 1);
+
+  // HL10 §7.5. The hidden prerequisite: a book that says "the first-person
+  // singular present indicative" has spent six technical terms on one form.
+  const metalanguage = measureMetalanguage(lessons, loadMetalanguage(options.root));
+
+  const json = `${JSON.stringify(
+    { ...report, strands, grammarCells: cells, rootLedger: rootLedger.summary, infoDump: infoDump.summary, metalanguage: metalanguage.summary },
+    null,
+    2,
+  )}\n`;
+  const text = [
+    renderCurriculumGapReport(report),
+    renderStrandSummary(strands).join("\n"),
+    "",
+    renderCellCoverage(spanishCells, slots, cells).join("\n"),
+    "",
+    renderRootLedger(rootLedger).join("\n"),
+    "",
+    renderInfoDump(infoDump).join("\n"),
+    "",
+    renderMetalanguage(metalanguage).join("\n"),
+    "",
+  ].join("\n");
   process.stdout.write(options.format === "json" ? json : text);
   return 0;
 }

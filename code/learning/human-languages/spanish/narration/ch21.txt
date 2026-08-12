@@ -1,63 +1,43 @@
-Spanish, chapter 21: Days of the Week.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 21: Estudiar --- Studying Is Being Eager.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-lunes to viernes — the planets of the week, worn down.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 1.
+estudiar — "to study," and the eagerness inside it.
 
 Warm-up.
 [pause 2 seconds]
-The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
+Your third -ar verb. By now the pattern should feel automatic — that's exactly what we want. estudiar also hides a nicer feeling than the classroom suggests: at root it means eagerness.
 
-The words, taken apart: the planet weekdays.
-Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
-Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
+Sounds you'll need.
+st-no-e — Spanish props up st- with an e: es-tudiar (the same reflex behind estar, España, escuela). es-too-DYAR.
+diphthong-io — the -iar glides: es-too-DYAR.
+
+The word, taken apart.
+estudiar comes from Latin studēre, "to be eager, to apply oneself zealously." A studium was zeal, enthusiasm, devotion — only later "study." So to study is, at heart, to throw yourself eagerly at something.
+That studēre is everywhere in English:
+student — literally "one who is eager."
+studio, studious, study — the place, the trait, the act.
+Italian studio and the musical studio keep the "devoted practice" sense.
+So Estudio español is "I devote myself eagerly to Spanish" — a nicer picture than mere schoolwork.
+
+Grammar Lens: the template holds.
+Drop -ar, add the ending — for the third time:
+[a table of 3 rows, read aloud]
+person: I (ending carries the subject). form: estudio. meaning: I study.
+person: tú. form: estudias. meaning: you study.
+person: usted. form: estudia. meaning: you (formal) study.
+Three verbs, one pattern: hablo, trabajo, estudio. The singular regular -ar present is now reusable rather than memorized verb by verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
+[your turn — say: "estudiar" — es-too-DYAR]
 [pause 8 seconds for the answer]
-[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
+[your turn — say: "estudio, estudias, estudia" — the now-familiar endings]
 [pause 8 seconds for the answer]
-[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
+[your turn — say: "estudiar" then English "student, studio" — the studēre "eagerness"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Recall the weekday family:
-What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
-Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
-What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
-Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
-
-
-Lesson 2 of 2.
-sábado and domingo — the week's religious edge.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
-
-The two days, taken apart.
-There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
-Two different rewrites:
-sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
-domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
-[pause 8 seconds for the answer]
-[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
-[pause 8 seconds for the answer]
-[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)
+What did studēre originally mean? ("To be eager / apply oneself.") Its English cousins? (Student, studio, studious.) Say "I study" — and notice it uses the same -o as hablo and trabajo. (Estudio.) Next: put a verb and a noun together into your first real sentence.

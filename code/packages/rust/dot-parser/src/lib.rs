@@ -545,7 +545,18 @@ fn lower(doc: &DotDocument) -> GraphDiagram {
         })
         .collect();
 
-    GraphDiagram { direction, title, nodes, edges }
+    GraphDiagram {
+        direction,
+        requested_width: None,
+        hide_empty_descriptions: false,
+        title,
+        accessibility_title: None,
+        accessibility_description: None,
+        links: Vec::new(),
+        groups: Vec::new(),
+        nodes,
+        edges,
+    }
 }
 
 /// Recursively process a statement list, modifying the accumulators.

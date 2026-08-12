@@ -1,0 +1,67 @@
+% ============================================================================
+% r-controlled-vowel-word — words that follow an "r-controlled vowel" (aka
+% "bossy r") spelling pattern (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The EIGHTH literacy sub-skill library in this loop's sweep, and the
+% THIRD to move beyond CCSS RF.K.2 (following
+% `compound-word-spelling-example.adj`'s and `silent-e-word.adj`'s
+% precedent). This one grounds a phonics pattern where a vowel followed by
+% "r" no longer makes its expected short/long sound — the "r-controlled
+% vowel" pattern. Recall is a binding query:
+%
+%     ? r_controlled_vowel_word(barn, $Pattern)   % ar
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `r_controlled_vowel_word(word, pattern)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the pattern WITH its source, on the CPU, with zero model
+% calls, and abstains on any word the source does not name. The query
+% also runs BACKWARD — bind the pattern and recall every word it applies
+% to:
+%
+%     ? r_controlled_vowel_word($W, er)
+%       % fern
+%
+% DESIGN NOTE — what `pattern` means here: the source names three r-
+% controlled vowel SOUNDS — /ar/ (as in barn), /or/ (as in corn), and
+% /er/ (as in fern, bird, and curl) — grouping fern/bird/curl together
+% under ONE phonetic label ("/er/ sound") even though they are spelled
+% with three different letter pairs (er, ir, ur). This table does NOT
+% assert that the source itself distinguished "er" from "ir" from "ur" as
+% separate categories — it did not. Instead, `pattern` here is the
+% LITERAL r-controlled digraph objectively present in each word's own
+% spelling (fern contains "er", bird contains "ir", curl contains "ur"),
+% an observable orthographic fact about the word itself, the same way
+% `word-families.adj`'s `family` column names the letters at the end of
+% each word rather than asserting a source-stated category. Asserting
+% that the SOURCE separated er/ir/ur would outrun the citation; asserting
+% that these letters appear in these words does not.
+%
+% Provenance: quoted verbatim from the University of Florida Literacy
+% Institute (UFLI)'s phonics foundations toolbox: "There are three main
+% r-controlled vowel sounds: the /ar/ sound, as in barn; the /or/ sound,
+% as in corn; and the /er/ sound, as in fern, bird, and curl."
+% WebFetch-verified TWICE for consistency before writing (two independent
+% fetches of the same page). `trust authoritative` — UFLI is a university
+% literacy research center (University of Florida, .edu), a primary
+% academic source, not a secondary/consensus-tier aggregator. A word that
+% is NOT one of these five — e.g. `star`, also a real "ar"-pattern word
+% but not named by this source — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a pattern the source never
+% asserted. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table r_controlled_vowel_word {
+    columns word, pattern
+
+    row (barn, ar)
+    row (corn, or)
+    row (fern, er)
+    row (bird, ir)
+    row (curl, ur)
+
+    source "There are three main r-controlled vowel sounds: the /ar/ sound, as in barn; the /or/ sound, as in corn; and the /er/ sound, as in fern, bird, and curl."
+    locator "https://ufli.education.ufl.edu/foundations/toolbox-aus/77-83/"
+    trust authoritative
+}

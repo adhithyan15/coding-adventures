@@ -428,8 +428,8 @@ use std::collections::HashSet;
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, EffectSet, Expr, Feature, FeatureManifest, Function, IndexArg, Metadata, Module, Param,
-    ParamKind, Scope, Span, Stmt,
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, IndexArg, Metadata,
+    Module, Param, ParamKind, Scope, Span, Stmt,
 };
 
 /// Maximum expression-nesting depth. `idl-parser`'s own `MAX_RULE_DEPTH`
@@ -1641,10 +1641,21 @@ impl Lowerer {
                         .to_string(),
                 ));
             }
+            // SIR28 §2: `PRINT` lowers to `__sys_write__`, not a bare
+            // `BuiltinCall("print", ...)` — mirrors `matlab-to-semantic-ir`'s/
+            // `scilab-to-semantic-ir`'s identical `disp` migration.
+            self.observed.add(Feature::ConsoleIO);
+            self.observed.add(Feature::Strings);
+            let mut sys_args = vec![
+                Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                Expr::BoolLit { value: false, span: span.clone() },
+            ];
+            sys_args.extend(positional);
             return Ok(Lowered::Expr(Expr::BuiltinCall {
-                name: "print".to_string(),
-                args: positional,
-                effects: EffectSet::PURE,
+                name: "__sys_write__".to_string(),
+                args: sys_args,
+                effects: EffectSet::PURE.with(Effect::MayPrint),
                 span,
             }));
         }

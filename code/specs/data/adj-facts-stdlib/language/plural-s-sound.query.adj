@@ -1,0 +1,14 @@
+% ============================================================================
+% plural-s-sound.query.adj — worked recall over the plural-s-sound library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how is this word's
+% plural ending pronounced?" (direct) or "which example word has this plural
+% sound?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "plural-s-sound.adj"
+
+? plural_s_sound(hats, $Sound)         % expect s_sound (direct)
+? plural_s_sound($W, iz_sound)         % expect boxes (reverse)
+? plural_s_sound(cats, $Sound)         % expect abstain -- cats is also /s/-sounded, but not one of the three tabled example words

@@ -736,13 +736,23 @@ fn nested_function_definitions_are_rejected() {
 
 #[test]
 fn disp_lowers_to_the_print_builtin() {
+    // SIR28 §2: `disp` lowers to `__sys_write__`, not a bare
+    // `BuiltinCall("print", ...)`.
     let m = compile_ok("disp(1);\n");
     let main = main_fn(&m);
     match &main.body.stmts[0] {
-        Stmt::ExprStmt { expr, .. } => {
-            assert!(matches!(expr, Expr::BuiltinCall { name, .. } if name == "print"));
-        }
-        other => panic!("expected ExprStmt(BuiltinCall(\"print\")), got {other:?}"),
+        Stmt::ExprStmt { expr, .. } => match expr {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__sys_write__");
+                assert_eq!(args.len(), 4);
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "stdout"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "once"));
+                assert!(matches!(args[2], Expr::BoolLit { value: false, .. }));
+                assert!(matches!(args[3], Expr::IntLit { value: 1, .. }));
+            }
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {other:?}"),
+        },
+        other => panic!("expected ExprStmt(BuiltinCall(\"__sys_write__\")), got {other:?}"),
     }
 }
 

@@ -217,6 +217,7 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
         fun load(): MosaicRuntimeHost? = runCatching {
             val library = System.getProperty("mosaic.app.library")
                 ?: System.getenv("MOSAIC_APP_LIBRARY")
+                ?: bundledMosaicLibrary()
                 ?: "mosaic_app"
             val api = Native.load(library, MosaicNativeApi::class.java)
             MosaicRuntimeHost(api)
@@ -224,6 +225,18 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             System.err.println("Mosaic Rust runtime unavailable: " + error.message)
         }.getOrNull()
     }
+}
+
+private fun bundledMosaicLibrary(): String? {
+    val resources = System.getProperty("compose.application.resources.dir") ?: return null
+    val fileName = when (mosaicPlatform()) {
+        "apple" -> "libmosaic_app.dylib"
+        "windows" -> "mosaic_app.dll"
+        else -> "libmosaic_app.so"
+    }
+    return java.io.File(resources, fileName)
+        .takeIf { it.isFile }
+        ?.absolutePath
 }
 
 private fun mosaicPlatform(): String {

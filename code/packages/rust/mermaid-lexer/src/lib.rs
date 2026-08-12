@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.40.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -16,6 +16,7 @@ const ER_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid
 const C4_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/c4.tokens");
 const SEQUENCE_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sequence.tokens");
+const STATE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/state.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -49,6 +50,10 @@ pub fn create_mermaid_c4_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_sequence_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, SEQUENCE_TOKEN_GRAMMAR_SOURCE, "sequence.tokens")
+}
+
+pub fn create_mermaid_state_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, STATE_TOKEN_GRAMMAR_SOURCE, "state.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -95,9 +100,101 @@ pub fn tokenize_mermaid_c4(source: &str) -> Vec<Token> {
 
 pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
     let mut lexer = create_mermaid_sequence_lexer(source);
+    let mut tokens = lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid sequence tokenization failed: {e}"));
+    let grammar = parse_token_grammar(SEQUENCE_TOKEN_GRAMMAR_SOURCE)
+        .expect("sequence.tokens was already validated while creating the lexer");
+    let statement_keywords = [
+        "participant",
+        "actor",
+        "create",
+        "destroy",
+        "link",
+        "links",
+        "properties",
+        "details",
+        "accTitle",
+        "accDescr",
+        "box",
+        "activate",
+        "deactivate",
+        "note",
+        "title",
+        "autonumber",
+        "loop",
+        "rect",
+        "opt",
+        "alt",
+        "else",
+        "par",
+        "par_over",
+        "and",
+        "critical",
+        "option",
+        "break",
+        "end",
+    ];
+    let mut line_start = true;
+    let mut context: Option<String> = None;
+    for token in &mut tokens {
+        let token_name = token.type_name.as_deref();
+        if matches!(
+            token.type_,
+            lexer::token::TokenType::Newline | lexer::token::TokenType::Semicolon
+        ) {
+            line_start = true;
+            context = None;
+            continue;
+        }
+        if token_name == Some("HEADER") {
+            line_start = false;
+            continue;
+        }
+        let keyword = grammar
+            .keywords
+            .iter()
+            .find(|keyword| keyword.eq_ignore_ascii_case(&token.value))
+            .cloned();
+        if line_start {
+            if let Some(keyword) =
+                keyword.filter(|value| statement_keywords.contains(&value.as_str()))
+            {
+                token.value.clone_from(&keyword);
+                context = Some(keyword);
+            }
+            line_start = false;
+        } else if let Some(keyword) = keyword {
+            let allowed = match context.as_deref() {
+                Some("create") => matches!(keyword.as_str(), "participant" | "actor"),
+                Some("participant" | "actor") => keyword == "as",
+                Some("note") => matches!(keyword.as_str(), "left" | "right" | "over"),
+                Some("note-placement") => keyword == "of",
+                Some("autonumber") => keyword == "off",
+                _ => false,
+            };
+            if allowed {
+                token.value.clone_from(&keyword);
+                context = match (context.as_deref(), keyword.as_str()) {
+                    (Some("create"), "participant" | "actor") => Some(keyword),
+                    (Some("note"), "left" | "right") => Some("note-placement".to_string()),
+                    _ => None,
+                };
+            }
+        }
+        if token.type_name.as_deref() == Some("WRAP_DIRECTIVE") {
+            token.value.make_ascii_lowercase();
+        }
+    }
+    tokens.retain(|token| token.type_name.as_deref() != Some("HASH_COMMENT"));
+    tokens
+}
+
+pub fn tokenize_mermaid_state(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_state_lexer(source);
     lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("Mermaid sequence tokenization failed: {e}"))
+        .unwrap_or_else(|e| panic!("Mermaid state tokenization failed: {e}"))
 }
 
 #[cfg(test)]
@@ -111,7 +208,196 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.21.0");
+        assert_eq!(VERSION, "0.40.0");
+    }
+
+    #[test]
+    fn tokenizes_state_transitions_and_aliases() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\ndirection LR\nstate \"Still waiting\" as Still\n[*] --> Still\nStill --> [*]: done\n",
+        );
+        let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
+        assert!(names.contains(&"HEADER"));
+        assert_eq!(names.iter().filter(|name| **name == "ARROW").count(), 2);
+        assert_eq!(
+            names.iter().filter(|name| **name == "EDGE_STATE").count(),
+            2
+        );
+        assert!(tokens
+            .iter()
+            .any(|token| token.value == "Still waiting" || token.value == "\"Still waiting\""));
+    }
+
+    #[test]
+    fn tokenizes_state_choice_markers() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nstate First <<choice>>\nstate Second [[choice]]\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("CHOICE"))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn tokenizes_state_fork_and_join_markers() {
+        let tokens =
+            tokenize_mermaid_state("stateDiagram-v2\nstate Fork <<fork>>\nstate Join [[join]]\n");
+        let markers: Vec<_> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("FORK_JOIN"))
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(markers, vec!["<<fork>>", "[[join]]"]);
+    }
+
+    #[test]
+    fn tokenizes_state_inline_styles() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("HASH_COLOR"))
+                .count(),
+            3
+        );
+        assert_eq!(tokens.iter().filter(|token| token.value == ",").count(), 2);
+    }
+
+    #[test]
+    fn tokenizes_state_class_styles() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nclassDef warning fill:#fef3c7,stroke:#92400e\nclass Ready,Waiting warning\n",
+        );
+        assert!(tokens.iter().any(|token| token.value == "classDef"));
+        assert!(tokens.iter().any(|token| token.value == "class"));
+        assert_eq!(tokens.iter().filter(|token| token.value == ",").count(), 2);
+    }
+
+    #[test]
+    fn tokenizes_state_inline_class_shorthand() {
+        let tokens = tokenize_mermaid_state("stateDiagram-v2\nStill:::quiet --> Moving:::active\n");
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("STYLE_SEPARATOR"))
+                .count(),
+            2
+        );
+    }
+
+    #[test]
+    fn tokenizes_state_attached_notes() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nnote left of Ready: Waiting for work\nnote right of Running: Active\n",
+        );
+        assert_eq!(
+            tokens.iter().filter(|token| token.value == "note").count(),
+            2
+        );
+        assert_eq!(tokens.iter().filter(|token| token.value == "of").count(), 2);
+        assert_eq!(tokens.iter().filter(|token| token.value == ":").count(), 2);
+    }
+
+    #[test]
+    fn tokenizes_state_multiline_and_floating_notes() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nnote left of Ready\nFirst line\nSecond line\nend note\nnote \"Floating\" as N1\n",
+        );
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_name.as_deref() == Some("END_NOTE"))
+                .count(),
+            1
+        );
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_ == TokenType::String && token.value == "Floating"));
+    }
+
+    #[test]
+    fn tokenizes_state_accessibility_metadata() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\naccTitle: State lifecycle\naccDescr: Ready to running\naccDescr {\nMultiline description\n}\n",
+        );
+        for name in ["ACC_TITLE", "ACC_DESCR", "ACC_DESCR_START"] {
+            assert!(
+                tokens
+                    .iter()
+                    .any(|token| token.type_name.as_deref() == Some(name)),
+                "missing {name} token"
+            );
+        }
+        assert!(tokens.iter().any(|token| token.value == "}"));
+    }
+
+    #[test]
+    fn tokenizes_state_click_links() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nclick Ready \"https://example.com\" \"Open ready state\"\nclick Running href \"https://example.com/run\"\n",
+        );
+        assert_eq!(
+            tokens.iter().filter(|token| token.value == "click").count(),
+            2
+        );
+        assert!(tokens.iter().any(|token| token.value == "href"));
+        assert_eq!(
+            tokens
+                .iter()
+                .filter(|token| token.type_ == TokenType::String)
+                .count(),
+            3
+        );
+    }
+
+    #[test]
+    fn tokenizes_state_composite_braces() {
+        let tokens =
+            tokenize_mermaid_state("stateDiagram-v2\nstate Processing {\nQueued --> Running\n}\n");
+        assert!(tokens.iter().any(|token| token.value == "{"));
+        assert!(tokens.iter().any(|token| token.value == "}"));
+    }
+
+    #[test]
+    fn tokenizes_state_concurrent_region_divider() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nstate Active {\nOff --> On\n--\nIdle --> Busy\n}\n",
+        );
+
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("CONCURRENT")));
+    }
+
+    #[test]
+    fn tokenizes_state_hide_empty_description_directive() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nhide empty description\nstate Junction <<choice>>\n",
+        );
+
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("HIDE_EMPTY")));
+    }
+
+    #[test]
+    fn tokenizes_state_entities_before_hash_colors() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nReady: Metal #9829; native\nstyle Ready fill:#dbeafe\n",
+        );
+
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("ENTITY")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("HASH_COLOR")));
     }
 
     #[test]
@@ -292,6 +578,21 @@ mod tests {
         assert!(values.contains(&"+"));
         assert!(values.contains(&"note"));
         assert!(values.contains(&"Ready"));
+    }
+
+    #[test]
+    fn tokenizes_sequence_keywords_case_insensitively() {
+        let tokens = tokenize_mermaid_sequence(
+            "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nNoTe RiGhT Of A: WRAP: Ready\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(values.contains(&"participant"));
+        assert!(values.contains(&"as"));
+        assert!(values.contains(&"note"));
+        assert!(values.contains(&"right"));
+        assert!(values.contains(&"of"));
+        assert!(values.contains(&"wrap:"));
     }
 
     #[test]
@@ -485,6 +786,15 @@ A\\-B: reverse stick bottom
     }
 
     #[test]
+    fn skips_sequence_hash_comments_without_dropping_entities() {
+        let tokens = tokenize_mermaid_sequence(
+            "sequenceDiagram\n# heading comment\nA->>B: I #9829; diagrams # trailing comment\n",
+        );
+        assert!(!tokens.iter().any(|token| token.value.contains("comment")));
+        assert!(tokens.iter().any(|token| token.value == "#9829;"));
+    }
+
+    #[test]
     fn tokenizes_sequence_line_break_variants() {
         let tokens = tokenize_mermaid_sequence(
             "sequenceDiagram\nAlice->>Bob: One<br>Two<br/>Three<br />Four\n",
@@ -526,12 +836,6 @@ A\\-B: reverse stick bottom
         let tokens = tokenize_mermaid_sequence(
             "sequenceDiagram\nparticipant Customer-Portal\nCustomer-Portal->>Order-Service: Submit\n",
         );
-        assert_eq!(
-            tokens
-                .iter()
-                .filter(|token| token.value == "-")
-                .count(),
-            3
-        );
+        assert_eq!(tokens.iter().filter(|token| token.value == "-").count(), 3);
     }
 }

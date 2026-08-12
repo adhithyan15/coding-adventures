@@ -17,6 +17,7 @@ that SIR-emitted Python calls into.
 from __future__ import annotations
 
 import inspect
+import sys
 from collections.abc import Callable
 from typing import Any
 
@@ -189,26 +190,18 @@ def global_get_static(name: str) -> Any:
 # --- Printing --------------------------------------------------------------
 
 
-def sir_print(v: Any) -> None:
-    """Print the SIR display form of ``v`` followed by a newline."""
-    print(values.to_display(v))
-    return None
-
-
-def _puts_one(v: Any, seen: set[int]) -> None:
-    """Emit a single ``puts`` argument, honouring Ruby's per-value rules.
+def _write_puts_one(v: Any, out: Any, seen: set[int]) -> None:
+    """Emit a single ``per_value`` argument under ``__sys_write__`` (SIR28 §2.1),
+    honouring Ruby ``puts``'s per-value rules.
 
     Ruby ``puts`` is deceptively subtle.  For one argument it behaves as:
 
     - **Array** → recurse over the *elements*, one per line.  Nesting is
       flattened: ``puts [1, [2, 3]]`` prints ``1\\n2\\n3\\n``.  An **empty**
       array prints nothing here (the caller's top-level ``puts []`` still
-      emits a single newline — see :func:`sir_puts` — because ``puts`` with
+      emits a single newline — see :func:`sir_write` — because ``puts`` with
       an empty argument list of its own writes one newline).
-    - **nil** → a blank line (``nil.to_s`` is ``""``, then the newline).
-    - **anything else** → its display string, then a newline — *unless* the
-      string already ends in ``"\\n"``, in which case Ruby does **not** add a
-      second newline (``puts "x\\n"`` prints ``x\\n``, not ``x\\n\\n``).
+    - **anything else** → its display string, then a newline.
 
     Truth table (single arg → stdout):
 
@@ -216,8 +209,6 @@ def _puts_one(v: Any, seen: set[int]) -> None:
     argument      bytes written
     ============  ================
     ``"x"``       ``x\\n``
-    ``"x\\n"``     ``x\\n``
-    ``nil``       ``\\n``
     ``[]``        (nothing)
     ``[1, 2]``    ``1\\n2\\n``
     ``[1, [2]]``  ``1\\n2\\n``
@@ -238,67 +229,64 @@ def _puts_one(v: Any, seen: set[int]) -> None:
     only a true self-cycle is short-circuited, so non-cyclic output is
     unchanged (``puts [1, [2, 3]]`` still prints ``1\\n2\\n3\\n``).
     """
-    # A sequence is a Python ``list`` in the runtime-core value model.
     if isinstance(v, list):
         vid = id(v)
         if vid in seen:
-            # Cycle: emit Ruby's `[...]` placeholder and stop recursing.
-            print("[...]")
+            print("[...]", file=out)
             return None
         seen.add(vid)
         for item in v:
-            _puts_one(item, seen)
+            _write_puts_one(item, out, seen)
         seen.discard(vid)
         return None
-    text = values.to_display(v)
-    # Ruby suppresses the added newline only when the rendered text already
-    # ends in one — so ``puts "x\n"`` and ``puts "x"`` produce identical
-    # output.  ``to_display(nil)`` is ``"nil"`` for ``print`` semantics, but
-    # ``puts nil`` must be a *blank* line, so nil is special-cased.
-    if v is None:
-        print()
-        return None
-    if text.endswith("\n"):
-        # Already newline-terminated: write verbatim, no extra newline.
-        print(text, end="")
-    else:
-        print(text)
+    print(values.to_display(v), file=out)
     return None
 
 
-def sir_puts(*args: Any) -> None:
-    """Ruby ``puts``: write each argument on its own line (see :func:`_puts_one`).
+def sir_write(stream: str, terminator: str, unpack_arrays: bool, *values_: Any) -> None:
+    """SIR28 §2.1: ``__sys_write__``, the general console-output primitive
+    every frontend lowers ``print``/``puts``/``console.log``/etc. to.
 
-    Ruby's ``puts`` is variadic and array-flattening:
+    It generalizes what used to be several backend-hardcoded newline
+    policies into ONE operation parameterized by policy flags carried as
+    DATA -- the root cause SIR28 exists to fix: real Ruby's ``print``
+    never newline-terminates, Python's own ``print()`` always does, but
+    before SIR28 both lowered to the identical ``BuiltinCall("print", ...)``
+    this backend had no way to tell apart.
 
-    - ``puts`` (no args) → a single newline.
-    - ``puts x`` → ``x`` on its own line (arrays flattened element-per-line;
-      a value already ending in ``"\\n"`` is not double-spaced; ``nil`` is a
-      blank line).
-    - ``puts a, b`` → each argument handled independently, in order.
-    - ``puts []`` → a single newline (an empty argument *value* still counts
-      as "print a line").
-
-    The empty-array top-level case is why the no-argument-list and the
-    ``[]``-argument cases converge on one newline: Ruby treats ``puts`` with
-    nothing *to* print as "print an empty line".
+    ``stream``: ``"stdout"`` | ``"stderr"``. ``terminator``: ``"none"``
+    (write each value back to back, no newline -- matches Ruby's ``print``)
+    | ``"per_value"`` (one newline per value, honouring ``unpack_arrays``
+    -- matches Ruby's ``puts``) | ``"once"`` (Python's native
+    ``print(a, b)`` -- space-join every value, one trailing newline).
+    Deliberately does NOT replicate Ruby ``puts``'s trailing-newline-
+    suppression nuance (``puts "x\\n"`` prints ``x\\n``, not ``x\\n\\n``)
+    -- that's a pre-existing, orthogonal divergence between backends' own
+    historical ``puts`` implementations that SIR28 does not fix or
+    replicate; ``per_value`` here always appends exactly one newline per
+    value, matching SIR28 §2.1's table and every other backend's
+    ``__sys_write__`` faithfully. (Parameter named ``values_`` with a
+    trailing underscore to avoid shadowing the ``values`` module imported
+    at the top of this file.)
     """
-    if not args:
-        # `puts` with no arguments writes exactly one newline.
-        print()
+    out = sys.stderr if stream == "stderr" else sys.stdout
+    if terminator == "per_value":
+        if not values_:
+            print(file=out)
+            return None
+        seen: set[int] = set()
+        for v in values_:
+            if unpack_arrays:
+                _write_puts_one(v, out, seen)
+            else:
+                print(values.to_display(v), file=out)
         return None
-    # `seen` guards the array-flatten recursion in `_puts_one` against cyclic
-    # arrays (see its docstring); a fresh, shared set across the args suffices
-    # because each handle is removed on exit.
-    seen: set[int] = set()
-    for a in args:
-        # `puts []` (an empty array as the sole argument) must still emit one
-        # newline — Ruby prints a blank line when an argument flattens to
-        # nothing.  `_puts_one([])` writes nothing, so detect that here.
-        if isinstance(a, list) and len(a) == 0:
-            print()
-        else:
-            _puts_one(a, seen)
+    if terminator == "once":
+        print(" ".join(values.to_display(v) for v in values_), file=out)
+        return None
+    # "none"
+    for v in values_:
+        print(values.to_display(v), end="", file=out)
     return None
 
 
@@ -328,8 +316,6 @@ _builtins: dict[str, Callable[..., Any]] = {
     "pair?": pairs.is_pair,
     "number?": values.is_number,
     "symbol?": values.is_symbol,
-    "print": sir_print,
-    "puts": sir_puts,
 }
 
 
@@ -338,7 +324,7 @@ def call_builtin(name: str, args: list[Any]) -> Any:
 
     The SIR backends translate most builtins to native code or route them to a
     dedicated per-concern runtime package, so this generic dispatch only fires
-    for the small set the core registers (arithmetic / pairs / print / type
+    for the small set the core registers (arithmetic / pairs / type
     predicates).  An unregistered name means the emitting backend produced a
     `call_builtin("<name>", …)` for a builtin it does not yet lower — a backend
     coverage gap, not a user error — so the message names the builtin and points

@@ -173,6 +173,11 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // A `ModuleDef` body reaching emit is now hosted (not rejected); the
     // soundness gate below recurses into it for the residual `Const` checks.
     Feature::Modules,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
+    // console-output primitive `print`/`puts` will migrate to. Additive:
+    // nothing emits it yet, so this declares acceptance ahead of any
+    // frontend using it.
+    Feature::ConsoleIO,
 ];
 
 impl Backend for GoBackend {
@@ -585,7 +590,9 @@ mod tests {
         let a = compile(&m).expect("compile");
         assert!(a.source.contains("func add(a Value, b Value) Value"));
         assert!(a.source.contains("_sir_plus([]Value{a, b})"));
-        assert!(a.source.contains("_sir_print([]Value{add("));
+        // SIR28 §2: Twig's `print` lowers to `__sys_write__`, which this
+        // backend maps to `_sir_write("stdout", "none", false, []Value{...})`.
+        assert!(a.source.contains("_sir_write(\"stdout\", \"none\", false, []Value{add("));
     }
 
     #[test]
@@ -1012,7 +1019,10 @@ mod tests {
     }
 
     // Direct proof that the E3 SOUNDNESS GATE fires: a `VarRef{Const}` used as
-    // a value OUTSIDE a `raise` (here as a `print` argument) is a shape the
+    // a value OUTSIDE a `raise` (here as an argument to an arbitrary builtin
+    // call — the check is builtin-name-agnostic, see `check_soundness_expr`;
+    // the name below is a placeholder unrelated to any real builtin, chosen
+    // so this test needs no extra `Feature` declared) is a shape the
     // validator accepts (`Constants` observed, manifest declares it) yet the
     // Go backend cannot emit — so `check_exception_soundness` rejects it with
     // an `UnsupportedFeature` naming the constant reference.
@@ -1026,7 +1036,7 @@ mod tests {
             body: Block {
                 stmts: vec![Stmt::ExprStmt {
                     expr: Expr::BuiltinCall {
-                        name: "print".into(),
+                        name: "__test_probe__".into(),
                         args: vec![Expr::VarRef {
                             name: "FOO".into(),
                             scope: Scope::Const,

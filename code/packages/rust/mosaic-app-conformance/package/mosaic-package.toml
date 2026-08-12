@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-app-conformance-ui"
+version = "0.1.0"
+description = "Minimal Mosaic UI driven by the shared Rust runtime conformance engine"
+license = "MIT"
+
+[components]
+exports = ["Counter"]
+
+[dependencies]
+
+[kernel]
+version = "1"

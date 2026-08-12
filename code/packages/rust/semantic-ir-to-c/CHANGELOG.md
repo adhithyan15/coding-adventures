@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.37.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` handling
+is dead code. Removed:
+
+- The `"print"`/`"puts"` entries from `variadic_helper`'s emit-name
+  match.
+- `_sir_print_v`, `_sir_puts_v`, `_sir_print`, and `_sir_puts` from
+  `runtime.rs`.
+- The `"print"`/`"puts"` arms from `_sir_builtin_dispatch`'s by-name
+  dispatch (the value-position/first-class-builtin path).
+
+**Kept** `_sir_puts_one`: unlike the deleted `_sir_print_v`/`_sir_puts_v`,
+this helper is genuinely shared — `_sir_write_v`'s `per_value` terminator
+(when `unpack_arrays` is set) calls it directly to get `puts`'s
+recursive array-flattening behavior. Confirmed via grep before touching
+anything; deleting it would have broken `__sys_write__` itself.
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: every local test helper that hand-built bare `print`/`puts`
+`BuiltinCall`s purely to observe hand-constructed IR's output (unrelated
+to testing print semantics itself) now builds the equivalent
+`__sys_write__` envelope (`terminator: "per_value"`, `unpack_arrays:
+true` — every one of this backend's test helpers was `puts`-shaped, not
+`print`-shaped), plus `Feature::ConsoleIO`/`Feature::Strings` added to
+each affected manifest. Also updated `examples/dump_convert.rs` and a
+runtime-shape assertion in `compile_and_run_conversions.rs` that
+asserted on the now-deleted `_sir_puts(...)` call text directly.
+
+## 0.36.6 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__"` emit arm (`emit_builtin_simple` for the common
+simple-args case, plus a dedicated `emit_compound_call` arm mirroring the
+existing `raise`-with-compound-message pattern for when a value argument
+needs statement hoisting) and a new runtime function, `_sir_write`/
+`_sir_write_v`, generalizing the existing `_sir_print_v`/`_sir_puts_v` into
+one function parameterized by `stream` (stdout/stderr), `terminator`
+(none/per_value/once), and `unpack_arrays` — the policy axes SIR28 §2.1
+defines. Declares `Feature::ConsoleIO`.
+
+Purely additive: nothing emits `__sys_write__` yet (that's SIR28 Slices
+4-6), so `_sir_print`/`_sir_puts` and every existing `print`/`puts`-sourced
+program are unchanged. `stream`/`terminator` are always compile-time `StrLit`
+literals (already validated by `semantic-ir`'s validator against a closed
+set, SIR28 §2.2) baked directly into the generated call as C int constants
+— never source-derived text reaching a dynamic file-handle/dispatch lookup.
+
+New `tests/compile_and_run_sys_write.rs`: hand-builds a `Module` directly
+per stream/terminator/unpack_arrays combination (no frontend emits the op
+yet), emits C, compiles with a real `cc`, runs, and asserts stdout/stderr —
+covering all three `terminator` modes, `unpack_arrays` true/false, the
+`stderr` stream, the empty-args `per_value` edge case, and the
+`emit_compound_call` hoisting path (a value argument that is itself an
+`If`).
+
 ## 0.36.5 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
 
 Documentation-only, no behavior change. Per `SIR25-language-agnostic-

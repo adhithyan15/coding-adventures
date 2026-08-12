@@ -184,9 +184,15 @@ reopen bounded replay slices without fetching the full audit tail.
 
 ## Dependencies
 
+- actor
 - embeddable-http-server
-- smart-home-dashboard-core
+- hue-core
+- smart-home-automation-runtime
+- smart-home-controller-runtime
 - smart-home-core
+- smart-home-dashboard-core
+- smart-home-discovery
+- smart-home-discovery-service
 - smart-home-runtime
 - smart-home-runtime-store
 - storage-local-folder
@@ -207,6 +213,7 @@ Run the production local controller against a durable runtime folder:
 cargo run -p smart-home-platform-http --bin smart-home-local-controller -- \
   --data-dir "$HOME/.coding-adventures/smart-home" \
   --dashboard-manifest "$HOME/.coding-adventures/smart-home/dashboards.json" \
+  --hue-mdns-interface en0 \
   --bind 127.0.0.1:8123
 ```
 
@@ -214,10 +221,17 @@ cargo run -p smart-home-platform-http --bin smart-home-local-controller -- \
 `SMART_HOME_DASHBOARD_MANIFEST` supplies the applied migration artifact or raw
 native manifest when `--dashboard-manifest` is omitted. Invalid and dry-run
 artifacts are rejected before the controller binds.
-The controller loads the latest `smart-home-runtime-store` snapshot before it
-binds, restores automation definitions, consumed trigger occurrences, and
-automation audit, uses wall-clock request timestamps, and saves the local API
-capability grant. A local worker evaluates schedule triggers every 500 ms.
+Hue discovery is opt-in. `--hue-mdns-interface NAME` installs a supervised
+Hue DNS-SD worker for that interface, runs its UDP scans through the discovery
+service actor, and commits accepted bridge observations through the same central
+runtime owner used by HTTP and automations. Both worker cadence and normalized
+discovery records survive controller restarts.
+The controller restores one `smart-home-controller-runtime` authority before it
+binds. That authority owns the normalized runtime, automation definitions,
+consumed trigger occurrences, automation audit, durable store revision, and
+shared HTTP adapter handles. The process uses wall-clock request timestamps,
+saves the local API capability grant, and evaluates schedule and enabled Hue
+discovery work every 500 ms against the same owned runtime.
 Accepted desired-state, service, automation-definition, and automation-execution
 mutations are persisted synchronously before the API returns success. A failed
 write restores the exact pre-request runtime and automation engine and returns

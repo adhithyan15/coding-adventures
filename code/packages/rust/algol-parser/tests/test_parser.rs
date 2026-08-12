@@ -177,6 +177,14 @@ fn test_own_array_declaration() {
     assert!(find_rule(&ast, "array_segment"), "Expected array bounds");
 }
 
+/// Scalar `own` declarations use the canonical grammar's dedicated node.
+#[test]
+fn test_own_scalar_declaration() {
+    let ast = parse_algol("begin own integer counter; counter := 1 end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "own_decl"), "Expected canonical 'own_decl'");
+}
+
 /// Multiple declarations in one block.
 #[test]
 fn test_multiple_declarations() {
@@ -219,6 +227,20 @@ fn test_arithmetic_assignment() {
         || find_rule(&ast, "simple_arith")
         || find_rule(&ast, "term");
     assert!(has_arith, "Expected arithmetic expression rules in AST");
+}
+
+/// Conditional expressions recurse through both branches in the source grammar.
+#[test]
+fn test_nested_conditional_expression_branches() {
+    let ast = parse_algol(
+        "begin integer result; boolean outer, inner; \
+         result := if outer then if inner then 1 else 42 else if inner then 2 else 3 end",
+    );
+    assert_program_root(&ast);
+    assert!(
+        count_rule(&ast, "expression") >= 7,
+        "Expected recursively nested canonical expression nodes"
+    );
 }
 
 /// Assignment with subtraction and division.
@@ -347,6 +369,16 @@ fn test_for_simple_form() {
     let ast = parse_algol(source);
     assert_program_root(&ast);
     assert!(find_rule(&ast, "for_stmt"), "Expected 'for_stmt'");
+}
+
+#[test]
+fn test_for_array_element_controlled_variable() {
+    let source = "begin integer index; integer array values[1:1]; index := 1; \
+                  for values[index] := 1 step 1 until 3 do index := index end";
+    let ast = parse_algol(source);
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "for_stmt"), "Expected 'for_stmt'");
+    assert!(find_rule(&ast, "subscripts"), "Expected array subscript");
 }
 
 // ===========================================================================
@@ -519,4 +551,36 @@ fn test_goto_program() {
     let ast = parse_algol(source);
     assert_program_root(&ast);
     assert!(find_rule(&ast, "goto_stmt"), "Expected goto_stmt");
+}
+
+#[test]
+fn test_report_style_go_to_program() {
+    let ast = parse_algol("begin boolean choose; choose := true; go to if choose then yes else no; yes: ; no: end");
+    assert_program_root(&ast);
+    assert!(find_rule(&ast, "goto_stmt"), "Expected goto_stmt");
+    assert!(find_rule(&ast, "desig_expr"), "Expected conditional designator");
+}
+
+#[test]
+fn test_multiple_labels_on_one_statement() {
+    let ast = parse_algol("begin first: second: halt end");
+    assert_program_root(&ast);
+    assert_eq!(count_rule(&ast, "label"), 2);
+    assert!(find_rule(&ast, "proc_stmt"), "Expected labeled procedure statement");
+}
+
+#[test]
+fn test_dummy_statements_at_boundaries() {
+    for source in [
+        "begin end",
+        "begin ; ; end",
+        "begin if false then else halt end",
+        "begin if true then halt else end",
+        "begin integer i; for i := 1 step 1 until 2 do ; end",
+        "begin empty: end",
+    ] {
+        let ast = parse_algol(source);
+        assert_program_root(&ast);
+        assert!(find_rule(&ast, "dummy_stmt"), "expected dummy statement in {source:?}");
+    }
 }

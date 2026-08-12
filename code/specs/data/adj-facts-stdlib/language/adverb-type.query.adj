@@ -1,0 +1,14 @@
+% ============================================================================
+% adverb-type.query.adj — worked recall over the adverb-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% adverb type describe?" (direct) or "which adverb type matches this
+% description?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "adverb-type.adj"
+
+? adverb_type(manner, $D)                                          % expect describes_how_an_action_is_performed (direct)
+? adverb_type($T, describes_how_long_an_action_lasts)               % expect duration (reverse)
+? adverb_type(time, $D)                                             % expect abstain -- a real adverb type the same source table names, but its own sentence bundles when/how-long/how-often into one sentence rather than one clean fact

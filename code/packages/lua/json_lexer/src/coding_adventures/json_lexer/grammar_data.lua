@@ -1,0 +1,69 @@
+-- Generated from code/grammars/json/json.tokens.
+-- Keep this deployed payload byte-for-byte aligned with the canonical grammar.
+return [====[
+# Token definitions for JSON (RFC 8259)
+# @version 1
+#
+# JSON is the simplest practical grammar for the grammar-driven infrastructure.
+# Unlike programming languages, JSON has no keywords, no comments, and no
+# identifiers. Every token is either a literal delimiter or a value.
+#
+# Format:
+#   TOKEN_NAME = /regex/     — regex-based token pattern
+#   TOKEN_NAME = "literal"   — exact literal match
+#
+# Order matters: first match wins. Regex patterns come before literal tokens
+# so that multi-character matches (strings, numbers) take priority.
+
+# ---------------------------------------------------------------------------
+# Value tokens — the actual data in JSON
+# ---------------------------------------------------------------------------
+
+# Escape mode: none tells the lexer to strip the surrounding quotes but
+# leave escape sequences (\n, \t, \uXXXX, etc.) as raw text. Decoding
+# escape sequences is the JSON parser's responsibility, not the lexer's.
+escapes: none
+
+# String: double-quoted with escape sequences.
+# Allowed escapes: \" \\ \/ \b \f \n \r \t \uXXXX
+# The regex matches the entire string including quotes. The lexer engine
+# strips the quotes (see escapes: none above) and leaves escapes intact.
+# Note: We use \x2f instead of / inside the regex because the grammar file
+# uses / as the regex delimiter and the parser does not support escaping.
+STRING   = /"([^"\\]|\\["\\\x2fbfnrt]|\\u[0-9a-fA-F]{4})*"/
+
+# Number: optional negative sign, followed by integer part, optional decimal,
+# and optional exponent. Written without alternation groups (|) or optional
+# capture groups (...)? so that the Lua pcre_to_lua converter handles it
+# correctly. The pattern is slightly more permissive than the JSON spec
+# (allows leading zeros) but correct tokenization is the parser's job.
+NUMBER   = /-?[0-9]+\.?[0-9]*[eE]?[-+]?[0-9]*/
+
+# Value literals — these are NOT keywords (JSON has no NAME/identifier token).
+# Each gets its own token type rather than being reclassified from NAME.
+TRUE     = "true"
+FALSE    = "false"
+NULL     = "null"
+
+# ---------------------------------------------------------------------------
+# Structural tokens — delimiters that organize the data
+# ---------------------------------------------------------------------------
+
+LBRACE   = "{"
+RBRACE   = "}"
+LBRACKET = "["
+RBRACKET = "]"
+COLON    = ":"
+COMMA    = ","
+
+# ---------------------------------------------------------------------------
+# Skip patterns — whitespace is consumed silently (no tokens emitted)
+# ---------------------------------------------------------------------------
+# JSON treats all whitespace identically: space, tab, carriage return, and
+# line feed are insignificant between tokens. By putting newlines in the skip
+# pattern (rather than relying on the default behavior), we prevent the lexer
+# from emitting NEWLINE tokens.
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+]====]

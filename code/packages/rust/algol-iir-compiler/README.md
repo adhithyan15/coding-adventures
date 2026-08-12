@@ -174,10 +174,50 @@ the empty string on its first procedure call and retains subsequent assignments
 across calls. A captured string still requires assignment before its first
 read, just like a local string.
 
+Direct real literals also use the shared string output path, preserving their
+source spelling and an exact unary `+` or `-` without requiring a runtime `f64`
+formatter. An arithmetic conditional whose leaves are all direct real literals
+branches to the selected source-spelled string at run time. Exact parentheses
+around a direct signed literal are ignored while preserving that spelling.
+Finite literal-only addition, subtraction, multiplication, and division are
+evaluated by the frontend and printed through the same string path. Zero
+divisors, non-finite results, and conditionals with a non-static leaf remain
+explicit type errors. A local real scalar assigned one of these finite static
+expressions can also print its canonical decimal value while execution remains
+straight-line. Copies between tracked real locals preserve independent value
+snapshots even if the source is later reassigned, and tracked locals may feed
+the same bounded finite arithmetic and exact standard-function evaluator.
+Integer literals also enter that real evaluator when their magnitude is within
+binary64's exact integer range; larger widenings remain unsupported.
+Labels, branches, loops,
+gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
+Real literal bases also accept the existing
+capped nonnegative integer-literal exponent chains or one explicitly signed
+integer literal in `-64..=64`. A single real-literal exponent is also accepted
+when its value is exactly integral and within that cap; other exponent shapes
+still require runtime real formatting. Nonnegative right-associated exponent
+chains may mix integer and exactly integral real literals when every computed
+exponent remains within the same cap.
+Direct calls to the non-overridden standard `abs` function over finite
+literal-only real arithmetic also use the static string path. `sqrt` does so
+when its nonnegative operand has an exactly round-tripping root; inexact roots,
+invalid domains, runtime operands, and user overrides still require runtime
+real formatting.
+Those supported static standard-function calls may nest and compose with the
+same finite literal-only arithmetic evaluator, while every nested call remains
+subject to the same override, domain, exact-root, and finiteness checks.
+Runtime arithmetic conditionals may select between those validated static
+standard-function expressions, branching directly to each precomputed string.
+The exact identities `sin(0)=0`, `cos(0)=1`, `ln(1)=0`, `exp(0)=1`, and
+`arctan(0)=0` also use this path without host or backend transcendental math.
+Exact `sign` results and `entier` results within binary64's exact integer range
+may widen into the same static real arithmetic path; larger floors fail closed.
+
 Proper procedures now lower as side-effecting IIR `void` functions when called
 in statement position. They can write enclosing scalar or array globals and use
-the same literal-backed output path as typed procedures; using a proper procedure in
-value position is a clean type error because it has no return value.
+the same string, integer, or boolean output paths as typed procedures. Using a
+proper procedure in value position is a clean type error because it has no
+return value.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

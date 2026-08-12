@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C06-practice
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 570
-chapter: 6
+sequence: 610
+chapter: 33
 type: practice-mix
 headword: (practice)
 gloss: your first sentences — the -ar present tense in action

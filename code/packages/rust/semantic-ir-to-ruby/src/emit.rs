@@ -83,8 +83,6 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     "pair?",
     "number?",
     "symbol?",
-    "print",
-    "puts",
     "global_get",
     "global_set",
     // SIR17 exceptions (`Feature::Exceptions`): `raise` (re-raise / raise a
@@ -131,6 +129,15 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // are hoisted + registered via `__def_method__`, reusing the slice-2 machinery.
     "__include__",
     "__extend__",
+    // SIR28: `__sys_write__`, the general console-output primitive every
+    // frontend now emits in place of the old bare `print`/`puts` (SIR28 §7
+    // removed the dead bare-name path). `args = [StrLit(stream),
+    // StrLit(terminator), BoolLit(unpack_arrays), ...values]`, already
+    // validated by `semantic-ir`'s validator (SIR28 §3.1) against a closed
+    // set — routes to the `sir_write` runtime helper, which branches on
+    // `stream`/`terminator` at Ruby runtime (no compile-time dispatch
+    // needed here, unlike the C/Go/Rust backends).
+    "__sys_write__",
 ];
 
 /// Emit a complete self-contained Ruby source file for `m`.
@@ -1506,8 +1513,13 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         "pair?" => format!("sir_is_pair({})", arg(&a, 0)),
         "number?" => format!("sir_is_number({})", arg(&a, 0)),
         "symbol?" => format!("sir_is_symbol({})", arg(&a, 0)),
-        "print" => format!("sir_print({})", a.join(", ")),
-        "puts" => format!("sir_puts({})", a.join(", ")),
+        // SIR28 §2: `__sys_write__` — every arg (including the
+        // stream/terminator/unpack_arrays literals) is already an emitted
+        // Ruby expression string in `a`, so this is a plain pass-through to
+        // the runtime helper; no compile-time literal extraction is needed
+        // here (unlike the C backend), since Ruby can branch on the string
+        // values directly at runtime.
+        "__sys_write__" => format!("sir_write({})", a.join(", ")),
         "global_get" => format!("sir_global_get({})", arg(&a, 0)),
         "global_set" => format!("sir_global_set({}, {})", arg(&a, 0), arg(&a, 1)),
         // SIR17 exceptions.  `raise` with no argument re-raises the exception

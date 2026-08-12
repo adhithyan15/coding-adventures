@@ -96,7 +96,7 @@ pub fn compile_source(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{Expr, Feature, Scope, Stmt};
+    use semantic_ir::{Effect, Expr, Feature, Scope, Stmt};
 
     /// Find a function by name in a lowered module.
     fn func<'a>(m: &'a semantic_ir::Module, name: &str) -> &'a semantic_ir::Function {
@@ -1019,15 +1019,39 @@ mod tests {
 
     #[test]
     fn builtin_calls_lower_to_builtin_call() {
-        // `len` is *not* here: as of M5 it lowers to the dedicated
+        // `len` is *not* covered here: as of M5 it lowers to the dedicated
         // `SeqLen` node (see `len_lowers_to_seq_len`), not `BuiltinCall`.
-        for (src, name) in [("print(1)\n", "print"), ("range(5)\n", "range")] {
-            let m = lower(src);
-            match main_value(&m) {
-                Expr::BuiltinCall { name: got, .. } => assert_eq!(got, name, "for {src:?}"),
-                other => panic!("expected BuiltinCall({name}) for {src:?}, got {other:?}"),
-            }
+        // `print` is *not* covered here either: it lowers to SIR28's
+        // `__sys_write__` (see `print_call_lowers_to_sys_write`), not a
+        // bare `BuiltinCall("print", ...)` — `range` is the only remaining
+        // plain-`BuiltinCall` builtin.
+        let m = lower("range(5)\n");
+        match main_value(&m) {
+            Expr::BuiltinCall { name, .. } => assert_eq!(name, "range"),
+            other => panic!("expected BuiltinCall(range, ...), got {other:?}"),
         }
+    }
+
+    #[test]
+    fn print_call_lowers_to_sys_write() {
+        // SIR28 §2: `print(1)` lowers to `__sys_write__(stdout, "once",
+        // false, 1)` — space-join every value, one trailing newline,
+        // matching Python's own `print()` semantics — not a bare
+        // `BuiltinCall("print", ...)`.
+        let m = lower("print(1)\n");
+        match main_value(&m) {
+            Expr::BuiltinCall { name, args, effects, .. } => {
+                assert_eq!(name, "__sys_write__");
+                assert_eq!(args.len(), 4);
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "stdout"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "once"));
+                assert!(matches!(args[2], Expr::BoolLit { value: false, .. }));
+                assert!(matches!(args[3], Expr::IntLit { value: 1, .. }));
+                assert!(effects.contains(Effect::MayPrint));
+            }
+            other => panic!("expected BuiltinCall(__sys_write__, ...), got {other:?}"),
+        }
+        assert!(m.manifest.contains(Feature::ConsoleIO));
     }
 
     #[test]

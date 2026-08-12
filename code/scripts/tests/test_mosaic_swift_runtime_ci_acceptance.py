@@ -43,6 +43,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-capi",
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
+            "rust/task-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -100,6 +101,11 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
 
     def test_workflow_routes_rust_and_swift_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
+        swift_runtime_step = workflow.split(
+            "- name: Round-trip Rust engine through standard SwiftUI binding", 1
+        )[1].split(
+            "- name: Round-trip Rust engine through standard Qt binding", 1
+        )[0]
         self.assertIn(
             "needs_mosaic_swift_runtime: "
             "${{ steps.mosaic-swift-runtime.outputs.required }}",
@@ -115,24 +121,37 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("timeout-minutes: 15", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,
         )
-        self.assertIn("--backend swiftui --output \"$output\" --emit-project", workflow)
+        self.assertIn(
+            "--backend swiftui --output \"$taskapp_output\" --emit-project --profile native-complete --runtime-library \"$task_runtime_library\"",
+            swift_runtime_step,
+        )
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
+        self.assertIn("mosaic-app-conformance/package", workflow)
+        self.assertIn('--runtime-library "$runtime_library"', workflow)
+        self.assertIn(
+            "find \"$swift_bin\" -type f -path '*/Runtime/libmosaic_app.dylib'",
+            workflow,
+        )
+        self.assertIn('cmp "$runtime_library" "$installed_runtime"', workflow)
         self.assertIn("Sources/App/MosaicRuntimeHost.swift", workflow)
         self.assertIn("Sources/CMosaicRuntime/CMosaicRuntime.c", workflow)
-        self.assertIn("swift run --package-path \"$harness\" Conformance", workflow)
-        self.assertIn("mosaic-swift-native-complete-rating-controls", workflow)
-        self.assertIn("mosaic-pkg-rating-controls", workflow)
         self.assertIn(
-            '--backend swiftui --output "$strict_output" '
-            "--emit-project --profile native-complete",
+            'env -u MOSAIC_APP_LIBRARY swift run --package-path "$harness" '
+            'Conformance --library "$installed_runtime"',
+            workflow,
+        )
+        self.assertIn("mosaic-swift-bundled-conformance", workflow)
+        self.assertIn(
+            '--backend swiftui --output "$bundled_output" '
+            '--emit-project --profile native-complete --runtime-library "$runtime_library"',
             workflow,
         )
         self.assertIn(
@@ -140,9 +159,29 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             workflow,
         )
         self.assertIn(
-            'swift build --package-path "$strict_output/swiftui"', workflow
+            'swift build --package-path "$bundled_output/swiftui"', workflow
         )
-        self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app",
+            swift_runtime_step,
+        )
+        self.assertIn("libtask_mosaic_app.dylib", swift_runtime_step)
+        self.assertIn(
+            'cmp "$task_runtime_library" "$installed_taskapp_runtime"',
+            swift_runtime_step,
+        )
+        self.assertIn('installed_taskapp="$taskapp_bin/App"', swift_runtime_step)
+        self.assertIn(
+            'env -u MOSAIC_APP_LIBRARY "$installed_taskapp"', swift_runtime_step
+        )
+        self.assertIn('kill -0 "$taskapp_pid"', swift_runtime_step)
+        self.assertIn("Mosaic Rust runtime unavailable", swift_runtime_step)
+        self.assertIn("missing required MIL prop", swift_runtime_step)
+        self.assertIn(
+            '--backend swiftui --output "$ios_output" --emit-project',
+            swift_runtime_step,
+        )
+        self.assertIn("MOSAIC_APP_LIBRARY", swift_runtime_step)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         program = SWIFT_CONFORMANCE / "Sources" / "Conformance" / "Program.swift"

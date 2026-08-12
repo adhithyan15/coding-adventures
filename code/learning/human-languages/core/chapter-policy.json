@@ -7,22 +7,65 @@
   "maxLinearisableTableColumns": 3,
   "maxNewGlyphsPerLesson": 3,
   "maxNewScriptSystemsPerLesson": 1,
+  "maxNewGrammarCellsPerLesson": 1,
+  "maxNewIdiomsPerLesson": 1,
+  "maxNewSensesPerLesson": 1,
+  "maxNewCultureClaimsPerLesson": 2,
+  "maxRuleStatementsPerLesson": 1,
+  "minDownstreamReach": 1,
+  "rootLedgerMinReuse": 3,
   "provenance": {
     "measuredAt": "2026-08-06",
     "corpus": "1096 lessons, 531 schema-v2, 277 schema-v2 chapters",
-    "atomsPerLesson": { "mean": 2.31, "median": 2, "p90": 3, "max": 7 },
-    "atomsPerChapter": { "median": 3, "p75": 5, "p90": 10, "max": 31 },
-    "tableColumns": { "2": 99, "3": 173, "4": 60, "5+": 8, "files": 340 },
+    "atomsPerLesson": {
+      "mean": 2.31,
+      "median": 2,
+      "p90": 3,
+      "max": 7
+    },
+    "atomsPerChapter": {
+      "median": 3,
+      "p75": 5,
+      "p90": 10,
+      "max": 31
+    },
+    "tableColumns": {
+      "2": 99,
+      "3": 173,
+      "4": 60,
+      "5+": 8,
+      "files": 340
+    },
     "rationale": "maxNewAtomsPerLesson sits at the existing p90, so the median lesson is already compliant and only genuine spikes are flagged (52 lessons). maxNewAtomsPerChapter sits just above the chapter p90 of 10, flagging 17 chapters. payoffRepresentativeness starts at half a chapter's introduced atoms; it is a floor to be raised, not a target. maxLinearisableTableColumns was 0 until the HL-C16 narration lineariser existed; 3 is where a table stops being a list of labelled facts a listener can hold ('Language: Telugu. Hello: namaskaram. Source: Sanskrit.') and starts being a grid whose meaning lives in comparison across rows — the corpus's own four-column tables have an unlabelled first column that only means something because of where it sits on the page. Three covers 272 of the 340 table-bearing lesson files."
   },
   "scriptRampProvenance": {
     "measuredAt": "2026-08-07",
     "corpus": "1225 lessons; 741 in the 16 non-Latin tracks, which are the only ones with a script-reading burden",
-    "newTargetGlyphsPerLesson": { "mean": 0.94, "median": 0, "p75": 1, "p90": 3, "p95": 5, "max": 12 },
-    "overBudget": { "gt3": 61, "gt4": 43, "gt5": 28, "gt6": 18, "gt8": 8 },
+    "newTargetGlyphsPerLesson": {
+      "mean": 0.94,
+      "median": 0,
+      "p75": 1,
+      "p90": 3,
+      "p95": 5,
+      "max": 12
+    },
+    "overBudget": {
+      "gt3": 61,
+      "gt4": 43,
+      "gt5": 28,
+      "gt6": 18,
+      "gt8": 8
+    },
     "steepest": "HI-W01-shirorekha-na-ma, MR-C01-dhanyavad, RU-C01-da — 12 new glyphs each",
     "multiSystemLessons": 5,
     "lessonsShowingForeignScript": 119,
     "rationale": "maxNewGlyphsPerLesson sits at the corpus's own p90 of 3 — the same rule that justified maxNewAtomsPerLesson, applied to the burden nobody was counting. The median non-Latin lesson introduces ZERO new glyphs, so this flags 61 genuine spikes rather than taxing ordinary lessons. It is deliberately NOT set at the max (12): a budget at the worst case is not a budget. maxNewScriptSystemsPerLesson is 1 by the project owner's rule that you cannot introduce more than one script at a time; today it flags only Japanese, whose five Chapter-1 lessons open kanji alongside hiragana and then add katakana. Counted separately and NEVER charged against these budgets: glyphs from OTHER scripts, which appear in 119 lessons and reach 26 in one — those are cousin-table context for a reader who already knows a related language, not a reading obligation, and conflating the two made a Kannada Chapter-1 lesson look like a 34-glyph cliff when its real Kannada load is 7."
+  },
+  "strandBudgetProvenance": {
+    "specifiedAt": "2026-08-10",
+    "spec": "HL10 section 2.2",
+    "status": "report-only",
+    "rationale": "HL09 showed one ramp can be gentle while another is brutal: Spanish looked gentle on vocabulary (178 words, every lesson within budget) while being unusable, because nothing measured what the learner could BUILD. These seven numbers give the remaining strands their own ceilings so no lesson can be gentle on atoms and steep on everything else. maxNewGrammarCellsPerLesson is the consequential one: a CELL is one filled slot in one paradigm (hablo), not the six-form table, and Spanish holds roughly 630 verb cells. At one per lesson the verb system alone is ~630 lessons, which is the honest size of the thing rather than a number to optimise away. maxRuleStatementsPerLesson is the info-dump gate: a lesson may state ONE rule, where a rule statement is 'X is used for...', 'X always/never...', 'there are N kinds of X', or a table introducing more than one new row. minDownstreamReach makes 'each lesson leads to future lessons' falsifiable -- an introduced atom that no later lesson requires or practises is a dead end. rootLedgerMinReuse stops etymology being decoration: a root must be cashed in by at least three later lessons or it is cut or moved to where its payoff lives. All seven ship report-only, per the HL05 precedent, because the corpus predates them and a gate that fails on recorded debt teaches authors to route around it.",
+    "measuredAgainstCorpus": "1694 lessons, 514 chapters, 22 tracks, at HL10 authoring time"
   }
 }

@@ -232,7 +232,15 @@ mod cyclic {
         Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
     }
     fn puts(arg: Expr) -> Stmt {
-        Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+        Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
     }
     fn let_(name: &str, value: Expr) -> Stmt {
         Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s() }
@@ -254,7 +262,7 @@ mod cyclic {
         stmts.push(puts(Expr::StrLit { value: "ok".into(), span: s() }));
         Module {
             name: "arrcycprog".into(),
-            manifest: FeatureManifest::from_features(&[
+            manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
                 Feature::Sequences,
                 Feature::Strings,
                 Feature::MutableBindings,

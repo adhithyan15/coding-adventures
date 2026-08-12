@@ -34,26 +34,48 @@ pub fn swift_runtime_binding() -> SwiftRuntimeBinding {
 
 /// Connect an emitted SwiftUI shell to the standard runtime before its legacy
 /// reflection-based host fallback.
-pub fn swift_app_with_runtime_binding(app_swift: &str) -> String {
-    app_swift.replacen(
+pub fn swift_app_with_runtime_binding(app_swift: &str, bundle_runtime: bool) -> String {
+    let with_binding = app_swift.replacen(
         "self.bridge = MosaicHostBridge.load()",
         "self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()",
         1,
-    )
+    );
+    if !bundle_runtime {
+        return with_binding;
+    }
+    let runtime_path = "Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path";
+    with_binding
+        .replace(
+            "MosaicRuntimeHost.loadRequired()",
+            &format!("MosaicRuntimeHost.loadRequired(libraryPath: {runtime_path})"),
+        )
+        .replace(
+            "MosaicRuntimeHost.load()",
+            &format!("MosaicRuntimeHost.load(libraryPath: {runtime_path})"),
+        )
 }
 
 /// Add the generated C loader target to an emitted Swift package manifest.
-pub fn swift_package_with_runtime_binding(package_swift: &str) -> String {
+pub fn swift_package_with_runtime_binding(package_swift: &str, bundle_runtime: bool) -> String {
     let with_target = package_swift.replacen(
         "  targets: [\n    .executableTarget(",
         "  targets: [\n    .target(\n      name: \"CMosaicRuntime\",\n      path: \"Sources/CMosaicRuntime\",\n      publicHeadersPath: \"include\"\n    ),\n    .executableTarget(",
         1,
     );
-    with_target.replacen(
+    let with_binding = with_target.replacen(
         "      name: \"App\",\n      path: \"Sources/App\"",
         "      name: \"App\",\n      dependencies: [\"CMosaicRuntime\"],\n      path: \"Sources/App\"",
         1,
-    )
+    );
+    if bundle_runtime {
+        with_binding.replacen(
+            "      path: \"Sources/App\"",
+            "      path: \"Sources/App\",\n      resources: [.copy(\"Runtime\")]",
+            1,
+        )
+    } else {
+        with_binding
+    }
 }
 
 /// Generate the standard XAML/.NET host binding for the requested C# namespace.
@@ -68,10 +90,25 @@ pub fn xaml_runtime_binding(namespace: &str) -> String {
 
 /// Generate the standard Flutter/Dart FFI host binding.
 pub fn flutter_runtime_binding() -> String {
-    include_str!("../templates/flutter/mosaic_host.dart").replace(
-        "__MOSAIC_PROTOCOL_VERSION__",
-        &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
-    )
+    flutter_runtime_binding_source(false)
+}
+
+/// Generate the standard Flutter/Dart FFI host binding for a project whose
+/// selected Rust engine is registered as a bundled Dart code asset.
+pub fn flutter_runtime_binding_with_bundled_asset() -> String {
+    flutter_runtime_binding_source(true)
+}
+
+fn flutter_runtime_binding_source(bundle_runtime: bool) -> String {
+    include_str!("../templates/flutter/mosaic_host.dart")
+        .replace(
+            "__MOSAIC_PROTOCOL_VERSION__",
+            &mosaic_app_runtime::PROTOCOL_VERSION.to_string(),
+        )
+        .replace(
+            "__MOSAIC_BUNDLED_RUNTIME__",
+            if bundle_runtime { "true" } else { "false" },
+        )
 }
 
 /// Add the small allocation helper used by Dart's native FFI to a generated
@@ -82,6 +119,19 @@ pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
         "dependencies:\n  ffi: '>=2.1.0 <3.0.0'\n",
         1,
     )
+}
+
+/// Add stable Dart build-hook dependencies and SDK floors to a Flutter
+/// project that bundles a selected precompiled Rust code asset.
+pub fn flutter_pubspec_with_bundled_runtime(pubspec_yaml: &str) -> String {
+    flutter_pubspec_with_runtime_binding(pubspec_yaml)
+        .replace("sdk: '>=3.5.0 <4.0.0'", "sdk: '>=3.10.0 <4.0.0'")
+        .replace("flutter: '>=3.32.0 <4.0.0'", "flutter: '>=3.38.0 <4.0.0'")
+        .replacen(
+            "dependencies:\n",
+            "dependencies:\n  code_assets: '>=1.0.0 <2.0.0'\n  hooks: '>=1.0.0 <3.0.0'\n",
+            1,
+        )
 }
 
 /// Files that expose the fixed Mosaic application C ABI as a QML host object.
@@ -156,6 +206,11 @@ mod tests {
         let source = compose_jna_binding();
         assert!(source.contains("System.getProperty(\"mosaic.app.library\")"));
         assert!(source.contains("System.getenv(\"MOSAIC_APP_LIBRARY\")"));
+        assert!(source.contains("System.getProperty(\"compose.application.resources.dir\")"));
+        assert!(source.contains("?: bundledMosaicLibrary()"));
+        assert!(source.contains("\"libmosaic_app.dylib\""));
+        assert!(source.contains("\"mosaic_app.dll\""));
+        assert!(source.contains("\"libmosaic_app.so\""));
         assert!(source.contains("Locale.getDefault().toLanguageTag()"));
         assert!(source.contains("put(\"textScale\", 1.0)"));
         assert!(source.contains("-> \"apple\""));
@@ -183,6 +238,19 @@ mod tests {
     }
 
     #[test]
+    fn qt_binding_prefers_the_application_relative_runtime() {
+        let source = qt_runtime_binding().source;
+        assert!(source.contains("QCoreApplication::applicationDirPath()"));
+        assert!(source.contains("QDir(QCoreApplication::applicationDirPath()).filePath(fileName)"));
+        let bundled = source.find("return {bundled, fileName").unwrap();
+        let global = source.find("QStringLiteral(\"mosaic_app\")").unwrap();
+        assert!(
+            bundled < global,
+            "the app-relative path must precede global lookup"
+        );
+    }
+
+    #[test]
     fn swift_binding_uses_the_shared_protocol_and_commits_successful_sequences() {
         let source = swift_runtime_binding().host_swift;
         assert!(source.contains(&format!(
@@ -199,7 +267,8 @@ mod tests {
             dispatch < commit,
             "sequence must commit only after dispatch succeeds"
         );
-        assert!(source.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(source
+            .contains("static func loadRequired(libraryPath: String? = nil) -> MosaicRuntimeHost"));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
@@ -207,14 +276,33 @@ mod tests {
     fn swift_shell_patches_install_the_runtime_before_legacy_fallback() {
         let app = swift_app_with_runtime_binding(
             "init() {\n    self.bridge = MosaicHostBridge.load()\n  }",
+            false,
         );
         assert!(app.contains("MosaicRuntimeHost.load() ?? MosaicHostBridge.load()"));
 
         let package = swift_package_with_runtime_binding(
             "  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    ),\n  ]",
+            false,
         );
         assert!(package.contains("name: \"CMosaicRuntime\""));
         assert!(package.contains("dependencies: [\"CMosaicRuntime\"]"));
+    }
+
+    #[test]
+    fn swift_shell_patches_resolve_a_bundled_runtime_resource() {
+        let strict_app = swift_app_with_runtime_binding(
+            "init() {\n    self.bridge = MosaicRuntimeHost.loadRequired()\n  }",
+            true,
+        );
+        assert!(strict_app.contains(
+            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+        ));
+
+        let package = swift_package_with_runtime_binding(
+            "  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    ),\n  ]",
+            true,
+        );
+        assert!(package.contains("resources: [.copy(\"Runtime\")]"));
     }
 
     #[test]
@@ -233,6 +321,20 @@ mod tests {
         assert!(source.contains("NativeLibrary.GetExport"));
         assert!(source.contains("finally { bufferFree(buffer); }"));
         assert!(source.contains("public void Dispose()"));
+    }
+
+    #[test]
+    fn xaml_binding_prefers_the_application_relative_runtime() {
+        let source = xaml_runtime_binding("Mosaic.Generated");
+        assert!(source.contains("Path.Combine(AppContext.BaseDirectory, \"mosaic_app.dll\")"));
+        let bundled = source
+            .find("Path.Combine(AppContext.BaseDirectory")
+            .unwrap();
+        let global = source.find("\"mosaic_app\",").unwrap();
+        assert!(
+            bundled < global,
+            "the app-relative path must precede global lookup"
+        );
     }
 
     #[test]
@@ -277,6 +379,24 @@ mod tests {
         assert!(source.contains("const MosaicHost()"));
         assert!(source.contains("static MosaicHost loadRequired()"));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(source.contains("static const bool _hasBundledRuntime = false;"));
+        assert!(!source.contains("__MOSAIC_BUNDLED_RUNTIME__"));
+    }
+
+    #[test]
+    fn flutter_binding_can_resolve_a_bundled_code_asset() {
+        let source = flutter_runtime_binding_with_bundled_asset();
+        assert!(source.contains("@Native<_CreateNative>(symbol: 'mosaic_app_create')"));
+        assert!(source.contains("static const bool _hasBundledRuntime = true;"));
+        assert!(source.contains("if (_hasBundledRuntime) return _MosaicRuntime.bundled();"));
+        let environment = source.find("MOSAIC_APP_LIBRARY").unwrap();
+        let bundled = source
+            .find("if (_hasBundledRuntime) return _MosaicRuntime.bundled();")
+            .unwrap();
+        assert!(
+            environment < bundled,
+            "the explicit development override wins"
+        );
     }
 
     #[test]
@@ -301,6 +421,18 @@ mod tests {
             flutter_pubspec_with_runtime_binding("dependencies:\n  flutter:\n    sdk: flutter\n");
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
         assert!(pubspec.contains("flutter:\n    sdk: flutter"));
+    }
+
+    #[test]
+    fn flutter_pubspec_installs_stable_code_asset_support() {
+        let pubspec = flutter_pubspec_with_bundled_runtime(
+            "environment:\n  sdk: '>=3.5.0 <4.0.0'\n  flutter: '>=3.32.0 <4.0.0'\ndependencies:\n  flutter:\n    sdk: flutter\n",
+        );
+        assert!(pubspec.contains("sdk: '>=3.10.0 <4.0.0'"));
+        assert!(pubspec.contains("flutter: '>=3.38.0 <4.0.0'"));
+        assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
+        assert!(pubspec.contains("hooks: '>=1.0.0 <3.0.0'"));
+        assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
     }
 
     #[test]

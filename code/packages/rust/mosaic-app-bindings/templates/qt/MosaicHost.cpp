@@ -2,6 +2,7 @@
 #include "MosaicHost.h"
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QLocale>
@@ -43,12 +44,14 @@ QStringList libraryCandidates()
     const auto requested = qEnvironmentVariable("MOSAIC_APP_LIBRARY");
     if (!requested.trimmed().isEmpty()) return {requested};
 #if defined(Q_OS_WIN)
-    return {QStringLiteral("mosaic_app.dll"), QStringLiteral("mosaic_app")};
+    const auto fileName = QStringLiteral("mosaic_app.dll");
 #elif defined(Q_OS_MACOS) || defined(Q_OS_IOS)
-    return {QStringLiteral("libmosaic_app.dylib"), QStringLiteral("mosaic_app")};
+    const auto fileName = QStringLiteral("libmosaic_app.dylib");
 #else
-    return {QStringLiteral("libmosaic_app.so"), QStringLiteral("mosaic_app")};
+    const auto fileName = QStringLiteral("libmosaic_app.so");
 #endif
+    const auto bundled = QDir(QCoreApplication::applicationDirPath()).filePath(fileName);
+    return {bundled, fileName, QStringLiteral("mosaic_app")};
 }
 }
 

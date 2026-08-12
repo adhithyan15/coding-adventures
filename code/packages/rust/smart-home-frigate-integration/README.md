@@ -10,16 +10,21 @@ and explicitly logs out. Credentials, login bodies, cookies, and JWTs never
 enter request plans, normalized state, or debug output.
 
 Camera entities expose confirmed processing FPS, detection state, connection
-quality, expected FPS, and recent reconnect/stall counters. The health mapping
-preserves Frigate's native connection-quality signal and marks stopped camera
-processing offline. Plain HTTP is accepted only for loopback protocol tests.
+quality, expected FPS, recent reconnect/stall counters, and the documented
+snapshot capability. The reusable snapshot transaction performs a fresh login,
+fetches one bounded JPEG from `/api/{camera}/latest.jpg` through a reviewed
+pinned address, and explicitly logs out after every authenticated outcome. The
+health mapping preserves Frigate's native connection-quality signal and marks
+stopped camera processing offline. Plain HTTP is accepted only for loopback
+protocol tests.
 
 This slice intentionally does not read Frigate configuration or expose event,
-snapshot, recording, export, playback, or mutation endpoints. Those operations
-need concrete event or media hosts and operation-specific D23 contracts.
+recording, export, playback, or mutation endpoints. Those operations need
+concrete event or resource hosts and operation-specific D23 contracts.
 
 Protocol references:
 
 - [Frigate authentication](https://docs.frigate.video/configuration/authentication/)
 - [Frigate login API](https://docs.frigate.video/integrations/api/login-login-post/)
 - [Frigate stats API](https://docs.frigate.video/integrations/api/stats-stats-get/)
+- [Frigate camera API](https://docs.frigate.video/integrations/api/camera/)

@@ -1,61 +1,40 @@
-Spanish, chapter 32: Dog and Cat.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 32: Synthesis --- The Same Conversation, Twice.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-gato — the word that travelled with the animal.
-
-Warm-up.
-[pause 2 seconds]
-Some etymologies can be followed all the way home. This one runs from your mouth back to ancient Egypt, and every step of it is documented.
-
-The word, taken apart: gato.
-gato ("cat") from Latin cattus. But cattus was not Classical Latin's word for cat. That was fēlēs, which survives today only in the scientific name Felis catus and in English feline.
-Cattus entered Latin later, arriving with the animal itself as domestic cats spread along Roman trade routes from where they were domesticated — Egypt, around 2000 BCE. The word is most likely Afro-Asiatic in origin (compare Nubian kadis, "cat").
-So word and creature travelled together, out of Africa into Europe, and the newcomer pushed fēlēs out almost everywhere: Spanish gato, Italian gatto, French chat, Old Irish cat, Welsh cath, English cat. When a thing arrives from abroad, its name usually arrives with it.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el gato" — the cat]
-[pause 8 seconds for the answer]
-[your turn — say: the trail — "kadis, cattus, gato"]
-[pause 8 seconds for the answer]
-[your turn — say: the word it replaced — "fēlēs," now only in "feline"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What was Classical Latin's actual word for cat, and where does it survive? (Fēlēs — in Felis catus and English feline.) Where did cattus most likely come from? (An Afro-Asiatic word, travelling with the domesticated cat out of Egypt.) Next: the other animal in this chapter, whose history nobody can trace at all.
-
-
-Lesson 2 of 2.
-perro — the word nobody can explain.
+Lesson 1 of 1.
+Synthesis — the same conversation, twice.
 
 Warm-up.
 [pause 2 seconds]
-Gato could be traced all the way to Egypt. Perro is the opposite kind of word, and it is worth knowing that such words exist: completely ordinary, used a thousand times a day, and nobody knows where it came from.
+Nothing new in this chapter either. This one is for using what you have — because knowing three endings is not the same as choosing the right one while a real person waits for you to finish.
 
-The word, taken apart: perro.
-perro ("dog"). Roll the rr: PEH-rro.
-The word Spanish should have inherited is canis — the same root as English canine, French chien, Italian cane. And it did survive, as the now-archaic Spanish can (still readable in old poetry and in canino). But at some point perro pushed can almost entirely out of everyday use — and perro itself has no agreed origin.
+Grammar Lens: what the ending is really saying.
+You are going to hold one short conversation twice — once with someone your own age, once with someone you want to show respect to. The words barely change. What changes is one letter on the end of one verb.
+That letter is the whole message. Hablas says I am at ease with you. Habla says I am being careful with you. English would need a change of tone, or a "sir." Spanish does it with an -s.
 
-Why it's said this way: an honestly open question.
-Three serious proposals, none confirmed:
-[a table of 3 rows, read aloud]
-proposal: onomatopoeia — a growl, or a shepherd's call "perr, perr". the case for it: matches how herding calls become names elsewhere. the problem: no early written evidence.
-proposal: pre-Roman Iberian substrate. the case for it: the -rro ending is a known marker of likely pre-Latin words in Spanish. the problem: the substrate languages are barely recorded.
-proposal: Persian persus, a hunting-dog breed. the case for it: such breeds did spread in the late Empire. the problem: the sound match is loose.
-Notice what makes this a good open question rather than a shrug: each proposal predicts different evidence, and the evidence needed simply has not survived. Perro remains one of Spanish's genuinely unsolved puzzles, and a useful reminder that "we don't know" is a real answer in etymology, not a gap in your notes.
+The exchange — with a friend.
+— ¡Hola! Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Hablas español? — Sí, hablo español. ¡Gracias!
+
+The exchange, again — being polite.
+— Buenos días. Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Habla usted español? — Sí, hablo español. Gracias.
+One letter. Hablas became habla, and the whole exchange changed its temperature. Your own line — hablo — never moved, because you are still you in both conversations.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el perro, el gato" — dog and cat]
+[your turn — say: version one, both parts, start to finish]
 [pause 8 seconds for the answer]
-[your turn — say: "can" — the archaic word perro replaced, from Latin canis]
+[your turn — say: version two — and catch the single letter that moved]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — "gato, traced to Egypt; perro, unsolved"]
-[pause 8 seconds for the answer]
+[repeat that twice]
+Run whichever version is harder.
+[question — say your answer, then pause 8 seconds]
+You are talking to someone your own age. Which form: hablas or habla?
+[question — say your answer, then pause 8 seconds]
+You are speaking to someone you want to show respect to. Which form?
+[question — say your answer, then pause 10 seconds]
+In BOTH conversations, how do you say I speak?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What archaic Spanish word did perro replace, and what is its Latin source? (Can, from canis — the root of English canine.) Does perro have a confirmed etymology? (No — onomatopoeic, pre-Latin substrate and Persian proposals all remain unconfirmed.) And gato's origin, by contrast? (Traceable — Latin cattus, probably Afro-Asiatic, travelling out of Egypt.)
+What is the only thing that changed between the two conversations? (One letter — hablas becomes habla.) Why did hablo stay the same? (Because it is about you, and you did not change.) What does choosing habla over hablas actually tell the other person? (That you are being respectful — the grammar is carrying the manners.)

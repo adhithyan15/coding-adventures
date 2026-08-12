@@ -4,6 +4,1750 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Fixed - the adjective arc had no nouns to describe (HL-C112)
+
+- Move `la casa` and `el libro` from chapters 70-71 to 56-57, ahead of the
+  adjective arc, so `una casa grande` is taught rather than assumed.
+- Forward references fall 446 -> 438; the adjective arc reaches zero.
+- Declare the `hacer`, `querer` and `decir` dependencies that 17 downstream
+  lessons had been reaching transitively through the moved segments.
+
+### Added - the -oso friend ending (HL-C88, HL10 §6.7)
+
+- Add Spanish chapter 59: `-oso` is English `-ous`, from Latin `-osus`, "full of".
+- Build it on the adjective arc: position, agreement, and the `ser`/`estar` choice
+  all apply without being restated.
+- Name the limit: `hermoso` is beautiful, not "hermous" — the ending is reliable,
+  the root still has to be shared.
+- Correct the earlier verdict that `-oso` was blocked on vocabulary: a reading
+  rule does not need the corpus to teach words ending in it.
+
+### Added - the first describing words (HL-C88, HL10 §5.4b)
+
+- Add Spanish chapters 56-58: `grande`, `cansado`, and a synthesis on choosing
+  `ser` or `estar` with an adjective and making the ending agree.
+- Close a 129-chapter gap: the corpus's only adjectives were the colours, first
+  taught at chapter 130, so `ser` vs `estar` at chapter 48 had nothing to contrast.
+- Teach adjective-after-noun order, and that the last letter says whether a word
+  shifts: `-o` does, `-e` and `-ista`/`-ante` do not.
+- Teach `cansado` as a word the decoder cannot help with, on purpose.
+
+### Added - professions, and the -ante and -ista endings (HL-C88, HL10 §6.7)
+
+- Add Spanish chapters 51-54: `profesor`, `estudiante`, the `-ista` family, and a
+  synthesis. The corpus taught `ser` at chapter 48 but had no profession noun in
+  322 word forms, so `Soy profesor` could not be said.
+- Teach the bare-noun rule: after `ser`, a job takes no `un` or `una`.
+- Build `estudiante` from `estudiar` with `-ante`, and read it as English `-ant`.
+- Ground the previously blocked `-ista` ending on words that need no teaching.
+- Both endings are invariant for gender; only the article moves.
+
+### Added - the es- + consonant friend rule (HL-C88, HL10 §6.7)
+
+- Add Spanish chapter 30: Latin `st-`/`sp-`/`sc-` grew an `e-` in Spanish, so
+  taking it off often reveals the English word (`estación` to station).
+- Anchor it on `estar` and `estudiar`, taught in chapters 4 and 6, and spend the
+  existing `stare-latin` and `studere-latin` roots rather than minting new slugs.
+- Name the limit: `español` is not an example, since its `Es-` is what remains of
+  `Hispania` rather than an added vowel.
+- Grow the chapter-31 synthesis from six rules to seven, and say that they stack.
+- Chose this rung by census: it has 11 taught words to decode, while `-ncia`,
+  `-oso`, `-ario` and `-ismo`/`-ista` have none anywhere in the book.
+
+### Fixed - over-long section short titles wrapped in the table of contents (HL-C109d)
+
+- Cut `sectionShortTitle` to a budget of 40 display columns, the corpus's 99th
+  percentile, so a month or weekday list no longer wraps a one-line TOC entry.
+- Count combining marks as zero columns and East Asian wide forms as two; cut at
+  a word boundary, and keep a single over-wide word intact rather than mid-word.
+- Drop a trailing separator with the item it joined, so a cut list does not read
+  as `sal - se - ...` with something missing from the middle.
+- 17 section lines in 17 chapters change. All 22 books now build with 0 overfull,
+  0 underfull and 0 missing characters.
+
+### Added - hidden friends via the sound laws (HL-C88, HL10 §6.7)
+
+- Add Spanish chapters 28-30: the general `f- -> h-` decoder, `cl-`/`pl-`/`fl- -> ll-`,
+  and a synthesis over all six decoding rules the book now holds.
+- Introduce `ES-SOUND-F-TO-H-DECODER` and pay the promise `ES-C06-hablar` made in its
+  own prose 22 chapters earlier, practising the `ES-SOUND-F-TO-H` atom it planted.
+- Review `-CT- -> -ch-` rather than introduce it: `ES-C02-noche` already teaches it.
+- Shift 241 lessons at sequence >=548 by +20 sequence and +3 chapter, and rebuild the
+  capability ledger, book targets, curriculum path segments and extension nodes with them.
+
+### Added - source-verified Chinese 请 (HL-C09CQ)
+
+- Verify 请 as ten ordered strokes with nine lifts against the pinned PRC source.
+- Preserve 讠-before-青 order and all four joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 137 entries; Chinese has 6 outstanding.
+### Added - source-verified Chinese 谢 (HL-C09CP)
+
+- Verify 谢 as twelve ordered strokes with eleven lifts against the pinned PRC source.
+- Preserve 讠-before-身-before-寸 order and all five joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 138 entries; Chinese has 7 outstanding.
+
+### Added - source-verified Chinese 字 (HL-C09CO)
+
+- Verify 字 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve 宀-before-子 component order and all three joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 139 entries; Chinese has 8 outstanding.
+
+### Added - source-verified Chinese 名 (HL-C09CN)
+
+- Verify 名 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve 夕-before-口 component order and both joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 140 entries; Chinese has 9 outstanding.
+
+### Added - source-verified Chinese 不 (HL-C09CM)
+
+- Verify 不 as four separately placed strokes with three lifts against the pinned PRC source.
+- Record that planned 叫 is outside the measured inventory and needs a separate font-resubsetting change.
+- Reduce HL-C09 debt to 141 entries; Chinese has 10 outstanding.
+### Added - source-verified Chinese 是 (HL-C09CL)
+
+- Verify 是 as nine ordered strokes with eight lifts against the pinned PRC source.
+- Preserve 日-first order and its joined top-right corner in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 142 entries; Chinese has 11 outstanding.
+
+### Added - source-verified Chinese 我 (HL-C09CK)
+
+- Verify 我 as seven ordered strokes with six lifts against the pinned PRC source.
+- Add a Noto Sans SC fit preserving the hooked vertical and long curved slash.
+- Reduce HL-C09 debt to 143 entries; Chinese has 12 outstanding.
+
+### Added - the three highest-reach friend endings (HL-C88, HL10 §6.7)
+
+- Add chapters 23-27, immediately after `español`: `-ción`/`-tion` (~2,000
+  words), `-dad`/`-ty` (~1,200), `-mente`/`-ly` (unbounded), a review and a
+  synthesis.
+- Ground each correspondence rather than asserting it: `-ción` and `-tion` are
+  the same Latin `-tiōnem`, inherited by one language and borrowed by the other;
+  `-dad` looks less like `-ty` because English wore `-tātem` down further
+  through French; `-mente` was a feminine noun meaning *mind*, which explains
+  the feminine adjective.
+- Separate decoders from machines in the review: two endings let the reader
+  read, one lets them build.
+- Close by having the reader read a sentence with four untaught words in it.
+- Record that `type: pattern` is reserved for slot-filling productions with a
+  single `-PATTERN-` atom; these rules are `type: grammar`.
+- Spanish reaches 178 chapters and 324 lessons.
+
+### Added - the pronoun as evidence of a hidden gender (HL-C107)
+
+- Add chapter 122, immediately after `el agua`: a third proof that the word is
+  feminine, after the adjective and the plural, and the cheapest of the three.
+- `La bebo`, not `lo bebo` — nothing sits in front of a pronoun, so no vowels
+  collide and it reports the gender straight.
+- Close on the general test rather than the single word: when an article looks
+  suspicious, listen for `lo` or `la`.
+- Spanish reaches 173 chapters and 319 lessons.
+
+### Added - source-verified Chinese 好 (HL-C09CJ)
+
+- Verify 好 from its pinned Hanzi Writer Data record as six ordered runs: all
+  three strokes of 女 before all three strokes of 子.
+- Preserve three joined turns and five lifts in a Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 144 entries; Chinese has 13 outstanding.
+
+### Added - source-verified Chinese 你 (HL-C09CI)
+
+- Verify 你 from its pinned Hanzi Writer Data record as seven ordered runs:
+  write 亻 first, then the five strokes of 尔.
+- Preserve the joined horizontal hook, joined vertical hook, and six lifts in
+  a Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 145 entries; Chinese has 14 outstanding.
+
+### Added - source-verified Chinese 宀 (HL-C09CH)
+
+- Verify 宀 from its pinned Hanzi Writer Data record as three ordered runs: a
+  top dot, a left-side drop, then a horizontal roof with a joined down-left hook.
+- Preserve the roof and hook inside the third stroke and two lifts in a Noto
+  Sans SC fit.
+- Reduce measured HL-C09 debt to 146 entries; Chinese has 15 outstanding.
+
+### Added - source-verified Chinese 氵 (HL-C09CG)
+
+- Verify 氵 from its pinned Hanzi Writer Data record as three ordered runs: two
+  down-right dots, then a bottom stroke that turns slightly left before rising.
+- Preserve the bottom turn and rise inside the third stroke and two lifts in a
+  Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 147 entries; Chinese has 16 outstanding.
+
+### Added - source-verified Chinese 讠 (HL-C09CF)
+
+- Verify 讠 from its pinned Hanzi Writer Data record as two ordered runs: a
+  down-right dot, then a horizontal that turns down and rises to finish.
+- Preserve both turns inside the second stroke and one lift in a Noto Sans SC
+  fit.
+- Reduce measured HL-C09 debt to 148 entries; Chinese has 17 outstanding.
+
+### Added - hay, closing rung 1 and the whole HL10 rung audit (HL-C105)
+
+- Add five chapters at 168-172. Placed late on purpose: only after `haber` can
+  `hay` be explained rather than listed.
+- Record that `hay` is the one common Spanish verb form that **agrees with
+  nothing** — visible as a gift only after 167 chapters of agreement.
+- Take it apart: `ha` + **`y`**, from Latin *ibi* ("there"), a word Spanish
+  otherwise lost completely and which survives only because it was welded to a
+  verb. French kept the same three pieces separate as *il y a*.
+- Pair `hay que` with the impersonal `se` as Spanish's two ways of leaving the
+  person out — one for what happens, one for what must happen.
+- Name the pattern: the smallest words need the most explaining, because
+  constant use wears them into fossils.
+- Close the beginner's arc honestly: the machinery is assembled; what remains
+  is words and practice.
+- **All eleven absent rungs from the HL10 §5.4a audit are now closed.**
+- Spanish reaches 172 chapters and 318 lessons.
+
+### Added - source-verified Chinese 日 (HL-C09CE)
+
+- Verify 日 from its pinned Hanzi Writer Data record as four ordered runs: the
+  left side, joined top-and-right corner, middle bar, then closing bottom.
+- Preserve the joined corner, inside-before-close order, and three lifts in a
+  Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 149 entries; Chinese has 18 outstanding.
+
+### Added - relative clauses, closing rung 28 (HL-C105)
+
+- Add five chapters at 163-167. This rung introduces **no new word at all**:
+  `que` and `lo` were both already held, and `lo que` is the two together.
+- Name what changes: a sentence may now contain another sentence.
+- Give a chapter to the error that outlives the others — **English deletes its
+  joint and Spanish never does**. The gap is invisible because the learner's own
+  language put it there, so the habit is mechanical: a noun, then a new subject
+  and verb, needs a `que`.
+- Explain why: English word order is rigid, Spanish moves its pieces, so a
+  deletable joint would be ambiguous. It is the price of pro-drop.
+- Frame `lo que` as a noun-shaped hole with a sentence attached — which is what
+  English *what* is.
+- Close on the argument that length is not difficulty: a relative clause adds a
+  slot, not grammar.
+- Spanish reaches 167 chapters and 313 lessons.
+
+### Added - source-verified Chinese 子 (HL-C09CD)
+
+- Verify 子 from its pinned Hanzi Writer Data record as three ordered runs: a
+  joined top turn, a separately joined central hook, then the middle héng.
+- Preserve both internal turns and two lifts in a Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 150 entries; Chinese has 19 outstanding.
+
+### Added - the impersonal se, closing rung 27 (HL-C105)
+
+- Add five chapters at 158-162 for the `se` that names nobody: `se habla
+  español`, the agreement that reveals its origin, `¿cómo se dice?`, a review
+  and a synthesis.
+- Show that the impersonal **is** the reflexive, grown: `se compran libros`
+  takes a plural verb because, underneath, books buy themselves.
+- Unify material learned a hundred chapters apart: Spanish has **two `se`s and
+  a coincidence**, not three. The `se` of `se lo digo` is Latin *illī*, met as
+  *gelo* in rung 15.
+- Give `¿cómo se dice?` its own chapter as the sentence that lets a
+  conversation repair itself.
+- Close on reading rather than producing: this construction is written at the
+  learner, and the missing person is what gives a sign its authority.
+- Spanish reaches 162 chapters and 308 lessons.
+
+### Added - source-verified Chinese 女 (HL-C09CC)
+
+- Verify 女 from its pinned Hanzi Writer Data record as three ordered runs: a
+  bent piědiǎn sweep, a separately left-falling piě, then the middle héng.
+- Preserve the first stroke's internal turn and two lifts in a Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 151 entries; Chinese has 20 outstanding.
+
+### Added - por and para, closing rung 26 (HL-C105)
+
+- Add five chapters at 153-157 replacing the usual twelve-rule list with one
+  arrow: `para` points forward at a target, `por` points back at a cause or
+  through a middle.
+- Ground the test in the words rather than a mnemonic: `para` is *per* + **ad**
+  ("toward", as in *advance*), `por` is *pro* + **per** ("through", still alive
+  in English *per hour* and *per cent*).
+- Explain three phrases the reader has owned since the opening chapters:
+  `por favor` is literally *by way of a favour*, `¿por qué?` is *through what?*,
+  and `porque` is those two words fused.
+- Close on the smallest word carrying the sentence's feeling: *para ti* is a
+  gift, *por ti* is a motive — and a wrong choice is a true sentence about a
+  different situation, not bad grammar.
+- Spanish reaches 157 chapters and 303 lessons.
+
+### Added - source-verified Chinese 口 (HL-C09CB)
+
+- Verify 口 from its pinned Hanzi Writer Data record as three ordered runs:
+  left side, joined top-and-right héngzhé, then the closing bottom bar.
+- Preserve the joined corner and close-last rule in a two-lift Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 152 entries; Chinese has 21 outstanding.
+
+### Added - commands, closing rung 24 (HL-C105)
+
+- Add six chapters at 109-114, placed after the subjunctive because three of
+  the four command boxes are the subjunctive.
+- Record the arithmetic: a whole mood whose only new material is **eight
+  one-syllable words** — `di, haz, ve, pon, ten, sal, sé, ven`.
+- The affirmative `tú` command is the he/she present the reader already holds;
+  the negative and both `usted` forms are the subjunctive doing its usual job.
+- Explain why the `usted` command is the polite one: `usted` is a worn-down
+  *vuestra merced*, a title, so the order is aimed past the listener — and that
+  indirectness is the politeness.
+- Frame the eight irregulars by a checkable fact: every one is a single
+  syllable, because commands are shouted and hurried and these are the
+  commonest verbs.
+- Close with register rather than form: an English speaker's mistake here is
+  **person, not tone**. `usted` with an old friend opens a distance.
+- Spanish reaches 152 chapters and 298 lessons.
+
+### Added - source-verified Chinese 亻 (HL-C09CA)
+
+- Verify the compressed person radical from its own pinned Hanzi Writer Data
+  record: left-falling piě before a separately started vertical shù.
+- Fit both ordered medians independently to the narrow Noto Sans SC outline
+  instead of mechanically squeezing the full 人 path.
+- Reduce measured HL-C09 debt to 153 entries; Chinese has 22 outstanding.
+
+### Added - the present perfect, closing rung 23 (HL-C105)
+
+- Add six chapters at 94-99: the participle, `he` + participle, the full
+  `haber` paradigm, the four irregular participles, a review and a synthesis.
+- Name the shape: this tense is **built, not conjugated** — six words learned
+  once plus one participle per verb, a fixed cost rather than a per-verb one.
+- Answer the question learners actually have about `haber`: it means nothing
+  here. Spanish gave the meaning to `tener`; English hollowed out `have` the
+  same way, which is why *I have eaten* holds nothing.
+- Frame the irregular participles as **older than the rule** — `hecho` from
+  *factum* (English **fact**), `dicho` from *dictum*, `visto` from *vīsum*,
+  `puesto` from *positum* — inherited whole rather than broken.
+- Record the third geography split, after `vosotros` and `os`: for something
+  that happened today, Madrid says *he hablado* and Mexico City says *hablé*.
+- Spanish reaches 146 chapters and 292 lessons.
+
+### Added - source-verified Chinese 人 (HL-C09BZ)
+
+- Open Chinese ductus coverage with the pinned Hanzi Writer Data record for
+  **人**, whose ordered medians draw left-falling piě before right-falling nà.
+- Fit the two source directions to Noto Sans SC with one verified pen lift while
+  recording the Arphic-derived source graphics' different proportions.
+- Reduce measured HL-C09 debt to 154 entries; Chinese has 23 outstanding.
+
+### Added - source-verified Hebrew Tav (HL-C09BY)
+
+- Verify printed **ת** from Aural Writing's full-alphabet demonstration as a
+  joined top-and-right run followed by one lift and a separate left leg and foot.
+- Preserve the source's one-run purple cursive retrace and arch while fitting
+  the one-lift printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 155 entries and close Hebrew; Chinese is the
+  smallest actionable inventory after Arabic's three source-blocked entries.
+
+### Added - the preterite/imperfect contrast, closing rung 20 (HL-C105)
+
+- Add five chapters at 89-93. Neither tense is new; all of the teaching is
+  about the choice between them, which is the whole difficulty.
+- State the core fact plainly: the two pasts differ in **viewpoint**, not in
+  time. The same afternoon can take either.
+- Teach `cuando`, which was never taught, because the contrast cannot be shown
+  in a single sentence without it.
+- Derive `tenía` / `tuve` ("had" / "got") from the aspect rule rather than
+  listing it as an exception: a state forced into the preterite gives you the
+  moment it began, so the reader can predict any state verb's preterite.
+- Hand over a question rather than a table — *am I saying what happened, or
+  what things were like?* — because trigger-word lists fail exactly where the
+  choice is interesting.
+- Close with the first narration in the book: a four-sentence story whose
+  imperfects are the background and whose preterites are the foreground.
+- Spanish reaches 140 chapters and 286 lessons.
+
+### Added - source-verified Hebrew Shin (HL-C09BX)
+
+- Verify printed **ש** from Aural Writing's full-alphabet demonstration as an
+  outer right-base-left run followed by one lift and a descending middle branch.
+- Preserve the source's compact one-run purple cursive loop while fitting the
+  one-lift printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 156 entries; Hebrew has 1 outstanding, with
+  the same source's adjacent Tav demonstration queued next.
+
+### Added - two pronouns at once, closing rung 15 (HL-C105)
+
+- Add the double object pronouns at chapters 76-80: the fixed order, the `se`
+  substitution, its etymology, a review and a synthesis.
+- Introduce **no new pronoun**. The whole arc is one order and one substitution.
+- Record that the `se` of `se lo digo` is **not** the reflexive `se` of
+  `se llama`: Old Spanish said *gelo* (from *illī* + *illum*), which re-split
+  into *ge* + *lo* and then drifted until *ge* sounded like *se*. Two unrelated
+  words collided by sound in the sixteenth century.
+- Ask the reader to say `le lo digo` aloud before the rule is given, so the
+  mouth objects before the grammar does.
+- Close on three words carrying a person and a thing with neither named
+  (`se la hago`), and on the doubled cost of that compression.
+- Spanish reaches 135 chapters and 281 lessons.
+
+### Added - source-verified Hebrew Resh (HL-C09BW)
+
+- Verify printed **ר** from Aural Writing's full-alphabet demonstration as one
+  joined top-bar, rounded-corner, and right-downstroke run.
+- Preserve the source's rounder one-run purple cursive hook while fitting the
+  zero-lift printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 157 entries; Hebrew has 2 outstanding, with
+  the same source's adjacent Shin demonstration queued next.
+
+### Added - the indirect object pronouns, closing rung 14 (HL-C105)
+
+- Add `le` and `les` at chapters 71-72, a chapter on choosing between the two
+  systems, then a review and a synthesis.
+- Record that a second complete table costs **two new words**: `me`, `te`, `nos`
+  and `os` are identical in both systems, and `les` is derived with the same
+  `-s` the reader already uses.
+- State the relief plainly: `le` does not mark gender, so one form covers him,
+  her and *usted* after four chapters of choosing `lo` against `la`.
+- Teach the deepest etymology in the arc: `lo` is Latin *illum* and `le` is
+  Latin *illī* — the accusative and the dative. Nouns lost their case endings
+  entirely; two cases survived in these pronouns.
+- Replace a verb-by-verb list with a test — does the verb act *on* it or aim
+  *at* it — and name *leísmo* honestly rather than letting it arrive later as a
+  contradiction.
+- Spanish reaches 130 chapters and 276 lessons.
+
+### Added - source-verified Hebrew Qof (HL-C09BV)
+
+- Verify printed **ק** from Aural Writing's full-alphabet demonstration as a
+  joined top-and-right body followed by one lift and a separate descending stem.
+- Preserve the source's one-run purple cursive hook while fitting the printed
+  order and below-line stem to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 158 entries; Hebrew has 3 outstanding, with
+  the same source's adjacent Resh demonstration queued next.
+
+### Added - the plural object pronouns, closing rung 13 (HL-C105)
+
+- Add `nos`, `los`/`las` and `os` at chapters 66-68, then a review and a
+  synthesis, completing the eight-cell direct object set.
+- Have the reader **derive** `los` and `las` in a warm-up rather than be taught
+  them: the object pronoun pluralises with a plain `-s`, which is the first
+  plural in the course that behaves exactly as guessed.
+- Pay off the article puzzle from the previous arc: `el` had to become `los`
+  because it is a worn-down *elo*, while `lo` kept its vowel and had nothing to
+  repair.
+- Teach `nosotros` where it belongs, alongside `nos`. The `-mos` ending had been
+  in use for thirty chapters and the word itself was never introduced.
+- Record that `os` is `vos` worn down, and that the same `vos` survives glued
+  into `vosotros` and standing whole as a subject pronoun in Argentina.
+- Close on what a pronoun costs: it promises the listener the thing it points
+  at is still in the room, and the gender has to point at something real.
+- Spanish reaches 125 chapters and 271 lessons.
+
+### Added - source-verified Hebrew Tsadi (HL-C09BU)
+
+- Verify printed **צ** from Aural Writing's full-alphabet demonstration as a
+  long diagonal joined to the base, followed by one lift and a short upper arm.
+- Preserve the source's compact one-run purple cursive form while fitting the
+  printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 159 entries; Hebrew has 4 outstanding. Final
+  Tsadi is already represented by `forms.final`, so the later Qof is queued next.
+
+### Added - source-verified Hebrew Pe (HL-C09BT)
+
+- Verify printed **פ** from Aural Writing's full-alphabet demonstration as an
+  outer top-right-base run followed by one lift and a short inner curl.
+- Preserve the source's one-run purple cursive spiral while fitting the printed
+  order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 160 entries; Hebrew has 5 outstanding. The
+  intervening final-Pe demonstration is already represented by `forms.final`,
+  so the same source's later Tsadi demonstration is queued next.
+
+### Added - source-verified Hebrew Ayin (HL-C09BS)
+
+- Verify printed **ע** from Aural Writing's full-alphabet demonstration as one
+  joined run: right descent, leftward base, and returning left-branch climb.
+- Preserve the source's compact purple cursive loop while fitting the printed
+  zero-lift order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 161 entries; Hebrew has 6 outstanding, with
+  the same source's Pe demonstration queued next.
+
+### Added - source-verified Hebrew Samekh (HL-C09BR)
+
+- Verify printed **ס** from Aural Writing's full-alphabet demonstration as one
+  clockwise loop: flat top, rounded right side, leftward base, and closing left side.
+- Preserve the source's rounder purple cursive oval while fitting the printed
+  zero-lift order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 162 entries; Hebrew has 7 outstanding, with
+  the same source's Ayin demonstration queued next.
+
+### Added - source-verified Hebrew Nun (HL-C09BQ)
+
+- Replace the queued non-writing Nun video with Aural Writing's auditable
+  print/cursive demonstration.
+- Verify printed **נ** as one joined head, right descent, and leftward base;
+  preserve the source's rounder purple cursive hook.
+- Reduce measured HL-C09 debt to 163 entries; Hebrew has 8 outstanding, with
+  the same source's Samekh demonstration queued next.
+
+### Added - the plural articles, and the plural rule chapter one promised (HL-C108)
+
+- Record a second gap in the noun system: `ES-C01-dia` teaches the vowel plural
+  and explicitly defers the consonant one ("later"). It is the only lesson that
+  introduces `ES-GRAMMAR-NOUN-NUMBER`, and *later* never came across 115
+  chapters. Neither `los` nor `las` was ever taught either.
+- Add five chapters at 56-60: `las` (the `-s` lands on article and noun alike),
+  `los` (the only article that changes more than its ending), the `-es` rule,
+  a review, and a synthesis.
+- Explain `los` as the third appearance of one sound change: `el` is a worn-down
+  *elo*, while the plural *illos* kept the vowel — the same split as `el`/`lo`.
+- Anchor the `-es` rule on `ustedes`, a word the reader has used for fifty
+  chapters without being told it is the consonant plural, and state it as one
+  rule with a repair rather than two rules.
+- Close on the indefinite article **leaving** rather than pluralising: *tengo un
+  libro* becomes *tengo libros*, so bare `libros` and `los libros` are two
+  different questions.
+- Spanish reaches 120 chapters and 266 lessons.
+
+### Added - source-verified Hebrew Mem (HL-C09BP)
+
+- Verify printed **מ** from HebrewPod101's Lamed/Mem lesson: draw the detached
+  angled left part, lift once, then join the upper shoulder, right side, and base.
+- Preserve the lesson's narrow N-like cursive alternative while fitting the
+  demonstrated open printed form to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 164 entries; Hebrew has 9 outstanding, with
+  the independently published Nun lesson (`3gYCaDgB-Nk`) queued next.
+
+### Added - three ordinary nouns, and the pronouns that replace them (HL-C106, HL-C105)
+
+- Record the **noun famine**: at chapter 53 the reader held 75 lexical atoms, of
+  which the concrete nouns were `café`, `día`, `noche`, `tarde` and `mañana`.
+  Every other noun in the course was introduced at chapter 78 or later, while
+  gender, number and both article systems were already fully taught.
+- Add three general-purpose nouns at chapters 53-55: `la casa` (feminine),
+  `el libro` (masculine), and `la comida`, **derived from `comer`** with the
+  `-ida` ending, which carries its own gender.
+- Add the singular direct object pronouns at chapters 56-60: `lo`, `la`, `me`
+  in its plain (non-reflexive) job, and `te`, one new form per chapter, then a
+  review and a synthesis.
+- Record that `lo` and the article `el` descend from the same Latin `illum`,
+  worn down twice because the two jobs stressed it differently, while `la` and
+  `la` never split at all.
+- Close on the communicative point rather than the forms: the synthesis contrasts
+  a grammatically correct dialogue that repeats every noun with the one a speaker
+  would actually say.
+- Spanish reaches 115 chapters and 261 lessons.
+
+### Added - source-verified Hebrew Lamed (HL-C09BO)
+
+- Verify printed **ל** from HebrewPod101's Lamed/Mem lesson: descend the tall
+  left stroke, continue right along the middle bar, and turn diagonally down-left.
+- Preserve the lesson's rounded looping handwritten alternative while fitting
+  the demonstrated angular print order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 165 entries; Hebrew has 10 outstanding, with
+  the same lesson's Mem demonstration queued next.
+
+### Added - deriving the remaining plurals, and closing rung 10 (HL-C105)
+
+- Add a consolidation chapter that introduces almost nothing: the remaining
+  irregular plurals are **derived** by the reader from rules already held.
+- `queremos`/`quieren` and `podemos`/`pueden` follow from the stress rule alone
+  (the stem breaks exactly where it is stressed), so the lessons ask for the
+  form **before** giving it — producing it is the evidence the rule stuck.
+- Record that the `-go` club has **no plural forms of its own**: the `-go` was
+  only ever in *yo*, so `decimos`/`dicen` and `venimos`/`vienen` break only as
+  far as the stress rule already predicts.
+- Close with a synthesis: three rules — family endings, the stress rule, and
+  *yo* being where irregularity hides — generate the whole present tense, and
+  the reader conjugates two verbs the course never taught them.
+- Rung 10 (present plural) is complete; Spanish reaches 107 chapters.
+
+### Added - source-verified Hebrew Kaf (HL-C09BN)
+
+- Verify printed **כ** from HebrewPod101's dedicated Kaf lesson: draw the top
+  left-to-right, continue down the rounded right side, and turn left along the
+  base without lifting.
+- Preserve the lesson's rounded handwritten half-circle while fitting its sharp
+  printed corners to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 166 entries; Hebrew has 11 outstanding, with
+  the series' Lamed/Mem lesson (`CBU6aSCcPrE`) queued next.
+
+### Added - tener and ir in the plural (HL-C105)
+
+- Completes the four commonest verbs in Spanish. Before this the reader could
+  conjugate any regular verb but only two irregulars.
+- **`tener` states the stem-change rule outright**: the stem breaks exactly
+  where it is stressed. That is why *nosotros* and *vosotros* never break, in
+  every stem-changing verb in the language -- and why the "boot" mnemonic is
+  unnecessary. It is the same stress principle that made `-er` and `-ir` look
+  identical in the singular and part in the plural.
+- **`ir` is a third suppletive.** Its whole present descends from *vadere*, not
+  *ire*, so the present is not irregular at all: it is **regular for a verb
+  whose infinitive Spanish stopped using**. English does the same with
+  *go*/*went*, where *went* belongs to *wend*.
+- Three of the four now teach one transferable tool: a verb that looks chaotic
+  is usually **more than one word wearing a single name**, and the
+  regular-looking parts are where one word survived intact.
+- Reuses `ES-ETYMON-IRE-VADERE` rather than minting a near-duplicate
+  `ES-ETYMON-VADERE` for the same fact.
+- Renames a `concept_tag` that matched `verbs.ts`'s `/(^|-)VERB-/` namespace
+  test -- the second time this arc that a plausible tag name would have reported
+  a grammar lesson as a Spanish verb.
+- Spanish 104 -> **106 chapters**, 249 lessons.
+
+### Added - source-verified Hebrew Yod (HL-C09BM)
+
+- Verify printed **י** from HebrewPod101's Tet/Yod lesson: draw the tiny head
+  left-to-right and continue down the short stem without lifting.
+- Preserve the lesson's comma-like handwritten alternative while fitting its
+  small printed angle to compact Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 167 entries; Hebrew has 12 outstanding, with
+  the series' dedicated Kaf lesson (`EcQ0gL-NM-k`) queued next.
+
+### Added - estar in the plural (HL-C105)
+
+- Placed beside `ser`'s plural rather than back at `estar`'s own early chapter,
+  so the `ser`/`estar` contrast holds in both numbers instead of only the
+  singular.
+- The review sets the two paradigms side by side and makes the point they are
+  hard for **opposite** reasons. `ser` is two Latin verbs fused (*esse* +
+  *sedere*), so its forms share no shape. `estar` is one verb (*stare*), so its
+  plural is a plain `-ar` paradigm -- and the only oddity in the whole column is
+  where the stress falls, which the written accent records honestly.
+- That generalises, and the lesson says so: where a Spanish verb looks chaotic,
+  the usual explanation is not that it decayed strangely but that it is **more
+  than one word wearing a single name**.
+- Re-sequenced 122 lessons by +10 to open room between the `ser` plural and the
+  next chapter. Sequences are internal ordering, not stable ids; lesson ids are
+  unchanged as always.
+- Spanish 103 -> **104 chapters**, 245 lessons.
+
+### Added - source-verified Hebrew Tet (HL-C09BL)
+
+- Verify printed **ט** from HebrewPod101's dedicated Tet/Yod lesson: descend the
+  left side and continue right along the base, lift once, then climb from the
+  lower-right before turning down-left into the inward hook.
+- Preserve the lesson's unusual bottom-up, one-run rounded handwriting while
+  fitting its printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 168 entries; Hebrew has 13 outstanding, with
+  the same lesson's Yod demonstration queued next.
+
+### Added - source-verified Hebrew Heit (HL-C09BK)
+
+- Verify printed **ח** from HebrewPod101's dedicated Zayin/Heit lesson: draw the
+  top bar left-to-right and continue down the right side, lift once, then draw
+  the joined left leg from top to bottom.
+- Preserve the lesson's rounded handwritten alternative while fitting its
+  sharp-cornered printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 169 entries; Hebrew has 14 outstanding, with
+  the series' Tet/Yod lesson (`NBUtBPVKchk`) queued next.
+
+### Added - source-verified Hebrew Zayin (HL-C09BJ)
+
+- Verify handwritten **ז** from HebrewPod101's dedicated Zayin/Heit lesson: rise
+  briefly to the right, then curve down and around the base without lifting.
+- Preserve the lesson's handwritten-Gimel mirror contrast and Vav warning while
+  fitting the one-stroke order to Noto Sans Hebrew's block outline.
+- Reduce measured HL-C09 debt to 170 entries; Hebrew has 15 outstanding, with
+  the same lesson's Heit demonstration queued next.
+
+### Added - source-verified Hebrew Vav (HL-C09BI)
+
+- Verify printed **ו** from HebrewPod101's dedicated Vav lesson: draw the small
+  head left-to-right and continue straight down the stem without lifting.
+- Preserve the lesson's simpler handwritten top-to-bottom form while excluding
+  its later Hirik and Shuruk vowel signs from base U+05D5's zero-lift count.
+- Reduce measured HL-C09 debt to 171 entries; Hebrew has 16 outstanding, with
+  the series' Zayin/Heit lesson (`XTqG_1dsFSU`) queued next.
+
+### Added - ser in the plural (HL-C105)
+
+- The highest-value irregular to take first: the commonest verb in Spanish, and
+  the reader held only its singular. `somos`, `sois`, `son`, plus a review, one
+  cell per lesson.
+- The review earns a fact memorisation never gives: **five of ser's six forms
+  begin with `s-`, and `eres` does not** -- because it comes from somewhere
+  else. `ser` is two Latin verbs fused: *esse* gives the `s-` forms, *sedere*
+  gives the infinitive and the future. The irregularity is not chaos; it is a
+  seam, and you can see exactly where it runs.
+- English does the same thing for the same reason: *am*, *is*, *are*, *was*,
+  *be* come from three separate Old English verbs. Languages seem to build "to
+  be" out of spare parts.
+- Even here the `-mos` survives. A verb that threw away everything else kept the
+  most stable ending in the language.
+- Spanish 102 -> **103 chapters**, 241 lessons.
+
+### Added - source-verified Hebrew Hei (HL-C09BH)
+
+- Verify printed **ה** from HebrewPod101's dedicated Hei lesson: draw the top
+  bar left-to-right and continue down the right side, lift once, then draw the
+  detached left leg from top to bottom.
+- Preserve the lesson's explicitly contrasted curved handwritten form while
+  fitting its sharp-angled printed order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 172 entries; Hebrew has 17 outstanding, with
+  the series' dedicated Vav/Hirik/Shuruk lesson (`kJUMyHR0zN4`) queued next.
+
+### Added - the present tense is complete: the -er/-ir plurals (HL-C105)
+
+- Four chapters finishing rung 10's present tense, and they turn on the fact
+  §5.2a exists for: **-er and -ir are identical in four of the six slots and
+  differ in exactly two** -- *nosotros* and *vosotros*.
+- So `comen`/`viven` share one lesson (same form, one fact) while
+  `comemos`/`vivimos` do not (different forms, two facts). The rule counts new
+  forms, not new slots, and this is the first place it cuts both ways in the
+  same chapter run.
+- `vivimos` explains **why the singular hid the difference**: there the ending is
+  unstressed and its vowel wears toward the other family's; in the plural the
+  stress lands on the ending and each family's own vowel survives. The families
+  never diverged -- the singular muffled them.
+- The closing review prints **eighteen forms**: the present tense of every
+  regular Spanish verb, each built separately before appearing in the grid.
+- Fixes a rotting sentinel in the consumer: `bookhashes` used chapter 99 as its
+  "no such chapter" case, having already moved from 42 for the same reason.
+  Now 9999, which cannot become a chapter.
+- Spanish 98 -> **102 chapters**, 237 lessons. Fully drivable chapters
+  **378 -> 381**.
+
+### Added - source-verified Hebrew Dalet (HL-C09BG)
+
+- Verify cursive **ד** from HebrewPod101's source-adjacent Dalet
+  demonstration: sweep the broad arch through its small loop and continue into
+  the descending tail without lifting.
+- Preserve the instructor's explicit "just one curve" order while fitting that
+  single run to the angular Noto Sans Hebrew top bar and right downstroke.
+- Reduce measured HL-C09 debt to 173 entries; Hebrew has 18 outstanding, with
+  the series' dedicated Hei lesson queued next.
+
+### Added - the plural, at last: the -ar present (HL-C105)
+
+- Opens rung 10, the largest gap the HL-C105 audit found. The book taught five
+  tenses and a mood, all singular; a reader could not say *we speak*.
+- Five chapters in the shape this arc established: `hablamos`, `hablan`,
+  `hablais` -- one cell per lesson -- then a review and a synthesis. The order is
+  deliberate: the universally useful forms first, the Spain-only one last.
+- The review carries **the first complete paradigm in the book**. Six forms,
+  withheld for thirty-two chapters until every box in it was earned. Most
+  courses open with that table; HL10 §5.3 says a table you cannot fill is a
+  picture of work still to do, and one you can fill is a picture of ground you
+  hold.
+- The synthesis makes `vosotros`/`ustedes` a genuine split rather than a
+  footnote, which is rung 10's stated requirement. It is **the first choice in
+  the book decided by geography rather than meaning** -- and neither form
+  corrects the other: roughly 40 million speakers use `vosotros` daily, and
+  several hundred million never have.
+- `ustedes` takes the *they* form for exactly the reason `usted` takes the *he*
+  form -- it is *vuestras mercedes*, the plural of the phrase behind `usted`.
+  And `vosotros` is *vos + otros*, "you others", a repair Spain needed because
+  `vos` had drifted singular there, and the Americas never needed because
+  `ustedes` already covered the plural.
+- Spanish 93 -> **98 chapters**, 232 lessons. Fully drivable chapters
+  **374 -> 378**.
+
+### Added - source-verified Hebrew Gimel (HL-C09BF)
+
+- Verify printed **ג** from HebrewPod101's dedicated Gimel/Dalet lesson: join
+  the short left-to-right top bar to the right stem and short lower-right leg,
+  lift once, then draw the longer diagonal leg down-left.
+- Preserve the lesson's explicitly contrasted rounded cursive form as a
+  documented variation while fitting the angular order to Noto Sans Hebrew.
+- Reduce measured HL-C09 debt to 174 entries; Hebrew has 19 outstanding, with
+  Dalet's one-curve demonstration queued next.
+
+### Added - a synthesis chapter for the vocabulary run (HL-C100)
+
+- Chapters 56-69 are **fourteen consecutive lexical chapters** -- colours,
+  family, body, food, seasons, months, time, weather, numbers, animals -- and
+  nothing between them ever asked the reader to combine what they held. A
+  learner arriving at the end had **27 concrete nouns** and had never been asked
+  to say one thing about their own life.
+- Chapter 70 is that chapter. It is also the one that surfaced HL-C104: writing
+  it was impossible until the indefinite article existed, because describing
+  your own life means introducing things your listener does not know about yet,
+  which is exactly the job `un` does.
+- So the article contrast is the grammar point rather than an aside: *el perro*
+  is the dog we were already discussing; *un perro* is one you are mentioning
+  for the first time. Almost every sentence in the chapter needs the second.
+- Spanish 92 -> **93 chapters**, 227 lessons. Fully drivable chapters
+  **373 -> 374**.
+
+### Added - source-verified Hebrew Bet (HL-C09BE)
+
+- Verify block-style handwritten **ב** from HebrewPod101's dedicated Bet
+  demonstration: join the left-to-right top bar to the right descent, lift once,
+  then draw the baseline left-to-right.
+- Keep the optional dagesh separate from base U+05D1's two-stroke, one-lift
+  body and preserve that distinction in the source note.
+- Reduce measured HL-C09 debt to 175 entries; Hebrew has 20 outstanding, with
+  the series' dedicated Gimel/Dalet lesson queued next.
+
+### Added - the indefinite article, which was never taught (HL-C104)
+
+- `un` and `una` did not exist anywhere in the corpus. A learner reaching
+  chapter 68 held 27 concrete nouns -- colours, family, body parts, food,
+  animals -- and could say *the* dog but not *a* dog.
+- HL10 §5.4 rung 3 says "definite article, **then indefinite**", and §12.2 block
+  11 says "four lessons, **then indefinite**". The definite articles shipped;
+  the indefinite ones never followed.
+- Now chapter 3, immediately after the definite articles and the agreement
+  payoff, where the learner already holds gender and three nouns: `un`, `una`,
+  and a review that lines up all four articles.
+- The etymology is a gift. **`un` IS the number one** -- Latin *unus* -- and
+  Spanish never separated them, so *un dia* is *a day* and *one day* at once.
+  English made the identical move and hid it better: *a*/*an* is the word *one*
+  worn down, which is why *an hour* and *one hour* begin with the same sound.
+  Spanish left the seam visible.
+- Fixes seven book targets whose filenames disagreed with their chapter numbers.
+  The early chapters use a zero-padded `ch03-` prefix and the renumber regex
+  looked for `/ch3-`, so those targets kept a stale filename through several
+  renumbers -- surfacing only now as "book chapter 3 occurs twice".
+- Spanish 91 -> **92 chapters**, 226 lessons. Fully drivable chapters
+  **372 -> 373**.
+
+### Added - source-verified Hebrew Alef (HL-C09BD)
+
+- Verify handwritten **א** from HebrewPod101's dedicated Alef lesson: draw the
+  main descending diagonal, lift once, then draw the opposing diagonal through
+  the crossing.
+- Preserve the demonstrated two-stroke, one-lift order while explicitly
+  adapting its compact X-like handwriting to the vendored Noto Sans Hebrew
+  block outline.
+- Record the inaccessible Arabic Mim and Nun media and the recovered,
+  out-of-inventory Arabic Faa source without changing HL-C09's fixed denominator;
+  measured debt is now 176 entries, with 21 Hebrew entries outstanding.
+
+### Changed - the preterite, and the tense cliff is gone (HL-C100)
+
+- Split the preterite into three: the regular forms, the strong preterites, and
+  a synthesis. They are two different pasts with two different histories, and
+  the chapter had been treating them as one.
+- The synthesis is a **recognition rule**, not a paradigm. The two kinds differ
+  by where the stress falls, and it is audible: *comi* stresses the ending and
+  therefore carries a written accent; *tuve* stresses the stem and therefore
+  carries none. The accent is not extra spelling to memorise -- it is the
+  stress, written down. **A preterite with no accent is a strong one.**
+- The strong preterites are Latin's own perfect, carried through on verbs used
+  too heavily ever to be rebuilt -- the same reason the imperfect has only three
+  irregulars.
+- **The cliff is gone.** Four consecutive chapters once carried 7, 8, 10 and 9
+  grammar atoms against a book mean of 1.4. The worst chapter in the book is now
+  **4**, and nothing exceeds it.
+- Caught by the ledger gate: I referenced `ES-ORTHOGRAPHY-ER-IR-PRETERITE-ACCENT`,
+  an atom that does not exist -- I had reconstructed the name from a truncated
+  console display of `...-FINAL-STRESS`. Validation caught it in the lesson;
+  `payoffsNotClosed` then caught the same wrong name still sitting in the
+  chapter ledger after I had fixed only the lesson.
+- Spanish 89 -> **91 chapters**, 223 lessons. Fully drivable chapters
+  **370 -> 372**.
+
+### Added - source-verified Arabic independent waw (HL-C09AZ)
+
+- Verify independent **و** from the University of Oregon page's directly linked
+  `waw.mov`: close the small head loop from its lower-right junction, then
+  continue down and left through the tail without lifting.
+- Preserve the video's one-stroke, zero-lift order, one-way-connector context,
+  w/long-ū roles, and Arabic-scoped Noto Naskh provenance independently of
+  Persian **و**.
+- Reduce the measured HL-C09 debt to 177 entries; Arabic has 3 outstanding,
+  with source recovery for independent **م** queued next.
+
+### Changed - the imperfect, and the spike is flattened (HL-C100)
+
+- Split the imperfect into four: the regular forms, `ver`, the three irregulars,
+  and a synthesis. `ver` had been sitting mid-chapter as a new verb, inserted
+  only because `veia` needed it; it now has its own chapter and its own
+  etymology.
+- The synthesis carries the fact no single lesson could: **the imperfect has
+  exactly three irregular verbs in the entire language** -- *ser*, *ir*, *ver*.
+  Not "the common ones", not "to start with". Three. Every other Spanish verb
+  takes `-aba` or `-ia` and behaves.
+- And they are irregular *because* they are the most-used verbs in the language,
+  worn straight through from Latin *erat* and *ibat* without ever being tidied
+  up. Rare verbs get regularised precisely because nobody remembers them well
+  enough to keep an odd shape alive. The exceptions are the words you use most,
+  which is the reason they are exceptions.
+- **The ramp spike is flattened.** Worst chapter is now **7** grammar atoms,
+  down from 10 three slices ago, with everything else at 4 or below against a
+  book mean of 1.4.
+- Spanish 86 -> **89 chapters**, 222 lessons. Fully drivable chapters
+  **367 -> 370**.
+
+### Changed - the subjunctive, split by idea (HL-C100)
+
+- The subjunctive was the worst remaining chapter at 9 grammar atoms. Split into
+  five, by **idea** rather than by count: the non-assertion concept alone (the
+  part learners actually struggle with), the regular forms, the yo-stem
+  irregulars, `ojala`, and a synthesis.
+- The synthesis makes the mood a **stance**, not a tense. *Hablas espanol* puts
+  a fact on the table; *quiero que hables espanol* claims nothing at all. Every
+  later use of the mood -- doubt, denial, hope -- is the same move, so the rule
+  is one sentence: *indicative: this is so; subjunctive: I am not saying this is
+  so.*
+- `ojala` closes the chapter because it explains itself: Arabic *wa-sha' allah*,
+  "and may God will it", carried through eight centuries of al-Andalus and kept
+  long after the religion behind it. A thing God has yet to will is, by
+  definition, not a fact anyone can assert -- which is why the word can only
+  ever take this mood.
+- Caught while writing: the exchange used `mi madre`, and `madre` is taught 37
+  chapters later. Replaced with a name.
+- Spanish 82 -> **86 chapters**. Worst chapter now **8** grammar atoms, down
+  from 9; fully drivable chapters **364 -> 367**.
+
+### Changed - the steepest chapter in the book, split (HL-C100)
+
+- Re-measured grammar load across all 79 chapters. The ramp's remaining spike is
+  **not in the opening**: chapters 39-42 carried **7, 8, 10 and 9** grammar
+  atoms against a book mean of **1.4** -- four consecutive chapters, each a
+  whole tense or mood system, with nothing between them.
+- Chapter 41 was the worst and held **two** systems: the future AND the
+  conditional, plus the irregular stems they share. It is now four chapters --
+  the future, the conditional, the shared stems, and a synthesis.
+- The synthesis pays off an etymology the course already taught: both endings
+  are *haber* glued onto the infinitive, once in the present and once in the
+  past. So future-versus-conditional is **one system seen from two moments** --
+  promise from the present, suppose from the past -- and English's *will*/*would*
+  is the same present/past pair of one old verb.
+- Spanish 79 -> **82 chapters**. Worst chapter now **9** grammar atoms, down from
+  10; fully drivable chapters **361 -> 364**; R2 misses **1824 -> 1822**.
+
+### Added - source-verified Arabic independent heh (HL-C09AY)
+
+- Verify independent **ه** from the University of Oregon page's directly linked
+  `letter-haa.mov`: close the lower counter, thread through the centre into the
+  upper-right counter, then sweep left along the baseline without lifting.
+- Preserve the video's one-stroke, zero-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of Persian **ه**.
+- Reduce the measured HL-C09 debt to 178 entries; Arabic has 4 outstanding,
+  with the same page's directly linked independent **و** lesson queued next.
+
+### Fixed - prose that names a chapter number, and a gate so it stays fixed (HL-C102)
+
+- Chapter numbers move on every split; lesson ids never do. A sentence like
+  "you learned this in chapter 14" is right when written and wrong three
+  renumbers later, and **nothing fails** -- the reader just follows a pointer
+  into the wrong chapter.
+- Three Spanish references were already wrong: `ES-C09-esta-en` sent the reader
+  to "Chapter 7" for a question now taught in 24; `ES-C41-explicar` placed
+  `contar` in "chapter 38" when it had reached 71; and a comment in `ES-C19-no`
+  that was **corrected two PRs ago** had gone stale again, because HL-C101 moved
+  the lesson it named.
+- All 32 Spanish references now name the thing instead of a number -- "since the
+  repair kit", "when you first met them", "the next chapter". Spanish is at zero.
+- Adds `tests/chapter-references.test.ts`, which counts **cross-chapter**
+  references only: a lesson naming its own chapter (an `# Chapter 2` heading)
+  points nowhere else and cannot rot. Spanish is held at zero; the other 19
+  tracks are pinned at their current 710 so the debt cannot grow while they are
+  stable, and should be cleared before they start splitting chapters.
+
+### Added - source-verified Arabic independent yaa (HL-C09AX)
+
+- Verify independent **ي** from the University of Oregon page's directly linked
+  `yaa.mov`: one continuous independent bowl, then the lower-left dot, then the
+  lower-right dot.
+- Preserve the video's three-stroke, two-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of Urdu **ی** U+06CC.
+- Reduce the measured HL-C09 debt to 179 entries; Arabic has 5 outstanding,
+  with the directly linked independent **ه** lesson reprioritized next.
+
+### Added - source-verified Arabic independent lam (HL-C09AW)
+
+- Verify independent **ل** from the University of Oregon page's directly linked
+  `lam.mov`: descend the tall upright and turn left through the base bowl in one run.
+- Preserve the video's one-stroke, zero-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of Persian and Urdu **ل**.
+- Reduce the measured HL-C09 debt to 180 entries; Arabic has 6 outstanding,
+  with the same page's directly linked independent **ي** lesson queued next.
+
+### Changed - the -ar synthesis can finally say "hablo espanol" (HL-C101)
+
+- `hablar` was taught at chapter 15 but `espanol` sat at 22, so the synthesis
+  chapter between them had nothing for the verb to take. Its exchange asked a
+  bare "**Hablas?**" -- a workaround for a missing noun, not a sentence anyone
+  says.
+- `espanol` and the first built sentence now precede the synthesis. The exchange
+  reads "**Hablas** espanol?" / "Si, **hablo** espanol", which is the most
+  useful thing the whole -ar arc affords.
+- The first attempt moved `espanol` alone and broke validation:
+  `ES-C06-hablo-espanol` uses `trabajar` and `estudiar` as its worked examples,
+  so the run had to move together. Final order is `-ar` review -> `trabajar` ->
+  `estudiar` -> `espanol` -> *hablo espanol* -> **synthesis**, which is a better
+  ramp than the original: the synthesis now exercises everything before it
+  rather than only the three cells.
+- Spanish 78 -> **79 chapters**. Fully drivable chapters **360 -> 361**;
+  R2 reinforcement misses **1825 -> 1824**.
+
+### Changed - one verb per chapter, slice 6: chapter 20 (HL-C99)
+
+- Split chapter 20 -- `trabajar` and `estudiar` -- into three chapters, the
+  third keeping `espanol` and the first built sentence together.
+- Milder crowding than the earlier slices: both verbs reuse the `-ar` pattern
+  and introduce no grammar at all. They are split because each owes the reader
+  an origin, and these two earn the room -- `trabajar` from *tripaliare*, from
+  *tripalium*, a three-stake torture device, which is why English **travail** is
+  the same word; `estudiar` from *studere*, "to be eager".
+- No new lessons: this slice is chapter boundaries only.
+- Spanish 76 -> **78 chapters**; old 21-76 -> 23-78. Fully drivable chapters
+  **358 -> 360**.
+
+### Added - source-verified Arabic independent kaf (HL-C09AV)
+
+- Verify independent **ك** from the University of Oregon page's directly linked
+  `kaf.mov`: descend the main upright and turn left along the baseline in one
+  run, then lift once and draw the inner arm from upper right down-left.
+- Preserve the video's two-stroke, one-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of Urdu **ک**.
+- Reduce the measured HL-C09 debt to 181 entries; Arabic has 7 outstanding,
+  with the same page's directly linked independent **ل** lesson queued next.
+
+### Changed - one verb per chapter, slice 5: chapter 30 (HL-C99)
+
+- Split chapter 30 -- `poner`, `salir`, `venir` -- into five: one verb each, a
+  review chapter that closes the `-go` club, and a synthesis chapter.
+- The review's thesis is historical, not formal: **the six `-go` verbs are not a
+  family.** They came from different Latin verbs by different routes and
+  converged on the same ending by accident. That has a practical consequence
+  worth telling a learner -- a pattern with a cause keeps recruiting, an
+  accident stops -- so the list of six is **closed**.
+- The synthesis observes that the irregularity lives in exactly one slot, `yo`,
+  which is the form a beginner uses most, and pairs each `-go` form with its
+  perfectly regular `tu`/`el` counterpart.
+- Spanish 72 -> **76 chapters**; old 31-72 -> 35-76. Fully drivable chapters
+  **354 -> 358**.
+
+### Fixed - three English homographs reporting as forward references (HL-C103)
+
+- `comes`, `hand` and `regular` are ordinary English words that are also target
+  headwords, so sentences like "*comer* **comes** from Latin *comedere*" and
+  "**Regular** stress: TAR-de" reported the Spanish word as a forward reference
+  from a lesson that was writing English.
+- Added by **census, not guesswork**: of 423 forward references, 368 matched via
+  emphasis and 55 in plain prose only; 18 of those were pure-ASCII candidates
+  and exactly three were English. The other 15 are genuine and must keep
+  reporting -- a list built from a plausible wordlist would have suppressed
+  them. The census method is now recorded in `continuity.ts`.
+- Records that the structural alternative -- guard the plain path only, and
+  trust emphasis to mean "target language" -- was tried and is wrong: authors
+  emphasise English for stress too.
+- Also drops `tres` from an activity's `accepted` list, where it offered credit
+  for a word the reader has not met.
+- Forward references **423 -> 418**.
+
+### Added - source-verified Arabic independent ayn (HL-C09AU)
+
+- Verify independent **ع** from the University of Oregon page's directly linked
+  `ayn.mov`: shape the open head, then continue around the lower bowl without lifting.
+- Preserve the video's one-stroke, zero-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of adjacent Ghayn.
+- Reduce the measured HL-C09 debt to 182 entries; Arabic has 8 outstanding,
+  with the directly linked independent **ك** lesson queued next.
+
+### Changed - one verb per chapter, slice 4: chapter 21 (HL-C99)
+
+- Split chapter 21, the book's **second and third paradigms**. They were still
+  bundled three-cells-to-a-lesson while `-ar` had just been given five chapters,
+  so the ramp contradicted itself mid-book.
+- `comer` now owns a chapter with one `-er` cell per lesson -- `como`, `comes`,
+  `come` -- and a review lesson that earns `ES-GRAMMAR-ER-PRESENT-SINGULAR`.
+  The `yo` slot is taught as **free**: `-o` is the ending the learner already
+  owns, and only the other two slots carry new information.
+- **`-ir` deliberately did not get the same treatment.** In the singular its
+  endings ARE the `-er` endings, so three per-cell lessons would have been
+  padding. `vivir` declares all three CONJ3 cells in one lesson on the grounds
+  that `maxNewGrammarCellsPerLesson` should count **new forms, not new slots**.
+  Flagged for HL10 §5.2.
+- Add a synthesis chapter where the three families and the two question words
+  become a four-line exchange in which every word is one the reader built.
+- Fix three forward references introduced while writing, one of them subtle:
+  "*comer* **comes** from Latin *comedere*" made the English verb *comes*
+  report as the Spanish `tú` form, six sequences before its lesson.
+  `continuity.ts` guards this class of collision but does not list `comes`;
+  filed as HL-C103.
+- Spanish 69 -> **72 chapters**; old 22-69 -> 25-72. Paradigm-shaped tables
+  **93 -> 91**; R2 reinforcement misses **1827 -> 1826**; forward references
+  unchanged at **423**.
+
+### Changed - one verb per chapter, slice 3: chapter 62 (HL-C99)
+
+- Split chapter 62 -- `traer`, `conseguir`, `jugar`, `conocer` -- into six:
+  one verb each, a review chapter, and a synthesis chapter. **No Spanish
+  chapter now teaches four verbs.**
+- The review chapter closes the stem-change system. e->ie and o->ue were
+  already held; `conseguir` adds e->i and `jugar` adds u->ue. There are
+  **four patterns in total, and u->ue has exactly one member in the entire
+  language** -- which is a single fact wearing a pattern's shape, and easier
+  once said out loud.
+- The synthesis chapter collects the three pairs where English offers one word
+  and Spanish forces a choice: *preguntar*/*pedir*, *traer*/*llevar*,
+  *conocer*/*saber*. They were taught chapters apart and had never been placed
+  side by side. The decision, not the word, is the work.
+- Fix a `concept_tag` that would have corrupted the verb-coverage report:
+  `ES-SYNTHESIS-VERB-SPLITS` matches `verbs.ts`'s `/(^|-)VERB-/` namespace
+  test, so a synthesis lesson was being counted as a Spanish verb named
+  *splits*. Renamed `ES-SYNTHESIS-PAIR-CHOICES`; audited every review and
+  synthesis tag added in this arc, and this was the only one.
+- Remove three self-references ("this course", "the course") caught by
+  `standalone-book`. One curriculum derives N books; no derived book may claim
+  to be the course.
+- Spanish 64 -> **69 chapters**; old 63-64 -> 68-69. Fully drivable chapters
+  **346 -> 351**.
+
+### Added - source-verified Arabic independent daad (HL-C09AT)
+
+- Verify independent **ض** from the University of Oregon page's embedded Daad
+  lesson: repeat Saad's oval, shoulder, and restarted bowl, then lift again to
+  place the upper dot last.
+- Preserve the lesson's three-stroke, two-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance while recording the direct MOV's 403.
+- Reduce the measured HL-C09 debt to 183 entries; Arabic has 9 outstanding,
+  with the source-backed independent **ع** lesson queued next.
+
+### Changed - one verb per chapter, slice 2: chapter 53 (HL-C99)
+
+- Split chapter 53 -- `tomar`, `preguntar`, `ayudar`, `gustar` -- into six
+  chapters: one verb each, a review chapter, and a synthesis chapter.
+- Place `gustar` **after** the review rather than beside the other three. It is
+  not a fourth verb; it is the reverse-subject system. The review chapter states
+  the shared shape out loud ("the sentence is about the one doing it") so the
+  next chapter has something to break. A review chapter is not only
+  consolidation -- it is where a contrast gets its setup.
+- The synthesis chapter closes a joke 53 chapters in the making: *mucho gusto*,
+  taught in chapter 5, is `gustar`'s own noun. It has always meant *much
+  pleasure*.
+- Fix a stale author comment in `ES-C19-no` that named "chapter 14" for the
+  negator sense. That lesson moved to chapter 20 three renumbers ago. The
+  comment now names the lesson id, which cannot rot. Audited all 31 prose
+  chapter references; this was the only stale one.
+- Spanish 59 -> **64 chapters**; old 54-59 -> 59-64. Atoms never revisited
+  **459 -> 456**; roots never spent **1803 -> 1801**; fully drivable chapters
+  **341 -> 346**.
+
+### Changed - one verb per chapter, starting with the four of the mind (HL-C99)
+
+- Split chapter 47 — which taught `pensar`, `entender`, `leer` and `escribir`
+  back to back with **no practice or payoff lesson of any kind** — into six:
+  one verb per chapter, then a **review** chapter and a **synthesis** chapter.
+- Close a duplicate teaching: `entender` re-introduced `no entiendo` 34 chapters
+  after the repair kit taught it, without referencing or practising
+  `ES-LEX-NO-ENTIENDO-01`. It now requires and practises that atom, and the
+  synthesis chapter turns the frozen formula into a sentence with parts —
+  *intendere*, "to stretch toward," so *no entiendo* never said *I failed*.
+- The review chapter's thesis is what no single verb chapter could show: all four
+  mind-verbs began as physical acts — weighing, stretching, gathering, scratching
+  — and *legere*, the root of `leer`, sits inside English **intellect**.
+- Add `ES-EXT-031-CONSOLIDATION`; `ES-PATH-031` had no extension node, so the two
+  new support lessons belonged nowhere. Staged **A2** from the path segment's own
+  spine node — the validator does not gate stage, so a wrong one would have
+  silently corrupted level reporting.
+- Spanish 54 → **59 chapters**; old 48–54 → 53–59. R1 reinforcement misses
+  **865 → 863**; fully drivable chapters **336 → 341**.
+
+### Added - source-verified Arabic independent saad (HL-C09AS)
+
+- Verify independent **ص** from the University of Oregon page's directly linked
+  `FullSizeRender-6.mov`: close the oval clockwise, rise into its short shoulder,
+  then lift once and restart at the baseline junction for the trailing bowl.
+- Preserve the video's two-stroke, one-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of adjacent Seen and Shiin.
+- Reduce the measured HL-C09 debt to 184 entries; Arabic has 10 outstanding,
+  with the page's directly linked Daad MOV queued next.
+
+### Changed - the first paradigm, one cell per chapter (HL-C98)
+
+- Split `ES-C06-ar-presente` — which taught `hablo`, `hablas` and `habla` in a
+  single lesson, behind a three-row table on first exposure, with pro-drop
+  alongside — into five chapters: **15** *hablo* and pro-drop, **16** *hablas*,
+  **17** *habla*, **18** a **review** chapter, **19** a **synthesis** chapter.
+  `maxNewGrammarCellsPerLesson` is 1; this lesson taught three.
+- Keep `ES-C06-ar-presente` as the review chapter so the 14 lessons that require
+  `ES-GRAMMAR-AR-PRESENT-SINGULAR` keep resolving; the atom is now *earned* at
+  the recap rather than asserted at the introduction. Its table is unchanged and
+  finally legitimate.
+- Add the corpus's **first `teaches_cells:` declarations** — coverage moves
+  **0 → 3 of 231** against `spanish/grammar-cells.json`, whose
+  `1SG → 2SG → 3SG` prerequisite chain already prescribed exactly this order.
+- Add the book's first chapters that introduce **zero** new atoms. Chapter 19
+  makes the register choice itself the communicative act: one conversation held
+  twice, warmly then respectfully, where the only thing that changes is one
+  letter on one verb.
+- Renumber Spanish 50 → **54 chapters** (old 16–50 → 20–54). Lesson ids are
+  stable slugs and deliberately do not renumber. Forward references **424 → 423**;
+  fully drivable chapters **332 → 336**; chapter 18 is `sight`, because a
+  paradigm table cannot be read aloud.
+
+### Added - source-verified Arabic independent shiin (HL-C09AR)
+
+- Verify independent **ش** from the University of Oregon page's directly linked
+  `FullSizeRender-7.mov`: draw the complete teeth-and-bowl body continuously,
+  then place the lower-left, lower-right, and centered upper dots separately.
+- Preserve the video's four-stroke, three-lift order, two-way-connector context,
+  and Arabic-scoped Noto Naskh provenance independently of Urdu **ش**.
+- Reduce the measured HL-C09 debt to 185 entries; Arabic has 11 outstanding,
+  with the page's directly linked Saad MOV queued next.
+
+### Added - source-verified Arabic independent seen (HL-C09AQ)
+
+- Verify independent **س** from the University of Oregon page's directly linked
+  `FullSizeRender-8.mov` at 00:01.6–00:02.8 as one continuous pen-down run:
+  shape three close teeth right-to-left, then flow directly into the final bowl.
+- Preserve the page's two-way-connector context and Arabic-scoped Noto Naskh
+  provenance independently of the already-authored Persian and Urdu **س** sources.
+- Reduce the measured HL-C09 debt to 186 entries; Arabic has 12 outstanding,
+  with the same page's directly linked Shiin MOV queued next.
+
+### Added - source-verified Arabic independent raa (HL-C09AP)
+
+- Verify independent **ر** from the University of Oregon page's directly linked
+  `raa.mp4` at 00:08.8–00:09.3 as one continuous pen-down run: descend from the
+  upper tip through the short stroke, then sweep left through the lower curve.
+- Preserve the page's one-way-connector context and Arabic-scoped Noto Naskh
+  provenance independently of the already-authored Urdu **ر** source.
+- Reduce the measured HL-C09 debt to 187 entries; Arabic has 13 outstanding,
+  with the next measured **س** backed by the dedicated page's direct MOV link.
+
+### Added - source-verified Arabic independent daal (HL-C09AO)
+
+- Verify independent **د** from the University of Oregon page's directly linked
+  `letter-daal-2.mp4` demonstration.
+- Preserve its zero-lift order: begin at the upper tip, descend down-right
+  through the curved shoulder, then turn left along the baseline in the same
+  pen-down run.
+- Keep one-way-connector context and Arabic-scoped Noto Naskh provenance while
+  reducing the measured HL-C09 debt to 188 entries; Arabic has 14 outstanding.
+
+### Added - source-verified Arabic independent khaa (HL-C09AN)
+
+- Resolve the chapter's `kha.mov` through its WordPress attachment ledger and
+  verify independent **خ** from its own demonstration.
+- Preserve the clip's body-first order: draw the short upper head left-to-right,
+  continue around the bowl without lifting, then lift once for the dot above.
+- Keep two-way-connector context and Arabic-scoped Noto Naskh provenance while
+  reducing the measured HL-C09 debt to 189 entries; Arabic has 15 outstanding.
+
+### Added - source-verified Arabic independent haa (HL-C09AM)
+
+- Resolve the chapter's unlinked `Haa.mov` through its WordPress attachment
+  ledger and verify two independent pen-down runs for **ح**.
+- Preserve the clip's visible stem-first order: finish the short left descender,
+  lift once, then restart near its top and sweep continuously around the dotless
+  bowl instead of inheriting adjacent Jeem's motion.
+- Keep two-way-connector context and Arabic-scoped Noto Naskh provenance while
+  reducing the measured HL-C09 debt to 190 entries; Arabic has 16 outstanding.
+
+### Added - source-verified Arabic independent jeem (HL-C09AL)
+
+- Record HL-C09AK's source defect: the page's link labeled Thaa plays another
+  two-dot Taa lesson, so **ث** remains conventional rather than gaining an
+  unsupported third-dot order or lift count.
+- Reprioritize to the next viable **ج** video and verify its independent body
+  first: the short upper head travels left-to-right, continues down and around
+  the bowl without lifting, then one lift precedes the dot below.
+- Preserve two-way-connector context, Arabic provenance independently of Urdu's
+  dot-first ج, and reduce the measured HL-C09 debt to 191 entries across seven
+  scripts; Arabic remains the smallest inventory with 17 entries outstanding.
+
+### Added - source-verified Arabic independent taa (HL-C09AJ)
+
+- Verify the independent **ت** body from the University of Oregon page's Baa
+  demonstration and its left-then-right upper dots from the dedicated Taa clip.
+- Record the evidence split explicitly because Taa opens with the shared bowl
+  already complete; preserve two separately lifted dot strokes, the lesson's
+  two-way-connector context, and Arabic provenance independently of Persian ت.
+- Reduce the measured HL-C09 debt to 192 entries across seven scripts; Arabic
+  remains the smallest inventory with 18 entries outstanding.
+
+### Added - source-verified Arabic independent baa (HL-C09AI)
+
+- Verify independent **ب** from the University of Oregon's adjacent video as a
+  continuous right-to-left bowl followed by one lift and the dot below.
+- Preserve the lesson's two-way-connector context while attaching the exact
+  citation and lift count to the canonical Arabic row, independently of the
+  Persian record for the same Unicode glyph.
+- Reduce the measured HL-C09 debt to 193 entries across seven scripts; Arabic
+  remains the smallest inventory with 19 entries outstanding.
+
+### Added - source-verified Arabic independent alif (HL-C09AH)
+
+- Verify independent **ا** from the University of Oregon's *Introduction to
+  Arabic* video as one continuous top-to-bottom stroke with zero lifts.
+- Preserve the lesson's one-way-connector context while attaching the exact
+  citation and lift count to the canonical Arabic row, independently of the
+  Persian and Urdu records for the same Unicode glyph.
+- Reduce the measured HL-C09 debt to 194 entries across seven scripts; Arabic
+  remains the smallest inventory with 20 entries outstanding.
+
+### Added - the irregular and stem-changing overlays (HL-C91)
+
+HL10 section 5.1 sized the Spanish verb system at roughly 630 cells. HL-C82
+shipped the 231 regular ones; this adds the **402 overlays**, for **633 total**.
+The original estimate holds.
+
+    stem-change  e-ie 36 · o-ue 32 · e-i 20 · u-ue 4
+    strong preterite 90 · short stem 144 · irregular subjunctive 36
+    irregular imperfect 18 · irregular participle 12 · go-club 10
+
+**They are a separate list, and that is pedagogy rather than tidiness.** A
+learner never meets "the irregular verbs" as a category. They meet the regular
+row, and then the one verb that breaks it, in frequency order, one cell at a
+time. So every overlay's prerequisite is the regular cell it deviates from:
+`tengo` hangs off `ES-CELL-IND-PRES-1SG-CONJ2`. The DAG gains depth, nothing
+becomes reachable earlier, and an irregular is always taught against a pattern
+the learner already holds.
+
+Three shapes are pinned by test because losing them would flatten the model back
+into "this verb is irregular":
+
+- **The boot.** A stem change covers the singular and the third plural only; the
+  two plural persons keep the regular stem. Four cells per verb, not six.
+- **One weld, twice.** A shortened future stem serves the conditional as well, so
+  a verb like *tener* owns twelve cells but one thing to learn.
+- **Three imperfects.** The entire language has three irregular imperfects, which
+  is why HL10 places that tense immediately after the preterite as a rest.
+
+The regular inventory is byte-identical to before -- verified against `HEAD`, not
+asserted -- so every HL-C82 pin still measures what it measured.
+
+`BUILD` already gates generator drift with `--check`; the generator now also
+refuses any overlay whose `deviatesFrom` is not a real regular cell, and any
+duplicate overlay id.
+
+### Added - Urdu baṛī ye completes the starter ductus inventory (HL-C09AG)
+
+- Verify independent **ے** from Northwestern's *Zer o Zabar* calligraphic and
+  handwriting animations as one zero-lift folded bowl: upper-right descent,
+  leftward sweep, far-left curl, then a rightward lower fold.
+- Preserve the source's independent/final sound role and its distinct
+  initial/medial be-series tooth while attaching the exact citation and lift
+  count to the canonical Urdu script row.
+- Reduce the measured HL-C09 debt to 195 entries across seven scripts; Urdu's
+  thirteen-entry starter inventory is now fully source-verified.
+
+### Fixed - a report that its own subject could edit (HL-C90)
+
+Every gate in this package interpolates author-written strings into lines
+written to stdout: lesson ids, node ids, root slugs, finding messages. A lesson
+id carrying an ANSI escape rewrites its own line in a terminal, so a crafted id
+could erase the very defect line a reviewer is reading to decide whether the
+corpus is sound.
+
+These reports exist to make problems visible. A report that can be edited by its
+subject does not.
+
+`stripControlCharacters` now guards **nineteen interpolations** across
+`report.ts`, `strands.ts`, `grammar-cells.ts`, `root-ledger.ts`, `info-dump.ts`
+and `metalanguage.ts` -- every place a corpus-derived string reaches a report
+line. Control characters are removed rather than escaped: the reports
+are read by humans, not parsed, so a visible `\u001b` adds noise without adding
+information. Tab and newline survive -- they are ordinary layout, and the render
+helpers control their own line breaks.
+
+Found by the security review of HL-C80 and filed whole rather than fixed halfway
+inside an unrelated PR, because the pattern was package-wide from the start.
+
+The tests build their control characters with `String.fromCharCode` rather than
+writing literals, for two reasons learned in this session: a literal ESC in a
+source file is invisible to a reviewer, and this repository has already had
+non-ASCII source literals silently mangled on write.
+
+### Added - the metalanguage ramp (HL-C89)
+
+The hidden prerequisite of every language textbook: it assumes the reader
+already knows grammar *vocabulary*. "The first-person singular present
+indicative of a regular -ar verb" spends six technical terms on one form, and a
+beginner who never studied grammar understands none of them. The book is gentle
+about Spanish and brutal about English, and nobody notices, because the author
+has known those words since school.
+
+`core/metalanguage.json` makes it a ramp: **54 terms**, each carrying the thing
+the learner must already be able to DO before the term is named. `verb` arrives
+once *soy*, *estoy* and one present form are in use. `mood` waits for block D of
+the subjunctive arc, twenty-four lessons in.
+
+**`plainAlternative` is the point.** A rule that only forbids is a rule authors
+route around, so every term carries what a lesson must say *instead* until the
+term is earned -- "a doing word" for verb, "the plain form, the one in a
+dictionary" for infinitive, "whether you are asserting or wanting" for mood. The
+gate can tell an author what to write, not merely what not to.
+
+The first measurement: **2,289 technical uses across 1,161 lessons**, led by
+`verb` (795 lessons), `noun` (398), `regular` (109), `tense` (109), `pronoun`
+(102), `article` (91). Nothing anywhere introduces any of them.
+
+**Two numbers, deliberately.** The raw total is 7,738, but `word` alone appears
+in 1,555 lessons and needs no introduction at all. A measurement that does not
+separate ordinary English from technical vocabulary produces one enormous number
+that is identical for every corpus and useless to every author -- the same
+cry-wolf failure the info-dump gate avoided by flagging shape rather than size.
+So terms carry `technical`, the total says how pervasive the assumption is, and
+the technical count says what to fix first. `noun`, `verb` and `adjective` count
+as technical on purpose: the premise is a reader who never studied grammar, and
+for them "a doing word" lands and "verb" does not.
+
+### Changed - HL-C89's scope, corrected by measuring before building
+
+HL10 section 7.4 also asks for a banned-word lint -- no *simply*, *just*,
+*obviously*. Measured first, and it is nearly a no-op: a naive denylist flags
+**535 of 1,694** lessons (`just` 359, `simply` 184), narrowing to genuinely
+dismissive senses drops it to **23**, and reading those, most are still innocent
+-- "*Desde luego* means 'of course'" is teaching the phrase, not talking down to
+the reader. The corpus's prose is already kind. Building that half first would
+have produced a gate nobody needed.
+
+
+### Added - the info-dump gate, and what it found (HL-C84)
+
+The owner's rule is one sentence: "will not info dump ever". This makes it a
+measurement.
+
+**The prose is not the problem.** Scanning all 1,694 lessons for rule-statement
+shapes -- "X is used for...", "X always takes...", "there are four kinds of X" --
+turns up **17 lessons**. Seventeen. HL09 called the writing "as well built as
+anything commercial" and the corpus agrees.
+
+**The info dump lives in tables**, and in one specific shape:
+
+    70 lessons carry a paradigm-shaped table -- a grid whose first column walks
+    a list of grammatical persons -- and 18 of those are FULL grids of five or
+    more rows. FR-C05-parler, GE-C05-wohnen and ES-C17-practice each present a
+    complete six-person conjugation at once.
+
+That is exactly the artifact HL10 section 5.3 forbids: six new forms, one new
+concept, no retrieval, and an implicit claim that the learner absorbs them by
+staring. It is also the single most universal convention in language publishing,
+which is why it needs a gate rather than a style note -- nobody writing one
+thinks they are doing anything unusual.
+
+**Shape, not size.** 470 tables in the corpus have three or more data rows and
+most are perfectly good: a vocabulary recap, a regional comparison, a list of
+labelled facts. Flagging all 470 would bury the 70 that matter and teach authors
+that the gate cries wolf. The signal is a first column that walks a paradigm,
+because that is a table presenting N grammar cells where the budget allows one.
+
+`PERSON_LABELS` is a census of what the corpus's own tables put in that column,
+per track, covering the six Latin-script tracks that use them today. A track
+absent from the map is never flagged -- honest rather than silently clean, the
+same rule `continuity.ts` uses for its article map.
+
+Report-only, per the HL05 precedent. Its real value is as a review aid: a lesson
+that trips it is not automatically wrong, but it is automatically read by a
+human before merge.
+
+### Fixed - two ways a lesson file could attack its own gate
+
+Security review of the above, both verified by execution.
+
+**A quadratic comment strip.** `replace(/<!--[\s\S]*?-->/g, "")` looks like the
+safe construct and is not. With `/g` the engine retries at every `<!--`, and
+when there is no closing `-->` each start expands one character at a time to
+EOF before failing -- O(n squared) in the *count* of `<!--` tokens, with no
+`-->` needed anywhere. Measured: 500 KB of repeated `<!--` took **13 seconds**,
+and a 4 MB lesson would have pinned a core for roughly fifteen minutes. Now a
+monotonic `indexOf` scan: the same input takes **22 ms**, and an unterminated
+comment keeps the remainder of the file verbatim rather than swallowing it.
+
+**A directory name resolving through `Object.prototype`.** `PERSON_LABELS` is a
+plain object indexed by `lesson.language`, which `loader.ts` takes straight from
+`readdirSync` -- so a track directory named `constructor`, `toString` or
+`__proto__` resolved to an inherited member, passed the `undefined` check, and
+threw on `.includes`. This package already exports `hasOwn` for exactly this and
+uses it at five sites; `parse.ts` guards its own language lookup the same way
+and `ramp.ts` documents this identical bug being fixed once before. The new
+module simply skipped the convention.
+
+
+### Added - the Root Ledger, and the account it renders (HL-C83)
+
+HL00 calls the etymology "the heart of the lesson... the signature of this
+curriculum", and it is genuinely the strongest thing in the corpus. But a root
+is only *useful* if it is spent again, which is what HL10 section 6.2's
+`rootLedgerMinReuse: 3` says: a root may be taught only if at least three LATER
+lessons draw on it.
+
+The first measurement, across both etymology namespaces:
+
+    2,717 roots
+    2,624 spent fewer than three times   (97%)
+    1,807 never spent at ALL             (taught once, never returned to)
+
+Spanish alone: 303 roots, 290 underspent, 190 never spent. The best-spent root
+in the entire corpus is `LA-ETYMON-SALVE-02`, at eight payoffs.
+
+The etymology is real, it is good, and almost none of it is being spent. That is
+the difference between a curriculum whose vocabulary compounds and one where
+every lesson starts over -- and it is the machinery the friends layer (HL10
+section 6.7) needs, since a root with recorded payoffs already knows which later
+words it predicts.
+
+**An introduction is not a payoff.** A root named in exactly one lesson scores
+zero, not one. Counting the introduction would have started every root at 1 and
+flattered the corpus by exactly the number of roots it has.
+
+**Both namespaces, deliberately.** The corpus records etymology twice --
+cross-language `roots:` slugs (1,966) that let a Spanish root and an Italian one
+be recognised as the same root, and `<LANG>-ETYMON-*` atoms (751) that
+participate in prerequisites and reinforcement windows. A ledger over only one
+would report a root unspent while the other namespace was quietly spending it.
+
+### Fixed - three bugs found while building it
+
+**The etymon namespace silently contributed zero.** The frontmatter keys are
+flat and dotted -- `introduces.knowledge`, never a nested `introduces` object --
+and reading them as nested returns `undefined` for every lesson in the corpus.
+The ledger reported 1,966 roots instead of 2,717, which reads as "the corpus has
+no etymon atoms" rather than "the reader is broken". `ramp.ts` already carried a
+warning about this exact mistake, from when it made the chapter gates report all
+279 authored chapters as broken; this module now uses that file's shared
+`frontmatterList` rather than its own reader.
+
+**A composite key that could merge two roots.** `${language} ${namespace}
+${root}` lets `("es", "roots", "a b")` and `("es", "roots a", "b")` collide and
+silently sum two roots' payoff counts. Now length-prefixed. No collision existed
+in the current corpus -- the counts are unchanged -- but a root slug is
+author-written and may contain anything.
+
+**NUL bytes in a source file.** The spaces inside a template literal were
+written to disk as U+0000: `${language}\0${namespace}`. The file still compiled,
+`grep` silently found nothing in it, and an exact-match edit could not touch the
+line. A NUL in source is always a write accident, never intent, so
+`tests/root-ledger.test.ts` now asserts that no file in `src/` contains one --
+cheaper to assert than to rediscover.
+
+
+### Added - the grammar cell inventory (HL-C82)
+
+A **cell** is one filled slot in one paradigm: Spanish `hablo` is a cell. The
+six-form present-indicative table is not a teachable unit; it is six.
+
+Every language textbook opens a tense with its full grid, and that grid is the
+steepest single step in language pedagogy -- six new forms, one new concept, no
+retrieval, and an implicit claim that the learner absorbs them by staring. HL10
+forbids it twice: `maxNewGrammarCellsPerLesson: 1`, and no paradigm table until
+every cell in it has been taught individually, at which point the table is a
+recap rather than an introduction. A rule like that is only enforceable if the
+cells are enumerated. Now they are.
+
+Two files, because HL10 section 4 makes GRAMMAR a universal slot inventory with
+local filling -- which is what lets the other 21 tracks reuse this:
+
+- `core/grammar-slots.json` -- **231 language-neutral slots**. 144 finite, 30
+  imperative, 48 compound, 9 non-finite. No id or gloss may name a form from any
+  particular language, and a test enforces it. A new track answers "do you have
+  this?" instead of designing a syllabus from nothing.
+- `spanish/grammar-cells.json` -- Spanish's answers, with the ordering a learner
+  climbs.
+
+**`prerequisites` is what makes this a ramp rather than a list**, and each edge
+is a pedagogical claim that can be argued with:
+
+- Singular before plural, one person at a time. This is what turns "the present
+  tense" from one chapter into fourteen.
+- Conjugation 1 before 2 before 3, at the same person and tense.
+- Tenses in acquisition order, anchored at the 1SG conjugation-1 cell only --
+  anchoring every cell would say "learn all of the present before any of the
+  preterite", forbidding the interleaving that makes the ramp gentle.
+- The present subjunctive hangs off the present indicative 1SG, because that is
+  where its stem comes from (`tengo` to `tenga`). Load-bearing, not decorative:
+  it is why HL10 section 5.4 puts the -go verbs before the subjunctive arc.
+- A negative command requires the affirmative command **and** the present
+  subjunctive -- which is how the subjunctive first reaches a learner, before it
+  is ever named.
+- Compounds require the participle and the auxiliary's own finite cell. Nobody
+  says "I have spoken" before they can say "I have".
+
+The resulting graph has four roots -- the three infinitives and `hablo` -- and a
+maximum depth of 15, the future subjunctive third person plural.
+
+The 18 future-subjunctive cells are marked `productive: false` with a recorded
+reason, so the gate can tell "not taught yet" from "deliberately recognised and
+never produced".
+
+`cellCoverage` measures the corpus and reports **0 of 231**. That zero is the
+honest number and is deliberate: the alternative was inferring cells from atom
+names, but `ES-GRAMMAR-AR-FUTURE-SINGULAR` is three cells only if the lesson
+really taught three at once -- which is the exact thing being forbidden. A fuzzy
+mapping would have credited coverage the corpus has not earned and quietly
+legitimised the info dump. HL-C84 wires the declarations on.
+
+The data is generated by `data/generate_grammar_cells.py`, which validates the
+DAG (no dangling edge, no cycle) at generation time. `BUILD` runs it with
+`--check`, so committed drift fails the build -- the same contract
+`check:books` and `check:modality` already enforce.
+
+### Fixed - an ordering check that graded file order instead of reading order
+
+Found while testing the above. `sequence` arrives from the frontmatter parser as
+a **string**, and the first draft of `sequenceOf` tested `typeof raw ===
+"number"`. Every lesson therefore fell through to `Infinity`, the sort became a
+no-op, and the out-of-order check silently graded lessons in whatever order the
+array happened to hold -- passing on any fixture that was already sorted.
+
+Now coerced the way `continuity.ts`'s `declaredSequence` already did it, with a
+regression test asserting both directions: array order wrong but `sequence`
+right must not fire, and array order right but `sequence` wrong must.
+
+### Added - the strand dimension, and the three ladders nobody has climbed (HL-C80)
+
+HL09 proved a course can be gentle on one ramp and brutal on another with
+nobody noticing, because only the gentle ramp was counted. Spanish measured
+178 headwords with every lesson inside the atom budget -- a textbook-perfect
+vocabulary ramp -- while the learner still could not say "no", could not say
+"I am", and met the entire past tense behind a spine node declaring one
+concept.
+
+The fix is not a bigger budget, it is more ladders. `core/spine.json` now
+declares eight **strands** -- FUNCTION, GRAMMAR, LEXICON, SOUND, ETYMOLOGY,
+CULTURE, IDIOM, TEXT -- and every one of its 33 nodes names exactly one. A new
+`strands.ts` measures the distribution, and `report-cli` prints it.
+
+The first snapshot is the reason the model was worth building:
+
+    FUNCTION 14, GRAMMAR 7, LEXICON 2, SOUND 0,
+    ETYMOLOGY 0, CULTURE 3, IDIOM 0, TEXT 7
+
+**Three declared ladders have no nodes on them.** ETYMOLOGY is the sharpest:
+HL00 calls it "the signature of this curriculum" and 708 lessons carry an
+etymology hook, so the content is genuinely there -- as prose an author chose
+to write, promised by no node and owed by no chapter. That is the difference
+between a commitment and an intention, and it is exactly what a strand model
+exists to expose. `summarizeStrands` seeds its counts from the DECLARED strand
+list rather than from the nodes present, so an unclimbed ladder reports as a
+zero instead of vanishing from the table.
+
+`nodeSizeDefects` makes the HL09 section 1 defect checkable: a node is realized
+by one to three chapters, so it may not declare more concepts than a chapter
+may introduce. `SPINE-SAY-WHAT-I-DO` declares **42** against a ceiling of 12,
+while `SPINE-TALK-ABOUT-PAST` declares one and stands for the entire past tense
+of the language. Both cannot be one rung of the same ladder, and that asymmetry
+is how a track claimed A2 on fourteen present-tense lessons. HL-C81 splits it;
+until then the count is pinned so it cannot grow quietly.
+
+`core/chapter-policy.json` gains the seven HL10 section 2.2 budgets, all
+optional so a policy file written before them still loads. The consequential
+one is `maxNewGrammarCellsPerLesson: 1` -- a *cell* is one filled slot in one
+paradigm (`hablo`), not the six-form table, and Spanish holds roughly 630 verb
+cells. `maxRuleStatementsPerLesson: 1` is the info-dump gate, and
+`minDownstreamReach: 1` makes "every lesson leads to future lessons"
+falsifiable by naming an introduced atom no later lesson ever uses.
+
+Everything here is report-only, per the HL05 precedent: the corpus predates the
+model, and a gate that fails on already-recorded debt teaches authors to route
+around it rather than pay it down.
+
+### Fixed - a strand gate that a crafted stage name could silence
+
+Security review of the above, verified against the built module rather than
+reasoned from the diff. `byStage` was built with `Object.fromEntries`, so it
+inherited from `Object.prototype`, and membership was tested with `in`, which
+walks the prototype chain. A node declaring `stage: "toString"` therefore passed
+the check, read the inherited **function**, and `+= 1` wrote the string
+`"function toString() { [native code] }1"` into the counts. That string is not
+`=== 0`, so `missingStages` reported the stage as **covered**.
+
+A gate whose whole job is making curriculum defects visible, reporting clean
+*because of* a crafted stage name, is worse than no gate. Buckets are now
+`Object.create(null)` with an own-property check.
+
+Five malformed-JSON shapes also threw uncaught `TypeError`s out of the CLI --
+`strands` as an object or string, `stages` as a string, `nodes` absent, `nodes`
+holding `null` -- surfacing as Node stack traces with absolute filesystem paths
+where `report-cli` otherwise catches and returns exit 2. `Array.isArray` guards
+now match the shape validation `loadChapterPolicy` already performs.
+
+Confirmed not exploitable and deliberately unchanged: `Object.fromEntries` uses
+`CreateDataPropertyOrThrow`, so a `__proto__` key becomes an ordinary own
+property and never a prototype write.
+
+Specified in `code/specs/HL10-spanish-pre-a1-to-c2-course-architecture.md`.
+
+
+### Added - Tamil chapter 39, and the first letter of the debt it exists to pay
+
+`TA-W19` measured the strand out of room after itself, and three letters —
+**ஏ**, **ஐ**, **ஒ** — were still used inside words and never taught. The track
+was extended rather than relaxing the chapter atom cap, the 3:1 cadence or the
+rule that a chapter must not open on a pen lesson. This is the first of three
+chapters planned to do it.
+
+One correction belongs here, because the decision was taken partly on it. The
+position search that informed it reported ZERO admissible slots anywhere in the
+track. That was wrong: it assigned a candidate insertion to the chapter of the
+lesson it precedes rather than the one it follows, which silently discarded
+every end-of-chapter position. Re-run correctly against `origin/main`, exactly
+ONE slot exists — chapter 35, after `TA-C35-naarkaali`, gaps of 3 and 3, load
+10 + 2 = 12. One slot is still not three, so extending the track was needed
+either way for at least two of the three letters; but "no slot at all" was not
+true, and chapters 40 and 41 should consider spending that slot before adding a
+second new chapter.
+
+- `TA-C39-vendum` (1170) — **வேண்டும்**, another verb Tamil builds with no
+  subject, after **தெரியும்** (ch32), **புரிகிறது** (ch33) and **பிடிக்கும்**
+  (ch34). The lesson deliberately does not number the family: chapter 19's
+  **ஆகிறது** age construction is described in the same terms, so a count would
+  have to argue for its own boundary. The lesson does not re-teach the
+  dative-subject shape either; it practises chapter 6's
+  `TA-GRAMMAR-DATIVE-SUBJECT-02` at a distance of 90 lessons, the first time
+  anything has reached it at R4 range.
+- `TA-C39-evvalavu` (1180) — **எவ்வளவு**, and the line Tamil draws that English
+  does not: **எத்தனை** counts, **எவ்வளவு** measures. Age took the counting one.
+- `TA-C39-oru` (1190, payoff) — **ஒரு** in front of a noun where **ஒன்று**
+  cannot stand, and the chapter's production task: ask a price, order one tea,
+  decline the second with **வேண்டாம்**.
+- `TA-W20-read-onru` (1195) — **ஒ**, spelling **ஒன்று** and **ஒரு**. It is
+  last in the chapter, so the opening reads "first 3 of 4 lessons".
+
+### Added - the spine node this track had declared and never realized
+
+`curriculum.json` already carried `SPINE-SAY-WHAT-I-WANT` with an empty
+`segments` list and `VERB-WANT` sitting in `omits` — an authored admission that
+the node was mapped but unmet. Chapter 39 realizes it through `TA-PATH-036`, so
+the omission is removed rather than merely annotated. Three of the chapter's
+lessons land at A2 as a result, because that node is an A2 node; only
+`TA-W20-read-onru` is pre-A1, on `SPINE-MEET-GREET` like every other writing
+lesson.
+
+### Changed - what a new chapter costs, measured
+
+Four wiring points are needed, and the first alone is not enough:
+`chapters.json` (the capability ledger), `book-generation.json` (the target),
+`tamil/book/book.tex` (the `\input`), and `curriculum.json` (path segment,
+extension, spine segments). Declaring only the ledger fails the book-cli gate
+"puts every ledgered chapter into its book, not merely into a file", which is
+exactly the check that exists to catch this.
+
+Pins re-derived by set difference against `origin/main`:
+
+- `atomsTaught` 2652 -> 2660; `pre-A1` 878 -> 879 and `A2` 409 -> 412;
+  ramp-to-A1 1187 -> 1188 with `TA-W20-read-onru` the only joiner; manifest
+  `totalLessons` 1690 -> 1694, `chapterCount` 513 -> 514, `pen` 68 -> 69,
+  `sight` 508 -> 511, `unstartableChapters` 137 -> 138.
+- `missedByWindow.R2` 1808 -> 1816, and all eight entrants are one mechanism:
+  the track grew 128 -> 132, so a window becomes evaluable for exactly those
+  atoms whose `introducedAt + window.from` falls in (127, 131]. They are four
+  two-atom pairs — VIDAI at 126, SUGAM at 125, UDAMBU at 124 and
+  IVAR-EN-NANBAR at 123 — and not one of their revisit counts changed.
+  R4 243 -> 247 is the same arithmetic at 80. R3 does not move at all —
+  1309 -> 1309, seven in and seven out — which is the whole argument for
+  declaring what a sentence
+  actually re-uses. `TA-C39-vendum` names **தெரியும்**, **புரிகிறது** and
+  **பிடிக்கும்** in one clause and credits all six of their atoms: the two
+  `PIDI` atoms (index 108) land a revisit at exactly distance 20, R3's first
+  position, so neither enters, while `TA-LEX-PURI-01`, `TA-GRAMMAR-PURI-02`
+  (index 100) and `TA-GRAMMAR-TERI-02` (index 98) leave R3 outright and drop off
+  the defect list. The same clause with the verbs merely named would have read
+  identically on the page and left R3 five windows worse.
+- Against that, ten atoms LEAVE a window, and those are the chapter earning its
+  keep: `TA-SCRIPT-EE-SIGN-01` 1 -> 2 revisits, `INDEPENDENT-VOWEL-E-01` 2 -> 3,
+  `NGA-LLA-01` 2 -> 3, `TTA-01` 1 -> 2, the two `PURI` atoms and
+  `TA-GRAMMAR-TERI-02` out of R3 (seven in all);
+  `GRAMMAR-DATIVE-SUBJECT-02` 2 -> 3, `LEX-DATIVE-SUBJECT-01` 3 -> 4 and
+  `LEX-NUMBERS-1-5-01` 2 -> 3 out of R4.
+- `atomsNeverRevisited` 472 -> 474, five in and three out. IN are
+  `TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02`, `TA-LEX-ORU-01`,
+  `TA-GRAMMAR-ORU-ATTRIBUTIVE-02` and TA-W20's own `TA-SCRIPT-O-VOWEL-01` and
+  `TA-SCRIPT-READ-ONRU-02`; OUT are `TA-SCRIPT-READ-MUUNRU-02`,
+  `TA-GRAMMAR-PIDI-02` and `TA-SCRIPT-UU-SIGN-01`, each 0 -> 1 revisits. The
+  last is TA-W19's own sign, credited where TA-W20 contrasts **மூன்று** with
+  **ஒன்று**. The 422-atom defect
+  subset moves separately, 422 -> 424; the two counters are worth keeping apart.
+  The `ORU` pair being among the entrants is structural, not
+  an oversight: `TA-W20` genuinely re-reads **ஒரு**, but a writing lesson may
+  only take other writing lessons as prerequisites — `TA-EXT-003-SCRIPT` is
+  inlined at `TA-PATH-003`, so naming a chapter-39 lesson would place the
+  prerequisite after its dependent and fail the ordering rule. The tie is
+  carried by `reviews_of`, which is not a revisit. Chapters 40 and 41 are
+  planned to close it.
+- `forwardReferences` 423 -> 424, and the new entry is a measurement
+  improvement rather than fresh damage: `TA-C18-mani-homophone-time` has always
+  printed **ஒரு**, but no lesson owned the word, so the checker had no teacher
+  to measure against. Naming one made a 65-lesson-old early use visible. It is
+  also an argument that **ஒரு** belongs earlier than chapter 39, which the
+  runway did not allow.
+
 ### Added - the ூ sign, and the measured end of the Tamil strand's runway
 
 - Teach `TA-W19-read-muunru` (chapter 38, sequence 1165) around **மூன்று**: the
@@ -65,10 +1809,11 @@ own.
 The two facts this entry rests on hold under a detector that does two specific
 things, and it is worth naming them rather than claiming detector-independence:
 it must scope negation, and it must not treat a `TA-C*` lesson as teaching. Both
-matter, and this very lesson is why the first one does — it prints **ஒன்று**,
-**ஐந்து** and **ஏழு** in bold inside the sentence saying they *wait on letters
-this book has not taught*, so a detector that ignores negation would score ஏ, ஐ
-and ஒ as taught here and put this lesson's delta at four glyphs instead of one.
+matter, and this very lesson is why the first one does — it prints the numbers
+it cannot yet spell in bold inside a sentence saying they wait on letters the
+book has not taught, so a detector that ignores negation scores those letters
+as taught here and puts this lesson's delta at four glyphs instead of one.
+(The chapter-39 entry above narrows that sentence, once **ஒ** is taught.)
 Chapter 7's own lessons bold the same letters while merely using them, which is
 why the second matters. Under a detector that does both: the difference **this**
 lesson makes is exactly **ூ**, and the thirteen chapter-7 glyphs named above are
@@ -153,6 +1898,16 @@ the direction of each mover is recorded at the assertion:
   after, which is the check that separates an artifact from a regression: no
   existing reinforcement was broken by the insertion. TA-W19's own two atoms
   appear in no window at all, because at index 127 none is evaluable.
+
+### Added - verified Urdu independent ں handwriting
+
+- Record Northwestern's *Zer o Zabar* independent nūn-e ġhunna animations as
+  one right-to-left bowl below the baseline with zero pen lifts.
+- Preserve the source's final/independent dotless-nūn distinction and its
+  ordinary-nūn initial/medial forms; Noto Naskh confirms U+06BA exactly shares
+  U+0646's body contour with the dot removed.
+- Raise cited handwriting coverage to 32 of 228 prose entries, leaving 196
+  explicit unverified part orders and 1 in the Urdu starter inventory.
 
 ### Added - verified Urdu independent ی handwriting
 
@@ -1992,7 +3747,6 @@ found defects the one before it had not.
   read; a reading-only ladder would fit it better. A second test requires a caveat on any
   mapping that names a specific foreign ladder without the awarding body's backing — it
   caught a bare Persian/AMFA correspondence during this change.
-
 
 
 ### Fixed — "detachable" and "is a writing segment" are two different things

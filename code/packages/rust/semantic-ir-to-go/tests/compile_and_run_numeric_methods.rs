@@ -60,8 +60,13 @@ fn method(recv: Expr, name: &str, extra: Vec<Expr>) -> Expr {
 fn print_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -95,7 +100,7 @@ fn closure(fn_name: &str) -> Expr {
 }
 
 fn manifest() -> FeatureManifest {
-    FeatureManifest::from_features(&[
+    FeatureManifest::from_features(&[Feature::ConsoleIO, 
         Feature::Closures,
         Feature::Sequences,
         Feature::Strings,
@@ -125,7 +130,11 @@ fn program(functions: Vec<Function>) -> Module {
 fn catalog_module() -> Module {
     // `puts`-style print lambda the block iterators drive (prints each yielded
     // value on its own line).
-    let show = lambda_fn("__lam_show", "x", builtin("print", vec![var_p("x")]));
+    let show = lambda_fn(
+        "__lam_show",
+        "x",
+        builtin("__sys_write__", vec![slit("stdout"), slit("once"), Expr::BoolLit { value: false, span: s() }, var_p("x")]),
+    );
 
     let stmts = vec![
         // 4.even? → #t ; 3.odd? → #t

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-estar-estado
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 300
-chapter: 4
+chapter: 8
 type: word
 headword: estás / está
 gloss: what estar is for — a current state or location — and the only two forms you need this chapter

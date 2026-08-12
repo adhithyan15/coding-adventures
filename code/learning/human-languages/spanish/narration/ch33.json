@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 33,
-  "title": "Green and Yellow",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1193d6388479368f",
+  "title": "Putting the -ar Verbs to Work",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cb862476e67c7bb6",
   "lessons": [
     {
-      "id": "ES-C33-verde",
-      "sequence": 1590,
-      "title": "verde — the colour named after being alive",
-      "headword": "verde",
-      "romanization": "verde",
-      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
+      "id": "ES-C06-practice",
+      "sequence": 610,
+      "title": "Practice — making sentences with -ar verbs",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "your first sentences — the -ar present tense in action",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a19f46a025249f81",
+      "sourceHash": "fnv1a64:7072a3ff918a32da",
       "notice": null,
       "blocks": [
         {
@@ -35,31 +35,79 @@
             },
             {
               "kind": "speech",
-              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
+              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: verde",
+          "type": "grammar",
+          "title": "Grammar Lens: conjugate on command",
           "segments": [
             {
-              "kind": "speech",
-              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "speech",
-              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
+              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
             },
             {
               "kind": "speech",
-              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
+              "text": "hablar: hablo, hablas, habla."
+            },
+            {
+              "kind": "speech",
+              "text": "trabajar: trabajo, trabajas, trabaja."
+            },
+            {
+              "kind": "speech",
+              "text": "estudiar: estudio, estudias, estudia."
+            },
+            {
+              "kind": "speech",
+              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
             }
           ]
         },
         {
           "index": 2,
+          "type": "input",
+          "title": "The exchange — say something real",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
+            },
+            {
+              "kind": "speech",
+              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
+            },
+            {
+              "kind": "speech",
+              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -72,34 +120,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"verde\" — green",
+              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"verde\" — green]"
+              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
+              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
+              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
+              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
+              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -111,118 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C33-amarillo",
-      "sequence": 1600,
-      "title": "amarillo — the colour that started as a taste",
-      "headword": "amarillo",
-      "romanization": "amarillo",
-      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:0d33a8da6aadbc9d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: amarillo",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
-            },
-            {
-              "kind": "speech",
-              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
-            },
-            {
-              "kind": "speech",
-              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"verde, amarillo\" — green and yellow",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
+              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
             }
           ]
         }

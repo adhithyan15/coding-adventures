@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 14,
-  "title": "The Preterite --- Your First Past Tense",
+  "title": "A Coffee, Please",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8355b5c240fbea88",
+  "sourceHash": "fnv1a64:095e5d40b15456d2",
   "lessons": [
     {
-      "id": "ES-C14-ser-ir-preterite",
-      "sequence": 1050,
-      "title": "fui — one past set shared by ser and ir",
-      "headword": "fui",
-      "romanization": "fui",
-      "gloss": "the shared singular preterite of ser and ir — fui, fuiste, fue",
+      "id": "ES-C06-cafe",
+      "sequence": 490,
+      "title": "café — coffee, and a place to drink it",
+      "headword": "café",
+      "romanization": "café",
+      "gloss": "coffee / a café — one useful noun before the polite request that follows",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9972a5a5d60a1796",
+      "sourceHash": "fnv1a64:40a3b88295e15b63",
       "notice": null,
       "blocks": [
         {
@@ -35,55 +35,37 @@
             },
             {
               "kind": "speech",
-              "text": "You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue."
+              "text": "Before you can make a polite request, you need one small thing to request. Café gives you a useful noun and lets the written accent do a job you already understand."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: three singular forms, two verbs",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "completed past of ser or ir"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. completed past of ser or ir: fui.",
-                "person: tú. completed past of ser or ir: fuiste.",
-                "person: él / ella / usted. completed past of ser or ir: fue."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:"
-            },
-            {
-              "kind": "speech",
-              "text": "Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir."
-            },
-            {
-              "kind": "speech",
-              "text": "Fue Roberto. — “It was Roberto.” Identification points to ser."
-            },
-            {
-              "kind": "speech",
-              "text": "Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson."
+              "text": "Say ca-FÉ. A vowel-final word would normally stress the second-to-last syllable, so the acute accent records the unexpected final stress."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The form, taken apart",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words."
+              "text": "Spanish café came through Italian caffè and Turkish kahve from Arabic qahwah. English coffee reached the same travelling word by a different European route. The drink and the word both crossed languages."
+            },
+            {
+              "kind": "speech",
+              "text": "The route from Arabic qahwah through Turkish kahve and Italian caffè to Spanish café."
+            },
+            {
+              "kind": "speech",
+              "text": "Café can name the drink or the place, just as English coffee and café divide those jobs. It is masculine: el café."
             }
           ]
         },
@@ -101,87 +83,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“fui, fuiste, fue”",
+              "instruction": "“café” — final stress",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “fui, fuiste, fue”]"
+              "source": "[YOU SAY: “café” — final stress]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Fui a Madrid.”",
+              "instruction": "“el café”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Fui a Madrid.”]"
+              "source": "[YOU SAY: “el café”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Fue Roberto — identification, so ser.”",
+              "instruction": "the route — “qahwah becomes kahve becomes caffè becomes café”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Fue Roberto — identification, so ser.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-ser-ir-preterite-singular-forms",
-              "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "fui, fuiste, fue",
-                "fui fuiste fue",
-                "fui / fuiste / fue"
-              ],
-              "feedback": {
-                "correct": "Right: fui, fuiste, fue.",
-                "incorrect": "Retrieve only the three learned singular forms: fui, fuiste, fue."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-ser-ir-preterite-fui-madrid",
-              "prompt": "Say 'I went to Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
-                "ES-LEX-A"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "fui a madrid.",
-                "fui a madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Fui a Madrid.",
-                "incorrect": "Use the shared yo form fui, then known a plus Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-ser-ir-preterite-context",
-              "prompt": "In 'Fue Roberto', which verb does fue express?",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "ser"
-              ],
-              "feedback": {
-                "correct": "Right: identifying Roberto points to ser.",
-                "incorrect": "This sentence identifies who it was, so fue expresses ser."
-              }
+              "source": "[YOU SAY: the route — “qahwah → kahve → caffè → café”]"
             }
           ]
         },
@@ -198,26 +122,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past."
+              "text": "Where does the stress fall? (On the final é.) Why is the accent written? (It overrides the usual vowel-final stress.) What route carried the word into Spanish? (Arabic qahwah becomes Turkish kahve becomes Italian caffè becomes Spanish café.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C14-hablar-preterite",
-      "sequence": 1060,
-      "title": "hablé — a regular singular past from a known verb",
-      "headword": "hablé",
-      "romanization": "hablé",
-      "gloss": "the regular singular -ar preterite — hablé, hablaste, habló",
+      "id": "ES-C06-por-favor",
+      "sequence": 500,
+      "title": "por favor — \"please,\" i.e. \"for a favour\"",
+      "headword": "por favor",
+      "romanization": "por favor",
+      "gloss": "please (literally \"for [a] favour\")",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffe1d91d615359ce",
+      "sourceHash": "fnv1a64:031d0e43ac4b59b7",
       "notice": null,
       "blocks": [
         {
@@ -233,83 +157,64 @@
             },
             {
               "kind": "speech",
-              "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
+              "text": "You can already thank (gracias) and reply (de nada). The third courtesy completes the set: por favor, \"please\" — literally \"for [a] favour.\" You're asking someone to do you a kindness."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: present beside completed past",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present",
-                "completed past"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present: hablo. completed past: hablé.",
-                "person: tú. present: hablas. completed past: hablaste.",
-                "person: él / ella / usted. present: habla. completed past: habló."
-              ]
+              "kind": "speech",
+              "text": "r-tap — one soft tapped r in por and favor."
             },
             {
               "kind": "speech",
-              "text": "Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:"
-            },
-            {
-              "kind": "speech",
-              "text": "hablo becomes hablé changes the final vowel and moves stress to the end."
-            },
-            {
-              "kind": "speech",
-              "text": "hablas becomes hablaste adds the past ending -aste."
-            },
-            {
-              "kind": "speech",
-              "text": "habla becomes habló changes the final vowel and moves stress to the end."
+              "text": "v-b — Spanish v and b sound identical (a soft b): favor ≈ fah-BOR. (So favor and English favour look alike and the v even sounds like the b you'd hear in \"harbour.\")"
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two accents, one natural stress pattern",
+          "type": "etymology",
+          "title": "The word, taken apart — the phrase",
           "segments": [
             {
               "kind": "speech",
-              "text": "The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past."
+              "text": "por = \"for / through / by,\" from Latin prō (\"for, on behalf of\") — the same pro- in English pronoun, propose, protect."
             },
             {
               "kind": "speech",
-              "text": "Now reuse known words:"
+              "text": "favor = \"a favour, goodwill,\" from Latin favēre, \"to be favourable to, to support.\" It's the very word English borrowed: favour, favorite, favorable, favouritism."
             },
             {
               "kind": "speech",
-              "text": "Hablé español. — “I spoke Spanish.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hablaste español? — “Did you speak Spanish?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Habló español. — “He, she, or you-formal spoke Spanish.”"
+              "text": "So por favor literally says “for a favour” — [do this] as a kindness to me. English favour, favorite, and favorable keep the same Latin family visible without asking you to learn another language's formula."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The endings, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the courtesy set is complete",
           "segments": [
             {
               "kind": "speech",
-              "text": "The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending."
+              "text": "You now hold the three pillars of politeness:"
+            },
+            {
+              "kind": "speech",
+              "text": "por favor — please (asking)."
+            },
+            {
+              "kind": "speech",
+              "text": "gracias — thank you (receiving)."
+            },
+            {
+              "kind": "speech",
+              "text": "de nada — you're welcome (replying)."
             }
           ]
         },
@@ -327,89 +232,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, hablaste, habló”",
+              "instruction": "\"por favor\" — por fah-BOR, soft v/b",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+              "source": "[YOU SAY: \"por favor\" — *por fah-BOR*, soft *v/b*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablo español. Hablé español.”",
+              "instruction": "\"Café, por favor\" — \"Coffee, please\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
+              "source": "[YOU SAY: \"Café, por favor\" — \"Coffee, please\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé and habló carry written accents; hablaste does not”",
+              "instruction": "\"favor\" then English \"favour, favorite\" — one family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé and habló carry written accents; hablaste does not”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hablé, hablaste, habló",
-                "hablé hablaste habló",
-                "hablé / hablaste / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé, hablaste, habló.",
-                "incorrect": "Keep habl- and retrieve -é, -aste, -ó."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-hable-espanol",
-              "prompt": "Say 'I spoke Spanish' in Spanish.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-LEX-ESPANOL",
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablé español.",
-                "hablé español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablé español.",
-                "incorrect": "Use hablé with its final written accent, then known español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-hablar-preterite-present-past",
-              "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hablé"
-              ],
-              "feedback": {
-                "correct": "Right: hablé is the completed-past yo form.",
-                "incorrect": "Hablo is present; hablé is the completed-past form."
-              }
+              "source": "[YOU SAY: \"favor\" then English \"favour, favorite\" — one family]"
             }
           ]
         },
@@ -426,26 +271,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words."
+              "text": "What does por favor literally mean? (\"For a favour.\") What Latin verb is favor from, and its English cousins? (favēre — favour, favorite, favorable.) Which three-word courtesy loop do you now own? (Por favor becomes gracias becomes de nada.) Next: your first regular verb — hablar, “to speak.”"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C14-practice",
-      "sequence": 1070,
-      "title": "Practice — two singular ways to talk about a completed past",
+      "id": "ES-C06-repaso-cafe",
+      "sequence": 505,
+      "title": "Ordering — putting it together",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló",
+      "gloss": "Ordering — putting the chapter together",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6add1b7975e3eb47",
+      "sourceHash": "fnv1a64:76520bd8380dab29",
       "notice": null,
       "blocks": [
         {
@@ -461,49 +306,29 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart."
+              "text": "Your first transaction: a thing you want, and the word that makes it a request. Nothing new in this lesson — only what you already have."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete Chapter 14 frame",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "shared past of ser and ir: fui, fuiste, fue."
-            },
-            {
-              "kind": "speech",
-              "text": "regular past of hablar: hablé, hablaste, habló."
-            },
-            {
-              "kind": "speech",
-              "text": "context: Fui a Madrid expresses ir; Fue Roberto expresses ser."
-            },
-            {
-              "kind": "speech",
-              "text": "time contrast: Hablo español is present; Hablé español is completed past."
-            },
-            {
-              "kind": "speech",
-              "text": "spelling: hablé and habló show final stress with a written accent; hablaste needs none."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons."
+              "text": "— Un café, por favor. — Gracias."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The two histories, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy."
+              "text": "You can ask for something and stay polite doing it."
             }
           ]
         },
@@ -521,143 +346,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“fui, fuiste, fue”",
+              "instruction": "the whole exchange, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “fui, fuiste, fue”]"
+              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, hablaste, habló”",
+              "instruction": "it again, faster, and let it sound like speech rather than recital",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Fui a Madrid. Fue Roberto.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Fui a Madrid. Fue Roberto.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hablo español. Hablé español.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-ser-ir-forms",
-              "prompt": "Give the three learned forms shared by ser and ir.",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "fui, fuiste, fue",
-                "fui fuiste fue",
-                "fui / fuiste / fue"
-              ],
-              "feedback": {
-                "correct": "Right: fui, fuiste, fue.",
-                "incorrect": "Retrieve the singular set: fui, fuiste, fue."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-ar-forms",
-              "prompt": "Give the three learned completed-past forms of hablar.",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hablé, hablaste, habló",
-                "hablé hablaste habló",
-                "hablé / hablaste / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé, hablaste, habló.",
-                "incorrect": "Retrieve the singular set: hablé, hablaste, habló."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-context-ser-ir",
-              "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
-              "assesses": [
-                "ES-LEX-FUI-SER-IR",
-                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
-                "ES-LEX-A"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "fui a madrid.",
-                "fui a madrid"
-              ],
-              "feedback": {
-                "correct": "Right: a plus Madrid supplies a destination, so fui expresses ir.",
-                "incorrect": "The destination phrase a Madrid makes Fui a Madrid the ir sentence."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-present-past",
-              "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
-              "assesses": [
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hablo español. hablé español.",
-                "hablo español; hablé español",
-                "hablo español. hablé español",
-                "hablo español hablé español"
-              ],
-              "feedback": {
-                "correct": "Right: Hablo español; Hablé español.",
-                "incorrect": "Use present hablo first, then completed-past hablé."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C14-practice-written-accents",
-              "prompt": "Which two of hablé, hablaste, habló carry written accents?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
-                "ES-SOUND-WRITTEN-ACCENT",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hablé and habló",
-                "hablé habló",
-                "hablé y habló",
-                "hablé / habló"
-              ],
-              "feedback": {
-                "correct": "Right: hablé and habló mark final stress.",
-                "incorrect": "The final-stressed forms are hablé and habló."
-              }
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             }
           ]
         },
@@ -674,7 +381,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) Chapter 15 can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
+              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
             }
           ]
         }

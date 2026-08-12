@@ -6,8 +6,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "platform-resolved owner-private vault-pm roots",
-      "justification": "Loads exact configuration, owner state, bootstrap generations, and encrypted immutable repository objects through audited adapters."
+      "target": "platform-resolved owner-private vault-pm roots or one explicit portable-import source",
+      "justification": "Loads exact configuration, owner state, bootstrap generations, encrypted immutable repository objects, or one bounded encrypted portable artifact through audited adapters."
     },
     {
       "category": "fs",
@@ -18,8 +18,8 @@
     {
       "category": "fs",
       "action": "create",
-      "target": "platform-resolved owner-private vault-pm roots",
-      "justification": "Creates missing private roots and first-generation durable records through the local host and storage adapters."
+      "target": "platform-resolved owner-private vault-pm roots or one explicit portable-export destination",
+      "justification": "Creates missing private roots and first-generation durable records through the local host and storage adapters, or one create-new already-encrypted portable artifact selected by the user."
     },
     {
       "category": "time",

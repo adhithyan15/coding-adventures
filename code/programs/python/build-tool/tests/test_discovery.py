@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import platform
 from pathlib import Path
 from unittest.mock import patch
@@ -20,6 +21,17 @@ from build_tool.discovery import (
 )
 
 FIXTURES = Path(__file__).parent / "fixtures"
+REPO_ROOT = Path(__file__).resolve().parents[5]
+SHARED_LANGUAGE_REGISTRY = (
+    REPO_ROOT
+    / "code"
+    / "specs"
+    / "fixtures"
+    / "build-tool-v1"
+    / "cases"
+    / "discovery-language-registry.json"
+)
+FILTER_LANGUAGES = frozenset({"csharp", "fsharp", "haskell", "java", "kotlin"})
 
 
 class TestReadLines:
@@ -73,6 +85,32 @@ class TestInferLanguage:
         path.mkdir(parents=True)
         assert _infer_language(path) == "rust"
 
+    @pytest.mark.parametrize("language", sorted(FILTER_LANGUAGES))
+    def test_newly_exposed_filter_paths(self, tmp_path, language):
+        path = tmp_path / "packages" / language / "demo"
+        path.mkdir(parents=True)
+        assert _infer_language(path) == language
+
+    @pytest.mark.parametrize("language", sorted(FILTER_LANGUAGES))
+    def test_language_word_outside_bucket_is_unknown(self, tmp_path, language):
+        path = tmp_path / "packages" / "custom" / language / "demo"
+        path.mkdir(parents=True)
+        assert _infer_language(path) == "unknown"
+
+    def test_nearest_bucket_wins_over_checkout_ancestor(self, tmp_path):
+        path = (
+            tmp_path
+            / "packages"
+            / "python"
+            / "repo"
+            / "code"
+            / "packages"
+            / "haskell"
+            / "demo"
+        )
+        path.mkdir(parents=True)
+        assert _infer_language(path) == "haskell"
+
     def test_unknown_path(self, tmp_path):
         path = tmp_path / "packages" / "zig" / "something"
         path.mkdir(parents=True)
@@ -89,6 +127,12 @@ class TestInferPackageName:
         path = tmp_path / "arithmetic"
         path.mkdir()
         assert _infer_package_name(path, "ruby") == "ruby/arithmetic"
+
+    @pytest.mark.parametrize("language", sorted(FILTER_LANGUAGES))
+    def test_program_identity_keeps_programs_segment(self, tmp_path, language):
+        path = tmp_path / "programs" / language / "demo"
+        path.mkdir(parents=True)
+        assert _infer_package_name(path, language) == f"{language}/programs/demo"
 
 
 class TestGetBuildFile:
@@ -282,6 +326,35 @@ class TestDiscoverRecursive:
         langs = {p.language for p in packages}
         assert langs == {"python", "ruby", "go", "rust"}
 
+    def test_consumes_shared_filter_identity_contract(self, tmp_path):
+        fixture = json.loads(SHARED_LANGUAGE_REGISTRY.read_text(encoding="utf-8"))
+
+        selected_files = []
+        for file_record in fixture["workspace"]["files"]:
+            parts = Path(file_record["path"]).parts
+            if len(parts) >= 4 and parts[2] in FILTER_LANGUAGES:
+                selected_files.append(file_record)
+                destination = tmp_path / file_record["path"]
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_text(file_record["content_utf8"], encoding="utf-8")
+
+        assert len(selected_files) == 11
+        packages = discover_packages(tmp_path / "code")
+        actual = [
+            (
+                package.name,
+                package.language,
+                package.path.relative_to(tmp_path).as_posix(),
+            )
+            for package in packages
+        ]
+        expected = [
+            (record["name"], record["language"], record["rel_path"])
+            for record in fixture["expected"]["result"]["packages"]
+            if record["language"] in FILTER_LANGUAGES
+        ]
+        assert actual == expected
+
 
 class TestDiscoverSkipList:
     """Tests for skip-list directory filtering."""
@@ -335,6 +408,18 @@ class TestDiscoverSkipList:
         packages = discover_packages(tmp_path)
         assert len(packages) == 1
         assert packages[0].language == "rust"
+
+    def test_skips_cabal_dist_newstyle(self, tmp_path):
+        pkg = tmp_path / "packages" / "haskell" / "pkg-a"
+        pkg.mkdir(parents=True)
+        (pkg / "BUILD").write_text("echo hs")
+
+        generated = tmp_path / "packages" / "haskell" / "dist-newstyle"
+        generated.mkdir(parents=True)
+        (generated / "BUILD").write_text("echo generated")
+
+        packages = discover_packages(tmp_path)
+        assert [package.name for package in packages] == ["haskell/pkg-a"]
 
     def test_skips_claude_dir(self, tmp_path):
         pkg = tmp_path / "packages" / "python" / "pkg-a"

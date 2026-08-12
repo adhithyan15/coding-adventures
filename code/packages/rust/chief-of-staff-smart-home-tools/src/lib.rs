@@ -15,23 +15,24 @@
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier as ToolPrivilegeTier, SchemaProperty,
     ToolApiError, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind,
-    ToolExecutionContext, ToolHandlerOutput, ToolIdempotency, ToolSideEffects, ToolStability,
-    ToolStreaming,
+    ToolExecutionContext, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolResult,
+    ToolSideEffects, ToolStability, ToolStreaming,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
+use smart_home_controller_runtime::{
+    ControllerTransactionError, SharedSmartHomeRuntime, SmartHomeControllerRuntime,
+};
 use smart_home_core::{
     canonical_integration_catalog_summary, smart_home_tool_catalog_summary, AgentId,
     AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
     AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant, CapabilityGrantId,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
-    DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId,
-    Health,
-    IntegrationCatalogSummary, IntegrationId, MediaCommandType, Metadata, PrivilegeTier,
-    ProtocolFamily,
-    ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope,
-    SmartHomeToolCatalogSummary, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
-    VaultRef,
+    DeviceControlCommandType, DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind,
+    EventId, Health, IntegrationCatalogSummary, IntegrationId, MediaCommandType, Metadata,
+    PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId,
+    SceneScope, SmartHomeToolCatalogSummary, StateConfidence, StateDelta, StateSnapshot,
+    StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     DiscoveryPairingAction, DiscoveryPairingPlan, DiscoveryPairingPlanOptions,
@@ -251,9 +252,9 @@ use smart_home_runtime::{
     WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
     WorkerRestartReason, WorkerStatus,
 };
-use std::cell::RefCell;
 use std::collections::BTreeSet;
-use std::rc::Rc;
+use std::convert::Infallible;
+use storage_core::StorageBackend;
 
 macro_rules! heap_object {
     ($(($name:expr, $value:expr $(,)?)),* $(,)?) => {{
@@ -846,26 +847,38 @@ pub const SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID: &str =
 pub const SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_readiness_gap_summary";
 
-/// Shared, mutable smart-home runtime handle for in-process D18D handlers.
-pub type SharedSmartHomeRuntime = Rc<RefCell<SmartHomeRuntime>>;
-
-/// Thin registration helper for smart-home D18D tools.
-#[derive(Clone)]
-pub struct SmartHomeToolBridge {
-    runtime: SharedSmartHomeRuntime,
+/// Thread-safe D18D adapter over the central durable smart-home controller.
+pub struct SmartHomeToolBridge<B> {
+    controller: SmartHomeControllerRuntime<B>,
     default_principal_id: AgentId,
 }
 
-impl SmartHomeToolBridge {
-    pub fn new(runtime: SharedSmartHomeRuntime, default_principal_id: AgentId) -> Self {
+impl<B> Clone for SmartHomeToolBridge<B> {
+    fn clone(&self) -> Self {
         Self {
-            runtime,
+            controller: self.controller.clone(),
+            default_principal_id: self.default_principal_id.clone(),
+        }
+    }
+}
+
+impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
+    pub fn new(
+        controller: impl Into<SmartHomeControllerRuntime<B>>,
+        default_principal_id: AgentId,
+    ) -> Self {
+        Self {
+            controller: controller.into(),
             default_principal_id,
         }
     }
 
-    pub fn runtime(&self) -> SharedSmartHomeRuntime {
-        self.runtime.clone()
+    pub fn controller(&self) -> SmartHomeControllerRuntime<B> {
+        self.controller.clone()
+    }
+
+    pub fn runtime_handle(&self) -> SharedSmartHomeRuntime {
+        self.controller.runtime_handle()
     }
 
     pub fn default_principal_id(&self) -> &AgentId {
@@ -880,21 +893,35 @@ impl SmartHomeToolBridge {
         Ok(())
     }
 
+    /// Execute one request through a freshly registered D18D runtime.
+    ///
+    /// The bridge and central controller remain thread-safe; the short-lived
+    /// registry is only a validation, policy, event, and terminal-result shell.
+    pub fn invoke(&self, request: &ToolInvocationRequest) -> Result<ToolResult, ToolApiError> {
+        let mut runtime = InMemoryToolRuntime::new();
+        let definition = smart_home_tool_definition(&request.tool_id)
+            .ok_or_else(|| ToolApiError::UnknownTool(request.tool_id.clone()))?;
+        runtime.register_handler(definition, self.handler_for(&request.tool_id))?;
+        Ok(runtime.invoke(request))
+    }
+
     fn handler_for(
         &self,
         tool_id: &str,
     ) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError> + 'static
     {
-        let runtime = self.runtime.clone();
+        let controller = self.controller.clone();
         let default_principal_id = self.default_principal_id.clone();
         let tool_id = tool_id.to_string();
 
         move |arguments, context| {
             let principal_id = principal_for_context(&context, &default_principal_id);
             let now_ms = context.requested_at;
-            let mut runtime = runtime.borrow_mut();
+            let tool_id = tool_id.clone();
 
-            match tool_id.as_str() {
+            controller
+                .transaction(now_ms, move |runtime, _| {
+                    let result = (|| match tool_id.as_str() {
                 SMART_HOME_LIST_INTEGRATIONS_TOOL_ID => {
                     let request = integration_catalog_query(&arguments)?;
                     Ok(list_integrations_output_handler_output(request))
@@ -2109,7 +2136,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_DEVICE_INVENTORY_AUDIT_TOOL_ID => {
                     let query = device_inventory_audit_query(&arguments)?;
                     list_device_inventory_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2118,7 +2145,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_DEVICE_INVENTORY_AUDIT_SUMMARY_TOOL_ID => {
                     let query = device_inventory_audit_query(&arguments)?;
                     get_device_inventory_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2127,7 +2154,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_ROOM_TOPOLOGY_AUDIT_TOOL_ID => {
                     let query = room_topology_audit_query(&arguments)?;
                     list_room_topology_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2136,7 +2163,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_ROOM_TOPOLOGY_AUDIT_SUMMARY_TOOL_ID => {
                     let query = room_topology_audit_query(&arguments)?;
                     get_room_topology_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2156,7 +2183,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_SCENE_COVERAGE_AUDIT_TOOL_ID => {
                     let query = scene_coverage_audit_query(&arguments)?;
                     list_scene_coverage_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2165,7 +2192,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_SCENE_COVERAGE_AUDIT_SUMMARY_TOOL_ID => {
                     let query = scene_coverage_audit_query(&arguments)?;
                     get_scene_coverage_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2282,7 +2309,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_EVENT_DELIVERY_AUDIT_TOOL_ID => {
                     let query = event_delivery_audit_query(&arguments)?;
                     list_event_delivery_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2291,7 +2318,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_EVENT_DELIVERY_AUDIT_SUMMARY_TOOL_ID => {
                     let query = event_delivery_audit_query(&arguments)?;
                     get_event_delivery_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2332,7 +2359,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_COMMAND_RISK_AUDIT_TOOL_ID => {
                     let query = command_risk_audit_query(&arguments)?;
                     list_command_risk_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2341,7 +2368,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_COMMAND_RISK_AUDIT_SUMMARY_TOOL_ID => {
                     let query = command_risk_audit_query(&arguments)?;
                     get_command_risk_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2350,7 +2377,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID => {
                     let query = authorization_gap_audit_query(&arguments)?;
                     list_authorization_gap_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2359,7 +2386,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_AUTHORIZATION_GAP_AUDIT_SUMMARY_TOOL_ID => {
                     let query = authorization_gap_audit_query(&arguments)?;
                     get_authorization_gap_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2421,19 +2448,19 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_controller_handoff_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
                 }
                 SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_platform_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_platform_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID => {
                     let query = platform_evidence_ledger_query(&arguments)?;
                     list_platform_evidence_ledger_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2442,7 +2469,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID => {
                     let query = platform_evidence_ledger_query(&arguments)?;
                     get_platform_evidence_ledger_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2451,7 +2478,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_PLATFORM_ACCESS_REVIEW_TOOL_ID => {
                     let query = platform_access_review_query(&arguments)?;
                     list_platform_access_review_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2460,7 +2487,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PLATFORM_ACCESS_REVIEW_SUMMARY_TOOL_ID => {
                     let query = platform_access_review_query(&arguments)?;
                     get_platform_access_review_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2469,7 +2496,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_PLATFORM_EVENT_OPS_REVIEW_TOOL_ID => {
                     let query = platform_event_ops_review_query(&arguments)?;
                     list_platform_event_ops_review_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2478,7 +2505,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PLATFORM_EVENT_OPS_REVIEW_SUMMARY_TOOL_ID => {
                     let query = platform_event_ops_review_query(&arguments)?;
                     get_platform_event_ops_review_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2498,19 +2525,19 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_pending_work_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
                 }
                 SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_attention_overview_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_attention_overview_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_SYSTEM_HEALTH_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_system_health_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2518,7 +2545,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_OPERATOR_ACTION_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_operator_action_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2526,7 +2553,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_SERVICE_EXECUTION_READINESS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_service_execution_readiness_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2534,43 +2561,43 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_SERVICE_EXECUTION_SAFETY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_service_execution_safety_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
                 }
                 SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_remediation_plan_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_remediation_plan_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_operations_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_operations_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_safety_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_safety_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_READINESS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_readiness_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_readiness_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_maintenance_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_maintenance_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_incident_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_incident_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_recovery_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_recovery_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_RECOVERY_READINESS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_recovery_readiness_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2578,7 +2605,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_COMMAND_LIFECYCLE_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_command_lifecycle_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2586,7 +2613,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_COMMAND_AUDIT_DOSSIER_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_command_audit_dossier_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2594,27 +2621,27 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_COMMAND_RESOLUTION_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_command_resolution_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
                 }
                 SMART_HOME_GET_MORNING_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_morning_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_morning_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_escalation_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_escalation_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_continuity_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_continuity_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_operator_readiness_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2622,35 +2649,35 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_SHIFT_HANDOFF_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_shift_handoff_brief_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
                 }
                 SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_closeout_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_closeout_brief_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_closeout_receipt_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_closeout_receipt_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_closeout_audit_trail_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
                 }
                 SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
-                    get_closeout_archive_output_handler_output(&mut runtime, principal_id, now_ms)
+                    get_closeout_archive_output_handler_output(runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_closeout_archive_manifest_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2658,7 +2685,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_closeout_retention_ledger_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                     )
@@ -2684,7 +2711,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID => {
                     let query = desired_state_drift_audit_query(&arguments)?;
                     list_desired_state_drift_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2693,7 +2720,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_DESIRED_STATE_DRIFT_AUDIT_SUMMARY_TOOL_ID => {
                     let query = desired_state_drift_audit_query(&arguments)?;
                     get_desired_state_drift_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2702,7 +2729,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_STATE_TRANSITION_AUDIT_TOOL_ID => {
                     let query = state_transition_audit_query(&arguments)?;
                     list_state_transition_audit_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2711,7 +2738,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_STATE_TRANSITION_AUDIT_SUMMARY_TOOL_ID => {
                     let query = state_transition_audit_query(&arguments)?;
                     get_state_transition_audit_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2720,7 +2747,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_SUPERVISION_REMEDIATION_TOOL_ID => {
                     let query = supervision_remediation_query(&arguments)?;
                     list_supervision_remediation_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2729,7 +2756,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_SUPERVISION_REMEDIATION_SUMMARY_TOOL_ID => {
                     let query = supervision_remediation_query(&arguments)?;
                     get_supervision_remediation_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2738,7 +2765,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WINDOWS_TOOL_ID => {
                     let query = runtime_maintenance_window_query(&arguments)?;
                     list_runtime_maintenance_windows_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2747,7 +2774,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WINDOW_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_window_query(&arguments)?;
                     get_runtime_maintenance_window_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2756,7 +2783,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_ACTIONS_TOOL_ID => {
                     let query = runtime_maintenance_action_query(&arguments)?;
                     list_runtime_maintenance_actions_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2765,7 +2792,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_ACTION_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_action_query(&arguments)?;
                     get_runtime_maintenance_action_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2774,7 +2801,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_PLANS_TOOL_ID => {
                     let query = runtime_maintenance_plan_query(&arguments)?;
                     list_runtime_maintenance_plans_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2783,7 +2810,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_PLAN_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_plan_query(&arguments)?;
                     get_runtime_maintenance_plan_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2792,7 +2819,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_TICKETS_TOOL_ID => {
                     let query = runtime_maintenance_ticket_query(&arguments)?;
                     list_runtime_maintenance_tickets_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2801,7 +2828,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_TICKET_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_ticket_query(&arguments)?;
                     get_runtime_maintenance_ticket_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2810,7 +2837,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDERS_TOOL_ID => {
                     let query = runtime_maintenance_work_order_query(&arguments)?;
                     list_runtime_maintenance_work_orders_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2819,7 +2846,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_query(&arguments)?;
                     get_runtime_maintenance_work_order_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2828,7 +2855,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAILS_TOOL_ID => {
                     let query = runtime_maintenance_work_order_guardrail_query(&arguments)?;
                     list_runtime_maintenance_work_order_guardrails_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2837,7 +2864,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_GUARDRAIL_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_guardrail_query(&arguments)?;
                     get_runtime_maintenance_work_order_guardrail_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2846,7 +2873,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID => {
                     let query = runtime_maintenance_work_order_evidence_query(&arguments)?;
                     list_runtime_maintenance_work_order_evidence_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2855,7 +2882,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_evidence_query(&arguments)?;
                     get_runtime_maintenance_work_order_evidence_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2864,7 +2891,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEWS_TOOL_ID => {
                     let query = runtime_maintenance_work_order_evidence_review_query(&arguments)?;
                     list_runtime_maintenance_work_order_evidence_reviews_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2873,7 +2900,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_REVIEW_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_work_order_evidence_review_query(&arguments)?;
                     get_runtime_maintenance_work_order_evidence_review_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2885,7 +2912,7 @@ impl SmartHomeToolBridge {
                         &arguments,
                     )?;
                     list_runtime_maintenance_work_order_evidence_review_dispositions_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2897,7 +2924,7 @@ impl SmartHomeToolBridge {
                         &arguments,
                     )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2910,7 +2937,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     list_runtime_maintenance_work_order_evidence_review_disposition_actions_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2923,7 +2950,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2936,7 +2963,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     list_runtime_maintenance_work_order_evidence_review_disposition_action_outcomes_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2949,7 +2976,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2962,7 +2989,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2975,7 +3002,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -2988,7 +3015,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoffs_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -3001,7 +3028,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -3014,7 +3041,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     list_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliations_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -3027,7 +3054,7 @@ impl SmartHomeToolBridge {
                             &arguments,
                         )?;
                     get_runtime_maintenance_work_order_evidence_review_disposition_action_outcome_readiness_handoff_reconciliation_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -3036,7 +3063,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_LIST_RUNTIME_MAINTENANCE_CLOSEOUT_PACKETS_TOOL_ID => {
                     let query = runtime_maintenance_closeout_query(&arguments)?;
                     list_runtime_maintenance_closeout_packets_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -3045,7 +3072,7 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID => {
                     let query = runtime_maintenance_closeout_query(&arguments)?;
                     get_runtime_maintenance_closeout_summary_output_handler_output(
-                        &mut runtime,
+                        runtime,
                         principal_id,
                         now_ms,
                         query,
@@ -3157,7 +3184,11 @@ impl SmartHomeToolBridge {
                     ToolErrorKind::ToolNotFound,
                     format!("unregistered smart-home tool handler `{tool_id}`"),
                 )),
-            }
+                    })();
+                    Ok::<_, Infallible>(result)
+                })
+                .map_err(controller_transaction_error)?
+                .value
         }
     }
 }
@@ -69148,13 +69179,7 @@ fn activation_handoff_package_json(package: &IntegrationActivationHandoffPackage
         ),
         (
             "risk_ids",
-            JsonValue::Array(
-                package
-                    .risk_ids
-                    .iter()
-                    .map(string)
-                    .collect(),
-            ),
+            JsonValue::Array(package.risk_ids.iter().map(string).collect()),
         ),
         ("risk_count", integer(package.risk_count as i64)),
         (
@@ -69468,13 +69493,7 @@ fn activation_execution_packet_json(packet: &IntegrationActivationExecutionPacke
         ),
         (
             "risk_ids",
-            JsonValue::Array(
-                packet
-                    .risk_ids
-                    .iter()
-                    .map(string)
-                    .collect(),
-            ),
+            JsonValue::Array(packet.risk_ids.iter().map(string).collect()),
         ),
         ("risk_count", integer(packet.risk_count as i64)),
         (
@@ -69830,13 +69849,7 @@ fn activation_verification_checkpoint_json(
         ),
         (
             "risk_ids",
-            JsonValue::Array(
-                checkpoint
-                    .risk_ids
-                    .iter()
-                    .map(string)
-                    .collect(),
-            ),
+            JsonValue::Array(checkpoint.risk_ids.iter().map(string).collect()),
         ),
         ("risk_count", integer(checkpoint.risk_count as i64)),
         (
@@ -85930,10 +85943,7 @@ fn state_transition_audit_row_json(row: &StateTransitionAuditRow) -> JsonValue {
         ),
         (
             "status",
-            row.status
-                .as_ref()
-                .map(string)
-                .unwrap_or(JsonValue::Null),
+            row.status.as_ref().map(string).unwrap_or(JsonValue::Null),
         ),
         ("reason", string(row.reason)),
         (
@@ -86089,10 +86099,7 @@ fn supervision_remediation_row_json(row: &SupervisionRemediationRow) -> JsonValu
         ),
         (
             "status",
-            row.status
-                .as_ref()
-                .map(string)
-                .unwrap_or(JsonValue::Null),
+            row.status.as_ref().map(string).unwrap_or(JsonValue::Null),
         ),
         ("reason", string(row.reason)),
         (
@@ -86218,12 +86225,7 @@ fn runtime_maintenance_window_json(row: &RuntimeMaintenanceWindowRow) -> JsonVal
         ),
         (
             "remediation_ids",
-            JsonValue::Array(
-                row.remediation_ids
-                    .iter()
-                    .map(string)
-                    .collect(),
-            ),
+            JsonValue::Array(row.remediation_ids.iter().map(string).collect()),
         ),
         (
             "requires_attention",
@@ -92588,9 +92590,7 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
             "device_set_display_brightness"
         }
-        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
-            "sensor_calibrate"
-        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => "sensor_calibrate",
         CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit) => {
             "device_set_temperature_unit"
         }
@@ -92729,6 +92729,31 @@ fn runtime_error(error: RuntimeError) -> ToolCallError {
         kind,
         message: error.to_string(),
         details: JsonValue::Null,
+    }
+}
+
+fn controller_transaction_error(error: ControllerTransactionError<Infallible>) -> ToolCallError {
+    match error {
+        ControllerTransactionError::Mutation(error) => match error {},
+        ControllerTransactionError::RevisionConflict { expected, actual } => ToolCallError::new(
+            ToolErrorKind::ToolConflict,
+            match actual {
+                Some(actual) => format!(
+                    "smart-home controller revision conflict: expected {expected}, actual {actual}"
+                ),
+                None => format!(
+                    "smart-home controller revision conflict: expected {expected}, actual none"
+                ),
+            },
+        ),
+        ControllerTransactionError::LockPoisoned(component) => ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            format!("smart-home controller {component} mutex was poisoned"),
+        ),
+        ControllerTransactionError::Persistence(error) => ToolCallError::new(
+            ToolErrorKind::ToolExecutionError,
+            format!("smart-home controller could not persist tool result: {error}"),
+        ),
     }
 }
 
@@ -96444,8 +96469,155 @@ mod tests {
     };
     use smart_home_runtime::ScheduledDiscoveryWorker;
     use smart_home_testkit::{confirmed_state, hue_bridge_discovery_record, hue_lighting_runtime};
+    use std::sync::MutexGuard;
+    use storage_core::InMemoryStorageBackend;
 
     const AGENT_ID: &str = "agent:chief-smart-home";
+
+    #[derive(Clone)]
+    struct TestSmartHomeController {
+        controller: SmartHomeControllerRuntime<InMemoryStorageBackend>,
+        runtime: SharedSmartHomeRuntime,
+    }
+
+    impl TestSmartHomeController {
+        fn borrow(&self) -> MutexGuard<'_, SmartHomeRuntime> {
+            self.runtime.lock().unwrap()
+        }
+
+        fn borrow_mut(&self) -> MutexGuard<'_, SmartHomeRuntime> {
+            self.runtime.lock().unwrap()
+        }
+    }
+
+    impl From<TestSmartHomeController> for SmartHomeControllerRuntime<InMemoryStorageBackend> {
+        fn from(value: TestSmartHomeController) -> Self {
+            value.controller
+        }
+    }
+
+    fn test_controller(runtime: SmartHomeRuntime) -> TestSmartHomeController {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        controller
+            .transaction(0, |candidate, _| {
+                *candidate = runtime;
+                Ok::<(), std::convert::Infallible>(())
+            })
+            .unwrap();
+        TestSmartHomeController {
+            runtime: controller.runtime_handle(),
+            controller,
+        }
+    }
+
+    #[test]
+    fn chief_bridge_is_send_sync_over_the_controller_authority() {
+        fn assert_send_sync<T: Send + Sync>() {}
+
+        assert_send_sync::<SmartHomeToolBridge<InMemoryStorageBackend>>();
+    }
+
+    #[test]
+    fn chief_read_commits_audit_state_to_the_shared_durable_controller() {
+        let mut initial_runtime = hue_lighting_runtime();
+        initial_runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-chief-controller"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let initial_decisions = initial_runtime.registry().counts().authorization_decisions;
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let initial_commit = controller
+            .transaction(1_000, |runtime, _| {
+                *runtime = initial_runtime;
+                Ok::<(), std::convert::Infallible>(())
+            })
+            .unwrap();
+        let bridge = SmartHomeToolBridge::new(controller.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let trace = tool_runtime.invoke_with_events(&request(
+            "call-list-devices-central",
+            SMART_HOME_LIST_DEVICES_TOOL_ID,
+            object([]),
+            1_250,
+        ));
+
+        assert!(trace.result.ok);
+        let snapshot = controller.durable_snapshot().unwrap().unwrap();
+        assert_ne!(snapshot.revision, initial_commit.revision);
+        assert_eq!(snapshot.saved_at_ms, 1_250);
+        assert_eq!(
+            snapshot.runtime.registry().counts().authorization_decisions,
+            initial_decisions + 1
+        );
+        assert_eq!(
+            controller
+                .runtime_handle()
+                .lock()
+                .unwrap()
+                .registry()
+                .counts()
+                .authorization_decisions,
+            initial_decisions + 1
+        );
+    }
+
+    #[test]
+    fn chief_denial_commits_audit_state_to_the_shared_durable_controller() {
+        let initial_runtime = hue_lighting_runtime();
+        let initial_decisions = initial_runtime.registry().counts().authorization_decisions;
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        controller
+            .transaction(1_000, |runtime, _| {
+                *runtime = initial_runtime;
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let bridge = SmartHomeToolBridge::new(controller.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied = tool_runtime.invoke(&request(
+            "call-denied-central",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            1_300,
+        ));
+
+        assert!(!denied.ok);
+        assert_eq!(
+            denied.error.as_ref().map(|error| error.kind),
+            Some(ToolErrorKind::ToolPermissionDenied)
+        );
+        let snapshot = controller.durable_snapshot().unwrap().unwrap();
+        assert_eq!(snapshot.saved_at_ms, 1_300);
+        assert!(
+            snapshot.runtime.registry().counts().authorization_decisions > initial_decisions,
+            "a denied Chief command must still durably publish its authorization audit"
+        );
+        assert_eq!(
+            controller
+                .runtime_handle()
+                .lock()
+                .unwrap()
+                .registry()
+                .counts()
+                .authorization_decisions,
+            snapshot.runtime.registry().counts().authorization_decisions
+        );
+    }
 
     #[test]
     fn udp_discovery_and_transport_labels_round_trip() {
@@ -96469,14 +96641,8 @@ mod tests {
             parse_discovery_source("udp_broadcast").unwrap(),
             DiscoverySource::UdpBroadcast
         );
-        assert_eq!(
-            smart_home_core::BridgeTransport::LanUdp.as_str(),
-            "lan_udp"
-        );
-        assert_eq!(
-            smart_home_core::BridgeTransport::LanTcp.as_str(),
-            "lan_tcp"
-        );
+        assert_eq!(smart_home_core::BridgeTransport::LanUdp.as_str(), "lan_udp");
+        assert_eq!(smart_home_core::BridgeTransport::LanTcp.as_str(), "lan_tcp");
 
         let summary = RegistryTopologySummary {
             lan_udp_bridges: 2,
@@ -98191,7 +98357,7 @@ mod tests {
 
     #[test]
     fn controller_handoff_summary_surfaces_runtime_ready_categories() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
@@ -98258,7 +98424,7 @@ mod tests {
 
     #[test]
     fn platform_brief_surfaces_home_assistant_controller_signals() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
@@ -98382,7 +98548,7 @@ mod tests {
 
     #[test]
     fn platform_evidence_ledger_rolls_up_runtime_owned_evidence_sources() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
@@ -98476,7 +98642,7 @@ mod tests {
 
     #[test]
     fn attention_overview_rolls_up_runtime_pressure() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .register_discovery_worker_schedule(
@@ -98537,7 +98703,7 @@ mod tests {
 
     #[test]
     fn system_health_brief_summarizes_runtime_pressure() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .register_discovery_worker_schedule(
@@ -98616,7 +98782,7 @@ mod tests {
 
     #[test]
     fn operator_action_brief_orders_runtime_actions() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-action-command-tool-only"),
@@ -98698,7 +98864,7 @@ mod tests {
 
     #[test]
     fn service_execution_readiness_brief_blocks_on_authorization_gaps() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-service-command-tool-only"),
@@ -98797,7 +98963,7 @@ mod tests {
 
     #[test]
     fn service_execution_safety_brief_wraps_readiness_and_safety_evidence() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-service-safety-command-tool-only"),
@@ -98901,7 +99067,7 @@ mod tests {
 
     #[test]
     fn remediation_plan_prioritizes_authorization_gaps() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -98988,7 +99154,7 @@ mod tests {
 
     #[test]
     fn command_lifecycle_brief_wraps_command_authorization_recovery_and_closeout_signals() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-lifecycle-command-tool-only"),
@@ -99123,7 +99289,7 @@ mod tests {
 
     #[test]
     fn command_audit_dossier_wraps_lifecycle_access_event_and_evidence_ledgers() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -99298,7 +99464,7 @@ mod tests {
 
     #[test]
     fn command_resolution_brief_wraps_audit_remediation_operator_and_closeout_signals() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -99477,7 +99643,7 @@ mod tests {
 
     #[test]
     fn operations_brief_composes_controller_runtime_and_remediation_signals() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -99589,7 +99755,7 @@ mod tests {
 
     #[test]
     fn safety_brief_holds_on_authorization_gap_blockers() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -99702,7 +99868,7 @@ mod tests {
 
     #[test]
     fn incident_brief_prioritizes_policy_blockers_and_response_lane() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -99817,7 +99983,7 @@ mod tests {
 
     #[test]
     fn recovery_brief_groups_policy_runtime_state_and_handoff_stages() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -99940,7 +100106,7 @@ mod tests {
 
     #[test]
     fn recovery_readiness_brief_wraps_recovery_execution_and_activation_evidence() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-readiness-command-tool-only"),
@@ -100059,7 +100225,7 @@ mod tests {
 
     #[test]
     fn morning_brief_prioritizes_daily_blockers_from_existing_briefs() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100185,7 +100351,7 @@ mod tests {
 
     #[test]
     fn escalation_brief_orders_open_sections_from_morning_brief() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100299,7 +100465,7 @@ mod tests {
 
     #[test]
     fn continuity_brief_turns_escalations_into_operator_handoff_plan() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100431,7 +100597,7 @@ mod tests {
 
     #[test]
     fn operator_readiness_brief_turns_continuity_lanes_into_operator_decision() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100565,7 +100731,7 @@ mod tests {
 
     #[test]
     fn shift_handoff_brief_turns_operator_lanes_into_shift_packet() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100706,7 +100872,7 @@ mod tests {
 
     #[test]
     fn closeout_brief_turns_shift_handoff_items_into_closeout_packet() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100848,7 +101014,7 @@ mod tests {
 
     #[test]
     fn closeout_receipt_turns_closeout_items_into_acknowledgement_packet() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -100986,7 +101152,7 @@ mod tests {
 
     #[test]
     fn closeout_audit_trail_turns_receipt_items_into_audit_events() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -101131,7 +101297,7 @@ mod tests {
 
     #[test]
     fn closeout_archive_turns_audit_events_into_archive_records() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -101276,7 +101442,7 @@ mod tests {
 
     #[test]
     fn closeout_archive_manifest_turns_archive_records_into_retention_manifest() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -101413,7 +101579,7 @@ mod tests {
 
     #[test]
     fn closeout_retention_ledger_turns_manifest_entries_into_ledger_records() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -101554,7 +101720,7 @@ mod tests {
 
     #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -101672,7 +101838,7 @@ mod tests {
 
     #[test]
     fn maintenance_brief_rolls_up_runtime_maintenance_handoff_and_closeout() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -101860,7 +102026,7 @@ mod tests {
     }
 
     fn chief_of_staff_runtime_drives_smart_home_light_end_to_end_inner() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
@@ -115201,7 +115367,7 @@ mod tests {
 
     #[test]
     fn device_inventory_audit_tools_surface_runtime_inventory_gaps_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let mut device = runtime
             .borrow()
             .registry()
@@ -115307,7 +115473,7 @@ mod tests {
 
     #[test]
     fn room_topology_audit_tools_surface_runtime_room_gaps_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let mut device = runtime
             .borrow()
             .registry()
@@ -115419,7 +115585,7 @@ mod tests {
 
     #[test]
     fn scene_coverage_audit_tools_surface_runtime_scene_gaps_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let mut scene = runtime
             .borrow()
             .registry()
@@ -115529,7 +115695,7 @@ mod tests {
 
     #[test]
     fn command_risk_audit_tools_surface_runtime_command_risks_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-command-tool-only"),
@@ -115669,7 +115835,7 @@ mod tests {
 
     #[test]
     fn authorization_gap_audit_tools_surface_runtime_policy_gaps_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         {
             let mut runtime = runtime.borrow_mut();
             let registry = runtime.registry_mut();
@@ -115841,7 +116007,7 @@ mod tests {
 
     #[test]
     fn platform_access_review_tools_roll_up_runtime_access_pressure_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         {
             let mut runtime = runtime.borrow_mut();
             let registry = runtime.registry_mut();
@@ -115994,7 +116160,7 @@ mod tests {
 
     #[test]
     fn desired_state_drift_audit_tools_surface_runtime_drift_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -116125,7 +116291,7 @@ mod tests {
 
     #[test]
     fn state_transition_audit_tools_surface_runtime_supervision_work_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -116274,7 +116440,7 @@ mod tests {
 
     #[test]
     fn supervision_remediation_tools_surface_runtime_supervision_pressure_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -116462,7 +116628,7 @@ mod tests {
 
     #[test]
     fn runtime_maintenance_window_tools_group_supervision_pressure_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -116657,7 +116823,7 @@ mod tests {
 
     #[test]
     fn runtime_maintenance_action_tools_expand_supervision_pressure_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -116852,7 +117018,7 @@ mod tests {
     #[test]
     fn runtime_maintenance_plan_ticket_work_order_guardrail_evidence_review_disposition_and_action_tools_group_action_pressure_end_to_end(
     ) {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -118322,7 +118488,7 @@ mod tests {
 
     #[test]
     fn event_delivery_audit_tools_surface_backlogged_runtime_streams_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -118514,7 +118680,7 @@ mod tests {
 
     #[test]
     fn platform_event_ops_review_tools_roll_up_runtime_event_pressure_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         runtime
             .borrow_mut()
             .registry_mut()
@@ -118705,7 +118871,7 @@ mod tests {
 
     #[test]
     fn smart_home_handler_reports_runtime_authorization_denials() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -118807,7 +118973,7 @@ mod tests {
 
     #[test]
     fn malformed_smart_home_tool_calls_fail_d18d_validation_before_handler() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -118905,7 +119071,7 @@ mod tests {
 
     #[test]
     fn activation_waiver_archive_tools_project_closure_lineage_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -119087,7 +119253,7 @@ mod tests {
 
     #[test]
     fn activation_waiver_retention_tools_project_archive_lineage_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -119270,7 +119436,7 @@ mod tests {
 
     #[test]
     fn activation_waiver_expiration_tools_project_retention_lineage_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -119457,7 +119623,7 @@ mod tests {
 
     #[test]
     fn activation_waiver_disposal_tools_project_expiration_lineage_end_to_end() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -119645,7 +119811,7 @@ mod tests {
             .name("activation-waiver-tombstone-lineage".to_string())
             .stack_size(8 * 1024 * 1024)
             .spawn(|| {
-                let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+                let runtime = test_controller(hue_lighting_runtime());
                 let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
                 let mut tool_runtime = InMemoryToolRuntime::new();
                 bridge.register_all(&mut tool_runtime).unwrap();
@@ -119838,7 +120004,7 @@ mod tests {
             .name("activation-waiver-purge-lineage".to_string())
             .stack_size(8 * 1024 * 1024)
             .spawn(|| {
-                let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+                let runtime = test_controller(hue_lighting_runtime());
                 let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
                 let mut tool_runtime = InMemoryToolRuntime::new();
                 bridge.register_all(&mut tool_runtime).unwrap();
@@ -120037,7 +120203,7 @@ mod tests {
     }
 
     fn activation_waiver_erasure_tools_project_purge_lineage_end_to_end_inner() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -120233,7 +120399,7 @@ mod tests {
     }
 
     fn activation_waiver_erasure_receipt_tools_project_erasure_lineage_end_to_end_inner() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -120443,7 +120609,7 @@ mod tests {
     }
 
     fn activation_waiver_release_closure_tools_project_receipt_lineage_end_to_end_inner() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -120651,7 +120817,7 @@ mod tests {
     }
 
     fn activation_waiver_release_signoff_tools_project_closure_lineage_end_to_end_inner() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -120866,7 +121032,7 @@ mod tests {
     }
 
     fn activation_waiver_release_certification_tools_project_signoff_lineage_end_to_end_inner() {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -121160,7 +121326,7 @@ mod tests {
 
     fn activation_waiver_release_certification_remediation_tools_project_certification_lineage_end_to_end_inner(
     ) {
-        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        let runtime = test_controller(hue_lighting_runtime());
         let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -121514,7 +121680,10 @@ mod tests {
     #[test]
     fn media_command_labels_round_trip_through_the_chief_boundary() {
         let commands = [
-            ("media_set_playback_state", MediaCommandType::SetPlaybackState),
+            (
+                "media_set_playback_state",
+                MediaCommandType::SetPlaybackState,
+            ),
             ("media_play_next", MediaCommandType::PlayNext),
             ("media_play_previous", MediaCommandType::PlayPrevious),
             ("media_set_volume", MediaCommandType::SetVolume),

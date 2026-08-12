@@ -1,0 +1,7 @@
+style HeadingText {
+  part heading-text-root {
+    color       : $foundation-color-text-light ;
+    font-size   : $foundation-font-heading ;
+    font-weight : 700 ;
+  }
+}

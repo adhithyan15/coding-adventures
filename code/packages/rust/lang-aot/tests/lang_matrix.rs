@@ -1211,6 +1211,100 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the canonical generated grammar permits conditional
+    // expressions and designators to recurse in either branch. Both nested
+    // then branches choose their inner else arm, producing 40 and jumping to
+    // `good`; the final addition returns 42 on every standard backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean outer, inner; \
+               outer := true; inner := false; \
+               result := if outer then if inner then 1 else 40 else 0; \
+               goto if outer then if inner then bad else good else bad; \
+               bad: result := 0; goto done; \
+               good: result := result + 2; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a nested declaration may override a standard function only
+    // within its block. The final `abs` call must resolve back to the built-in,
+    // rather than leaking the nested typed sibling through compiler metadata.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; result := abs(-20); \
+               begin integer procedure abs(x); value x; integer x; abs := 1; \
+                     result := result + abs(-99) end; \
+               result := result + abs(-21) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — procedures obey block scope like scalar, label, and switch
+    // declarations. The nested `choose` resolves to its stable sibling while
+    // the call after that block resolves to the restored outer procedure.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure choose; choose := 20; \
+               result := choose(); \
+               begin integer procedure choose; choose := 1; \
+                     result := result + choose() end; \
+               result := result + choose() + 1 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a real array element may be the controlled variable of a
+    // for clause. Integer bounds widen to f64, and the typed array path carries
+    // each value while the loop's add and comparisons stay at f64 width.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; real total; real array cursor[1:1]; \
+               total := 0.0; \
+               for cursor[1] := 1 step 1 until 6 do total := total + cursor[1]; \
+               result := entier(total * 2.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an integer array element may be the controlled variable of a
+    // for clause. Each assignment/read uses the existing bounds-checked array
+    // path; summing the three assigned values onto 36 produces 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, index; integer array values[1:1]; \
+               index := 1; result := 36; \
+               for values[index] := 1 step 1 until 3 do \
+                 result := result + values[index] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — report-style `go to` feeds the same runtime-selected
+    // designational-expression lowering as the single-word `goto` spelling.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; boolean choose; choose := true; \
+               go to if choose then yes else no; \
+               no: result := 1; go to done; yes: result := 42; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — dummy statements consume no tokens and perform no work. This
+    // exercises leading/consecutive/trailing separators, an empty then arm, an
+    // empty for body, and a labeled empty statement before returning 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, i; ; result := 40;; \
+               if false then else result := result + 1; \
+               for i := 1 step 1 until 3 do ; \
+               empty: ; result := result + 1; end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — the exponentiation operator `↑` (§3.3.4, spelled `^`; LANG-FULL
     // AL-pow).  A **nonnegative integer-literal exponent** unrolls to repeated
     // multiplication and keeps the base's type, so `2 ^ 5` is the *integer* 32 —
@@ -1250,10 +1344,9 @@ const PROGRAMS: &[Prog] = &[
     },
     // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
     // implementation-defined, so this frontend recognises undeclared statement
-    // calls named `print`/`output` as standard output procedures. The narrow
-    // foothold is deliberately literal-only: `print('HI')` lowers to E4
-    // `str_const` + `print_str`, exactly the same shared string op pair BASIC
-    // string `PRINT` already proved. That makes stdout the observable result on
+    // calls named `print`/`output` as standard output procedures. A string
+    // literal lowers to E4 `str_const` + `print_str`, exactly the same shared
+    // pair BASIC string `PRINT` already proved. That makes stdout observable on
     // native-AOT / LLVM / WASM / JVM / CLR / VM / JIT without adding any
     // ALGOL-specific backend hooks.
     Prog {
@@ -1261,6 +1354,212 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin print('HI') end",
         expect: Expect::Stdout("HI"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — implementation-defined integer output reuses the shared
+    // `call_builtin print_i64` path already supported by every standard backend.
+    // The argument is an expression, proving output is not limited to literals.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer n; n := 40; output(n + 2) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — boolean output branches on the typed value and prints one of
+    // two shared string literals, avoiding an untyped bool-to-integer coercion.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; flag := true; output(flag and true, flag and false) end",
+        expect: Expect::Stdout("truefalse"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a direct real literal has a deterministic source spelling, so
+    // it can reuse string output without adding a partial runtime f64 formatter.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(4.25) end",
+        expect: Expect::Stdout("4.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
+    // bounded static real expressions. Copying preserves the destination when
+    // the source is reassigned; overflow, control flow, calls, captures,
+    // dynamic values, and inexact widening still require the deferred formatter.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer n, saved; n := abs(-40) + sign(-2) + entier(3.9); saved := n; n := 9; output(saved + 0.5) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a runtime condition may preserve assignment metadata when
+    // both independently proven branches have exactly the same value. The
+    // condition still lowers and executes; only the path-independent snapshot
+    // is reused by later formatter-free mixed real output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; integer n; real x; flag := false; n := if flag then 40 else 40; x := if flag then 2.5 else 2.5; output(n + x) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — statement control flow intersects independently compiled
+    // branch states. Equal integer and real assignments remain available to
+    // later static output while both runtime branches still lower normally.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; integer n; real x; flag := false; if flag then n := 40 else n := 40; if flag then x := 2.5 else x := 2.5; output(n + x) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact unary signs stay attached to direct real literals while
+    // the bounded source-spelling path continues to reject computed reals.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(-4.25, +2.5) end",
+        expect: Expect::Stdout("-4.25+2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a runtime boolean may select between source-spelled real
+    // literal leaves. The frontend branches before output and sends only the
+    // selected spelling through print_str, so this does not introduce a
+    // runtime f64 formatter or broaden the computed-real path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; flag := false; output(if flag then +4.25 else -2.5) end",
+        expect: Expect::Stdout("-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact arithmetic grouping around a direct signed real literal
+    // does not turn it into a computed f64. The frontend unwraps only a balanced
+    // parenthesis pair around one literal-only subtree and preserves each sign.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output((+4.25), (-2.5)) end",
+        expect: Expect::Stdout("+4.25-2.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — finite literal-only addition/subtraction can be evaluated by
+    // the frontend. The resulting decimal strings use the existing portable
+    // print_str path, while runtime operands and other operators stay rejected.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 + 2.25, 6.5 - 2.0) end",
+        expect: Expect::Stdout("4.254.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — finite literal-only multiplication uses the same bounded
+    // frontend evaluator. The second expression proves normal precedence while
+    // every backend continues to receive only portable string output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.5 * 2.0, 1.5 + 2.0 * 3.0) end",
+        expect: Expect::Stdout("57.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — finite literal-only division completes the bounded arithmetic
+    // output evaluator. The second expression proves multiplicative operators
+    // remain left associative before the frontend emits portable strings.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(9.0 / 2.0, 8.0 / 2.0 * 1.5) end",
+        expect: Expect::Stdout("4.56"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — real literal bases with capped nonnegative integer-literal
+    // exponent chains use deterministic repeated multiplication. The chain
+    // proves ALGOL's right associativity without emitting f64_pow.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.5 ^ 2, 2.0 ^ 3 ^ 2) end",
+        expect: Expect::Stdout("6.25512"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — one signed integer-literal exponent remains bounded by the
+    // existing cap. Negative powers use repeated division and still emit only
+    // a frontend-computed string on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 ^ (-3), 4.0 ^ (+2)) end",
+        expect: Expect::Stdout("0.12516"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exactly integral real-literal exponents inside the existing
+    // cap use the same deterministic repeated arithmetic as integer spellings.
+    // Fractional real exponents remain excluded from static output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 ^ 3.0, 2.0 ^ (-3.0)) end",
+        expect: Expect::Stdout("80.125"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — nonnegative integral-literal exponent chains may use real or
+    // integer spellings. The frontend computes the right-associated exponent
+    // first and enforces the expansion cap before emitting shared strings.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(2.0 ^ 3.0 ^ 2.0, 2.0 ^ 3 ^ 2.0) end",
+        expect: Expect::Stdout("512512"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — deterministic real standard-function calls over static
+    // operands bypass runtime f64 formatting. Exact sqrt keeps this path
+    // independent of backend math-library formatting behavior.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(abs(2.0 - 6.25), sqrt(2.25)) end",
+        expect: Expect::Stdout("4.251.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — formatter-free standard-function values may nest and compose
+    // with the existing finite literal-only arithmetic evaluator.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(abs(sqrt(2.25) - 2.0) + 0.25, sqrt(abs(-2.25)) * 2.0) end",
+        expect: Expect::Stdout("0.753"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a runtime condition may select between formatter-free static
+    // standard-function expressions without materializing either as an f64.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; flag := false; output(if flag then abs(-4.25) else sqrt(2.25) + 0.5) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — canonical transcendental inputs with exact zero/one results
+    // join the formatter-free static standard-function path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(sin(0.0), cos(0.0), ln(1.0), exp(0.0), arctan(0.0)) end",
+        expect: Expect::Stdout("01010"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact integer-valued standard-function results can widen
+    // into the formatter-free literal-only real arithmetic path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(sign(-2.5) + 2.0, entier(2.75) + 0.5) end",
+        expect: Expect::Stdout("12.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
@@ -1390,6 +1689,33 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a valid procedure heading may partition its formals across
+    // multiple specification groups. All names are declared once in the
+    // formal list, appear once in the value part, and receive exactly one type.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+                  integer procedure combine(a,b,c); value a,b,c; integer a,b; real c; \
+                    combine := a * 10 + b + entier(c); \
+                  result := combine(3, 4, 8.0) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 report-style split specifications. `integer p,a` supplies the
+    // types while `procedure p` and `array a` independently supply each
+    // formal's kind; the semantic pass merges these complementary parts.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; integer array values[4:4]; \
+                  integer procedure twice(x); value x; integer x; twice := x + x; \
+                  integer procedure apply(p,a); value a; integer p,a; procedure p; array a; \
+                    apply := p(a[4]); \
+                  values[4] := 21; result := apply(twice, values) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a proper procedure captures an enclosing array and retains
     // its declaration-space lower bounds across a fresh procedure frame.
     Prog {
@@ -1402,8 +1728,8 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a one-dimensional typed array formal is a descriptor-value
-    // parameter: its handle aliases the caller's elements and its declared
-    // lower bound crosses the call beside that handle. `invoke` captures
+    // parameter: its value-mode handle is copied while its declared lower
+    // bound crosses the call beside that handle. `invoke` captures
     // `values`, so it also proves global descriptor reload before `fill` is
     // called in a fresh frame. All seven backends receive `array<i64>, i64`
     // parameters through the ordinary shared IIR call ABI. Exit 42.
@@ -1416,6 +1742,28 @@ const PROGRAMS: &[Prog] = &[
                   procedure invoke; result := fill(values); \
                   invoke end",
         expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — multidimensional coordinates are checked independently before
+    // row-major flattening. Without this guard A[1,3] in a 2x2 array aliases
+    // the valid A[2,1] flat slot; every backend must instead fail closed.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array values[1:2, 1:2]; integer result; \
+                  values[2,1] := 42; result := values[1,3] end",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — array bound pairs are evaluated at run time, and every extent
+    // must remain positive before stride arithmetic or allocation. A reversed
+    // dynamic pair therefore fails closed on all seven standard backends.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer lower, upper, result; lower := 2; upper := 1; \
+                  begin integer array values[lower:upper]; result := 42 end end",
+        expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
@@ -1594,6 +1942,20 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(36),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a report-style typed procedure formal retains its expected
+    // integer result while direct specialization substitutes `twice`. The
+    // procedure target remains compile-time metadata and adds no IIR argument.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; \
+               integer procedure twice(x); value x; integer x; twice := x + x; \
+               integer procedure apply(p, x); value x; integer procedure p; integer x; \
+                 apply := p(x); \
+               result := apply(twice, 21) end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a direct nested procedure actual may capture its enclosing
     // value formal before travelling through `dispatch`. The specialised
     // wrapper calls `add` directly, while the existing capture substrate keeps
@@ -1759,6 +2121,46 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end",
         expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — definite string initialization is joined across statement
+    // control flow. Both exits assign the same typed local slot, so the later
+    // runtime print is valid regardless of which branch executes.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; string s; flag := false; if flag then s := 'HI' else s := 'LO'; print(s) end",
+        expect: Expect::Stdout("LO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a zero-trip loop cannot erase definite initialization from
+    // before the loop. The body is skipped, and the pre-loop typed string is
+    // still the value printed by every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; string s; s := 'OK'; for i := 1 while false do s := 'HI'; print(s) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — list elements execute in order, and a plain single-value
+    // element runs its body exactly once. It can therefore establish definite
+    // string initialization after an earlier while element runs zero times.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a list containing only single-value elements is straight-line
+    // repetition with no zero-trip path or backedge. Its final static real
+    // assignment therefore remains available to the portable output path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; for i := 1, 2 do r := i + 4.25; print(r) end",
+        expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
@@ -2133,6 +2535,70 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — switch declarations obey lexical block scope. The nested `s`
+    // selects `innertarget`, then leaving that block restores the outer `s`,
+    // which selects `outertarget`. If the inner binding leaked, the phase guard
+    // would jump to `bad` and return 1 instead of 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, phase; switch s := outertarget; \
+               phase := 0; \
+               begin switch s := innertarget; goto s[1]; \
+                     innertarget: if phase = 0 then \
+                       begin phase := 1; result := 20 end \
+                     else goto bad end; \
+               goto s[1]; outertarget: result := result + 22; goto done; \
+               bad: result := 1; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — labels obey lexical block scope. The first nested `goto outer`
+    // resolves forward to the inner label; after that block exits, the same
+    // spelling resolves to the outer label and completes the result as 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, phase; phase := 0; goto outer; \
+               outer: if phase = 0 then \
+                 begin phase := 1; \
+                   begin integer marker; marker := 0; goto outer; \
+                         outer: result := 20 + marker; goto innerdone; \
+                         innerdone: end; \
+                   goto outer end \
+               else begin result := result + 22; goto done end; \
+               done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — switch-to-switch references bind where the containing switch
+    // is declared. `root` forward-references the outer `leaf`; the inner block's
+    // shadowing `leaf` must not retarget the stored graph.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result; switch root := leaf[1]; \
+               switch leaf := outertarget; \
+               begin integer marker; switch leaf := innertarget; \
+                     marker := 0; goto root[1]; \
+                     innertarget: result := 1 + marker; goto done end; \
+               outertarget: result := 42; done: end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — repeated labels on one statement denote the same target.
+    // Execution first enters through `first`, then loops through `second` and
+    // takes the other branch to return 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer result, phase; phase := 0; goto first; \
+               first: second: if phase = 0 then \
+                 begin phase := 1; goto second end \
+               else result := 42 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
     // enabler E3, phase 1).  `r := 2.5 * 2.0` computes in IEEE-754 double
     // (`5.0`), then `if r = 5.0` folds a real equality to the integer exit code
@@ -2285,28 +2751,28 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — boolean E5 arrays carry `bool` elements through a typed array
-    // value parameter rather than silently widening to integer storage. The
-    // non-unit lower bound proves the descriptor crosses the call and the normal
-    // ALGOL index translation still applies before `array_get` feeds boolean
-    // control flow. `true and not false` selects the observable 42 result.
+    // ALGOL 60 — boolean E5 arrays carry `bool` elements through a true
+    // call-by-value copy. The callee observes its writes and contributes 40,
+    // while the caller's opposite values remain unchanged and contribute 2.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin boolean array flags[-1:0]; integer result; \
                procedure setflags(a); value a; boolean array a; \
-               begin a[-1] := true; a[0] := false end; \
-               setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end",
+               begin a[-1] := true; a[0] := false; \
+                     if a[-1] and not a[0] then result := 40 else result := 0 end; \
+               flags[-1] := false; flags[0] := true; setflags(flags); \
+               if not flags[-1] and flags[0] then result := result + 2 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 -- a 2-D boolean array value formal keeps both lower bounds and
-    // the outer row-major stride. The distinct true/false checkerboard catches
-    // a descriptor that aliases a neighboring cell instead of the intended one.
+    // ALGOL 60 -- a 2-D boolean value copy keeps both lower bounds and the
+    // outer row-major stride. The callee sees its checkerboard, while all four
+    // caller cells remain false after return.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end",
+        src: "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true; if a[-1,2] and not a[-1,3] and not a[0,2] and a[0,3] then result := 40 else result := 0 end; flags[-1,2] := false; flags[-1,3] := false; flags[0,2] := false; flags[0,3] := false; setflags(flags); if not flags[-1,2] and not flags[-1,3] and not flags[0,2] and not flags[0,3] then result := result + 2 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -2379,7 +2845,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
+        src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -2389,7 +2855,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end",
+        src: "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -2399,7 +2865,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; procedure fill(a); value a; boolean array a; begin procedure seed(b); value b; boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; procedure invoke; seed(a); invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; fill(flags) end",
+        src: "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; procedure fill(a); value a; boolean array a; begin procedure seed(b); boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; procedure invoke; seed(a); invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; fill(flags) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -5566,6 +6032,601 @@ fn matrix_every_proven_cell_agrees() {
     eprintln!("lang-matrix: {ran} proven cells exercised");
 }
 
+#[test]
+fn algol_integer_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60 && program.src.contains("output(n + 2)")
+        })
+        .expect("the ALGOL integer-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but ALGOL integer output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_boolean_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(flag and true, flag and false)")
+        })
+        .expect("the ALGOL boolean-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but ALGOL boolean output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_real_literal_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60 && program.src.contains("output(4.25)")
+        })
+        .expect("the ALGOL real-literal-output program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but ALGOL real-literal output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_integer_functions_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("n := abs(-40) + sign(-2) + entier(3.9); saved := n")
+        })
+        .expect("the static integer-functions program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static integer-function output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_signed_real_literal_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60 && program.src.contains("output(-4.25, +2.5)")
+        })
+        .expect("the ALGOL signed-real-literal program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but signed real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_real_literal_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(if flag then +4.25 else -2.5)")
+        })
+        .expect("the conditional real-literal program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_parenthesized_real_literal_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output((+4.25), (-2.5))")
+        })
+        .expect("the parenthesized real-literal program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but parenthesized real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_additive_real_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.0 + 2.25, 6.5 - 2.0)")
+        })
+        .expect("the static additive real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static additive real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_multiplication_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.5 * 2.0, 1.5 + 2.0 * 3.0)")
+        })
+        .expect("the static real multiplication program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real multiplication output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_division_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(9.0 / 2.0, 8.0 / 2.0 * 1.5)")
+        })
+        .expect("the static real division program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real division output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_integer_power_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.5 ^ 2, 2.0 ^ 3 ^ 2)")
+        })
+        .expect("the static real integer-power program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real integer-power output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_signed_power_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.0 ^ (-3), 4.0 ^ (+2))")
+        })
+        .expect("the static real signed-power program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real signed-power output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_integral_real_exponent_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("output(2.0 ^ 3.0, 2.0 ^ (-3.0))")
+        })
+        .expect("the static integral-real exponent program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static integral-real exponent output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_integral_exponent_chain_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(2.0 ^ 3.0 ^ 2.0, 2.0 ^ 3 ^ 2.0)")
+        })
+        .expect("the static integral exponent-chain program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static integral exponent-chain output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_standard_function_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(abs(2.0 - 6.25), sqrt(2.25))")
+        })
+        .expect("the static real standard-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static real standard-function output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_composed_static_real_standard_function_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(abs(sqrt(2.25) - 2.0) + 0.25")
+        })
+        .expect("the composed static real standard-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but composed static standard-function output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_static_real_standard_function_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(if flag then abs(-4.25) else sqrt(2.25) + 0.5)")
+        })
+        .expect("the conditional static real standard-function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but conditional static standard-function output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_canonical_static_real_function_output_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(sin(0.0), cos(0.0), ln(1.0), exp(0.0), arctan(0.0))")
+        })
+        .expect("the canonical static real function program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but canonical static real function output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_integer_function_static_real_composition_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("output(sign(-2.5) + 2.0, entier(2.75) + 0.5)")
+        })
+        .expect("the integer-function static real program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but integer-function static real output did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_canonical_conditional_branches_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("result := if outer then if inner")
+                && program.src.contains("goto if outer then if inner")
+        })
+        .expect("the canonical conditional-branch ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but canonical conditional branches did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
 /// Focused regression for the cross-backend runtime-string ordering path. The
 /// full matrix currently has an unrelated JVM/Twig failure before it reaches this
 /// late ALGOL row, so keep every standard backend independently visible here.
@@ -5900,7 +6961,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_string_array_on_eve
                     .contains("string array words[-1:0, 4:5, 7:8, 10:11]")
                 && program
                     .src
-                    .contains("procedure seed(b); value b; string array b")
+                    .contains("procedure seed(b); string array b")
                 && program.src.contains("procedure invoke; seed(a)")
         })
         .expect("the nested 4-D ALGOL string-array forwarding program must remain in the matrix");
@@ -5936,7 +6997,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_real_array_on_every
                     .contains("real array values[-1:0, 2:3, 5:6, 8:9]")
                 && program
                     .src
-                    .contains("procedure seed(b); value b; real array b")
+                    .contains("procedure seed(b); real array b")
                 && program.src.contains("procedure invoke; seed(a)")
         })
         .expect("the nested 4-D ALGOL real-array forwarding program must remain in the matrix");
@@ -5972,7 +7033,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_boolean_array_on_ev
                     .contains("boolean array flags[-1:0, 2:3, 5:6, 8:9]")
                 && program
                     .src
-                    .contains("procedure seed(b); value b; boolean array b")
+                    .contains("procedure seed(b); boolean array b")
                 && program.src.contains("procedure invoke; seed(a)")
         })
         .expect("the nested 4-D ALGOL boolean-array forwarding program must remain in the matrix");
@@ -6117,6 +7178,64 @@ fn algol_array_parameter_runs_on_every_available_standard_backend() {
 }
 
 #[test]
+fn algol_array_for_variable_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("for values[index] := 1 step 1 until 3")
+        })
+        .expect("the ALGOL array-controlled for program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but array-controlled for execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_real_for_variable_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("for cursor[1] := 1 step 1 until 6")
+        })
+        .expect("the ALGOL real for-variable program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but real for-variable execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -6139,6 +7258,128 @@ fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but zero-argument procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_validated_procedure_heading_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure combine(a,b,c)")
+                && program.src.contains("value a,b,c; integer a,b; real c")
+        })
+        .expect("the validated ALGOL procedure-heading program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but validated procedure-heading execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_split_formal_specifications_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure apply(p,a)")
+                && program
+                    .src
+                    .contains("integer p,a; procedure p; array a")
+        })
+        .expect("the split-specification ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but split formal specifications did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_procedure_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure choose; choose := 20")
+                && program.src.contains("integer procedure choose; choose := 1")
+        })
+        .expect("the ALGOL procedure-shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but procedure-shadowing execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_standard_function_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure abs(x)")
+                && program.src.contains("result := result + abs(-21)")
+        })
+        .expect("the ALGOL standard-function shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but standard-function shadowing did not complete"
             );
             continue;
         };
@@ -6381,6 +7622,66 @@ fn algol_multidimensional_array_parameter_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but multidimensional array-parameter execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multidimensional_cross_coordinate_oob_traps_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("values[1:2, 1:2]")
+                && program.src.contains("result := values[1,3]")
+        })
+        .expect("the ALGOL multidimensional coordinate-trap program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multidimensional coordinate-trap execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reversed_dynamic_array_bounds_trap_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer lower, upper, result")
+                && program.src.contains("values[lower:upper]")
+        })
+        .expect("the ALGOL reversed-bound trap program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reversed-bound execution did not complete"
             );
             continue;
         };
@@ -6659,6 +7960,37 @@ fn algol_direct_formal_procedure_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but direct formal-procedure execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_typed_formal_procedure_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("integer procedure twice(x)")
+                && program.src.contains("integer procedure p; integer x")
+                && program.src.contains("result := apply(twice, 21)")
+        })
+        .expect("the typed formal-procedure ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but typed formal-procedure execution did not complete"
             );
             continue;
         };
@@ -6963,6 +8295,190 @@ fn algol_switch_designator_elements_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but switch designator execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_report_style_go_to_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("go to if choose then yes else no")
+        })
+        .expect("the ALGOL report-style go-to program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but report-style go-to execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_switch_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("switch s := outertarget")
+                && program.src.contains("begin switch s := innertarget")
+                && program.src.contains("outertarget: result := result + 22")
+        })
+        .expect("the ALGOL switch-shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but switch-shadowing execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_label_shadowing_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("phase := 0; goto outer")
+                && program.src.contains("outer: result := 20 + marker")
+                && program.src.contains("result := result + 22")
+        })
+        .expect("the ALGOL label-shadowing program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but label-shadowing execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_lexical_nested_switch_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("switch root := leaf[1]")
+                && program.src.contains("switch leaf := outertarget")
+                && program.src.contains("switch leaf := innertarget")
+        })
+        .expect("the ALGOL lexical nested-switch program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but lexical nested-switch execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_multiple_labels_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("goto first")
+                && program.src.contains("first: second:")
+                && program.src.contains("goto second")
+        })
+        .expect("the ALGOL multiple-label program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but multiple-label execution did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dummy_statements_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("if false then else")
+                && program.src.contains("for i := 1 step 1 until 3 do ;")
+                && program.src.contains("empty: ;")
+        })
+        .expect("the ALGOL dummy-statement program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but dummy-statement execution did not complete"
             );
             continue;
         };

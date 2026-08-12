@@ -8,6 +8,7 @@
 
 #![forbid(unsafe_code)]
 
+use serde::{Deserialize, Serialize};
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Health, IntegrationId, Metadata, ProtocolFamily,
     ProtocolIdentifier,
@@ -67,7 +68,7 @@ impl fmt::Display for DiscoveryError {
 
 impl std::error::Error for DiscoveryError {}
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoverySource {
     Mdns,
     WsDiscovery,
@@ -128,7 +129,7 @@ impl fmt::Display for DiscoverySource {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoveryConfidence {
     Hint,
     Candidate,
@@ -374,7 +375,7 @@ impl DiscoveryRecordSummary {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct DiscoveryWorkerId(String);
 
 impl DiscoveryWorkerId {
@@ -397,7 +398,7 @@ impl fmt::Display for DiscoveryWorkerId {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoveryWorkerKind {
     MdnsScan,
     CloudFallback,
@@ -424,7 +425,7 @@ impl fmt::Display for DiscoveryWorkerKind {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum DiscoveryWorkerRunStatus {
     Completed,
     Partial,
@@ -638,7 +639,7 @@ impl DiscoveryWorkerRunSummary {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum PairingRequirement {
     Unknown,
     None,
@@ -1107,7 +1108,7 @@ pub fn discovery_hints_for_source(
         .collect()
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DiscoveryRecord {
     pub integration_id: IntegrationId,
     pub protocol_family: ProtocolFamily,

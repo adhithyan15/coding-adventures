@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Serde support for discovery worker identifiers, kinds, run statuses, and
+  sources so central runtime snapshots can retain scheduler state.
+- Serde support for normalized discovery records, confidence, and pairing
+  requirements so central runtime snapshots can retain accepted observations.
 - `UdpMulticast` source and catalog-mechanism projection for vendor LAN
   discovery over local UDP endpoints.
 - `WsDiscovery` source and catalog-mechanism projection for ONVIF discovery

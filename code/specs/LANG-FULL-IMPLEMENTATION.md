@@ -14,12 +14,12 @@ program per language**, and each frontend is a **deliberate subset**:
 | Brainfuck | 1-loop "print A", nested-loop multiply (`"HA"`), two sequential loops (`"OK"`), stdin echo/transform, and canonical cat all run on all 7 backends | all 8 ops are cross-backend-proven by B1/B1-stdin/B1-eof; no current BF subset gap remains beyond adding more regression programs |
 | Dartmouth BASIC | `PRINT 42`, `PRINT "HELLO"` on all 7 backends, `GOSUB`/`RETURN`, arrays, data, functions, scalar real arithmetic, historical real formatting | literal-backed string variables, literal reassignment, literal `+` concat, variable-backed and chained concat assignment, `PRINT`/`IF` string concat expressions, multi-item string `PRINT` with `;` and `,`, literal-backed scalar string copy, copied-slot string equality, and equality/inequality/lexical-ordering string branches ✅ (BA4/E4); integer-literal `^` ✅ (BA-^); string arrays/input and general runtime-math `^` remain; `FOR`/`NEXT`, `IF`/`GOTO`, `DEF FN` (BA5), `DIM` real arrays incl. multi-dimensional `DIM A(m,n)` (BA3/BA7/BA-DIM-2D), `READ`/`DATA`/`RESTORE` over real data (BA6/BA7), `GOSUB`/`RETURN` (BA1), and BA7 `f64` arithmetic/formatting all run on every backend |
 | Oct | `let`/`if` | rejects **all 10 Intel-8008 intrinsics** (its raison d'être); `&&`/`||` short-circuit ✅ (O1), u8 wrap + `~` ✅ (O2), `static` module globals ✅ (O3), logical `!` ✅ (O-!); intrinsics remain |
-| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); changed recursive scalar actuals still require a thunk ABI and dynamic procedure descriptors remain follow-up work |
+| ALGOL 60 | `result := 17 mod 5` → 2 | `integer`/`real`/`boolean` scalars, typed procedures including `real` returns and `boolean` results feeding control flow ✅ (AL13, all 7 backends), direct name- and value-mode formal procedures including declared, nested-capturing, self- and mutually-recursively-forwarded, implemented-standard-function, and implementation-defined standard-output-procedure actuals plus direct call-by-name scalars (including Jensen-style expression thunks and strings), scalar forwarding/remapping recursion, and rank-inferred arrays with forwarding plus direct/mutual array recursion ✅ (AL7, all 7 backends), nested procedures capturing scalar and array value formals ✅, switches including conditional/nested designators, rank-inferred array value parameters with isolated element copies ✅ (1-D through N-D, including nested-procedure capture), N-dimensional integer & real arrays with per-coordinate and declaration-extent validation ✅ (AL-multidim / AL-multidim-real, all 7 backends), `boolean array` declarations and value formals ✅ (all 7 standard backends), `string array` ✅ (E4d-AL, all 7 standard backends), procedure capture of enclosing arrays with declared bounds ✅, `own` static-lifetime scalars, arrays, and strings ✅ (AL6, all 7 backends), `abs`/`sign`/`entier`/`sqrt`/`sin`/`cos`/`ln`/`exp`/`arctan` standard functions ✅ (AL8 + E8, all 7 backends), right-associative `↑` exponentiation ✅ (AL-pow, all 7 backends), string I/O plus finite literal-only real `+`/`-`/`*`/`/`, exact checked straight-line integer and real scalar snapshots including capped integer powers, integer-valued standard functions, and path-independent equal conditional assignments, capped integral-literal real power chains, conditional/composed static standard-function output including canonical transcendental identities and exact integer-valued results, and initialized scalar locals carrying string-procedure results through runtime equality and lexical ordering ✅ (AL4/E4d-AL; also executed on BEAM's ASCII character-list subset); runtime real formatting, changed recursive scalar actuals requiring a thunk ABI, and dynamic procedure descriptors remain follow-up work |
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.
-The checkerboard payload verifies both descriptor lower bounds and the outer
-row-major stride after the procedure call.
+The callee's checkerboard and the caller's unchanged initialized cells verify
+both descriptor metadata and isolated array value storage.
 
 **AL-multidim-string-capture:** the seven-backend matrix executes a nested
 procedure that writes a two-dimensional string-array value formal through its
@@ -721,6 +721,11 @@ backend immediately) come before the enabler-dependent items.
   `SIN`, `COS`, `LOG`, `EXP`, and `RND` still need a cross-backend math helper — deferred.
 
 ### ALGOL 60
+- ✅ **AL-grammar-sync** — the checked-in Rust parser artifact is generated from
+  the canonical `code/grammars/algol/algol60.grammar` after the compiler gained
+  support for its dedicated scalar `own_decl` node and fully recursive
+  conditional expression and designational branches. A program nesting a
+  conditional in each then branch runs on all seven standard backends.
 - ✅ **AL1** — real arithmetic + `/` (algol-iir-compiler 0.4.0): `real` → IIR `f64`, `REAL_LIT`
   → `Operand::Float`, `+`/`-`/`*`/unary-minus over reals emit the `f64` hint, `/` is real
   division, real comparisons compare at `f64` width; `div`/`mod` stay integer-only; integer
@@ -737,7 +742,10 @@ backend immediately) come before the enabler-dependent items.
   `llvm.trap` via `clang` (PR-4a), WASM linear-memory+`unreachable` via `wasm-runtime` (PR-4b),
   and **native** x86_64/aarch64 `__twig_alloc_bytes`+`ud2`/`udf` trap (PR-4c — aarch64 local,
   x86_64 CI). The for-loop sum-of-squares array Prog now runs on LLVM too (the ALGOL-for-loop
-  guard-type fix landed in `algol-iir-compiler` 0.5.1).
+  guard-type fix landed in `algol-iir-compiler` 0.5.1). A for-clause controlled
+  variable may itself be an integer or real scalar/array element; its designator
+  is re-evaluated for each typed, bounds-checked assignment and read. Real loops
+  widen integer bounds and retain `f64` width for sign, bound, and increment ops.
   **AL-multidim ✅**: `integer array M[1:2, 1:2]` (2D) runs on **all 7 backends**
   via row-major flat index `(i-lo1)*stride + (j-lo2)` computed during declaration; strides
   accumulated right-to-left; `alloc_array`/`array_set`/`array_get` with flat 0-based index;
@@ -754,6 +762,17 @@ backend immediately) come before the enabler-dependent items.
   lower bounds) runs on **all 7 backends** — proves the per-dim `sub−lower` subtraction composes
   with the row-major strides (`flat = Σ_d (sub[d]−lower[d])*stride[d]`); no compiler change (the
   `ArrayDim.lower_slot` subtraction already existed); `algol-iir-compiler` 0.26.0 / `lang-aot` 0.169.0.
+  **AL-multidim-coordinate-bounds ✅**: every coordinate is checked before
+  flattening, preventing an invalid `A[1,3]` in a 2x2 array from aliasing the
+  valid flat slot for `A[2,1]`. Dimension sizes are recovered from `array_len`
+  and adjacent row-major strides, preserving the existing descriptor ABI. The
+  fail-closed trap runs on all seven standard backends.
+  **AL-array-extent-validation ✅**: every run-time dimension extent must be
+  positive before stride arithmetic or allocation, so reversed bounds and
+  `upper - lower + 1` overflow fail closed. Each row-major extent product is
+  divided back and compared before use, preventing signed overflow from
+  allocating undersized storage. A reversed dynamic bound pair traps on all
+  seven standard backends without changing the typed array descriptor ABI.
   **AL-array-params ✅**: an array `value` formal infers its rank from its
   indexed uses in the procedure body, then receives the caller's typed handle,
   every lower bound, and each non-final row-major stride. The descriptor keeps
@@ -769,7 +788,8 @@ backend immediately) come before the enabler-dependent items.
   enclosing block. The frontend globalizes the handle and every lower-bound /
   row-major-stride metadata value, so `integer array values[4:5]; procedure
   seed; values[4] := 40; values[5] := 2; seed` returns 42 on all seven standard
-  backends. Array `value` descriptors use the call ABI above, and a nested
+  backends. Array `value` descriptors use the call ABI above with a fresh
+  element copy, while name-mode arrays retain shared storage; a nested
   procedure can capture an outer formal by reloading its globalized handle and
   every bound/stride component in the fresh nested frame. A 2-D `string array`
   formal now exercises that captured descriptor on all seven backends, with
@@ -790,6 +810,17 @@ backend immediately) come before the enabler-dependent items.
   (`combine(scale(3.0), scale(4.0))` → 42 on all seven backends), and integer
   procedure values likewise compose as `i64` actuals
   (`combine(scale(3), scale(4))` → 42 on all seven backends).
+  Procedure declarations follow lexical block scope: nested declarations use
+  stable sibling-function identities, shadow an outer procedure inside their
+  block, and restore the outer direct-call binding after scope exit. Nested
+  declaration metadata also leaves lookup scope, so unique nested procedures
+  cannot leak and temporary standard-function overrides restore the built-in.
+  Procedure headings are validated before lowering: duplicate formal/value
+  names, value or specification names outside the formal list, and repeated
+  specifications are rejected. Complementary report-style parts such as
+  `integer a; array a;` and `integer p; procedure p;` merge into one typed
+  formal, while duplicate or conflicting type/kind parts fail closed. Valid
+  multi-group headings keep the same typed direct-call ABI.
 - ◑ **AL4** — literal string `print`/`output` I/O runs on all 7 backends via
   **E4**. Undeclared statement-position `print('HI')`/`output('HI')` calls lower
   to `str_const` + `print_str`, and literal-backed scalar string variables
@@ -814,6 +845,32 @@ backend immediately) come before the enabler-dependent items.
   while an `own string` initializes once to the empty string and retains its
   typed global identity as repeated calls replace it from procedure results
   before forwarding the latest handle through another string formal.
+  Implementation-defined `print`/`output` procedures also accept integer
+  variables and expressions through the shared `print_i64` builtin and render
+  boolean values as `true` or `false` through typed string branches, proven on
+  all seven standard backends. Direct real literals, including exact unary `+`
+  or `-` signs, preserve and print their source spelling on the same seven
+  columns. Arithmetic conditionals whose leaves are all direct real literals
+  branch to the selected source-spelled string at run time on those columns,
+  exact parentheses around a signed direct literal preserve that spelling, and
+  finite literal-only arithmetic is evaluated at compile time before entering
+  the string path. A local real scalar assigned one of those static expressions
+  can now print its canonical value along a straight-line path on all seven
+  columns. Straight-line copies preserve independent snapshots across later
+  source reassignment, and tracked locals may feed the bounded finite
+  arithmetic and exact standard-function evaluator. Integer literals within
+  binary64's exact range may widen into that evaluator; larger values fail
+  closed. Conditional statements intersect equal outgoing snapshots, including
+  the unmodified path when `else` is absent, and definite string initialization
+  intersects both branch exits. Loop joins are computed per list element:
+  single-value elements retain body initialization because they execute once,
+  while `while` and `step`/`until` elements preserve their entry set because
+  their body may execute zero times. All-single-value lists also retain static
+  integer and real snapshots as straight-line repetitions; any dynamic loop
+  element keeps snapshot tracking disabled. Each plain element updates the
+  controlled local's snapshot before its body is analyzed. Labels, gotos, calls, dynamic
+  reassignment, differing branches, and captured globals invalidate the tracked value. General computed/runtime
+  `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.
 - ✅ **AL5** — switches (computed goto) + conditional designational expressions.
   `switch s := a1,a2,a3; … goto s[3]` ⇒ exit 49, **verified by running** across
@@ -826,15 +883,28 @@ backend immediately) come before the enabler-dependent items.
   elements retain their full designator until the selected `goto`: a conditional
   branch and a nested switch subscript execute at that time, so both see current
   variables. A cyclic switch graph is rejected before it can recursively expand
-  the IIR dispatch chain. **Limit:** switches aren't block-scope-shadowable.
+  the IIR dispatch chain. A `goto` may also use the report-style two-word spelling
+  `go to`; both spellings share the same label, switch, and conditional designator
+  lowering. Switch declarations are block-scope-shadowable: a
+  nested declaration resolves as the nearest binding and the outer switch is
+  restored when that block exits. Labels use the same lexical rule: each block
+  assigns stable internal targets before lowering, so nested labels may shadow
+  outer labels, forward gotos resolve correctly, and switch-list labels retain
+  the declaration block's binding when expanded later. Nested switch references
+  inside a switch list likewise retain stable declaration-time identities,
+  including forward references to switches declared later in the same block.
+  A statement may carry multiple labels; each is pre-registered in the block
+  and emitted at the same IIR instruction position. Boundary-checked dummy
+  statements are explicit no-ops, covering empty blocks and branches, empty
+  loop bodies, consecutive or trailing separators, and labeled empty statements.
 - ✅ **AL6** — `own` variables (static lifetime). `coding-adventures-algol-parser`
   0.2.0 adds the `[ "own" ] type ident_list` rule; `algol-iir-compiler` 0.7.0 lowers
   an `own` scalar to a module **global** (the E6 substrate), keyed by its unique
   per-procedure slot, and crucially drops the per-declaration `const` zero-init for
   globals so the value is not re-zeroed each call. `bump(1) + bump(1) + bump(1)`
   accumulates `1 + 2 + 3 = 6` (a non-`own` local gives `3`) on **all 7 backends**.
-  (Grammar was patched surgically, not full-regen — the checked-in `algol.grammar`
-  has drifted ahead of the compiled grammar in other rules; resync is follow-up.)
+  The canonical grammar resync completed in `coding-adventures-algol-parser`
+  0.8.0, replacing the earlier surgical generated-artifact patch.
 - ✅ **AL7** — direct call-by-name (Jensen-style expression thunks).
   Each direct call with `integer`, `real`, `boolean`, or `string` name formals emits a
   specialised typed sibling IIR function. Scalar formal reads re-evaluate the
@@ -870,7 +940,10 @@ backend immediately) come before the enabler-dependent items.
   statement-only lowering. An active formal can be forwarded into a nested
   direct wrapper, so `dispatch(square, 6)` through `forward(p, x)` returns 36,
   `dispatch(abs, 0 - 42)` returns 42, and `dispatch(print, 'FORMAL')` through
-  a nested wrapper prints `FORMAL` on native/LLVM/WASM/JVM/CLR/VM/JIT. This
+  a nested wrapper prints `FORMAL` on native/LLVM/WASM/JVM/CLR/VM/JIT.
+  Report-style `integer procedure p` and other typed procedure formals retain
+  and validate the expected result type during the same static specialization;
+  mismatched and proper procedure actuals are rejected before IIR lowering. This
   intentionally excludes expression and scalar actuals plus dynamic/nonlocal
   procedure values, which require the descriptor ABI described by LANG27.
 - ✅ **AL8** — standard functions (§3.2.4/§3.2.5). All pure-IIR and transcendental

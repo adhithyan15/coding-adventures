@@ -4,6 +4,19 @@ All notable changes to the C `canonical-cbor` package are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- Added the shared `canonical-cbor-v1` portable conformance suite and a static
+  `cbor_status_message` diagnostic for every status.
+- Added checked encode bounds for 128 nesting levels and a 1 MiB encoded item.
+
+### Changed
+
+- Encoding now rejects duplicate encoded map keys and returns the precise
+  payload-blind status while keeping output parameters empty on failure.
+
 ## [0.1.0] - 2026-07-12
 
 ### Added

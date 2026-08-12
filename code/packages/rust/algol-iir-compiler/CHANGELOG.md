@@ -1,5 +1,348 @@
 # Changelog
 
+## 0.125.0 — 2026-08-11 — controlled-variable snapshots
+
+Plain single-value `for` elements now update the local controlled variable's
+integer or real snapshot alongside the emitted assignment. Body expressions
+therefore observe each element's current static value instead of stale entry
+metadata.
+
+## 0.124.0 — 2026-08-11 — single-value loop snapshots
+
+`for` lists containing only plain single-value elements now retain integer and
+real snapshots through their straight-line body repetitions. Lists containing
+`while` or `step`/`until` elements continue to disable snapshot tracking.
+
+## 0.123.0 — 2026-08-11 — single-value loop initialization
+
+Plain single-value `for` list elements now retain definite scalar-string
+initialization from their body because each executes exactly once. `while` and
+`step`/`until` elements remain conservative, and mixed lists join each element
+in sequence.
+
+## 0.122.0 — 2026-08-11 — loop string-initialization joins
+
+`for` statements now restore the definite scalar-string initialization state
+from loop entry at exit. This rejects body-only initialization because a
+`while` or `step` element may execute zero times, while preserving strings
+initialized before the loop.
+
+## 0.121.0 — 2026-08-11 — conditional string initialization joins
+
+Definite initialization for scalar strings now intersects the initialized-slot
+sets from both statement-conditional exits. A then-only assignment no longer
+makes a later read unsoundly valid, while assignments on both branches and an
+already initialized path without `else` remain supported.
+
+## 0.120.0 — 2026-08-11 — conditional-statement snapshot merging
+
+Statement conditionals now compile each branch from the same post-condition
+metadata state and retain only identical integer and real snapshots at the
+join. Missing `else` branches merge against the unmodified path, while calls
+and every existing invalidation boundary continue to poison the result.
+
+## 0.119.0 — 2026-08-11 — path-independent conditional snapshots
+
+Integer and real assignments through runtime conditional expressions now keep
+static metadata when both independently proven branches have exactly the same
+value. The condition still lowers normally, while differing, dynamic, or
+non-finite branches fail closed.
+
+## 0.118.0 — 2026-08-11 — static integer-function snapshots
+
+Integer snapshot tracking now evaluates non-overridden `abs`, `sign`, and
+`entier` calls over bounded static operands. Absolute-value overflow and
+non-finite, inexact-range, dynamic, or lexically overridden calls fail closed.
+
+## 0.117.0 — 2026-08-11 — static integer power snapshots
+
+Integer snapshot tracking now evaluates nonnegative literal exponent chains
+within the existing exponent cap using checked `i64` powers. Overflow,
+negative or dynamic exponents, and oversized chains invalidate metadata.
+
+## 0.116.0 — 2026-08-11 — static integer arithmetic snapshots
+
+Straight-line integer snapshot tracking now evaluates checked `+`, `-`, `*`,
+`div`, and `mod` expressions. Overflow, zero division, unsupported operators,
+and dynamic operands invalidate the metadata rather than introducing host
+arithmetic or an unsound runtime formatting shortcut.
+
+## 0.115.0 — 2026-08-11 — static integer scalar widening
+
+Straight-line local integer literals and copies now retain exact `i64`
+snapshots for bounded static real expressions. Widening remains restricted to
+binary64's exact integer range, and the metadata is cleared at the same
+control-flow, call, capture, and dynamic-assignment boundaries as static reals.
+
+## 0.114.0 — 2026-08-11 — static mixed numeric output
+
+Integer literals within binary64's exact integer range may now widen into the
+bounded static real evaluator, including assignments to tracked real locals and
+mixed arithmetic output. Larger integer literals fail closed instead of losing
+precision during compile-time conversion.
+
+## 0.113.0 — 2026-08-11 — static real scalar expressions
+
+Tracked straight-line real locals may now participate in the same bounded,
+finite arithmetic and exact standard-function evaluator used by direct static
+output. Runtime or invalidated operands continue to fail closed rather than
+materializing a partial formatter.
+
+## 0.112.0 — 2026-08-11 — static real scalar copy output
+
+Straight-line copies between tracked local real scalars now preserve the
+source's canonical static value as an independent snapshot. Reassigning the
+source updates only its own tracked value, while all existing control-flow,
+call, capture, dynamic-value, and finiteness guards remain unchanged.
+
+## 0.111.0 — 2026-08-11 — straight-line static real scalar output
+
+Local real scalars assigned a finite compile-time expression may now print its
+canonical decimal value through the existing portable string path. Tracking is
+restricted to straight-line local state and is cleared by labels, branches,
+loops, gotos, procedure calls, dynamic reassignment, and captured globals, so
+values that can vary at run time still fail closed pending a typed formatter.
+
+## 0.110.0 — 2026-08-11 — integer-function static real composition
+
+Exact `sign` and safely bounded `entier` results may now widen into the
+formatter-free literal-only real arithmetic evaluator. `entier` is restricted
+to binary64's exact integer range; larger results continue to fail closed
+instead of silently losing integer precision.
+
+## 0.109.0 — 2026-08-11 — canonical transcendental output
+
+The formatter-free static real path now recognizes the exact identities
+`sin(0)=0`, `cos(0)=1`, `ln(1)=0`, `exp(0)=1`, and `arctan(0)=0` without
+invoking host or backend math libraries. Other transcendental inputs continue
+to require runtime real formatting and fail closed.
+
+## 0.108.0 — 2026-08-11 — conditional static standard-function output
+
+Runtime conditionals may now select between formatter-free real branches that
+contain composed `abs` and exact-`sqrt` calls. Both branches are validated with
+lexical override, domain, exact-root, and finiteness checks before the compiler
+emits the existing portable string-output control flow.
+
+## 0.107.0 — 2026-08-11 — composed static real standard-function output
+
+Formatter-free `abs` and exact-`sqrt` values may now nest and participate in
+finite literal-only real arithmetic. Evaluation remains aware of lexical
+standard-function overrides, and runtime, inexact, invalid, or non-finite
+subexpressions continue to fail closed.
+
+## 0.106.0 — 2026-08-11 — static real standard-function output
+
+Direct non-overridden `abs` calls over finite literal-only real arithmetic now
+use the formatter-free static output path. `sqrt` joins that path when its
+finite nonnegative operand has an exactly round-tripping root; inexact roots,
+invalid domains, runtime operands, and user overrides continue to fail closed.
+
+## 0.105.0 — 2026-08-11 — static integral exponent-chain output
+
+The bounded real output path now evaluates right-associated exponent chains
+whose integer- or real-literal members are all nonnegative and integral. Every
+computed exponent must remain within the existing cap of 64; fractional,
+negative-chain, oversized, and runtime shapes continue to fail closed.
+
+## 0.104.0 — 2026-08-11 — static integral-real exponent output
+
+Finite real literal exponents whose values are exactly integral and within
+`-64.0..=64.0` now share the deterministic repeated-arithmetic output path.
+Fractional, oversized, non-finite, chained-real, and runtime exponents continue
+to require runtime formatting and therefore fail closed.
+
+## 0.103.0 — 2026-08-11 — static real signed-power output
+
+The bounded real output evaluator now accepts one explicitly signed integer
+literal exponent in `-64..=64`. Negative exponents use repeated division, while
+zero bases, non-finite intermediates, signed exponent chains, and runtime or
+real exponents continue to fail closed without a runtime formatter.
+
+## 0.102.0 — 2026-08-11 — static real integer-power output
+
+Finite literal-only real bases raised to small nonnegative integer-literal
+exponent chains now print through the bounded compile-time string path. The
+existing exponent cap and repeated-multiplication semantics avoid host `pow`
+variation; real, negative, oversized, runtime, and non-finite powers fail closed.
+
+## 0.101.0 — 2026-08-11 — static real division output
+
+Finite literal-only real division now completes the bounded arithmetic output
+evaluator. Quotients use the existing shared string path, while zero divisors,
+non-finite results, and runtime operands fail closed without introducing a
+runtime `f64` formatter ABI.
+
+## 0.100.0 — 2026-08-11 — static real multiplication output
+
+Finite literal-only real multiplication now joins addition and subtraction in
+the bounded compile-time output evaluator. Products, including parenthesized
+and conditional leaves, print through the shared string path; division,
+runtime operands, and non-finite results continue to fail closed.
+
+## 0.99.0 — 2026-08-11 — static additive real output
+
+Literal-only real addition and subtraction now evaluate at compile time and
+print their finite result through the shared string path. Direct literals still
+preserve source spelling, while multiplication, division, non-finite results,
+and any runtime operand remain outside this bounded formatter-free step.
+
+## 0.98.0 — 2026-08-11 — parenthesized real-literal output
+
+The source-spelled real output path now unwraps exact balanced parentheses
+around direct literals, including signed forms. Parenthesized arithmetic still
+fails closed, so grouping cannot bypass the runtime f64 formatter boundary.
+
+## 0.97.0 — 2026-08-11 — conditional real-literal output
+
+Implementation-defined output now accepts an arithmetic conditional when every
+leaf is a direct real literal. The condition branches directly between each
+leaf's source-spelled string output, so runtime selection works without a
+partial f64 formatter ABI; any computed or runtime real leaf still fails closed.
+
+## 0.96.0 — 2026-08-11 — signed real-literal output
+
+The real-literal output fast path now accepts an exact unary `+` or `-` and
+preserves that sign in stdout. Binary arithmetic and runtime real values still
+bypass the literal recognizer and fail closed pending a runtime formatter ABI.
+
+## 0.95.0 — 2026-08-11 — real-literal standard output
+
+Implementation-defined `print` and `output` calls now accept a direct real
+literal and print its deterministic source spelling through the shared string
+path. Runtime `f64` values remain explicit type errors until a portable typed
+formatter ABI is available.
+
+## 0.94.0 — 2026-08-11 — boolean standard output
+
+Implementation-defined `print` and `output` procedure calls now render boolean
+variables and expressions as `true` or `false`. Typed control flow selects the
+corresponding shared string literal, avoiding a boolean-to-integer ABI coercion.
+
+## 0.93.0 — 2026-08-11 — integer standard output
+
+Implementation-defined `print` and `output` procedure calls now accept integer
+variables and expressions, lowering them to the shared `print_i64` builtin.
+String output retains its existing `print_str` paths; real and boolean output
+remain explicit type errors.
+
+## 0.92.0 — 2026-08-11 — fail-closed array extents
+
+Array declarations now require every run-time dimension extent to remain
+positive before computing strides or allocating storage. Reversed bounds and
+`upper - lower + 1` overflow take a portable bounds-trap path. Row-major stride
+and total-length products are divided back and checked, preventing signed `i64`
+overflow from becoming an undersized allocation.
+
+## 0.91.0 — 2026-08-11 — multidimensional coordinate bounds
+
+Each array subscript coordinate is now bounds-checked before row-major
+flattening. Dimension sizes are recovered from the existing flat array length
+and adjacent descriptor strides, so invalid coordinates cannot alias a valid
+neighboring row and the procedure ABI does not grow. Invalid reads and writes
+reuse the shared backend `array_get`/`array_set` trap path.
+
+## 0.90.0 — 2026-08-11 — array value copies
+
+Array `value` actuals now receive a fresh typed element copy while retaining
+the existing handle, lower-bound, and stride call ABI. Callee writes no longer
+mutate caller storage; name-mode arrays continue to share their caller's
+descriptor and storage. The copy loop uses the shared bounds-checked E5 array
+operations and works for every supported element type and rank.
+
+## 0.89.0 — 2026-08-11 — split formal specifications
+
+Complementary report-style specification parts now merge before procedure
+lowering: `integer a; array a;` forms an integer-array formal, and `integer p;
+procedure p;` forms a typed procedure formal. Duplicate type/kind parts and
+conflicting types or kinds still fail closed. The resulting array descriptors
+and direct formal-procedure specialization retain their existing typed ABIs.
+
+## 0.88.0 — 2026-08-11 — procedure heading validation
+
+Procedure headings now fail closed before IIR lowering when the formal list,
+`value` part, or specification parts are inconsistent. Formal names and value
+names must be unique, every value/specification name must belong to the formal
+list, and each formal must receive exactly one specification. Valid headings
+with multiple specification groups retain the existing typed direct-call ABI.
+
+## 0.87.0 — 2026-08-11 — typed formal procedures
+
+Report-style typed procedure formals such as `integer procedure p` now retain
+their expected result type during direct call-site specialization. Declared and
+forwarded procedure actuals plus supported standard functions are checked
+before lowering; proper procedures and mismatched result types fail closed.
+The static direct-call IIR ABI is unchanged.
+
+## 0.86.0 — 2026-08-11 — canonical ALGOL grammar resynchronization
+
+The compiler now consumes the canonical generated parser shapes for scalar
+`own` declarations and recursively nested conditional expression and
+designational branches. This removes the parser artifact's historical drift
+without introducing a dynamic closure or thunk ABI.
+
+## 0.85.0 — 2026-08-11 — nested procedure visibility
+
+Nested procedure signatures and declaration ASTs now leave compiler lookup
+tables with their lexical block. Emitted sibling names remain reserved so two
+disjoint blocks cannot collide. This restores undeclared and standard-function
+lookup after scope exit while preserving calls already emitted inside the block.
+
+## 0.84.0 — 2026-08-11 — block-scoped procedure shadowing
+
+Procedure declarations now receive stable sibling-function identities while a
+nearest-binding map follows ALGOL block scope. A nested declaration may shadow
+an outer procedure, calls inside the block resolve to the nested sibling, and
+leaving the block restores the outer binding. Same-block duplicates remain an
+error, and calls retain the existing fully typed direct IIR ABI.
+
+## 0.83.0 — 2026-08-11 — real for controlled variables
+
+ALGOL for-clause controlled variables may now be `real` scalars or real array
+elements. Integer initial values, steps, and limits widen to `f64`; loop sign,
+bound, and increment operations retain the controlled variable's numeric width.
+
+## 0.82.0 — 2026-08-11 — subscripted for controlled variables
+
+Integer array elements may now serve as ALGOL for-clause controlled variables.
+Their designators are re-evaluated for each assignment and read through the
+existing bounds-checked typed `array_set`/`array_get` lowering.
+
+## 0.81.0 — 2026-08-11 — dummy statements
+
+ALGOL dummy statements now lower as explicit no-ops. Boundary lookahead in the
+parser permits empty blocks, branches, loop bodies, and labeled statements while
+preventing arbitrary invalid syntax from disappearing during compilation.
+
+## 0.80.0 — 2026-08-11 — multiple labels per statement
+
+The compiler now pre-registers and emits every label prefix attached to one
+statement. Each stable IIR label points at the same instruction position, so
+forward and backward gotos may use any of the source labels while existing
+block shadowing and duplicate checks remain intact.
+
+## 0.79.0 — 2026-08-11 — declaration-scoped nested switches
+
+Switch declarations now receive stable lexical identities in a block pre-pass.
+Stored switch-list references bind to the declaration-time identity, so a later
+nested declaration with the same spelling cannot retarget an outer switch graph.
+The pre-pass also preserves forward switch references within one block.
+
+## 0.78.0 — 2026-08-11 — block-scoped label shadowing
+
+Labels now receive stable internal names within their lexical block. Nested
+blocks may shadow an outer label, nearest-binding lookup applies to forward and
+backward gotos, and leaving the block restores the outer binding. Switch-list
+label designators retain the declaration block's binding when expanded later.
+Duplicate labels in one block remain an error.
+
+## 0.77.0 — 2026-08-11 — block-scoped switch shadowing
+
+Switch declarations now follow lexical block scope. A nested block may shadow
+an outer switch, nearest-binding lookup applies while the block is active, and
+the outer binding is restored on exit. Duplicate switches in one block remain
+an error, and existing deferred designator and cycle checks are unchanged.
+
 ## 0.76.0 — 2026-08-09 — mutual recursive direct procedure formals
 
 Regression coverage now proves that two mutually recursive direct `procedure`

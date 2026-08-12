@@ -2,25 +2,34 @@
   "version": 1,
   "language": "spanish",
   "chapter": 26,
-  "title": "Water, Wine, and Bread",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:adcb64dbcc088e9f",
+  "title": "Review --- Three Endings",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:9f9e8209ae3e3d28",
   "lessons": [
     {
-      "id": "ES-C26-agua",
-      "sequence": 1440,
-      "title": "el agua — water, and an article that is not what it looks like",
-      "headword": "el agua",
-      "romanization": "el agua",
-      "gloss": "water — a word that barely changed from Latin, and takes el without ever stopping being feminine",
+      "id": "ES-C56-repaso-amigos",
+      "sequence": 539,
+      "title": "Review — three endings",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — three endings, and the arithmetic of what they just did to your vocabulary",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:af75f70992f67934",
-      "notice": null,
+      "sourceHash": "fnv1a64:07202e2d1d34da54",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "What you've built"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called What you've built until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,56 +44,58 @@
             },
             {
               "kind": "speech",
-              "text": "One of the least changed words in Spanish, carrying one of its most misunderstood rules. The \"masculine\" article on this feminine noun is not a mistake and not an exception to gender."
+              "text": "Nothing new here. Say the three endings and their English partners before you look."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: agua",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "agua (\"water\") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed."
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 3,
+              "headers": [
+                "Spanish",
+                "English",
+                "gender",
+                "roughly how many"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, English, gender, roughly how many. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung."
+              "text": "Three chapters. Between them they reach further than every vocabulary lesson in this book put together, and they will keep reaching for as long as you keep learning adjectives."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth stating plainly, because it changes what you should expect from the rest of the book. A Spanish course is not mostly a list of words. A large part of it is a small number of rules that turn words you already own into words you can use — and you have just been handed three of the biggest."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: el agua's article and gender",
+          "title": "Grammar Lens: two kinds of ending",
           "segments": [
             {
               "kind": "speech",
-              "text": "Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, \"the cold water,\" keeps the feminine adjective ending, and the plural is las aguas, never los aguas."
+              "text": "The three are not the same kind of thing, and the difference matters:"
             },
             {
               "kind": "speech",
-              "text": "The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick \"an apple\" over \"a apple.\""
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "the water. singular: el agua. plural: las aguas.",
-                "the eagle. singular: el águila. plural: las águilas.",
-                "the axe. singular: el hacha. plural: las hachas."
-              ]
+              "text": "-ción and -dad are decoders. They let you read a word you have never met. They have a fixed reach, because there are only so many English words with those endings."
             },
             {
               "kind": "speech",
-              "text": "Only the article changes. The noun's gender never moves."
+              "text": "-mente is a machine. It lets you build a word nobody taught you, from any adjective you hold. Its reach is whatever your adjective vocabulary turns out to be."
+            },
+            {
+              "kind": "speech",
+              "text": "Both kinds are worth having, and neither is a substitute for the other. A decoder gets you through a page; a machine gets you through a sentence you have to say yourself."
             }
           ]
         },
@@ -102,29 +113,75 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el agua\" — water, feminine, but takes el",
+              "instruction": "\"nación, ciudad, rápidamente\" — one of each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes *el*]"
+              "source": "[YOU SAY: \"nación, ciudad, rápidamente\" — one of each]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the proof — \"el agua fría\" and \"las aguas\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the proof — \"el agua fría\" and \"las aguas\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-repaso-amigos-three",
+              "prompt": "Give the three Spanish endings and their English partners.",
+              "assesses": [
+                "ES-FRIEND-CION-TION",
+                "ES-FRIEND-DAD-TY",
+                "ES-FRIEND-MENTE-LY"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "-cion is -tion, -dad is -ty, -mente is -ly",
+                "-ción/-tion, -dad/-ty, -mente/-ly"
+              ],
+              "feedback": {
+                "correct": "Three endings, thousands of words.",
+                "incorrect": "-cion/-tion, -dad/-ty, -mente/-ly."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-repaso-amigos-gender",
+              "prompt": "Which of the three endings tell you the gender for free?",
+              "assesses": [
+                "ES-GRAMMAR-NOUN-GENDER",
+                "ES-FRIEND-DAD-TY"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "-cion and -dad, both feminine",
+                "-ción and -dad",
+                "the two noun endings"
+              ],
+              "feedback": {
+                "correct": "Two endings, no gender decision ever.",
+                "incorrect": "-cion and -dad. Both are always feminine."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-repaso-amigos-kinds",
+              "prompt": "Which ending is a machine rather than a decoder, and why?",
+              "assesses": [
+                "ES-FRIEND-MENTE-LY",
+                "ES-FRIEND-CION-TION"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "-mente, because you can build new words with it",
+                "-mente — it makes an adverb from any adjective"
+              ],
+              "feedback": {
+                "correct": "A decoder reads; a machine builds.",
+                "incorrect": "-mente. The other two let you read; this one lets you make."
+              }
             }
           ]
         },
@@ -141,253 +198,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to \"eau.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C26-vino",
-      "sequence": 1450,
-      "title": "el vino — one word, three separate arrivals in English",
-      "headword": "el vino",
-      "romanization": "el vino",
-      "gloss": "wine — one Latin root that reached English by three separate roads, plus one English built at home",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6254dc7ee5085423",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: vino",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vino (\"wine\") from Latin vīnum — which held its shape well, as French's vin did too."
-            },
-            {
-              "kind": "speech",
-              "text": "English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English word",
-                "how it got there"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.",
-                "English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, \"sour wine\").",
-                "English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el agua, el vino\" — the two drinks",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el agua, el vino\" — the two drinks]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"vino\" then English \"wine, vine, vinegar\" — one root, three roads",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"vino\" then English \"wine, vine, vinegar\" — one root, three roads]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C26-pan",
-      "sequence": 1460,
-      "title": "el pan — bread, and the friend who shares it",
-      "headword": "el pan",
-      "romanization": "el pan",
-      "gloss": "bread — and the compañero who shares it with you",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:652a27f226793cb3",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: pan",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: bread and friendship",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
-            },
-            {
-              "kind": "speech",
-              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
-            },
-            {
-              "kind": "speech",
-              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
-            },
-            {
-              "kind": "speech",
-              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
-            },
-            {
-              "kind": "speech",
-              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el pan\" — bread",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el pan\" — bread]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"compañero\" — literally, one you share bread with",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"panadería, panadero\" — bakery, baker",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
+              "text": "Three endings — name them. (-ción, -dad, -mente.) Which two are always feminine? (-ción and -dad.) Which one has no upper limit? (-mente.) Next: reading a sentence nobody taught you."
             }
           ]
         }

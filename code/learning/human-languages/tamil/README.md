@@ -99,15 +99,22 @@ through.
   native நலம்), and விடை (*viḍai*) — which the Dravidian dictionary files
   in the **same entry as வீடு**, so the arc walks in through the house and out
   through the leave on one root. In the book, Chapters 35–38.
-- **The script strand, W01–W19** ([`lessons/TA-W*`](./lessons/)): 23 lessons
+- **Chapter 39 — Asking for What You Want** ([`lessons/TA-C39-*`](./lessons/)):
+  வேண்டும் (*vēṇḍum*), a verb built with no subject at all, so the wanter sits
+  in the dative beside தெரியும், புரிகிறது and பிடிக்கும்; எவ்வளவு
+  (*evvaḷavu*), which measures where எத்தனை counts; and ஒரு (*oru*), the shape
+  ஒன்று takes in front of a noun, closing on **ஒரு தேநீர் வேண்டும்**. The
+  chapter exists because the writing strand ran out of room before the script
+  ran out of letters. In the book, Chapter 39.
+- **The script strand, W01–W20** ([`lessons/TA-W*`](./lessons/)): 24 lessons
   marked `delivery: script`, one after roughly every third speaking lesson from
-  Chapter 4 to Chapter 38. They teach curves, the abugida, retroflexion, the
+  Chapter 4 to Chapter 39. They teach curves, the abugida, retroflexion, the
   three Tamil n letters, the puḷḷi, the vowel signs, and then spell — one word
   per lesson — words the learner has already been saying, from **வணக்கம்** to
-  **மூன்று**. Chapters 1–3 hold no writing lesson at all, on purpose. The strand
-  ends there because it runs out of room, not because the script is finished:
-  thirteen glyphs the Chapter 7 numbers use — ஏ, ஐ, ஒ and the ten Tamil digits
-  ௧–௰ — are still never taught, and there is no chapter left to teach them in.
+  **ஒன்று**. Chapters 1–3 hold no writing lesson at all, on purpose. The script
+  is still not finished: twelve glyphs the Chapter 7 numbers use — ஏ, ஐ and the
+  ten Tamil digits ௧–௰ — remain untaught, and closing that is what Chapters 40
+  and 41 are for.
 
 ---
 

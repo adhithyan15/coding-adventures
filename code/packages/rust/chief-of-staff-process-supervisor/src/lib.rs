@@ -10,7 +10,8 @@
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
     ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
-    OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
+    ModelToolCall, OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
+    ToolCompletionCall,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -924,6 +925,39 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
         let (_, frame) = self
             .control
             .request_completion(call)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Request the exact model tool catalog installed for this host binding.
+    pub fn request_model_tools(&mut self) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_model_tools()
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Request one provider-neutral tool-aware completion turn.
+    pub fn request_tool_completion(
+        &mut self,
+        call: ToolCompletionCall,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_tool_completion(call)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Dispatch one model-returned call through the parent-owned D18D runtime.
+    pub fn request_tool_execution(
+        &mut self,
+        call: ModelToolCall,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_tool_execution(call)
             .map_err(|_| ProcessSupervisorError::Control)?;
         self.exchange_data_plane(frame)
     }

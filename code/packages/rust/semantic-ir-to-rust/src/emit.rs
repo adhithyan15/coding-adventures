@@ -1639,9 +1639,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "pair?" => ("__sir::is_pair", false),
         "number?" => ("__sir::is_number", false),
         "symbol?" => ("__sir::is_symbol", false),
-        "print" => ("__sir::print", false),
-        // `puts` is variadic (`puts a, b`) → takes the whole `Vec<Value>`.
-        "puts" => ("__sir::puts", true),
+        // SIR28 §2: print/puts are dead — every frontend emits
+        // `__sys_write__` instead (handled above, before this match).
         "global_set" => ("__sir::global_set_call", false),
         "global_get" => ("__sir::global_get_call", false),
         // ── collection-method dispatch (C6) ───────────────────────────
@@ -1672,6 +1671,17 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         // `runtime.rs` for the security rationale).
         "__method__" => {
             emit_method_dispatch(out, args, indent);
+            return;
+        }
+        // SIR28 §2: the console-output primitive `print`/`puts` generalize
+        // into. `args = [StrLit(stream), StrLit(terminator),
+        // BoolLit(unpack_arrays), ...values]`, already validated by
+        // `semantic-ir`'s validator (SIR28 §3.1) against a closed set —
+        // routed to `emit_sys_write`, which mirrors `emit_method_dispatch`'s
+        // "lift a compile-time-known literal to a Rust literal, degrade
+        // gracefully rather than panic on the unexpected" discipline.
+        "__sys_write__" => {
+            emit_sys_write(out, args, indent);
             return;
         }
         // ── block-pass (`&:sym` / `&blk`) ─────────────────────────────
@@ -1797,6 +1807,40 @@ fn emit_method_dispatch(out: &mut String, args: &[Expr], indent: usize) {
     out.push_str(", vec![");
     if args.len() > 2 {
         emit_args(out, &args[2..], indent);
+    }
+    out.push_str("])");
+}
+
+/// Emit `BuiltinCall("__sys_write__", [StrLit(stream), StrLit(terminator),
+/// BoolLit(unpack_arrays), ...values])` (SIR28 §2) as
+/// `__sir::write(<stream str-literal>, <terminator str-literal>,
+/// <unpack_arrays bool-literal>, vec![<values>])`.
+///
+/// `stream`/`terminator` are lifted to Rust `&str` literals (same rationale
+/// as `emit_method_dispatch`'s method name: the runtime's `write` matches
+/// them as compile-time-known `&str`s, keeping dispatch closed) rather than
+/// passed through as runtime `Value`s. A malformed shape (missing/non-literal
+/// leading args — should never happen given upstream validation) degrades to
+/// `"stdout"`/`"none"`/`false` rather than panicking in the emitter.
+fn emit_sys_write(out: &mut String, args: &[Expr], indent: usize) {
+    out.push_str("__sir::write(");
+    match args.first() {
+        Some(Expr::StrLit { value, .. }) => out.push_str(&quote_rs_string(value)),
+        _ => out.push_str("\"stdout\""),
+    }
+    out.push_str(", ");
+    match args.get(1) {
+        Some(Expr::StrLit { value, .. }) => out.push_str(&quote_rs_string(value)),
+        _ => out.push_str("\"none\""),
+    }
+    out.push_str(", ");
+    match args.get(2) {
+        Some(Expr::BoolLit { value, .. }) => out.push_str(if *value { "true" } else { "false" }),
+        _ => out.push_str("false"),
+    }
+    out.push_str(", vec![");
+    if args.len() > 3 {
+        emit_args(out, &args[3..], indent);
     }
     out.push_str("])");
 }
@@ -4195,25 +4239,34 @@ mod tests {
         }
     }
 
-    /// `puts` routes to the **variadic** `__sir::puts(vec![…])` helper, so
-    /// `puts a, b` (multiple args) reaches the runtime intact — unlike the
-    /// fixed-arity `__sir::print`.
+    /// SIR28 §2: a `puts`-shaped `__sys_write__` call (`terminator:
+    /// "per_value"`, `unpack_arrays: true`) routes to the variadic
+    /// `__sir::write(..., vec![…])` runtime helper, all value args
+    /// forwarded as a `Vec`. This lets `puts a, b` (multiple args) reach
+    /// the runtime intact — mirrors the pre-SIR28
+    /// `emit_puts_routes_to_variadic_helper` test this replaces.
     #[test]
-    fn emit_puts_routes_to_variadic_helper() {
+    fn emit_sys_write_puts_shape_routes_to_variadic_helper() {
+        fn puts_shaped(args: Vec<Expr>) -> Expr {
+            let mut sys_args = vec![
+                strlit("stdout"),
+                strlit("per_value"),
+                Expr::BoolLit { value: true, span: s() },
+            ];
+            sys_args.extend(args);
+            builtin("__sys_write__", sys_args)
+        }
+
         // Single arg.
         let mut out = String::new();
-        emit_expr(&mut out, &builtin("puts", vec![strlit("hi")]), 0);
-        assert!(out.starts_with("__sir::puts(vec!["), "got: {out}");
+        emit_expr(&mut out, &puts_shaped(vec![strlit("hi")]), 0);
+        assert!(out.starts_with(r#"__sir::write("stdout", "per_value", true, vec!["#), "got: {out}");
         assert!(out.contains(r#""hi""#), "got: {out}");
 
         // Multiple args, both forwarded.
         let mut out2 = String::new();
-        emit_expr(
-            &mut out2,
-            &builtin("puts", vec![strlit("a"), strlit("b")]),
-            0,
-        );
-        assert!(out2.starts_with("__sir::puts(vec!["), "got: {out2}");
+        emit_expr(&mut out2, &puts_shaped(vec![strlit("a"), strlit("b")]), 0);
+        assert!(out2.starts_with(r#"__sir::write("stdout", "per_value", true, vec!["#), "got: {out2}");
         assert!(
             out2.contains(r#""a""#) && out2.contains(r#""b""#),
             "got: {out2}"
@@ -4221,8 +4274,8 @@ mod tests {
 
         // No args — a bare `puts`.
         let mut out0 = String::new();
-        emit_expr(&mut out0, &builtin("puts", vec![]), 0);
-        assert_eq!(out0, "__sir::puts(vec![])");
+        emit_expr(&mut out0, &puts_shaped(vec![]), 0);
+        assert_eq!(out0, r#"__sir::write("stdout", "per_value", true, vec![])"#);
     }
 
     #[test]
@@ -4338,16 +4391,21 @@ mod tests {
                 span: s(),
             }],
             ensure_body: Some(vec![Stmt::ExprStmt {
-                expr: builtin("print", vec![int(9)]),
+                expr: builtin(
+                    "__sys_write__",
+                    vec![strlit("stdout"), strlit("once"), Expr::BoolLit { value: false, span: s() }, int(9)],
+                ),
                 span: s(),
             }]),
             span: s(),
         };
         let mut out = String::new();
         emit_stmt(&mut out, &tc, 1);
-        // The ensure body (`print(9)`) must appear three times: Ok arm,
-        // matched arm, unmatched-else arm.
-        let count = out.matches("__sir::print(__sir::Value::Int(9i64))").count();
+        // The ensure body (`print(9)`-shaped `__sys_write__`) must appear
+        // three times: Ok arm, matched arm, unmatched-else arm.
+        let count = out
+            .matches(r#"__sir::write("stdout", "once", false, vec![__sir::Value::Int(9i64)])"#)
+            .count();
         assert_eq!(
             count, 3,
             "ensure should run on all 3 paths; got {count}:\n{out}"
@@ -4364,7 +4422,10 @@ mod tests {
             }],
             rescues: vec![],
             ensure_body: Some(vec![Stmt::ExprStmt {
-                expr: builtin("print", vec![int(9)]),
+                expr: builtin(
+                    "__sys_write__",
+                    vec![strlit("stdout"), strlit("once"), Expr::BoolLit { value: false, span: s() }, int(9)],
+                ),
                 span: s(),
             }]),
             span: s(),
@@ -4373,7 +4434,9 @@ mod tests {
         emit_stmt(&mut out, &tc, 1);
         assert!(out.contains("Err(__payload) => {"), "got: {out}");
         // ensure appears in both Ok and Err arms.
-        let count = out.matches("__sir::print(__sir::Value::Int(9i64))").count();
+        let count = out
+            .matches(r#"__sir::write("stdout", "once", false, vec![__sir::Value::Int(9i64)])"#)
+            .count();
         assert_eq!(count, 2, "got {count}:\n{out}");
         assert!(
             out.contains("std::panic::resume_unwind(Box::new(__exc));"),

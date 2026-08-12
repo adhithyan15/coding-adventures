@@ -272,7 +272,75 @@ enum ProcedureParamType {
     },
     /// A formal procedure is compiled by direct, call-site-specialised
     /// substitution. It therefore has no ordinary IIR value representation.
+    Procedure {
+        /// `Some` for report-style typed formals such as `integer procedure p`.
+        /// `None` retains the existing untyped direct-procedure formal.
+        expected_ret: Option<ScalarType>,
+    },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ProcedureParamKind {
+    Array,
     Procedure,
+}
+
+/// One source-level parameter specification, before complementary report-style
+/// parts such as `integer a; array a;` are combined.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+struct ProcedureParamSpecification {
+    scalar_type: Option<ScalarType>,
+    kind: Option<ProcedureParamKind>,
+}
+
+impl ProcedureParamSpecification {
+    fn merge(self, other: Self, name: &str) -> Result<Self, CompileError> {
+        let scalar_type = match (self.scalar_type, other.scalar_type) {
+            (Some(left), Some(right)) if left == right => {
+                return Err(CompileError::Type(format!(
+                    "duplicate type specification for formal parameter {name:?}"
+                )))
+            }
+            (Some(_), Some(_)) => {
+                return Err(CompileError::Type(format!(
+                    "conflicting type specifications for formal parameter {name:?}"
+                )))
+            }
+            (left @ Some(_), None) | (None, left @ Some(_)) => left,
+            (None, None) => None,
+        };
+        let kind = match (self.kind, other.kind) {
+            (Some(left), Some(right)) if left == right => {
+                return Err(CompileError::Type(format!(
+                    "duplicate kind specification for formal parameter {name:?}"
+                )))
+            }
+            (Some(_), Some(_)) => {
+                return Err(CompileError::Type(format!(
+                    "conflicting kind specifications for formal parameter {name:?}"
+                )))
+            }
+            (left @ Some(_), None) | (None, left @ Some(_)) => left,
+            (None, None) => None,
+        };
+        Ok(Self { scalar_type, kind })
+    }
+
+    fn finish(self, name: &str) -> Result<ProcedureParamType, CompileError> {
+        match (self.scalar_type, self.kind) {
+            (Some(ty), None) => Ok(ProcedureParamType::Scalar(ty)),
+            (elem_ty, Some(ProcedureParamKind::Array)) => Ok(ProcedureParamType::Array {
+                elem_ty: elem_ty.unwrap_or(ScalarType::Real),
+                dimensions: 1,
+            }),
+            (expected_ret, Some(ProcedureParamKind::Procedure)) => {
+                Ok(ProcedureParamType::Procedure { expected_ret })
+            }
+            (None, None) => Err(CompileError::Malformed(format!(
+                "parameter {name:?} has an empty specification"
+            ))),
+        }
+    }
 }
 
 /// Whether an ALGOL formal receives an eager value or re-evaluates its actual
@@ -366,6 +434,11 @@ struct Compiler {
     register_names: HashSet<String>,
     defined_labels: HashSet<String>,
     referenced_labels: HashSet<String>,
+    /// Source label name -> stable IIR label for the nearest lexical block.
+    /// Labels are pre-registered before declarations and statements so forward
+    /// gotos and switch-list entries bind to the correct shadowing declaration.
+    labels: HashMap<String, String>,
+    label_scope_names: Vec<HashSet<String>>,
     /// Procedures lowered out of line, in declaration order.  These become
     /// extra `IIRFunction`s alongside `main` when the module is assembled.
     functions: Vec<IIRFunction>,
@@ -376,6 +449,21 @@ struct Compiler {
     /// compiled at each direct call site so their reads can re-evaluate the
     /// caller's actual expression.
     proc_decls: HashMap<String, GrammarASTNode>,
+    /// Source procedure name -> stable sibling-function identity for the
+    /// nearest lexical block. Stable identities let a nested declaration
+    /// shadow an outer procedure without retargeting stored signatures or
+    /// direct formal-procedure bindings.
+    proc_names: HashMap<String, String>,
+    /// Procedure names declared in each lexical block. The stack distinguishes
+    /// legal nested shadowing from duplicate declarations in one block.
+    proc_scope_names: Vec<HashSet<String>>,
+    /// Stable identities introduced by each lexical block. Nested identities
+    /// leave the compiler lookup tables at scope exit even though their emitted
+    /// sibling functions remain in the finished module.
+    proc_scope_identities: Vec<Vec<String>>,
+    /// Every direct sibling-function name already emitted or reserved. This
+    /// prevents two disjoint nested blocks from reusing the same IIR name.
+    proc_function_names: HashSet<String>,
     /// Active call-by-name formal substitutions while lowering one specialised
     /// procedure body.
     by_name_bindings: HashMap<String, ByNameBinding>,
@@ -396,10 +484,18 @@ struct Compiler {
     /// reuse a sibling whose captured binding map matches exactly. Changed
     /// scalar expressions still need an environment-aware thunk ABI.
     compiling_by_name_procedures: HashMap<String, Vec<InFlightByNameSpecialization>>,
-    /// Switch name → its ordered designational expressions. A `goto s[i]`
-    /// evaluates the selected expression at run time, which permits both
-    /// conditional and nested switch-list elements.
+    /// Stable switch identity -> its ordered designational expressions. A
+    /// `goto s[i]` evaluates the selected expression at run time, which permits
+    /// both conditional and nested switch-list elements.
     switches: HashMap<String, Vec<GrammarASTNode>>,
+    /// Source switch name -> stable identity for the nearest lexical block.
+    /// Pre-registration preserves forward references and lets stored switch
+    /// lists retain their declaration-time bindings across later shadowing.
+    switch_names: HashMap<String, String>,
+    /// Switch names declared in each lexical block. `switch_names` is the
+    /// flattened nearest-binding view; this stack distinguishes legal shadowing
+    /// from a duplicate declaration in the same block.
+    switch_scope_names: Vec<HashSet<String>>,
     /// Switches being expanded into the current linear dispatch chain. The
     /// source grammar permits a switch to name another switch, but a cycle
     /// cannot be finitely inlined into portable IIR control flow.
@@ -418,6 +514,16 @@ struct Compiler {
     /// a literal-only model, this also covers runtime results such as a string
     /// procedure call copied into a scalar local.
     initialized_string_slots: HashSet<String>,
+    /// Canonical text for local real scalars assigned a finite compile-time
+    /// expression along a straight-line path. This deliberately stops tracking
+    /// at control flow or procedure calls; a general runtime f64 formatter is
+    /// still required once the source value can vary at run time.
+    static_real_slots: HashMap<String, String>,
+    /// Exact values for local integer scalars assigned a literal or another
+    /// tracked integer along the same straight-line path. These snapshots may
+    /// widen into static real expressions only within binary64's exact range.
+    static_integer_slots: HashMap<String, i64>,
+    static_real_tracking_disabled: bool,
 }
 
 impl Default for Compiler {
@@ -433,9 +539,15 @@ impl Default for Compiler {
             register_names: HashSet::new(),
             defined_labels: HashSet::new(),
             referenced_labels: HashSet::new(),
+            labels: HashMap::new(),
+            label_scope_names: vec![HashSet::new()],
             functions: Vec::new(),
             proc_sigs: HashMap::new(),
             proc_decls: HashMap::new(),
+            proc_names: HashMap::new(),
+            proc_scope_names: vec![HashSet::new()],
+            proc_scope_identities: vec![Vec::new()],
+            proc_function_names: HashSet::new(),
             by_name_bindings: HashMap::new(),
             procedure_bindings: HashMap::new(),
             suspended_by_name: HashSet::new(),
@@ -443,10 +555,15 @@ impl Default for Compiler {
             by_name_capture_counter: 0,
             compiling_by_name_procedures: HashMap::new(),
             switches: HashMap::new(),
+            switch_names: HashMap::new(),
+            switch_scope_names: vec![HashSet::new()],
             resolving_switches: HashSet::new(),
             switch_expansion_steps: 0,
             block_captured: HashSet::new(),
             initialized_string_slots: HashSet::new(),
+            static_real_slots: HashMap::new(),
+            static_integer_slots: HashMap::new(),
+            static_real_tracking_disabled: false,
         }
     }
 }
@@ -530,9 +647,23 @@ impl Compiler {
     fn emit_block(&mut self, node: &GrammarASTNode, is_root: bool) -> Result<(), CompileError> {
         self.set_loc(node);
 
+        let saved_switches = (!is_root).then(|| self.switches.clone());
+        let saved_switch_names = (!is_root).then(|| self.switch_names.clone());
+        let saved_labels = (!is_root).then(|| self.labels.clone());
+        let saved_proc_names = (!is_root).then(|| self.proc_names.clone());
         if !is_root {
             self.push_scope();
+            self.switch_scope_names.push(HashSet::new());
+            self.label_scope_names.push(HashSet::new());
+            self.proc_scope_names.push(HashSet::new());
+            self.proc_scope_identities.push(Vec::new());
         }
+
+        // Labels have block scope and may be referenced before their textual
+        // declaration, including from a switch list. Register every label in
+        // this block while deliberately stopping at nested block boundaries.
+        self.register_block_labels(node)?;
+        self.register_block_switch_names(node)?;
 
         // Pass 0 — register every procedure's signature *before* lowering any
         // body.  ALGOL allows a call to appear ahead of the textual
@@ -584,6 +715,22 @@ impl Compiler {
         self.block_captured = saved_captured;
         if !is_root {
             self.pop_scope();
+            self.switch_scope_names.pop();
+            self.switches = saved_switches.expect("nested block saves switch bindings");
+            self.switch_names =
+                saved_switch_names.expect("nested block saves switch name bindings");
+            self.label_scope_names.pop();
+            self.labels = saved_labels.expect("nested block saves label bindings");
+            for stable_name in self
+                .proc_scope_identities
+                .pop()
+                .expect("nested block has procedure identities")
+            {
+                self.proc_sigs.remove(&stable_name);
+                self.proc_decls.remove(&stable_name);
+            }
+            self.proc_scope_names.pop();
+            self.proc_names = saved_proc_names.expect("nested block saves procedure bindings");
         }
         Ok(())
     }
@@ -624,12 +771,15 @@ impl Compiler {
                 .find(|token| token.effective_type_name() == "NAME")
                 .map(|token| token.value.clone())
                 .ok_or_else(|| CompileError::Malformed("procedure_decl missing name".into()))?;
-            let sig = self.proc_sigs.get(&name).ok_or_else(|| {
+            let stable_name = self.proc_names.get(&name).ok_or_else(|| {
+                CompileError::Malformed(format!("procedure {name:?} was not registered"))
+            })?;
+            let sig = self.proc_sigs.get(stable_name).ok_or_else(|| {
                 CompileError::Malformed(format!("procedure {name:?} was not registered"))
             })?;
             if sig.params.iter().any(|param| {
                 param.mode == ProcedureParamMode::Name
-                    || matches!(param.ty, ProcedureParamType::Procedure)
+                    || matches!(param.ty, ProcedureParamType::Procedure { .. })
             })
             {
                 // Name and procedure formals are not ordinary ABI values. Their
@@ -637,7 +787,12 @@ impl Compiler {
                 // expression or procedure target is known.
                 return Ok(());
             }
-            let func = self.compile_procedure(proc_decl)?;
+            let func = self.compile_procedure_with_bindings(
+                proc_decl,
+                Some(stable_name.clone()),
+                HashMap::new(),
+                HashMap::new(),
+            )?;
             self.functions.push(func);
             return Ok(());
         }
@@ -656,7 +811,9 @@ impl Compiler {
         if let Some(array_decl) = first_direct_node(node, "array_decl") {
             return self.emit_array_decl(array_decl, false);
         }
-        let Some(type_decl) = first_direct_node(node, "type_decl") else {
+        let scalar_decl = first_direct_node(node, "own_decl")
+            .or_else(|| first_direct_node(node, "type_decl"));
+        let Some(type_decl) = scalar_decl else {
             let construct = direct_nodes(node)
                 .first()
                 .map(|n| n.rule_name.as_str())
@@ -673,7 +830,8 @@ impl Compiler {
 
         // LANG-FULL AL6: a leading `own` token gives these variables static
         // lifetime — they become module globals that persist across calls.
-        let is_own = direct_tokens(type_decl).iter().any(|t| t.value == "own");
+        let is_own = type_decl.rule_name == "own_decl"
+            || direct_tokens(type_decl).iter().any(|t| t.value == "own");
 
         for name in direct_tokens(ident_list)
             .into_iter()
@@ -888,6 +1046,7 @@ impl Compiler {
                     vec![Operand::Var(span), Operand::Var(one)],
                     "i64",
                 ));
+                self.emit_positive_array_extent_guard(&size);
                 lower_slots.push(lower.slot);
                 size_slots.push(size);
             }
@@ -904,14 +1063,7 @@ impl Compiler {
                 // stride[d] = size[d+1] * running  (running starts as 1 = None)
                 let s_next = &size_slots[d + 1];
                 let stride_d = if let Some(prev) = running {
-                    let prod = self.fresh_temp();
-                    self.emit(IIRInstr::new(
-                        "mul",
-                        Some(prod.clone()),
-                        vec![Operand::Var(s_next.clone()), Operand::Var(prev)],
-                        "i64",
-                    ));
-                    prod
+                    self.emit_checked_array_extent_product(s_next, &prev)
                 } else {
                     // stride = size[d+1] * 1 = size[d+1]
                     s_next.clone()
@@ -928,14 +1080,7 @@ impl Compiler {
                 let stride_0 = stride_slots[0]
                     .clone()
                     .expect("non-last dimension always has a stride slot");
-                let total = self.fresh_temp();
-                self.emit(IIRInstr::new(
-                    "mul",
-                    Some(total.clone()),
-                    vec![Operand::Var(size_slots[0].clone()), Operand::Var(stride_0)],
-                    "i64",
-                ));
-                total
+                self.emit_checked_array_extent_product(&size_slots[0], &stride_0)
             };
 
             // Build the per-dimension descriptor.
@@ -1012,6 +1157,87 @@ impl Compiler {
         Ok(())
     }
 
+    /// Require a run-time array extent to be positive. This catches reversed
+    /// bounds and `upper - lower + 1` overflow before stride arithmetic or an
+    /// allocation can consume the invalid value.
+    fn emit_positive_array_extent_guard(&mut self, size: &str) {
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let positive = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_gt",
+            Some(positive.clone()),
+            vec![Operand::Var(size.to_string()), Operand::Var(zero)],
+            "i64",
+        ));
+        self.emit_guard_or_array_trap(positive, "array_extent_valid");
+    }
+
+    /// Multiply two already-positive extents and reject signed `i64` overflow.
+    /// Dividing the wrapped product by either positive factor can equal the
+    /// other factor only when the multiplication was representable.
+    fn emit_checked_array_extent_product(&mut self, lhs: &str, rhs: &str) -> String {
+        let product = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "mul",
+            Some(product.clone()),
+            vec![Operand::Var(lhs.to_string()), Operand::Var(rhs.to_string())],
+            "i64",
+        ));
+        let recovered = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "div",
+            Some(recovered.clone()),
+            vec![Operand::Var(product.clone()), Operand::Var(rhs.to_string())],
+            "i64",
+        ));
+        let exact = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_eq",
+            Some(exact.clone()),
+            vec![Operand::Var(recovered), Operand::Var(lhs.to_string())],
+            "i64",
+        ));
+        self.emit_guard_or_array_trap(exact, "array_extent_product_valid");
+        product
+    }
+
+    /// Branch to a portable fail-closed path when `condition` is false. IIR has
+    /// no generic trap instruction, so the invalid arm deliberately reads index
+    /// zero from a zero-length array and reuses every backend's bounds trap.
+    fn emit_guard_or_array_trap(&mut self, condition: String, valid_stem: &str) {
+        let invalid_label = self.fresh_label("array_declaration_invalid");
+        let valid_label = self.fresh_label(valid_stem);
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(condition), Operand::Var(invalid_label.clone())],
+            "void",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(valid_label.clone())],
+            "void",
+        ));
+        self.emit_label(&invalid_label);
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let trap_array = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "alloc_array",
+            Some(trap_array.clone()),
+            vec![Operand::Var(zero.clone())],
+            "array<i64>",
+        ));
+        let ignored = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_get",
+            Some(ignored),
+            vec![Operand::Var(trap_array), Operand::Var(zero)],
+            "i64",
+        ));
+        self.emit_label(&valid_label);
+    }
+
     /// Resolve a subscripted `variable` node `A[i]` (or `A[i, j]`, etc.) to
     /// the array handle slot plus a slot holding the flat **0-based** linear
     /// index.  Shared by the `array_get` (read) and `array_set` (write) paths.
@@ -1047,9 +1273,39 @@ impl Compiler {
             )));
         }
 
+        // A flat-only bounds check is insufficient for multiple dimensions:
+        // A[1, 3] can otherwise alias A[2, 1] in a 2x2 row-major array. Recover
+        // each dimension's size from the flat length and adjacent strides, and
+        // route an invalid coordinate to the first index beyond the array. The
+        // following array_get/array_set then uses its ordinary backend bounds
+        // trap, without extending the rank-specific descriptor ABI.
+        let descriptor_global = binding.is_global.then(|| binding.slot.clone());
+        if binding.is_global {
+            let handle = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "global_load",
+                Some(handle.clone()),
+                vec![Operand::Str(binding.slot.clone())],
+                make_array_type(binding.ty.iir()),
+            ));
+            binding.slot = handle;
+            binding.is_global = false;
+        }
+        let length = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_len",
+            Some(length.clone()),
+            vec![Operand::Var(binding.slot.clone())],
+            "i64",
+        ));
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let invalid_label = self.fresh_label("array_coordinate_invalid");
+        let done_label = self.fresh_label("array_coordinate_checked");
+
         // Compute flat 0-based index: Σ_d (sub[d] − lower[d]) * stride[d].
         // Accumulate into `flat`; start with None meaning "haven't written yet".
         let mut flat: Option<String> = None;
+        let mut previous_stride: Option<String> = None;
 
         for (dim_index, (dim, sub_node)) in info.dims.iter().zip(subs).enumerate() {
             let idx = self.emit_expr(sub_node)?;
@@ -1062,13 +1318,13 @@ impl Compiler {
             // diff = sub − lower. A captured array owns its bound metadata in
             // module globals, because the procedure body has a fresh register
             // frame and cannot directly see the declaring block's temporaries.
-            let lower_slot = if binding.is_global {
+            let lower_slot = if let Some(global_slot) = &descriptor_global {
                 let slot = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "global_load",
                     Some(slot.clone()),
                     vec![Operand::Str(array_dim_global_name(
-                        &binding.slot,
+                        global_slot,
                         dim_index,
                         "lower",
                     ))],
@@ -1086,29 +1342,99 @@ impl Compiler {
                 "i64",
             ));
 
-            // contrib = diff * stride  (or just diff when stride = 1, last dim)
-            let contrib = if let Some(stride) = &dim.stride_slot {
-                let stride_slot = if binding.is_global {
+            let stride_slot = if dim.stride_slot.is_some() {
+                if let Some(global_slot) = &descriptor_global {
                     let slot = self.fresh_temp();
                     self.emit(IIRInstr::new(
                         "global_load",
                         Some(slot.clone()),
                         vec![Operand::Str(array_dim_global_name(
-                            &binding.slot,
+                            global_slot,
                             dim_index,
                             "stride",
                         ))],
                         "i64",
                     ));
-                    slot
+                    Some(slot)
                 } else {
-                    stride.clone()
-                };
+                    dim.stride_slot.clone()
+                }
+            } else {
+                None
+            };
+            let dimension_size = match (&previous_stride, &stride_slot) {
+                (None, None) => length.clone(),
+                (None, Some(stride)) => {
+                    let size = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "div",
+                        Some(size.clone()),
+                        vec![Operand::Var(length.clone()), Operand::Var(stride.clone())],
+                        "i64",
+                    ));
+                    size
+                }
+                (Some(previous), None) => previous.clone(),
+                (Some(previous), Some(stride)) => {
+                    let size = self.fresh_temp();
+                    self.emit(IIRInstr::new(
+                        "div",
+                        Some(size.clone()),
+                        vec![Operand::Var(previous.clone()), Operand::Var(stride.clone())],
+                        "i64",
+                    ));
+                    size
+                }
+            };
+
+            let negative = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "cmp_lt",
+                Some(negative.clone()),
+                vec![Operand::Var(diff.clone()), Operand::Var(zero.clone())],
+                "i64",
+            ));
+            let nonnegative_label = self.fresh_label("array_coordinate_nonnegative");
+            self.emit(IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![
+                    Operand::Var(negative),
+                    Operand::Var(nonnegative_label.clone()),
+                ],
+                "void",
+            ));
+            self.emit(IIRInstr::new(
+                "jmp",
+                None,
+                vec![Operand::Var(invalid_label.clone())],
+                "void",
+            ));
+            self.emit_label(&nonnegative_label);
+            let within_dimension = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "cmp_lt",
+                Some(within_dimension.clone()),
+                vec![Operand::Var(diff.clone()), Operand::Var(dimension_size)],
+                "i64",
+            ));
+            self.emit(IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![
+                    Operand::Var(within_dimension),
+                    Operand::Var(invalid_label.clone()),
+                ],
+                "void",
+            ));
+
+            // contrib = diff * stride  (or just diff when stride = 1, last dim)
+            let contrib = if let Some(stride_slot) = &stride_slot {
                 let prod = self.fresh_temp();
                 self.emit(IIRInstr::new(
                     "mul",
                     Some(prod.clone()),
-                    vec![Operand::Var(diff), Operand::Var(stride_slot)],
+                    vec![Operand::Var(diff), Operand::Var(stride_slot.clone())],
                     "i64",
                 ));
                 prod
@@ -1129,20 +1455,24 @@ impl Compiler {
             } else {
                 contrib // first (or only) dimension: flat = contrib
             });
+            previous_stride = stride_slot;
         }
 
         let flat = flat.expect("dims is always non-empty");
-        if binding.is_global {
-            let handle = self.fresh_temp();
-            self.emit(IIRInstr::new(
-                "global_load",
-                Some(handle.clone()),
-                vec![Operand::Str(binding.slot.clone())],
-                make_array_type(binding.ty.iir()),
-            ));
-            binding.slot = handle;
-            binding.is_global = false;
-        }
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(done_label.clone())],
+            "void",
+        ));
+        self.emit_label(&invalid_label);
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(flat.clone()),
+            vec![Operand::Var(length)],
+            "i64",
+        ));
+        self.emit_label(&done_label);
         Ok((binding, flat))
     }
 
@@ -1176,17 +1506,17 @@ impl Compiler {
         }
     }
 
-    /// Map a procedure `specifier` to the supported formal shape.
+    /// Map a procedure `specifier` to one source-level specification part.
     ///
     /// The compiled parser accepts `integer array a` as a two-token specifier;
     /// its legacy `array a` spelling remains a real-array formal, matching the
     /// default element type of an untyped ALGOL array declaration. Array
     /// formals infer their dimension count from their subscripted uses in the
     /// procedure body; the actual's rank is checked when the call is lowered.
-    fn procedure_param_type(
+    fn procedure_param_specification(
         &self,
         node: &GrammarASTNode,
-    ) -> Result<ProcedureParamType, CompileError> {
+    ) -> Result<ProcedureParamSpecification, CompileError> {
         let tokens = recursive_tokens(node);
         let words: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
         let scalar = |word: &str| match word {
@@ -1198,23 +1528,39 @@ impl Compiler {
         };
 
         match words.as_slice() {
-            ["array"] => Ok(ProcedureParamType::Array {
-                elem_ty: ScalarType::Real,
-                dimensions: 1,
+            ["array"] => Ok(ProcedureParamSpecification {
+                scalar_type: None,
+                kind: Some(ProcedureParamKind::Array),
             }),
             [ty, "array"] => scalar(ty)
-                .map(|elem_ty| ProcedureParamType::Array {
-                    elem_ty,
-                    dimensions: 1,
+                .map(|scalar_type| ProcedureParamSpecification {
+                    scalar_type: Some(scalar_type),
+                    kind: Some(ProcedureParamKind::Array),
                 })
                 .ok_or_else(|| CompileError::Malformed(format!(
                     "unknown array parameter element type {ty:?}"
                 ))),
-            ["procedure"] => Ok(ProcedureParamType::Procedure),
+            ["procedure"] => Ok(ProcedureParamSpecification {
+                scalar_type: None,
+                kind: Some(ProcedureParamKind::Procedure),
+            }),
+            [ty, "procedure"] => scalar(ty)
+                .map(|scalar_type| ProcedureParamSpecification {
+                    scalar_type: Some(scalar_type),
+                    kind: Some(ProcedureParamKind::Procedure),
+                })
+                .ok_or_else(|| {
+                    CompileError::Malformed(format!(
+                        "unknown procedure parameter return type {ty:?}"
+                    ))
+                }),
             [ty] => scalar(ty)
-                .map(ProcedureParamType::Scalar)
+                .map(|scalar_type| ProcedureParamSpecification {
+                    scalar_type: Some(scalar_type),
+                    kind: None,
+                })
                 .ok_or_else(|| CompileError::Unsupported(format!("{ty} parameters"))),
-            [_, kind] if matches!(*kind, "label" | "switch" | "procedure") => Err(
+            [_, kind] if matches!(*kind, "label" | "switch") => Err(
                 CompileError::Unsupported(format!("{kind} parameters")),
             ),
             _ => Err(CompileError::Malformed(format!(
@@ -1272,43 +1618,75 @@ impl Compiler {
             },
             None => Vec::new(),
         };
+        let mut declared_names = HashSet::with_capacity(param_names.len());
+        for param_name in &param_names {
+            if !declared_names.insert(param_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate formal parameter {param_name:?}"
+                )));
+            }
+        }
 
         // Which parameters are passed by value.
-        let value_names: HashSet<String> = match first_direct_node(proc_decl, "value_part") {
+        let value_name_list = match first_direct_node(proc_decl, "value_part") {
             Some(vp) => first_direct_node(vp, "ident_list")
                 .map(ident_list_names)
-                .unwrap_or_default()
-                .into_iter()
-                .collect(),
-            None => HashSet::new(),
+                .unwrap_or_default(),
+            None => Vec::new(),
         };
-        // Each parameter's type, gathered from the `spec_part` declarations.
-        let mut type_of: HashMap<String, ProcedureParamType> = HashMap::new();
+        let mut value_names = HashSet::with_capacity(value_name_list.len());
+        for value_name in value_name_list {
+            if !declared_names.contains(&value_name) {
+                return Err(CompileError::Type(format!(
+                    "value parameter {value_name:?} is not in the formal parameter list"
+                )));
+            }
+            if !value_names.insert(value_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate value parameter {value_name:?}"
+                )));
+            }
+        }
+        // Each parameter's type and kind, gathered from the `spec_part`
+        // declarations. Report-style split specifications (`integer a; array
+        // a;`) contribute complementary pieces and are merged before lowering.
+        let mut specification_of: HashMap<String, ProcedureParamSpecification> = HashMap::new();
         for spec in direct_nodes(proc_decl)
             .into_iter()
             .filter(|n| n.rule_name == "spec_part")
         {
             let specifier = first_direct_node(spec, "specifier")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing specifier".into()))?;
-            let ty = self.procedure_param_type(specifier)?;
+            let specification = self.procedure_param_specification(specifier)?;
             let list = first_direct_node(spec, "ident_list")
                 .ok_or_else(|| CompileError::Malformed("spec_part missing ident_list".into()))?;
             for n in ident_list_names(list) {
-                type_of.insert(n, ty);
+                if !declared_names.contains(&n) {
+                    return Err(CompileError::Type(format!(
+                        "specified parameter {n:?} is not in the formal parameter list"
+                    )));
+                }
+                let merged = specification_of
+                    .get(&n)
+                    .copied()
+                    .unwrap_or_default()
+                    .merge(specification, &n)?;
+                specification_of.insert(n, merged);
             }
         }
 
         let mut params = Vec::with_capacity(param_names.len());
         for p in param_names {
-            let ty = type_of.get(&p).copied().ok_or_else(|| {
+            let specification = specification_of.get(&p).copied().ok_or_else(|| {
                 CompileError::Malformed(format!("parameter {p:?} has no specification"))
             })?;
+            let ty = specification.finish(&p)?;
             let ty = match ty {
                 ProcedureParamType::Array { elem_ty, .. } => ProcedureParamType::Array {
                     elem_ty,
                     dimensions: array_formal_dimension_count(proc_decl, &p)?,
                 },
-                ProcedureParamType::Scalar(_) | ProcedureParamType::Procedure => ty,
+                ProcedureParamType::Scalar(_) | ProcedureParamType::Procedure { .. } => ty,
             };
             // Formal procedures are replaced with a statically captured target
             // during direct specialisation, so value mode does not need a
@@ -1328,19 +1706,34 @@ impl Compiler {
     /// before the body is lowered (forward references and recursion).
     fn register_proc_sig(&mut self, proc_decl: &GrammarASTNode) -> Result<(), CompileError> {
         let (name, params, ret) = self.procedure_parts(proc_decl)?;
-        if self.proc_sigs.contains_key(&name) {
+        let current_scope = self
+            .proc_scope_names
+            .last_mut()
+            .expect("compiler always has a procedure scope");
+        if !current_scope.insert(name.clone()) {
             return Err(CompileError::Type(format!(
                 "duplicate declaration for procedure {name:?}"
             )));
         }
+        let stable_name = if self.proc_function_names.contains(&name) {
+            self.fresh_label(&format!("procedure_{name}"))
+        } else {
+            name.clone()
+        };
+        self.proc_function_names.insert(stable_name.clone());
+        self.proc_scope_identities
+            .last_mut()
+            .expect("compiler always has procedure identities")
+            .push(stable_name.clone());
         self.proc_sigs.insert(
-            name.clone(),
+            stable_name.clone(),
             ProcSig {
                 params,
                 ret,
             },
         );
-        self.proc_decls.insert(name, proc_decl.clone());
+        self.proc_decls.insert(stable_name.clone(), proc_decl.clone());
+        self.proc_names.insert(name, stable_name);
         Ok(())
     }
 
@@ -1358,15 +1751,9 @@ impl Compiler {
     /// the procedure's root scope (slot == bare name == `IIRFunction` param),
     /// and so is the procedure's own name, which the body assigns to and we
     /// `ret` at the end.
-    fn compile_procedure(
-        &mut self,
-        proc_decl: &GrammarASTNode,
-    ) -> Result<IIRFunction, CompileError> {
-        self.compile_procedure_with_bindings(proc_decl, None, HashMap::new(), HashMap::new())
-    }
-
-    /// Lower a procedure body, optionally as a call-site-specialised sibling
-    /// whose name formals are backed by caller expressions.
+    /// `specialised_name` is either the declaration's stable lexical identity
+    /// or a call-site-specialised sibling whose name formals are backed by
+    /// caller expressions.
     fn compile_procedure_with_bindings(
         &mut self,
         proc_decl: &GrammarASTNode,
@@ -1386,10 +1773,20 @@ impl Compiler {
         let saved_registers = std::mem::take(&mut self.register_names);
         let saved_defined = std::mem::take(&mut self.defined_labels);
         let saved_referenced = std::mem::take(&mut self.referenced_labels);
+        let saved_labels = std::mem::take(&mut self.labels);
+        let saved_label_scope_names =
+            std::mem::replace(&mut self.label_scope_names, vec![HashSet::new()]);
         let saved_switches = std::mem::take(&mut self.switches);
+        let saved_switch_names = std::mem::take(&mut self.switch_names);
+        let saved_switch_scope_names =
+            std::mem::replace(&mut self.switch_scope_names, vec![HashSet::new()]);
         let saved_switch_expansion_steps = std::mem::replace(&mut self.switch_expansion_steps, 0);
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
+        let saved_static_real_slots = std::mem::take(&mut self.static_real_slots);
+        let saved_static_integer_slots = std::mem::take(&mut self.static_integer_slots);
+        let saved_static_real_tracking_disabled =
+            std::mem::replace(&mut self.static_real_tracking_disabled, true);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
         let saved_by_name_bindings =
             std::mem::replace(&mut self.by_name_bindings, by_name_bindings);
@@ -1435,7 +1832,7 @@ impl Compiler {
                 }
                 continue;
             }
-            if matches!(*pty, ProcedureParamType::Procedure) {
+            if matches!(*pty, ProcedureParamType::Procedure { .. }) {
                 if !self.procedure_bindings.contains_key(pname) {
                     return Err(CompileError::Malformed(format!(
                         "formal procedure parameter {pname:?} has no call-site binding"
@@ -1511,7 +1908,7 @@ impl Compiler {
                         )?;
                     }
                 }
-                ProcedureParamType::Procedure => unreachable!(
+                ProcedureParamType::Procedure { .. } => unreachable!(
                     "formal procedure parameters are bound through specialisation"
                 ),
             }
@@ -1568,7 +1965,10 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("proc_body is empty".into()))?;
         match inner.rule_name.as_str() {
             "block" => self.emit_block(inner, false)?,
-            "statement" => self.emit_statement(inner)?,
+            "statement" => {
+                self.register_statement_labels(inner)?;
+                self.emit_statement(inner)?;
+            }
             other => {
                 return Err(CompileError::Malformed(format!(
                     "unexpected proc_body child {other:?}"
@@ -1617,9 +2017,16 @@ impl Compiler {
         self.register_names = saved_registers;
         self.defined_labels = saved_defined;
         self.referenced_labels = saved_referenced;
+        self.labels = saved_labels;
+        self.label_scope_names = saved_label_scope_names;
         self.switches = saved_switches;
+        self.switch_names = saved_switch_names;
+        self.switch_scope_names = saved_switch_scope_names;
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
+        self.static_real_slots = saved_static_real_slots;
+        self.static_integer_slots = saved_static_integer_slots;
+        self.static_real_tracking_disabled = saved_static_real_tracking_disabled;
         self.scopes = saved_scopes;
         self.by_name_bindings = saved_by_name_bindings;
         self.procedure_bindings = saved_procedure_bindings;
@@ -1731,6 +2138,18 @@ impl Compiler {
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")
+            .map(|token| token.value.clone());
+        let is_pure_standard_function = source_name.is_some_and(|name| {
+            let target_name = self.resolve_procedure_identity(&name);
+            !self.proc_sigs.contains_key(&target_name)
+                && is_supported_standard_function(&target_name)
+        });
+        if !is_pure_standard_function {
+            self.disable_static_real_tracking();
+        }
         self.emit_call_common(node, true)?.ok_or_else(|| {
             CompileError::Type("proper procedure call has no return value".into())
         })
@@ -1749,23 +2168,20 @@ impl Compiler {
         // A formal procedure binding captures a direct source target. Standard
         // output procedures have no declared signature, so reuse their
         // statement-only lowering after resolving that target.
-        let target_source_name = self
-            .procedure_bindings
-            .get(&name)
-            .map(|binding| binding.source_name.clone())
-            .unwrap_or_else(|| name.clone());
+        let target_source_name = self.resolve_procedure_identity(&name);
         if self.try_emit_standard_output_stmt(&target_source_name, node)? {
             return Ok(());
         }
+        self.disable_static_real_tracking();
         self.emit_call_common(node, false)?;
         Ok(())
     }
 
     /// ALGOL 60's report leaves input/output in implementation-defined
     /// procedures; this LANG-FULL AL4 foothold recognises undeclared statement
-    /// calls named `print` or `output` and lowers literal string arguments to
-    /// the shared E4 stdout primitive. A user-declared procedure of the same
-    /// name still wins, matching the standard-function override policy.
+    /// calls named `print` or `output` and lowers string, integer, or boolean
+    /// arguments to shared stdout primitives. A user-declared procedure of the
+    /// same name still wins, matching the standard-function override policy.
     fn try_emit_standard_output_stmt(
         &mut self,
         name: &str,
@@ -1800,26 +2216,33 @@ impl Compiler {
                 continue;
             }
 
+            // Compile-time real expressions have deterministic text. A direct
+            // literal preserves its source spelling; bounded literal-only
+            // addition/subtraction is evaluated here. Conditional expressions
+            // whose leaves are all static can branch directly to the portable
+            // string path without materialising or formatting a runtime f64.
+            if self.try_emit_real_literal_output_expr(actual)? {
+                continue;
+            }
+
             if let Some(var_name) = expr_variable_name(actual) {
                 let binding = self.require_var(&var_name)?;
-                if binding.ty != ScalarType::String {
-                    return Err(CompileError::Type(format!(
-                        "standard output procedure {name:?} cannot print {} variable {var_name:?}",
-                        binding.ty.name()
-                    )));
+                if binding.ty == ScalarType::Real && !binding.is_global {
+                    if let Some(text) = self.static_real_slots.get(&binding.slot).cloned() {
+                        self.emit_standard_output_literal(&text);
+                        continue;
+                    }
                 }
-                if !binding.is_global && !self.initialized_string_slots.contains(&binding.slot) {
+                if binding.ty == ScalarType::String
+                    && !binding.is_global
+                    && !self.initialized_string_slots.contains(&binding.slot)
+                {
                     return Err(CompileError::Unsupported(format!(
                         "standard output procedure {name:?} requires initialized string variable {var_name:?}"
                     )));
                 }
                 let value = self.read_scalar(binding);
-                self.emit(IIRInstr::new(
-                    "print_str",
-                    None,
-                    vec![Operand::Var(value.slot)],
-                    "void",
-                ));
+                self.emit_standard_output_value(name, value)?;
                 continue;
             }
 
@@ -1829,23 +2252,546 @@ impl Compiler {
             // sound on every backend because the E4-dyn foothold proved
             // `print_str` of a runtime string on all seven columns, so — unlike
             // the literal/variable fast paths above — no literal-backing is
-            // required. A non-string result is a type error.
+            // required. Integer expressions use the shared numeric stdout
+            // builtin, while booleans select typed string literals. Real
+            // formatting remains an explicit type error.
             let value = self.emit_expr(actual)?;
-            if value.ty != ScalarType::String {
-                return Err(CompileError::Type(format!(
-                    "standard output procedure {name:?} cannot print a {} value",
-                    value.ty.name()
-                )));
+            self.emit_standard_output_value(name, value)?;
+        }
+
+        Ok(true)
+    }
+
+    fn try_emit_real_literal_output_expr(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<bool, CompileError> {
+        if let Some(text) = self.static_real_output_text(node) {
+            self.emit_standard_output_literal(&text);
+            return Ok(true);
+        }
+
+        let Some((condition, then_node, else_node)) =
+            self.static_real_output_conditional_parts(node)
+        else {
+            return Ok(false);
+        };
+        let condition = self.emit_expr(condition)?;
+        if condition.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(
+                "conditional expression condition must be boolean".into(),
+            ));
+        }
+
+        let else_label = self.fresh_label("output_real_literal_else");
+        let end_label = self.fresh_label("output_real_literal_end");
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![
+                Operand::Var(condition.slot),
+                Operand::Var(else_label.clone()),
+            ],
+            "void",
+        ));
+        if !self.try_emit_real_literal_output_expr(then_node)? {
+            return Err(CompileError::Malformed(
+                "validated real-literal output branch changed shape".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_label(&else_label);
+        if !self.try_emit_real_literal_output_expr(else_node)? {
+            return Err(CompileError::Malformed(
+                "validated real-literal output branch changed shape".into(),
+            ));
+        }
+        self.emit_label(&end_label);
+        Ok(true)
+    }
+
+    fn static_real_output_conditional_parts<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<(&'n GrammarASTNode, &'n GrammarASTNode, &'n GrammarASTNode)> {
+        let (condition, then_node, else_node) = self.conditional_expression_parts(node)?;
+        if !self.is_static_real_output_expr(then_node)
+            || !self.is_static_real_output_expr(else_node)
+        {
+            return None;
+        }
+        Some((condition, then_node, else_node))
+    }
+
+    fn conditional_expression_parts<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<(&'n GrammarASTNode, &'n GrammarASTNode, &'n GrammarASTNode)> {
+        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+            || !direct_tokens(node).iter().any(|token| token.value == "if")
+        {
+            return None;
+        }
+
+        let condition = first_direct_node(node, "bool_expr")?;
+        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == node.rule_name)
+            .collect();
+        if branches.len() != 2 {
+            return None;
+        }
+        Some((condition, branches[0], branches[1]))
+    }
+
+    fn is_static_real_output_expr(&self, node: &GrammarASTNode) -> bool {
+        self.static_real_output_text(node).is_some()
+            || self.static_real_output_conditional_parts(node).is_some()
+    }
+
+    fn static_real_output_text(&self, node: &GrammarASTNode) -> Option<String> {
+        if let Some(literal) = expr_real_literal_text(node) {
+            return Some(literal);
+        }
+        let value = self.static_real_arithmetic_value(node)?;
+        value.is_finite().then(|| value.to_string())
+    }
+
+    fn static_real_arithmetic_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        let widen_tracked_integers = self.static_real_expression_has_real_evidence(node);
+        expr_static_real_arithmetic_value_with(node, &|call| {
+            self.static_standard_real_value(call)
+                .or_else(|| self.static_tracked_numeric_value(call, widen_tracked_integers))
+        })
+    }
+
+    fn static_assigned_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        if let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let then_value = self.static_assigned_real_value(then_node)?;
+            let else_value = self.static_assigned_real_value(else_node)?;
+            return (then_value.to_bits() == else_value.to_bits()).then_some(then_value);
+        }
+        self.static_real_arithmetic_value(node)
+    }
+
+    fn static_assigned_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let then_value = self.static_assigned_integer_value(then_node)?;
+            let else_value = self.static_assigned_integer_value(else_node)?;
+            return (then_value == else_value).then_some(then_value);
+        }
+        self.static_integer_scalar_value(node)
+    }
+
+    fn static_tracked_numeric_value(
+        &self,
+        node: &GrammarASTNode,
+        widen_integer: bool,
+    ) -> Option<f64> {
+        let name = expr_variable_name(node)?;
+        let binding = self.require_var(&name).ok()?;
+        if binding.is_global {
+            return None;
+        }
+        match binding.ty {
+            ScalarType::Real => self
+                .static_real_slots
+                .get(&binding.slot)?
+                .parse::<f64>()
+                .ok()
+                .filter(|value| value.is_finite()),
+            ScalarType::Integer if widen_integer => {
+                let value = *self.static_integer_slots.get(&binding.slot)?;
+                (value.unsigned_abs() <= 9_007_199_254_740_992_u64).then_some(value as f64)
             }
-            self.emit(IIRInstr::new(
+            _ => None,
+        }
+    }
+
+    fn static_real_expression_has_real_evidence(&self, node: &GrammarASTNode) -> bool {
+        if direct_tokens(node)
+            .iter()
+            .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
+        {
+            return true;
+        }
+        if let Some(name) = expr_variable_name(node) {
+            return self
+                .require_var(&name)
+                .is_ok_and(|binding| binding.ty == ScalarType::Real);
+        }
+        if node.rule_name == "proc_call" {
+            let name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| self.resolve_procedure_identity(&token.value));
+            if name.is_some_and(|name| {
+                matches!(
+                    name.as_str(),
+                    "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                )
+            }) {
+                return true;
+            }
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| self.static_real_expression_has_real_evidence(child))
+    }
+
+    fn static_integer_scalar_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if let Some(value) = self.static_standard_integer_value(node) {
+            return Some(value);
+        }
+        if let Some(name) = expr_variable_name(node) {
+            let binding = self.require_var(&name).ok()?;
+            if binding.ty == ScalarType::Integer && !binding.is_global {
+                return self.static_integer_slots.get(&binding.slot).copied();
+            }
+            return None;
+        }
+
+        let tokens = direct_tokens(node);
+        let children = direct_nodes(node);
+        if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+            return tokens[0].value.parse::<i64>().ok();
+        }
+        if tokens.len() == 1
+            && children.len() == 1
+            && matches!(tokens[0].value.as_str(), "+" | "-")
+        {
+            let value = self.static_integer_scalar_value(children[0])?;
+            return if tokens[0].value == "-" {
+                value.checked_neg()
+            } else {
+                Some(value)
+            };
+        }
+        if (tokens.is_empty()
+            || (tokens.len() == 2 && tokens[0].value == "(" && tokens[1].value == ")"))
+            && children.len() == 1
+        {
+            return self.static_integer_scalar_value(children[0]);
+        }
+
+        let seq = pieces(node);
+        if node.rule_name == "expr_pow"
+            && seq
+                .iter()
+                .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            if seq.len().is_multiple_of(2) {
+                return None;
+            }
+            let mut operands = Vec::new();
+            for (index, piece) in seq.iter().enumerate() {
+                if index % 2 == 0 {
+                    let Piece::Node(operand) = piece else {
+                        return None;
+                    };
+                    operands.push(*operand);
+                } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                    return None;
+                }
+            }
+            let (base, exponents) = operands.split_first()?;
+            let exponent = literal_nonneg_integer_power_chain(exponents)?;
+            return self
+                .static_integer_scalar_value(base)?
+                .checked_pow(exponent);
+        }
+        if seq.len() == 1 {
+            return match seq[0] {
+                Piece::Node(child) => self.static_integer_scalar_value(child),
+                Piece::Op(_) => None,
+            };
+        }
+
+        let mut index = 0;
+        let mut negate = false;
+        if let Some(Piece::Op(op)) = seq.first() {
+            negate = match op.as_str() {
+                "+" => false,
+                "-" => true,
+                _ => return None,
+            };
+            index += 1;
+        }
+        let Piece::Node(first) = seq.get(index)? else {
+            return None;
+        };
+        let first = self.static_integer_scalar_value(first)?;
+        let mut value = if negate { first.checked_neg()? } else { first };
+        index += 1;
+        while index < seq.len() {
+            let Piece::Op(op) = seq.get(index)? else {
+                return None;
+            };
+            let Piece::Node(rhs) = seq.get(index + 1)? else {
+                return None;
+            };
+            let rhs = self.static_integer_scalar_value(rhs)?;
+            value = match op.as_str() {
+                "+" => value.checked_add(rhs)?,
+                "-" => value.checked_sub(rhs)?,
+                "*" => value.checked_mul(rhs)?,
+                "div" => value.checked_div(rhs)?,
+                "mod" => value.checked_rem(rhs)?,
+                _ => return None,
+            };
+            index += 2;
+        }
+        Some(value)
+    }
+
+    fn static_standard_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if node.rule_name != "proc_call" {
+            return None;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "abs" => self.static_integer_scalar_value(actuals[0])?.checked_abs(),
+            "sign" => {
+                if let Some(value) = self.static_integer_scalar_value(actuals[0]) {
+                    return Some(value.signum());
+                }
+                let value = self.static_real_arithmetic_value(actuals[0])?;
+                Some(if value < 0.0 { -1 } else if value > 0.0 { 1 } else { 0 })
+            }
+            "entier" => {
+                let value = self.static_real_arithmetic_value(actuals[0])?.floor();
+                (value.is_finite() && value.abs() <= 9_007_199_254_740_992.0)
+                    .then_some(value as i64)
+            }
+            _ => None,
+        }
+    }
+
+    /// Evaluate deterministic real standard-function calls inside the static
+    /// arithmetic tree. User declarations still shadow the built-ins, and
+    /// `sqrt` is accepted only when the host operation round-trips exactly to
+    /// its finite literal-only operand. Transcendental functions are limited
+    /// to canonical inputs whose Report-defined result is exactly zero or one.
+    /// Integer-valued `sign` and `entier` results are represented as f64 only
+    /// while they remain in the exact binary64 integer range.
+    fn static_standard_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        if node.rule_name != "proc_call" {
+            return None;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        let operand = self.static_real_arithmetic_value(actuals[0])?;
+        let value = match target_name.as_str() {
+            "abs" => operand.abs(),
+            "sqrt" if operand >= 0.0 => {
+                let root = operand.sqrt();
+                (root * root == operand).then_some(root)?
+            }
+            "sin" | "arctan" if operand == 0.0 => 0.0,
+            "cos" | "exp" if operand == 0.0 => 1.0,
+            "ln" if operand == 1.0 => 0.0,
+            "sign" => {
+                if operand < 0.0 {
+                    -1.0
+                } else if operand > 0.0 {
+                    1.0
+                } else {
+                    0.0
+                }
+            }
+            "entier" => {
+                let integer = operand.floor();
+                (integer.abs() <= 9_007_199_254_740_992.0).then_some(integer)?
+            }
+            _ => return None,
+        };
+        value.is_finite().then_some(value)
+    }
+
+    fn emit_standard_output_value(
+        &mut self,
+        name: &str,
+        value: ExprValue,
+    ) -> Result<(), CompileError> {
+        match value.ty {
+            ScalarType::String => self.emit(IIRInstr::new(
                 "print_str",
                 None,
                 vec![Operand::Var(value.slot)],
                 "void",
-            ));
+            )),
+            ScalarType::Integer => self.emit(IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("print_i64".to_string()),
+                    Operand::Var(value.slot),
+                ],
+                "void",
+            )),
+            ScalarType::Boolean => self.emit_standard_output_boolean(value.slot),
+            ScalarType::Real => {
+                return Err(CompileError::Type(format!(
+                    "standard output procedure {name:?} cannot print a {} value",
+                    value.ty.name()
+                )))
+            }
         }
+        Ok(())
+    }
 
-        Ok(true)
+    fn emit_standard_output_boolean(&mut self, value_slot: String) {
+        let false_label = self.fresh_label("output_boolean_false");
+        let end_label = self.fresh_label("output_boolean_end");
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(value_slot), Operand::Var(false_label.clone())],
+            "void",
+        ));
+        self.emit_standard_output_literal("true");
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_label(&false_label);
+        self.emit_standard_output_literal("false");
+        self.emit_label(&end_label);
+    }
+
+    fn disable_static_real_tracking(&mut self) {
+        self.static_real_slots.clear();
+        self.static_integer_slots.clear();
+        self.static_real_tracking_disabled = true;
+    }
+
+    fn emit_standard_output_literal(&mut self, literal: &str) {
+        let slot = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "str_const",
+            Some(slot.clone()),
+            vec![Operand::Str(literal.to_string())],
+            "str",
+        ));
+        self.emit(IIRInstr::new(
+            "print_str",
+            None,
+            vec![Operand::Var(slot)],
+            "void",
+        ));
+    }
+
+    /// Materialize ALGOL call-by-value semantics for an array actual.
+    ///
+    /// Array handles carry their flat element count in the shared E5 header,
+    /// so the caller can clone every element without extending the rank-specific
+    /// procedure ABI. Lower bounds and strides remain ordinary descriptor
+    /// arguments, while only the copied handle crosses the call boundary.
+    fn emit_array_value_copy(&mut self, source_handle: &str, elem_ty: ScalarType) -> String {
+        let length = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_len",
+            Some(length.clone()),
+            vec![Operand::Var(source_handle.to_string())],
+            "i64",
+        ));
+        let copy = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "alloc_array",
+            Some(copy.clone()),
+            vec![Operand::Var(length.clone())],
+            make_array_type(elem_ty.iir()),
+        ));
+
+        let index = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let one = self.emit_const(ScalarType::Integer, Operand::Int(1));
+        let loop_label = self.fresh_label("array_value_copy_loop");
+        let done_label = self.fresh_label("array_value_copy_done");
+        self.emit_label(&loop_label);
+        let in_bounds = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_lt",
+            Some(in_bounds.clone()),
+            vec![Operand::Var(index.clone()), Operand::Var(length)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(in_bounds), Operand::Var(done_label.clone())],
+            "void",
+        ));
+        let element = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "array_get",
+            Some(element.clone()),
+            vec![
+                Operand::Var(source_handle.to_string()),
+                Operand::Var(index.clone()),
+            ],
+            elem_ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "array_set",
+            None,
+            vec![
+                Operand::Var(copy.clone()),
+                Operand::Var(index.clone()),
+                Operand::Var(element),
+            ],
+            elem_ty.iir(),
+        ));
+        let next = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "add",
+            Some(next.clone()),
+            vec![Operand::Var(index.clone()), Operand::Var(one)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(index),
+            vec![Operand::Var(next)],
+            "i64",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(loop_label)],
+            "void",
+        ));
+        self.emit_label(&done_label);
+        copy
     }
 
     /// Shared call-lowering for `proc_call` and `proc_stmt`: resolve the
@@ -1867,11 +2813,7 @@ impl Compiler {
         // A formal procedure shadows any source procedure with the same
         // spelling. Its enclosing sibling already captured a direct source
         // target, so the ordinary call path can use that target's signature.
-        let target_source_name = self
-            .procedure_bindings
-            .get(&name)
-            .map(|binding| binding.source_name.clone())
-            .unwrap_or_else(|| name.clone());
+        let target_source_name = self.resolve_procedure_identity(&name);
 
         // ALGOL 60 §3.2.4 *standard functions* (`abs`, `sign`, `entier`, …) are
         // built into the language, not user-declared procedures, so they have no
@@ -1908,7 +2850,7 @@ impl Compiler {
 
         let target_name = if sig.params.iter().any(|param| {
             param.mode == ProcedureParamMode::Name
-                || matches!(param.ty, ProcedureParamType::Procedure)
+                || matches!(param.ty, ProcedureParamType::Procedure { .. })
         })
         {
             self.compile_by_name_specialization(&target_source_name, &sig, &actuals)?
@@ -1966,8 +2908,8 @@ impl Compiler {
                     // Global arrays (captured or `own`) store their descriptor
                     // metadata outside the current frame. Reload the complete
                     // rank-specific descriptor so the callee gets the same
-                    // handle/lower-bound/stride values as a local-array actual.
-                    if binding.is_global {
+                    // lower-bound/stride values as a local-array actual.
+                    let (handle, descriptor_slots) = if binding.is_global {
                         let handle = self.fresh_temp();
                         self.emit(IIRInstr::new(
                             "global_load",
@@ -1975,7 +2917,7 @@ impl Compiler {
                             vec![Operand::Str(binding.slot.clone())],
                             make_array_type(binding.ty.iir()),
                         ));
-                        arg_slots.push(handle);
+                        let mut descriptor_slots = Vec::with_capacity(info.dims.len() * 2);
                         for (dim_index, dim) in info.dims.iter().enumerate() {
                             let lower = self.fresh_temp();
                             self.emit(IIRInstr::new(
@@ -1988,7 +2930,7 @@ impl Compiler {
                                 ))],
                                 "i64",
                             ));
-                            arg_slots.push(lower);
+                            descriptor_slots.push(lower);
                             if dim.stride_slot.is_some() {
                                 let stride = self.fresh_temp();
                                 self.emit(IIRInstr::new(
@@ -2001,20 +2943,29 @@ impl Compiler {
                                     ))],
                                     "i64",
                                 ));
-                                arg_slots.push(stride);
+                                descriptor_slots.push(stride);
                             }
                         }
+                        (handle, descriptor_slots)
                     } else {
-                        arg_slots.push(binding.slot);
+                        let mut descriptor_slots = Vec::with_capacity(info.dims.len() * 2);
                         for dim in &info.dims {
-                            arg_slots.push(dim.lower_slot.clone());
+                            descriptor_slots.push(dim.lower_slot.clone());
                             if let Some(stride_slot) = &dim.stride_slot {
-                                arg_slots.push(stride_slot.clone());
+                                descriptor_slots.push(stride_slot.clone());
                             }
                         }
-                    }
+                        (binding.slot, descriptor_slots)
+                    };
+                    let handle = if param.mode == ProcedureParamMode::Value {
+                        self.emit_array_value_copy(&handle, info.elem_ty)
+                    } else {
+                        handle
+                    };
+                    arg_slots.push(handle);
+                    arg_slots.extend(descriptor_slots);
                 }
-                ProcedureParamType::Procedure => {
+                ProcedureParamType::Procedure { .. } => {
                     // The specialised body substitutes this direct target; a
                     // formal procedure does not cross the fixed IIR ABI.
                 }
@@ -2060,7 +3011,7 @@ impl Compiler {
         let has_procedure_formal = sig
             .params
             .iter()
-            .any(|param| matches!(param.ty, ProcedureParamType::Procedure));
+            .any(|param| matches!(param.ty, ProcedureParamType::Procedure { .. }));
         let in_flight = self.compiling_by_name_procedures.get(source_name).cloned();
         if let Some(in_flight) = &in_flight {
             // Name arrays already travel through the ordinary typed descriptor
@@ -2093,8 +3044,13 @@ impl Compiler {
                     let (actual, key) = self.prepare_by_name_actual(actual)?;
                     by_name_bindings.insert(param.name.clone(), ByNameBinding { actual, ty, key });
                 }
-                ProcedureParamType::Procedure => {
-                    let binding = self.prepare_procedure_actual(source_name, &param.name, actual)?;
+                ProcedureParamType::Procedure { expected_ret } => {
+                    let binding = self.prepare_procedure_actual(
+                        source_name,
+                        &param.name,
+                        expected_ret,
+                        actual,
+                    )?;
                     procedure_bindings.insert(param.name.clone(), binding);
                 }
                 _ => {}
@@ -2198,7 +3154,7 @@ impl Compiler {
                         .expect("scalar name formal must have a prepared binding");
                     Some(format!("scalar:{}={}", param.name, binding.key))
                 }
-                ProcedureParamType::Procedure => {
+                ProcedureParamType::Procedure { .. } => {
                     let binding = procedure_bindings
                         .get(&param.name)
                         .expect("formal procedure must have a prepared binding");
@@ -2217,6 +3173,7 @@ impl Compiler {
         &self,
         caller_name: &str,
         formal_name: &str,
+        expected_ret: Option<ScalarType>,
         actual: &GrammarASTNode,
     ) -> Result<ProcedureBinding, CompileError> {
         let actual_name = expr_variable_name(actual).ok_or_else(|| {
@@ -2224,24 +3181,72 @@ impl Compiler {
                 "procedure {caller_name:?}: formal procedure {formal_name:?} requires a direct procedure name"
             ))
         })?;
-        if let Some(binding) = self.procedure_bindings.get(&actual_name) {
-            return Ok(binding.clone());
-        }
-        if self.proc_sigs.contains_key(&actual_name) {
-            return Ok(ProcedureBinding {
-                source_name: actual_name,
-            });
-        }
-        if is_supported_standard_function(&actual_name)
+        let binding = if let Some(binding) = self.procedure_bindings.get(&actual_name) {
+            binding.clone()
+        } else if let Some(stable_name) = self.proc_names.get(&actual_name) {
+            ProcedureBinding {
+                source_name: stable_name.clone(),
+            }
+        } else if is_supported_standard_function(&actual_name)
             || is_supported_standard_output_procedure(&actual_name)
         {
-            return Ok(ProcedureBinding {
+            ProcedureBinding {
                 source_name: actual_name,
-            });
+            }
+        } else {
+            return Err(CompileError::Type(format!(
+                "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, supported standard function, or standard output procedure, got {actual_name:?}"
+            )));
+        };
+        self.validate_procedure_actual_return(
+            caller_name,
+            formal_name,
+            expected_ret,
+            &binding.source_name,
+        )?;
+        Ok(binding)
+    }
+
+    fn validate_procedure_actual_return(
+        &self,
+        caller_name: &str,
+        formal_name: &str,
+        expected_ret: Option<ScalarType>,
+        actual_name: &str,
+    ) -> Result<(), CompileError> {
+        let Some(expected) = expected_ret else {
+            return Ok(());
+        };
+        let actual_ret = self.proc_sigs.get(actual_name).map(|sig| sig.ret);
+        let matches = match actual_ret {
+            Some(Some(actual)) => actual == expected,
+            Some(None) => false,
+            None if is_supported_standard_function(actual_name) => {
+                standard_function_supports_return(actual_name, expected)
+            }
+            None => false,
+        };
+        if matches {
+            return Ok(());
         }
+        let actual = match actual_ret {
+            Some(Some(actual)) => actual.name(),
+            Some(None) => "proper",
+            None if is_supported_standard_output_procedure(actual_name) => "proper",
+            None => "incompatible",
+        };
         Err(CompileError::Type(format!(
-            "procedure {caller_name:?}: formal procedure {formal_name:?} requires a declared procedure, supported standard function, or standard output procedure, got {actual_name:?}"
+            "procedure {caller_name:?}: typed formal procedure {formal_name:?} expects an {} result, but {actual_name:?} is {actual}",
+            expected.name()
         )))
+    }
+
+    fn resolve_procedure_identity(&self, name: &str) -> String {
+        self.procedure_bindings
+            .get(name)
+            .map(|binding| binding.source_name.clone())
+            .or_else(|| self.proc_names.get(name).cloned())
+            .unwrap_or_else(|| name.to_string())
     }
 
     /// Freeze one name actual in its caller's lexical environment before a
@@ -2969,8 +3974,16 @@ impl Compiler {
         self.set_loc(node);
 
         let children = direct_nodes(node);
-        if let Some(label) = children.iter().find(|n| n.rule_name == "label") {
-            let name = self.label_name(label)?;
+        if children.iter().any(|node| node.rule_name == "label") {
+            self.disable_static_real_tracking();
+        }
+        for label in children.iter().filter(|node| node.rule_name == "label") {
+            let source_name = self.label_name(label)?;
+            let name = self.labels.get(&source_name).cloned().ok_or_else(|| {
+                CompileError::Malformed(format!(
+                    "label {source_name:?} was not registered in its block"
+                ))
+            })?;
             self.defined_labels.insert(name.clone());
             self.emit(IIRInstr::new(
                 "label",
@@ -2997,6 +4010,7 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("unlabeled_stmt has no child".into()))?;
         match child.rule_name.as_str() {
             "assign_stmt" => self.emit_assignment(child),
+            "dummy_stmt" => Ok(()),
             "goto_stmt" => self.emit_goto(child),
             "compound_stmt" => self.emit_compound(child),
             "for_stmt" => self.emit_for(child),
@@ -3030,6 +4044,14 @@ impl Compiler {
         }
         let expr = first_direct_node(node, "expression")
             .ok_or_else(|| CompileError::Malformed("assign_stmt has no expression".into()))?;
+        let static_real_text = (!self.static_real_tracking_disabled)
+            .then(|| self.static_assigned_real_value(expr))
+            .flatten()
+            .filter(|value| value.is_finite())
+            .map(|value| value.to_string());
+        let static_integer_value = (!self.static_real_tracking_disabled)
+            .then(|| self.static_assigned_integer_value(expr))
+            .flatten();
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -3281,6 +4303,21 @@ impl Compiler {
                 self.initialized_string_slots.insert(binding.slot.clone());
                 continue;
             }
+            if binding.ty == ScalarType::Real && !binding.is_global {
+                if let Some(text) = &static_real_text {
+                    self.static_real_slots
+                        .insert(binding.slot.clone(), text.clone());
+                } else {
+                    self.static_real_slots.remove(&binding.slot);
+                }
+            }
+            if binding.ty == ScalarType::Integer && !binding.is_global {
+                if let Some(integer) = static_integer_value {
+                    self.static_integer_slots.insert(binding.slot.clone(), integer);
+                } else {
+                    self.static_integer_slots.remove(&binding.slot);
+                }
+            }
             if binding.is_global {
                 // E6: a captured block scalar is a module global.
                 self.emit(IIRInstr::new(
@@ -3303,6 +4340,7 @@ impl Compiler {
 
     fn emit_goto(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
+        self.disable_static_real_tracking();
         let desig = first_direct_node(node, "desig_expr")
             .ok_or_else(|| CompileError::Malformed("goto_stmt has no desig_expr".into()))?;
         self.emit_desig_jump(desig)
@@ -3324,21 +4362,21 @@ impl Compiler {
     /// goto lowers to a chain every backend already runs.
     fn emit_desig_jump(&mut self, desig: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(desig);
-        // desig_expr = "if" bool_expr "then" simple_desig "else" desig_expr
+        // desig_expr = "if" bool_expr "then" desig_expr "else" desig_expr
         //            | simple_desig
         if direct_tokens(desig).iter().any(|t| t.value == "if") {
             let cond_node = first_direct_node(desig, "bool_expr").ok_or_else(|| {
                 CompileError::Malformed("conditional designator missing condition".into())
             })?;
-            let then_node = first_direct_node(desig, "simple_desig").ok_or_else(|| {
-                CompileError::Malformed("conditional designator missing then target".into())
-            })?;
-            let else_node = direct_nodes(desig)
+            let branches: Vec<&GrammarASTNode> = direct_nodes(desig)
                 .into_iter()
-                .find(|n| n.rule_name == "desig_expr")
-                .ok_or_else(|| {
-                    CompileError::Malformed("conditional designator missing else target".into())
-                })?;
+                .filter(|child| child.rule_name == "desig_expr")
+                .collect();
+            if branches.len() != 2 {
+                return Err(CompileError::Malformed(
+                    "conditional designator should have two targets".into(),
+                ));
+            }
             let cond = self.emit_expr(cond_node)?;
             if cond.ty != ScalarType::Boolean {
                 return Err(CompileError::Type(
@@ -3353,7 +4391,7 @@ impl Compiler {
                 vec![Operand::Var(cond.slot), Operand::Var(else_label.clone())],
                 "void",
             ));
-            self.emit_simple_desig_jump(then_node)?;
+            self.emit_desig_jump(branches[0])?;
             self.emit(IIRInstr::new(
                 "jmp",
                 None,
@@ -3361,7 +4399,7 @@ impl Compiler {
                 "void",
             ));
             self.emit_label(&else_label);
-            self.emit_desig_jump(else_node)?;
+            self.emit_desig_jump(branches[1])?;
             self.emit_label(&end_label);
             Ok(())
         } else {
@@ -3381,16 +4419,24 @@ impl Compiler {
         let tokens = direct_tokens(simple);
         // simple_desig = NAME LBRACKET arith_expr RBRACKET   (switch subscript)
         if tokens.iter().any(|t| t.effective_type_name() == "LBRACKET") {
-            let name = tokens
+            let source_name = tokens
                 .iter()
                 .find(|t| t.effective_type_name() == "NAME")
                 .map(|t| t.value.clone())
                 .ok_or_else(|| CompileError::Malformed("switch subscript missing name".into()))?;
+            let name = if source_name.starts_with("__algol_switch_") {
+                source_name.clone()
+            } else {
+                self.switch_names
+                    .get(&source_name)
+                    .cloned()
+                    .unwrap_or_else(|| source_name.clone())
+            };
             let index_node = first_direct_node(simple, "arith_expr").ok_or_else(|| {
                 CompileError::Malformed("switch subscript missing index".into())
             })?;
             let targets = self.switches.get(&name).cloned().ok_or_else(|| {
-                CompileError::Type(format!("goto uses undeclared switch {name:?}"))
+                CompileError::Type(format!("goto uses undeclared switch {source_name:?}"))
             })?;
             let index = self.emit_expr(index_node)?;
             if index.ty != ScalarType::Integer {
@@ -3411,7 +4457,7 @@ impl Compiler {
             }
             if !self.resolving_switches.insert(name.clone()) {
                 return Err(CompileError::Type(format!(
-                    "cyclic switch-list element involving {name:?}"
+                    "cyclic switch-list element involving {source_name:?}"
                 )));
             }
             let result = (|| {
@@ -3458,7 +4504,12 @@ impl Compiler {
             // simple_desig = label
             let label_node = first_direct_node(simple, "label")
                 .ok_or_else(|| CompileError::Malformed("designator missing label".into()))?;
-            let label = self.label_name(label_node)?;
+            let source_label = self.label_name(label_node)?;
+            let label = self
+                .labels
+                .get(&source_label)
+                .cloned()
+                .unwrap_or(source_label);
             self.referenced_labels.insert(label.clone());
             self.emit(IIRInstr::new("jmp", None, vec![Operand::Var(label)], "void"));
             Ok(())
@@ -3473,15 +4524,20 @@ impl Compiler {
     /// run-time conditional and nested-switch semantics.
     fn register_switch(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        let name = direct_tokens(node)
+        let source_name = direct_tokens(node)
             .into_iter()
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("switch_decl missing name".into()))?;
+        let name = self.switch_names.get(&source_name).cloned().ok_or_else(|| {
+            CompileError::Malformed(format!(
+                "switch {source_name:?} was not registered in its block"
+            ))
+        })?;
         let switch_list = first_direct_node(node, "switch_list")
             .ok_or_else(|| CompileError::Malformed("switch_decl missing switch_list".into()))?;
 
-        let targets: Vec<GrammarASTNode> = direct_nodes(switch_list)
+        let mut targets: Vec<GrammarASTNode> = direct_nodes(switch_list)
             .into_iter()
             .filter(|n| n.rule_name == "desig_expr")
             .cloned()
@@ -3489,12 +4545,75 @@ impl Compiler {
         if targets.is_empty() {
             return Err(CompileError::Malformed("switch has no targets".into()));
         }
-        if self.switches.contains_key(&name) {
-            return Err(CompileError::Type(format!(
-                "duplicate declaration for switch {name:?}"
-            )));
+        for target in &mut targets {
+            bind_designator_labels(target, &self.labels);
+            bind_designator_switches(target, &self.switch_names);
         }
         self.switches.insert(name, targets);
+        Ok(())
+    }
+
+    fn register_block_switch_names(
+        &mut self,
+        block: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        for declaration in direct_nodes(block)
+            .into_iter()
+            .filter(|node| node.rule_name == "declaration")
+        {
+            let Some(switch_decl) = first_direct_node(declaration, "switch_decl") else {
+                continue;
+            };
+            let source_name = direct_tokens(switch_decl)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+                .ok_or_else(|| CompileError::Malformed("switch_decl missing name".into()))?;
+            let current_scope = self
+                .switch_scope_names
+                .last_mut()
+                .expect("compiler always has a switch scope");
+            if !current_scope.insert(source_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate declaration for switch {source_name:?}"
+                )));
+            }
+            let stable_name = self.fresh_label("switch_binding");
+            self.switch_names.insert(source_name, stable_name);
+        }
+        Ok(())
+    }
+
+    fn register_block_labels(&mut self, block: &GrammarASTNode) -> Result<(), CompileError> {
+        for statement in direct_nodes(block)
+            .into_iter()
+            .filter(|node| node.rule_name == "statement")
+        {
+            self.register_statement_labels(statement)?;
+        }
+        Ok(())
+    }
+
+    fn register_statement_labels(
+        &mut self,
+        statement: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let mut labels = Vec::new();
+        collect_statement_labels(statement, &mut labels);
+        for label in labels {
+            let source_name = self.label_name(label)?;
+            let current_scope = self
+                .label_scope_names
+                .last_mut()
+                .expect("compiler always has a label scope");
+            if !current_scope.insert(source_name.clone()) {
+                return Err(CompileError::Type(format!(
+                    "duplicate declaration for label {source_name:?}"
+                )));
+            }
+            let iir_name = self.fresh_label(&format!("label_{source_name}"));
+            self.labels.insert(source_name, iir_name);
+        }
         Ok(())
     }
 
@@ -3510,6 +4629,11 @@ impl Compiler {
         if cond.ty != ScalarType::Boolean {
             return Err(CompileError::Type("if condition must be boolean".into()));
         }
+
+        let entry_real_slots = self.static_real_slots.clone();
+        let entry_integer_slots = self.static_integer_slots.clone();
+        let entry_tracking_disabled = self.static_real_tracking_disabled;
+        let entry_initialized_string_slots = self.initialized_string_slots.clone();
 
         let branches: Vec<&GrammarASTNode> = children
             .into_iter()
@@ -3531,6 +4655,10 @@ impl Compiler {
             "void",
         ));
         self.emit_branch_node(then_branch)?;
+        let mut then_real_slots = self.static_real_slots.clone();
+        let mut then_integer_slots = self.static_integer_slots.clone();
+        let then_tracking_disabled = self.static_real_tracking_disabled;
+        let then_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -3538,10 +4666,33 @@ impl Compiler {
             "void",
         ));
         self.emit_label(&else_label);
+        self.static_real_slots = entry_real_slots;
+        self.static_integer_slots = entry_integer_slots;
+        self.static_real_tracking_disabled = entry_tracking_disabled;
+        self.initialized_string_slots = entry_initialized_string_slots;
         if let Some(branch) = else_branch {
             self.emit_branch_node(branch)?;
         }
+        let else_real_slots = self.static_real_slots.clone();
+        let else_integer_slots = self.static_integer_slots.clone();
+        let else_tracking_disabled = self.static_real_tracking_disabled;
+        let else_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit_label(&end_label);
+
+        self.initialized_string_slots = then_initialized_string_slots
+            .intersection(&else_initialized_string_slots)
+            .cloned()
+            .collect();
+
+        if then_tracking_disabled || else_tracking_disabled {
+            self.disable_static_real_tracking();
+        } else {
+            then_real_slots.retain(|slot, value| else_real_slots.get(slot) == Some(value));
+            then_integer_slots.retain(|slot, value| else_integer_slots.get(slot) == Some(value));
+            self.static_real_slots = then_real_slots;
+            self.static_integer_slots = then_integer_slots;
+            self.static_real_tracking_disabled = false;
+        }
         Ok(())
     }
 
@@ -3557,18 +4708,13 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        let var_name = direct_tokens(node)
-            .into_iter()
-            .find(|t| t.effective_type_name() == "NAME")
-            .map(|t| t.value.clone())
+        let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
-        let var_ty = match self.active_by_name_binding(&var_name) {
-            Some(binding) => binding.ty,
-            None => self.require_var(&var_name)?.ty,
-        };
-        if var_ty != ScalarType::Integer {
+        let var_ty = self.for_target_type(target)?;
+        if !matches!(var_ty, ScalarType::Integer | ScalarType::Real) {
             return Err(CompileError::Type(format!(
-                "for variable {var_name:?} must be integer"
+                "for controlled variable must be arithmetic, got {}",
+                var_ty.name()
             )));
         }
 
@@ -3581,35 +4727,123 @@ impl Compiler {
         if elems.is_empty() {
             return Err(CompileError::Malformed("for_list has no elements".into()));
         }
+        if elems.iter().any(|elem| {
+            direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step")
+        }) {
+            self.disable_static_real_tracking();
+        }
         let body = direct_nodes(node)
             .into_iter()
             .find(|n| n.rule_name == "statement")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
-            self.emit_for_element(&var_name, elem, body)?;
+            let entry_initialized_string_slots = self.initialized_string_slots.clone();
+            let executes_once = !direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step");
+            self.emit_for_element(target, var_ty, elem, body)?;
+            if !executes_once {
+                self.initialized_string_slots = entry_initialized_string_slots;
+            }
         }
         Ok(())
     }
 
+    fn for_target_type(&self, target: &GrammarASTNode) -> Result<ScalarType, CompileError> {
+        if array_subscripts(target).is_some() {
+            let name = direct_tokens(target)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone())
+                .ok_or_else(|| {
+                    CompileError::Malformed("subscripted for variable missing name".into())
+                })?;
+            let binding = self.require_var(&name)?;
+            if binding.array.is_none() {
+                return Err(CompileError::Type(format!(
+                    "{name:?} is not an array — cannot subscript it"
+                )));
+            }
+            return Ok(binding.ty);
+        }
+
+        let name = self.simple_variable_name(target)?;
+        if let Some(binding) = self.active_by_name_binding(&name) {
+            return Ok(binding.ty);
+        }
+        let binding = self.require_var(&name)?;
+        if binding.array.is_some() {
+            return Err(CompileError::Type(format!(
+                "{name:?} is an array, not a scalar controlled variable"
+            )));
+        }
+        Ok(binding.ty)
+    }
+
+    fn emit_for_target_read(
+        &mut self,
+        target: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        if array_subscripts(target).is_some() {
+            return self.emit_array_read(target);
+        }
+        let name = self.simple_variable_name(target)?;
+        self.emit_named_scalar_read(&name)
+    }
+
+    fn emit_for_target_write(
+        &mut self,
+        target: &GrammarASTNode,
+        value: ExprValue,
+    ) -> Result<(), CompileError> {
+        if array_subscripts(target).is_some() {
+            let (binding, zero) = self.resolve_array_index(target)?;
+            if binding.ty != value.ty {
+                return Err(CompileError::Type(format!(
+                    "for controlled variable is {} but assigned value is {}",
+                    binding.ty.name(),
+                    value.ty.name()
+                )));
+            }
+            self.emit(IIRInstr::new(
+                "array_set",
+                None,
+                vec![
+                    Operand::Var(binding.slot),
+                    Operand::Var(zero),
+                    Operand::Var(value.slot),
+                ],
+                binding.ty.iir(),
+            ));
+            return Ok(());
+        }
+        let name = self.simple_variable_name(target)?;
+        self.emit_named_scalar_write(&name, value)
+    }
+
     fn emit_for_element(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
         if direct_tokens(elem).iter().any(|t| t.value == "while") {
-            return self.emit_for_while(var_name, elem, body);
+            return self.emit_for_while(target, target_ty, elem, body);
         }
         if direct_tokens(elem).iter().any(|t| t.value == "step") {
-            return self.emit_for_step_until(var_name, elem, body);
+            return self.emit_for_step_until(target, target_ty, elem, body);
         }
-        self.emit_for_once(var_name, elem, body)
+        self.emit_for_once(target, target_ty, elem, body)
     }
 
     fn emit_for_once(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3623,19 +4857,66 @@ impl Compiler {
             ));
         }
 
+        let static_real_value = (!self.static_real_tracking_disabled
+            && target_ty == ScalarType::Real)
+            .then(|| self.static_assigned_real_value(arith_nodes[0]))
+            .flatten()
+            .filter(|value| value.is_finite())
+            .map(|value| value.to_string());
+        let static_integer_value = (!self.static_real_tracking_disabled
+            && target_ty == ScalarType::Integer)
+            .then(|| self.static_assigned_integer_value(arith_nodes[0]))
+            .flatten();
         let value = self.emit_expr(arith_nodes[0])?;
-        if value.ty != ScalarType::Integer {
-            return Err(CompileError::Type(
-                "single-value for element must be integer".into(),
-            ));
-        }
-        self.emit_named_scalar_write(var_name, value)?;
+        let value = self.coerce_value(value, target_ty, "single-value for element")?;
+        self.emit_for_target_write(target, value)?;
+        self.update_for_target_snapshot(target, static_real_value, static_integer_value)?;
         self.emit_statement(body)
+    }
+
+    fn update_for_target_snapshot(
+        &mut self,
+        target: &GrammarASTNode,
+        static_real_value: Option<String>,
+        static_integer_value: Option<i64>,
+    ) -> Result<(), CompileError> {
+        if array_subscripts(target).is_some() {
+            return Ok(());
+        }
+        let name = self.simple_variable_name(target)?;
+        if self.active_by_name_binding(&name).is_some() {
+            return Ok(());
+        }
+        let binding = self.require_var(&name)?;
+        if binding.is_global {
+            return Ok(());
+        }
+        match binding.ty {
+            ScalarType::Real => match static_real_value {
+                Some(value) => {
+                    self.static_real_slots.insert(binding.slot, value);
+                }
+                None => {
+                    self.static_real_slots.remove(&binding.slot);
+                }
+            },
+            ScalarType::Integer => match static_integer_value {
+                Some(value) => {
+                    self.static_integer_slots.insert(binding.slot, value);
+                }
+                None => {
+                    self.static_integer_slots.remove(&binding.slot);
+                }
+            },
+            _ => {}
+        }
+        Ok(())
     }
 
     fn emit_for_step_until(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3650,19 +4931,14 @@ impl Compiler {
         }
 
         let start = self.emit_expr(arith_nodes[0])?;
+        let start = self.coerce_value(start, target_ty, "for initial value")?;
         let step = self.emit_expr(arith_nodes[1])?;
+        let step = self.coerce_value(step, target_ty, "for step")?;
         let limit = self.emit_expr(arith_nodes[2])?;
-        if start.ty != ScalarType::Integer
-            || step.ty != ScalarType::Integer
-            || limit.ty != ScalarType::Integer
-        {
-            return Err(CompileError::Type(
-                "for bounds and step must be integer".into(),
-            ));
-        }
-        self.emit_named_scalar_write(var_name, start)?;
+        let limit = self.coerce_value(limit, target_ty, "for limit")?;
+        self.emit_for_target_write(target, start)?;
 
-        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
+        let zero = self.emit_const(target_ty, target_ty.default_operand());
         let loop_label = self.fresh_label("for_loop");
         let negative_check_label = self.fresh_label("for_negative_check");
         let body_label = self.fresh_label("for_body");
@@ -3674,13 +4950,13 @@ impl Compiler {
             "cmp_ge",
             Some(step_non_negative.clone()),
             vec![Operand::Var(step.slot.clone()), Operand::Var(zero)],
-            // The guard compares **integer** operands (step vs 0), so the
-            // comparison's `type_hint` is the *operand* width `i64` — not the
+            // The guard compares operands at the controlled variable's width,
+            // so the comparison's `type_hint` is `i64` or `f64` — not the
             // boolean *result* type. A code-gen backend (LLVM `lower_cmp`) reads
-            // this hint as the `icmp` operand type, so `"bool"` would emit the
+            // this hint as the comparison operand type, so `"bool"` would emit
             // invalid `icmp i1 <i64>, <i64>`. This mirrors the regular relational
             // path, which already tags the cmp with `lhs.ty.iir()`.
-            "i64",
+            target_ty.iir(),
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -3692,7 +4968,7 @@ impl Compiler {
             "void",
         ));
 
-        let loop_value = self.emit_named_scalar_read(var_name)?;
+        let loop_value = self.emit_for_target_read(target)?;
         let positive_cond = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_le",
@@ -3701,7 +4977,7 @@ impl Compiler {
                 Operand::Var(loop_value.slot),
                 Operand::Var(limit.slot.clone()),
             ],
-            "i64", // operand width (loop var vs limit, both integer) — see above
+            target_ty.iir(),
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -3717,7 +4993,7 @@ impl Compiler {
         ));
 
         self.emit_label(&negative_check_label);
-        let loop_value = self.emit_named_scalar_read(var_name)?;
+        let loop_value = self.emit_for_target_read(target)?;
         let negative_cond = self.fresh_temp();
         self.emit(IIRInstr::new(
             "cmp_ge",
@@ -3726,7 +5002,7 @@ impl Compiler {
                 Operand::Var(loop_value.slot),
                 Operand::Var(limit.slot.clone()),
             ],
-            "i64", // operand width (loop var vs limit, both integer) — see above
+            target_ty.iir(),
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
@@ -3737,19 +5013,19 @@ impl Compiler {
 
         self.emit_label(&body_label);
         self.emit_statement(body)?;
-        let loop_value = self.emit_named_scalar_read(var_name)?;
+        let loop_value = self.emit_for_target_read(target)?;
         let next = self.fresh_temp();
         self.emit(IIRInstr::new(
             "add",
             Some(next.clone()),
             vec![Operand::Var(loop_value.slot), Operand::Var(step.slot)],
-            "i64",
+            target_ty.iir(),
         ));
-        self.emit_named_scalar_write(
-            var_name,
+        self.emit_for_target_write(
+            target,
             ExprValue {
                 slot: next,
-                ty: ScalarType::Integer,
+                ty: target_ty,
             },
         )?;
         self.emit(IIRInstr::new(
@@ -3764,7 +5040,8 @@ impl Compiler {
 
     fn emit_for_while(
         &mut self,
-        var_name: &str,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
         elem: &GrammarASTNode,
         body: &GrammarASTNode,
     ) -> Result<(), CompileError> {
@@ -3780,12 +5057,8 @@ impl Compiler {
         self.emit_label(&loop_label);
 
         let value = self.emit_expr(arith_node)?;
-        if value.ty != ScalarType::Integer {
-            return Err(CompileError::Type(
-                "for while value expression must be integer".into(),
-            ));
-        }
-        self.emit_named_scalar_write(var_name, value)?;
+        let value = self.coerce_value(value, target_ty, "for while value expression")?;
+        self.emit_for_target_write(target, value)?;
 
         let cond = self.emit_expr(cond_node)?;
         if cond.ty != ScalarType::Boolean {
@@ -3886,37 +5159,47 @@ impl Compiler {
 
     fn emit_conditional_expr(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         match node.rule_name.as_str() {
+            "expression" => {
+                let cond_node = first_direct_node(node, "bool_expr").ok_or_else(|| {
+                    CompileError::Malformed("conditional expression missing condition".into())
+                })?;
+                let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+                    .into_iter()
+                    .filter(|child| child.rule_name == "expression")
+                    .collect();
+                if branches.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "conditional expression should have two branches".into(),
+                    ));
+                }
+                self.emit_conditional_branches(cond_node, branches[0], branches[1])
+            }
             "arith_expr" => {
                 let cond_node = first_direct_node(node, "bool_expr").ok_or_else(|| {
                     CompileError::Malformed("arithmetic conditional missing condition".into())
                 })?;
-                let then_node = first_direct_node(node, "simple_arith").ok_or_else(|| {
-                    CompileError::Malformed("arithmetic conditional missing then branch".into())
-                })?;
-                let else_node = direct_nodes(node)
+                let branches: Vec<&GrammarASTNode> = direct_nodes(node)
                     .into_iter()
-                    .find(|n| n.rule_name == "arith_expr")
-                    .ok_or_else(|| {
-                        CompileError::Malformed(
-                            "arithmetic conditional missing else branch".into(),
-                        )
-                    })?;
-                self.emit_conditional_branches(cond_node, then_node, else_node)
+                    .filter(|child| child.rule_name == "arith_expr")
+                    .collect();
+                if branches.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "arithmetic conditional should have two branches".into(),
+                    ));
+                }
+                self.emit_conditional_branches(cond_node, branches[0], branches[1])
             }
             "bool_expr" => {
                 let bool_nodes: Vec<&GrammarASTNode> = direct_nodes(node)
                     .into_iter()
                     .filter(|n| n.rule_name == "bool_expr")
                     .collect();
-                if bool_nodes.len() != 2 {
+                if bool_nodes.len() != 3 {
                     return Err(CompileError::Malformed(
-                        "boolean conditional should have condition and else bool_expr".into(),
+                        "boolean conditional should have condition and two branches".into(),
                     ));
                 }
-                let then_node = first_direct_node(node, "simple_bool").ok_or_else(|| {
-                    CompileError::Malformed("boolean conditional missing then branch".into())
-                })?;
-                self.emit_conditional_branches(bool_nodes[0], then_node, bool_nodes[1])
+                self.emit_conditional_branches(bool_nodes[0], bool_nodes[1], bool_nodes[2])
             }
             other => Err(CompileError::Unsupported(format!(
                 "conditional expressions in {other}"
@@ -4811,7 +6094,11 @@ impl Compiler {
             .filter(|t| matches!(t.effective_type_name(), "NAME" | "INTEGER_LIT"))
             .collect();
         if tokens.len() == 1 {
-            Ok(format!("L_{}", tokens[0].value))
+            if tokens[0].value.starts_with("__algol_") {
+                Ok(tokens[0].value.clone())
+            } else {
+                Ok(format!("L_{}", tokens[0].value))
+            }
         } else {
             Err(CompileError::Malformed(format!(
                 "label should contain exactly one NAME or INTEGER_LIT token, got {}",
@@ -5117,6 +6404,17 @@ fn is_supported_standard_function(name: &str) -> bool {
     )
 }
 
+fn standard_function_supports_return(name: &str, expected: ScalarType) -> bool {
+    match name {
+        "abs" => matches!(expected, ScalarType::Integer | ScalarType::Real),
+        "sign" | "entier" => expected == ScalarType::Integer,
+        "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan" => {
+            expected == ScalarType::Real
+        }
+        _ => false,
+    }
+}
+
 /// Standard output procedures that direct formal-procedure bindings may
 /// substitute. They retain their existing statement-only lowering and never
 /// become dynamic procedure values.
@@ -5190,6 +6488,71 @@ fn literal_nonneg_integer_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> 
     Some(value as u32)
 }
 
+fn literal_signed_integer_exponent(node: &GrammarASTNode) -> Option<i32> {
+    if let Some(value) = literal_nonneg_integer_exponent(node) {
+        return Some(value as i32);
+    }
+
+    let tokens = direct_tokens(node);
+    let child_nodes = direct_nodes(node);
+    if tokens.len() == 1
+        && child_nodes.len() == 1
+        && matches!(tokens[0].value.as_str(), "+" | "-")
+    {
+        let value = literal_signed_integer_exponent(child_nodes[0])?;
+        return match tokens[0].value.as_str() {
+            "+" => Some(value),
+            "-" => value.checked_neg(),
+            _ => None,
+        };
+    }
+    if tokens.len() == 2
+        && child_nodes.len() == 1
+        && tokens[0].value == "("
+        && tokens[1].value == ")"
+    {
+        return literal_signed_integer_exponent(child_nodes[0]);
+    }
+    if tokens.is_empty() && child_nodes.len() == 1 {
+        return literal_signed_integer_exponent(child_nodes[0]);
+    }
+
+    None
+}
+
+fn literal_integral_real_exponent(node: &GrammarASTNode) -> Option<i32> {
+    let value = expr_real_literal_text(node)?.parse::<f64>().ok()?;
+    if !value.is_finite()
+        || value.fract() != 0.0
+        || value < -(MAX_POW_UNROLL_EXPONENT as f64)
+        || value > MAX_POW_UNROLL_EXPONENT as f64
+    {
+        return None;
+    }
+    Some(value as i32)
+}
+
+fn literal_nonnegative_integral_power_chain(nodes: &[&GrammarASTNode]) -> Option<u32> {
+    let (last, prefix) = nodes.split_last()?;
+    let exponent_value = |node: &GrammarASTNode| {
+        literal_nonneg_integer_exponent(node).or_else(|| {
+            let value = literal_integral_real_exponent(node)?;
+            (value >= 0).then_some(value as u32)
+        })
+    };
+    let mut value = exponent_value(last)? as u64;
+
+    for node in prefix.iter().rev() {
+        let base = exponent_value(node)? as u64;
+        value = base.checked_pow(value.try_into().ok()?)?;
+        if value > MAX_POW_UNROLL_EXPONENT as u64 {
+            return None;
+        }
+    }
+
+    Some(value as u32)
+}
+
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "STRING_LIT" {
@@ -5202,6 +6565,160 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     }
 
     None
+}
+
+fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "REAL_LIT" {
+        return Some(tokens[0].value.clone());
+    }
+
+    let child_nodes = direct_nodes(node);
+    if tokens.len() == 1
+        && child_nodes.len() == 1
+        && matches!(tokens[0].value.as_str(), "+" | "-")
+    {
+        let literal = expr_real_literal_text(child_nodes[0])?;
+        return Some(format!("{}{literal}", tokens[0].value));
+    }
+    if tokens.len() == 2
+        && child_nodes.len() == 1
+        && tokens[0].value == "("
+        && tokens[1].value == ")"
+    {
+        return expr_real_literal_text(child_nodes[0]);
+    }
+    if !tokens.is_empty() {
+        return None;
+    }
+    if child_nodes.len() == 1 {
+        return expr_real_literal_text(child_nodes[0]);
+    }
+
+    None
+}
+
+fn expr_static_real_arithmetic_value_with<F>(
+    node: &GrammarASTNode,
+    static_call_value: &F,
+) -> Option<f64>
+where
+    F: Fn(&GrammarASTNode) -> Option<f64>,
+{
+    if let Some(value) = static_call_value(node) {
+        return value.is_finite().then_some(value);
+    }
+    let tokens = direct_tokens(node);
+    if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+        let value = tokens[0].value.parse::<i64>().ok()?;
+        if value.unsigned_abs() <= 9_007_199_254_740_992_u64 {
+            return Some(value as f64);
+        }
+        return None;
+    }
+    if let Some(literal) = expr_real_literal_text(node) {
+        return literal.parse::<f64>().ok().filter(|value| value.is_finite());
+    }
+
+    let seq = pieces(node);
+    if node.rule_name == "expr_pow"
+        && seq
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+    {
+        if seq.len().is_multiple_of(2) {
+            return None;
+        }
+        let mut operands = Vec::new();
+        for (index, piece) in seq.iter().enumerate() {
+            if index % 2 == 0 {
+                let Piece::Node(operand) = piece else {
+                    return None;
+                };
+                operands.push(*operand);
+            } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                return None;
+            }
+        }
+        let (base, exponents) = operands.split_first()?;
+        let exponent = literal_nonnegative_integral_power_chain(exponents)
+            .map(|value| value as i32)
+            .or_else(|| {
+                if exponents.len() == 1 {
+                    literal_signed_integer_exponent(exponents[0])
+                        .or_else(|| literal_integral_real_exponent(exponents[0]))
+                } else {
+                    None
+                }
+            })?;
+        let base = expr_static_real_arithmetic_value_with(base, static_call_value)?;
+        let mut value = 1.0;
+        if exponent < 0 && base == 0.0 {
+            return None;
+        }
+        for _ in 0..exponent.unsigned_abs() {
+            if exponent < 0 {
+                value /= base;
+            } else {
+                value *= base;
+            }
+            if !value.is_finite() {
+                return None;
+            }
+        }
+        return Some(value);
+    }
+    if seq.len() == 1 {
+        return match seq[0] {
+            Piece::Node(child) => {
+                expr_static_real_arithmetic_value_with(child, static_call_value)
+            }
+            Piece::Op(_) => None,
+        };
+    }
+
+    let mut index = 0;
+    let mut leading_sign = 1.0;
+    if let Some(Piece::Op(op)) = seq.first() {
+        leading_sign = match op.as_str() {
+            "+" => 1.0,
+            "-" => -1.0,
+            _ => return None,
+        };
+        index += 1;
+    }
+    let Piece::Node(first) = seq.get(index)? else {
+        return None;
+    };
+    let mut value =
+        leading_sign * expr_static_real_arithmetic_value_with(first, static_call_value)?;
+    index += 1;
+    let mut saw_binary_operator = false;
+    while index < seq.len() {
+        let Piece::Op(op) = seq.get(index)? else {
+            return None;
+        };
+        let Piece::Node(rhs) = seq.get(index + 1)? else {
+            return None;
+        };
+        let rhs = expr_static_real_arithmetic_value_with(rhs, static_call_value)?;
+        if op == "/" && rhs == 0.0 {
+            return None;
+        }
+        value = match op.as_str() {
+            "+" => value + rhs,
+            "-" => value - rhs,
+            "*" => value * rhs,
+            "/" => value / rhs,
+            _ => return None,
+        };
+        if !value.is_finite() {
+            return None;
+        }
+        saw_binary_operator = true;
+        index += 2;
+    }
+    saw_binary_operator.then_some(value)
 }
 
 fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
@@ -5236,6 +6753,76 @@ fn bare_scalar_variable_name(node: &GrammarASTNode) -> Option<String> {
                 .map(|token| token.value.clone())
         })
         .flatten()
+}
+
+/// Collect labels whose declaration region is the current block. Compound,
+/// conditional, and loop statements do not introduce scopes; a nested block
+/// does, so its subtree is intentionally left for that block's own pre-pass.
+fn collect_statement_labels<'a>(
+    node: &'a GrammarASTNode,
+    labels: &mut Vec<&'a GrammarASTNode>,
+) {
+    if node.rule_name == "block" {
+        return;
+    }
+    if node.rule_name == "statement" {
+        labels.extend(
+            direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "label"),
+        );
+    }
+    for child in direct_nodes(node) {
+        collect_statement_labels(child, labels);
+    }
+}
+
+/// Freeze lexical label references in a stored switch designator. Switch
+/// entries are evaluated later, but their identifiers belong to the switch
+/// declaration's block rather than the eventual `goto` statement's block.
+fn bind_designator_labels(node: &mut GrammarASTNode, labels: &HashMap<String, String>) {
+    if node.rule_name == "label" {
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Token(token) = child {
+                let source_name = format!("L_{}", token.value);
+                if let Some(iir_name) = labels.get(&source_name) {
+                    token.value = iir_name.clone();
+                }
+            }
+        }
+        return;
+    }
+    for child in &mut node.children {
+        if let ASTNodeOrToken::Node(node) = child {
+            bind_designator_labels(node, labels);
+        }
+    }
+}
+
+/// Freeze nested switch references in a stored designator to the stable switch
+/// identity visible where the containing switch was declared.
+fn bind_designator_switches(node: &mut GrammarASTNode, switches: &HashMap<String, String>) {
+    if node.rule_name == "simple_desig"
+        && node.children.iter().any(|child| {
+            matches!(child, ASTNodeOrToken::Token(token) if token.effective_type_name() == "LBRACKET")
+        })
+    {
+        for child in &mut node.children {
+            if let ASTNodeOrToken::Token(token) = child {
+                if token.effective_type_name() == "NAME" {
+                    if let Some(stable_name) = switches.get(&token.value) {
+                        token.value = stable_name.clone();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    for child in &mut node.children {
+        if let ASTNodeOrToken::Node(node) = child {
+            bind_designator_switches(node, switches);
+        }
+    }
 }
 
 /// Rewrite NAME tokens in a stored call-by-name actual to compiler-generated
@@ -5738,6 +7325,32 @@ mod tests {
     }
 
     #[test]
+    fn array_element_can_be_a_for_controlled_variable() {
+        let src = "begin integer result, index; integer array values[1:1]; \
+                   index := 1; result := 36; \
+                   for values[index] := 1 step 1 until 3 do \
+                     result := result + values[index] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_for_controlled_variable_widens_integer_bounds() {
+        let src = "begin integer result; real cursor, total; total := 0.0; \
+                   for cursor := 1 step 1 until 6 do total := total + cursor; \
+                   result := entier(total * 2.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn real_array_element_can_be_a_for_controlled_variable() {
+        let src = "begin integer result; real total; real array cursor[1:1]; \
+                   total := 0.0; \
+                   for cursor[1] := 1 step 1 until 6 do total := total + cursor[1]; \
+                   result := entier(total * 2.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
     fn compiles_and_runs_arithmetic_conditional_expression() {
         let src = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i end";
         assert_eq!(run_i64(src), 6);
@@ -5746,6 +7359,23 @@ mod tests {
     #[test]
     fn compiles_and_runs_boolean_conditional_expression() {
         let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_nested_then_conditional_expression() {
+        let src = "begin boolean outer, inner; integer result; \
+                   outer := true; inner := false; \
+                   result := if outer then if inner then 1 else 42 else 0 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_nested_then_conditional_designator() {
+        let src = "begin boolean outer, inner; integer result; \
+                   outer := true; inner := false; \
+                   goto if outer then if inner then bad else good else bad; \
+                   bad: result := 0; goto done; good: result := 42; done: end";
         assert_eq!(run_i64(src), 42);
     }
 
@@ -5860,17 +7490,795 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_numeric_argument_rejects_as_wrong_type() {
-        // `print` is a string-output procedure; a numeric argument is a type
-        // error. Since E4d-AL added a general string-expression path, `print(42)`
-        // now evaluates the argument and rejects it by *type* (a clearer message)
-        // rather than by the old literal-only shape check.
-        let err = compile_source("begin print(42) end", "test")
-            .expect_err("numeric print is a type error for the string-output procedure");
+    fn al4_print_integer_expression_lowers_to_shared_stdout_builtin() {
+        let module = compile_source("begin integer n; n := 40; print(n + 2) end", "test")
+            .expect("integer output compiles");
+        let main = module.get_function("main").expect("has main");
         assert!(
-            format!("{err:?}").contains("cannot print a integer value"),
-            "expected an integer-type rejection, got: {err:?}"
+            main.instructions.iter().any(|instr| {
+                instr.op == "call_builtin"
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "print_i64")
+            }),
+            "integer output should reuse the cross-backend print_i64 builtin"
         );
+    }
+
+    #[test]
+    fn al4_print_boolean_expression_lowers_to_typed_string_branches() {
+        let module = compile_source(
+            "begin boolean flag; flag := true; print(flag and true) end",
+            "test",
+        )
+        .expect("boolean output compiles");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["true", "false"] {
+            assert!(
+                main.instructions.iter().any(|instr| {
+                    instr.op == "str_const"
+                        && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+                }),
+                "boolean output should materialize the {expected:?} branch"
+            );
+        }
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+    }
+
+    #[test]
+    fn al4_print_real_literal_uses_source_spelling() {
+        let module = compile_source("begin print(4.25) end", "test")
+            .expect("real literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.25")
+        }));
+    }
+
+    #[test]
+    fn al4_print_straight_line_static_real_variable() {
+        let module = compile_source("begin real x; x := 4.2; print(x) end", "test")
+            .expect("a straight-line static real assignment has deterministic output text");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.2")
+        }));
+    }
+
+    #[test]
+    fn al4_print_reassigned_dynamic_real_still_rejects_without_formatter_abi() {
+        let err = compile_source(
+            "begin real x; x := 4.2; x := sin(1.0); print(x) end",
+            "test",
+        )
+        .expect_err("a dynamically reassigned real still needs a portable formatter");
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "expected a real-type rejection, got: {err:?}"
+        );
+    }
+
+    #[test]
+    fn al4_print_different_statement_branches_invalidate_snapshot() {
+        let err = compile_source(
+            "begin real x; boolean flag; x := 4.2; flag := false; if flag then x := 1.0 else x := 2.0; print(x) end",
+            "test",
+        )
+        .expect_err("branch-selected scalar values still need runtime formatting");
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "unexpected rejection: {err:?}"
+        );
+    }
+
+    #[test]
+    fn al4_equal_statement_branches_preserve_static_snapshots() {
+        let module = compile_source(
+            "begin boolean flag; integer n; real x; flag := false; if flag then n := 40 else n := 40; if flag then x := 2.5 else x := 2.5; output(n + x) end",
+            "test",
+        )
+        .expect("equal statement branches preserve path-independent snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "jmp_if_false")
+                .count(),
+            2,
+            "both runtime conditions must still execute"
+        );
+    }
+
+    #[test]
+    fn al4_missing_else_merges_with_the_unmodified_path() {
+        let module = compile_source(
+            "begin boolean flag; real x; flag := false; x := 2.5; if flag then x := 2.5; output(x) end",
+            "test",
+        )
+        .expect("an absent else branch retains the post-condition baseline");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "2.5")
+        }));
+    }
+
+    #[test]
+    fn al4_call_in_one_statement_branch_invalidates_the_merge() {
+        let err = compile_source(
+            "begin real procedure choose; choose := 2.5; boolean flag; real x; flag := false; x := 2.5; if flag then x := choose() else x := 2.5; output(x) end",
+            "test",
+        )
+        .expect_err("a call on either branch must poison the merged metadata");
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "unexpected rejection: {err:?}"
+        );
+    }
+
+    #[test]
+    fn al4_print_straight_line_static_real_copy_is_a_snapshot() {
+        let module = compile_source(
+            "begin real x, y; x := 2.0 * 2.25; y := x; x := 9.0; print(y) end",
+            "test",
+        )
+        .expect("a copied static real keeps its assigned value");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_real_scalar_expression() {
+        let module = compile_source(
+            "begin real x; x := 2.25; print(x * 2.0 + 0.5) end",
+            "test",
+        )
+        .expect("tracked real locals compose in finite static expressions");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "5")
+        }));
+        assert!(main
+            .instructions
+            .iter()
+            .all(|instr| !matches!(instr.op.as_str(), "mul" | "add")));
+    }
+
+    #[test]
+    fn al4_print_static_mixed_integer_real_expression() {
+        let module = compile_source(
+            "begin real x; x := 40; print(x + 2.5, -2 + 4.5) end",
+            "test",
+        )
+        .expect("exact integer literals widen in static real expressions");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["42.5", "2.5"]);
+    }
+
+    #[test]
+    fn al4_print_static_integer_scalar_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := 40; saved := n; n := 9; output(saved + 2.5) end",
+            "test",
+        )
+        .expect("an exact integer scalar snapshot widens in a static real expression");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert!(main
+            .instructions
+            .iter()
+            .all(|instr| !matches!(instr.op.as_str(), "int_to_real" | "add")));
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved, quotient; n := (8 - 1) * 6; saved := n; n := 9; quotient := 100 div 3 + 9 mod 4 + 8; output(saved + 0.5, quotient + 0.5) end",
+            "test",
+        )
+        .expect("checked integer arithmetic snapshots widen in static real expressions");
+        let main = module.get_function("main").expect("has main");
+        let outputs = main
+            .instructions
+            .iter()
+            .filter(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+            })
+            .count();
+        assert_eq!(outputs, 2);
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_rejects_overflow() {
+        let err = compile_source(
+            "begin integer n; n := 9223372036854775807 + 1; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("overflowing integer arithmetic must invalidate the static snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_rejects_zero_division() {
+        let err = compile_source(
+            "begin integer n; n := 1 div 0; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("zero division must invalidate the static integer snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_power_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := 2 ^ 3 + 34; saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("checked integer powers participate in static snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_power_rejects_overflow() {
+        let err = compile_source(
+            "begin integer n; n := 2 ^ 63; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("overflowing integer powers must invalidate the static snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_functions_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := abs(-40) + sign(-2) + entier(3.9); saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("static integer-valued functions participate in snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_functions_respect_user_override() {
+        let err = compile_source(
+            "begin integer procedure sign(x); value x; integer x; sign := x; integer n; n := sign(40); output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a user-defined sign call must not become static metadata");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_equal_conditional_assignments_preserve_static_snapshots() {
+        let module = compile_source(
+            "begin boolean flag; integer n; real x; flag := false; n := if flag then 40 else 40; x := if flag then 2.5 else 2.5; output(n + x) end",
+            "test",
+        )
+        .expect("equal conditional branches preserve assignment snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "jmp_if_false")
+                .count(),
+            2,
+            "both runtime conditions must still be evaluated"
+        );
+    }
+
+    #[test]
+    fn al4_different_conditional_integer_branches_invalidate_snapshot() {
+        let err = compile_source(
+            "begin boolean flag; integer n; flag := false; n := if flag then 40 else 41; output(n + 2.5) end",
+            "test",
+        )
+        .expect_err("path-dependent integer values must invalidate metadata");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_different_conditional_real_branches_invalidate_snapshot() {
+        let err = compile_source(
+            "begin boolean flag; real x; flag := false; x := if flag then 2.5 else 3.5; output(x) end",
+            "test",
+        )
+        .expect_err("path-dependent real values must invalidate metadata");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_scalar_rejects_inexact_widening() {
+        let err = compile_source(
+            "begin integer n; n := 9007199254740993; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an inexact tracked integer widening must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_mixed_integer_rejects_inexact_widening() {
+        let err = compile_source("begin print(9007199254740993 + 0.5) end", "test")
+            .expect_err("an inexact integer-to-real widening must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_division() {
+        let module = compile_source("begin print(9.0 / 2.0, 8.0 / 2.0 * 1.5) end", "test")
+            .expect("static real division compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.5", "6"]);
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
+    }
+
+    #[test]
+    fn al4_print_signed_real_literals_preserve_signs() {
+        let module = compile_source("begin print(-4.25, +2.5) end", "test")
+            .expect("signed real literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["-4.25", "+2.5"]);
+    }
+
+    #[test]
+    fn al4_print_conditional_real_literals_branches_before_output() {
+        let module = compile_source(
+            "begin boolean flag; flag := false; print(if flag then +4.25 else -2.5) end",
+            "test",
+        )
+        .expect("conditional real-literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text)))
+                    if matches!(text.as_str(), "+4.25" | "-2.5") =>
+                {
+                    Some(text.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["+4.25", "-2.5"]);
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
+    }
+
+    #[test]
+    fn al4_print_conditional_with_static_real_product() {
+        let module = compile_source(
+            "begin boolean flag; flag := true; print(if flag then 2.0 * 2.25 else 4.25) end",
+            "test",
+        )
+        .expect("conditional static real product compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
+        }));
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+    }
+
+    #[test]
+    fn al4_print_static_real_addition_and_subtraction() {
+        let module = compile_source("begin print(2.0 + 2.25, 6.5 - 2.0) end", "test")
+            .expect("static additive real output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "4.5"]);
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
+    }
+
+    #[test]
+    fn al4_print_static_real_multiplication() {
+        let module = compile_source("begin print(2.5 * 2.0, 1.5 + 2.0 * 3.0) end", "test")
+            .expect("static real multiplication compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["5", "7.5"]);
+        assert!(main.instructions.iter().all(|instr| instr.type_hint != "f64"));
+    }
+
+    #[test]
+    fn al4_print_static_real_arithmetic_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 + 1.0E308) end", "test")
+            .expect_err("non-finite compile-time output must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_multiplication_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 * 2.0) end", "test")
+            .expect_err("non-finite compile-time product must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_division_rejects_zero_divisor() {
+        let err = compile_source("begin print(1.0 / 0.0) end", "test")
+            .expect_err("zero divisor must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_division_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 / 1.0E-308) end", "test")
+            .expect_err("non-finite compile-time quotient must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integer_power() {
+        let module = compile_source("begin print(2.5 ^ 2, 2.0 ^ 3 ^ 2) end", "test")
+            .expect("static real integer powers compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["6.25", "512"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integer_power_rejects_non_finite_result() {
+        let err = compile_source("begin print(1.0E308 ^ 2) end", "test")
+            .expect_err("non-finite compile-time power must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_power_rejects_unbounded_exponents() {
+        for source in [
+            "begin print(2.0 ^ 0.5) end",
+            "begin print(2.0 ^ 65) end",
+            "begin print(2.0 ^ 65.0) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("unbounded static real power must require runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_print_static_real_signed_integer_power() {
+        let module = compile_source("begin print(2.0 ^ (-3), 4.0 ^ (+2)) end", "test")
+            .expect("static signed real integer powers compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0.125", "16"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_negative_power_rejects_zero_base() {
+        let err = compile_source("begin print(0.0 ^ (-1)) end", "test")
+            .expect_err("zero to a negative power must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integral_real_exponent() {
+        let module = compile_source("begin print(2.0 ^ 3.0, 2.0 ^ (-3.0)) end", "test")
+            .expect("static integral real exponents compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["8", "0.125"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integral_exponent_chain() {
+        let module = compile_source("begin print(2.0 ^ 3.0 ^ 2.0, 2.0 ^ 3 ^ 2.0) end", "test")
+            .expect("static integral exponent chains compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["512", "512"]);
+        assert!(main.instructions.iter().all(|instr| instr.op != "f64_pow"));
+    }
+
+    #[test]
+    fn al4_print_static_real_integral_exponent_chain_rejects_unbounded_result() {
+        let err = compile_source("begin print(2.0 ^ 4.0 ^ 4.0) end", "test")
+            .expect_err("an oversized computed exponent must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_standard_functions() {
+        let module = compile_source(
+            "begin print(abs(2.0 - 6.25), sqrt(2.25)) end",
+            "test",
+        )
+        .expect("deterministic static real standard functions compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "1.5"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "f64_sqrt" | "cmp_lt" | "fsub")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_sqrt_rejects_inexact_and_invalid_operands() {
+        for source in ["begin print(sqrt(2.0)) end", "begin print(sqrt(-1.0)) end"] {
+            let err = compile_source(source, "test")
+                .expect_err("non-exact static sqrt must require runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_print_static_standard_function_respects_user_override() {
+        let err = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0)) end",
+            "test",
+        )
+        .expect_err("a user-defined abs result still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_real_standard_functions_compose_with_arithmetic() {
+        let module = compile_source(
+            "begin print(abs(sqrt(2.25) - 2.0) + 0.25, sqrt(abs(-2.25)) * 2.0) end",
+            "test",
+        )
+        .expect("static standard functions compose with literal-only arithmetic");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0.75", "3"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "f64_sqrt" | "cmp_lt" | "fsub" | "fadd" | "fmul")
+        }));
+    }
+
+    #[test]
+    fn al4_print_nested_static_standard_function_respects_user_override() {
+        let err = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; print(abs(2.0) + 0.5) end",
+            "test",
+        )
+        .expect_err("a nested user-defined abs result still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_conditional_static_real_standard_functions() {
+        let module = compile_source(
+            "begin boolean flag; flag := false; print(if flag then abs(-4.25) else sqrt(2.25) + 0.5) end",
+            "test",
+        )
+        .expect("conditional static standard-function output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text)))
+                    if matches!(text.as_str(), "4.25" | "2") =>
+                {
+                    Some(text.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "2"]);
+        assert!(main.instructions.iter().any(|instr| instr.op == "jmp_if_false"));
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "f64_sqrt" | "cmp_lt" | "fadd")
+        }));
+    }
+
+    #[test]
+    fn al4_print_conditional_static_standard_function_respects_user_override() {
+        let err = compile_source(
+            "begin real procedure abs(x); value x; real x; abs := x + 1.0; boolean flag; flag := true; print(if flag then abs(2.0) else 1.5) end",
+            "test",
+        )
+        .expect_err("a conditional user-defined abs result still requires runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_canonical_static_real_standard_functions() {
+        let module = compile_source(
+            "begin print(sin(0.0), cos(0.0), ln(1.0), exp(0.0), arctan(0.0)) end",
+            "test",
+        )
+        .expect("canonical static real standard functions compile");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["0", "1", "0", "1", "0"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(
+                instr.op.as_str(),
+                "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp" | "f64_atan"
+            )
+        }));
+    }
+
+    #[test]
+    fn al4_print_noncanonical_static_real_standard_functions_still_reject() {
+        for source in [
+            "begin print(sin(1.0)) end",
+            "begin print(cos(1.0)) end",
+            "begin print(ln(2.0)) end",
+            "begin print(exp(1.0)) end",
+            "begin print(arctan(1.0)) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("noncanonical transcendental output requires runtime formatting");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_print_integer_standard_functions_in_static_real_arithmetic() {
+        let module = compile_source(
+            "begin print(sign(-2.5) + 2.0, entier(2.75) + 0.5) end",
+            "test",
+        )
+        .expect("integer-valued standard functions compose with static real arithmetic");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["1", "2.5"]);
+        assert!(main.instructions.iter().all(|instr| {
+            !matches!(instr.op.as_str(), "real_to_int_floor" | "cmp_lt" | "cmp_gt")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_entier_rejects_values_outside_exact_f64_integer_range() {
+        let err = compile_source(
+            "begin print(entier(1.0E20) + 0.5) end",
+            "test",
+        )
+        .expect_err("an inexact f64 integer conversion must require runtime formatting");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_parenthesized_real_literals_preserve_spelling() {
+        let module = compile_source("begin print((4.25), (-2.5), +(3.0)) end", "test")
+            .expect("parenthesized real-literal output compiles");
+        let main = module.get_function("main").expect("has main");
+        let literals: Vec<&str> = main
+            .instructions
+            .iter()
+            .filter_map(|instr| match (instr.op.as_str(), instr.srcs.first()) {
+                ("str_const", Some(Operand::Str(text))) => Some(text.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(literals, vec!["4.25", "-2.5", "+3.0"]);
+    }
+
+    #[test]
+    fn al4_print_parenthesized_static_real_product() {
+        let module = compile_source("begin print((2.0 * 2.25)) end", "test")
+            .expect("parenthesized static real product compiles");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4.5")
+        }));
     }
 
     #[test]
@@ -5908,6 +8316,104 @@ mod tests {
         let err = compile_source("begin string s; print(s) end", "test")
             .expect_err("unassigned string variables are not initialized");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_then_only_string_initialization_rejects_after_conditional() {
+        let err = compile_source(
+            "begin boolean flag; string s; flag := false; if flag then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("a then-only assignment does not definitely initialize the string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_both_string_branches_initialize_after_conditional() {
+        let module = compile_source(
+            "begin boolean flag; string s; flag := false; if flag then s := 'HI' else s := 'LO'; print(s) end",
+            "test",
+        )
+        .expect("both conditional exits definitely initialize the string");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "print_str"
+                && matches!(instr.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+        }));
+    }
+
+    #[test]
+    fn al4_initialized_string_survives_missing_else_join() {
+        compile_source(
+            "begin boolean flag; string s; flag := false; s := 'OK'; if flag then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect("an initialized baseline remains initialized on both exits");
+    }
+
+    #[test]
+    fn al4_loop_body_does_not_definitely_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 1 while false do s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("a zero-trip loop body cannot definitely initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_initialized_string_survives_loop_join() {
+        compile_source(
+            "begin integer i; string s; s := 'OK'; for i := 1 while false do s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect("a string initialized before the loop remains initialized afterward");
+    }
+
+    #[test]
+    fn al4_single_value_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a single-value for element executes its body exactly once");
+    }
+
+    #[test]
+    fn al4_mixed_loop_list_uses_later_definite_initialization() {
+        compile_source(
+            "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a later single-value element executes after a zero-trip element");
+    }
+
+    #[test]
+    fn al4_single_value_loop_retains_static_real_snapshot() {
+        compile_source(
+            "begin integer i; real r; for i := 1 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect("a single-value for list is straight-line for static snapshots");
+    }
+
+    #[test]
+    fn al4_single_value_loop_updates_controlled_variable_snapshot() {
+        compile_source(
+            "begin integer i; real r; for i := 1, 2 do r := i + 4.25; print(r) end",
+            "test",
+        )
+        .expect("each single-value element updates the controlled variable snapshot");
+    }
+
+    #[test]
+    fn al4_step_loop_still_invalidates_static_real_snapshot() {
+        let err = compile_source(
+            "begin integer i; real r; for i := 1 step 1 until 1 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect_err("a step loop may execute zero times and cannot establish a snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────
@@ -6630,6 +9136,175 @@ mod tests {
     }
 
     #[test]
+    fn nested_block_procedure_shadows_and_restores_outer_binding() {
+        let src = "begin integer result; \
+                   integer procedure choose; choose := 20; \
+                   result := choose(); \
+                   begin integer procedure choose; choose := 1; \
+                         result := result + choose() end; \
+                   result := result + choose() + 1 end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "procedure_shadowing").expect("compiles");
+        assert!(module.get_function("choose").is_some());
+        assert!(module
+            .functions
+            .iter()
+            .any(|function| function.name.starts_with("__algol_procedure_choose_")));
+    }
+
+    #[test]
+    fn duplicate_procedure_in_same_block_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure pick; pick := 1; \
+                   integer procedure pick; pick := 2; pick() end",
+            "duplicate_procedure",
+        )
+        .expect_err("same-block procedure declarations must remain unique");
+        assert!(err
+            .to_string()
+            .contains("duplicate declaration for procedure"));
+    }
+
+    #[test]
+    fn procedure_heading_with_multiple_specification_groups_runs() {
+        let src = "begin integer result; \
+                   integer procedure combine(a,b,c); value a,b,c; integer a,b; real c; \
+                   combine := a * 10 + b + entier(c); \
+                   result := combine(3, 4, 8.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn split_array_and_procedure_specifications_run() {
+        let src = "begin integer result; integer array values[4:4]; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p,a); value a; integer p,a; procedure p; array a; \
+                   apply := p(a[4]); values[4] := 21; result := apply(twice, values) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn duplicate_formal_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x,x); value x; integer x; bad := x; bad(1,2) end",
+            "duplicate_formal_parameter",
+        )
+        .expect_err("formal parameter names must be unique");
+        assert!(err.to_string().contains("duplicate formal parameter \"x\""));
+    }
+
+    #[test]
+    fn unknown_value_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value y; integer x; bad := x; bad(1) end",
+            "unknown_value_parameter",
+        )
+        .expect_err("the value part may only name formal parameters");
+        assert!(err
+            .to_string()
+            .contains("value parameter \"y\" is not in the formal parameter list"));
+    }
+
+    #[test]
+    fn duplicate_value_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x,x; integer x; bad := x; bad(1) end",
+            "duplicate_value_parameter",
+        )
+        .expect_err("the value part may name each formal at most once");
+        assert!(err.to_string().contains("duplicate value parameter \"x\""));
+    }
+
+    #[test]
+    fn unknown_specified_parameter_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x,y; bad := x; bad(1) end",
+            "unknown_specified_parameter",
+        )
+        .expect_err("specification parts may only name formal parameters");
+        assert!(err
+            .to_string()
+            .contains("specified parameter \"y\" is not in the formal parameter list"));
+    }
+
+    #[test]
+    fn conflicting_formal_type_specifications_are_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x; real x; bad := x; bad(1) end",
+            "conflicting_formal_specification",
+        )
+        .expect_err("a formal parameter cannot have conflicting types");
+        assert!(err
+            .to_string()
+            .contains("conflicting type specifications for formal parameter \"x\""));
+    }
+
+    #[test]
+    fn duplicate_formal_type_specification_is_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x; integer x; bad := x; bad(1) end",
+            "duplicate_formal_type_specification",
+        )
+        .expect_err("a formal parameter cannot repeat its type");
+        assert!(err
+            .to_string()
+            .contains("duplicate type specification for formal parameter \"x\""));
+    }
+
+    #[test]
+    fn conflicting_formal_kind_specifications_are_rejected() {
+        let err = compile_source(
+            "begin integer procedure bad(x); value x; integer x; array x; procedure x; bad := 0; bad(1) end",
+            "conflicting_formal_kind_specification",
+        )
+        .expect_err("a formal parameter cannot be both an array and a procedure");
+        assert!(err
+            .to_string()
+            .contains("conflicting kind specifications for formal parameter \"x\""));
+    }
+
+    #[test]
+    fn nested_standard_function_override_is_restored_after_scope_exit() {
+        let src = "begin integer result; result := abs(-20); \
+                   begin integer procedure abs(x); value x; integer x; abs := 1; \
+                         result := result + abs(-99) end; \
+                   result := result + abs(-21) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_procedure_is_not_visible_after_scope_exit() {
+        let err = compile_source(
+            "begin integer result; \
+             begin integer procedure hidden; hidden := 42; result := hidden() end; \
+             result := hidden() end",
+            "nested_procedure_visibility",
+        )
+        .expect_err("a nested procedure must leave lookup scope with its block");
+        assert!(err.to_string().contains("call to undeclared procedure"));
+    }
+
+    #[test]
+    fn disjoint_blocks_use_distinct_procedure_identities() {
+        let src = "begin integer result; result := 0; \
+                   begin integer procedure local; local := 20; \
+                         result := result + local() end; \
+                   begin integer procedure local; local := 22; \
+                         result := result + local() end end";
+        assert_eq!(run_i64(src), 42);
+
+        let module = compile_source(src, "disjoint_procedures").expect("compiles");
+        let local_names: HashSet<&str> = module
+            .functions
+            .iter()
+            .map(|function| function.name.as_str())
+            .filter(|name| name.contains("local"))
+            .collect();
+        assert_eq!(local_names.len(), 2);
+    }
+
+    #[test]
     fn procedure_emitted_as_sibling_function() {
         let module = compile_source(
             "begin integer result; integer procedure sq(x); value x; integer x; \
@@ -6654,9 +9329,9 @@ mod tests {
 
     // ---- AL8: one-dimensional array descriptor value parameters ----
 
-    /// A typed array formal preserves the caller's non-unit lower bound and
-    /// aliases its element storage. The callee writes 40 and 2 through `a`, then
-    /// reads them back for the typed procedure result: `sum(values)` = 42.
+    /// A typed array formal preserves the caller's non-unit lower bound. The
+    /// callee writes 40 and 2 into its value copy, then reads them back for the
+    /// typed procedure result: `sum(values)` = 42.
     const AL8_ARRAY_PARAMETER_PROG: &str = "begin integer array values[4:5]; integer result; \
          integer procedure sum(a); value a; integer array a; \
          begin a[4] := 40; a[5] := 2; sum := a[4] + a[5] end; \
@@ -6689,6 +9364,12 @@ mod tests {
             .expect("main calls sum");
         assert_eq!(call.srcs.len(), 3, "callee + handle + lower bound");
         assert!(matches!(call.srcs.first(), Some(Operand::Var(name)) if name == "sum"));
+        for op in ["array_len", "alloc_array", "array_get", "array_set"] {
+            assert!(
+                main.instructions.iter().any(|instr| instr.op == op),
+                "array value lowering must emit {op} at the call site"
+            );
+        }
 
         assert!(
             matches!(sum.instructions.last(), Some(instr)
@@ -6727,8 +9408,10 @@ mod tests {
     fn array_parameter_accepts_boolean_elements() {
         let src = "begin boolean array flags[-1:0]; integer result; \
                    procedure setflags(a); value a; boolean array a; \
-                   begin a[-1] := true; a[0] := false end; \
-                   setflags(flags); if flags[-1] and not flags[0] then result := 42 else result := 0 end";
+                   begin a[-1] := true; a[0] := false; \
+                         if a[-1] and not a[0] then result := 40 else result := 0 end; \
+                   flags[-1] := false; flags[0] := true; setflags(flags); \
+                   if not flags[-1] and flags[0] then result := result + 2 else result := 0 end";
         assert_eq!(run_i64(src), 42);
 
         let module = compile_source(src, "boolean_array_param").expect("compiles");
@@ -6747,7 +9430,7 @@ mod tests {
 
     #[test]
     fn multidimensional_boolean_array_parameter_preserves_full_descriptor() {
-        let src = "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true end; setflags(flags); if flags[-1,2] and not flags[-1,3] and not flags[0,2] and flags[0,3] then result := 42 else result := 0 end";
+        let src = "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true; if a[-1,2] and not a[-1,3] and not a[0,2] and a[0,3] then result := 40 else result := 0 end; flags[-1,2] := false; flags[-1,3] := false; flags[0,2] := false; flags[0,3] := false; setflags(flags); if not flags[-1,2] and not flags[-1,3] and not flags[0,2] and not flags[0,3] then result := result + 2 else result := 0 end";
         assert_eq!(run_i64(src), 42);
 
         let module =
@@ -6951,7 +9634,7 @@ mod tests {
     #[test]
     fn captured_array_actual_reloads_its_descriptor_for_array_parameter() {
         let src = "begin integer array values[4:5, -2:-1]; integer result; \
-                   procedure seed(a); value a; integer array a; \
+                   procedure seed(a); integer array a; \
                      begin a[4,-2] := 40; a[5,-1] := 2 end; \
                    procedure invoke; seed(values); \
                    invoke; result := values[4,-2] + values[5,-1] end";
@@ -7192,7 +9875,7 @@ mod tests {
     fn nested_procedure_forwards_captured_four_dimensional_string_array_parameter() {
         let src = "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; \
                    procedure fill(a); value a; string array a; \
-                     begin procedure seed(b); value b; string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; \
+                     begin procedure seed(b); string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; \
                            procedure invoke; seed(a); \
                            invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; \
                    fill(words) end";
@@ -7200,7 +9883,11 @@ mod tests {
 
         let module = compile_source(src, "captured_four_dimensional_string_array_forwarding")
             .expect("compiles");
-        let seed = module.get_function("seed").expect("seed function exists");
+        let seed = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_seed_"))
+            .expect("specialized seed function exists");
         assert_eq!(
             seed.params,
             vec![
@@ -7253,7 +9940,7 @@ mod tests {
             .iter()
             .find(|instr| {
                 instr.op == "call"
-                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name.starts_with("__algol_by_name_seed_"))
             })
             .expect("invoke forwards the captured array to seed");
         assert_eq!(
@@ -7267,7 +9954,7 @@ mod tests {
     fn nested_procedure_forwards_captured_four_dimensional_real_array_parameter() {
         let src = "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; \
                    procedure fill(a); value a; real array a; \
-                     begin procedure seed(b); value b; real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; \
+                     begin procedure seed(b); real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; \
                            procedure invoke; seed(a); \
                            invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; \
                    fill(values) end";
@@ -7275,7 +9962,11 @@ mod tests {
 
         let module = compile_source(src, "captured_four_dimensional_real_array_forwarding")
             .expect("compiles");
-        let seed = module.get_function("seed").expect("seed function exists");
+        let seed = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_seed_"))
+            .expect("specialized seed function exists");
         assert_eq!(
             seed.params,
             vec![
@@ -7328,7 +10019,7 @@ mod tests {
             .iter()
             .find(|instr| {
                 instr.op == "call"
-                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name.starts_with("__algol_by_name_seed_"))
             })
             .expect("invoke forwards the captured array to seed");
         assert_eq!(
@@ -7342,7 +10033,7 @@ mod tests {
     fn nested_procedure_forwards_captured_four_dimensional_boolean_array_parameter() {
         let src = "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; \
                    procedure fill(a); value a; boolean array a; \
-                     begin procedure seed(b); value b; boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; \
+                     begin procedure seed(b); boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; \
                            procedure invoke; seed(a); \
                            invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; \
                    fill(flags) end";
@@ -7350,7 +10041,11 @@ mod tests {
 
         let module = compile_source(src, "captured_four_dimensional_boolean_array_forwarding")
             .expect("compiles");
-        let seed = module.get_function("seed").expect("seed function exists");
+        let seed = module
+            .functions
+            .iter()
+            .find(|function| function.name.starts_with("__algol_by_name_seed_"))
+            .expect("specialized seed function exists");
         assert_eq!(
             seed.params,
             vec![
@@ -7403,7 +10098,7 @@ mod tests {
             .iter()
             .find(|instr| {
                 instr.op == "call"
-                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "seed")
+                    && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name.starts_with("__algol_by_name_seed_"))
             })
             .expect("invoke forwards the captured array to seed");
         assert_eq!(
@@ -7592,6 +10287,73 @@ mod tests {
         assert!(apply.instructions.iter().any(|instr| {
             instr.op == "call" && instr.srcs.first() == Some(&Operand::Var("twice".to_string()))
         }));
+    }
+
+    #[test]
+    fn typed_formal_procedure_accepts_matching_direct_actual() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p, x); value x; integer procedure p; integer x; \
+                     apply := p(x); \
+                   result := apply(twice, 21) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn typed_formal_procedure_forwards_matching_actual() {
+        let src = "begin integer result; \
+                   integer procedure twice(x); value x; integer x; twice := x + x; \
+                   integer procedure apply(p, x); value x; integer procedure p; integer x; \
+                     begin integer procedure forward(p, x); value x; \
+                           integer procedure p; integer x; forward := p(x); \
+                           apply := forward(p, x) end; \
+                   result := apply(twice, 21) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn typed_formal_procedure_accepts_matching_standard_function() {
+        let src = "begin integer result; \
+                   integer procedure apply(p, x); value x; real procedure p; real x; \
+                     apply := entier(p(x)); \
+                   result := apply(sqrt, 1764.0) end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn typed_formal_procedure_rejects_wrong_standard_function_result() {
+        let err = compile_source(
+            "begin integer result; \
+             integer procedure apply(p, x); value x; integer procedure p; real x; \
+             apply := p(x); result := apply(sqrt, 1764.0) end",
+            "typed_formal_wrong_standard_result",
+        )
+        .expect_err("typed formal must reject a mismatched standard function");
+        assert!(err.to_string().contains("expects an integer result"));
+    }
+
+    #[test]
+    fn typed_formal_procedure_rejects_wrong_declared_return_type() {
+        let err = compile_source(
+            "begin integer result; real procedure measure; measure := 42.0; \
+             integer procedure apply(p); integer procedure p; apply := p(); \
+             result := apply(measure) end",
+            "typed_formal_wrong_return",
+        )
+        .expect_err("typed formal must reject a mismatched declared result");
+        assert!(err.to_string().contains("expects an integer result"));
+    }
+
+    #[test]
+    fn typed_formal_procedure_rejects_proper_procedure_actual() {
+        let err = compile_source(
+            "begin integer result; procedure touch; result := 1; \
+             integer procedure apply(p); integer procedure p; apply := p(); \
+             result := apply(touch) end",
+            "typed_formal_proper_actual",
+        )
+        .expect_err("typed formal must reject a proper procedure actual");
+        assert!(err.to_string().contains("but \"touch\" is proper"));
     }
 
     #[test]
@@ -8236,6 +10998,89 @@ mod tests {
     }
 
     #[test]
+    fn nested_block_switch_shadows_and_restores_outer_binding() {
+        let src = "begin integer result, phase; switch s := outertarget; \
+                   phase := 0; \
+                   begin switch s := innertarget; goto s[1]; \
+                         innertarget: if phase = 0 then \
+                           begin phase := 1; result := 20 end \
+                         else goto bad end; \
+                   goto s[1]; \
+                   outertarget: result := result + 22; goto done; \
+                   bad: result := 1; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn duplicate_switch_in_same_block_is_rejected() {
+        let err = compile_source(
+            "begin switch s := one; switch s := two; goto s[1]; one: ; two: end",
+            "duplicate_switch",
+        )
+        .expect_err("same-block switch declarations must remain unique");
+        assert!(err.to_string().contains("duplicate declaration for switch"));
+    }
+
+    #[test]
+    fn nested_block_label_shadows_and_restores_outer_binding() {
+        let src = "begin integer result, phase; phase := 0; goto outer; \
+                   outer: if phase = 0 then \
+                     begin phase := 1; \
+                       begin integer marker; marker := 0; goto outer; \
+                             outer: result := 20 + marker; goto innerdone; \
+                             innerdone: end; \
+                       goto outer end \
+                   else begin result := result + 22; goto done end; \
+                   done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn switch_label_binding_is_frozen_at_declaration() {
+        let src = "begin integer result; switch s := target; \
+                   begin integer marker; marker := 0; goto s[1]; \
+                         target: result := 1 + marker; goto done end; \
+                   target: result := 42; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn nested_switch_binding_is_frozen_at_declaration() {
+        let src = "begin integer result; switch root := leaf[1]; \
+                   switch leaf := outertarget; \
+                   begin integer marker; switch leaf := innertarget; \
+                         marker := 0; goto root[1]; \
+                         innertarget: result := 1 + marker; goto done end; \
+                   outertarget: result := 42; done: end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn multiple_labels_share_one_statement_target() {
+        let src = "begin integer result, phase; phase := 0; goto first; \
+                   first: second: if phase = 0 then \
+                     begin phase := 1; goto second end \
+                   else result := 42 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn dummy_statements_are_no_ops_at_statement_boundaries() {
+        let src = "begin integer result, i; ; result := 40;; \
+                   if false then else result := result + 1; \
+                   for i := 1 step 1 until 3 do ; \
+                   empty: ; result := result + 1; end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn duplicate_label_in_same_block_is_rejected() {
+        let err = compile_source("begin one: ; one: end", "duplicate_label")
+            .expect_err("same-block label declarations must remain unique");
+        assert!(err.to_string().contains("duplicate declaration for label"));
+    }
+
+    #[test]
     fn rejects_cyclic_switch_list_elements() {
         let err = compile_source(
             "begin integer result; switch s := s[1]; goto s[1]; result := 0 end",
@@ -8464,6 +11309,33 @@ mod tests {
         );
     }
 
+    /// Each coordinate is checked before flattening, so an invalid column
+    /// cannot alias the next row's first valid cell.
+    #[test]
+    fn multidimensional_cross_coordinate_read_traps() {
+        let src = "begin integer array A[1:2, 1:2]; integer result; \
+                   A[2,1] := 42; result := A[1,3] end";
+        let err = execute_source(src, "test").unwrap_err();
+        assert!(
+            matches!(err, CompileError::Runtime(_)),
+            "cross-coordinate read should trap instead of aliasing A[2,1], got {err:?}"
+        );
+    }
+
+    /// Array formals recover per-dimension sizes from the existing flat length
+    /// and stride descriptor, with no additional procedure arguments.
+    #[test]
+    fn multidimensional_formal_cross_coordinate_write_traps() {
+        let src = "begin integer array A[1:2, 1:2]; integer result; \
+                   procedure overwrite(a); integer array a; a[1,3] := 42; \
+                   overwrite(A); result := 0 end";
+        let err = execute_source(src, "test").unwrap_err();
+        assert!(
+            matches!(err, CompileError::Runtime(_)),
+            "cross-coordinate formal write should trap instead of aliasing A[2,1], got {err:?}"
+        );
+    }
+
     /// Subscripting a scalar is a compile-time type error.
     #[test]
     fn rejects_subscripting_a_scalar() {
@@ -8586,6 +11458,51 @@ mod tests {
                    M[0-2, 0] := 40; M[0-1, 1] := 2; \
                    result := M[0-2, 0] + M[0-1, 1] end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn reversed_array_bounds_trap_before_allocation() {
+        let err = execute_source(
+            "begin integer lower, upper; lower := 2; upper := 1; \
+             begin integer array A[lower:upper]; integer result; result := 42 end end",
+            "test",
+        )
+        .expect_err("a reversed run-time bound must trap");
+        assert!(matches!(err, CompileError::Runtime(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn overflowing_array_extent_emits_fail_closed_guard() {
+        let module = compile_source(
+            "begin integer array A[0:9223372036854775807]; integer result; \
+             result := 42 end",
+            "test",
+        )
+        .expect("overflowing extent still lowers to a guarded run-time path");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions
+                .iter()
+                .any(|instr| instr.op == "cmp_gt" && instr.type_hint == "i64"),
+            "the wrapped extent must be required to remain positive"
+        );
+    }
+
+    #[test]
+    fn multidimensional_product_emits_overflow_guard() {
+        let module = compile_source(
+            "begin integer array A[1:3037000500, 1:3037000500]; integer result; \
+             result := 42 end",
+            "test",
+        )
+        .expect("overflowing product still lowers to a guarded run-time path");
+        let main = module.get_function("main").expect("has main");
+        assert!(
+            main.instructions
+                .windows(2)
+                .any(|pair| pair[0].op == "div" && pair[1].op == "cmp_eq"),
+            "the row-major product must be divided back and compared"
+        );
     }
 
     /// Wrong number of subscripts for a 2-D array is a type error.

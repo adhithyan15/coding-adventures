@@ -7,6 +7,9 @@
 // static picture of the finished letter cannot show — where it stays down and
 // where (if ever) it lifts.
 
+import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
+import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
+import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
 //
@@ -189,6 +192,30 @@ function truncateToFraction(pts: Point[], fraction: number): Point[] {
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
 
+const arabicAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = arabic.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Arabic ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const chineseCharacterSource = (glyph: string): StrokeSource => {
+  const letter = chinese.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Chinese ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const hebrewAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = hebrew.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Hebrew ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const persianAlphabetSource = (glyph: string): StrokeSource => {
   const letter = persoArabic.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -216,6 +243,64 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // glyph (shape) and against `source` (order), not trusted because they look
 // plausible here.
 //
+// Arabic ا opens the smallest remaining starter inventory from the University
+// of Oregon's instructional video: one top-to-bottom movement with no lift.
+// Its scoped key preserves Arabic provenance separately from the Persian and
+// Urdu records for the same Unicode glyph while sharing the Noto Naskh shape.
+// The adjacent Arabic ب demonstration sweeps its bowl right-to-left, turns up
+// at the left tip, then lifts once to place the dot below. Its Arabic-scoped
+// source remains separate from Persian ب while sharing the checked Noto shape.
+// Arabic ت reuses that separately demonstrated bowl because its own clip opens
+// with the body already complete, then places the left and right upper dots as
+// separate strokes. Its scoped source remains distinct from Persian ت.
+// The linked Arabic ث asset is actually another ت lesson: it draws only two
+// upper dots, so it cannot support a three-dot path. The next viable source,
+// Arabic ج, draws the short head left-to-right, continues around the bowl, then
+// lifts once for its dot. That body-first order stays distinct from Urdu ج.
+// The page's unlinked Arabic ح attachment instead opens while a short left stem
+// is descending, then restarts near that stem's top and sweeps around the
+// dotless bowl. Its one verified lift is not inferred from adjacent Jeem.
+// The same page's Arabic خ clip returns to a body-first order: the short head
+// flows directly around the bowl, then one lift precedes the upper dot. That
+// order comes from Khaa's own clip rather than being copied from ج or ح.
+// The next page's Arabic د clip starts at the independent form's upper tip,
+// descends down-right through its curved shoulder, and turns left along the
+// baseline in the same pen-down run. Its one-way-connector context stays
+// explicit, but the path does not infer motion from a contextual form.
+// The same page's Arabic ر clip begins at the independent form's upper tip,
+// descends through its short stroke, and sweeps left through the lower curve
+// without lifting. Its scoped source stays distinct from Urdu ر even though
+// both paths fit the same vendored Noto Naskh glyph.
+// The next page's Arabic س clip shapes all three close teeth right-to-left and
+// flows directly into the final bowl in one uninterrupted run. Its scoped
+// evidence stays distinct from the already-authored Persian and Urdu س paths.
+// The page's Arabic ش clip repeats that complete body, then separately places
+// the lower-left, lower-right, and centered upper dots. Its three verified
+// lifts stay scoped separately from Urdu ش even though the geometry agrees.
+// The page's Arabic ص clip closes its oval and rises into the short shoulder in
+// one run, then restarts once at the baseline junction for the trailing bowl.
+// The pause and restart keep Saad's path distinct from the adjacent س and ش.
+// The page's embedded Arabic ض lesson repeats those two Saad body runs, then
+// lifts again to place the upper dot last. Its independently observed order is
+// recorded even though the directly linked short MOV was unavailable at audit.
+// The next source page's Arabic ع clip begins at the upper-right tip, shapes the
+// open head, and flows directly down and around the lower bowl without lifting.
+// Its independent form stays distinct from the adjacent dotted Ghayn lesson.
+// The next page's Arabic ك clip descends the main upright and turns left along
+// the baseline without lifting, then restarts once for the inner arm. Its
+// Arabic identity stays distinct from the separately sourced Urdu ک glyph.
+// The same page's Arabic ل clip keeps the tall upright and leftward base bowl
+// in one pen-down run. Its scoped source remains distinct from the Persian and
+// Urdu records even though all three share the same Unicode glyph and outline.
+// The later Arabic ه clip starts at the independent form's upper right, closes
+// its lower counter, threads through the centre into the upper-right counter,
+// then sweeps left along the baseline without lifting. The compact handwritten
+// order is fitted to Noto Naskh's wider two-counter outline and remains scoped
+// independently from the Persian record for the same Unicode glyph.
+// The adjacent Arabic و clip begins at the small head's lower-right junction,
+// sweeps left around the loop, then continues down and left through the tail
+// without lifting. Its one-way-connector context and Arabic source remain
+// distinct from the Persian record for the same Unicode glyph and outline.
 // Persian ا opens UT Austin's freehand alphabet demonstration: one vertical
 // movement travels from the top to the baseline. The lesson presents the
 // alphabet right-to-left, while this isolated non-connector remains one stroke.
@@ -247,6 +332,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // the dot near the baseline. Initial and medial forms use a distinct tooth.
 // Urdu ہ starts at the independent teardrop's upper right, loops
 // counterclockwise around its base, and crosses the top without lifting.
+// Urdu ے begins at the independent form's upper right, sweeps left across its
+// broad bowl, curls back underneath at the far left, and continues right along
+// the lower fold in one uninterrupted stroke.
 // The adjacent ب starts at the bowl's right lip, sweeps right-to-left through
 // its shallow dip, then lifts once before placing the separate dot below.
 // After the intervening Persian-added پ row, ت repeats the same bowl, lifts to
@@ -289,6 +377,2450 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // ---------------------------------------------------------------------------
 
 export const DUCTUS: Record<string, LetterDuctus> = {
+  // Hanzi Writer Data's ordered medians draw 人 with the left-falling stroke
+  // first, then restart at the central junction for the right-falling stroke.
+  // The source's Arphic-derived proportions are fitted to the vendored Noto
+  // Sans SC outline while preserving both directions and the intervening lift.
+  [ductusKey("chinese", "人")]: {
+    script: "chinese",
+    glyph: "人",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left-falling piě stroke from the upper centre",
+            path: [
+              { x: 500, y: 810 },
+              { x: 500, y: 740 },
+              { x: 490, y: 650 },
+              { x: 470, y: 555 },
+              { x: 445, y: 465 },
+              { x: 410, y: 375 },
+              { x: 365, y: 285 },
+              { x: 310, y: 200 },
+              { x: 245, y: 120 },
+              { x: 175, y: 55 },
+              { x: 105, y: 5 },
+              { x: 65, y: -25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the right-falling nà stroke from the junction",
+            path: [
+              { x: 500, y: 690 },
+              { x: 515, y: 620 },
+              { x: 535, y: 535 },
+              { x: 565, y: 445 },
+              { x: 605, y: 355 },
+              { x: 655, y: 265 },
+              { x: 715, y: 180 },
+              { x: 785, y: 105 },
+              { x: 860, y: 45 },
+              { x: 925, y: 0 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("人"),
+  },
+  // The compressed person radical keeps the source dataset's two-run order:
+  // a long left-falling stroke, then a separately started vertical. Its Noto
+  // Sans SC fit follows the glyph's narrow left-side proportions rather than
+  // mechanically squeezing the full 人 path.
+  [ductusKey("chinese", "亻")]: {
+    script: "chinese",
+    glyph: "亻",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left-falling piě stroke from upper right to lower left",
+            path: [
+              { x: 440, y: 820 },
+              { x: 430, y: 790 },
+              { x: 415, y: 755 },
+              { x: 395, y: 720 },
+              { x: 375, y: 680 },
+              { x: 350, y: 640 },
+              { x: 325, y: 600 },
+              { x: 295, y: 560 },
+              { x: 265, y: 520 },
+              { x: 230, y: 475 },
+              { x: 195, y: 435 },
+              { x: 160, y: 395 },
+              { x: 125, y: 360 },
+              { x: 95, y: 330 },
+              { x: 75, y: 305 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the vertical shù stroke from the junction to the baseline",
+            path: [
+              { x: 310, y: 590 },
+              { x: 310, y: 550 },
+              { x: 310, y: 500 },
+              { x: 310, y: 440 },
+              { x: 310, y: 370 },
+              { x: 310, y: 295 },
+              { x: 310, y: 220 },
+              { x: 310, y: 140 },
+              { x: 310, y: 60 },
+              { x: 310, y: -50 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("亻"),
+  },
+  // 口 establishes the first Chinese joined corner in the authored inventory:
+  // descend the left side, join the top and right side in one héngzhé run, then
+  // close the bottom last. The flat Noto fit preserves those three source runs.
+  [ductusKey("chinese", "口")]: {
+    script: "chinese",
+    glyph: "口",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left vertical shù stroke from top to bottom",
+            path: [
+              { x: 166, y: 700 },
+              { x: 166, y: 620 },
+              { x: 166, y: 530 },
+              { x: 166, y: 440 },
+              { x: 166, y: 350 },
+              { x: 166, y: 260 },
+              { x: 166, y: 170 },
+              { x: 166, y: 80 },
+              { x: 166, y: -35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the top bar from left to right",
+            path: [
+              { x: 166, y: 700 },
+              { x: 260, y: 700 },
+              { x: 360, y: 700 },
+              { x: 470, y: 700 },
+              { x: 580, y: 700 },
+              { x: 690, y: 700 },
+              { x: 785, y: 700 },
+              { x: 835, y: 700 },
+            ],
+          },
+          {
+            label: "turn the corner without lifting and descend the right side",
+            path: [
+              { x: 835, y: 700 },
+              { x: 835, y: 610 },
+              { x: 835, y: 520 },
+              { x: 835, y: 430 },
+              { x: 835, y: 340 },
+              { x: 835, y: 250 },
+              { x: 835, y: 160 },
+              { x: 835, y: 70 },
+              { x: 835, y: -30 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then close the bottom from left to right",
+            path: [
+              { x: 166, y: 70 },
+              { x: 260, y: 70 },
+              { x: 360, y: 70 },
+              { x: 470, y: 70 },
+              { x: 580, y: 70 },
+              { x: 690, y: 70 },
+              { x: 785, y: 70 },
+              { x: 835, y: 70 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("口"),
+  },
+  // 女 begins with one bent piědiǎn run: descend down-left, turn at the lower
+  // junction, and sweep down-right without lifting. A separately started
+  // left-falling piě comes next, then the middle héng crosses left-to-right.
+  // The four movements follow the three pinned medians on the Noto Sans SC fit.
+  [ductusKey("chinese", "女")]: {
+    script: "chinese",
+    glyph: "女",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the first piědiǎn stroke down and left",
+            path: [
+              { x: 460, y: 840 },
+              { x: 440, y: 790 },
+              { x: 415, y: 720 },
+              { x: 390, y: 650 },
+              { x: 365, y: 580 },
+              { x: 340, y: 510 },
+              { x: 310, y: 440 },
+              { x: 285, y: 375 },
+              { x: 255, y: 320 },
+              { x: 220, y: 275 },
+            ],
+          },
+          {
+            label: "turn without lifting and sweep down to the lower right",
+            path: [
+              { x: 220, y: 275 },
+              { x: 300, y: 265 },
+              { x: 400, y: 220 },
+              { x: 500, y: 175 },
+              { x: 600, y: 125 },
+              { x: 700, y: 75 },
+              { x: 800, y: 20 },
+              { x: 890, y: -35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the left-falling piě stroke from upper right to lower left",
+            path: [
+              { x: 717, y: 550 },
+              { x: 700, y: 490 },
+              { x: 680, y: 430 },
+              { x: 650, y: 360 },
+              { x: 615, y: 295 },
+              { x: 570, y: 235 },
+              { x: 520, y: 180 },
+              { x: 460, y: 125 },
+              { x: 390, y: 75 },
+              { x: 310, y: 30 },
+              { x: 220, y: -10 },
+              { x: 130, y: -45 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle horizontal héng from left to right",
+            path: [
+              { x: 70, y: 561 },
+              { x: 180, y: 561 },
+              { x: 300, y: 561 },
+              { x: 420, y: 561 },
+              { x: 540, y: 561 },
+              { x: 660, y: 561 },
+              { x: 780, y: 561 },
+              { x: 890, y: 561 },
+              { x: 940, y: 561 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("女"),
+  },
+  // 子 has two joined turns across its first two strokes: the top horizontal
+  // turns down-left, then a separately started vertical hooks left at the base.
+  // A second lift precedes the final middle horizontal from left to right.
+  [ductusKey("chinese", "子")]: {
+    script: "chinese",
+    glyph: "子",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top horizontal héng from left to right",
+            path: [
+              { x: 160, y: 735 },
+              { x: 250, y: 735 },
+              { x: 350, y: 735 },
+              { x: 450, y: 735 },
+              { x: 550, y: 735 },
+              { x: 650, y: 735 },
+              { x: 740, y: 735 },
+              { x: 790, y: 735 },
+            ],
+          },
+          {
+            label: "turn without lifting and sweep down-left",
+            path: [
+              { x: 790, y: 735 },
+              { x: 750, y: 680 },
+              { x: 700, y: 640 },
+              { x: 650, y: 600 },
+              { x: 600, y: 565 },
+              { x: 550, y: 535 },
+              { x: 490, y: 515 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the central vertical",
+            path: [
+              { x: 504, y: 530 },
+              { x: 504, y: 460 },
+              { x: 504, y: 380 },
+              { x: 504, y: 300 },
+              { x: 504, y: 220 },
+              { x: 504, y: 140 },
+              { x: 504, y: 70 },
+              { x: 500, y: 20 },
+              { x: 500, y: -35 },
+            ],
+          },
+          {
+            label: "hook left at the base without lifting",
+            path: [
+              { x: 500, y: -35 },
+              { x: 450, y: -40 },
+              { x: 390, y: -40 },
+              { x: 330, y: -35 },
+              { x: 285, y: -20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle horizontal héng from left to right",
+            path: [
+              { x: 60, y: 357 },
+              { x: 170, y: 357 },
+              { x: 290, y: 357 },
+              { x: 410, y: 357 },
+              { x: 530, y: 357 },
+              { x: 650, y: 357 },
+              { x: 770, y: 357 },
+              { x: 890, y: 357 },
+              { x: 945, y: 357 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("子"),
+  },
+  // 日 starts with the left side, then joins the top bar to the right side in
+  // one héngzhé stroke. The inside bar precedes a separately closing bottom.
+  [ductusKey("chinese", "日")]: {
+    script: "chinese",
+    glyph: "日",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left vertical shù from top to bottom",
+            path: [
+              { x: 214, y: 735 },
+              { x: 214, y: 630 },
+              { x: 214, y: 520 },
+              { x: 214, y: 410 },
+              { x: 214, y: 300 },
+              { x: 214, y: 190 },
+              { x: 214, y: 80 },
+              { x: 214, y: 0 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the top horizontal héng from left to right",
+            path: [
+              { x: 214, y: 735 },
+              { x: 310, y: 735 },
+              { x: 410, y: 735 },
+              { x: 510, y: 735 },
+              { x: 610, y: 735 },
+              { x: 710, y: 735 },
+              { x: 792, y: 735 },
+            ],
+          },
+          {
+            label: "turn without lifting and descend the right side",
+            path: [
+              { x: 792, y: 735 },
+              { x: 792, y: 630 },
+              { x: 792, y: 520 },
+              { x: 792, y: 410 },
+              { x: 792, y: 300 },
+              { x: 792, y: 190 },
+              { x: 792, y: 80 },
+              { x: 792, y: 0 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle horizontal héng from left to right",
+            path: [
+              { x: 214, y: 389 },
+              { x: 310, y: 389 },
+              { x: 410, y: 389 },
+              { x: 510, y: 389 },
+              { x: 610, y: 389 },
+              { x: 710, y: 389 },
+              { x: 792, y: 389 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then close the bottom horizontal héng from left to right",
+            path: [
+              { x: 214, y: 33 },
+              { x: 310, y: 33 },
+              { x: 410, y: 33 },
+              { x: 510, y: 33 },
+              { x: 610, y: 33 },
+              { x: 710, y: 33 },
+              { x: 792, y: 33 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("日"),
+  },
+  // 讠 starts with a down-right dot. After one lift, the short horizontal,
+  // vertical descent, and rising finish stay joined inside one second stroke.
+  [ductusKey("chinese", "讠")]: {
+    script: "chinese",
+    glyph: "讠",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top dot down and right",
+            path: [
+              { x: 150, y: 780 },
+              { x: 180, y: 755 },
+              { x: 215, y: 720 },
+              { x: 250, y: 685 },
+              { x: 290, y: 645 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the short horizontal from left to right",
+            path: [
+              { x: 60, y: 492 },
+              { x: 110, y: 492 },
+              { x: 160, y: 492 },
+              { x: 210, y: 492 },
+              { x: 255, y: 492 },
+              { x: 293, y: 492 },
+            ],
+          },
+          {
+            label: "turn without lifting and descend the vertical",
+            path: [
+              { x: 293, y: 492 },
+              { x: 293, y: 410 },
+              { x: 293, y: 320 },
+              { x: 293, y: 230 },
+              { x: 293, y: 140 },
+              { x: 293, y: 60 },
+              { x: 293, y: 20 },
+            ],
+          },
+          {
+            label: "turn without lifting and rise to the upper right",
+            path: [
+              { x: 293, y: 20 },
+              { x: 330, y: 35 },
+              { x: 370, y: 60 },
+              { x: 410, y: 85 },
+              { x: 445, y: 110 },
+              { x: 475, y: 140 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("讠"),
+  },
+  // 氵 stacks two separately drawn down-right dots above a third stroke that
+  // begins at the bottom and rises to the upper right. The three pinned
+  // medians remain separate while fitting the narrow Noto Sans SC radical.
+  [ductusKey("chinese", "氵")]: {
+    script: "chinese",
+    glyph: "氵",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the upper dot down and right",
+            path: [
+              { x: 155, y: 785 },
+              { x: 195, y: 770 },
+              { x: 235, y: 745 },
+              { x: 275, y: 720 },
+              { x: 315, y: 695 },
+              { x: 350, y: 675 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle dot down and right",
+            path: [
+              { x: 72, y: 515 },
+              { x: 110, y: 505 },
+              { x: 150, y: 485 },
+              { x: 190, y: 465 },
+              { x: 230, y: 445 },
+              { x: 270, y: 420 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then begin the bottom stroke with a slight rise left",
+            path: [
+              { x: 158, y: -58 },
+              { x: 150, y: -32 },
+              { x: 155, y: 0 },
+            ],
+          },
+          {
+            label: "continue without lifting in a long rise to the upper right",
+            path: [
+              { x: 155, y: 0 },
+              { x: 185, y: 45 },
+              { x: 220, y: 95 },
+              { x: 255, y: 145 },
+              { x: 290, y: 195 },
+              { x: 325, y: 245 },
+              { x: 360, y: 295 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("氵"),
+  },
+  // 宀 places its top dot first, then a separate down-left stroke on the left.
+  // After the second lift, the roof crosses left-to-right and hooks down-left
+  // without breaking. The Noto fit keeps that source order and joined hook.
+  [ductusKey("chinese", "宀")]: {
+    script: "chinese",
+    glyph: "宀",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top dot down and right",
+            path: [
+              { x: 440, y: 805 },
+              { x: 455, y: 790 },
+              { x: 470, y: 770 },
+              { x: 485, y: 750 },
+              { x: 500, y: 730 },
+              { x: 515, y: 715 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the left-side stroke down and left",
+            path: [
+              { x: 150, y: 660 },
+              { x: 145, y: 625 },
+              { x: 138, y: 585 },
+              { x: 130, y: 545 },
+              { x: 122, y: 505 },
+              { x: 112, y: 475 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the horizontal roof from left to right",
+            path: [
+              { x: 150, y: 646 },
+              { x: 250, y: 646 },
+              { x: 360, y: 646 },
+              { x: 470, y: 646 },
+              { x: 580, y: 646 },
+              { x: 690, y: 646 },
+              { x: 790, y: 646 },
+              { x: 875, y: 646 },
+            ],
+          },
+          {
+            label: "hook down and left without lifting",
+            path: [
+              { x: 875, y: 646 },
+              { x: 880, y: 620 },
+              { x: 875, y: 585 },
+              { x: 865, y: 545 },
+              { x: 850, y: 505 },
+              { x: 833, y: 475 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("宀"),
+  },
+  // 你 writes 亻 first, then the five strokes of 尔: a falling stroke, a
+  // joined horizontal hook, a joined vertical hook, and two separate dots.
+  // The seven Noto-fitted runs preserve that component order and six lifts.
+  [ductusKey("chinese", "你")]: {
+    script: "chinese",
+    glyph: "你",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left-falling stroke of the person radical",
+            path: [
+              { x: 300, y: 810 },
+              { x: 285, y: 760 },
+              { x: 265, y: 705 },
+              { x: 240, y: 650 },
+              { x: 210, y: 595 },
+              { x: 175, y: 540 },
+              { x: 140, y: 495 },
+              { x: 105, y: 455 },
+              { x: 70, y: 425 },
+              { x: 45, y: 410 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the vertical stroke of the person radical",
+            path: [
+              { x: 196, y: 605 },
+              { x: 196, y: 520 },
+              { x: 196, y: 430 },
+              { x: 196, y: 340 },
+              { x: 196, y: 250 },
+              { x: 196, y: 160 },
+              { x: 196, y: 70 },
+              { x: 196, y: -50 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the upper-right left-falling stroke",
+            path: [
+              { x: 500, y: 810 },
+              { x: 490, y: 765 },
+              { x: 475, y: 715 },
+              { x: 455, y: 660 },
+              { x: 430, y: 605 },
+              { x: 405, y: 550 },
+              { x: 375, y: 500 },
+              { x: 345, y: 455 },
+              { x: 325, y: 435 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the upper horizontal from left to right",
+            path: [
+              { x: 450, y: 612 },
+              { x: 530, y: 612 },
+              { x: 620, y: 612 },
+              { x: 710, y: 612 },
+              { x: 800, y: 612 },
+              { x: 890, y: 612 },
+            ],
+          },
+          {
+            label: "hook down and left without lifting",
+            path: [
+              { x: 890, y: 612 },
+              { x: 900, y: 580 },
+              { x: 900, y: 540 },
+              { x: 895, y: 500 },
+              { x: 885, y: 465 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the central vertical",
+            path: [
+              { x: 649, y: 590 },
+              { x: 649, y: 500 },
+              { x: 649, y: 400 },
+              { x: 649, y: 300 },
+              { x: 649, y: 200 },
+              { x: 649, y: 100 },
+              { x: 649, y: 15 },
+              { x: 645, y: -30 },
+            ],
+          },
+          {
+            label: "hook left at the base without lifting",
+            path: [
+              { x: 645, y: -30 },
+              { x: 615, y: -40 },
+              { x: 580, y: -42 },
+              { x: 545, y: -40 },
+              { x: 515, y: -30 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the lower-left dot down and left",
+            path: [
+              { x: 485, y: 380 },
+              { x: 470, y: 330 },
+              { x: 450, y: 275 },
+              { x: 425, y: 220 },
+              { x: 400, y: 165 },
+              { x: 370, y: 110 },
+              { x: 345, y: 80 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the lower-right dot down and right",
+            path: [
+              { x: 790, y: 380 },
+              { x: 815, y: 335 },
+              { x: 840, y: 285 },
+              { x: 865, y: 235 },
+              { x: 885, y: 185 },
+              { x: 900, y: 135 },
+              { x: 915, y: 90 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("你"),
+  },
+  // 好 writes all three strokes of 女 before the three strokes of 子. The
+  // first strokes of both components turn without lifting, and 子's vertical
+  // keeps its base hook joined. Six Noto-fitted runs preserve five lifts.
+  [ductusKey("chinese", "好")]: {
+    script: "chinese",
+    glyph: "好",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw 女's first bent stroke down and left",
+            path: [
+              { x: 218, y: 820 },
+              { x: 205, y: 750 },
+              { x: 190, y: 675 },
+              { x: 175, y: 600 },
+              { x: 155, y: 520 },
+              { x: 135, y: 440 },
+              { x: 120, y: 365 },
+              { x: 100, y: 320 },
+              { x: 82, y: 300 },
+            ],
+          },
+          {
+            label: "turn without lifting and sweep right",
+            path: [
+              { x: 82, y: 300 },
+              { x: 145, y: 270 },
+              { x: 205, y: 225 },
+              { x: 265, y: 175 },
+              { x: 325, y: 120 },
+              { x: 375, y: 70 },
+              { x: 410, y: 40 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 女's left-falling stroke",
+            path: [
+              { x: 390, y: 620 },
+              { x: 380, y: 550 },
+              { x: 365, y: 475 },
+              { x: 345, y: 395 },
+              { x: 320, y: 310 },
+              { x: 290, y: 225 },
+              { x: 255, y: 150 },
+              { x: 215, y: 80 },
+              { x: 165, y: 20 },
+              { x: 95, y: -45 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 女's horizontal stroke left to right",
+            path: [
+              { x: 45, y: 600 },
+              { x: 100, y: 600 },
+              { x: 160, y: 600 },
+              { x: 220, y: 600 },
+              { x: 280, y: 600 },
+              { x: 335, y: 600 },
+              { x: 370, y: 600 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 子's top horizontal left to right",
+            path: [
+              { x: 485, y: 730 },
+              { x: 555, y: 730 },
+              { x: 630, y: 730 },
+              { x: 705, y: 730 },
+              { x: 780, y: 730 },
+              { x: 850, y: 730 },
+            ],
+          },
+          {
+            label: "turn without lifting and sweep down-left",
+            path: [
+              { x: 850, y: 730 },
+              { x: 840, y: 700 },
+              { x: 820, y: 665 },
+              { x: 790, y: 625 },
+              { x: 755, y: 585 },
+              { x: 715, y: 545 },
+              { x: 680, y: 520 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend 子's vertical stroke",
+            path: [
+              { x: 700, y: 520 },
+              { x: 700, y: 440 },
+              { x: 700, y: 350 },
+              { x: 700, y: 260 },
+              { x: 700, y: 170 },
+              { x: 700, y: 80 },
+              { x: 700, y: 15 },
+              { x: 695, y: -25 },
+            ],
+          },
+          {
+            label: "hook left at the base without lifting",
+            path: [
+              { x: 695, y: -25 },
+              { x: 665, y: -35 },
+              { x: 625, y: -40 },
+              { x: 585, y: -38 },
+              { x: 545, y: -25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 子's middle horizontal left to right",
+            path: [
+              { x: 440, y: 380 },
+              { x: 520, y: 380 },
+              { x: 610, y: 380 },
+              { x: 700, y: 380 },
+              { x: 790, y: 380 },
+              { x: 880, y: 380 },
+              { x: 950, y: 380 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("好"),
+  },
+  // 我 has seven sourced strokes. Only the vertical and its base hook remain
+  // joined; the long curved slash also hooks upward without lifting, producing
+  // nine visible movements and six pen lifts.
+  [ductusKey("chinese", "我")]: {
+    script: "chinese",
+    glyph: "我",
+    strokes: [
+      { segments: [{ label: "draw the short upper-left falling stroke", path: [
+        { x: 450, y: 800 }, { x: 390, y: 785 }, { x: 325, y: 770 },
+        { x: 255, y: 755 }, { x: 185, y: 740 }, { x: 105, y: 720 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the upper horizontal left to right", path: [
+        { x: 65, y: 510 }, { x: 180, y: 510 }, { x: 300, y: 510 },
+        { x: 420, y: 510 }, { x: 540, y: 510 }, { x: 660, y: 510 },
+        { x: 780, y: 510 }, { x: 900, y: 510 }, { x: 940, y: 510 },
+      ] }] },
+      { segments: [
+        { label: "lift, then descend the vertical stroke", path: [
+          { x: 307, y: 720 }, { x: 307, y: 620 }, { x: 307, y: 520 },
+          { x: 307, y: 420 }, { x: 307, y: 320 }, { x: 307, y: 220 },
+          { x: 307, y: 120 }, { x: 307, y: 20 }, { x: 302, y: -25 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 302, y: -25 }, { x: 275, y: -35 }, { x: 235, y: -40 },
+          { x: 195, y: -38 }, { x: 155, y: -25 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw the lower rising stroke", path: [
+        { x: 55, y: 215 }, { x: 120, y: 230 }, { x: 190, y: 245 },
+        { x: 265, y: 262 }, { x: 340, y: 280 }, { x: 415, y: 298 },
+        { x: 490, y: 315 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the long curved slash down and right", path: [
+          { x: 600, y: 810 }, { x: 600, y: 700 }, { x: 605, y: 590 },
+          { x: 615, y: 480 }, { x: 635, y: 365 }, { x: 660, y: 255 },
+          { x: 700, y: 150 }, { x: 750, y: 65 }, { x: 805, y: 5 },
+          { x: 850, y: -35 }, { x: 875, y: -45 },
+        ] },
+        { label: "hook upward on the right without lifting", path: [
+          { x: 875, y: -45 }, { x: 895, y: 5 }, { x: 905, y: 55 },
+          { x: 915, y: 105 }, { x: 925, y: 145 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw the separate rising slash up and left", path: [
+        { x: 850, y: 390 }, { x: 815, y: 325 }, { x: 770, y: 260 },
+        { x: 720, y: 200 }, { x: 660, y: 140 }, { x: 595, y: 85 },
+        { x: 525, y: 35 }, { x: 455, y: -5 },
+      ] }] },
+      { segments: [{ label: "lift, then place the upper-right dot down and right", path: [
+        { x: 755, y: 785 }, { x: 785, y: 755 }, { x: 815, y: 720 },
+        { x: 845, y: 685 }, { x: 875, y: 650 }, { x: 895, y: 625 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("我"),
+  },
+  // 是 closes 日 in four strokes before drawing the five-stroke lower body.
+  // Only 日's top-right corner remains joined: nine strokes, eight lifts, and
+  // ten visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "是")]: {
+    script: "chinese",
+    glyph: "是",
+    strokes: [
+      { segments: [{ label: "draw 日's left vertical", path: [
+        { x: 200, y: 770 }, { x: 200, y: 710 }, { x: 200, y: 650 },
+        { x: 200, y: 590 }, { x: 200, y: 530 }, { x: 200, y: 490 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 日's top horizontal", path: [
+          { x: 200, y: 760 }, { x: 300, y: 760 }, { x: 400, y: 760 },
+          { x: 500, y: 760 }, { x: 600, y: 760 }, { x: 700, y: 760 },
+          { x: 795, y: 760 },
+        ] },
+        { label: "turn down the right side without lifting", path: [
+          { x: 795, y: 760 }, { x: 795, y: 700 }, { x: 795, y: 640 },
+          { x: 795, y: 580 }, { x: 795, y: 520 }, { x: 795, y: 490 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 日's inner horizontal", path: [
+          { x: 235, y: 634 }, { x: 330, y: 634 }, { x: 430, y: 634 },
+          { x: 530, y: 634 }, { x: 630, y: 634 }, { x: 730, y: 634 },
+          { x: 760, y: 634 },
+      ] }] },
+      { segments: [{ label: "lift, then close 日 with the bottom horizontal", path: [
+        { x: 235, y: 500 }, { x: 330, y: 500 }, { x: 430, y: 500 },
+        { x: 530, y: 500 }, { x: 630, y: 500 }, { x: 730, y: 500 },
+        { x: 760, y: 500 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the wide middle horizontal", path: [
+        { x: 65, y: 365 }, { x: 180, y: 365 }, { x: 300, y: 365 },
+        { x: 420, y: 365 }, { x: 540, y: 365 }, { x: 660, y: 365 },
+        { x: 780, y: 365 }, { x: 900, y: 365 }, { x: 940, y: 365 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the central vertical", path: [
+        { x: 508, y: 350 }, { x: 508, y: 300 }, { x: 508, y: 245 },
+        { x: 508, y: 190 }, { x: 508, y: 130 }, { x: 508, y: 70 },
+        { x: 508, y: 10 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the short lower-right horizontal", path: [
+        { x: 510, y: 185 }, { x: 580, y: 185 }, { x: 650, y: 185 },
+        { x: 720, y: 185 }, { x: 790, y: 185 }, { x: 850, y: 185 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the lower-left falling stroke", path: [
+        { x: 265, y: 280 }, { x: 250, y: 230 }, { x: 230, y: 180 },
+        { x: 205, y: 130 }, { x: 175, y: 85 }, { x: 140, y: 45 },
+        { x: 100, y: 10 }, { x: 60, y: -25 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the long finishing stroke down and right", path: [
+        { x: 245, y: 180 }, { x: 280, y: 140 }, { x: 320, y: 105 },
+        { x: 370, y: 65 }, { x: 430, y: 25 }, { x: 500, y: -5 },
+        { x: 580, y: -25 }, { x: 670, y: -25 }, { x: 760, y: -25 },
+        { x: 850, y: -25 }, { x: 920, y: -20 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("是"),
+  },
+  // 不 places four independent strokes: top horizontal, long falling stroke,
+  // central vertical, then the right-falling dot. Four strokes mean three
+  // lifts and four visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "不")]: {
+    script: "chinese",
+    glyph: "不",
+    strokes: [
+      { segments: [{ label: "draw the top horizontal left-to-right", path: [
+        { x: 85, y: 730 }, { x: 200, y: 730 }, { x: 320, y: 730 },
+        { x: 440, y: 730 }, { x: 560, y: 730 }, { x: 680, y: 730 },
+        { x: 800, y: 730 }, { x: 915, y: 730 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the long stroke down-left", path: [
+        { x: 545, y: 710 }, { x: 525, y: 650 }, { x: 490, y: 590 },
+        { x: 440, y: 525 }, { x: 380, y: 460 }, { x: 315, y: 395 },
+        { x: 245, y: 330 }, { x: 175, y: 275 }, { x: 105, y: 225 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the central vertical", path: [
+        { x: 500, y: 550 }, { x: 500, y: 475 }, { x: 500, y: 400 },
+        { x: 500, y: 325 }, { x: 500, y: 250 }, { x: 500, y: 175 },
+        { x: 500, y: 100 }, { x: 500, y: 20 }, { x: 500, y: -55 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the separate right-falling dot", path: [
+        { x: 610, y: 470 }, { x: 660, y: 430 }, { x: 715, y: 390 },
+        { x: 770, y: 350 }, { x: 825, y: 305 }, { x: 875, y: 260 },
+        { x: 920, y: 220 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("不"),
+  },
+  // 名 completes 夕 before 口. The second 夕 stroke joins its horizontal to the
+  // long down-left fall, and 口 joins its top to the right side: six strokes,
+  // five lifts, and eight visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "名")]: {
+    script: "chinese",
+    glyph: "名",
+    strokes: [
+      { segments: [{ label: "draw 夕's upper left-falling stroke", path: [
+        { x: 445, y: 820 }, { x: 420, y: 775 }, { x: 385, y: 730 },
+        { x: 340, y: 685 }, { x: 285, y: 640 }, { x: 225, y: 600 },
+        { x: 165, y: 560 }, { x: 105, y: 525 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 夕's horizontal", path: [
+          { x: 350, y: 705 }, { x: 440, y: 705 }, { x: 530, y: 705 },
+          { x: 620, y: 705 }, { x: 710, y: 705 }, { x: 775, y: 705 },
+        ] },
+        { label: "continue down-left without lifting", path: [
+          { x: 775, y: 705 }, { x: 745, y: 650 }, { x: 700, y: 590 },
+          { x: 640, y: 530 }, { x: 570, y: 470 }, { x: 490, y: 415 },
+          { x: 400, y: 360 }, { x: 305, y: 315 }, { x: 205, y: 275 },
+          { x: 110, y: 240 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then place 夕's inner down-right dot", path: [
+        { x: 300, y: 540 }, { x: 330, y: 515 }, { x: 365, y: 490 },
+        { x: 400, y: 460 }, { x: 435, y: 430 }, { x: 470, y: 400 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 口's left side", path: [
+        { x: 290, y: 305 }, { x: 290, y: 245 }, { x: 290, y: 185 },
+        { x: 290, y: 125 }, { x: 290, y: 65 }, { x: 290, y: 5 },
+        { x: 290, y: -50 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 口's top horizontal", path: [
+          { x: 300, y: 305 }, { x: 385, y: 305 }, { x: 470, y: 305 },
+          { x: 555, y: 305 }, { x: 640, y: 305 }, { x: 725, y: 305 },
+          { x: 810, y: 305 },
+        ] },
+        { label: "turn down the right side without lifting", path: [
+          { x: 810, y: 305 }, { x: 810, y: 245 }, { x: 810, y: 185 },
+          { x: 810, y: 125 }, { x: 810, y: 65 }, { x: 810, y: 5 },
+          { x: 810, y: -50 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then close 口 with the bottom horizontal", path: [
+        { x: 300, y: 5 }, { x: 385, y: 5 }, { x: 470, y: 5 },
+        { x: 555, y: 5 }, { x: 640, y: 5 }, { x: 725, y: 5 },
+        { x: 800, y: 5 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("名"),
+  },
+  // 字 writes 宀 before 子. The roof ends in one joined hook; 子 then keeps its
+  // top turn and vertical base hook joined: six strokes, five lifts, and nine
+  // visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "字")]: {
+    script: "chinese",
+    glyph: "字",
+    strokes: [
+      { segments: [{ label: "draw 宀's top dot down-right", path: [
+        { x: 455, y: 825 }, { x: 475, y: 800 }, { x: 495, y: 775 },
+        { x: 520, y: 750 }, { x: 545, y: 725 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 宀's left-side stroke down-left", path: [
+        { x: 125, y: 690 }, { x: 120, y: 650 }, { x: 115, y: 610 },
+        { x: 105, y: 570 }, { x: 95, y: 535 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 宀's horizontal roof", path: [
+          { x: 140, y: 700 }, { x: 250, y: 700 }, { x: 360, y: 700 },
+          { x: 470, y: 700 }, { x: 580, y: 700 }, { x: 690, y: 700 },
+          { x: 800, y: 700 }, { x: 880, y: 700 },
+        ] },
+        { label: "hook down-left without lifting", path: [
+          { x: 880, y: 700 }, { x: 875, y: 660 }, { x: 865, y: 620 },
+          { x: 855, y: 580 }, { x: 850, y: 545 },
+        ] },
+      ] },
+      { segments: [
+        { label: "lift, then draw 子's top horizontal", path: [
+          { x: 260, y: 515 }, { x: 345, y: 515 }, { x: 430, y: 515 },
+          { x: 515, y: 515 }, { x: 600, y: 515 }, { x: 685, y: 515 },
+          { x: 735, y: 515 },
+        ] },
+        { label: "turn down-left without lifting", path: [
+          { x: 735, y: 515 }, { x: 700, y: 480 }, { x: 660, y: 445 },
+          { x: 615, y: 410 }, { x: 570, y: 380 }, { x: 525, y: 350 },
+          { x: 490, y: 330 },
+        ] },
+      ] },
+      { segments: [
+        { label: "lift, then descend 子's vertical", path: [
+          { x: 500, y: 350 }, { x: 500, y: 290 }, { x: 500, y: 230 },
+          { x: 500, y: 170 }, { x: 500, y: 110 }, { x: 500, y: 50 },
+          { x: 500, y: 5 },
+        ] },
+        { label: "hook left without lifting", path: [
+          { x: 500, y: 5 }, { x: 480, y: -20 }, { x: 450, y: -35 },
+          { x: 410, y: -40 }, { x: 365, y: -40 }, { x: 325, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 子's middle horizontal", path: [
+        { x: 85, y: 265 }, { x: 200, y: 265 }, { x: 315, y: 265 },
+        { x: 430, y: 265 }, { x: 545, y: 265 }, { x: 660, y: 265 },
+        { x: 775, y: 265 }, { x: 900, y: 265 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("字"),
+  },
+  // 谢 writes 讠, then 身, then 寸. Its twelve cited strokes preserve the two
+  // turns in 讠's second run, 身's two-turn enclosure, and 寸's base hook:
+  // twelve strokes, eleven lifts, and seventeen visible movements.
+  [ductusKey("chinese", "谢")]: {
+    script: "chinese",
+    glyph: "谢",
+    strokes: [
+      { segments: [{ label: "draw 讠's top dot down-right", path: [
+        { x: 90, y: 780 }, { x: 120, y: 755 }, { x: 150, y: 725 },
+        { x: 185, y: 690 }, { x: 225, y: 650 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 讠's short horizontal", path: [
+          { x: 50, y: 490 }, { x: 85, y: 490 }, { x: 120, y: 490 },
+          { x: 155, y: 490 }, { x: 195, y: 490 },
+        ] },
+        { label: "turn down without lifting", path: [
+          { x: 195, y: 490 }, { x: 195, y: 400 }, { x: 195, y: 300 },
+          { x: 195, y: 200 }, { x: 195, y: 100 }, { x: 195, y: 10 },
+        ] },
+        { label: "turn and finish rising up-right without lifting", path: [
+          { x: 195, y: 10 }, { x: 225, y: 25 }, { x: 255, y: 50 },
+          { x: 285, y: 80 }, { x: 315, y: 115 }, { x: 335, y: 145 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 身's upper falling stroke", path: [
+        { x: 505, y: 825 }, { x: 500, y: 790 }, { x: 485, y: 755 },
+        { x: 465, y: 720 }, { x: 440, y: 685 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 身's left side", path: [
+        { x: 375, y: 680 }, { x: 375, y: 600 }, { x: 375, y: 520 },
+        { x: 375, y: 440 }, { x: 375, y: 360 }, { x: 375, y: 285 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 身's top horizontal", path: [
+          { x: 405, y: 695 }, { x: 450, y: 695 }, { x: 495, y: 695 },
+          { x: 540, y: 695 }, { x: 580, y: 695 },
+        ] },
+        { label: "turn and descend 身's right side without lifting", path: [
+          { x: 580, y: 695 }, { x: 580, y: 575 }, { x: 580, y: 455 },
+          { x: 580, y: 335 }, { x: 580, y: 215 }, { x: 580, y: 95 },
+          { x: 580, y: 10 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 580, y: 10 }, { x: 565, y: -10 }, { x: 540, y: -25 },
+          { x: 510, y: -35 }, { x: 475, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 身's upper inner horizontal", path: [
+        { x: 390, y: 565 }, { x: 430, y: 565 }, { x: 470, y: 565 },
+        { x: 510, y: 565 }, { x: 550, y: 565 }, { x: 580, y: 565 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 身's lower inner horizontal", path: [
+        { x: 390, y: 430 }, { x: 430, y: 430 }, { x: 470, y: 430 },
+        { x: 510, y: 430 }, { x: 550, y: 430 }, { x: 580, y: 430 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 身's wide lower horizontal", path: [
+        { x: 290, y: 285 }, { x: 350, y: 285 }, { x: 410, y: 285 },
+        { x: 470, y: 285 }, { x: 530, y: 285 }, { x: 585, y: 285 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 身's lower falling stroke down-left", path: [
+        { x: 535, y: 270 }, { x: 510, y: 220 }, { x: 480, y: 170 },
+        { x: 440, y: 120 }, { x: 395, y: 75 }, { x: 345, y: 30 },
+        { x: 295, y: -10 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 寸's horizontal", path: [
+        { x: 650, y: 585 }, { x: 700, y: 585 }, { x: 750, y: 585 },
+        { x: 800, y: 585 }, { x: 850, y: 585 }, { x: 900, y: 585 },
+        { x: 950, y: 585 },
+      ] }] },
+      { segments: [
+        { label: "lift, then descend 寸's vertical", path: [
+          { x: 855, y: 825 }, { x: 855, y: 700 }, { x: 855, y: 575 },
+          { x: 855, y: 450 }, { x: 855, y: 325 }, { x: 855, y: 200 },
+          { x: 855, y: 75 }, { x: 855, y: 5 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 855, y: 5 }, { x: 840, y: -15 }, { x: 815, y: -30 },
+          { x: 785, y: -40 }, { x: 750, y: -40 }, { x: 720, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then place 寸's dot down-right", path: [
+        { x: 680, y: 430 }, { x: 700, y: 390 }, { x: 720, y: 350 },
+        { x: 740, y: 310 }, { x: 760, y: 270 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("谢"),
+  },
+  // 请 writes 讠 before 青. The speech radical keeps both turns inside its
+  // second run; 青 closes with a joined top, right side, and leftward base hook:
+  // ten strokes, nine lifts, and fourteen visible movements.
+  [ductusKey("chinese", "请")]: {
+    script: "chinese",
+    glyph: "请",
+    strokes: [
+      { segments: [{ label: "draw 讠's top dot down-right", path: [
+        { x: 135, y: 780 }, { x: 165, y: 750 }, { x: 195, y: 715 },
+        { x: 225, y: 680 }, { x: 255, y: 650 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 讠's short horizontal", path: [
+          { x: 45, y: 490 }, { x: 80, y: 490 }, { x: 120, y: 490 },
+          { x: 160, y: 490 }, { x: 200, y: 490 }, { x: 235, y: 490 },
+        ] },
+        { label: "turn down without lifting", path: [
+          { x: 235, y: 490 }, { x: 235, y: 400 }, { x: 235, y: 300 },
+          { x: 235, y: 200 }, { x: 235, y: 100 }, { x: 235, y: 10 },
+        ] },
+        { label: "turn and finish rising up-right without lifting", path: [
+          { x: 235, y: 10 }, { x: 265, y: 25 }, { x: 295, y: 50 },
+          { x: 330, y: 80 }, { x: 360, y: 110 }, { x: 390, y: 145 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 青's top horizontal", path: [
+        { x: 385, y: 735 }, { x: 475, y: 735 }, { x: 565, y: 735 },
+        { x: 655, y: 735 }, { x: 745, y: 735 }, { x: 835, y: 735 },
+        { x: 925, y: 735 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 青's second horizontal", path: [
+        { x: 410, y: 610 }, { x: 490, y: 610 }, { x: 570, y: 610 },
+        { x: 650, y: 610 }, { x: 730, y: 610 }, { x: 810, y: 610 },
+        { x: 895, y: 610 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 青's upper vertical", path: [
+        { x: 650, y: 835 }, { x: 650, y: 765 }, { x: 650, y: 695 },
+        { x: 650, y: 625 }, { x: 650, y: 555 }, { x: 650, y: 485 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 青's wide middle horizontal", path: [
+        { x: 355, y: 485 }, { x: 455, y: 485 }, { x: 555, y: 485 },
+        { x: 655, y: 485 }, { x: 755, y: 485 }, { x: 855, y: 485 },
+        { x: 955, y: 485 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 青's lower left side", path: [
+        { x: 460, y: 370 }, { x: 460, y: 295 }, { x: 460, y: 220 },
+        { x: 460, y: 145 }, { x: 460, y: 70 }, { x: 460, y: -5 },
+        { x: 460, y: -70 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 青's lower top horizontal", path: [
+          { x: 490, y: 370 }, { x: 550, y: 370 }, { x: 610, y: 370 },
+          { x: 670, y: 370 }, { x: 730, y: 370 }, { x: 790, y: 370 },
+          { x: 845, y: 370 },
+        ] },
+        { label: "turn and descend the right side without lifting", path: [
+          { x: 845, y: 370 }, { x: 845, y: 295 }, { x: 845, y: 220 },
+          { x: 845, y: 145 }, { x: 845, y: 70 }, { x: 845, y: 5 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 845, y: 5 }, { x: 830, y: -15 }, { x: 805, y: -30 },
+          { x: 775, y: -40 }, { x: 740, y: -40 }, { x: 705, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 青's upper inner horizontal", path: [
+        { x: 480, y: 235 }, { x: 540, y: 235 }, { x: 600, y: 235 },
+        { x: 660, y: 235 }, { x: 720, y: 235 }, { x: 780, y: 235 },
+        { x: 825, y: 235 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 青's lower inner horizontal", path: [
+        { x: 480, y: 100 }, { x: 540, y: 100 }, { x: 600, y: 100 },
+        { x: 660, y: 100 }, { x: 720, y: 100 }, { x: 780, y: 100 },
+        { x: 825, y: 100 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("请"),
+  },
+  // HebrewPod101's second handwritten Alef demonstration draws one descending
+  // diagonal, lifts, then draws the opposing diagonal across it. This learner
+  // path keeps those two pen-down runs while routing the crossing through the
+  // branches of the vendored Noto Sans Hebrew block Alef.
+  [ductusKey("hebrew", "א")]: {
+    script: "hebrew",
+    glyph: "א",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the main diagonal down and right",
+            path: [
+              { x: 120, y: 560 },
+              { x: 180, y: 480 },
+              { x: 250, y: 400 },
+              { x: 320, y: 310 },
+              { x: 390, y: 220 },
+              { x: 470, y: 100 },
+              { x: 540, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend from the upper-right arm to the crossing",
+            path: [
+              { x: 540, y: 560 },
+              { x: 535, y: 500 },
+              { x: 525, y: 430 },
+              { x: 500, y: 370 },
+              { x: 470, y: 330 },
+              { x: 425, y: 290 },
+              { x: 385, y: 285 },
+            ],
+          },
+          {
+            label: "continue through the crossing and down the lower-left leg",
+            path: [
+              { x: 385, y: 285 },
+              { x: 350, y: 315 },
+              { x: 320, y: 340 },
+              { x: 280, y: 370 },
+              { x: 252, y: 370 },
+              { x: 220, y: 350 },
+              { x: 175, y: 300 },
+              { x: 135, y: 220 },
+              { x: 105, y: 120 },
+              { x: 85, y: 30 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("א"),
+  },
+  // The same lesson's block-style Bet joins the top bar directly to the right
+  // descent, then lifts once before drawing the baseline left-to-right. Its
+  // later dagesh is an optional mark and is not part of base U+05D1 here.
+  [ductusKey("hebrew", "ב")]: {
+    script: "hebrew",
+    glyph: "ב",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 90, y: 555 },
+              { x: 170, y: 555 },
+              { x: 260, y: 555 },
+              { x: 330, y: 540 },
+              { x: 390, y: 500 },
+              { x: 415, y: 430 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 415, y: 430 },
+              { x: 415, y: 330 },
+              { x: 415, y: 220 },
+              { x: 415, y: 100 },
+              { x: 415, y: 40 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the baseline from left to right",
+            path: [
+              { x: 50, y: 40 },
+              { x: 150, y: 40 },
+              { x: 250, y: 40 },
+              { x: 350, y: 40 },
+              { x: 450, y: 40 },
+              { x: 520, y: 40 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ב"),
+  },
+  // The dedicated Gimel lesson's printed-form demonstration joins its short
+  // top bar to the right stem and short lower-right leg. It then lifts once,
+  // restarts at the lower junction, and draws the longer leg down-left. That
+  // angular order follows Noto Sans Hebrew while the source note preserves the
+  // lesson's visibly different rounded cursive alternative.
+  [ductusKey("hebrew", "ג")]: {
+    script: "hebrew",
+    glyph: "ג",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short top bar from left to right",
+            path: [
+              { x: 105, y: 555 },
+              { x: 145, y: 555 },
+              { x: 185, y: 550 },
+              { x: 220, y: 535 },
+              { x: 245, y: 510 },
+            ],
+          },
+          {
+            label: "continue down the right stem without lifting",
+            path: [
+              { x: 245, y: 510 },
+              { x: 260, y: 455 },
+              { x: 263, y: 380 },
+              { x: 263, y: 300 },
+              { x: 263, y: 220 },
+              { x: 265, y: 150 },
+            ],
+          },
+          {
+            label: "continue into the short lower-right leg",
+            path: [
+              { x: 265, y: 150 },
+              { x: 275, y: 110 },
+              { x: 286, y: 70 },
+              { x: 300, y: 25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the lower junction, and draw the longer leg down-left",
+            path: [
+              { x: 235, y: 155 },
+              { x: 215, y: 130 },
+              { x: 185, y: 100 },
+              { x: 150, y: 75 },
+              { x: 110, y: 55 },
+              { x: 70, y: 42 },
+              { x: 38, y: 40 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ג"),
+  },
+  // The source's cursive Dalet is explicitly one curve: a broad left-to-right
+  // arch curls through a small loop and continues into its tail. The learner
+  // path preserves that zero-lift run while fitting it to Noto Sans Hebrew's
+  // angular block top bar, sharp right heel, and downstroke.
+  [ductusKey("hebrew", "ד")]: {
+    script: "hebrew",
+    glyph: "ד",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 150, y: 555 },
+              { x: 240, y: 555 },
+              { x: 330, y: 555 },
+              { x: 420, y: 555 },
+              { x: 480, y: 555 },
+            ],
+          },
+          {
+            label: "continue around the sharp right corner and down without lifting",
+            path: [
+              { x: 480, y: 555 },
+              { x: 430, y: 540 },
+              { x: 385, y: 510 },
+              { x: 370, y: 460 },
+              { x: 370, y: 370 },
+              { x: 370, y: 270 },
+              { x: 370, y: 170 },
+              { x: 370, y: 70 },
+              { x: 370, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ד"),
+  },
+  // The dedicated Hei lesson writes the printed body as a left-to-right top
+  // bar that turns down the right side, then lifts once for the detached left
+  // leg. This angular order follows Noto Sans Hebrew while the source note
+  // preserves the lesson's rounded handwritten alternative.
+  [ductusKey("hebrew", "ה")]: {
+    script: "hebrew",
+    glyph: "ה",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 150, y: 555 },
+              { x: 240, y: 555 },
+              { x: 330, y: 555 },
+              { x: 410, y: 555 },
+              { x: 480, y: 555 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 480, y: 555 },
+              { x: 500, y: 530 },
+              { x: 510, y: 480 },
+              { x: 510, y: 380 },
+              { x: 510, y: 270 },
+              { x: 510, y: 160 },
+              { x: 510, y: 50 },
+              { x: 510, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the detached left leg from top to bottom",
+            path: [
+              { x: 115, y: 320 },
+              { x: 115, y: 260 },
+              { x: 115, y: 180 },
+              { x: 115, y: 100 },
+              { x: 115, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ה"),
+  },
+  // The dedicated Vav lesson draws the printed head left-to-right and turns
+  // directly into the top-to-bottom stem. This two-movement learner path is
+  // one continuous zero-lift stroke on the Noto Sans Hebrew outline.
+  [ductusKey("hebrew", "ו")]: {
+    script: "hebrew",
+    glyph: "ו",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the small head from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 120, y: 555 },
+              { x: 175, y: 555 },
+            ],
+          },
+          {
+            label: "continue straight down without lifting",
+            path: [
+              { x: 175, y: 555 },
+              { x: 175, y: 480 },
+              { x: 175, y: 380 },
+              { x: 175, y: 270 },
+              { x: 175, y: 160 },
+              { x: 175, y: 60 },
+              { x: 175, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ו"),
+  },
+  // The lesson's rounded handwritten Zayin begins with a short rightward rise
+  // and continues around the body without lifting. This path preserves that
+  // order while following Noto Sans Hebrew's broader head and curved stem.
+  [ductusKey("hebrew", "ז")]: {
+    script: "hebrew",
+    glyph: "ז",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short head from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 160, y: 555 },
+              { x: 260, y: 555 },
+            ],
+          },
+          {
+            label: "continue down through the curved stem without lifting",
+            path: [
+              { x: 260, y: 555 },
+              { x: 220, y: 520 },
+              { x: 180, y: 475 },
+              { x: 150, y: 425 },
+              { x: 132, y: 360 },
+              { x: 130, y: 285 },
+              { x: 138, y: 205 },
+              { x: 148, y: 125 },
+              { x: 160, y: 55 },
+              { x: 166, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ז"),
+  },
+  // The printed Heit demonstration joins its left-to-right top bar to the
+  // right descent, then lifts once for the left leg. The source also preserves
+  // the same order with rounded corners in handwriting.
+  [ductusKey("hebrew", "ח")]: {
+    script: "hebrew",
+    glyph: "ח",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 75, y: 555 },
+              { x: 170, y: 555 },
+              { x: 280, y: 555 },
+              { x: 390, y: 555 },
+              { x: 480, y: 555 },
+              { x: 540, y: 540 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 540, y: 540 },
+              { x: 542, y: 480 },
+              { x: 542, y: 380 },
+              { x: 542, y: 270 },
+              { x: 542, y: 160 },
+              { x: 542, y: 55 },
+              { x: 542, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the joined left leg from top to bottom",
+            path: [
+              { x: 142, y: 555 },
+              { x: 142, y: 480 },
+              { x: 142, y: 380 },
+              { x: 142, y: 270 },
+              { x: 142, y: 160 },
+              { x: 142, y: 55 },
+              { x: 142, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ח"),
+  },
+  // Printed Tet uses an L-shaped left-and-base stroke, then restarts at the
+  // lower right and climbs before turning inward. The source's rounded
+  // handwriting preserves that unusual bottom-up finish as one continuous run.
+  [ductusKey("hebrew", "ט")]: {
+    script: "hebrew",
+    glyph: "ט",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the left side from top to bottom",
+            path: [
+              { x: 103, y: 560 },
+              { x: 103, y: 480 },
+              { x: 103, y: 380 },
+              { x: 103, y: 270 },
+              { x: 125, y: 170 },
+            ],
+          },
+          {
+            label: "continue around the bottom from left to right without lifting",
+            path: [
+              { x: 125, y: 170 },
+              { x: 160, y: 90 },
+              { x: 235, y: 35 },
+              { x: 315, y: 25 },
+              { x: 400, y: 45 },
+              { x: 470, y: 105 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the lower-right, and climb the right side",
+            path: [
+              { x: 470, y: 105 },
+              { x: 515, y: 170 },
+              { x: 537, y: 250 },
+              { x: 537, y: 330 },
+              { x: 530, y: 420 },
+              { x: 500, y: 495 },
+              { x: 455, y: 545 },
+            ],
+          },
+          {
+            label: "turn down-left into the inward hook without lifting",
+            path: [
+              { x: 455, y: 545 },
+              { x: 410, y: 560 },
+              { x: 365, y: 557 },
+              { x: 330, y: 540 },
+              { x: 315, y: 530 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ט"),
+  },
+  // Printed Yod is the same tiny comma-like idea as handwriting with a sharper
+  // angle: the head runs left-to-right and turns directly down the short stem.
+  [ductusKey("hebrew", "י")]: {
+    script: "hebrew",
+    glyph: "י",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the small head from left to right",
+            path: [
+              { x: 60, y: 555 },
+              { x: 120, y: 555 },
+              { x: 180, y: 555 },
+            ],
+          },
+          {
+            label: "continue down through the short angled stem without lifting",
+            path: [
+              { x: 180, y: 555 },
+              { x: 180, y: 480 },
+              { x: 180, y: 390 },
+              { x: 180, y: 300 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("י"),
+  },
+  // Printed Kaf sharpens the handwritten half-circle into one continuous
+  // top-right-bottom run: across the top, around the right side, then left.
+  [ductusKey("hebrew", "כ")]: {
+    script: "hebrew",
+    glyph: "כ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 135, y: 555 },
+              { x: 209, y: 555 },
+            ],
+          },
+          {
+            label: "continue down the rounded right side without lifting",
+            path: [
+              { x: 209, y: 555 },
+              { x: 300, y: 530 },
+              { x: 380, y: 470 },
+              { x: 420, y: 385 },
+              { x: 423, y: 294 },
+              { x: 420, y: 205 },
+              { x: 380, y: 120 },
+              { x: 300, y: 58 },
+              { x: 209, y: 38 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting",
+            path: [
+              { x: 209, y: 38 },
+              { x: 135, y: 38 },
+              { x: 60, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("כ"),
+  },
+  // Printed Lamed is one angular run: down the tall left stroke, right across
+  // the middle, then diagonally down-left. Handwriting rounds this into a loop.
+  [ductusKey("hebrew", "ל")]: {
+    script: "hebrew",
+    glyph: "ל",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the tall left stroke from top to bottom",
+            path: [
+              { x: 80, y: 730 },
+              { x: 80, y: 660 },
+              { x: 80, y: 590 },
+              { x: 80, y: 555 },
+            ],
+          },
+          {
+            label: "continue right along the middle bar without lifting",
+            path: [
+              { x: 80, y: 555 },
+              { x: 180, y: 555 },
+              { x: 300, y: 555 },
+              { x: 420, y: 555 },
+            ],
+          },
+          {
+            label: "turn diagonally down-left through the lower stroke without lifting",
+            path: [
+              { x: 420, y: 555 },
+              { x: 400, y: 480 },
+              { x: 370, y: 390 },
+              { x: 340, y: 300 },
+              { x: 310, y: 210 },
+              { x: 280, y: 120 },
+              { x: 250, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ל"),
+  },
+  // Printed Mem starts with its detached angled left part. After one lift, the
+  // angular right body climbs, descends, and returns left along the base.
+  [ductusKey("hebrew", "מ")]: {
+    script: "hebrew",
+    glyph: "מ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the detached left part from its lower tip up to the corner",
+            path: [
+              { x: 92, y: 45 },
+              { x: 115, y: 205 },
+              { x: 145, y: 365 },
+              { x: 140, y: 555 },
+            ],
+          },
+          {
+            label: "turn down-right through its short inner leg without lifting",
+            path: [
+              { x: 140, y: 555 },
+              { x: 150, y: 520 },
+              { x: 160, y: 485 },
+              { x: 170, y: 450 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then climb diagonally right through the upper shoulder",
+            path: [
+              { x: 190, y: 440 },
+              { x: 235, y: 515 },
+              { x: 300, y: 560 },
+              { x: 390, y: 560 },
+            ],
+          },
+          {
+            label: "turn down the right side without lifting",
+            path: [
+              { x: 390, y: 560 },
+              { x: 470, y: 525 },
+              { x: 530, y: 430 },
+              { x: 565, y: 315 },
+              { x: 550, y: 180 },
+              { x: 500, y: 76 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting, stopping before the left part",
+            path: [
+              { x: 500, y: 76 },
+              { x: 430, y: 48 },
+              { x: 355, y: 38 },
+              { x: 280, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("מ"),
+  },
+  // Printed Nun joins its small head, right descent, and leftward base in one
+  // run. The source's immediately adjacent cursive form rounds the same hook.
+  [ductusKey("hebrew", "נ")]: {
+    script: "hebrew",
+    glyph: "נ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short top head from left to right",
+            path: [
+              { x: 105, y: 555 },
+              { x: 155, y: 555 },
+              { x: 210, y: 540 },
+              { x: 255, y: 500 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 255, y: 500 },
+              { x: 260, y: 400 },
+              { x: 260, y: 280 },
+              { x: 260, y: 160 },
+              { x: 240, y: 80 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting",
+            path: [
+              { x: 240, y: 80 },
+              { x: 190, y: 55 },
+              { x: 120, y: 40 },
+              { x: 60, y: 40 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("נ"),
+  },
+  // Printed Samekh closes one continuous clockwise loop. The source's
+  // immediately adjacent cursive form rounds the same zero-lift movement.
+  [ductusKey("hebrew", "ס")]: {
+    script: "hebrew",
+    glyph: "ס",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the flat top from left to right",
+            path: [
+              { x: 70, y: 555 },
+              { x: 170, y: 555 },
+              { x: 275, y: 555 },
+              { x: 365, y: 550 },
+            ],
+          },
+          {
+            label: "round down the right side without lifting",
+            path: [
+              { x: 365, y: 550 },
+              { x: 455, y: 520 },
+              { x: 525, y: 430 },
+              { x: 550, y: 325 },
+              { x: 535, y: 200 },
+              { x: 465, y: 90 },
+              { x: 365, y: 35 },
+            ],
+          },
+          {
+            label: "sweep left along the base without lifting",
+            path: [
+              { x: 365, y: 35 },
+              { x: 285, y: 30 },
+              { x: 205, y: 55 },
+              { x: 145, y: 115 },
+            ],
+          },
+          {
+            label: "climb the left side and close the loop without lifting",
+            path: [
+              { x: 145, y: 115 },
+              { x: 120, y: 210 },
+              { x: 120, y: 315 },
+              { x: 125, y: 410 },
+              { x: 150, y: 490 },
+              { x: 120, y: 535 },
+              { x: 70, y: 555 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ס"),
+  },
+  // Printed Ayin descends its right branch into the base, sweeps left, then
+  // turns back to climb the left branch in one uninterrupted run.
+  [ductusKey("hebrew", "ע")]: {
+    script: "hebrew",
+    glyph: "ע",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the right branch and curve left into the base",
+            path: [
+              { x: 500, y: 560 },
+              { x: 495, y: 455 },
+              { x: 475, y: 335 },
+              { x: 440, y: 225 },
+              { x: 390, y: 145 },
+              { x: 330, y: 85 },
+              { x: 250, y: 45 },
+            ],
+          },
+          {
+            label: "sweep left along the base without lifting",
+            path: [
+              { x: 250, y: 45 },
+              { x: 190, y: 25 },
+              { x: 125, y: 15 },
+              { x: 70, y: 10 },
+            ],
+          },
+          {
+            label: "turn back and climb the left branch without lifting",
+            path: [
+              { x: 70, y: 10 },
+              { x: 145, y: 35 },
+              { x: 205, y: 80 },
+              { x: 210, y: 165 },
+              { x: 180, y: 285 },
+              { x: 150, y: 410 },
+              { x: 115, y: 560 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ע"),
+  },
+  // Printed Pe draws the outer top, right side, and returning base in one run,
+  // then lifts once for its short inner curl. The adjacent cursive form instead
+  // coils inward as one rounded spiral.
+  [ductusKey("hebrew", "פ")]: {
+    script: "hebrew",
+    glyph: "פ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the outer top from left to right",
+            path: [
+              { x: 150, y: 560 },
+              { x: 220, y: 570 },
+              { x: 286, y: 565 },
+              { x: 365, y: 535 },
+              { x: 430, y: 475 },
+            ],
+          },
+          {
+            label: "turn down the right side without lifting",
+            path: [
+              { x: 430, y: 475 },
+              { x: 475, y: 410 },
+              { x: 505, y: 330 },
+              { x: 505, y: 260 },
+              { x: 480, y: 185 },
+              { x: 435, y: 120 },
+              { x: 370, y: 75 },
+            ],
+          },
+          {
+            label: "return left along the base without lifting",
+            path: [
+              { x: 370, y: 75 },
+              { x: 300, y: 45 },
+              { x: 220, y: 35 },
+              { x: 140, y: 38 },
+              { x: 70, y: 38 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the short inner curl from left to right",
+            path: [
+              { x: 95, y: 400 },
+              { x: 98, y: 350 },
+              { x: 120, y: 305 },
+              { x: 160, y: 270 },
+              { x: 205, y: 250 },
+              { x: 252, y: 247 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("פ"),
+  },
+  // Printed Tsadi draws its long left diagonal into the returning base, then
+  // lifts once for the short upper-right arm. Its cursive counterpart compresses
+  // those branches into one compact rounded run.
+  [ductusKey("hebrew", "צ")]: {
+    script: "hebrew",
+    glyph: "צ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the long diagonal from the upper left",
+            path: [
+              { x: 100, y: 560 },
+              { x: 145, y: 505 },
+              { x: 195, y: 430 },
+              { x: 245, y: 350 },
+              { x: 295, y: 270 },
+              { x: 345, y: 185 },
+              { x: 395, y: 100 },
+              { x: 440, y: 40 },
+            ],
+          },
+          {
+            label: "turn left along the base without lifting",
+            path: [
+              { x: 440, y: 40 },
+              { x: 350, y: 38 },
+              { x: 250, y: 38 },
+              { x: 150, y: 38 },
+              { x: 55, y: 38 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then curve the upper-right arm down-left into the junction",
+            path: [
+              { x: 460, y: 560 },
+              { x: 458, y: 505 },
+              { x: 448, y: 450 },
+              { x: 430, y: 390 },
+              { x: 405, y: 335 },
+              { x: 375, y: 285 },
+              { x: 345, y: 260 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("צ"),
+  },
+  // Printed Qof keeps the top and slanted right body in one run, then lifts
+  // once for the separate descending stem. Its cursive counterpart rounds the
+  // same idea into one continuous hooked descent.
+  [ductusKey("hebrew", "ק")]: {
+    script: "hebrew",
+    glyph: "ק",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 85, y: 555 },
+              { x: 180, y: 555 },
+              { x: 280, y: 555 },
+              { x: 380, y: 555 },
+              { x: 470, y: 555 },
+              { x: 560, y: 555 },
+            ],
+          },
+          {
+            label: "turn down-left through the right body without lifting",
+            path: [
+              { x: 560, y: 555 },
+              { x: 545, y: 520 },
+              { x: 520, y: 460 },
+              { x: 500, y: 400 },
+              { x: 480, y: 335 },
+              { x: 455, y: 260 },
+              { x: 430, y: 180 },
+              { x: 405, y: 100 },
+              { x: 375, y: 10 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the separate inner-left stem below the line",
+            path: [
+              { x: 140, y: 360 },
+              { x: 140, y: 275 },
+              { x: 140, y: 180 },
+              { x: 140, y: 80 },
+              { x: 140, y: -20 },
+              { x: 140, y: -105 },
+              { x: 140, y: -180 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ק"),
+  },
+  // Printed Resh carries its short top bar directly around the rounded corner
+  // and down the right side. The cursive form keeps the same zero-lift hook.
+  [ductusKey("hebrew", "ר")]: {
+    script: "hebrew",
+    glyph: "ר",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 55, y: 555 },
+              { x: 105, y: 555 },
+              { x: 155, y: 555 },
+              { x: 205, y: 555 },
+              { x: 250, y: 555 },
+            ],
+          },
+          {
+            label: "round the top-right corner and continue down without lifting",
+            path: [
+              { x: 250, y: 555 },
+              { x: 305, y: 550 },
+              { x: 350, y: 530 },
+              { x: 385, y: 495 },
+              { x: 400, y: 445 },
+              { x: 400, y: 350 },
+              { x: 400, y: 250 },
+              { x: 400, y: 140 },
+              { x: 400, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ר"),
+  },
+  // Printed Shin draws its outer right-base-left bowl in one run, then lifts
+  // once for the middle branch. The adjacent purple cursive form compresses
+  // those parts into a single rounded loop with a short rightward exit.
+  [ductusKey("hebrew", "ש")]: {
+    script: "hebrew",
+    glyph: "ש",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the right branch and round left along the base",
+            path: [
+              { x: 620, y: 570 },
+              { x: 620, y: 500 },
+              { x: 620, y: 420 },
+              { x: 620, y: 340 },
+              { x: 610, y: 250 },
+              { x: 580, y: 170 },
+              { x: 530, y: 100 },
+              { x: 470, y: 60 },
+              { x: 400, y: 35 },
+              { x: 330, y: 32 },
+              { x: 260, y: 45 },
+              { x: 200, y: 80 },
+              { x: 160, y: 135 },
+            ],
+          },
+          {
+            label: "continue up the left branch without lifting",
+            path: [
+              { x: 160, y: 135 },
+              { x: 135, y: 200 },
+              { x: 110, y: 280 },
+              { x: 110, y: 380 },
+              { x: 110, y: 480 },
+              { x: 110, y: 570 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the middle branch into the base",
+            path: [
+              { x: 365, y: 570 },
+              { x: 365, y: 500 },
+              { x: 365, y: 430 },
+              { x: 355, y: 365 },
+              { x: 330, y: 320 },
+              { x: 295, y: 285 },
+              { x: 250, y: 260 },
+              { x: 205, y: 250 },
+              { x: 165, y: 250 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ש"),
+  },
+  // Printed Tav joins its top bar to the right side, then lifts once for the
+  // separate left leg and foot. The purple cursive form instead retraces its
+  // left stem and arches into the right side in one continuous run.
+  [ductusKey("hebrew", "ת")]: {
+    script: "hebrew",
+    glyph: "ת",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top bar from left to right",
+            path: [
+              { x: 65, y: 555 },
+              { x: 130, y: 555 },
+              { x: 210, y: 555 },
+              { x: 300, y: 555 },
+              { x: 390, y: 555 },
+              { x: 430, y: 550 },
+            ],
+          },
+          {
+            label: "continue down the right side without lifting",
+            path: [
+              { x: 430, y: 550 },
+              { x: 490, y: 535 },
+              { x: 535, y: 500 },
+              { x: 560, y: 450 },
+              { x: 565, y: 380 },
+              { x: 565, y: 280 },
+              { x: 565, y: 170 },
+              { x: 565, y: 70 },
+              { x: 565, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the separate left leg",
+            path: [
+              { x: 195, y: 520 },
+              { x: 195, y: 450 },
+              { x: 195, y: 360 },
+              { x: 195, y: 270 },
+              { x: 195, y: 180 },
+              { x: 185, y: 120 },
+            ],
+          },
+          {
+            label: "curve left into the small foot without lifting",
+            path: [
+              { x: 185, y: 120 },
+              { x: 165, y: 80 },
+              { x: 135, y: 50 },
+              { x: 100, y: 38 },
+              { x: 70, y: 42 },
+              { x: 50, y: 55 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: hebrewAlphabetSource("ת"),
+  },
   "ا": {
     script: "perso-arabic",
     glyph: "ا",
@@ -334,6 +2866,998 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ا"),
+  },
+  [ductusKey("arabic", "ا")]: {
+    script: "arabic",
+    glyph: "ا",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "down",
+            path: [
+              { x: 120, y: 640 },
+              { x: 120, y: 580 },
+              { x: 119, y: 500 },
+              { x: 124, y: 400 },
+              { x: 128, y: 250 },
+              { x: 129, y: 100 },
+              { x: 127, y: 10 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ا"),
+  },
+  [ductusKey("arabic", "ب")]: {
+    script: "arabic",
+    glyph: "ب",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot below",
+            path: [
+              { x: 412, y: -137 },
+              { x: 379, y: -101 },
+              { x: 344, y: -137 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ب"),
+  },
+  [ductusKey("arabic", "ت")]: {
+    script: "arabic",
+    glyph: "ت",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 },
+              { x: 663, y: 345 },
+              { x: 650, y: 305 },
+              { x: 654, y: 260 },
+              { x: 672, y: 215 },
+              { x: 688, y: 170 },
+              { x: 686, y: 126 },
+              { x: 620, y: 94 },
+              { x: 530, y: 65 },
+              { x: 430, y: 42 },
+              { x: 335, y: 38 },
+              { x: 245, y: 51 },
+              { x: 170, y: 83 },
+              { x: 120, y: 135 },
+              { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the left dot above",
+            path: [
+              { x: 247, y: 374 },
+              { x: 284, y: 412 },
+              { x: 319, y: 379 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot",
+            path: [
+              { x: 395, y: 389 },
+              { x: 434, y: 430 },
+              { x: 470, y: 395 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ت"),
+  },
+  [ductusKey("arabic", "ج")]: {
+    script: "arabic",
+    glyph: "ج",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short upper head from left to right",
+            path: [
+              { x: 110, y: 315 },
+              { x: 150, y: 335 },
+              { x: 210, y: 340 },
+              { x: 280, y: 325 },
+              { x: 350, y: 305 },
+              { x: 420, y: 285 },
+              { x: 490, y: 270 },
+              { x: 540, y: 270 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot below",
+            path: [
+              { x: 415, y: -1 },
+              { x: 374, y: 38 },
+              { x: 330, y: -9 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ج"),
+  },
+  [ductusKey("arabic", "ح")]: {
+    script: "arabic",
+    glyph: "ح",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short left stem downward",
+            path: [
+              { x: 110, y: 315 },
+              { x: 105, y: 302 },
+              { x: 100, y: 290 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once and restart near the stem's top",
+            path: [
+              { x: 110, y: 315 },
+              { x: 150, y: 335 },
+              { x: 210, y: 340 },
+              { x: 280, y: 325 },
+              { x: 350, y: 305 },
+              { x: 420, y: 285 },
+              { x: 490, y: 270 },
+              { x: 540, y: 270 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ح"),
+  },
+  [ductusKey("arabic", "خ")]: {
+    script: "arabic",
+    glyph: "خ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the short upper head from left to right",
+            path: [
+              { x: 110, y: 315 },
+              { x: 150, y: 335 },
+              { x: 210, y: 340 },
+              { x: 280, y: 325 },
+              { x: 350, y: 305 },
+              { x: 420, y: 285 },
+              { x: 490, y: 270 },
+              { x: 540, y: 270 },
+            ],
+          },
+          {
+            label: "continue down and around the bowl",
+            path: [
+              { x: 540, y: 270 },
+              { x: 490, y: 270 },
+              { x: 420, y: 285 },
+              { x: 350, y: 305 },
+              { x: 280, y: 325 },
+              { x: 210, y: 340 },
+              { x: 150, y: 335 },
+              { x: 110, y: 315 },
+              { x: 100, y: 290 },
+              { x: 130, y: 305 },
+              { x: 170, y: 310 },
+              { x: 220, y: 305 },
+              { x: 270, y: 285 },
+              { x: 320, y: 265 },
+              { x: 300, y: 245 },
+              { x: 260, y: 220 },
+              { x: 216, y: 190 },
+              { x: 180, y: 130 },
+              { x: 145, y: 65 },
+              { x: 118, y: -42 },
+              { x: 130, y: -110 },
+              { x: 180, y: -175 },
+              { x: 225, y: -200 },
+              { x: 300, y: -245 },
+              { x: 400, y: -245 },
+              { x: 500, y: -230 },
+              { x: 575, y: -210 },
+              { x: 608, y: -195 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot above",
+            path: [
+              { x: 340, y: 460 },
+              { x: 285, y: 510 },
+              { x: 338, y: 565 },
+              { x: 390, y: 515 },
+              { x: 340, y: 460 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("خ"),
+  },
+  [ductusKey("arabic", "د")]: {
+    script: "arabic",
+    glyph: "د",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend diagonally down and right through the curved shoulder",
+            path: [
+              { x: 270, y: 350 },
+              { x: 260, y: 325 },
+              { x: 260, y: 300 },
+              { x: 270, y: 275 },
+              { x: 285, y: 245 },
+              { x: 300, y: 215 },
+              { x: 318, y: 185 },
+              { x: 333, y: 155 },
+              { x: 343, y: 130 },
+              { x: 345, y: 110 },
+              { x: 342, y: 100 },
+            ],
+          },
+          {
+            label: "turn left along the baseline without lifting",
+            path: [
+              { x: 342, y: 100 },
+              { x: 320, y: 90 },
+              { x: 290, y: 75 },
+              { x: 250, y: 60 },
+              { x: 210, y: 50 },
+              { x: 170, y: 40 },
+              { x: 130, y: 40 },
+              { x: 90, y: 50 },
+              { x: 60, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("د"),
+  },
+  [ductusKey("arabic", "ر")]: {
+    script: "arabic",
+    glyph: "ر",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend through the short stroke",
+            path: [
+              { x: 250, y: 320 },
+              { x: 248, y: 280 },
+              { x: 255, y: 235 },
+              { x: 270, y: 190 },
+              { x: 287, y: 145 },
+              { x: 300, y: 95 },
+              { x: 304, y: 48 },
+            ],
+          },
+          {
+            label: "sweep left through the lower curve without lifting",
+            path: [
+              { x: 304, y: 48 },
+              { x: 298, y: 8 },
+              { x: 284, y: -30 },
+              { x: 260, y: -68 },
+              { x: 226, y: -103 },
+              { x: 185, y: -130 },
+              { x: 140, y: -146 },
+              { x: 95, y: -151 },
+              { x: 52, y: -147 },
+              { x: 10, y: -136 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ر"),
+  },
+  [ductusKey("arabic", "س")]: {
+    script: "arabic",
+    glyph: "س",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "form the three close teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow directly into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("س"),
+  },
+  [ductusKey("arabic", "ش")]: {
+    script: "arabic",
+    glyph: "ش",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "shape the three close teeth from right to left",
+            path: [
+              { x: 923, y: 310 },
+              { x: 935, y: 120 },
+              { x: 925, y: 70 },
+              { x: 870, y: 45 },
+              { x: 770, y: 75 },
+              { x: 748, y: 110 },
+              { x: 748, y: 230 },
+              { x: 690, y: 65 },
+              { x: 640, y: 45 },
+              { x: 540, y: 55 },
+              { x: 478, y: 190 },
+              { x: 515, y: 20 },
+            ],
+          },
+          {
+            label: "flow directly into the final bowl without lifting",
+            path: [
+              { x: 515, y: 20 },
+              { x: 515, y: -25 },
+              { x: 470, y: -125 },
+              { x: 370, y: -205 },
+              { x: 250, y: -230 },
+              { x: 145, y: -180 },
+              { x: 92, y: -95 },
+              { x: 110, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the lower-left dot",
+            path: [
+              { x: 610, y: 360 },
+              { x: 648, y: 410 },
+              { x: 686, y: 365 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then place the lower-right dot",
+            path: [
+              { x: 753, y: 370 },
+              { x: 792, y: 423 },
+              { x: 830, y: 376 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift a third time, then place the centered upper dot",
+            path: [
+              { x: 684, y: 446 },
+              { x: 720, y: 494 },
+              { x: 757, y: 446 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ش"),
+  },
+  [ductusKey("arabic", "ص")]: {
+    script: "arabic",
+    glyph: "ص",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "close the oval clockwise from its lower-left junction",
+            path: [
+              { x: 535, y: 30 },
+              { x: 560, y: 90 },
+              { x: 620, y: 160 },
+              { x: 700, y: 230 },
+              { x: 790, y: 305 },
+              { x: 870, y: 320 },
+              { x: 950, y: 285 },
+              { x: 1010, y: 230 },
+              { x: 1015, y: 175 },
+              { x: 970, y: 115 },
+              { x: 900, y: 70 },
+              { x: 810, y: 45 },
+              { x: 720, y: 38 },
+              { x: 630, y: 42 },
+              { x: 535, y: 30 },
+            ],
+          },
+          {
+            label: "turn left and rise into the short shoulder without lifting",
+            path: [
+              { x: 535, y: 30 },
+              { x: 530, y: 65 },
+              { x: 520, y: 105 },
+              { x: 510, y: 145 },
+              { x: 495, y: 190 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the baseline junction, and sweep through the trailing bowl",
+            path: [
+              { x: 500, y: -54 },
+              { x: 475, y: -115 },
+              { x: 425, y: -175 },
+              { x: 360, y: -215 },
+              { x: 280, y: -232 },
+              { x: 205, y: -225 },
+              { x: 145, y: -185 },
+              { x: 105, y: -125 },
+              { x: 92, y: -65 },
+              { x: 100, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ص"),
+  },
+  [ductusKey("arabic", "ض")]: {
+    script: "arabic",
+    glyph: "ض",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "close the oval clockwise from its lower-left junction",
+            path: [
+              { x: 535, y: 30 },
+              { x: 560, y: 90 },
+              { x: 620, y: 160 },
+              { x: 700, y: 230 },
+              { x: 790, y: 305 },
+              { x: 870, y: 320 },
+              { x: 950, y: 285 },
+              { x: 1010, y: 230 },
+              { x: 1015, y: 175 },
+              { x: 970, y: 115 },
+              { x: 900, y: 70 },
+              { x: 810, y: 45 },
+              { x: 720, y: 38 },
+              { x: 630, y: 42 },
+              { x: 535, y: 30 },
+            ],
+          },
+          {
+            label: "turn left and rise into the short shoulder without lifting",
+            path: [
+              { x: 535, y: 30 },
+              { x: 530, y: 65 },
+              { x: 520, y: 105 },
+              { x: 510, y: 145 },
+              { x: 495, y: 190 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, restart at the baseline junction, and sweep through the trailing bowl",
+            path: [
+              { x: 500, y: -54 },
+              { x: 475, y: -115 },
+              { x: 425, y: -175 },
+              { x: 360, y: -215 },
+              { x: 280, y: -232 },
+              { x: 205, y: -225 },
+              { x: 145, y: -185 },
+              { x: 105, y: -125 },
+              { x: 92, y: -65 },
+              { x: 100, y: 20 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then place the upper dot last",
+            path: [
+              { x: 725, y: 470 },
+              { x: 675, y: 515 },
+              { x: 725, y: 568 },
+              { x: 770, y: 520 },
+              { x: 725, y: 470 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ض"),
+  },
+  [ductusKey("arabic", "ع")]: {
+    script: "arabic",
+    glyph: "ع",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep left from the upper-right tip and shape the open head",
+            path: [
+              { x: 355, y: 400 },
+              { x: 315, y: 420 },
+              { x: 255, y: 430 },
+              { x: 195, y: 415 },
+              { x: 145, y: 375 },
+              { x: 110, y: 320 },
+              { x: 105, y: 270 },
+              { x: 135, y: 235 },
+              { x: 145, y: 205 },
+              { x: 185, y: 175 },
+              { x: 250, y: 165 },
+              { x: 325, y: 175 },
+              { x: 395, y: 205 },
+              { x: 450, y: 235 },
+              { x: 410, y: 205 },
+              { x: 350, y: 175 },
+              { x: 285, y: 145 },
+              { x: 230, y: 110 },
+              { x: 190, y: 75 },
+              { x: 175, y: 50 },
+            ],
+          },
+          {
+            label: "continue down and around the lower bowl without lifting",
+            path: [
+              { x: 175, y: 50 },
+              { x: 150, y: -5 },
+              { x: 135, y: -70 },
+              { x: 145, y: -135 },
+              { x: 185, y: -195 },
+              { x: 245, y: -235 },
+              { x: 320, y: -250 },
+              { x: 400, y: -245 },
+              { x: 480, y: -230 },
+              { x: 555, y: -205 },
+              { x: 610, y: -180 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ع"),
+  },
+  [ductusKey("arabic", "ك")]: {
+    script: "arabic",
+    glyph: "ك",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the main upright",
+            path: [
+              { x: 430, y: 630 },
+              { x: 435, y: 550 },
+              { x: 440, y: 450 },
+              { x: 450, y: 350 },
+              { x: 465, y: 250 },
+              { x: 475, y: 150 },
+              { x: 470, y: 80 },
+            ],
+          },
+          {
+            label: "turn left along the baseline without lifting",
+            path: [
+              { x: 470, y: 80 },
+              { x: 410, y: 52 },
+              { x: 320, y: 40 },
+              { x: 220, y: 38 },
+              { x: 120, y: 42 },
+              { x: 45, y: 58 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the inner arm from upper right down-left",
+            path: [
+              { x: 255, y: 385 },
+              { x: 235, y: 375 },
+              { x: 215, y: 360 },
+              { x: 195, y: 340 },
+              { x: 185, y: 320 },
+              { x: 185, y: 305 },
+              { x: 215, y: 295 },
+              { x: 245, y: 292 },
+              { x: 275, y: 285 },
+              { x: 282, y: 273 },
+              { x: 270, y: 258 },
+              { x: 250, y: 240 },
+              { x: 225, y: 222 },
+              { x: 180, y: 207 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ك"),
+  },
+  [ductusKey("arabic", "ل")]: {
+    script: "arabic",
+    glyph: "ل",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the tall upright",
+            path: [
+              { x: 458, y: 640 },
+              { x: 445, y: 500 },
+              { x: 440, y: 420 },
+              { x: 450, y: 240 },
+              { x: 475, y: 80 },
+              { x: 510, y: -20 },
+            ],
+          },
+          {
+            label: "continue left through the base bowl without lifting",
+            path: [
+              { x: 510, y: -20 },
+              { x: 465, y: -120 },
+              { x: 350, y: -205 },
+              { x: 205, y: -215 },
+              { x: 105, y: -135 },
+              { x: 90, y: -75 },
+              { x: 100, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ل"),
+  },
+  [ductusKey("arabic", "ه")]: {
+    script: "arabic",
+    glyph: "ه",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve down-left and close the lower counter",
+            path: [
+              { x: 315, y: 400 },
+              { x: 285, y: 375 },
+              { x: 255, y: 350 },
+              { x: 230, y: 325 },
+              { x: 205, y: 300 },
+              { x: 190, y: 260 },
+              { x: 190, y: 210 },
+              { x: 205, y: 165 },
+              { x: 235, y: 125 },
+              { x: 275, y: 105 },
+              { x: 320, y: 110 },
+              { x: 355, y: 135 },
+              { x: 380, y: 175 },
+              { x: 390, y: 225 },
+              { x: 380, y: 275 },
+              { x: 355, y: 320 },
+              { x: 315, y: 355 },
+            ],
+          },
+          {
+            label: "thread through the centre and close the upper-right counter without lifting",
+            path: [
+              { x: 315, y: 355 },
+              { x: 360, y: 355 },
+              { x: 410, y: 340 },
+              { x: 455, y: 315 },
+              { x: 500, y: 275 },
+              { x: 535, y: 225 },
+              { x: 555, y: 170 },
+              { x: 555, y: 115 },
+              { x: 535, y: 70 },
+              { x: 535, y: 50 },
+              { x: 500, y: 40 },
+              { x: 455, y: 30 },
+              { x: 415, y: 45 },
+              { x: 385, y: 75 },
+              { x: 365, y: 100 },
+            ],
+          },
+          {
+            label: "sweep left along the baseline without lifting",
+            path: [
+              { x: 365, y: 100 },
+              { x: 345, y: 75 },
+              { x: 310, y: 65 },
+              { x: 270, y: 65 },
+              { x: 225, y: 70 },
+              { x: 175, y: 65 },
+              { x: 120, y: 65 },
+              { x: 70, y: 65 },
+              { x: 25, y: 65 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ه"),
+  },
+  [ductusKey("arabic", "و")]: {
+    script: "arabic",
+    glyph: "و",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep left from the lower-right junction and close the small head loop",
+            path: [
+              { x: 390, y: 60 },
+              { x: 340, y: 45 },
+              { x: 285, y: 40 },
+              { x: 225, y: 45 },
+              { x: 175, y: 80 },
+              { x: 145, y: 125 },
+              { x: 145, y: 165 },
+              { x: 170, y: 215 },
+              { x: 210, y: 260 },
+              { x: 250, y: 285 },
+              { x: 300, y: 285 },
+              { x: 345, y: 245 },
+              { x: 375, y: 185 },
+              { x: 390, y: 115 },
+              { x: 390, y: 60 },
+            ],
+          },
+          {
+            label: "continue down and left through the tail without lifting",
+            path: [
+              { x: 390, y: 60 },
+              { x: 370, y: -5 },
+              { x: 340, y: -70 },
+              { x: 300, y: -120 },
+              { x: 250, y: -160 },
+              { x: 195, y: -170 },
+              { x: 135, y: -160 },
+              { x: 80, y: -140 },
+              { x: 45, y: -120 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("و"),
+  },
+  // Arabic ي (U+064A) shares the isolated bowl skeleton with Urdu ی (U+06CC),
+  // but keeps its own source and adds the two lower dots observed in yaa.mov.
+  [ductusKey("arabic", "ي")]: {
+    script: "arabic",
+    glyph: "ي",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend from the upper right into the independent bowl",
+            path: [
+              { x: 548, y: 285 },
+              { x: 510, y: 288 },
+              { x: 472, y: 270 },
+              { x: 430, y: 238 },
+              { x: 395, y: 205 },
+              { x: 365, y: 168 },
+              { x: 345, y: 125 },
+              { x: 330, y: 82 },
+              { x: 340, y: 45 },
+              { x: 375, y: 25 },
+              { x: 420, y: 8 },
+              { x: 470, y: -2 },
+              { x: 520, y: -24 },
+              { x: 555, y: -55 },
+            ],
+          },
+          {
+            label: "sweep left through the bowl without lifting",
+            path: [
+              { x: 555, y: -55 },
+              { x: 535, y: -98 },
+              { x: 495, y: -145 },
+              { x: 445, y: -188 },
+              { x: 390, y: -218 },
+              { x: 325, y: -238 },
+              { x: 255, y: -238 },
+              { x: 190, y: -218 },
+              { x: 140, y: -180 },
+              { x: 105, y: -130 },
+              { x: 90, y: -78 },
+              { x: 94, y: -25 },
+              { x: 105, y: 28 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the lower-left dot",
+            path: [
+              { x: 150, y: -373 },
+              { x: 198, y: -323 },
+              { x: 245, y: -370 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then place the lower-right dot",
+            path: [
+              { x: 300, y: -360 },
+              { x: 352, y: -310 },
+              { x: 400, y: -356 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ي"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",
@@ -727,6 +4251,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: urduAlphabetSource("ن"),
   },
+  [ductusKey("urdu-nastaliq", "ں")]: {
+    script: "urdu-nastaliq",
+    glyph: "ں",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the independent dotless bowl right to left below the baseline",
+            path: [
+              { x: 495, y: 210 },
+              { x: 475, y: 160 },
+              { x: 480, y: 100 },
+              { x: 500, y: 40 },
+              { x: 510, y: -20 },
+              { x: 485, y: -80 },
+              { x: 430, y: -140 },
+              { x: 360, y: -190 },
+              { x: 280, y: -220 },
+              { x: 210, y: -215 },
+              { x: 150, y: -170 },
+              { x: 105, y: -110 },
+              { x: 90, y: -60 },
+              { x: 95, y: 0 },
+              { x: 105, y: 45 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ں"),
+  },
   [ductusKey("urdu-nastaliq", "ہ")]: {
     script: "urdu-nastaliq",
     glyph: "ہ",
@@ -808,6 +4363,57 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: urduAlphabetSource("ی"),
+  },
+  [ductusKey("urdu-nastaliq", "ے")]: {
+    script: "urdu-nastaliq",
+    glyph: "ے",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend from the upper right and sweep left across the broad bowl",
+            path: [
+              { x: 360, y: 280 },
+              { x: 350, y: 275 },
+              { x: 330, y: 252 },
+              { x: 310, y: 238 },
+              { x: 292, y: 230 },
+              { x: 250, y: 215 },
+              { x: 200, y: 195 },
+              { x: 150, y: 173 },
+              { x: 115, y: 145 },
+              { x: 100, y: 110 },
+            ],
+          },
+          {
+            label: "curl back underneath at the far left without lifting",
+            path: [
+              { x: 100, y: 110 },
+              { x: 90, y: 95 },
+              { x: 82, y: 78 },
+              { x: 82, y: 62 },
+              { x: 95, y: 55 },
+              { x: 120, y: 52 },
+            ],
+          },
+          {
+            label: "continue right along the lower fold without lifting",
+            path: [
+              { x: 120, y: 52 },
+              { x: 170, y: 30 },
+              { x: 250, y: 20 },
+              { x: 350, y: 12 },
+              { x: 450, y: 10 },
+              { x: 550, y: 20 },
+              { x: 650, y: 40 },
+              { x: 720, y: 62 },
+              { x: 740, y: 90 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: urduAlphabetSource("ے"),
   },
   "ب": {
     script: "perso-arabic",

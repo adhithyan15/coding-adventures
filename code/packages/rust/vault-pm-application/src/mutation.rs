@@ -1,40 +1,82 @@
+use crate::restore::remap_imported_item_state;
 use crate::{
-    encode_item_revision, encode_signed_commit, seal_object, ActiveStateV1, ApplicationError,
-    ApplicationRepository, ApplicationRepositoryError, CatalogV1, LocalSecretV1, LocalStateStore,
-    LocalStateStoreError, LocalVaultStateV1, ObjectKind, ObjectRandomness, PublicationJournalV1,
-    V1Keys,
+    encode_item_revision, encode_signed_audit_event, encode_signed_commit, seal_object,
+    ActiveStateV1, ApplicationError, ApplicationRepository, ApplicationRepositoryError, CatalogV1,
+    LocalSecretV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, ObjectKind,
+    ObjectRandomness, PublicationJournalV1, V1Keys,
 };
 use coding_adventures_ed25519::{generate_keypair, sign};
+use coding_adventures_vault_pm_audit::{AuditActionV1, AuditEventV1, AuditOutcomeV1};
 use coding_adventures_vault_pm_domain::{
-    ItemCandidate, ItemDocument, ItemId, ItemState, RevisionId, Tombstone,
+    ItemCandidate, ItemDocument, ItemId, ItemState, OperationId, RevisionId, Tombstone,
 };
-use coding_adventures_vault_pm_format::{AnnouncementV1, CommitV1, Signature};
+use coding_adventures_vault_pm_format::{
+    AnnouncementV1, CommitV1, ObjectFrameV1, ObjectId, Signature,
+};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads, MAX_PUBLICATION_OBJECTS};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
 const ITEM_ID_BYTES: usize = 16;
+const TRACE_ID_BYTES: usize = 32;
 const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
+const AUDIT_RANDOM_BYTES: usize = TRACE_ID_BYTES + OBJECT_RANDOM_BYTES;
+/// Exact caller-filled CSPRNG bytes consumed by one audit-only access commit.
+pub const AUDITED_ACCESS_RANDOM_BYTES: usize = TRACE_ID_BYTES + 2 * OBJECT_RANDOM_BYTES;
+#[cfg(test)]
+pub(crate) const AUDIT_ONLY_TEST_RANDOM_BYTES: usize = AUDITED_ACCESS_RANDOM_BYTES;
 
 /// Exact caller-filled CSPRNG bytes consumed by one add-item mutation.
-pub const ADD_ITEM_RANDOM_BYTES: usize = ITEM_ID_BYTES + 3 * OBJECT_RANDOM_BYTES;
+pub const ADD_ITEM_RANDOM_BYTES: usize =
+    ITEM_ID_BYTES + 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one replace-item mutation.
-pub const REPLACE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+pub const REPLACE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one delete-item mutation.
-pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+pub const DELETE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one restore-item mutation.
-pub const RESTORE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+pub const RESTORE_ITEM_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
 /// Exact caller-filled CSPRNG bytes consumed by one conflict-resolution mutation.
-pub const RESOLVE_ITEM_CONFLICT_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES;
+pub const RESOLVE_ITEM_CONFLICT_RANDOM_BYTES: usize = 3 * OBJECT_RANDOM_BYTES + AUDIT_RANDOM_BYTES;
+
+/// Owned wipe-on-drop entropy for one access trace, encrypted audit event, and
+/// audit-only repository commit.
+pub struct AuditedAccessRandomnessV1 {
+    bytes: [u8; AUDITED_ACCESS_RANDOM_BYTES],
+}
+
+impl AuditedAccessRandomnessV1 {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; AUDITED_ACCESS_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for AuditedAccessRandomnessV1 {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for AuditedAccessRandomnessV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for AuditedAccessRandomnessV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AuditedAccessRandomnessV1(<redacted>)")
+    }
+}
 
 /// Return the exact caller-CSPRNG byte count required to import one opened
 /// portable snapshot.
 ///
 /// Import allocates one new 16-byte item identity per source item, one fresh
-/// encrypted revision frame per retained candidate, and fresh catalog and
-/// commit frames. Snapshots too large for one atomic repository publication
-/// are rejected before entropy is accepted.
+/// encrypted revision frame per retained candidate, fresh catalog and commit
+/// frames, and a reserved trace plus audit-event frame. Snapshots too large for
+/// one atomic repository publication are rejected before entropy is accepted.
 pub fn portable_import_random_bytes(
     snapshot: &crate::OpenedPortableSnapshotV1,
 ) -> Result<usize, ApplicationError> {
@@ -46,7 +88,7 @@ fn portable_import_random_bytes_for_counts(
     candidate_count: usize,
 ) -> Result<usize, ApplicationError> {
     if candidate_count
-        .checked_add(1)
+        .checked_add(2)
         .is_none_or(|object_count| object_count > MAX_PUBLICATION_OBJECTS)
     {
         return Err(ApplicationError::BoundExceeded);
@@ -55,8 +97,9 @@ fn portable_import_random_bytes_for_counts(
         .checked_mul(item_count)
         .and_then(|item_bytes| {
             OBJECT_RANDOM_BYTES
-                .checked_mul(candidate_count.checked_add(2)?)
+                .checked_mul(candidate_count.checked_add(3)?)
                 .and_then(|object_bytes| item_bytes.checked_add(object_bytes))
+                .and_then(|bytes| bytes.checked_add(TRACE_ID_BYTES))
         })
         .ok_or(ApplicationError::BoundExceeded)
 }
@@ -115,7 +158,8 @@ impl Debug for PortableImportRandomnessV1 {
     }
 }
 
-/// Owned wipe-on-drop entropy for one item ID and three encrypted frames.
+/// Owned wipe-on-drop entropy for one item ID, three mutation frames, one
+/// operation trace, and one encrypted audit-event frame.
 pub struct AddItemRandomnessV1 {
     bytes: [u8; ADD_ITEM_RANDOM_BYTES],
 }
@@ -154,7 +198,7 @@ impl Debug for AddItemRandomnessV1 {
     }
 }
 
-/// Owned wipe-on-drop entropy for the three encrypted replacement frames.
+/// Owned wipe-on-drop entropy for replacement, trace, and audit-event frames.
 pub struct ReplaceItemRandomnessV1 {
     bytes: [u8; REPLACE_ITEM_RANDOM_BYTES],
 }
@@ -184,7 +228,7 @@ impl Debug for ReplaceItemRandomnessV1 {
     }
 }
 
-/// Owned wipe-on-drop entropy for the three encrypted deletion frames.
+/// Owned wipe-on-drop entropy for deletion, trace, and audit-event frames.
 pub struct DeleteItemRandomnessV1 {
     bytes: [u8; DELETE_ITEM_RANDOM_BYTES],
 }
@@ -214,7 +258,7 @@ impl Debug for DeleteItemRandomnessV1 {
     }
 }
 
-/// Owned wipe-on-drop entropy for the three encrypted restoration frames.
+/// Owned wipe-on-drop entropy for restoration, trace, and audit-event frames.
 pub struct RestoreItemRandomnessV1 {
     bytes: [u8; RESTORE_ITEM_RANDOM_BYTES],
 }
@@ -244,7 +288,7 @@ impl Debug for RestoreItemRandomnessV1 {
     }
 }
 
-/// Owned wipe-on-drop entropy for the three encrypted conflict-resolution frames.
+/// Owned wipe-on-drop entropy for conflict, trace, and audit-event frames.
 pub struct ResolveItemConflictRandomnessV1 {
     bytes: [u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES],
 }
@@ -290,7 +334,10 @@ pub(crate) fn import_opened_portable_snapshot(
     if report.heads() != active.pinned_heads() {
         return Err(ApplicationError::ConcurrentHost);
     }
-    if active.last_device_counter() != 1 || !current_items.is_empty() {
+    // Audit-only events are allowed before the first import so failed artifact
+    // reads, credentials, and retries can remain traceable. Any prior logical
+    // item mutation leaves a live or tombstone candidate and still fails here.
+    if !current_items.is_empty() {
         return Err(ApplicationError::InvalidInput);
     }
     if randomness.item_count != snapshot.item_count()
@@ -412,6 +459,27 @@ fn prepare_portable_import_publication(
 
     let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
     parents.sort_unstable();
+    let commit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let trace_id = OperationId::new(take_slice(randomness, &mut offset));
+    let audit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let audit_event = prepare_mutation_audit_event(
+        active,
+        keys,
+        local_secret,
+        device_counter,
+        trace_id,
+        AuditActionV1::PortableImport,
+        None,
+        None,
+        None,
+        parents.clone(),
+        wall_time_ms,
+        &audit_randomness,
+    )?;
+    if let Some((frame, id)) = audit_event.as_ref() {
+        added_objects.push(*id);
+        objects.push(frame.clone());
+    }
     added_objects.sort_unstable();
     added_objects.dedup();
     if added_objects.len() != objects.len() {
@@ -443,7 +511,7 @@ fn prepare_portable_import_publication(
         keys,
         ObjectKind::Commit,
         &commit_plaintext,
-        &take_object_randomness_slice(randomness, &mut offset),
+        &commit_randomness,
     )?;
     debug_assert_eq!(offset, randomness.len());
     let commit_id = commit_frame
@@ -470,7 +538,7 @@ fn prepare_portable_import_publication(
     let expected_heads =
         PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
 
-    PublicationJournalV1::new(
+    let publication = PublicationJournalV1::new(
         objects,
         commit_frame,
         announcement,
@@ -478,31 +546,10 @@ fn prepare_portable_import_publication(
         expected_heads,
         device_counter,
         catalog_id,
-    )
-}
-
-fn remap_imported_item_state(
-    state: &ItemState,
-    item_id: ItemId,
-) -> Result<ItemState, ApplicationError> {
-    match state {
-        ItemState::Live(document) => ItemDocument::new(
-            item_id,
-            document.schema().clone(),
-            document.created_at_ms(),
-            document.updated_at_ms(),
-            document.favorite().clone(),
-            document.collection_ids().clone(),
-            document.tags().clone(),
-            document.payload().clone(),
-            document.attachments().clone(),
-        )
-        .map(|document| ItemState::Live(Box::new(document)))
-        .map_err(|_| ApplicationError::IntegrityFailure),
-        ItemState::Tombstone(tombstone) => Ok(ItemState::Tombstone(Tombstone {
-            item_id,
-            deleted_at_ms: tombstone.deleted_at_ms,
-        })),
+    )?;
+    match audit_event.map(|(_, id)| id) {
+        Some(head) => publication.with_audit_event_head(head),
+        None => Ok(publication),
     }
 }
 
@@ -540,6 +587,8 @@ pub(crate) fn add_item(
         document.id(),
         ItemState::Live(Box::new(document)),
         &BTreeSet::new(),
+        AuditActionV1::ItemCreate,
+        None,
         wall_time_ms,
         randomness.bytes[ITEM_ID_BYTES..]
             .try_into()
@@ -594,6 +643,8 @@ pub(crate) fn replace_item(
         document.id(),
         ItemState::Live(Box::new(document)),
         &BTreeSet::from([expected_revision]),
+        AuditActionV1::ItemUpdate,
+        Some(expected_revision),
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -645,6 +696,8 @@ pub(crate) fn delete_item(
             deleted_at_ms,
         }),
         &BTreeSet::from([expected_revision]),
+        AuditActionV1::ItemDelete,
+        Some(expected_revision),
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -689,6 +742,8 @@ pub(crate) fn restore_item(
         item_id,
         ItemState::Live(document.clone()),
         &BTreeSet::from([selected.revision_id()]),
+        AuditActionV1::ItemRestore,
+        Some(selected.revision_id()),
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -739,6 +794,8 @@ pub(crate) fn resolve_item_conflict(
         *item_id,
         selected.state().clone(),
         &causal_parents,
+        AuditActionV1::ItemConflictResolve,
+        Some(selected_revision),
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -798,6 +855,8 @@ pub(crate) fn merge_item_conflict(
         document.id(),
         ItemState::Live(Box::new(document)),
         &causal_parents,
+        AuditActionV1::ItemConflictMerge,
+        None,
         wall_time_ms,
         &randomness.bytes,
     )?;
@@ -855,6 +914,267 @@ fn publish_mutation(
 }
 
 #[allow(clippy::too_many_arguments)]
+pub(crate) fn activate_audit_epoch(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    wall_time_ms: u64,
+    randomness: AuditedAccessRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if active.audit_event_head().is_some() {
+        return Err(ApplicationError::InvalidInput);
+    }
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        AuditActionV1::AuditEpochStart,
+        AuditOutcomeV1::Succeeded,
+        None,
+        None,
+        wall_time_ms,
+        None,
+        None,
+        &randomness.bytes,
+        local_state_store,
+    )
+}
+
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn activate_audit_epoch_for_test(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    wall_time_ms: u64,
+    event_basis_override: Option<Vec<ObjectId>>,
+    event_signing_seed_override: Option<[u8; 32]>,
+    randomness: [u8; AUDIT_ONLY_TEST_RANDOM_BYTES],
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        AuditActionV1::AuditEpochStart,
+        AuditOutcomeV1::Succeeded,
+        None,
+        None,
+        wall_time_ms,
+        event_basis_override,
+        event_signing_seed_override,
+        &randomness,
+        local_state_store,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn publish_audited_access(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    action: AuditActionV1,
+    outcome: AuditOutcomeV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    randomness: AuditedAccessRandomnessV1,
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    if active.audit_event_head().is_none()
+        || (action.is_item_mutation() && outcome == AuditOutcomeV1::Succeeded)
+        || matches!(
+            action,
+            AuditActionV1::AuditEpochStart | AuditActionV1::VaultInitialize
+        )
+        || (action == AuditActionV1::PortableImport && outcome == AuditOutcomeV1::Succeeded)
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        action,
+        outcome,
+        item_id,
+        selected_revision,
+        wall_time_ms,
+        None,
+        None,
+        &randomness.bytes,
+        local_state_store,
+    )
+}
+
+#[cfg(test)]
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn publish_audit_only_event_for_test(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    action: AuditActionV1,
+    outcome: AuditOutcomeV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    event_basis_override: Option<Vec<ObjectId>>,
+    event_signing_seed_override: Option<[u8; 32]>,
+    randomness: [u8; AUDIT_ONLY_TEST_RANDOM_BYTES],
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    publish_audit_only_event_inner(
+        active,
+        keys,
+        local_secret,
+        repository,
+        action,
+        outcome,
+        item_id,
+        selected_revision,
+        wall_time_ms,
+        event_basis_override,
+        event_signing_seed_override,
+        &randomness,
+        local_state_store,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn publish_audit_only_event_inner(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    repository: &dyn ApplicationRepository,
+    action: AuditActionV1,
+    outcome: AuditOutcomeV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    wall_time_ms: u64,
+    event_basis_override: Option<Vec<ObjectId>>,
+    event_signing_seed_override: Option<[u8; 32]>,
+    randomness: &[u8; AUDITED_ACCESS_RANDOM_BYTES],
+    local_state_store: &dyn LocalStateStore,
+) -> Result<ActiveStateV1, ApplicationError> {
+    let device_counter = active
+        .last_device_counter()
+        .checked_add(1)
+        .ok_or(ApplicationError::BoundExceeded)?;
+    let mut offset = 0;
+    let trace_id = OperationId::new(take_slice(randomness, &mut offset));
+    let audit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    let commit_randomness = take_object_randomness_slice(randomness, &mut offset);
+    debug_assert_eq!(offset, AUDITED_ACCESS_RANDOM_BYTES);
+
+    let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
+    parents.sort_unstable();
+    let event_basis = event_basis_override.unwrap_or_else(|| parents.clone());
+    let event = AuditEventV1::new(
+        active.vault_id(),
+        active.device_id(),
+        device_counter,
+        trace_id,
+        action,
+        outcome,
+        item_id,
+        selected_revision,
+        None,
+        active.audit_event_head(),
+        event_basis,
+        wall_time_ms,
+    )
+    .map_err(|_| ApplicationError::InternalInvariant)?
+    .sign(
+        event_signing_seed_override
+            .as_ref()
+            .unwrap_or(local_secret.device_signing_seed()),
+    )
+    .map_err(|_| ApplicationError::InternalInvariant)?;
+    let event_plaintext = Zeroizing::new(encode_signed_audit_event(&event)?);
+    let event_frame = seal_object(
+        keys,
+        ObjectKind::AuditEvent,
+        &event_plaintext,
+        &audit_randomness,
+    )?;
+    let event_id = event_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+
+    let added_objects = vec![event_id];
+    let (_, device_signing_secret) = generate_keypair(local_secret.device_signing_seed());
+    let device_signing_secret = Zeroizing::new(device_signing_secret);
+    let unsigned_commit = CommitV1 {
+        vault_id: active.vault_id(),
+        device_id: active.device_id(),
+        device_counter,
+        parents,
+        catalog_root: active.catalog_root(),
+        added_objects,
+        tombstone_root: None,
+        wall_time_ms,
+        device_certificate: active.device_certificate_id(),
+        signature: Signature::new([0; 64]),
+    };
+    let commit_preimage = unsigned_commit
+        .signing_preimage()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let commit = unsigned_commit.with_signature(Signature::new(sign(
+        &commit_preimage,
+        &device_signing_secret,
+    )));
+    let commit_plaintext = Zeroizing::new(encode_signed_commit(&commit)?);
+    let commit_frame = seal_object(
+        keys,
+        ObjectKind::Commit,
+        &commit_plaintext,
+        &commit_randomness,
+    )?;
+    let commit_id = commit_frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let unsigned_announcement = AnnouncementV1 {
+        vault_id: active.vault_id(),
+        device_id: active.device_id(),
+        device_counter,
+        commit_id,
+        device_certificate: active.device_certificate_id(),
+        signature: Signature::new([0; 64]),
+    };
+    let announcement_preimage = unsigned_announcement
+        .signing_preimage()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let announcement = unsigned_announcement
+        .with_signature(Signature::new(sign(
+            &announcement_preimage,
+            &device_signing_secret,
+        )))
+        .encode()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    let expected_heads =
+        PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
+    let publication = PublicationJournalV1::new_audit_only(
+        vec![event_frame],
+        commit_frame,
+        announcement,
+        active.pinned_heads().clone(),
+        expected_heads,
+        device_counter,
+        active.catalog_root(),
+        event_id,
+    )?;
+    publish_mutation(active, repository, publication, local_state_store)
+}
+
+#[allow(clippy::too_many_arguments)]
 fn prepare_item_publication(
     active: &ActiveStateV1,
     current_items: &BTreeMap<ItemId, Vec<ItemCandidate>>,
@@ -863,6 +1183,8 @@ fn prepare_item_publication(
     item_id: ItemId,
     item_state: ItemState,
     causal_parents: &BTreeSet<RevisionId>,
+    audit_action: AuditActionV1,
+    selected_revision: Option<RevisionId>,
     wall_time_ms: u64,
     randomness: &[u8; REPLACE_ITEM_RANDOM_BYTES],
 ) -> Result<PublicationJournalV1, ApplicationError> {
@@ -874,6 +1196,8 @@ fn prepare_item_publication(
     let revision_randomness = take_object_randomness(randomness, &mut offset);
     let catalog_randomness = take_object_randomness(randomness, &mut offset);
     let commit_randomness = take_object_randomness(randomness, &mut offset);
+    let trace_id = OperationId::new(take(randomness, &mut offset));
+    let audit_randomness = take_object_randomness(randomness, &mut offset);
     debug_assert_eq!(offset, REPLACE_ITEM_RANDOM_BYTES);
 
     let revision_plaintext = Zeroizing::new(encode_item_revision(causal_parents, &item_state)?);
@@ -912,10 +1236,28 @@ fn prepare_item_publication(
 
     let mut parents = active.pinned_heads().iter().copied().collect::<Vec<_>>();
     parents.sort_unstable();
+    let audit_event = prepare_mutation_audit_event(
+        active,
+        keys,
+        local_secret,
+        device_counter,
+        trace_id,
+        audit_action,
+        Some(item_id),
+        selected_revision,
+        Some(revision_id),
+        parents.clone(),
+        wall_time_ms,
+        &audit_randomness,
+    )?;
     let mut added_objects = vec![revision_object_id, catalog_id];
+    if let Some((_, audit_id)) = &audit_event {
+        added_objects.push(*audit_id);
+    }
     added_objects.sort_unstable();
     added_objects.dedup();
-    if added_objects.len() != 2 {
+    let expected_object_count = 2 + usize::from(audit_event.is_some());
+    if added_objects.len() != expected_object_count {
         return Err(ApplicationError::InternalInvariant);
     }
     let (_, device_signing_secret) = generate_keypair(local_secret.device_signing_seed());
@@ -970,15 +1312,70 @@ fn prepare_item_publication(
     let expected_heads =
         PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
 
-    PublicationJournalV1::new(
-        vec![revision_frame, catalog_frame],
+    let mut objects = vec![revision_frame, catalog_frame];
+    let audit_event_head = audit_event.map(|(frame, id)| {
+        objects.push(frame);
+        id
+    });
+    let publication = PublicationJournalV1::new(
+        objects,
         commit_frame,
         announcement,
         active.pinned_heads().clone(),
         expected_heads,
         device_counter,
         catalog_id,
+    )?;
+    match audit_event_head {
+        Some(head) => publication.with_audit_event_head(head),
+        None => Ok(publication),
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn prepare_mutation_audit_event(
+    active: &ActiveStateV1,
+    keys: &V1Keys,
+    local_secret: &LocalSecretV1,
+    device_counter: u64,
+    trace_id: OperationId,
+    action: AuditActionV1,
+    item_id: Option<ItemId>,
+    selected_revision: Option<RevisionId>,
+    result_revision: Option<RevisionId>,
+    basis_heads: Vec<ObjectId>,
+    timestamp_ms: u64,
+    randomness: &ObjectRandomness,
+) -> Result<Option<(ObjectFrameV1, ObjectId)>, ApplicationError> {
+    let Some(previous_event) = active.audit_event_head() else {
+        return Ok(None);
+    };
+    if !action.is_item_mutation() && action != AuditActionV1::PortableImport {
+        return Err(ApplicationError::InternalInvariant);
+    }
+    let event = AuditEventV1::new(
+        active.vault_id(),
+        active.device_id(),
+        device_counter,
+        trace_id,
+        action,
+        AuditOutcomeV1::Succeeded,
+        item_id,
+        selected_revision,
+        result_revision,
+        Some(previous_event),
+        basis_heads,
+        timestamp_ms,
     )
+    .map_err(|_| ApplicationError::InternalInvariant)?
+    .sign(local_secret.device_signing_seed())
+    .map_err(|_| ApplicationError::InternalInvariant)?;
+    let plaintext = Zeroizing::new(encode_signed_audit_event(&event)?);
+    let frame = seal_object(keys, ObjectKind::AuditEvent, &plaintext, randomness)?;
+    let id = frame
+        .id()
+        .map_err(|_| ApplicationError::InternalInvariant)?;
+    Ok(Some((frame, id)))
 }
 
 fn take_object_randomness(
@@ -1041,6 +1438,20 @@ fn map_local_state_store(error: LocalStateStoreError) -> ApplicationError {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn audited_access_randomness_redacts_and_zeroizes() {
+        let mut randomness = AuditedAccessRandomnessV1::new([0x96; AUDITED_ACCESS_RANDOM_BYTES]);
+
+        assert_eq!(
+            format!("{randomness:?}"),
+            "AuditedAccessRandomnessV1(<redacted>)"
+        );
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0x96));
+
+        randomness.zeroize();
+        assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+    }
 
     #[test]
     fn add_item_randomness_redacts_and_zeroizes() {
@@ -1112,7 +1523,7 @@ mod tests {
 
     #[test]
     fn portable_import_randomness_is_exact_bounded_redacted_and_zeroizing() {
-        assert_eq!(portable_import_random_bytes_for_counts(2, 3), Ok(432));
+        assert_eq!(portable_import_random_bytes_for_counts(2, 3), Ok(544));
         assert_eq!(
             portable_import_random_bytes_for_counts(1, MAX_PUBLICATION_OBJECTS),
             Err(ApplicationError::BoundExceeded)
@@ -1123,7 +1534,7 @@ mod tests {
         );
 
         let mut randomness = PortableImportRandomnessV1 {
-            bytes: vec![0x87; 432],
+            bytes: vec![0x87; 544],
             item_count: 2,
             candidate_count: 3,
         };

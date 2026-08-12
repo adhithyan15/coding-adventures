@@ -2,6 +2,363 @@
 
 All notable changes to this package are documented here.
 
+## [0.53.0] - 2026-08-11
+
+### Added
+
+- Add audited typed disclosure of optional login notes.
+
+### Changed
+
+- Make login replacement own and replace the complete ordered URL list and
+  optional notes while retaining immutable identity and unrelated metadata.
+- Accept existing multi-URL logins during edit preparation.
+
+## [0.52.0] - 2026-08-11
+
+### Added
+
+- Add item-bound audited disclosure of one typed field from the sole current
+  live candidate without returning its revision capability to the host.
+
+### Security
+
+- Publish denied confirmation, missing/conflicted item, field mismatch, and
+  successful exact-revision outcomes before releasing a non-printable owned
+  secret.
+
+## [0.51.0] - 2026-08-11
+
+### Added
+
+- Add item-bound audited choose-candidate conflict resolution.
+
+### Security
+
+- Publish missing, unconflicted, and wrong-selector failures before their
+  closed errors, while binding successful selected revisions atomically to the
+  all-current-parent resolution mutation.
+
+## [0.50.0] - 2026-08-11
+
+### Added
+
+- Add a distinct audit-first generation-zero boundary with an exact owned
+  randomness block and encrypted `VaultInitialize` genesis event.
+
+### Security
+
+- Bind the signed initialization event into the initial commit, retry journal,
+  and intended active owner state so new product vaults are auditable before
+  the first post-initialization operation.
+- Retain the legacy pre-audit preparation boundary only for migration,
+  recovery, and fail-closed compatibility verification.
+
+## [0.49.0] - 2026-08-11
+
+### Added
+
+- Add a session-consuming host-failure boundary for portable restore
+  verification input and artifact-opening failures.
+
+### Security
+
+- Publish a failed itemless `PortableRestoreVerify` event before CLI
+  composition can expose a post-unlock source-read, prompt, or open failure.
+
+## [0.48.0] - 2026-08-11
+
+### Added
+
+- Add an opaque portable-restore expectation over canonical normalized
+  candidate-group semantics and source identity sets.
+- Add independently reopened target verification with aggregate-only results.
+
+### Security
+
+- Compare exact live/tombstone values, timestamps, schemas, CRDT state,
+  candidate grouping, parent removal, and cross-vault identity disjointness.
+- Publish dedicated succeeded or failed `PortableRestoreVerify` events before
+  releasing the aggregate proof or integrity failure.
+
+## [0.47.0] - 2026-08-11
+
+### Added
+
+- Add audited portable-import host-failure and target-validation boundaries.
+- Allow an empty target to retain audit-only attempts before its first atomic
+  import.
+
+### Security
+
+- Publish failed `PortableImport` events before returning host, artifact, or
+  target errors, while keeping the success event atomic with re-identified
+  candidates and the new target catalog.
+
+## [0.46.0] - 2026-08-11
+
+### Added
+
+- Add a session-consuming boundary for an authenticated portable-export host
+  input failure.
+
+### Security
+
+- Publish a failed itemless `PortableExport` event before CLI composition can
+  expose a post-unlock distinct-passphrase prompt failure.
+
+## [0.45.0] - 2026-08-11
+
+### Added
+
+- Add a session-consuming boundary that records an authenticated host-side
+  item-create failure against its already-reserved item identity.
+
+### Security
+
+- Publish the failed `ItemCreate` event and its fresh trace through the
+  audit-only journal before the caller can expose a prompt failure.
+
+## [0.44.0] - 2026-08-11
+
+### Added
+
+- Add bounded newest-first projections for complete verified operation-audit
+  history and exact trace lookup.
+- Expose only the trace, counter, action, outcome, optional item/revision
+  selectors, and advisory time required by an explicit audit surface.
+
+### Security
+
+- Publish one successful `AuditRead` event before re-verifying and returning
+  either history result, so the authorizing access can appear in its own view
+  without recursive self-auditing.
+- Reject invalid list bounds without writing, and keep stable identities out of
+  default debug output.
+
+## [0.43.0] - 2026-08-11
+
+### Added
+
+- Add an opaque login-edit preparation that retains the current revision and
+  secret-bearing document entirely inside the application boundary.
+- Add audited preparation, completion, and host-failure paths for missing,
+  conflicted, unsupported, invalid-input, prompt, and entropy failures.
+
+### Security
+
+- Publish successful `ItemUpdate` events atomically with replacement revisions
+  and publish closed edit failures before the host can expose their outcome.
+- Preserve notes and immutable metadata without releasing the existing login
+  document or optimistic revision capability to CLI orchestration.
+
+## [0.42.0] - 2026-08-11
+
+### Added
+
+- Add item-bound bounded-history restore boundaries that validate the stable
+  item ID, historical revision, tombstone state, current conflict state, and
+  same-revision guard without exposing a history projection to the host.
+- Add an audited restore variant that durably records failed authenticated
+  selection outcomes before returning their closed error.
+
+### Security
+
+- Publish successful restore events atomically with their new live revision;
+  failed events bind the selected revision only after repository history proves
+  that it belongs to the attempted item.
+
+## [0.41.0] - 2026-08-11
+
+### Added
+
+- Add one application-selected current-item delete boundary that keeps the
+  exact optimistic revision capability out of transitional CLI hosts.
+- Add an audited variant that returns successful deletion only after its
+  atomic mutation event is durable and returns missing, tombstoned, or
+  conflicted failures only after a failed `ItemDelete` event is durable.
+
+### Security
+
+- Permit audit-only item-mutation events only for failed or denied outcomes;
+  successful item mutations must still bind their result revision atomically
+  to the causal mutation publication.
+
+## [0.40.0] - 2026-08-11
+
+### Added
+
+- Expose a payload-free unlocked-session predicate so transitional hosts can
+  require audited access whenever a durable audit epoch already exists.
+
+## [0.39.0] - 2026-08-11
+
+### Added
+
+- Add a production session-consuming audit-epoch activation boundary for
+  explicit migration of a pre-audit vault.
+
+### Security
+
+- Publish the one permitted successful `AuditEpochStart` through the durable
+  audit-only journal before returning the next owner state.
+- Reject repeat activation without changing owner state, and prove exact
+  pending-journal recovery after ambiguous provider success.
+
+## [0.38.0] - 2026-08-11
+
+### Added
+
+- Add session-consuming audited access to exact current revision capabilities,
+  whole secret-bearing revisions, and schema-specific secret fields.
+- Represent refused interactive and unsafe non-interactive disclosure
+  ceremonies as durable `Denied` item-read events.
+
+### Security
+
+- Withhold every revision capability, owned document, revealed secret, and
+  closed operation failure until its signed event and next owner state are
+  durable.
+- Bind successful reads and authorized field-selection failures to the exact
+  item and reachable revision without traversing revisions for denied requests.
+
+## [0.37.0] - 2026-08-11
+
+### Added
+
+- Extend the session-consuming audited access boundary to complete repository
+  verification, coarse unlocked diagnostics, and encrypted portable export.
+- Preserve the existing aggregate verification report, identity-free doctor
+  result, and owned export-secret handling behind the common durable-result
+  wrapper.
+
+### Security
+
+- Withhold verification, diagnosis, and encrypted export results until their
+  signed access events and next owner states are durable.
+- Record invalid portable-export inputs as failed authenticated attempts, while
+  audit-publication failure supersedes and withholds either result or error.
+
+## [0.36.0] - 2026-08-11
+
+### Added
+
+- Extend the session-consuming audited access boundary to one-item redacted
+  reads, redacted search, bounded redacted history, and current conflict
+  candidate inspection.
+- Bind successful item reads to their exact selected live revision and map
+  missing or tombstoned items to a closed audited `NotFound` result.
+
+### Security
+
+- Route list, show, search, history, and conflict inspection through one common
+  publish-before-release completion path.
+- Record invalid queries, invalid history bounds, missing items, and
+  unconflicted candidate requests as failed authenticated attempts; audit
+  publication failure still supersedes and withholds every operation result.
+
+## [0.35.0] - 2026-08-10
+
+### Added
+
+- Add a session-consuming audited item-list boundary and a redacted result
+  wrapper that carries both the durable next owner state and the original
+  closed operation result.
+- Add an exact wipe-on-drop entropy container for one trace, encrypted audit
+  event, and audit-only repository commit.
+
+### Security
+
+- Refuse audited access on pre-epoch vaults, and publish either a succeeded or
+  failed `ItemList` event before releasing any redacted list or authenticated
+  conflict result.
+- Withhold the underlying operation result when event publication fails, while
+  retaining the exact pending journal for recovery after ambiguous provider
+  success.
+
+## [0.34.0] - 2026-08-10
+
+### Added
+
+- Add a dedicated crash-resumable audit-only publication journal that advances
+  the repository commit, device counter, and encrypted event head while reusing
+  the exact active catalog root.
+
+### Security
+
+- Permit catalog reuse only when the publication supplies a distinct new audit
+  event, and require pending-state validation to bind an omitted catalog frame
+  to the exact prior active catalog.
+- Prove canonical pending-state replay after an ambiguous provider success and
+  complete verification of epoch and non-mutating access events without
+  manufacturing replacement catalog ciphertext.
+
+## [0.33.0] - 2026-08-10
+
+### Added
+
+- Extend complete unlocked audit verification through the durable encrypted
+  operation-event head and report the verified event count without identities.
+
+### Security
+
+- Decrypt every linked event, verify its certified-device signature, and bind
+  its vault, device counter, exact basis heads, commit timestamp, event-object
+  membership, selected revision, and mutation result to reachable signed
+  commits.
+- Reject cycles, gaps, skipped durable heads, wrong signers, wrong basis heads,
+  missing results, and non-genesis chain roots. Pre-audit vaults remain
+  backward-compatible and explicitly report zero verified events.
+
+## [0.32.0] - 2026-08-10
+
+### Added
+
+- Add encrypted, device-signed audit events to item create, update, delete,
+  restore, conflict resolution/merge, and portable-import publications whenever
+  the durable audit epoch is active.
+- Reserve an independent 32-byte trace ID and encrypted-event randomness in
+  every mutation entropy container so hosts cannot silently omit audit entropy.
+
+### Security
+
+- Bind each successful mutation event to the same device counter, exact parent
+  heads, affected item, selected revision where applicable, resulting revision,
+  prior per-device event, and advisory time as its repository commit.
+- Publish the event in the same crash-resumable journal and advance the durable
+  audit head only with the mutation commit. Pre-audit vault behavior remains
+  compatible, and public activation stays deferred until access paths also fail
+  closed.
+
+## [0.31.0] - 2026-08-10
+
+### Added
+
+- Add an optional owner-private per-device audit-event head to active state and
+  pending publication journals, with backward-compatible decoding of pre-audit
+  state records.
+
+### Security
+
+- Require every publication after audit activation to advance to a distinct
+  newly published event object, preventing a journal from silently skipping or
+  reusing the durable audit chain head.
+- Keep event identities redacted from diagnostics; this dormant state boundary
+  does not activate auditing or claim current command enforcement by itself.
+
+## [0.30.0] - 2026-08-10
+
+### Added
+
+- Add the stable authenticated object kind and strict canonical wrapper for a
+  signed VLT-PM15 operation-audit event.
+
+### Security
+
+- Encrypt operation events under a distinct object-kind AAD domain and require
+  callers to verify the decoded event against its certified device key; this
+  slice does not yet claim repository publication or CLI enforcement.
+
 ## [0.29.0] - 2026-08-10
 
 ### Added

@@ -2,11 +2,11 @@
 schema_version: 2
 id: ES-C07-comer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 580
-chapter: 7
+sequence: 620
+chapter: 34
 type: word
 headword: comer
-gloss: to eat (your first -er verb)
+gloss: to eat — your first -er verb, and the family whose yo-form you already own
 concept_tag: VERB-EAT
 prerequisites: [ES-C06-practice]
 sounds: [r-tap, vowel-o]
@@ -17,9 +17,9 @@ duration:
 requires:
   knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP]
 introduces:
-  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE]
+  knowledge: [ES-LEX-COMER, ES-ETYMON-COMEDERE]
 practises:
-  knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE]
+  knowledge: [ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-COMER, ES-ETYMON-COMEDERE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -46,7 +46,7 @@ same**. Meet **comer** ("to eat"), your first **-er** verb.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-COMER, ES-ETYMON-COMEDERE]; assesses=[] -->
 
-**comer** comes from Latin **comedere**, *"to eat up"* — **com-** (intensifier,
+**comer** derives from Latin **comedere**, *"to eat up"* — **com-** (intensifier,
 "completely") + **edere**, "to eat." That **edere** is the twin of English **eat**
 (both from the same ancient root), and it feeds a small English family:
 
@@ -54,38 +54,31 @@ same**. Meet **comer** ("to eat"), your first **-er** verb.
 - **comestible** — a fancy word for food (straight from *comedere*).
 - English **eat** itself — the Germanic cousin of Latin *edere*.
 
-## Grammar Lens: the -er present tense
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-ER-PRESENT-SINGULAR]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-COMER] -->
+## Grammar Lens: one family over, and one ending already yours
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-COMER] -->
 
-The pattern is the **-ar** one with the *a*'s swapped for *e*'s. Drop **-er**, add:
+*Hablar* ended in **-ar**. *Comer* ends in **-er**, and that single letter is
+what makes it a different family.
 
-| person | -ar was | **-er** is | *comer* → |
-|---|---|---|---|
-| yo | -o | **-o** | **como** (I eat) |
-| tú | -as | **-es** | **comes** (you eat) |
-| él/ella/usted | -a | **-e** | **come** (he/she eats) |
-So the **yo** form is identical (**-o**), and *tú*/*él* just trade *a* for *e*:
-*hablas/habla* → *comes/come*. Those are the only three forms this lesson asks
-you to hold.
+Here is the good news, and it is worth having before you meet a single new
+form: **the *yo* ending does not change.** *Hablar* gave *habl**o***. *Comer*
+will give *com**o***. The ending you already own works untouched.
 
-> **Watch the false friend:** **como** means "I eat" **and** "like/as" (*como tú*,
-> "like you") **and**, with an accent, **cómo** = "how?". Same four letters,
-> three jobs — the accent and context sort them out.
+Only two slots in this family behave differently from the one you know, and you
+will meet them one at a time over the next three chapters — not here.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-PRO-DROP, ES-LEX-COMER, ES-ETYMON-COMEDERE] -->
 
 [PAUSE 1s]
 - [YOU SAY: "comer" — *ko-MER*]
-- [YOU SAY: "como, comes, come" — note the *-o/-es/-e* endings]
 - [YOU SAY: "comer" then English "edible, comestible, eat" — the *edere* family]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE] -->
-<!-- hl-activity: {"id":"ES-C07-comer-singular-forms","kind":"text","assesses":["ES-LEX-COMER","ES-GRAMMAR-ER-PRESENT-SINGULAR"],"prompt":"Give the three singular forms of comer in order: I, tú, usted.","answer":"como, comes, come","accepted":["como comes come","como / comes / come"],"feedback":{"correct":"Right: comer gives como, comes, come.","incorrect":"Drop -er and add -o, -es, -e: como, comes, come."},"response_seconds":10} -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-ETYMON-COMEDERE, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->
 
-[PAUSE 3s] What Latin verb is *comer* from, and its English cousins? (*comedere*
-← *edere* — edible, eat.) What are the three singular *-er* endings? (*-o / -es /
--e*.) How do they differ from *-ar*? (The tú and usted vowels change from *a*
-to *e*.) Next: your
-first **-ir** verb, *vivir*.
+<!-- hl-activity: {"id":"ES-C07-comer-family","kind":"text","assesses":["ES-LEX-COMER"],"prompt":"Which ending makes comer a different family from hablar?","answer":"-er","accepted":["er","the -er ending"],"feedback":{"correct":"Yes — -ar and -er are two families.","incorrect":"The -er ending."},"response_seconds":8} -->
+
+[PAUSE 3s] What Latin verb is *comer* from, and its English cousins?
+(*Comedere* ← *edere* — edible, eat.) Which ending is the same in both
+families? (The **yo** ending, **-o**.) Next: the *yo* form — and it will cost you nothing.

@@ -5,6 +5,56 @@ this file.
 
 ## [Unreleased]
 
+### Added - portable Text accessibility
+
+`Text` now emits Flutter `Semantics`/`ExcludeSemantics` wrappers for literal or
+slot-backed accessible names, headings, and intentionally hidden text. Custom
+labels replace the widget's built-in text semantics to avoid duplicate speech.
+
+### Fixed - analyzer-clean Flutter bootstrap
+
+Project emission now owns `analysis_options.yaml`, the matching
+`flutter_lints` dependency, and a package-name-correct Mosaic widget smoke test,
+so the documented `flutter create` bootstrap no longer installs a broken
+counter-app test or an unresolved lint include. Indexed and plain `For`
+lowering also omits authored item bindings when the generated body never reads
+them. CI analyzes the whole generated project and runs its permissive widget
+test instead of hiding bootstrap failures behind `dart analyze lib`.
+
+### Added - native accessible dynamic tables
+
+Canonical UI31 tables now lower dynamic header, row, and cell `For` loops to
+Flutter's native `DataTable`, `DataColumn`, `DataRow`, and `DataCell` widgets.
+This restores the platform table semantics that the former nested
+`Column`/`Row` visual fallback could not expose while preserving editable cell
+content, event dispatch, stable row keys, authored cell styling, and RTL.
+Unsupported table shapes deliberately retain the visual fallback so strict
+capability analysis continues to report them rather than making a false
+accessibility claim. The generated Flutter floor is now 3.32, the first stable
+release with explicit table/row/cell semantic roles; generated runtime helpers
+are also analyzer-clean on Dart 3.12.
+
+### Added - native accessible drag and drop
+
+`HostDraggable` and `HostDropTarget` now lower to Flutter's native
+`Draggable`/`DragTarget` pair. A component-instance scope registers eligible
+targets for keyboard movement, pointer and keyboard releases share one accepted
+drop path, disabled and accepted-kind rules are enforced before target
+selection, and the generated runtime emits drag lifecycle payloads and
+screen-reader announcements. Space/Enter grabs and drops, arrow keys move among
+valid targets, Escape cancels, and semantic activation exposes the same flow to
+assistive technologies. The native wrappers retain their authored part
+decoration and spacing instead of discarding the card and target styling.
+
+### Fixed - complete toolkit Dart compilation
+
+Flutter control lowerings now avoid generated component-name collisions with
+Material's `Checkbox`, `Radio`, and `Tooltip`, derive callback fields from the
+declared event payload, carry indexed `HostLink` events through their loop
+shadow, preserve decimal numeric payloads as `num`, and omit unused truthiness
+and loop-index bindings. The complete 23-component toolkit is analyzer-clean
+and builds as a native Flutter desktop application.
+
 ### Added - native-complete runtime-required shell
 
 `EmitOptions::require_runtime` now selects a fail-loud Flutter application
@@ -115,7 +165,7 @@ composition shape). Total tests: 57 (was 49, +8).
 
 L5 of UI32 ([spec PR #4286](https://github.com/adhithyan15/coding-adventures/pull/4286); L2 React #4297, L3 HTML #4309, L4 WebComponent #4315). `mosaic-compile --backend flutter --emit-project` now produces a flutter-create-shaped scaffold alongside the component `.dart`:
 
-- `pubspec.yaml` — pinned Flutter SDK `>=3.24.0 <4.0.0` + Dart `>=3.5.0 <4.0.0` per UI32 §3.6.3. Dart pub package name follows snake_case rules (§3.6.2 Flutter row) — auto-derived as `mosaic_{snake(name)}` (e.g., `ProfileCard` → `mosaic_profile_card`).
+- `pubspec.yaml` — pinned Flutter SDK `>=3.32.0 <4.0.0` + Dart `>=3.5.0 <4.0.0` per UI32 §3.6.3. Dart pub package name follows snake_case rules (§3.6.2 Flutter row) — auto-derived as `mosaic_{snake(name)}` (e.g., `ProfileCard` → `mosaic_profile_card`).
 - `lib/main.dart` — `MaterialApp` shell that mounts the component as `Scaffold.body`'s `Center(child: <Component>())`. Imports the component package-locally from `lib/{Component}.dart`, which keeps the generated shell valid under Dart's package-boundary rules.
 - `README.md` — `flutter pub get && flutter run` recipe + file map.
 

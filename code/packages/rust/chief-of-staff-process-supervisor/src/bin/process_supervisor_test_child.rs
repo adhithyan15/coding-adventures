@@ -1,5 +1,6 @@
 use chief_of_staff_host_control_protocol::{
-    ChannelBindingAccess, CompletionCall, DataPlaneResponse, PromptMessage, PromptRole,
+    ChannelBindingAccess, CompletionCall, DataPlaneResponse, ModelToolChoice, PromptMessage,
+    PromptRole, ToolCompletionCall, ToolCompletionOutput,
 };
 use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_process_supervisor::ChildProcessControl;
@@ -56,6 +57,41 @@ fn exercise_data_plane(
     })?;
     if !matches!(completed, DataPlaneResponse::Failed { .. }) {
         return Err("unexpected completion response".into());
+    }
+    let listed = control.request_model_tools()?;
+    let DataPlaneResponse::ModelToolsListed { tools, .. } = listed else {
+        return Err("unexpected model tool catalog response".into());
+    };
+    let tool_completed = control.request_tool_completion(ToolCompletionCall {
+        completion: CompletionCall {
+            model: "test-model".to_string(),
+            system: Some("use the offered tool".to_string()),
+            messages: vec![PromptMessage {
+                role: PromptRole::User,
+                text: "list entities".to_string(),
+            }],
+            temperature: 0.0,
+            max_tokens: Some(32),
+            stop_sequences: Vec::new(),
+            seed: Some(0),
+            metadata: BTreeMap::new(),
+        },
+        tools,
+        choice: ModelToolChoice::Required,
+        results: Vec::new(),
+    })?;
+    let DataPlaneResponse::ToolCompleted { result, .. } = tool_completed else {
+        return Err("unexpected tool completion response".into());
+    };
+    let ToolCompletionOutput::ToolCall(call) = result.output else {
+        return Err("expected model-returned tool call".into());
+    };
+    let executed = control.request_tool_execution(call.clone())?;
+    if !matches!(
+        executed,
+        DataPlaneResponse::ToolExecuted { result, .. } if result.call == call
+    ) {
+        return Err("unexpected tool execution response".into());
     }
     Ok(())
 }

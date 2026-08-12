@@ -1,5 +1,77 @@
 # Changelog
 
+## 0.40.0
+
+- Tokenize Mermaid state entities distinctly from hash colors.
+
+## 0.39.0
+
+- Tokenize the pinned state `hide empty description` directive.
+
+## 0.38.0
+
+- Recognize state scale-width statements from the pinned grammar.
+
+## 0.37.0
+
+- Recognize state diagram title statements from the pinned grammar.
+
+## 0.36.0
+
+- Tokenize state concurrent-region dividers distinctly from transition arrows.
+
+## 0.35.0
+
+- Tokenize state composite-group braces from the pinned grammar.
+
+## 0.34.0
+
+- Tokenize state click links, href markers, URLs, and tooltips.
+
+## 0.33.0
+
+- Tokenize state accessibility titles and single-line or multiline descriptions.
+
+## 0.32.0
+
+- Tokenize multiline state note terminators and floating-note strings.
+
+## 0.31.0
+
+- Tokenize attached state note keywords from the pinned Mermaid grammar.
+
+## 0.30.0
+
+- Tokenize Mermaid state `:::` inline class separators from the pinned grammar.
+
+## 0.29.0
+
+- Recognize Mermaid state `classDef` and `class` statements in the portable lexer grammar.
+
+## 0.28.0
+
+- Tokenize state inline-style separators and hexadecimal colors without folding them into labels.
+
+## 0.27.0
+
+- Tokenize angle-bracket and bracket Mermaid state fork/join markers.
+
+## 0.26.0
+
+- Tokenize both Mermaid 11.16.1 state choice marker spellings.
+
+## 0.25.0
+
+- Add a grammar-driven Mermaid 11.16.1 state-diagram lexer for declarations, transitions, directions, and edge states.
+
+## 0.23.0
+
+- Match and canonicalize Mermaid 11.16.1 sequence keywords case-insensitively.
+
+## 0.22.0
+
+- Skip Mermaid 11.16.1 sequence `#` comments while preserving numeric and named entities.
+
 ## 0.21.0
 
 - Tokenize sequence `wrap:` and `nowrap:` directives atomically.

@@ -27,6 +27,8 @@
 //! | `HostCheckbox`       | `Checkbox(value: ..., onChanged: ...)`              |
 //! | `HostRadio`          | `Radio<String>(value: ..., groupValue: ..., onChanged: ...)` |
 //! | `HostTable`          | `DataTable(columns: [...], rows: [...])`            |
+//! | `HostDraggable`      | native `Draggable<_MosaicDragData>` + keyboard/semantics controller |
+//! | `HostDropTarget`     | native `DragTarget<_MosaicDragData>` + scoped target registry |
 //! | `HostLink`           | `InkWell(onTap: () => launchUrl(...), child: Text(...))` (UI29-4) |
 //! | `HostTooltip`        | `Tooltip(message: ..., child: ...)` (UI29-4)        |
 //! | `HostNumberInput`    | `TextField(keyboardType: TextInputType.number, ...)` (UI29-4) |
@@ -147,7 +149,8 @@ impl std::error::Error for PipelineEmitError {}
 /// Options controlling the Flutter emitter's behaviour.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EmitOptions {
-    /// Also emit `pubspec.yaml`, `lib/main.dart`, `README.md`
+    /// Also emit `pubspec.yaml`, `analysis_options.yaml`, `lib/main.dart`,
+    /// `test/widget_test.dart`, and `README.md`
     /// alongside the component `.dart` file. Default `false`.
     pub emit_project: bool,
 
@@ -159,8 +162,9 @@ pub struct EmitOptions {
 
     /// Pinned Flutter SDK constraint to write into
     /// `pubspec.yaml`'s `environment.flutter`. UI32 spec §3.6.3
-    /// requires exact pinning. Default `">=3.24.0 <4.0.0"` — a
-    /// known-good Flutter 3.24+ stable that supports Dart 3.5.
+    /// requires exact pinning. Default `">=3.32.0 <4.0.0"` — the first
+    /// stable Flutter release whose native Table exposes explicit
+    /// table/row/cell semantics roles.
     /// Caret-pinning is not idiomatic for Flutter SDK constraints
     /// (which use range syntax), so this is the closest exact
     /// equivalent.
@@ -168,7 +172,7 @@ pub struct EmitOptions {
 
     /// Pinned Dart SDK constraint to write into
     /// `pubspec.yaml`'s `environment.sdk`. Default
-    /// `">=3.5.0 <4.0.0"` — paired with the Flutter 3.24 pin.
+    /// `">=3.5.0 <4.0.0"` — compatible with the Flutter 3.32 floor.
     pub pinned_dart_sdk: String,
 
     /// Pubspec package name to write into `pubspec.yaml` `name:`.
@@ -184,7 +188,7 @@ impl Default for EmitOptions {
         Self {
             emit_project: false,
             require_runtime: false,
-            pinned_flutter_sdk: ">=3.24.0 <4.0.0".to_string(),
+            pinned_flutter_sdk: ">=3.32.0 <4.0.0".to_string(),
             pinned_dart_sdk: ">=3.5.0 <4.0.0".to_string(),
             package_name: None,
         }
@@ -192,14 +196,18 @@ impl Default for EmitOptions {
 }
 
 /// Project-shaped artifacts emitted when `EmitOptions::emit_project`
-/// is on. Three files — enough for `flutter pub get && flutter run`
-/// to start a MaterialApp that mounts the component.
+/// is on. These files are enough for `flutter create`, `flutter analyze`,
+/// `flutter test`, and `flutter run` to operate without retaining the stock
+/// counter-app test or a lint include that is absent from the pubspec.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProjectFiles {
     /// `pubspec.yaml` — pinned Flutter + Dart SDK constraints,
     /// `flutter:` block with the SDK dep. Package name follows
     /// Dart pub rules (snake_case).
     pub pubspec_yaml: String,
+    /// `analysis_options.yaml` — the standard Flutter lint baseline with
+    /// generated-code warnings kept visible to `flutter analyze`.
+    pub analysis_options_yaml: String,
     /// `lib/main.dart` — `MaterialApp` shell that mounts the
     /// component as the `home:` widget. Imports the component
     /// sibling-relative from the project root.
@@ -209,6 +217,11 @@ pub struct ProjectFiles {
     /// manifest host assets while the generated shell remains runnable
     /// without a host installed.
     pub mosaic_host_dart: String,
+    /// `test/widget_test.dart` — package-name-correct smoke coverage for the
+    /// generated Mosaic application shell. Permissive shells mount the app;
+    /// runtime-required shells verify the exported widget type without trying
+    /// to load a target native library in the test process.
+    pub widget_test_dart: String,
     /// `README.md` — prereqs (Flutter SDK), `flutter pub get` +
     /// `flutter run` commands, file map.
     pub readme: String,
@@ -292,9 +305,14 @@ fn build_flutter_project_files(
 
     Ok(ProjectFiles {
         pubspec_yaml: build_pubspec_yaml(&pub_name, options),
+        analysis_options_yaml: build_analysis_options_yaml(),
         main_dart: build_main_dart(name, &interface.slots, options.require_runtime),
         mosaic_host_dart: build_mosaic_host_dart(options.require_runtime),
-        readme: build_flutter_readme(&pub_name, name, options.require_runtime),
+        widget_test_dart: build_widget_test_dart(&pub_name, options.require_runtime),
+        readme: format!(
+            "{}\n## Analyze and test\n\nMosaic supplies `analysis_options.yaml`, the matching `flutter_lints` dependency, and `test/widget_test.dart` before Flutter creates platform runners. The bootstrap therefore preserves a package-name-correct smoke test instead of installing the stock counter-app test.\n\n```sh\nflutter analyze\nflutter test\n```\n",
+            build_flutter_readme(&pub_name, name, options.require_runtime)
+        ),
     })
 }
 
@@ -335,8 +353,26 @@ const BANNER_MD: &str = "<!-- AUTO-GENERATED by mosaic-compile --emit-project. E
 
 fn build_pubspec_yaml(pub_name: &str, options: &EmitOptions) -> String {
     format!(
-        "{BANNER_YAML}name: {pub_name}\ndescription: Auto-generated Flutter shell for a Mosaic component.\npublish_to: 'none'\nversion: 0.0.0\n\nenvironment:\n  sdk: '{}'\n  flutter: '{}'\n\ndependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n\nflutter:\n  uses-material-design: true\n",
+        "{BANNER_YAML}name: {pub_name}\ndescription: Auto-generated Flutter shell for a Mosaic component.\npublish_to: 'none'\nversion: 0.0.0\n\nenvironment:\n  sdk: '{}'\n  flutter: '{}'\n\ndependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_lints: '>=6.0.0 <7.0.0'\n  flutter_test:\n    sdk: flutter\n\nflutter:\n  uses-material-design: true\n",
         options.pinned_dart_sdk, options.pinned_flutter_sdk,
+    )
+}
+
+fn build_analysis_options_yaml() -> String {
+    format!(
+        "{BANNER_YAML}include: package:flutter_lints/flutter.yaml\n\nanalyzer:\n  errors:\n    unused_import: error\n    unused_local_variable: error\n\nlinter:\n  rules:\n    # Mosaic component artifacts retain their PascalCase component identity.\n    file_names: false\n\n"
+    )
+}
+
+fn build_widget_test_dart(pub_name: &str, require_runtime: bool) -> String {
+    if require_runtime {
+        return format!(
+            "{BANNER_DART}import 'package:flutter_test/flutter_test.dart';\nimport 'package:{pub_name}/main.dart';\n\nvoid main() {{\n  test('exports the generated Mosaic app widget', () {{\n    expect(MosaicApp, isNotNull);\n  }});\n}}\n"
+        );
+    }
+
+    format!(
+        "{BANNER_DART}import 'package:flutter/material.dart';\nimport 'package:flutter_test/flutter_test.dart';\nimport 'package:{pub_name}/main.dart';\n\nvoid main() {{\n  testWidgets('mounts the generated Mosaic app shell', (tester) async {{\n    await tester.pumpWidget(const MosaicApp());\n    await tester.pump();\n\n    expect(find.byType(MaterialApp), findsOneWidget);\n  }});\n}}\n"
     )
 }
 
@@ -349,6 +385,24 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl], require_runtime: bo
 
 fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_root_widget_constructor(component_name, slots);
+    let host_props_field = if slots.is_empty() {
+        String::new()
+    } else {
+        "  Map<String, Object?> _hostProps = const <String, Object?>{};\n".to_string()
+    };
+    let apply_host_props = if slots.is_empty() {
+        String::new()
+    } else {
+        concat!(
+            "    final nextProps = mosaicMap(response['props']);\n",
+            "    if (nextProps.isNotEmpty) {\n",
+            "      setState(() {\n",
+            "        _hostProps = nextProps;\n",
+            "      });\n",
+            "    }\n"
+        )
+        .to_string()
+    };
     format!(
         concat!(
             "{banner}",
@@ -367,7 +421,7 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
             "}}\n\n",
             "class _MosaicAppState extends State<MosaicApp> {{\n",
             "  late final MosaicHost? _mosaicHost;\n",
-            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n\n",
+            "{host_props_field}\n",
             "  @override\n",
             "  void initState() {{\n",
             "    super.initState();\n",
@@ -394,14 +448,9 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
             "  void _applyMosaicResponse(Map<String, Object?>? response) {{\n",
             "    if (response == null) return;\n",
             "    if (!mounted) return;\n",
-            "    final nextProps = mosaicMap(response['props']);\n",
             "    final hostIntent = mosaicMap(response['hostIntent']);\n",
             "    final error = response['error'];\n",
-            "    if (nextProps.isNotEmpty) {{\n",
-            "      setState(() {{\n",
-            "        _hostProps = nextProps;\n",
-            "      }});\n",
-            "    }}\n",
+            "{apply_host_props}",
             "    if (hostIntent.isNotEmpty) {{\n",
             "      debugPrint('hostIntent: $hostIntent');\n",
             "    }}\n",
@@ -501,12 +550,29 @@ fn build_permissive_main_dart(component_name: &str, slots: &[SlotDecl]) -> Strin
         ),
         banner = BANNER_DART,
         component_name = component_name,
-        root_widget = root_widget
+        root_widget = root_widget,
+        host_props_field = host_props_field,
+        apply_host_props = apply_host_props,
     )
 }
 
 fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     let root_widget = build_runtime_required_root_widget_constructor(component_name, slots);
+    let host_props_field = if slots.is_empty() {
+        String::new()
+    } else {
+        "  Map<String, Object?> _hostProps = const <String, Object?>{};\n".to_string()
+    };
+    let next_props = if slots.is_empty() {
+        String::new()
+    } else {
+        "    final nextProps = mosaicMap(response['props']);\n".to_string()
+    };
+    let assign_host_props = if slots.is_empty() {
+        String::new()
+    } else {
+        "      _hostProps = nextProps;\n".to_string()
+    };
     format!(
         concat!(
             "{banner}",
@@ -525,7 +591,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "}}\n\n",
             "class _MosaicAppState extends State<MosaicApp> {{\n",
             "  late final MosaicHost _mosaicHost;\n",
-            "  Map<String, Object?> _hostProps = const <String, Object?>{{}};\n",
+            "{host_props_field}",
             "  bool _hostReady = false;\n\n",
             "  @override\n",
             "  void initState() {{\n",
@@ -557,12 +623,12 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "    if (!response.containsKey('props')) {{\n",
             "      throw StateError('Mosaic runtime response did not include props');\n",
             "    }}\n",
-            "    final nextProps = mosaicMap(response['props']);\n",
+            "{next_props}",
             "    final hostIntent = mosaicMap(response['hostIntent']);\n",
             "    final error = response['error'];\n",
             "    if (!mounted) return;\n",
             "    setState(() {{\n",
-            "      _hostProps = nextProps;\n",
+            "{assign_host_props}",
             "      _hostReady = true;\n",
             "    }});\n",
             "    if (hostIntent.isNotEmpty) {{\n",
@@ -772,13 +838,16 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "}}\n\n",
             "T mosaicRequiredValue<T>(Map<String, Object?> props, String name) {{\n",
             "  final value = props[name];\n",
-            "  if (value is T) return value as T;\n",
+            "  if (value is T) return value;\n",
             "  throw StateError(\"Mosaic runtime prop '$name' has the wrong type\");\n",
             "}}\n"
         ),
         banner = BANNER_DART,
         component_name = component_name,
         root_widget = root_widget,
+        host_props_field = host_props_field,
+        next_props = next_props,
+        assign_host_props = assign_host_props,
     )
 }
 
@@ -1000,12 +1069,12 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
 fn build_flutter_readme(pub_name: &str, component_name: &str, require_runtime: bool) -> String {
     if !require_runtime {
         return format!(
-        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\nChoose the platforms this host will ship, let Flutter add their standard runner files, then build or run normally. Flutter preserves the Mosaic-generated `lib/` sources:\n\n```sh\nflutter create --platforms=macos,windows,linux .\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `lib/{component_name}.dart` | The Mosaic-compiled component mounted by the app shell. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)`, hydrates slot values from an optional Mosaic host, and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Default no-op Mosaic host hook. App packages can overwrite it with a real bridge. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery shell file carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — Flutter app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project`.\n\n## Prerequisites\n\n- Flutter SDK 3.32+ (run `flutter --version` to check).\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\nChoose the platforms this host will ship, let Flutter add their standard runner files, then build or run normally. Flutter preserves the Mosaic-generated `lib/` sources:\n\n```sh\nflutter create --platforms=macos,windows,linux .\nflutter pub get\nflutter run -d <device-id>   # or `flutter run` to pick interactively\n```\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `lib/{component_name}.dart` | The Mosaic-compiled component mounted by the app shell. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | MaterialApp shell that mounts `{component_name}(...)`, hydrates slot values from an optional Mosaic host, and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Default no-op Mosaic host hook. App packages can overwrite it with a real bridge. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery shell file carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
         );
     }
 
     format!(
-        "{BANNER_MD}# {component_name} — Flutter native-complete app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project --profile native-complete`.\n\nThis shell requires Mosaic's standard Rust application runtime at startup. It waits for the first runtime props envelope before mounting `{component_name}` and never substitutes preview/sample values for missing required props.\n\n## Prerequisites\n\n- Flutter SDK 3.24+ (run `flutter --version` to check).\n- A built Mosaic Rust application library, available through `MOSAIC_APP_LIBRARY` or the platform's conventional `mosaic_app` library name.\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\nChoose the platforms this host will ship, let Flutter add their standard runner files, then build or run normally. Flutter preserves the Mosaic-generated `lib/` sources:\n\n```sh\nflutter create --platforms=macos,windows,linux .\nflutter pub get\nMOSAIC_APP_LIBRARY=/absolute/path/to/libmosaic_app.dylib flutter run -d <device-id>\n```\n\nUse the platform-appropriate library filename on Linux or Windows. Startup fails explicitly when the Rust runtime cannot be loaded or does not provide the required props envelope.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `lib/{component_name}.dart` | The Mosaic-compiled component mounted by the app shell. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | Runtime-required MaterialApp shell that waits for Rust-provided props and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Mosaic host contract. The package builder installs the standard Dart FFI binding here. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery shell file carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+        "{BANNER_MD}# {component_name} — Flutter native-complete app shell\n\nAuto-generated by `mosaic-compile --backend flutter --emit-project --profile native-complete`.\n\nThis shell requires Mosaic's standard Rust application runtime at startup. It waits for the first runtime props envelope before mounting `{component_name}` and never substitutes preview/sample values for missing required props.\n\n## Prerequisites\n\n- Flutter SDK 3.32+ (run `flutter --version` to check).\n- A built Mosaic Rust application library, available through `MOSAIC_APP_LIBRARY` or the platform's conventional `mosaic_app` library name.\n- A device target: iOS simulator, Android emulator, or desktop (`flutter config --enable-macos-desktop` / `--enable-linux-desktop` / `--enable-windows-desktop`).\n\n## Run\n\nChoose the platforms this host will ship, let Flutter add their standard runner files, then build or run normally. Flutter preserves the Mosaic-generated `lib/` sources:\n\n```sh\nflutter create --platforms=macos,windows,linux .\nflutter pub get\nMOSAIC_APP_LIBRARY=/absolute/path/to/libmosaic_app.dylib flutter run -d <device-id>\n```\n\nUse the platform-appropriate library filename on Linux or Windows. Startup fails explicitly when the Rust runtime cannot be loaded or does not provide the required props envelope.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `lib/{component_name}.dart` | The Mosaic-compiled component mounted by the app shell. |\n| `pubspec.yaml` | Dart pub manifest. Pinned Flutter + Dart SDKs per UI32 spec §3.6.3. |\n| `lib/main.dart` | Runtime-required MaterialApp shell that waits for Rust-provided props and forwards Mosaic event envelopes. |\n| `lib/mosaic_host.dart` | Mosaic host contract. The package builder installs the standard Dart FFI binding here. |\n| `README.md` | This file. |\n\nDart pub name: `{pub_name}`.\n\n## Editing\n\nEvery shell file carries an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
     )
 }
 
@@ -1037,12 +1106,61 @@ pub fn from_pipeline(
         "// Auto-generated by mosaic-emit-flutter. Do not edit."
     )
     .unwrap();
-    writeln!(out, "import 'package:flutter/material.dart';").unwrap();
+    let uses_checkbox = layout_contains_tag(&layout.root, "HostCheckbox");
+    let uses_radio = layout_contains_tag(&layout.root, "HostRadio");
+    let uses_tooltip = layout_contains_tag(&layout.root, "HostTooltip");
+    let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget");
+    if uses_radio {
+        writeln!(out, "// ignore_for_file: deprecated_member_use").unwrap();
+    }
+    if uses_drag {
+        // The generated private helper exposes the complete UI35 callback
+        // contract even when a particular component binds only a subset.
+        // `SemanticsService.announce` is retained for the documented Flutter
+        // 3.24 floor; newer SDKs deprecate it in favor of a multi-view API.
+        writeln!(
+            out,
+            "// ignore_for_file: unused_element_parameter, deprecated_member_use"
+        )
+        .unwrap();
+    }
+    writeln!(
+        out,
+        "import 'package:flutter/material.dart' hide Checkbox, Radio, Tooltip;"
+    )
+    .unwrap();
+    let mut material_aliases = Vec::new();
+    if uses_checkbox {
+        material_aliases.push("Checkbox");
+    }
+    if uses_radio {
+        material_aliases.push("Radio");
+    }
+    if uses_tooltip {
+        material_aliases.push("Tooltip");
+    }
+    if !material_aliases.is_empty() {
+        writeln!(
+            out,
+            "import 'package:flutter/material.dart' as material show {};",
+            material_aliases.join(", ")
+        )
+        .unwrap();
+    }
+    if uses_drag {
+        writeln!(out, "import 'package:flutter/services.dart';").unwrap();
+        writeln!(out, "import 'package:flutter/semantics.dart';").unwrap();
+    }
     writeln!(out).unwrap();
 
     // 2. Event union — sealed base class + one subclass per emit.
     out.push_str(&emit_event_union(name, &interface.emits)?);
     writeln!(out).unwrap();
+    if uses_drag {
+        out.push_str(&emit_drag_helpers());
+        writeln!(out).unwrap();
+    }
 
     // 3. Pre-compute the per-part style map. Same shape as the React
     //    emitter's `build_part_style_map`: kebab part-name → joined
@@ -1064,6 +1182,14 @@ pub fn from_pipeline(
     })
 }
 
+fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
+    node.tag == tag
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_tag(child, tag))
+}
+
 // =====================================================================
 // Section emitters
 // =====================================================================
@@ -1080,8 +1206,8 @@ pub fn from_pipeline(
 ///   const GridEvent();
 /// }
 /// class GridEventNavigate extends GridEvent {
-///   final int row;
-///   final int col;
+///   final num row;
+///   final num col;
 ///   const GridEventNavigate({required this.row, required this.col});
 /// }
 /// ```
@@ -1158,6 +1284,317 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
     Ok(out)
 }
 
+/// Emit the package-independent Flutter drag/drop runtime used by generated
+/// components. Pointer and keyboard releases both call `accept`, so the
+/// proposal payload and accepted outcome cannot diverge. The scope is mounted
+/// once per generated component instance, which keeps keyboard target
+/// enumeration out of sibling or nested component instances.
+fn emit_drag_helpers() -> String {
+    r#"class _MosaicDragData {
+  const _MosaicDragData({required this.key, required this.kind, required this.label});
+
+  final String key;
+  final String kind;
+  final String label;
+}
+
+class _MosaicDragScope extends StatefulWidget {
+  const _MosaicDragScope({required this.child});
+
+  final Widget child;
+
+  static _MosaicDragScopeState of(BuildContext context) {
+    final host = context.dependOnInheritedWidgetOfExactType<_MosaicDragScopeHost>();
+    assert(host != null, 'Mosaic drag primitives require a component drag scope');
+    return host!.state;
+  }
+
+  @override
+  State<_MosaicDragScope> createState() => _MosaicDragScopeState();
+}
+
+class _MosaicDragScopeHost extends InheritedWidget {
+  const _MosaicDragScopeHost({required this.state, required super.child});
+
+  final _MosaicDragScopeState state;
+
+  @override
+  bool updateShouldNotify(_MosaicDragScopeHost oldWidget) => false;
+}
+
+class _MosaicDragScopeState extends State<_MosaicDragScope> {
+  final List<_MosaicDropTargetState> _targets = <_MosaicDropTargetState>[];
+  _MosaicDragData? _active;
+  void Function(bool dropped)? _onDragEnd;
+  _MosaicDropTargetState? _activeTarget;
+
+  void register(_MosaicDropTargetState target) {
+    if (!_targets.contains(target)) _targets.add(target);
+  }
+
+  void unregister(_MosaicDropTargetState target) {
+    _targets.remove(target);
+    if (identical(_activeTarget, target)) _activeTarget = null;
+  }
+
+  void announce(String message) {
+    SemanticsService.announce(message, Directionality.of(context));
+  }
+
+  void grab(
+    _MosaicDragData data,
+    VoidCallback? onDragStart,
+    void Function(bool dropped)? onDragEnd,
+  ) {
+    if (_active != null) return;
+    _active = data;
+    _onDragEnd = onDragEnd;
+    _activeTarget = null;
+    onDragStart?.call();
+    announce('Grabbed ${data.label}. Use arrow keys to choose a target, then press Space or Enter to drop.');
+  }
+
+  List<_MosaicDropTargetState> get _eligibleTargets {
+    final data = _active;
+    if (data == null) return const <_MosaicDropTargetState>[];
+    return _targets.where((target) => target.accepts(data)).toList(growable: false);
+  }
+
+  void step(int delta) {
+    final data = _active;
+    final targets = _eligibleTargets;
+    if (data == null || targets.isEmpty) {
+      announce('No available drop targets.');
+      return;
+    }
+    final previous = _activeTarget;
+    var targetIndex = previous == null ? -1 : targets.indexOf(previous);
+    targetIndex = (targetIndex + delta) % targets.length;
+    if (targetIndex < 0) targetIndex += targets.length;
+    final next = targets[targetIndex];
+    if (!identical(previous, next)) {
+      previous?.leave(data);
+      next.enter(data);
+    }
+    next.hover(data, 'into');
+    _activeTarget = next;
+    announce('Move to ${next.widget.targetKey}, position ${targetIndex + 1} of ${targets.length}.');
+  }
+
+  bool drop() {
+    final data = _active;
+    final target = _activeTarget;
+    if (data == null || target == null || !target.accepts(data)) return false;
+    target.accept(data, 'into');
+    _finish(true);
+    return true;
+  }
+
+  void cancel() {
+    final data = _active;
+    if (data == null) return;
+    _activeTarget?.leave(data);
+    announce('Cancelled drag.');
+    _finish(false);
+  }
+
+  void _finish(bool dropped) {
+    final onDragEnd = _onDragEnd;
+    _active = null;
+    _onDragEnd = null;
+    _activeTarget = null;
+    onDragEnd?.call(dropped);
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      _MosaicDragScopeHost(state: this, child: widget.child);
+}
+
+class _MosaicDraggable extends StatelessWidget {
+  const _MosaicDraggable({
+    required this.data,
+    required this.disabled,
+    required this.child,
+    this.onDragStart,
+    this.onDragEnd,
+  });
+
+  final _MosaicDragData data;
+  final bool disabled;
+  final Widget child;
+  final VoidCallback? onDragStart;
+  final void Function(bool dropped)? onDragEnd;
+
+  void _toggle(BuildContext context) {
+    final scope = _MosaicDragScope.of(context);
+    if (scope._active == null) {
+      scope.grab(data, onDragStart, onDragEnd);
+    } else if (!scope.drop()) {
+      scope.cancel();
+    }
+  }
+
+  KeyEventResult _onKey(BuildContext context, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final scope = _MosaicDragScope.of(context);
+    final key = event.logicalKey;
+    if (key == LogicalKeyboardKey.escape && scope._active != null) {
+      scope.cancel();
+      return KeyEventResult.handled;
+    }
+    if (disabled) return KeyEventResult.ignored;
+    if (key == LogicalKeyboardKey.space || key == LogicalKeyboardKey.enter) {
+      _toggle(context);
+      return KeyEventResult.handled;
+    }
+    if (scope._active != null &&
+        (key == LogicalKeyboardKey.arrowDown || key == LogicalKeyboardKey.arrowRight)) {
+      scope.step(1);
+      return KeyEventResult.handled;
+    }
+    if (scope._active != null &&
+        (key == LogicalKeyboardKey.arrowUp || key == LogicalKeyboardKey.arrowLeft)) {
+      scope.step(-1);
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = _MosaicDragScope.of(context);
+    final semanticChild = Semantics(
+      button: true,
+      label: 'Draggable ${data.label}. Press Space or Enter to grab.',
+      onTap: disabled && scope._active == null ? null : () => _toggle(context),
+      child: child,
+    );
+    return Focus(
+      canRequestFocus: !disabled,
+      onKeyEvent: (node, event) => _onKey(context, event),
+      child: Draggable<_MosaicDragData>(
+        data: data,
+        maxSimultaneousDrags: disabled ? 0 : 1,
+        onDragStarted: () {
+          onDragStart?.call();
+          scope.announce('Grabbed ${data.label}.');
+        },
+        onDragEnd: (details) {
+          onDragEnd?.call(details.wasAccepted);
+          if (!details.wasAccepted) scope.announce('Cancelled drag.');
+        },
+        feedback: Material(
+          type: MaterialType.transparency,
+          child: Opacity(opacity: 0.8, child: child),
+        ),
+        childWhenDragging: Opacity(opacity: 0.45, child: semanticChild),
+        child: semanticChild,
+      ),
+    );
+  }
+}
+
+class _MosaicDropTarget extends StatefulWidget {
+  const _MosaicDropTarget({
+    required this.targetKey,
+    required this.disabled,
+    required this.child,
+    this.acceptsKinds,
+    this.onDragEnter,
+    this.onDragLeave,
+    this.onDropHover,
+    this.onDrop,
+  });
+
+  final String targetKey;
+  final bool disabled;
+  final List<String>? acceptsKinds;
+  final Widget child;
+  final void Function(_MosaicDragData data)? onDragEnter;
+  final void Function(_MosaicDragData data)? onDragLeave;
+  final void Function(_MosaicDragData data, String position)? onDropHover;
+  final void Function(_MosaicDragData data, String position)? onDrop;
+
+  @override
+  State<_MosaicDropTarget> createState() => _MosaicDropTargetState();
+}
+
+class _MosaicDropTargetState extends State<_MosaicDropTarget> {
+  _MosaicDragScopeState? _scope;
+  String _position = 'into';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final next = _MosaicDragScope.of(context);
+    if (!identical(_scope, next)) {
+      _scope?.unregister(this);
+      _scope = next;
+      next.register(this);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scope?.unregister(this);
+    super.dispose();
+  }
+
+  bool accepts(_MosaicDragData data) =>
+      !widget.disabled &&
+      (widget.acceptsKinds == null || widget.acceptsKinds!.contains(data.kind));
+
+  String _positionFor(Offset globalOffset) {
+    final renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox || renderObject.size.height <= 0) return 'into';
+    final ratio = renderObject.globalToLocal(globalOffset).dy / renderObject.size.height;
+    return ratio < 1 / 3 ? 'before' : ratio > 2 / 3 ? 'after' : 'into';
+  }
+
+  void accept(_MosaicDragData data, String position) {
+    if (!accepts(data)) return;
+    widget.onDrop?.call(data, position);
+    _scope?.announce('Dropped ${data.label} on ${widget.targetKey}.');
+  }
+
+  void enter(_MosaicDragData data) => widget.onDragEnter?.call(data);
+
+  void leave(_MosaicDragData data) => widget.onDragLeave?.call(data);
+
+  void hover(_MosaicDragData data, String position) {
+    _position = position;
+    widget.onDropHover?.call(data, position);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<_MosaicDragData>(
+      onWillAcceptWithDetails: (details) {
+        final accepted = accepts(details.data);
+        if (accepted) enter(details.data);
+        return accepted;
+      },
+      onMove: (details) {
+        if (!accepts(details.data)) return;
+        hover(details.data, _positionFor(details.offset));
+      },
+      onLeave: (data) {
+        if (data != null) leave(data);
+      },
+      onAcceptWithDetails: (details) => accept(details.data, _position),
+      builder: (context, candidateData, rejectedData) => Semantics(
+        container: true,
+        label: 'Drop target ${widget.targetKey}',
+        child: widget.child,
+      ),
+    );
+  }
+}
+"#
+    .to_string()
+}
+
 /// Emit the `StatelessWidget` class: fields for every slot, a
 /// `dispatch` field (always present, matches React's required prop),
 /// a const constructor with named-required parameters, and the
@@ -1197,28 +1634,7 @@ fn emit_widget_class(
     writeln!(out, "    required this.dispatch,").unwrap();
     writeln!(out, "  }});").unwrap();
 
-    // Mosaic conditions use value truthiness, while Dart requires a
-    // statically-typed bool. Keep the conversion on the generated widget so
-    // multiple emitted component files cannot introduce a top-level helper
-    // collision. The leading underscore is outside mosmodel's authored-name
-    // grammar, so slots cannot shadow this member.
-    writeln!(out).unwrap();
-    writeln!(out, "  bool _mosaicTruthy(Object? value) {{").unwrap();
-    writeln!(out, "    if (value == null) return false;").unwrap();
-    writeln!(out, "    if (value is bool) return value;").unwrap();
-    writeln!(out, "    if (value is num) return value != 0;").unwrap();
-    writeln!(out, "    if (value is String) return value.isNotEmpty;").unwrap();
-    writeln!(out, "    if (value is Iterable) return value.isNotEmpty;").unwrap();
-    writeln!(out, "    if (value is Map) return value.isNotEmpty;").unwrap();
-    writeln!(out, "    return true;").unwrap();
-    writeln!(out, "  }}").unwrap();
-
-    // 3. build method.
-    writeln!(out).unwrap();
-    writeln!(out, "  @override").unwrap();
-    writeln!(out, "  Widget build(BuildContext context) {{").unwrap();
-    writeln!(out, "    return").unwrap();
-    let tree = emit_widget_tree(
+    let mut tree = emit_widget_tree(
         layout_root,
         6,
         part_styles,
@@ -1226,6 +1642,42 @@ fn emit_widget_class(
         emits,
         TableCtx::default(),
     )?;
+
+    if layout_contains_tag(layout_root, "HostDraggable")
+        || layout_contains_tag(layout_root, "HostDropTarget")
+    {
+        let nested = tree
+            .trim_end()
+            .lines()
+            .map(|line| format!("    {line}"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        tree = format!("      _MosaicDragScope(\n        child:\n{nested},\n      )\n");
+    }
+
+    // Mosaic conditions use value truthiness, while Dart requires a
+    // statically-typed bool. Keep the conversion on the generated widget so
+    // multiple emitted component files cannot introduce a top-level helper
+    // collision. Emit it only for a tree that uses it so otherwise-clean
+    // package exports do not carry an unused private member warning.
+    if tree.contains("_mosaicTruthy(") {
+        writeln!(out).unwrap();
+        writeln!(out, "  bool _mosaicTruthy(Object? value) {{").unwrap();
+        writeln!(out, "    if (value == null) return false;").unwrap();
+        writeln!(out, "    if (value is bool) return value;").unwrap();
+        writeln!(out, "    if (value is num) return value != 0;").unwrap();
+        writeln!(out, "    if (value is String) return value.isNotEmpty;").unwrap();
+        writeln!(out, "    if (value is Iterable) return value.isNotEmpty;").unwrap();
+        writeln!(out, "    if (value is Map) return value.isNotEmpty;").unwrap();
+        writeln!(out, "    return true;").unwrap();
+        writeln!(out, "  }}").unwrap();
+    }
+
+    // 3. build method.
+    writeln!(out).unwrap();
+    writeln!(out, "  @override").unwrap();
+    writeln!(out, "  Widget build(BuildContext context) {{").unwrap();
+    writeln!(out, "    return").unwrap();
     out.push_str(&tree);
     // Trim trailing newline before adding the closing `;`.
     if out.ends_with('\n') {
@@ -1317,6 +1769,101 @@ fn extract_column_widths_slot(host_table: &LayoutNode) -> Option<String> {
     None
 }
 
+/// The native Flutter table lowering deliberately accepts the canonical
+/// UI31/Grid shape rather than pretending every arbitrary HostTable tree can
+/// be represented by `DataTable`:
+///
+/// ```text
+/// HostTable
+///   HostTableHead > Row > For > <header widget>
+///   HostTableBody > For > Row > For > <cell widget>
+/// ```
+///
+/// `DataTable` accepts dynamically-created `List<DataColumn>` and
+/// `List<DataRow>` values, so both `For` loops can remain dynamic. Unsupported
+/// shapes retain the visual Column fallback and, importantly, remain visible
+/// to native-complete degradation analysis.
+struct FlutterDataTableShape<'a> {
+    header_cells: &'a LayoutNode,
+    body_rows: &'a LayoutNode,
+    body_cells: &'a LayoutNode,
+}
+
+fn flutter_data_table_shape(host_table: &LayoutNode) -> Option<FlutterDataTableShape<'_>> {
+    if host_table.children.iter().any(|child| {
+        !matches!(
+            child.tag.as_str(),
+            "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+        )
+    }) {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    if header_row.tag != "Row" {
+        return None;
+    }
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    if header_cells.tag != "For" || header_cells.children.len() != 1 {
+        return None;
+    }
+
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    if body_rows.tag != "For" {
+        return None;
+    }
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    if body_row.tag != "Row" {
+        return None;
+    }
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    if body_cells.tag != "For" || body_cells.children.len() != 1 {
+        return None;
+    }
+
+    Some(FlutterDataTableShape {
+        header_cells,
+        body_rows,
+        body_cells,
+    })
+}
+
+/// Returns whether a HostTable layout has the canonical dynamic structure that
+/// this emitter lowers to Flutter's native DataTable family.
+///
+/// Package capability analysis uses the same predicate so strict-profile
+/// reporting cannot drift away from the actual lowering.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    flutter_data_table_shape(host_table).is_some()
+}
+
 // =====================================================================
 // Widget tree walker
 // =====================================================================
@@ -1353,10 +1900,10 @@ fn emit_widget_tree(
         return emit_host_button(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostCheckbox" {
-        return emit_host_checkbox(node, indent, part_styles, component);
+        return emit_host_checkbox(node, indent, part_styles, component, emits);
     }
     if node.tag == "HostRadio" {
-        return emit_host_radio(node, indent, part_styles, component);
+        return emit_host_radio(node, indent, part_styles, component, emits);
     }
     if node.tag == "HostScroll" {
         return emit_host_scroll(node, indent, part_styles, component, emits, ctx);
@@ -1367,6 +1914,12 @@ fn emit_widget_tree(
     if node.tag == "HostTable" {
         return emit_host_table(node, indent, part_styles, component, emits, ctx);
     }
+    if node.tag == "HostDraggable" {
+        return emit_host_draggable(node, indent, part_styles, component, emits, ctx);
+    }
+    if node.tag == "HostDropTarget" {
+        return emit_host_drop_target(node, indent, part_styles, component, emits, ctx);
+    }
     // UI29-4 kernel — three new primitives. `HostLink` lowers to an
     // `InkWell` wrapping a `Text` (with a `url_launcher` TODO comment
     // since Flutter has no built-in URL-launch capability without an
@@ -1375,7 +1928,7 @@ fn emit_widget_tree(
     // `TextField` configured with `TextInputType.number` so mobile
     // devices show the numeric keypad.
     if node.tag == "HostLink" {
-        return emit_host_link(node, indent, component);
+        return emit_host_link(node, indent, component, emits, ctx);
     }
     if node.tag == "HostTooltip" {
         return emit_host_tooltip(node, indent, part_styles, component, emits, ctx);
@@ -1436,11 +1989,6 @@ fn emit_widget_tree(
         "Box" => Some("Container"),
         "Row" => Some("Row"),
         "Column" => Some("Column"),
-        // UI35 — the drag family. This backend does not implement dragging yet, so
-        // both lower to a Column: the content still renders, it
-        // just isn't draggable here. Erroring instead would mean a layout using drag
-        // cannot be emitted to this backend AT ALL. See UI35-host-drag-drop.md.
-        "HostDraggable" | "HostDropTarget" => Some("Column"),
         "Stack" => Some("Stack"),
         // UI28-1 / U29-D1 — HostTable structural sub-tags lower to
         // `Column` containers on Flutter (Flutter has no semantic
@@ -1603,7 +2151,19 @@ fn emit_container(
         // form. A `Container` with no children just collapses to the box;
         // multiple children need a child Column wrapper since Container
         // only accepts one direct child.
-        let style_args = args_for_container_inline(style_props);
+        let style_args = style_to_container_args(style_props);
+        if node.children.len() == 1 && style_args.is_empty() {
+            // If the resolved Mosaic style has no Flutter-visible container
+            // properties, this wrapper changes neither layout nor visuals.
+            return emit_widget_tree(
+                &node.children[0],
+                indent,
+                part_styles,
+                component,
+                emits,
+                child_ctx,
+            );
+        }
         if node.children.is_empty() {
             return Ok(format!(
                 "{pad}Container({})\n",
@@ -1620,9 +2180,13 @@ fn emit_container(
                 child_ctx,
             )?;
             let child_src = child_src.trim_end_matches('\n');
+            let style_prefix = if style_args.is_empty() {
+                String::new()
+            } else {
+                format!("{inner_pad}{style_args},\n")
+            };
             return Ok(format!(
-                "{pad}Container(\n{inner_pad}child: {child_src}{style_args}\n{pad})\n",
-                inner_pad = " ".repeat(indent + 2),
+                "{pad}Container(\n{style_prefix}{inner_pad}child: {child_src}\n{pad})\n",
             ));
         }
         let children = emit_paired_children(
@@ -1633,8 +2197,13 @@ fn emit_container(
             emits,
             child_ctx,
         )?;
+        let style_prefix = if style_args.is_empty() {
+            String::new()
+        } else {
+            format!("{inner_pad}{style_args},\n")
+        };
         return Ok(format!(
-            "{pad}Container(\n{pad}  child: Column(children: [\n{children}{pad}  ]){style_args}\n{pad})\n"
+            "{pad}Container(\n{style_prefix}{pad}  child: Column(children: [\n{children}{pad}  ])\n{pad})\n"
         ));
     }
 
@@ -1772,28 +2341,46 @@ fn emit_for_spread(
     let body_pad = indent + 4;
     let body = for_body_widget(node, body_pad, part_styles, component, emits, body_ctx)?;
     let body_trimmed = body.trim_start();
+    let uses_item = dart_source_references_identifier(body_trimmed, &as_name);
 
     match index_name {
-        Some(idx) => Ok(format!(
-            "{pad}...{coll}.asMap().entries.map(({entry}) {{\n\
-             {p2}final {idx} = {entry}.key;\n\
-             {p2}final {asn} = {entry}.value;\n\
-             {p2}return {body};\n\
-             {pad}}})\n",
+        Some(idx) if dart_source_references_identifier(body_trimmed, &idx) => {
+            let item_binding = if uses_item {
+                format!("{}final {as_name} = entry.value;\n", " ".repeat(indent + 2))
+            } else {
+                String::new()
+            };
+            Ok(format!(
+                "{pad}...{coll}.asMap().entries.map((entry) {{\n\
+                 {p2}final {idx} = entry.key;\n\
+                 {item_binding}\
+                 {p2}return {body};\n\
+                 {pad}}})\n",
+                coll = coll_expr,
+                idx = idx,
+                body = body_trimmed,
+                p2 = " ".repeat(indent + 2),
+            ))
+        }
+        Some(_) | None => Ok(format!(
+            "{pad}...{coll}.map(({parameter}) => {body})\n",
             coll = coll_expr,
-            idx = idx,
-            asn = as_name,
-            body = body_trimmed,
-            entry = "entry",
-            p2 = " ".repeat(indent + 2),
-        )),
-        None => Ok(format!(
-            "{pad}...{coll}.map(({asn}) => {body})\n",
-            coll = coll_expr,
-            asn = as_name,
+            parameter = if uses_item { as_name.as_str() } else { "_" },
             body = body_trimmed,
         )),
     }
+}
+
+fn dart_source_references_identifier(source: &str, identifier: &str) -> bool {
+    source.match_indices(identifier).any(|(start, _)| {
+        let before = source[..start].chars().next_back();
+        let after = source[start + identifier.len()..].chars().next();
+        !before.is_some_and(is_dart_identifier_char) && !after.is_some_and(is_dart_identifier_char)
+    })
+}
+
+fn is_dart_identifier_char(character: char) -> bool {
+    character.is_ascii_alphanumeric() || matches!(character, '_' | '$')
 }
 
 /// Resolve a `For`'s `each:` prop to its Dart collection expression.
@@ -1832,16 +2419,12 @@ fn for_body_widget(
         return Ok(format!("{}const SizedBox.shrink()", " ".repeat(body_pad)));
     }
     if node.children.len() == 1 {
-        return Ok(emit_widget_tree(
-            &node.children[0],
-            body_pad,
-            part_styles,
-            component,
-            emits,
-            ctx,
-        )?
-        .trim_end_matches('\n')
-        .to_string());
+        let child = &node.children[0];
+        return Ok(
+            emit_widget_tree(child, body_pad, part_styles, component, emits, ctx)?
+                .trim_end_matches('\n')
+                .to_string(),
+        );
     }
     let inner = emit_paired_children(
         &node.children,
@@ -1913,21 +2496,26 @@ fn emit_for_dart(
     let body_pad = indent + 6;
     let body = for_body_widget(node, body_pad, part_styles, component, emits, body_ctx)?;
     let body_trimmed = body.trim_start();
+    let uses_item = dart_source_references_identifier(body_trimmed, &as_name);
 
     match index_name {
         Some(idx) => {
             // Indexed form: enumerate via .asMap().entries, bind key+value,
             // wrap the body in a KeyedSubtree so the index becomes the
             // element-tree stable key (UI28-1 §5).
+            let item_binding = if uses_item {
+                format!("{}final {as_name} = entry.value;\n", " ".repeat(indent + 2))
+            } else {
+                String::new()
+            };
             Ok(format!(
                 "{pad}Column(children: {coll}.asMap().entries.map((entry) {{\n\
                  {p2}final {idx} = entry.key;\n\
-                 {p2}final {asn} = entry.value;\n\
+                 {item_binding}\
                  {p2}return KeyedSubtree(key: ValueKey({idx}), child: {body});\n\
                  {pad}}}).toList())\n",
                 coll = coll_expr,
                 idx = idx,
-                asn = as_name,
                 body = body_trimmed,
                 p2 = " ".repeat(indent + 2),
             ))
@@ -1936,9 +2524,9 @@ fn emit_for_dart(
             // Plain form: single-arg arrow function returning the body.
             // No key — the author opted out by not binding `index:`.
             Ok(format!(
-                "{pad}Column(children: {coll}.map(({asn}) => {body}).toList())\n",
+                "{pad}Column(children: {coll}.map(({parameter}) => {body}).toList())\n",
                 coll = coll_expr,
-                asn = as_name,
+                parameter = if uses_item { as_name.as_str() } else { "_" },
                 body = body_trimmed,
             ))
         }
@@ -2038,29 +2626,7 @@ fn render_branch(
 
 /// Render a container's part-style props as inline Flutter
 /// `Container` properties: `color: Color(0xFFRRGGBB), padding:
-/// EdgeInsets.all(N)`, etc. Returns the rendered argument list,
-/// already comma-prefixed when non-empty, so the caller can splice
-/// it after the `child:` argument.
-fn args_for_container_inline(style_props: &str) -> String {
-    let mut parts: Vec<String> = Vec::new();
-    for prop in style_props.split(';') {
-        let prop = prop.trim();
-        if prop.is_empty() {
-            continue;
-        }
-        if let Some(arg) = style_prop_to_container_arg(prop) {
-            parts.push(arg);
-        }
-    }
-    if parts.is_empty() {
-        String::new()
-    } else {
-        format!(", {}", parts.join(", "))
-    }
-}
-
-/// Same as [`args_for_container_inline`] but for the no-child case
-/// where the args don't need a leading comma.
+/// EdgeInsets.all(N)`, etc.
 fn style_to_container_args(style_props: &str) -> String {
     let mut parts: Vec<String> = Vec::new();
     for prop in style_props.split(';') {
@@ -2090,6 +2656,10 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
         )),
         "width" => Some(format!("width: {}", parse_pixel_value(value))),
         "height" => Some(format!("height: {}", parse_pixel_value(value))),
+        "min-height" => Some(format!(
+            "constraints: const BoxConstraints(minHeight: {})",
+            parse_pixel_value(value)
+        )),
         "background-color" | "color" => css_color_to_dart(value).map(|c| format!("color: {c}")),
         _ => None,
     }
@@ -2312,6 +2882,12 @@ fn emit_styled_box(
     if let Some(h) = base.get("height") {
         args.push(format!("height: {}", parse_pixel_value(h)));
     }
+    if let Some(min_height) = base.get("min-height") {
+        args.push(format!(
+            "constraints: const BoxConstraints(minHeight: {})",
+            parse_pixel_value(min_height)
+        ));
+    }
     if let Some(ta) = base.get("text-align") {
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
@@ -2450,18 +3026,12 @@ fn emit_styled_box(
 /// `Text ( content: ( v ) )` reach the Flutter widget unchanged.
 fn emit_text(node: &LayoutNode, indent: usize) -> String {
     let pad = " ".repeat(indent);
-    if let Some(s) = find_string_prop(node, "content") {
-        return format!("{pad}Text(\"{}\")\n", escape_dart_string(s));
-    }
-    if let Some(slot) = find_slot_ref_prop(node, "content") {
+    let text = if let Some(s) = find_string_prop(node, "content") {
+        format!("Text(\"{}\")", escape_dart_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "content") {
         let camel = to_camel_case_first_lower(slot);
-        return format!("{pad}Text({camel})\n");
-    }
-    // UI28-1 / U29-D1 — Expr content. mosaic-pkg-grid v0.2.0's
-    // `Text ( content: ( v ) )` shape, where `v` is the inner For
-    // loop's binding. The Expr text is the literal Dart expression
-    // evaluated in the surrounding .map closure's scope.
-    if let Some(expr_text) = node
+        format!("Text({camel})")
+    } else if let Some(expr_text) = node
         .props
         .iter()
         .find(|p| p.name == "content")
@@ -2470,9 +3040,40 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
             _ => None,
         })
     {
-        return format!("{pad}Text({expr_text})\n");
+        // UI28-1 / U29-D1 — Expr content passes verbatim into Text so
+        // surrounding For-loop bindings remain live.
+        format!("Text({expr_text})")
+    } else {
+        "const Text(\"\")".to_string()
+    };
+
+    let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
+        || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
+    if hidden {
+        return format!("{pad}ExcludeSemantics(child: {text})\n");
     }
-    format!("{pad}const Text(\"\")\n")
+
+    let label = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(value)) => {
+            Some(format!("\"{}\"", escape_dart_string(value)))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => Some(to_camel_case_first_lower(slot)),
+        _ => None,
+    };
+    let heading = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "heading");
+    if label.is_none() && !heading {
+        return format!("{pad}{text}\n");
+    }
+    let mut args = Vec::new();
+    if let Some(label) = label {
+        args.push(format!("label: {label}"));
+        args.push("excludeSemantics: true".to_string());
+    }
+    if heading {
+        args.push("header: true".to_string());
+    }
+    args.push(format!("child: {text}"));
+    format!("{pad}Semantics({})\n", args.join(", "))
 }
 
 /// Lower an `Image` node to `Image.network(...)` for URL sources or
@@ -2823,6 +3424,7 @@ fn emit_host_checkbox(
     indent: usize,
     _part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let checked_expr: String = if let Some(slot) = find_slot_ref_prop(node, "checked") {
@@ -2853,16 +3455,42 @@ fn emit_host_checkbox(
     let on_changed_body: String = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        format!("dispatch({component}Event{case}(value: v ?? false))")
+        let args = emits
+            .iter()
+            .find(|emit| emit.name == *emit_name)
+            .map(host_checkbox_event_args)
+            .transpose()?
+            .unwrap_or_default();
+        format!("dispatch({component}Event{case}({args}))")
     } else {
         "/* no onToggle bound */".to_string()
     };
-    let body = format!("Checkbox(value: {checked_expr}, onChanged: (v) {{ {on_changed_body}; }})");
+    let body = format!(
+        "material.Checkbox(value: {checked_expr}, onChanged: (v) {{ {on_changed_body}; }})"
+    );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
         None => body,
     };
     Ok(format!("{pad}{inner}\n"))
+}
+
+fn host_checkbox_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            let value = match &param.r#type {
+                EmitPayloadType::Bool => "v ?? false",
+                EmitPayloadType::Number => "(v ?? false) ? 1 : 0",
+                EmitPayloadType::Text | EmitPayloadType::Color => "(v ?? false).toString()",
+                EmitPayloadType::Component(_) => "throw UnimplementedError()",
+            };
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
 }
 
 /// `HostRadio` → `Radio<String>`. Group coordination via `groupValue`
@@ -2873,6 +3501,7 @@ fn emit_host_radio(
     indent: usize,
     _part_styles: &HashMap<String, String>,
     component: &str,
+    emits: &[EmitDecl],
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let value_expr: String = if let Some(s) = find_string_prop(node, "value") {
@@ -2919,18 +3548,42 @@ fn emit_host_radio(
     let on_changed_body: String = if let Some(emit_name) = find_emit_ref_prop(node, "onSelect") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
-        format!("dispatch({component}Event{case}(value: v ?? \"\"))")
+        let args = emits
+            .iter()
+            .find(|emit| emit.name == *emit_name)
+            .map(host_radio_event_args)
+            .transpose()?
+            .unwrap_or_default();
+        format!("dispatch({component}Event{case}({args}))")
     } else {
         "/* no onSelect bound */".to_string()
     };
     let body = format!(
-        "Radio<String>(value: {value_expr}, groupValue: {group_value_expr}, onChanged: (v) {{ {on_changed_body}; }})"
+        "material.Radio<String>(value: {value_expr}, groupValue: {group_value_expr}, onChanged: (v) {{ {on_changed_body}; }})"
     );
     let inner = match label {
         Some(l) => format!("Row(children: [{body}, {l}])"),
         None => body,
     };
     Ok(format!("{pad}{inner}\n"))
+}
+
+fn host_radio_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            let value = match &param.r#type {
+                EmitPayloadType::Text | EmitPayloadType::Color => "v ?? \"\"",
+                EmitPayloadType::Number => "num.tryParse(v ?? \"\") ?? 0",
+                EmitPayloadType::Bool => "(v ?? \"\").isNotEmpty",
+                EmitPayloadType::Component(_) => "throw UnimplementedError()",
+            };
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
 }
 
 /// `HostScroll` → `SingleChildScrollView`. Multi-child case wraps
@@ -2996,9 +3649,392 @@ fn emit_host_dialog(
     ))
 }
 
-/// `HostTable` → `DataTable`. v1 emits a minimal `DataTable(columns:
-/// [], rows: [])` placeholder; full sub-tag (`HostTableHead`/`Body`/
-/// `Foot`) walk is a follow-up.
+/// `HostDraggable` and `HostDropTarget` lower through a small generated
+/// runtime that keeps native pointer drag/drop and the keyboard interaction
+/// on one payload path. The surrounding `_MosaicDragScope` is mounted once
+/// per generated component instance by `emit_widget_class`.
+fn emit_host_draggable(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let key = drag_text_prop_expression(node, "drag-key", "")?;
+    let kind = drag_text_prop_expression(node, "drag-kind", "")?;
+    let label = drag_text_prop_expression(node, "drag-label", &key)?;
+    let disabled = bool_prop_expression(node, "drag-disabled")?
+        .or(bool_prop_expression(node, "disabled")?)
+        .unwrap_or_else(|| "false".to_string());
+    let child = emit_container(
+        node,
+        "Container",
+        indent + 4,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
+
+    let mut callbacks = String::new();
+    if let Some(call) = drag_event_dispatch(
+        node,
+        "onDragStart",
+        component,
+        emits,
+        &[("key", &key), ("kind", &kind)],
+    )? {
+        writeln!(callbacks, "{pad}  onDragStart: () {{ {call}; }},").unwrap();
+    }
+    if let Some(call) = drag_event_dispatch(
+        node,
+        "onDragEnd",
+        component,
+        emits,
+        &[("key", &key), ("kind", &kind), ("dropped", "dropped")],
+    )? {
+        writeln!(callbacks, "{pad}  onDragEnd: (dropped) {{ {call}; }},").unwrap();
+    }
+
+    Ok(format!(
+        "{pad}_MosaicDraggable(\n\
+         {pad}  data: _MosaicDragData(key: {key}, kind: {kind}, label: {label}),\n\
+         {pad}  disabled: {disabled},\n\
+         {callbacks}\
+         {pad}  child:\n{child}\
+         {pad})\n"
+    ))
+}
+
+fn emit_host_drop_target(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let target_key = drag_text_prop_expression(node, "drop-key", "")?;
+    let disabled = bool_prop_expression(node, "drop-disabled")?
+        .or(bool_prop_expression(node, "disabled")?)
+        .unwrap_or_else(|| "false".to_string());
+    let accepts = drag_accepts_expression(node)?;
+    let child = emit_container(
+        node,
+        "Container",
+        indent + 4,
+        part_styles,
+        component,
+        emits,
+        ctx,
+    )?;
+
+    let enter_values = [("key", "data.key"), ("kind", "data.kind")];
+    let hover_values = [
+        ("key", "data.key"),
+        ("kind", "data.kind"),
+        ("targetKey", target_key.as_str()),
+        ("position", "position"),
+    ];
+    let mut callbacks = String::new();
+    for (prop, callback, values) in [
+        (
+            "onDragEnter",
+            "onDragEnter: (data)",
+            enter_values.as_slice(),
+        ),
+        (
+            "onDragLeave",
+            "onDragLeave: (data)",
+            enter_values.as_slice(),
+        ),
+        (
+            "onDropHover",
+            "onDropHover: (data, position)",
+            hover_values.as_slice(),
+        ),
+        (
+            "onDrop",
+            "onDrop: (data, position)",
+            hover_values.as_slice(),
+        ),
+    ] {
+        if let Some(call) = drag_event_dispatch(node, prop, component, emits, values)? {
+            writeln!(callbacks, "{pad}  {callback} {{ {call}; }},").unwrap();
+        }
+    }
+
+    let accepts_arg = accepts
+        .map(|value| format!("{pad}  acceptsKinds: {value},\n"))
+        .unwrap_or_default();
+    Ok(format!(
+        "{pad}_MosaicDropTarget(\n\
+         {pad}  targetKey: {target_key},\n\
+         {pad}  disabled: {disabled},\n\
+         {accepts_arg}\
+         {callbacks}\
+         {pad}  child:\n{child}\
+         {pad})\n"
+    ))
+}
+
+fn drag_text_prop_expression(
+    node: &LayoutNode,
+    name: &str,
+    fallback: &str,
+) -> Result<String, PipelineEmitError> {
+    let value = match find_prop_value(node, name) {
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_dart_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            format!("{field}.toString()")
+        }
+        Some(LayoutPropValue::Expr(expression)) => {
+            format!("({}).toString()", expression.trim())
+        }
+        Some(LayoutPropValue::Number(number)) => format!("\"{number}\""),
+        Some(LayoutPropValue::EmitRef(_)) | None => {
+            if fallback.starts_with('"') || fallback.ends_with(".toString()") {
+                fallback.to_string()
+            } else {
+                format!("\"{}\"", escape_dart_string(fallback))
+            }
+        }
+    };
+    Ok(value)
+}
+
+fn drag_accepts_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, "accepts") else {
+        // Historical Mosaic layouts omitted `accepts`; preserve that useful
+        // accept-all behavior. An explicitly authored empty list remains an
+        // empty list and accepts nothing, as UI35 specifies.
+        return Ok(None);
+    };
+    let expression = match value {
+        LayoutPropValue::String(kind) => {
+            format!("const <String>[\"{}\"]", escape_dart_string(kind))
+        }
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            field
+        }
+        LayoutPropValue::Expr(expression) => {
+            format!("List<String>.from(({}) as Iterable)", expression.trim())
+        }
+        LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => "const <String>[]".to_string(),
+    };
+    Ok(Some(expression))
+}
+
+fn drag_event_dispatch(
+    node: &LayoutNode,
+    prop: &str,
+    component: &str,
+    emits: &[EmitDecl],
+    values: &[(&str, &str)],
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+        return Ok(None);
+    };
+    let case = pascalize(&strip_on_prefix(emit_name));
+    validate_emit_name(&case)?;
+    let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(Some(format!("dispatch({component}Event{case}())")));
+    };
+    let args = emit
+        .params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            let expression = values
+                .iter()
+                .find_map(|(name, value)| (*name == field).then_some(*value))
+                .map(ToString::to_string)
+                .unwrap_or_else(|| match &param.r#type {
+                    EmitPayloadType::Text | EmitPayloadType::Color => "\"\"".to_string(),
+                    EmitPayloadType::Number => "0".to_string(),
+                    EmitPayloadType::Bool => "false".to_string(),
+                    EmitPayloadType::Component(_) => "throw UnimplementedError()".to_string(),
+                });
+            Ok(format!("{field}: {expression}"))
+        })
+        .collect::<Result<Vec<_>, PipelineEmitError>>()?
+        .join(", ");
+    Ok(Some(format!("dispatch({component}Event{case}({args}))")))
+}
+
+fn emit_native_data_table(
+    shape: FlutterDataTableShape<'_>,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let field_pad = " ".repeat(indent + 2);
+    let closure_pad = " ".repeat(indent + 4);
+    let binding_pad = " ".repeat(indent + 6);
+    let return_pad = " ".repeat(indent + 6);
+
+    let header_collection = for_collection_expr(shape.header_cells);
+    let header_item = find_keyword_prop(shape.header_cells, "as")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+    let header_index =
+        find_keyword_prop(shape.header_cells, "index").map(to_camel_case_first_lower);
+    let header_ctx = TableCtx {
+        cell_index: header_index
+            .as_deref()
+            .filter(|_| ctx.column_widths_slot.is_some()),
+        for_item: Some(header_item.as_str()),
+        for_index: header_index.as_deref().or(ctx.for_index),
+        direct_row_child: false,
+        ..ctx
+    };
+    let header_widget = for_body_widget(
+        shape.header_cells,
+        indent + 8,
+        part_styles,
+        component,
+        emits,
+        header_ctx,
+    )?;
+    let header_widget = header_widget.trim();
+
+    let row_collection = for_collection_expr(shape.body_rows);
+    let row_item = find_keyword_prop(shape.body_rows, "as")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+    let row_index = find_keyword_prop(shape.body_rows, "index").map(to_camel_case_first_lower);
+    let cell_collection = for_collection_expr(shape.body_cells);
+    let cell_item = find_keyword_prop(shape.body_cells, "as")
+        .map(to_camel_case_first_lower)
+        .unwrap_or_else(|| "item".to_string());
+    let cell_index = find_keyword_prop(shape.body_cells, "index").map(to_camel_case_first_lower);
+    let cell_ctx = TableCtx {
+        cell_index: cell_index
+            .as_deref()
+            .filter(|_| ctx.column_widths_slot.is_some()),
+        for_item: Some(cell_item.as_str()),
+        for_index: cell_index
+            .as_deref()
+            .or(row_index.as_deref())
+            .or(ctx.for_index),
+        direct_row_child: false,
+        ..ctx
+    };
+    let cell_widget = for_body_widget(
+        shape.body_cells,
+        indent + 12,
+        part_styles,
+        component,
+        emits,
+        cell_ctx,
+    )?;
+    let cell_widget = cell_widget.trim();
+
+    let mut out = String::new();
+    writeln!(
+        out,
+        "{pad}(({header_collection}).isEmpty ? const SizedBox.shrink() : DataTable("
+    )
+    .unwrap();
+    match header_index
+        .as_deref()
+        .filter(|index| dart_source_references_identifier(header_widget, index))
+    {
+        Some(index) => {
+            writeln!(
+                out,
+                "{field_pad}columns: {header_collection}.asMap().entries.map((mosaicColumnEntry) {{"
+            )
+            .unwrap();
+            writeln!(out, "{binding_pad}final {index} = mosaicColumnEntry.key;").unwrap();
+            writeln!(
+                out,
+                "{binding_pad}final {header_item} = mosaicColumnEntry.value;"
+            )
+            .unwrap();
+            writeln!(
+                out,
+                "{return_pad}return DataColumn(label: {header_widget});"
+            )
+            .unwrap();
+            writeln!(out, "{closure_pad}}}).toList(),").unwrap();
+        }
+        None => {
+            writeln!(
+                out,
+                "{field_pad}columns: {header_collection}.map(({header_item}) => DataColumn(label: {header_widget})).toList(),"
+            )
+            .unwrap();
+        }
+    }
+
+    match row_index {
+        Some(index) => {
+            writeln!(
+                out,
+                "{field_pad}rows: {row_collection}.asMap().entries.map((mosaicRowEntry) {{"
+            )
+            .unwrap();
+            writeln!(out, "{binding_pad}final {index} = mosaicRowEntry.key;").unwrap();
+            writeln!(out, "{binding_pad}final {row_item} = mosaicRowEntry.value;").unwrap();
+            writeln!(out, "{return_pad}return DataRow(").unwrap();
+            writeln!(out, "{return_pad}  key: ValueKey({index}),").unwrap();
+        }
+        None => {
+            writeln!(out, "{field_pad}rows: {row_collection}.map(({row_item}) {{").unwrap();
+            writeln!(out, "{return_pad}return DataRow(").unwrap();
+        }
+    }
+
+    match cell_index
+        .as_deref()
+        .filter(|index| dart_source_references_identifier(cell_widget, index))
+    {
+        Some(index) => {
+            writeln!(
+                out,
+                "{return_pad}  cells: {cell_collection}.asMap().entries.map((mosaicCellEntry) {{"
+            )
+            .unwrap();
+            writeln!(out, "{return_pad}    final {index} = mosaicCellEntry.key;").unwrap();
+            writeln!(
+                out,
+                "{return_pad}    final {cell_item} = mosaicCellEntry.value;"
+            )
+            .unwrap();
+            writeln!(out, "{return_pad}    return DataCell({cell_widget});").unwrap();
+            writeln!(out, "{return_pad}  }}).toList(),").unwrap();
+        }
+        None => {
+            writeln!(
+                out,
+                "{return_pad}  cells: {cell_collection}.map(({cell_item}) => DataCell({cell_widget})).toList(),"
+            )
+            .unwrap();
+        }
+    }
+    writeln!(out, "{return_pad});").unwrap();
+    writeln!(out, "{closure_pad}}}).toList(),").unwrap();
+    writeln!(out, "{pad}))").unwrap();
+    Ok(out)
+}
+
+/// `HostTable` lowers the canonical UI31/Grid structure to Flutter's native
+/// `DataTable`. Other shapes keep the visual fallback and remain degradations
+/// in the native-complete report.
 ///
 /// UI31 §3.2 RTL contract — when authored with a `dir:` prop, the
 /// `DataTable` is wrapped in `Directionality(textDirection: ...,
@@ -3062,51 +4098,30 @@ fn emit_host_table(
         direct_row_child: false,
     };
 
-    // UI28-1 / U29-D1 — HostTable now walks its children (sub-tags:
-    // HostTableColGroup / HostTableHead / HostTableBody / HostTableFoot)
-    // instead of emitting a fixed `DataTable(columns: const [], rows:
-    // const [])` placeholder. Flutter's native `DataTable` requires
-    // its `columns:` and `rows:` to be built up-front from typed
-    // `DataColumn` + `DataRow` values, which doesn't fit the
-    // For-driven dynamic shape that mosaic-pkg-grid v0.2.0 uses
-    // (`HostTableBody { For (rows) { Row { For (cells) { Cell } } } }`).
-    //
-    // Instead we lower to `Column(children: [...])` where each
-    // sub-tag's children become its own nested Column / Row tree.
-    // This gives up DataTable's built-in column-sort headers and
-    // its automatic cell-width-equalisation, but preserves the
-    // semantic structure: every Row maps to a Flutter `Row`, every
-    // cell is a widget inside that Row, and the For loops drive
-    // dynamic row/cell counts via the existing emit_for_dart
-    // lowering (Phase 2 / PR #4393).
-    //
-    // HostTableColGroup is a no-op visually on Flutter (Flutter has
-    // no <colgroup> equivalent — column widths flow from cell
-    // intrinsic sizing or explicit SizedBox wrappers). The children
-    // still walk through so a For-of-Col doesn't error out, but the
-    // emitted Column wrapper is invisible at the layout layer.
-    //
-    // The two-letter `dir` slot continues to wrap the entire body in
-    // a `Directionality` for RTL support per UI31 §3.2 — this hasn't
-    // changed; we just compute the body differently now.
-    let body_inner = if node.children.is_empty() {
-        format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
+    let table_body = if let Some(shape) = flutter_data_table_shape(node) {
+        emit_native_data_table(shape, 0, part_styles, component, emits, ctx)?
+            .trim()
+            .to_string()
     } else {
-        emit_paired_children(
-            &node.children,
-            indent + 4,
-            part_styles,
-            component,
-            emits,
-            ctx,
-        )?
+        let body_inner = if node.children.is_empty() {
+            format!("{}const SizedBox.shrink()\n", " ".repeat(indent + 2))
+        } else {
+            emit_paired_children(
+                &node.children,
+                indent + 4,
+                part_styles,
+                component,
+                emits,
+                ctx,
+            )?
+        };
+        format!(
+            "Column(\n{p}children: [\n{body}{p}],\n{pad})",
+            p = " ".repeat(indent + 2),
+            body = body_inner,
+            pad = pad,
+        )
     };
-    let table_body = format!(
-        "Column(\n{p}children: [\n{body}{p}],\n{pad})",
-        p = " ".repeat(indent + 2),
-        body = body_inner,
-        pad = pad,
-    );
     let table_body = table_body.as_str();
 
     // Resolve the directionality expression. `None` means: do not
@@ -3198,6 +4213,8 @@ fn emit_host_link(
     node: &LayoutNode,
     indent: usize,
     component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -3218,6 +4235,10 @@ fn emit_host_link(
         format!("Text(\"{}\")", escape_dart_string(s))
     } else if let Some(slot) = find_slot_ref_prop(node, "label") {
         let camel = to_camel_case_first_lower(slot);
+        validate_slot_or_field_name(&camel)?;
+        format!("Text({camel})")
+    } else if let Some(keyword) = find_keyword_prop(node, "label") {
+        let camel = to_camel_case_first_lower(keyword);
         validate_slot_or_field_name(&camel)?;
         format!("Text({camel})")
     } else {
@@ -3267,9 +4288,13 @@ fn emit_host_link(
         if let Some(emit_name) = find_emit_ref_prop(node, "onActivate") {
             let case = pascalize(&strip_on_prefix(emit_name));
             validate_emit_name(&case)?;
-            Some(format!(
-                "dispatch({component}Event{case}(href: {href_expr}))"
-            ))
+            let args = emits
+                .iter()
+                .find(|emit| emit.name == *emit_name)
+                .map(|emit| host_link_event_args(emit, &href_expr, ctx))
+                .transpose()?
+                .unwrap_or_default();
+            Some(format!("dispatch({component}Event{case}({args}));"))
         } else {
             None
         };
@@ -3294,6 +4319,34 @@ fn emit_host_link(
     Ok(format!(
         "{pad}InkWell(onTap: {on_tap_body}, child: {label_expr})\n"
     ))
+}
+
+fn host_link_event_args(
+    emit: &EmitDecl,
+    href_expr: &str,
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field)?;
+            let value = match &param.r#type {
+                EmitPayloadType::Number => ctx.for_index.unwrap_or("0").to_string(),
+                EmitPayloadType::Text | EmitPayloadType::Color => {
+                    if field == "href" {
+                        href_expr.to_string()
+                    } else {
+                        ctx.for_item.unwrap_or(href_expr).to_string()
+                    }
+                }
+                EmitPayloadType::Bool => "false".to_string(),
+                EmitPayloadType::Component(_) => "throw UnimplementedError()".to_string(),
+            };
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
 }
 
 /// `HostTooltip` (kernel primitive #20, UI29-4) → `Tooltip(message:,
@@ -3367,7 +4420,7 @@ fn emit_host_tooltip(
     let child_src = child_src.trim_end_matches('\n');
 
     Ok(format!(
-        "{pad}Tooltip(\n{inner_pad}message: {message_expr},\n{inner_pad}child: {child_src},\n{pad})\n"
+        "{pad}material.Tooltip(\n{inner_pad}message: {message_expr},\n{inner_pad}child: {child_src},\n{pad})\n"
     ))
 }
 
@@ -3593,7 +4646,7 @@ fn slot_type_to_dart(t: &SlotType) -> String {
 fn payload_to_dart_type(t: &EmitPayloadType) -> String {
     match t {
         EmitPayloadType::Text => "String".to_string(),
-        EmitPayloadType::Number => "int".to_string(),
+        EmitPayloadType::Number => "num".to_string(),
         EmitPayloadType::Bool => "bool".to_string(),
         EmitPayloadType::Color => "String".to_string(),
         EmitPayloadType::Component(name) => name.clone(),
@@ -3994,9 +5047,36 @@ mod tests {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
-        assert!(r.output.contains("import 'package:flutter/material.dart';"));
+        assert!(r
+            .output
+            .contains("import 'package:flutter/material.dart' hide Checkbox, Radio, Tooltip;"));
         assert!(r.output.contains("class X extends StatelessWidget"));
         assert!(r.output.contains("Container("));
+        assert!(!r.output.contains("_mosaicTruthy"));
+    }
+
+    #[test]
+    fn plain_single_child_box_elides_unnecessary_container() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Box",
+                vec![],
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("hello".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let output = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+
+        assert!(output.contains("Text(\"hello\")"), "{output}");
+        assert!(!output.contains("Container(\n"), "{output}");
     }
 
     // ----- Event union: zero emits emits a sealed base class -----------
@@ -4043,8 +5123,8 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("Grid")).unwrap();
         let out = &r.output;
         assert!(out.contains("class GridEventNavigate extends GridEvent"));
-        assert!(out.contains("final int row;"));
-        assert!(out.contains("final int col;"));
+        assert!(out.contains("final num row;"));
+        assert!(out.contains("final num col;"));
         assert!(out.contains("required this.row,"));
         assert!(out.contains("required this.col,"));
         assert!(out.contains("String get mosaicName => \"onNavigate\";"));
@@ -4154,6 +5234,60 @@ mod tests {
             "expected `Text(greeting)`, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn text_accessibility_metadata_lowers_to_flutter_semantics() {
+        let m = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "Title",
+            node_with(
+                "Text",
+                vec![
+                    LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Visible title".into()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::SlotRef("spoken-title".into()),
+                    },
+                    LayoutProp {
+                        name: "a11y-role".into(),
+                        value: LayoutPropValue::Keyword("heading".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Title")).unwrap().output;
+        assert!(out.contains(
+            "Semantics(label: spokenTitle, excludeSemantics: true, header: true, child: Text(\"Visible title\"))"
+        ));
+
+        let hidden = layout(
+            "Hidden",
+            node_with(
+                "Text",
+                vec![LayoutProp {
+                    name: "a11y-hidden".into(),
+                    value: LayoutPropValue::Keyword("true".into()),
+                }],
+                vec![],
+            ),
+        );
+        let hidden_out = from_pipeline(
+            &component("Hidden", vec![], vec![]),
+            &hidden,
+            &empty_style("Hidden"),
+        )
+        .unwrap()
+        .output;
+        assert!(hidden_out.contains("ExcludeSemantics(child: const Text(\"\"))"));
     }
 
     // ----- HostButton + onTap dispatch placeholder ---------------------
@@ -4680,6 +5814,44 @@ mod tests {
     }
 
     #[test]
+    fn host_checkbox_uses_declared_event_field_without_component_name_collision() {
+        let m = component(
+            "Checkbox",
+            vec![slot("checked", SlotType::Bool, true)],
+            vec![emit(
+                "onChange",
+                vec![EmitParam {
+                    name: "checked".into(),
+                    r#type: EmitPayloadType::Bool,
+                }],
+            )],
+        );
+        let l = layout(
+            "Checkbox",
+            node_with(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".into(),
+                        value: LayoutPropValue::SlotRef("checked".into()),
+                    },
+                    LayoutProp {
+                        name: "onToggle".into(),
+                        value: LayoutPropValue::EmitRef("onChange".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Checkbox"))
+            .expect("emit Checkbox toolkit component")
+            .output;
+        assert!(out.contains("as material show Checkbox;"));
+        assert!(out.contains("material.Checkbox(value: checked"));
+        assert!(out.contains("dispatch(CheckboxEventChange(checked: v ?? false))"));
+    }
+
+    #[test]
     fn host_radio_with_value_emits_radio_string_widget() {
         let m = component("X", vec![], vec![]);
         let l = layout(
@@ -4699,6 +5871,276 @@ mod tests {
             "expected `Radio<String>(value: \"vanilla\"`, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn host_drag_drop_emits_native_pointer_keyboard_and_semantics_runtime() {
+        let m = component(
+            "Board",
+            vec![
+                slot("drag-key", SlotType::Text, true),
+                slot("drag-kind", SlotType::Text, true),
+                slot("drag-label", SlotType::Text, true),
+                slot("drag-disabled", SlotType::Bool, true),
+                slot(
+                    "accepted-kinds",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot("drop-disabled", SlotType::Bool, true),
+            ],
+            vec![
+                emit(
+                    "onDragStart",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDragEnd",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "dropped".into(),
+                            r#type: EmitPayloadType::Bool,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDragEnter",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDragLeave",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDropHover",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "target-key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "position".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+                emit(
+                    "onDrop",
+                    vec![
+                        EmitParam {
+                            name: "key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "kind".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "target-key".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                        EmitParam {
+                            name: "position".into(),
+                            r#type: EmitPayloadType::Text,
+                        },
+                    ],
+                ),
+            ],
+        );
+        let draggable = node_with(
+            "HostDraggable",
+            vec![
+                LayoutProp {
+                    name: "drag-key".into(),
+                    value: LayoutPropValue::SlotRef("drag-key".into()),
+                },
+                LayoutProp {
+                    name: "drag-kind".into(),
+                    value: LayoutPropValue::SlotRef("drag-kind".into()),
+                },
+                LayoutProp {
+                    name: "drag-label".into(),
+                    value: LayoutPropValue::SlotRef("drag-label".into()),
+                },
+                LayoutProp {
+                    name: "drag-disabled".into(),
+                    value: LayoutPropValue::SlotRef("drag-disabled".into()),
+                },
+                LayoutProp {
+                    name: "onDragStart".into(),
+                    value: LayoutPropValue::EmitRef("onDragStart".into()),
+                },
+                LayoutProp {
+                    name: "onDragEnd".into(),
+                    value: LayoutPropValue::EmitRef("onDragEnd".into()),
+                },
+            ],
+            vec![node_with(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("Card".into()),
+                }],
+                vec![],
+            )],
+        );
+        let drop_target = node_with(
+            "HostDropTarget",
+            vec![
+                LayoutProp {
+                    name: "drop-key".into(),
+                    value: LayoutPropValue::String("lane-a".into()),
+                },
+                LayoutProp {
+                    name: "accepts".into(),
+                    value: LayoutPropValue::SlotRef("accepted-kinds".into()),
+                },
+                LayoutProp {
+                    name: "drop-disabled".into(),
+                    value: LayoutPropValue::SlotRef("drop-disabled".into()),
+                },
+                LayoutProp {
+                    name: "onDragEnter".into(),
+                    value: LayoutPropValue::EmitRef("onDragEnter".into()),
+                },
+                LayoutProp {
+                    name: "onDragLeave".into(),
+                    value: LayoutPropValue::EmitRef("onDragLeave".into()),
+                },
+                LayoutProp {
+                    name: "onDropHover".into(),
+                    value: LayoutPropValue::EmitRef("onDropHover".into()),
+                },
+                LayoutProp {
+                    name: "onDrop".into(),
+                    value: LayoutPropValue::EmitRef("onDrop".into()),
+                },
+            ],
+            vec![draggable],
+        );
+        let out = from_pipeline(&m, &layout("Board", drop_target), &empty_style("Board"))
+            .expect("emit native Flutter drag/drop")
+            .output;
+
+        for expected in [
+            "import 'package:flutter/services.dart';",
+            "import 'package:flutter/semantics.dart';",
+            "class _MosaicDragScope extends StatefulWidget",
+            "final List<_MosaicDropTargetState> _targets",
+            "Draggable<_MosaicDragData>(",
+            "DragTarget<_MosaicDragData>(",
+            "LogicalKeyboardKey.space",
+            "LogicalKeyboardKey.enter",
+            "LogicalKeyboardKey.escape",
+            "LogicalKeyboardKey.arrowDown",
+            "SemanticsService.announce",
+            "onTap: disabled && scope._active == null ? null : () => _toggle(context)",
+            "previous?.leave(data);",
+            "next.enter(data);",
+            "next.hover(data, 'into');",
+            "_MosaicDragScope(",
+            "acceptsKinds: acceptedKinds",
+            "disabled: _mosaicTruthy(dragDisabled)",
+            "disabled: _mosaicTruthy(dropDisabled)",
+            "BoardEventDragStart(key: dragKey.toString(), kind: dragKind.toString())",
+            "BoardEventDragEnd(key: dragKey.toString(), kind: dragKind.toString(), dropped: dropped)",
+            "BoardEventDragEnter(key: data.key, kind: data.kind)",
+            "BoardEventDragLeave(key: data.key, kind: data.kind)",
+            "BoardEventDropHover(key: data.key, kind: data.kind, targetKey: \"lane-a\", position: position)",
+            "BoardEventDrop(key: data.key, kind: data.kind, targetKey: \"lane-a\", position: position)",
+        ] {
+            assert!(out.contains(expected), "missing `{expected}`:\n{out}");
+        }
+    }
+
+    #[test]
+    fn non_drag_component_omits_drag_runtime_and_services_import() {
+        let out = from_pipeline(
+            &component("Plain", vec![], vec![]),
+            &layout("Plain", node("Box")),
+            &empty_style("Plain"),
+        )
+        .expect("emit non-drag component")
+        .output;
+        assert!(!out.contains("package:flutter/services.dart"));
+        assert!(!out.contains("_MosaicDragScope"));
+        assert!(!out.contains("Draggable<_MosaicDragData>"));
+    }
+
+    #[test]
+    fn empty_drop_target_preserves_authored_minimum_hit_area() {
+        let style = StyleDef {
+            component_name: "Board".into(),
+            parts: vec![PartStyle {
+                name: "lane".into(),
+                base: vec![StyleProp {
+                    name: "min-height".into(),
+                    value: "60".into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let mut target = node_with(
+            "HostDropTarget",
+            vec![LayoutProp {
+                name: "drop-key".into(),
+                value: LayoutPropValue::String("empty-lane".into()),
+            }],
+            vec![],
+        );
+        target.part_name = Some("lane".into());
+        let out = from_pipeline(
+            &component("Board", vec![], vec![]),
+            &layout("Board", target),
+            &style,
+        )
+        .expect("emit styled empty drop target")
+        .output;
+        assert!(out.contains("constraints: const BoxConstraints(minHeight: 60)"));
     }
 
     // ----- HostScroll ---------------------------------------------------
@@ -4948,6 +6390,66 @@ mod tests {
             "expected no TODO placeholder, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn host_link_inside_indexed_for_dispatches_declared_number_payload() {
+        let m = component(
+            "Nav",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onSelect",
+                vec![EmitParam {
+                    name: "index".into(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let link = node_with(
+            "HostLink",
+            vec![
+                LayoutProp {
+                    name: "href".into(),
+                    value: LayoutPropValue::String("#".into()),
+                },
+                LayoutProp {
+                    name: "label".into(),
+                    value: LayoutPropValue::Keyword("item".into()),
+                },
+                LayoutProp {
+                    name: "external".into(),
+                    value: LayoutPropValue::Keyword("false".into()),
+                },
+                LayoutProp {
+                    name: "onActivate".into(),
+                    value: LayoutPropValue::EmitRef("onSelect".into()),
+                },
+            ],
+            vec![],
+        );
+        let l = layout(
+            "Nav",
+            node_with(
+                "Row",
+                vec![],
+                vec![for_node(
+                    LayoutPropValue::SlotRef("items".into()),
+                    "item",
+                    Some("i"),
+                    vec![link],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Nav"))
+            .expect("emit indexed links")
+            .output;
+        assert!(out.contains("final i = entry.key;"));
+        assert!(out.contains("child: Text(item)"));
+        assert!(out.contains("dispatch(NavEventSelect(index: i));"));
     }
 
     /// UI29-4 Flutter test 4 — `HostLink` injection regression. A
@@ -5307,25 +6809,109 @@ mod tests {
     //   format string.
     // ================================================================
 
-    /// UI31 §3.1 a11y gate (revised UI28-1 / U29-D1) — `HostTable`
-    /// lowers to a `Column(children: [...])` rather than Flutter's
-    /// native `DataTable` because the For-driven dynamic shape that
-    /// mosaic-pkg-grid v0.2.0 introduces doesn't fit `DataTable`'s
-    /// up-front-typed columns+rows API.
-    ///
-    /// Accessibility on Flutter for the v0.2.0 Grid is the host's
-    /// responsibility (Flutter has no semantic `<table>` widget
-    /// other than DataTable, which can't be driven dynamically).
-    /// Empty HostTable still emits the wrapping Column with the
-    /// SizedBox.shrink() placeholder so the file type-checks.
+    /// Unsupported/empty HostTable shapes retain the visual fallback rather
+    /// than making a false native-semantics claim.
     #[test]
-    fn ui31_a11y_host_table_uses_native_datatable_widget() {
+    fn ui31_unsupported_host_table_retains_visual_fallback() {
         let m = component("T", vec![], vec![]);
         let l = layout("T", node("HostTable"));
         let r = from_pipeline(&m, &l, &empty_style("T")).unwrap();
         assert!(
             r.output.contains("Column("),
             "HostTable must lower to Column(children: [...]) (UI28-1 / U29-D1), got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI31 §3.1 a11y gate — the canonical dynamic Grid structure lowers to
+    /// Flutter's native DataTable/DataColumn/DataRow/DataCell family.
+    #[test]
+    fn ui31_canonical_dynamic_host_table_uses_native_datatable_widget() {
+        let for_prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.into(),
+            value,
+        };
+        let header_cells = node_with(
+            "For",
+            vec![
+                for_prop("each", LayoutPropValue::Expr("headers".into())),
+                for_prop("as", LayoutPropValue::Keyword("h".into())),
+                for_prop("index", LayoutPropValue::Keyword("ch".into())),
+            ],
+            vec![node_with(
+                "Box",
+                vec![],
+                vec![node_with(
+                    "Text",
+                    vec![for_prop("content", LayoutPropValue::Expr("h".into()))],
+                    vec![],
+                )],
+            )],
+        );
+        let body_cells = node_with(
+            "For",
+            vec![
+                for_prop("each", LayoutPropValue::Keyword("row".into())),
+                for_prop("as", LayoutPropValue::Keyword("v".into())),
+                for_prop("index", LayoutPropValue::Keyword("c".into())),
+            ],
+            vec![node_with(
+                "Text",
+                vec![for_prop("content", LayoutPropValue::Expr("v".into()))],
+                vec![],
+            )],
+        );
+        let body_rows = node_with(
+            "For",
+            vec![
+                for_prop("each", LayoutPropValue::Expr("rows".into())),
+                for_prop("as", LayoutPropValue::Keyword("row".into())),
+                for_prop("index", LayoutPropValue::Keyword("r".into())),
+            ],
+            vec![node_with("Row", vec![], vec![body_cells])],
+        );
+        let table = node_with(
+            "HostTable",
+            vec![],
+            vec![
+                node_with(
+                    "HostTableHead",
+                    vec![],
+                    vec![node_with("Row", vec![], vec![header_cells])],
+                ),
+                node_with("HostTableBody", vec![], vec![body_rows]),
+            ],
+        );
+        let r = from_pipeline(
+            &component("T", vec![], vec![]),
+            &layout("T", table),
+            &empty_style("T"),
+        )
+        .unwrap();
+
+        assert!(r.output.contains("DataTable("), "{}", r.output);
+        assert!(
+            r.output
+                .contains("(headers).isEmpty ? const SizedBox.shrink()"),
+            "{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("DataColumn(label: Text(h))"),
+            "{}",
+            r.output
+        );
+        assert!(r.output.contains("return DataRow("), "{}", r.output);
+        assert!(r.output.contains("DataCell(Text(v))"), "{}", r.output);
+        assert!(r.output.contains("key: ValueKey(r)"), "{}", r.output);
+        assert!(
+            !r.output.contains("final ch ="),
+            "unused header indices must not be emitted: {}",
+            r.output
+        );
+        assert!(
+            !r.output.contains("final c ="),
+            "unused cell indices must not be emitted: {}",
             r.output
         );
     }
@@ -5590,7 +7176,7 @@ mod tests {
             .main_dart
             .contains("child: const CircularProgressIndicator()"));
         assert!(!project.main_dart.contains(": const Semantics("));
-        assert!(project.main_dart.contains("return value as T"));
+        assert!(project.main_dart.contains("return value;"));
         assert!(!project.main_dart.contains("MosaicHost?"));
         assert!(!project.main_dart.contains("_mosaicHost?."));
         assert!(!project.main_dart.contains("debugPrint(\"event:"));
@@ -5634,6 +7220,14 @@ mod tests {
         assert!(
             proj.mosaic_host_dart.starts_with("// AUTO-GENERATED"),
             "lib/mosaic_host.dart must START with `// AUTO-GENERATED`"
+        );
+        assert!(
+            proj.analysis_options_yaml.starts_with("# AUTO-GENERATED"),
+            "analysis_options.yaml must START with `# AUTO-GENERATED`"
+        );
+        assert!(
+            proj.widget_test_dart.starts_with("// AUTO-GENERATED"),
+            "test/widget_test.dart must START with `// AUTO-GENERATED`"
         );
         // README uses HTML-comment syntax.
         assert!(
@@ -5724,15 +7318,22 @@ mod tests {
             proj.pubspec_yaml
         );
         assert!(
-            proj.pubspec_yaml.contains("flutter: '>=3.24.0 <4.0.0'"),
+            proj.pubspec_yaml.contains("flutter: '>=3.32.0 <4.0.0'"),
             "expected Flutter SDK pin, got:\n{}",
             proj.pubspec_yaml
         );
+        assert!(
+            proj.pubspec_yaml
+                .contains("flutter_lints: '>=6.0.0 <7.0.0'"),
+            "expected analyzer dependency, got:\n{}",
+            proj.pubspec_yaml
+        );
+        assert!(proj.readme.contains("Flutter SDK 3.32+"));
     }
 
     /// §3.7 Output paths tripwire.
     #[test]
-    fn ui32_project_files_struct_exposes_only_spec_22_flutter_files() {
+    fn ui32_project_files_struct_exposes_complete_flutter_bootstrap_files() {
         let m = component("X", vec![], vec![]);
         let l = layout("X", node("Box"));
         let s = empty_style("X");
@@ -5746,14 +7347,75 @@ mod tests {
             .unwrap();
         let ProjectFiles {
             pubspec_yaml,
+            analysis_options_yaml,
             main_dart,
             mosaic_host_dart,
+            widget_test_dart,
             readme,
         } = proj;
         assert!(!pubspec_yaml.is_empty(), "pubspec.yaml empty");
+        assert!(
+            !analysis_options_yaml.is_empty(),
+            "analysis_options.yaml empty"
+        );
         assert!(!main_dart.is_empty(), "lib/main.dart empty");
         assert!(!mosaic_host_dart.is_empty(), "lib/mosaic_host.dart empty");
+        assert!(!widget_test_dart.is_empty(), "test/widget_test.dart empty");
         assert!(!readme.is_empty(), "README.md empty");
+    }
+
+    #[test]
+    fn generated_widget_test_uses_actual_pub_name_and_mosaic_app() {
+        let m = component("ProfileCard", vec![], vec![]);
+        let project = from_pipeline_with_options(
+            &m,
+            &layout("ProfileCard", node("Box")),
+            &empty_style("ProfileCard"),
+            &EmitOptions {
+                emit_project: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap()
+        .project
+        .unwrap();
+
+        assert!(project
+            .widget_test_dart
+            .contains("package:mosaic_profile_card/main.dart"));
+        assert!(project
+            .widget_test_dart
+            .contains("tester.pumpWidget(const MosaicApp())"));
+        assert!(!project.widget_test_dart.contains("MyApp"));
+        assert!(!project.main_dart.contains("_hostProps"));
+        assert!(project
+            .analysis_options_yaml
+            .contains("include: package:flutter_lints/flutter.yaml"));
+    }
+
+    #[test]
+    fn runtime_required_widget_test_does_not_load_native_runtime() {
+        let m = component("ProfileCard", vec![], vec![]);
+        let project = from_pipeline_with_options(
+            &m,
+            &layout("ProfileCard", node("Box")),
+            &empty_style("ProfileCard"),
+            &EmitOptions {
+                emit_project: true,
+                require_runtime: true,
+                ..EmitOptions::default()
+            },
+        )
+        .unwrap()
+        .project
+        .unwrap();
+
+        assert!(project
+            .widget_test_dart
+            .contains("expect(MosaicApp, isNotNull)"));
+        assert!(!project.widget_test_dart.contains("loadRequired"));
+        assert!(!project.widget_test_dart.contains("pumpWidget"));
+        assert!(!project.main_dart.contains("_hostProps"));
     }
 
     #[test]
@@ -6036,7 +7698,7 @@ mod tests {
         let out = &r.output;
         // SlotRef lowers via to_camel_case_first_lower; "rows" stays "rows".
         assert!(
-            out.contains("Column(children: rows.map((r) =>"),
+            out.contains("Column(children: rows.map((_) =>"),
             "expected unindexed map form, got:\n{}",
             out
         );
@@ -6075,11 +7737,7 @@ mod tests {
             "expected `final r = entry.key;`, got:\n{}",
             out
         );
-        assert!(
-            out.contains("final row = entry.value;"),
-            "expected `final row = entry.value;`, got:\n{}",
-            out
-        );
+        assert!(!out.contains("final row = entry.value;"));
         assert!(
             out.contains("KeyedSubtree(key: ValueKey(r)"),
             "expected stable KeyedSubtree per UI28-1 §5, got:\n{}",
@@ -6106,7 +7764,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
         assert!(
             r.output
-                .contains("Column(children: cols.visible.map((c) =>"),
+                .contains("Column(children: cols.visible.map((_) =>"),
             "expected the Expr text verbatim as the collection, got:\n{}",
             r.output
         );
@@ -6132,7 +7790,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
         let out = &r.output;
         assert!(out.contains("final rowIdx = entry.key;"));
-        assert!(out.contains("final rowData = entry.value;"));
+        assert!(!out.contains("final rowData = entry.value;"));
         assert!(out.contains("ValueKey(rowIdx)"));
     }
 
@@ -6258,7 +7916,7 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
         assert!(
             r.output
-                .contains("Column(children: rows.map((r) => const SizedBox.shrink())"),
+                .contains("Column(children: rows.map((_) => const SizedBox.shrink())"),
             "expected SizedBox.shrink() body for empty For, got:\n{}",
             r.output
         );
@@ -6417,9 +8075,8 @@ mod tests {
         assert!(out.contains("final r = entry.key;"));
         assert!(out.contains("final row = entry.value;"));
         // Inner For shape — uses the Expr text 'row' as the collection.
-        assert!(out.contains("row.asMap().entries.map((entry)"));
-        assert!(out.contains("final c = entry.key;"));
-        assert!(out.contains("final cell = entry.value;"));
+        assert!(out.contains("...row.map((cell)"));
+        assert!(!out.contains("final c = entry.key;"));
     }
 
     // ====================================================================
@@ -6552,8 +8209,8 @@ mod tests {
         let out = &r.output;
         // The For lowered to a collection spread directly in the Row.
         assert!(
-            out.contains("...cells.asMap().entries.map((entry)"),
-            "expected a `...`-spread For inside the Row, got:\n{out}"
+            out.contains("...cells.map((_)"),
+            "expected a spread with an anonymous unused item binding, got:\n{out}"
         );
         // The Row owns the cells; the For must NOT wrap them in its own
         // Column (that was the vertical-stack bug).
@@ -6593,6 +8250,10 @@ mod tests {
         assert!(
             out.contains(".toList())"),
             "standalone form ends in `.toList())`, got:\n{out}"
+        );
+        assert!(
+            !out.contains("final row = entry.value;"),
+            "unused authored item bindings must not become analyzer warnings:\n{out}"
         );
         assert!(
             !out.trim_start().starts_with("...") && !out.contains("return\n      ...rows"),

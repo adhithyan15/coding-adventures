@@ -22,8 +22,7 @@
           "ES-LEX-BUENOS-DIAS",
           "ES-MORPH-BUENO-BUENA",
           "ES-GRAMMAR-NOUN-GENDER",
-          "ES-GRAMMAR-NOUN-NUMBER",
-          "ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL"
+          "ES-GRAMMAR-NOUN-NUMBER"
         ]
       }
     },
@@ -31,7 +30,7 @@
       "chapter": 2,
       "title": "The Rest of the Greetings",
       "label": "ch:greetings",
-      "canDo": "I can greet someone correctly at any hour — morning, afternoon, or night.",
+      "canDo": "I can greet someone correctly at any hour — morning, afternoon or night — and say why the greeting changes shape.",
       "spineNodes": [
         "SPINE-TIME-OF-DAY"
       ],
@@ -52,139 +51,890 @@
     },
     {
       "chapter": 3,
-      "title": "Introducing Yourself",
-      "label": "ch:introductions",
-      "canDo": "I can give my name, ask someone else's, and say it was a pleasure to meet them.",
+      "title": "Un and Una --- the Other Article",
+      "label": "ch:spanish-indefinite-article",
+      "canDo": "I can say a day, an afternoon and a night, choosing the article by the noun's gender.",
       "spineNodes": [
-        "SPINE-EXCHANGE-NAMES"
+        "SPINE-TIME-OF-DAY"
       ],
       "payoff": {
-        "lesson": "ES-C03-practice",
+        "lesson": "ES-C02-repaso-articulos",
         "kind": "dialogue",
-        "summary": "A first meeting start to finish: greet, exchange names at the right level of formality, and close with mucho gusto.",
+        "summary": "un is the number one, and English a is the same word worn down.",
         "assesses": [
-          "ES-LEX-HOLA",
-          "ES-LEX-BUENOS-DIAS",
-          "ES-LEX-ME-LLAMO",
-          "ES-LEX-TU",
-          "ES-LEX-USTED",
-          "ES-LEX-COMO-SE-LLAMA",
-          "ES-LEX-TE-LLAMAS",
-          "ES-LEX-MUCHO-GUSTO"
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE",
+          "ES-ETYMON-UNUS"
         ]
       }
     },
     {
       "chapter": 4,
-      "title": "How Are You?",
-      "label": "ch:how-are-you",
-      "canDo": "I can ask how someone is in Spanish, formally or informally, answer for myself, and hand the question back.",
+      "title": "Saying Your Name",
+      "label": "ch:your-name",
+      "canDo": "I can say my own name in Spanish.",
       "spineNodes": [
-        "SPINE-COURTESY-THANK",
-        "SPINE-CHECK-WELLBEING"
+        "SPINE-EXCHANGE-NAMES"
       ],
       "payoff": {
-        "lesson": "ES-C04-practice",
+        "lesson": "ES-C03-repaso-nombre",
         "kind": "dialogue",
-        "summary": "The whole how-are-you exchange run twice — ¿Cómo está usted? for a stranger, ¿Cómo estás? for a friend — answered with bien, regular or más o menos and closed with gracias / de nada.",
+        "summary": "Saying Your Name — the chapter run end to end.",
         "assesses": [
-          "ES-LEX-GRACIAS",
-          "ES-LEX-DE-NADA",
-          "ES-LEX-ESTAR",
-          "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-          "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
-          "ES-LEX-COMO-ESTA-USTED",
-          "ES-LEX-COMO-ESTAS",
-          "ES-LEX-BIEN",
-          "ES-LEX-REGULAR",
-          "ES-LEX-MAS-O-MENOS",
-          "ES-PRAGMATICS-AND-YOU",
-          "ES-LEX-ME-LLAMO"
+          "ES-LEX-ME",
+          "ES-GRAMMAR-OBJECT-PRONOUN",
+          "ES-LEX-LLAMO",
+          "ES-GRAMMAR-FIRST-PERSON-VERB",
+          "ES-LEX-ME-LLAMO",
+          "ES-GRAMMAR-REFLEXIVE-FIRST-PERSON"
         ]
       }
     },
     {
       "chapter": 5,
-      "title": "Farewells",
-      "label": "ch:farewells",
-      "canDo": "I can close a Spanish conversation and pick the goodbye that fits how soon I will see the person again.",
+      "title": "The Three Words for You",
+      "label": "ch:three-yous",
+      "canDo": "I can choose between tú and usted, and recognise vos.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C03-repaso-tu-usted",
+        "kind": "dialogue",
+        "summary": "The Three Words for You — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-TU",
+          "ES-LEX-USTED",
+          "ES-ETYMON-TU-THOU",
+          "ES-REGISTER-TU-USTED",
+          "ES-GRAMMAR-USTED-THIRD-PERSON",
+          "ES-LEX-VOS-01",
+          "ES-CULTURE-VOSEO-02",
+          "ES-ETYMON-VOS-03",
+          "ES-ETYMON-VUESTRA-MERCED"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Asking Someone's Name",
+      "label": "ch:asking-a-name",
+      "canDo": "I can ask someone's name in either register and say it was a pleasure.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING",
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C03-practice",
+        "kind": "dialogue",
+        "summary": "Asking Someone's Name — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-COMO",
+          "ES-ETYMON-QUOMODO",
+          "ES-SCRIPT-INVERTED-QUESTION",
+          "ES-GRAMMAR-QUESTION-ACCENT",
+          "ES-ETYMON-QUESTION-QU",
+          "ES-LEX-SE-LLAMA",
+          "ES-LEX-TE-LLAMAS",
+          "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+          "ES-LEX-COMO-SE-LLAMA",
+          "ES-LEX-MUCHO",
+          "ES-LEX-GUSTO",
+          "ES-LEX-MUCHO-GUSTO"
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Thank You, Yes, and No",
+      "label": "ch:thank-you",
+      "canDo": "I can thank someone, answer when I am thanked, and say yes or no.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK",
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-repaso-gracias",
+        "kind": "dialogue",
+        "summary": "Thanks, the answer to thanks, and the two words that let you accept or decline.",
+        "assesses": [
+          "ES-LEX-SI-01",
+          "ES-ETYMON-SI-02",
+          "ES-LEX-NO-01",
+          "ES-LEX-GRACIAS",
+          "ES-ETYMON-GRATIA",
+          "ES-LEX-DE-NADA",
+          "ES-ETYMON-NATA"
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "How Are You",
+      "label": "ch:how-are-you",
+      "canDo": "I can ask a stranger how they are.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-repaso-como-esta",
+        "kind": "dialogue",
+        "summary": "Greeting plus the question that opens almost every conversation.",
+        "assesses": [
+          "ES-LEX-ESTAR",
+          "ES-ETYMON-STARE",
+          "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
+          "ES-GRAMMAR-STATE-LOCATION-ESTAR",
+          "ES-LEX-COMO-ESTA-USTED"
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Answering, and Handing It Back",
+      "label": "ch:how-are-you",
+      "canDo": "I can answer how I am, choose my register, and return the question.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-repaso-estar",
+        "kind": "dialogue",
+        "summary": "The answer, the register choice inside it, and handing the question back.",
+        "assesses": [
+          "ES-LEX-COMO-ESTAS",
+          "ES-GRAMMAR-ESTAR-REGISTER-CONTRAST",
+          "ES-LEX-REGULAR",
+          "ES-LEX-MAS-O-MENOS",
+          "ES-ETYMON-REGULA",
+          "ES-LEX-Y",
+          "ES-PRAGMATICS-AND-YOU",
+          "ES-ETYMON-ET"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "The Written Accent",
+      "label": "ch:written-accent",
+      "canDo": "I can hear where a Spanish word is stressed and see why the accent is written.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-W01-repaso-acento",
+        "kind": "dialogue",
+        "summary": "The Written Accent — the chapter run end to end.",
+        "assesses": [
+          "ES-SCRIPT-ACUTE-ACCENT",
+          "ES-GRAMMAR-DEFAULT-STRESS",
+          "ES-GRAMMAR-STRESS-EXCEPTION",
+          "ES-LEX-EL-PRONOUN",
+          "ES-GRAMMAR-DIACRITIC-ACCENT"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Enye and the Upside-Down Marks",
+      "label": "ch:enye-and-marks",
+      "canDo": "I can read and write ñ and the upside-down question and exclamation marks.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C04-practice",
+        "kind": "dialogue",
+        "summary": "Enye and the Upside-Down Marks — the chapter run end to end.",
+        "assesses": [
+          "ES-SCRIPT-ENYE",
+          "ES-SOUND-ENYE",
+          "ES-ETYMON-DOUBLE-N",
+          "ES-FORM-MANANA",
+          "ES-FORM-ESPANOL",
+          "ES-SCRIPT-INVERTED-EXCLAMATION",
+          "ES-ORTHOGRAPHY-OPENING-PUNCTUATION",
+          "ES-HISTORY-RAE-INVERTED-MARKS",
+          "ES-ORTHOGRAPHY-PUNCTUATION-SPAN"
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Goodbye",
+      "label": "ch:goodbye",
+      "canDo": "I can end a conversation, and I know the word every softer goodbye is built from.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C05-repaso-adios",
+        "kind": "dialogue",
+        "summary": "Goodbye — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-ADIOS",
+          "ES-PRAGMATICS-FINAL-FAREWELL",
+          "ES-ETYMON-A-DIOS",
+          "ES-LEX-HASTA",
+          "ES-ETYMON-HATTA",
+          "ES-HISTORY-AL-ANDALUS-LOANS",
+          "ES-LEX-AQUI",
+          "ES-GRAMMAR-HASTA-ENDPOINT"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Until When",
+      "label": "ch:until-when",
+      "canDo": "I can pick the farewell that matches when I will next see someone.",
       "spineNodes": [
         "SPINE-TAKE-LEAVE"
       ],
       "payoff": {
         "lesson": "ES-C05-practice",
         "kind": "dialogue",
-        "summary": "One conversation from hola to its ending, choosing hasta luego, hasta mañana, hasta pronto or the final adiós to match when the two of you will next meet.",
+        "summary": "Until When — the chapter run end to end.",
         "assesses": [
-          "ES-LEX-ADIOS",
-          "ES-LEX-HASTA",
+          "ES-LEX-LUEGO",
           "ES-LEX-HASTA-LUEGO",
+          "ES-ETYMON-LOCUS",
+          "ES-LEX-MANANA",
           "ES-LEX-HASTA-MANANA",
+          "ES-ETYMON-MANEANA",
+          "ES-LEX-PRONTO",
           "ES-LEX-HASTA-PRONTO",
-          "ES-LEX-HOLA",
-          "ES-LEX-COMO-ESTA-USTED"
+          "ES-ETYMON-PROMPTUS"
         ]
       }
     },
     {
-      "chapter": 6,
-      "title": "The First Verbs",
-      "label": "ch:first-verbs",
-      "canDo": "I can build my own Spanish sentences with -ar verbs and ask politely for a coffee.",
+      "chapter": 14,
+      "title": "A Coffee, Please",
+      "label": "ch:a-coffee",
+      "canDo": "I can ask for something politely.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-repaso-cafe",
+        "kind": "dialogue",
+        "summary": "A Coffee, Please — the chapter run end to end.",
+        "assesses": [
+          "ES-LEX-CAFE",
+          "ES-ETYMON-QAHWA",
+          "ES-GRAMMAR-CAFE-MASCULINE",
+          "ES-LEX-POR-FAVOR",
+          "ES-PRAGMATICS-POLITE-REQUEST",
+          "ES-ETYMON-PRO-FAVOR"
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "When You Don't Understand",
+      "label": "ch:repair",
+      "canDo": "I can say that I did not understand, and ask for it more slowly.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-R03-repaso-reparar",
+        "kind": "dialogue",
+        "summary": "The two sentences that rescue a conversation, and the thanks that closes it.",
+        "assesses": [
+          "ES-LEX-NO-ENTIENDO-01",
+          "ES-ETYMON-INTENDERE-02",
+          "ES-LEX-MAS-DESPACIO-01",
+          "ES-ETYMON-SPATIUM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "Your First Verb, and the Form That Means I",
+      "label": "ch:first-verb",
+      "canDo": "I can say what I do, in one word, with no pronoun at all.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-pro-drop",
+        "kind": "dialogue",
+        "summary": "One word, one whole sentence — and why English cannot do the same.",
+        "assesses": [
+          "ES-LEX-HABLAR",
+          "ES-ETYMON-FABULARI",
+          "ES-GRAMMAR-AR-PRESENT-1SG",
+          "ES-GRAMMAR-PRO-DROP"
+        ]
+      }
+    },
+    {
+      "chapter": 17,
+      "title": "Talking to a Friend",
+      "label": "ch:hablas",
+      "canDo": "I can say what a friend does, using the tu form of an -ar verb.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-hablas",
+        "kind": "dialogue",
+        "summary": "The -as ending, and the one English ending that survives beside it.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-2SG",
+          "ES-LEX-TU",
+          "ES-GRAMMAR-AR-PRESENT-1SG"
+        ]
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "He, She, and the Polite You",
+      "label": "ch:habla",
+      "canDo": "I can say what someone else does, and address someone respectfully, with one form.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-habla",
+        "kind": "dialogue",
+        "summary": "One form doing three jobs, and the vuestra merced fossil behind it.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-3SG",
+          "ES-GRAMMAR-USTED-THIRD-PERSON",
+          "ES-LEX-USTED"
+        ]
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Review --- The Three Forms Side by Side",
+      "label": "ch:review-ar-singular",
+      "canDo": "I can hold all three singular -ar forms at once and choose between them without stopping.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-ar-presente",
+        "kind": "dialogue",
+        "summary": "The first paradigm table in the book, arriving only after all three of its cells are owned.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+          "ES-GRAMMAR-AR-PRESENT-1SG",
+          "ES-GRAMMAR-AR-PRESENT-2SG",
+          "ES-GRAMMAR-AR-PRESENT-3SG"
+        ]
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Trabajar --- Work, and the Torture Device Behind It",
+      "label": "ch:spanish-trabajar",
+      "canDo": "I can say what I do for work with a second regular -ar verb.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-trabajar",
+        "kind": "task",
+        "summary": "tripalium, a three-stake device, is why work and travail are the same word.",
+        "assesses": [
+          "ES-LEX-TRABAJAR",
+          "ES-ETYMON-TRIPALIUM"
+        ]
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Estudiar --- Studying Is Being Eager",
+      "label": "ch:spanish-estudiar",
+      "canDo": "I can say what I study, with a third regular -ar verb and no new pattern.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-estudiar",
+        "kind": "task",
+        "summary": "studere, to be eager - the root under student, studio and studious.",
+        "assesses": [
+          "ES-LEX-ESTUDIAR",
+          "ES-ETYMON-STUDERE"
+        ]
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Espanol, and Your First Built Sentence",
+      "label": "ch:spanish-espanol",
+      "canDo": "I can name the language and build a whole sentence from parts I chose myself.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-hablo-espanol",
+        "kind": "dialogue",
+        "summary": "Hispania to espanol, and the first sentence assembled rather than memorised.",
+        "assesses": [
+          "ES-LEX-ESPANOL",
+          "ES-ETYMON-HISPANIA",
+          "ES-LEX-HABLO-ESPANOL",
+          "ES-GRAMMAR-BARE-LANGUAGE"
+        ]
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "-cion --- About Two Thousand Words, At Once",
+      "label": "ch:friend-cion",
+      "canDo": "I can turn an English -tion word into Spanish and know its gender without being told.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-cion",
+        "kind": "task",
+        "summary": "Complete ES-C56-cion: convert an English -tion word, give the gender, and say why the correspondence is a rule.",
+        "assesses": [
+          "ES-FRIEND-CION-TION",
+          "ES-ETYMON-TIONEM"
+        ],
+        "note": "The highest-reach lesson in the book so far: one ending, roughly two thousand words, and a gender that never has to be decided. Not a resemblance -- Latin -tionem, inherited by Spanish and borrowed by English."
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "-dad --- Twelve Hundred More",
+      "label": "ch:friend-dad",
+      "canDo": "I can read a -dad word I have never met, and say why it looks less like its English partner.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-dad",
+        "kind": "task",
+        "summary": "Complete ES-C56-dad: convert university, read realidad unseen, and explain the uneven erosion.",
+        "assesses": [
+          "ES-FRIEND-DAD-TY",
+          "ES-ETYMON-TATEM"
+        ],
+        "note": "Harder to spot than -cion because English wore -tatem down further, through French, to -ty. Same relationship, more erosion on one side."
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "-mente --- With No Upper Limit",
+      "label": "ch:friend-mente",
+      "canDo": "I can build an adverb from any adjective, and say why the adjective goes feminine first.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-mente",
+        "kind": "task",
+        "summary": "Complete ES-C56-mente: build rapidamente, explain the feminine step, and say what the word literally means.",
+        "assesses": [
+          "ES-FRIEND-MENTE-LY",
+          "ES-ETYMON-MENTE"
+        ],
+        "note": "A machine rather than a decoder: its reach is however many adjectives the reader ends up holding. The feminine step is not arbitrary -- mente was a feminine NOUN, and the agreement outlived it."
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Review --- Three Endings",
+      "label": "ch:review-friends",
+      "canDo": "I can name the three endings, their partners, and which give gender for free.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-repaso-amigos",
+        "kind": "task",
+        "summary": "Complete ES-C56-repaso-amigos: give the three pairs and distinguish a decoder from a machine.",
+        "assesses": [
+          "ES-FRIEND-CION-TION",
+          "ES-FRIEND-DAD-TY",
+          "ES-FRIEND-MENTE-LY"
+        ],
+        "note": "States the arithmetic plainly: three chapters reach further than every vocabulary lesson in the book combined, which changes what a reader should expect the rest of it to be."
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Synthesis --- Reading What You Were Never Taught",
+      "label": "ch:synthesis-friends",
+      "canDo": "I can read a sentence containing words no lesson has taught me.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-sintesis-leer",
+        "kind": "task",
+        "summary": "Complete ES-C56-sintesis-leer: read a four-new-word sentence and say what let you read it.",
+        "assesses": [
+          "ES-FRIEND-CION-TION",
+          "ES-FRIEND-DAD-TY",
+          "ES-FRIEND-MENTE-LY"
+        ],
+        "note": "First chapter that asks the reader to read words nobody taught them. Also warns, at no cost, that the endings are reliable rather than perfect, so the false friends later land as memorable rather than as a betrayal."
+      }
+    },
+    {
+      "chapter": 28,
+      "title": "F to H --- Why the H Says Nothing",
+      "label": "ch:sound-f-h",
+      "canDo": "I can decode an unfamiliar h- word by putting an f back, and say why the h is silent.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-f-a-h",
+        "kind": "task",
+        "summary": "Complete ES-C57-f-a-h: say why the h is silent, name hablar's English friend, and decode hierro unseen.",
+        "assesses": [
+          "ES-SOUND-F-TO-H",
+          "ES-ETYMON-FABULARI"
+        ],
+        "note": "Pays off a bare fact held since chapter one. The silent h is a gravestone: Latin f- weakened to a breath and then to nothing, and the spelling outlived the sound. Also states its own limits -- hola and hasta are not dead f-words."
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Cl-, Pl-, Fl- to Ll-",
+      "label": "ch:sound-cluster-ll",
+      "canDo": "I can try three Latin clusters on an unfamiliar ll- word and find the English cousin.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-ll",
+        "kind": "task",
+        "summary": "Complete ES-C57-ll: name llamar's cousins, give the three clusters, and decode llave.",
+        "assesses": [
+          "ES-SOUND-CLUSTER-TO-LL"
+        ],
+        "note": "Three starting points, one destination -- untidy, and useful because of it: an unfamiliar ll- word gives the reader three English shapes to try. Also names what all three sound laws share: Spanish inherited and eroded, English borrowed later and stayed nearer the Latin."
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Es- --- the Vowel Spanish Put in Front",
+      "label": "ch:es-inicial",
+      "canDo": "I can strip the e- from a Spanish word beginning es- plus a consonant and recognise the English word underneath.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-es-inicial",
+        "kind": "task",
+        "summary": "Decode estacion, estudiante and espacio by taking the e- off the front.",
+        "assesses": [
+          "ES-SOUND-ES-PROTHESIS"
+        ]
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Synthesis --- The Decoder",
+      "label": "ch:synthesis-sound-laws",
+      "canDo": "I can decode unfamiliar Spanish with three sound laws and three endings.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-sintesis-descifrar",
+        "kind": "task",
+        "summary": "Complete ES-C57-sintesis-descifrar: decode hoja and lleno, read a two-ending phrase, and say what a word that resists every rule suggests.",
+        "assesses": [
+          "ES-SOUND-F-TO-H",
+          "ES-SOUND-CLUSTER-TO-LL",
+          "ES-FRIEND-CION-TION"
+        ],
+        "note": "Six rules together. Deliberately exact about what a decoder is NOT -- a reading tool, mostly first guesses -- because overclaiming it disappoints at the worst moment. What actually changes is that an unfamiliar word stops being a wall."
+      }
+    },
+    {
+      "chapter": 32,
+      "title": "Synthesis --- The Same Conversation, Twice",
+      "label": "ch:synthesis-ar-singular",
+      "canDo": "I can hold one short conversation both warmly and respectfully, changing only the verb ending.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C06-repaso-hablar",
+        "kind": "dialogue",
+        "summary": "The register choice carried entirely by one letter - and now with something real to say.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+          "ES-REGISTER-TU-USTED",
+          "ES-LEX-ESPANOL"
+        ]
+      }
+    },
+    {
+      "chapter": 33,
+      "title": "Putting the -ar Verbs to Work",
+      "label": "ch:spanish-ar-practice",
+      "canDo": "I can use several -ar verbs in real sentences.",
       "spineNodes": [
         "SPINE-POLITE-REQUEST-REPAIR"
       ],
       "payoff": {
         "lesson": "ES-C06-practice",
-        "kind": "production",
-        "summary": "Conjugate hablar, trabajar and estudiar across yo, tú and usted with no pronoun spoken, answer ¿Hablas español? about yourself, then order café, por favor and run the gracias / de nada loop.",
+        "kind": "dialogue",
+        "summary": "The -ar present tense in action across the verbs of the last chapters.",
         "assesses": [
-          "ES-LEX-CAFE",
-          "ES-LEX-POR-FAVOR",
-          "ES-LEX-HABLAR",
           "ES-LEX-TRABAJAR",
           "ES-LEX-ESTUDIAR",
-          "ES-LEX-ESPANOL",
-          "ES-LEX-HABLO-ESPANOL",
-          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
-          "ES-GRAMMAR-PRO-DROP",
-          "ES-LEX-GRACIAS",
-          "ES-LEX-DE-NADA"
+          "ES-GRAMMAR-AR-PRESENT-SINGULAR"
         ]
       }
     },
     {
-      "chapter": 7,
-      "title": "Eating, Drinking, Living --- the -er and -ir Verbs",
-      "label": "ch:er-ir-verbs",
-      "canDo": "I can use the singular forms of regular Spanish -er and -ir verbs to ask and answer what someone eats or drinks and where they live.",
+      "chapter": 34,
+      "title": "Comer --- the Second Verb Family, One Slot at a Time",
+      "label": "ch:spanish-comer",
+      "canDo": "I can use all three singular forms of a regular -er verb, having built each one separately.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO",
         "SPINE-EXCHANGE-NAMES",
         "SPINE-ASK-LOCATION"
       ],
       "payoff": {
-        "lesson": "ES-C07-practice",
-        "kind": "task",
-        "summary": "Ask and answer a short exchange about eating, drinking, studying, and where someone lives, using the three singular regular verb patterns and only previously introduced words.",
+        "lesson": "ES-C07-repaso-comer",
+        "kind": "dialogue",
+        "summary": "The -er singular, earned a slot at a time - and the yo ending that never changed.",
         "assesses": [
-          "ES-LEX-COMER",
           "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-          "ES-ETYMON-COMEDERE",
-          "ES-LEX-VIVIR",
-          "ES-GRAMMAR-IR-PRESENT-SINGULAR",
-          "ES-ETYMON-VIVERE",
-          "ES-LEX-BEBER",
-          "ES-LEX-QUE",
-          "ES-ETYMON-QUID",
-          "ES-LEX-DONDE",
-          "ES-LEX-EN",
-          "ES-ETYMON-DE-UNDE"
+          "ES-GRAMMAR-ER-PRESENT-1SG",
+          "ES-GRAMMAR-ER-PRESENT-2SG",
+          "ES-GRAMMAR-ER-PRESENT-3SG"
         ]
       }
     },
     {
-      "chapter": 8,
+      "chapter": 35,
+      "title": "Vivir --- the Family That Costs Nothing",
+      "label": "ch:spanish-vivir",
+      "canDo": "I can use the singular of a regular -ir verb, and say why it asked me to learn no new form.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-vivir",
+        "kind": "task",
+        "summary": "In the singular the -ir endings ARE the -er endings; the families part company only in the plural.",
+        "assesses": [
+          "ES-LEX-VIVIR",
+          "ES-GRAMMAR-IR-PRESENT-SINGULAR",
+          "ES-ETYMON-VIVERE"
+        ]
+      }
+    },
+    {
+      "chapter": 36,
+      "title": "Beber, and Two Ways to Ask",
+      "label": "ch:spanish-beber-preguntas",
+      "canDo": "I can say what I drink, and ask what and where with que and donde.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-practice",
+        "kind": "task",
+        "summary": "A second -er verb that needs no new pattern, and the two question words that turn the forms outward.",
+        "assesses": [
+          "ES-LEX-BEBER",
+          "ES-LEX-QUE",
+          "ES-LEX-DONDE",
+          "ES-LEX-EN"
+        ]
+      }
+    },
+    {
+      "chapter": 37,
+      "title": "Synthesis --- Asking, and Answering",
+      "label": "ch:spanish-synthesis-three-families",
+      "canDo": "I can hold a short exchange about what someone drinks and where they live, using all three verb families.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-sintesis-preguntar",
+        "kind": "dialogue",
+        "summary": "Three families and two question words, and every word in the dialogue self-built.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+          "ES-GRAMMAR-ER-PRESENT-SINGULAR",
+          "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 38,
+      "title": "Hablamos --- the First Form That Is Not About One Person",
+      "label": "ch:spanish-hablamos",
+      "canDo": "I can say what we do, with the -amos ending.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-hablamos",
+        "kind": "task",
+        "summary": "-mos is Latin's -mus, barely changed in two thousand years.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-1PL"
+        ]
+      }
+    },
+    {
+      "chapter": 39,
+      "title": "Hablan --- They, and Ustedes",
+      "label": "ch:spanish-hablan",
+      "canDo": "I can say what they do, and address any group as ustedes.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-hablan",
+        "kind": "task",
+        "summary": "ustedes is vuestras mercedes - so it takes the they form for the same reason usted takes the he form.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-3PL",
+          "ES-LEX-USTEDES"
+        ]
+      }
+    },
+    {
+      "chapter": 40,
+      "title": "Hablais --- the Form Spain Keeps",
+      "label": "ch:spanish-hablais",
+      "canDo": "I can recognise the vosotros form and say where it is used.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-hablais",
+        "kind": "task",
+        "summary": "vos + otros, added in Spain to keep the plural apart from a singular vos the Americas kept instead.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-2PL",
+          "ES-LEX-VOSOTROS",
+          "ES-CULTURE-VOSOTROS-USTEDES-SPLIT"
+        ]
+      }
+    },
+    {
+      "chapter": 41,
+      "title": "Review --- the Whole Present Tense",
+      "label": "ch:spanish-review-present-complete",
+      "canDo": "I can produce all six present-tense forms of a regular -ar verb.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-repaso-presente-completo",
+        "kind": "dialogue",
+        "summary": "The first complete paradigm in the book - withheld for thirty-two chapters until every box in it was earned.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRESENT-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 42,
+      "title": "Synthesis --- the Same Sentence, Two Continents",
+      "label": "ch:spanish-synthesis-plural-you",
+      "canDo": "I can choose between vosotros and ustedes by where I am, and say that neither corrects the other.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-sintesis-dos-continentes",
+        "kind": "dialogue",
+        "summary": "The first choice in this book decided by geography rather than meaning.",
+        "assesses": [
+          "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
+          "ES-GRAMMAR-AR-PRESENT-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 43,
+      "title": "Where -er and -ir Part Company",
+      "label": "ch:spanish-er-ir-1pl",
+      "canDo": "I can say what we eat and what we live, and explain why the singular hid the difference.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-vivimos",
+        "kind": "task",
+        "summary": "comemos and vivimos: one vowel apart, audible only because the ending is stressed.",
+        "assesses": [
+          "ES-GRAMMAR-ER-PRESENT-1PL",
+          "ES-GRAMMAR-IR-PRESENT-1PL"
+        ]
+      }
+    },
+    {
+      "chapter": 44,
+      "title": "Comeis and Vivis",
+      "label": "ch:spanish-er-ir-2pl",
+      "canDo": "I can recognise both vosotros forms and say that they are the second and last difference.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-comeis-vivis",
+        "kind": "task",
+        "summary": "Latin's -tis, collapsed two ways: -eis for one family, -is for the other.",
+        "assesses": [
+          "ES-GRAMMAR-ER-PRESENT-2PL",
+          "ES-GRAMMAR-IR-PRESENT-2PL"
+        ]
+      }
+    },
+    {
+      "chapter": 45,
+      "title": "Comen and Viven --- Agreeing Again",
+      "label": "ch:spanish-er-ir-3pl",
+      "canDo": "I can say what they eat and what they live, with one ending shared by both families.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-comen-viven",
+        "kind": "task",
+        "summary": "After two chapters apart the families fall back into step and stay there.",
+        "assesses": [
+          "ES-GRAMMAR-ER-PRESENT-3PL",
+          "ES-GRAMMAR-IR-PRESENT-3PL"
+        ]
+      }
+    },
+    {
+      "chapter": 46,
+      "title": "Review --- the Present Tense, Whole",
+      "label": "ch:spanish-review-present-all",
+      "canDo": "I can conjugate any regular Spanish verb in the present, in any of the three families.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C07-repaso-tres-familias",
+        "kind": "dialogue",
+        "summary": "Eighteen forms, every one built separately before it appeared in the grid.",
+        "assesses": [
+          "ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 47,
       "title": "Numbers, and How Old You Are",
       "label": "ch:numbers-and-age",
       "canDo": "I can count from one through ten and use singular forms of tener to ask and answer age with a number I know.",
@@ -213,7 +963,7 @@
       }
     },
     {
-      "chapter": 9,
+      "chapter": 48,
       "title": "Ser and Estar --- Two Ways to Be",
       "label": "ch:ser-y-estar",
       "canDo": "I can identify someone, state origin, check wellbeing, and give a location by choosing a learned singular form of ser or estar.",
@@ -241,7 +991,7 @@
       }
     },
     {
-      "chapter": 10,
+      "chapter": 49,
       "title": "Going, and the Future You Can Already Say",
       "label": "ch:ir-y-futuro",
       "canDo": "I can ask where someone is going, say what a singular person is going to do, and mark a known singular noun with mi, tu, or su.",
@@ -269,7 +1019,262 @@
       }
     },
     {
-      "chapter": 11,
+      "chapter": 50,
+      "title": "Ser in the Plural",
+      "label": "ch:spanish-ser-plural",
+      "canDo": "I can use all six present forms of ser, and say why no two of them look alike.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-repaso-ser",
+        "kind": "dialogue",
+        "summary": "Two Latin verbs in one paradigm - and the seam between them is visible at eres.",
+        "assesses": [
+          "ES-GRAMMAR-SER-PRESENT-COMPLETE",
+          "ES-GRAMMAR-SER-PRESENT-1PL",
+          "ES-GRAMMAR-SER-PRESENT-3PL"
+        ]
+      }
+    },
+    {
+      "chapter": 51,
+      "title": "Profesor --- and the Article Spanish Leaves Out",
+      "label": "ch:profesor",
+      "canDo": "I can say what someone does for a living with ser and no article.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-profesor",
+        "kind": "task",
+        "summary": "I can say what someone does for a living with ser and no article.",
+        "assesses": [
+          "ES-LEX-PROFESOR"
+        ]
+      }
+    },
+    {
+      "chapter": 52,
+      "title": "Estudiante --- a Word You Can Build",
+      "label": "ch:estudiante",
+      "canDo": "I can build a person-word from a verb with -ante, and read it as English -ant.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-estudiante",
+        "kind": "task",
+        "summary": "I can build a person-word from a verb with -ante, and read it as English -ant.",
+        "assesses": [
+          "ES-FRIEND-ANTE-ANT"
+        ]
+      }
+    },
+    {
+      "chapter": 53,
+      "title": "-ista --- Jobs You Can Already Read",
+      "label": "ch:ista",
+      "canDo": "I can read an -ista word as English -ist without being taught it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-ista",
+        "kind": "task",
+        "summary": "I can read an -ista word as English -ist without being taught it.",
+        "assesses": [
+          "ES-FRIEND-ISTA-IST"
+        ]
+      }
+    },
+    {
+      "chapter": 54,
+      "title": "Synthesis --- Saying What People Do",
+      "label": "ch:sintesis-trabajo",
+      "canDo": "I can say what I and others do, and turn the question back.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-sintesis-trabajo",
+        "kind": "task",
+        "summary": "I can say what I and others do, and turn the question back.",
+        "assesses": [
+          "ES-GRAMMAR-BARE-PROFESSION"
+        ]
+      }
+    },
+    {
+      "chapter": 55,
+      "title": "Estar in the Plural",
+      "label": "ch:spanish-estar-plural",
+      "canDo": "I can use all six present forms of estar, and say why its plural is regular where ser's is not.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-repaso-ser-estar",
+        "kind": "dialogue",
+        "summary": "One Latin verb against two - which is the whole reason one paradigm is plain and the other is not.",
+        "assesses": [
+          "ES-GRAMMAR-ESTAR-PRESENT-COMPLETE",
+          "ES-GRAMMAR-ESTAR-PRESENT-1PL",
+          "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+        ]
+      }
+    },
+    {
+      "chapter": 56,
+      "title": "La Casa --- Your First Everyday Noun",
+      "label": "ch:noun-casa",
+      "canDo": "I can say la casa and tengo una casa, using the article and gender rules I already hold.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C43-casa",
+        "kind": "task",
+        "summary": "Complete ES-C43-casa: produce la casa and tengo una casa, and say what casa meant in Latin.",
+        "assesses": [
+          "ES-LEX-CASA",
+          "ES-ETYMON-CASA",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE"
+        ],
+        "note": "The chapter adds a noun and no grammar: the article, gender and tener machinery were all in place, and had nothing ordinary to act on."
+      }
+    },
+    {
+      "chapter": 57,
+      "title": "El Libro --- And a Word Made of Tree Bark",
+      "label": "ch:noun-libro",
+      "canDo": "I can say el libro and tengo un libro, and contrast it with la casa as a gender pair.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C43-libro",
+        "kind": "task",
+        "summary": "Complete ES-C43-libro: produce el libro and tengo un libro, and say what Latin liber originally named.",
+        "assesses": [
+          "ES-LEX-LIBRO",
+          "ES-ETYMON-LIBER",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
+        ],
+        "note": "Pairing one masculine and one feminine everyday noun is the point: from here every gender-dependent rule has two plain test cases."
+      }
+    },
+    {
+      "chapter": 58,
+      "title": "Grande --- the First Word for What a Thing Is Like",
+      "label": "ch:grande",
+      "canDo": "I can describe a thing with an adjective after the noun.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-grande",
+        "kind": "task",
+        "summary": "I can describe a thing with an adjective after the noun.",
+        "assesses": [
+          "ES-GRAMMAR-ADJECTIVE-AFTER-NOUN"
+        ]
+      }
+    },
+    {
+      "chapter": 59,
+      "title": "Cansado --- a State, Not a Quality",
+      "label": "ch:cansado",
+      "canDo": "I can say how I am right now with estar and an adjective.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-cansado",
+        "kind": "task",
+        "summary": "I can say how I am right now with estar and an adjective.",
+        "assesses": [
+          "ES-LEX-CANSADO"
+        ]
+      }
+    },
+    {
+      "chapter": 60,
+      "title": "Synthesis --- Describing Things",
+      "label": "ch:sintesis-describir",
+      "canDo": "I can choose ser or estar with an adjective and make it agree.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-sintesis-describir",
+        "kind": "task",
+        "summary": "I can choose ser or estar with an adjective and make it agree.",
+        "assesses": [
+          "ES-GRAMMAR-STATE-LOCATION-ESTAR"
+        ]
+      }
+    },
+    {
+      "chapter": 61,
+      "title": "-oso --- a Shelf of Words You Were Never Taught",
+      "label": "ch:oso",
+      "canDo": "I can read an -oso word as English -ous, make it agree, and choose ser or estar for it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C09-oso",
+        "kind": "task",
+        "summary": "Read misterioso, make comida deliciosa agree, and pick estar for nervioso.",
+        "assesses": [
+          "ES-FRIEND-OSO-OUS"
+        ]
+      }
+    },
+    {
+      "chapter": 62,
+      "title": "Tener in the Plural, and the Stem-Change Rule",
+      "label": "ch:spanish-tener-plural",
+      "canDo": "I can use tener in every person, and state when a stem changes and when it does not.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C08-tienen",
+        "kind": "dialogue",
+        "summary": "The stem breaks exactly where it is stressed - so nosotros and vosotros never break, in any verb.",
+        "assesses": [
+          "ES-GRAMMAR-TENER-PRESENT-1PL",
+          "ES-GRAMMAR-TENER-PRESENT-2PL",
+          "ES-GRAMMAR-TENER-PRESENT-3PL",
+          "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "Ir in the Plural --- a Verb That Is Not Ir",
+      "label": "ch:spanish-ir-plural",
+      "canDo": "I can use ir in every person, and say why its present belongs to a different verb.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C10-van",
+        "kind": "dialogue",
+        "summary": "The present of ir is regular for vadere - and the four commonest verbs are now complete.",
+        "assesses": [
+          "ES-GRAMMAR-IR-VERB-PRESENT-1PL",
+          "ES-GRAMMAR-IR-VERB-PRESENT-2PL",
+          "ES-GRAMMAR-IR-VERB-PRESENT-3PL"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
       "title": "Verbs That Break in the Middle --- the Stem Changers",
       "label": "ch:stem-changes",
       "canDo": "I can express singular wanting and ability, compare the learned e-to-ie and o-to-ue changes, and say our with a known singular noun.",
@@ -299,7 +1304,7 @@
       }
     },
     {
-      "chapter": 12,
+      "chapter": 65,
       "title": "Hacer, Decir, and the -go Verb Club",
       "label": "ch:yo-go-verbs",
       "canDo": "I can use the three learned singular forms of hacer and decir and compare tengo, hago, and digo without predicting unseen verbs.",
@@ -324,33 +1329,648 @@
       }
     },
     {
-      "chapter": 13,
-      "title": "Poner, Salir, Venir --- Completing the -go Club",
-      "label": "ch:completing-go-club",
-      "canDo": "I can use the three learned singular forms of poner, salir, and venir and compare their yo forms with tengo, hago, and digo.",
+      "chapter": 66,
+      "title": "Poner --- Putting, and the Root Under Position",
+      "label": "ch:spanish-poner",
+      "canDo": "I can say what I put, with the -go yo form and regular forms elsewhere.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C13-poner",
+        "kind": "task",
+        "summary": "pongo in the yo slot, pones and pone everywhere else.",
+        "assesses": [
+          "ES-LEX-PONER",
+          "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
+          "ES-ETYMON-PONERE"
+        ]
+      }
+    },
+    {
+      "chapter": 67,
+      "title": "Salir --- Leaving",
+      "label": "ch:spanish-salir",
+      "canDo": "I can say that I leave, and use the regular forms for anyone else.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C13-salir",
+        "kind": "task",
+        "summary": "salgo in the yo slot; sales and sale behave normally.",
+        "assesses": [
+          "ES-LEX-SALIR",
+          "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 68,
+      "title": "Venir --- Coming",
+      "label": "ch:spanish-venir",
+      "canDo": "I can say that I come, and hear the stem break in the other two forms.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C13-venir",
+        "kind": "task",
+        "summary": "vengo, then vienes and viene with the ie break.",
+        "assesses": [
+          "ES-LEX-VENIR",
+          "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 69,
+      "title": "Review --- Six Verbs, One Ending",
+      "label": "ch:spanish-review-yo-go",
+      "canDo": "I can name all six -go verbs and say why the list is closed.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C13-practice",
-        "kind": "task",
-        "summary": "Complete ES-C13-practice, the canonical closing checkpoint, and demonstrate the chapter promise with known words and only the learned singular person frame.",
+        "kind": "dialogue",
+        "summary": "The club is complete at six - and it was never a club, only six unrelated verbs that converged.",
         "assesses": [
-          "ES-LEX-PONER",
-          "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
-          "ES-ETYMON-PONERE",
-          "ES-LEX-SALIR",
-          "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
-          "ES-ETYMON-SALIRE",
-          "ES-LEX-VENIR",
-          "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
-          "ES-ETYMON-VENIRE"
-        ],
-        "note": "The payoff retrieves all nine Chapter-13 atoms and deliberately leaves plural persons, full boot diagrams, reflexive clothing, house and table nouns, clock times, dinner vocabulary, and unseen yo-go verbs for later lessons."
+          "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+          "ES-HISTORY-YO-GO-CONVERGENCE"
+        ]
       }
     },
     {
-      "chapter": 14,
+      "chapter": 70,
+      "title": "Synthesis --- You, and Somebody Else",
+      "label": "ch:spanish-synthesis-yo-go",
+      "canDo": "I can say the same thing about myself and about someone else, and know which of the two is irregular.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C13-sintesis-yo-go",
+        "kind": "dialogue",
+        "summary": "The oddity lives only in the yo slot - the form a beginner says most.",
+        "assesses": [
+          "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+          "ES-GRAMMAR-PRO-DROP"
+        ]
+      }
+    },
+    {
+      "chapter": 71,
+      "title": "Deriving the Rest",
+      "label": "ch:spanish-derive-plurals",
+      "canDo": "I can produce the plural of any irregular verb in this book from rules, and conjugate a verb I was never shown.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C13-sintesis-derivar",
+        "kind": "dialogue",
+        "summary": "Three rules generate the whole present tense - and a system, unlike a table, works on words it has never seen.",
+        "assesses": [
+          "ES-GRAMMAR-YO-GO-PLURAL-REGULAR",
+          "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE",
+          "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 72,
+      "title": "La Comida --- A Noun You Can Build",
+      "label": "ch:noun-comida",
+      "canDo": "I can build comida from comer with -ida, and know that nouns made this way are feminine.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C43-comida",
+        "kind": "task",
+        "summary": "Complete ES-C43-comida: derive comida from comer and say what gender the -ida ending guarantees.",
+        "assesses": [
+          "ES-LEX-COMIDA",
+          "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+          "ES-GRAMMAR-NOUN-GENDER"
+        ],
+        "note": "The ending matters more than the word: it is the first noun the reader could have produced without being told, and it carries its gender with it."
+      }
+    },
+    {
+      "chapter": 73,
+      "title": "Las --- The Plural Article That Behaves",
+      "label": "ch:articles-las",
+      "canDo": "I can say las casas and las comidas, putting the plural -s on both the article and the noun.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C44-las",
+        "kind": "task",
+        "summary": "Complete ES-C44-las: produce las casas and las comidas and say how many new rules the chapter added.",
+        "assesses": [
+          "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+          "ES-GRAMMAR-NOUN-NUMBER",
+          "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL"
+        ],
+        "note": "Adds no rule. The chapter-one -s rule turns out to apply to the article as well, which is agreement doing what it has always done."
+      }
+    },
+    {
+      "chapter": 74,
+      "title": "Los --- The One That Does Not Add -s",
+      "label": "ch:articles-los",
+      "canDo": "I can say los libros and explain why the masculine plural article is not els.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C44-los",
+        "kind": "task",
+        "summary": "Complete ES-C44-los: produce los libros, give all four articles, and say why el does not simply take an -s.",
+        "assesses": [
+          "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+          "ES-ETYMON-ILLE-ILLA",
+          "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
+        ],
+        "note": "The only article that changes more than its ending. Explained as the third appearance of one sound change: the masculine forms lost a vowel the feminine ones never had to lose."
+      }
+    },
+    {
+      "chapter": 75,
+      "title": "-es --- The Plural Chapter One Promised",
+      "label": "ch:plural-es",
+      "canDo": "I can form the plural of a word ending in a consonant, and say why the extra vowel is there.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C44-plural-es",
+        "kind": "task",
+        "summary": "Complete ES-C44-plural-es: pluralise espanol, name the word that has carried this rule since long before the chapter, and say why -s alone will not do.",
+        "assesses": [
+          "ES-GRAMMAR-NOUN-PLURAL-ES",
+          "ES-LEX-USTEDES",
+          "ES-LEX-ESPANOL"
+        ],
+        "note": "Delivers a rule chapter one explicitly deferred. Anchored on ustedes, which the reader has used for fifty chapters without being told it was the consonant plural."
+      }
+    },
+    {
+      "chapter": 76,
+      "title": "Review --- All Four Words for The",
+      "label": "ch:review-articles",
+      "canDo": "I can give el, la, los and las and state the plural rule including its consonant repair.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C44-repaso-articulos",
+        "kind": "task",
+        "summary": "Complete ES-C44-repaso-articulos: give the four articles in order and state the plural rule in one sentence.",
+        "assesses": [
+          "ES-GRAMMAR-DEFINITE-ARTICLES",
+          "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+          "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+          "ES-GRAMMAR-NOUN-PLURAL-ES",
+          "ES-GRAMMAR-NOUN-NUMBER"
+        ],
+        "note": "First chapter in which all four definite articles may appear together: the last of them was earned two chapters earlier."
+      }
+    },
+    {
+      "chapter": 77,
+      "title": "Synthesis --- More Than One",
+      "label": "ch:synthesis-more-than-one",
+      "canDo": "I can contrast a bare plural with a definite plural, and know that the indefinite article is dropped rather than pluralised.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C44-sintesis-mas-de-uno",
+        "kind": "task",
+        "summary": "Complete ES-C44-sintesis-mas-de-uno: say tengo libros and tengo los libros and explain what separates them.",
+        "assesses": [
+          "ES-GRAMMAR-BARE-PLURAL-NOUN",
+          "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+          "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
+        ],
+        "note": "The communicative payoff of the plural arc: one article pluralises and the other leaves, and the difference is definiteness, which English marks without ever explaining."
+      }
+    },
+    {
+      "chapter": 78,
+      "title": "Lo --- Saying It Without Naming It",
+      "label": "ch:pronoun-lo",
+      "canDo": "I can replace a masculine noun already named with lo, in front of the verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C42-lo",
+        "kind": "task",
+        "summary": "Complete ES-C42-lo: turn Tengo el libro into Lo tengo, and name the article that shares lo's Latin ancestor.",
+        "assesses": [
+          "ES-LEX-LO-OBJECT",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-OBJECT-PRONOUN",
+          "ES-ETYMON-ILLE-ILLA"
+        ],
+        "note": "The pre-verb slot is not new: it has been held since me llamo. Only the word filling it is."
+      }
+    },
+    {
+      "chapter": 79,
+      "title": "La --- The Pronoun Carries What Left",
+      "label": "ch:pronoun-la",
+      "canDo": "I can replace a feminine noun with la, and explain that the pronoun carries a gender the sentence no longer states.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C42-la",
+        "kind": "task",
+        "summary": "Complete ES-C42-la: turn Hago la comida into La hago and say what decides between lo and la.",
+        "assesses": [
+          "ES-LEX-LA-OBJECT",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-ETYMON-ILLE-ILLA"
+        ],
+        "note": "First point in the path where a word must remember a property of something that has been removed from the sentence."
+      }
+    },
+    {
+      "chapter": 80,
+      "title": "Me and Te --- The Two People Talking",
+      "label": "ch:pronoun-me-te",
+      "canDo": "I can say te quiero and me quieres, and tell the doer form apart from the object form.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C42-te",
+        "kind": "task",
+        "summary": "Complete ES-C42-te: produce te quiero and me quieres, and name the English pair that matches tu and te.",
+        "assesses": [
+          "ES-LEX-TE-OBJECT",
+          "ES-GRAMMAR-TE-DIRECT-OBJECT",
+          "ES-ETYMON-TE-TU",
+          "ES-LEX-TE-QUIERO",
+          "ES-GRAMMAR-ME-DIRECT-OBJECT"
+        ],
+        "note": "Exactly one new form. Me contributes a second use of a word held since chapter four, which is why both lessons fit one chapter without crowding it."
+      }
+    },
+    {
+      "chapter": 81,
+      "title": "Review --- Four Pronouns, One Slot",
+      "label": "ch:review-direct-object",
+      "canDo": "I can name me, te, lo and la and say which of them a noun decides.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C42-repaso-objeto",
+        "kind": "task",
+        "summary": "Complete ES-C42-repaso-objeto: give all four pronouns and identify the single question that chooses between them.",
+        "assesses": [
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA",
+          "ES-GRAMMAR-ME-DIRECT-OBJECT",
+          "ES-GRAMMAR-TE-DIRECT-OBJECT",
+          "ES-GRAMMAR-OBJECT-PRONOUN"
+        ],
+        "note": "Nothing is introduced. The table is a recap of four cells built one per chapter, which is why it is allowed to appear at all."
+      }
+    },
+    {
+      "chapter": 82,
+      "title": "Synthesis --- Saying It Once",
+      "label": "ch:synthesis-say-it-once",
+      "canDo": "I can answer a yes/no question about a thing already named without naming it again.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C42-sintesis-decirlo-una-vez",
+        "kind": "task",
+        "summary": "Complete ES-C42-sintesis-decirlo-una-vez: answer Tienes el libro and Haces la comida with lo tengo and la hago, and say what was wrong with the grammatically correct version.",
+        "assesses": [
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA",
+          "ES-GRAMMAR-ME-DIRECT-OBJECT",
+          "ES-GRAMMAR-TE-DIRECT-OBJECT"
+        ],
+        "note": "No new forms. The subject is the communicative function no table can drill: noticing that a thing has already been named."
+      }
+    },
+    {
+      "chapter": 83,
+      "title": "Nos --- Us, and the Word Inside -mos",
+      "label": "ch:pronoun-nos",
+      "canDo": "I can say nos quieren, and say what nosotros is made of.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C45-nos",
+        "kind": "task",
+        "summary": "Complete ES-C45-nos: produce nos quieren and name the verb ending that is the same ancient word.",
+        "assesses": [
+          "ES-LEX-NOS-OBJECT",
+          "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+          "ES-LEX-NOSOTROS",
+          "ES-ETYMON-NOS-OTROS"
+        ],
+        "note": "Also closes a gap: the reader has used the -mos ending for thirty chapters and had never met the word nosotros."
+      }
+    },
+    {
+      "chapter": 84,
+      "title": "Los and Las --- Them, Derived",
+      "label": "ch:pronoun-plural",
+      "canDo": "I can make any direct object pronoun plural, and say why the pronoun is tidier than the article.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C45-los-las",
+        "kind": "task",
+        "summary": "Complete ES-C45-los-las: produce los tengo and las hago, and explain why lo needed no repair in the plural when el did.",
+        "assesses": [
+          "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+          "ES-ETYMON-ILLE-ILLA"
+        ],
+        "note": "The reader produces both forms in the warm-up before being given them. The etymology pays off a puzzle set two arcs earlier."
+      }
+    },
+    {
+      "chapter": 85,
+      "title": "Os --- You All, in Spain",
+      "label": "ch:pronoun-os",
+      "canDo": "I can use os for a group in Spain and los or las everywhere else.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C45-os",
+        "kind": "task",
+        "summary": "Complete ES-C45-os: say os quiero and its non-peninsular equivalent, and name the older word os is worn down from.",
+        "assesses": [
+          "ES-LEX-OS-OBJECT",
+          "ES-GRAMMAR-OS-DIRECT-OBJECT",
+          "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+        ],
+        "note": "Second time the course splits on geography rather than meaning, and the same word vos accounts for os, vosotros and Argentine vos."
+      }
+    },
+    {
+      "chapter": 86,
+      "title": "Review --- All Eight",
+      "label": "ch:review-object-complete",
+      "canDo": "I can give all eight direct object pronouns and say which four depend on a noun.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C45-repaso-ocho",
+        "kind": "task",
+        "summary": "Complete ES-C45-repaso-ocho: give the eight pronouns and identify the four that a noun decides.",
+        "assesses": [
+          "ES-GRAMMAR-ME-DIRECT-OBJECT",
+          "ES-GRAMMAR-TE-DIRECT-OBJECT",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA",
+          "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+          "ES-GRAMMAR-OS-DIRECT-OBJECT",
+          "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+        ],
+        "note": "Nine chapters of one cell at a time; this is the first page on which all eight appear together, and two of them were never taught at all."
+      }
+    },
+    {
+      "chapter": 87,
+      "title": "Synthesis --- The Conversation Without Them",
+      "label": "ch:synthesis-without-repeating",
+      "canDo": "I can carry a four-turn exchange using pronouns, and say what a pronoun promises the listener.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C45-sintesis-sin-repetir",
+        "kind": "task",
+        "summary": "Complete ES-C45-sintesis-sin-repetir: run the exchange with pronouns and say what goes wrong when the gender points at nothing.",
+        "assesses": [
+          "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA",
+          "ES-GRAMMAR-NOS-DIRECT-OBJECT"
+        ],
+        "note": "States the cost as well as the benefit: a pronoun buys speed and is paid for in attention, which is the skill no grid can carry."
+      }
+    },
+    {
+      "chapter": 88,
+      "title": "Le --- To Him, To Her, To You",
+      "label": "ch:pronoun-le",
+      "canDo": "I can say le digo, and know that le does not mark gender.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C46-le",
+        "kind": "task",
+        "summary": "Complete ES-C46-le: produce le digo, say how many genders le has, and name the Latin case it comes from.",
+        "assesses": [
+          "ES-LEX-LE-OBJECT",
+          "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+          "ES-ETYMON-ILLI-DATIVE"
+        ],
+        "note": "After four chapters of choosing between lo and la by gender, le asks for nothing: one form covers him, her and usted. Latin's dative illi survives here whole."
+      }
+    },
+    {
+      "chapter": 89,
+      "title": "Les --- And What the Second System Costs",
+      "label": "ch:pronoun-les",
+      "canDo": "I can say les digo and name the four pronouns that are identical in both object systems.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C46-les",
+        "kind": "task",
+        "summary": "Complete ES-C46-les: produce les digo and say how many genuinely new words the indirect set adds.",
+        "assesses": [
+          "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+          "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
+        ],
+        "note": "The arithmetic is the lesson: a second complete table costs exactly two new words, because me, te, nos and os do both jobs unchanged."
+      }
+    },
+    {
+      "chapter": 90,
+      "title": "Which One Is the Verb Asking For?",
+      "label": "ch:which-object",
+      "canDo": "I can decide between the direct and indirect pronoun by asking one question of the verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C46-cual-pide",
+        "kind": "task",
+        "summary": "Complete ES-C46-cual-pide: state the test, apply it to hablar and tener, and say why le veo is not an error in Madrid.",
+        "assesses": [
+          "ES-GRAMMAR-WHICH-OBJECT",
+          "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO"
+        ],
+        "note": "Replaces a verb-by-verb list with a test the reader can run, and names leismo honestly rather than letting it arrive later as a contradiction."
+      }
+    },
+    {
+      "chapter": 91,
+      "title": "Review --- Two Systems, Two New Words",
+      "label": "ch:review-both-objects",
+      "canDo": "I can give both object pronoun sets and say which row is the only one where they differ in shape.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C46-repaso-dos-sistemas",
+        "kind": "task",
+        "summary": "Complete ES-C46-repaso-dos-sistemas: give the six indirect pronouns and count the distinct shapes across both tables.",
+        "assesses": [
+          "ES-GRAMMAR-OBJECT-SETS-OVERLAP",
+          "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+          "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+        ],
+        "note": "Twelve cells carried by nine shapes. The only asymmetry is the him/her row, where the direct set marks gender and the indirect set does not."
+      }
+    },
+    {
+      "chapter": 92,
+      "title": "Synthesis --- The Thing and the Person",
+      "label": "ch:synthesis-two-sets",
+      "canDo": "I can use both sets in one exchange and say what decides between them.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C46-sintesis-dar-y-decir",
+        "kind": "task",
+        "summary": "Complete ES-C46-sintesis-dar-y-decir: run the four-turn exchange and say what separates lo from le.",
+        "assesses": [
+          "ES-GRAMMAR-WHICH-OBJECT",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO",
+          "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+          "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL"
+        ],
+        "note": "First choice in the book that nothing on the page can settle: same slot, same length, same Latin ancestor, and only meaning tells them apart."
+      }
+    },
+    {
+      "chapter": 93,
+      "title": "Me Lo --- Both at Once",
+      "label": "ch:double-object-order",
+      "canDo": "I can put two object pronouns in front of one verb, in the right order.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C47-me-lo",
+        "kind": "task",
+        "summary": "Complete ES-C47-me-lo: produce te lo digo and me la haces, and say which pronoun leads.",
+        "assesses": [
+          "ES-GRAMMAR-DOUBLE-OBJECT-ORDER"
+        ],
+        "note": "No new pronoun. The fixed order is smaller to learn than English's free one, and the lesson says so."
+      }
+    },
+    {
+      "chapter": 94,
+      "title": "Se Lo --- The Pair That Does Not Exist",
+      "label": "ch:se-for-le",
+      "canDo": "I can turn le or les into se in front of lo, la, los or las.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C47-se-lo",
+        "kind": "task",
+        "summary": "Complete ES-C47-se-lo: produce se lo digo, name the four words that trigger the change, and count the readings se lo digo allows.",
+        "assesses": [
+          "ES-GRAMMAR-SE-FOR-LE"
+        ],
+        "note": "The reader is asked to say le lo digo aloud first; the mouth objects before the grammar does."
+      }
+    },
+    {
+      "chapter": 95,
+      "title": "Why Se? --- Gelo, and a Collision",
+      "label": "ch:etymon-gelo",
+      "canDo": "I can say why le becomes se, and that this se is not the reflexive one.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C47-por-que-se",
+        "kind": "task",
+        "summary": "Complete ES-C47-por-que-se: name the Old Spanish form, and say whether the se of se lo digo is the se of se llama.",
+        "assesses": [
+          "ES-ETYMON-GELO",
+          "ES-GRAMMAR-SE-FOR-LE"
+        ],
+        "note": "Removes a confusion most learners carry for years: two unrelated words, Latin se and Latin illi, collided by sound in the sixteenth century."
+      }
+    },
+    {
+      "chapter": 96,
+      "title": "Review --- The Pairs",
+      "label": "ch:review-double-object",
+      "canDo": "I can generate every permitted pair of object pronouns from two facts.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C47-repaso-dobles",
+        "kind": "task",
+        "summary": "Complete ES-C47-repaso-dobles: state the two facts that generate the table and say how many new pronouns the arc added.",
+        "assesses": [
+          "ES-GRAMMAR-DOUBLE-OBJECT-ORDER",
+          "ES-GRAMMAR-SE-FOR-LE",
+          "ES-ETYMON-GELO"
+        ],
+        "note": "Answer: none. One order and one substitution, and the substitution is an accident of medieval pronunciation rather than a rule."
+      }
+    },
+    {
+      "chapter": 97,
+      "title": "Synthesis --- Two at a Time",
+      "label": "ch:synthesis-double-object",
+      "canDo": "I can carry a four-turn exchange in which almost no noun appears.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C47-sintesis-dos-a-la-vez",
+        "kind": "task",
+        "summary": "Complete ES-C47-sintesis-dos-a-la-vez: produce se la hago and say how many words in it name anything.",
+        "assesses": [
+          "ES-GRAMMAR-DOUBLE-OBJECT-ORDER",
+          "ES-GRAMMAR-SE-FOR-LE",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA"
+        ],
+        "note": "Three words carrying a person and a thing, neither named. The cost is doubled too: two pronouns are two promises that both things are still in the room."
+      }
+    },
+    {
+      "chapter": 98,
       "title": "The Preterite --- Your First Past Tense",
       "label": "ch:preterite",
       "canDo": "I can use the singular completed past of ser or ir and the known regular -ar verb hablar.",
@@ -373,141 +1993,643 @@
       }
     },
     {
-      "chapter": 15,
-      "title": "Completing the Preterite --- Three Families, One Question",
-      "label": "ch:completing-preterite",
-      "canDo": "I can form the singular completed past of regular -er/-ir verbs and the known strong verbs tener, hacer, and estar.",
+      "chapter": 99,
+      "title": "The Regular Preterite",
+      "label": "ch:spanish-preterito-regular",
+      "canDo": "I can say what I did with a regular -er or -ir verb, and place the written accent correctly.",
       "spineNodes": [
         "SPINE-TALK-ABOUT-PAST"
       ],
       "payoff": {
-        "lesson": "ES-C15-practice",
+        "lesson": "ES-C15-comer-vivir-preterite",
         "kind": "task",
-        "summary": "Complete ES-C15-practice and retrieve the bounded singular sets for comer, vivir, tener, hacer, and estar with their spelling and historical contrasts.",
+        "summary": "-er and -ir agree again, and the accent marks the stressed final vowel.",
         "assesses": [
           "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-          "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-          "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
           "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-          "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
-          "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-          "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-          "ES-ETYMON-TUVE",
-          "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-          "ES-ETYMON-HICE",
-          "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-          "ES-ETYMON-ESTUVE-ANALOGY"
-        ],
-        "note": "The payoff retrieves all twelve Chapter-15 atoms with mapped activities and deliberately defers every plural form, additional irregular verbs, and new time, place, person, or object vocabulary."
+          "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
+        ]
       }
     },
     {
-      "chapter": 16,
-      "title": "The Imperfect --- the Past That Kept Going",
-      "label": "ch:imperfect",
-      "canDo": "I can use the Spanish imperfect for past habits, background, and actions in progress.",
+      "chapter": 100,
+      "title": "The Strong Preterites",
+      "label": "ch:spanish-preterito-fuerte",
+      "canDo": "I can use tuve, hice and estuve, and hear that their stress sits on the stem.",
       "spineNodes": [
         "SPINE-TALK-ABOUT-PAST"
       ],
       "payoff": {
-        "lesson": "ES-C16-practice",
+        "lesson": "ES-C15-preterite-fuertes",
         "kind": "task",
-        "summary": "Complete ES-C16-practice and retrieve the bounded singular imperfect rows for hablar, comer, vivir, ser, ir, and newly learned ver while contrasting open and completed past viewpoints.",
+        "summary": "Latin's own perfect, carried through on verbs too heavily used to be rebuilt.",
+        "assesses": [
+          "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+          "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+          "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+          "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 101,
+      "title": "Synthesis --- You Can Hear Which Past It Is",
+      "label": "ch:spanish-synthesis-preterito",
+      "canDo": "I can tell a regular preterite from a strong one by ear, and say why only one of them carries an accent.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C15-sintesis-preterito",
+        "kind": "dialogue",
+        "summary": "The accent is the stress written down: ending-stressed regular, stem-stressed strong.",
+        "assesses": [
+          "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+          "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
+        ]
+      }
+    },
+    {
+      "chapter": 102,
+      "title": "The Imperfect --- What Used to Happen",
+      "label": "ch:spanish-imperfecto",
+      "canDo": "I can describe an ongoing or habitual past with a regular verb from any family.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C16-vivir-imperfecto",
+        "kind": "task",
+        "summary": "-aba and -ia, and -er and -ir agreeing once again.",
         "assesses": [
           "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
           "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
           "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-          "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
-          "ES-LEX-VER",
-          "ES-GRAMMAR-VER-PRESENT-SINGULAR",
-          "ES-ETYMON-VER-VIDERE",
-          "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
-          "ES-ETYMON-ERA",
-          "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
-          "ES-ETYMON-IBA",
-          "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
-        ],
-        "note": "The payoff retrieves all twelve Chapter-16 atoms with mapped activities and deliberately defers every plural form, undeclared time clue, new person, and new setting."
+          "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+        ]
       }
     },
     {
-      "chapter": 17,
-      "title": "The Future and the Conditional --- One Weld, Twice",
-      "label": "ch:future-conditional",
-      "canDo": "I can form the Spanish future and conditional from the infinitive and use each for its core meaning.",
+      "chapter": 103,
+      "title": "Ver --- Seeing",
+      "label": "ch:spanish-ver",
+      "canDo": "I can say what I see, with a verb whose stem keeps a letter Latin had.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C16-ver",
+        "kind": "task",
+        "summary": "videre, and the e that other verbs dropped but ver kept.",
+        "assesses": [
+          "ES-LEX-VER",
+          "ES-GRAMMAR-VER-PRESENT-SINGULAR",
+          "ES-ETYMON-VER-VIDERE"
+        ]
+      }
+    },
+    {
+      "chapter": 104,
+      "title": "The Only Three Irregulars",
+      "label": "ch:spanish-imperfecto-irregulares",
+      "canDo": "I can use era, iba and veia, and know that no fourth irregular imperfect exists.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C16-ver-imperfecto",
+        "kind": "task",
+        "summary": "erat and ibat worn straight through from Latin, never tidied up.",
+        "assesses": [
+          "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
+          "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+          "ES-GRAMMAR-VER-IMPERFECT-SINGULAR",
+          "ES-ETYMON-ERA",
+          "ES-ETYMON-IBA"
+        ]
+      }
+    },
+    {
+      "chapter": 105,
+      "title": "Synthesis --- Three Exceptions, and No Others",
+      "label": "ch:spanish-synthesis-imperfecto",
+      "canDo": "I can use the imperfect freely, knowing its complete irregular inventory is three verbs.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C16-sintesis-imperfecto",
+        "kind": "dialogue",
+        "summary": "The exceptions are the words you use most - which is the reason they are exceptions.",
+        "assesses": [
+          "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+          "ES-ETYMON-ERA",
+          "ES-ETYMON-IBA"
+        ]
+      }
+    },
+    {
+      "chapter": 106,
+      "title": "Hablaba and Hablo --- Two Ways of Looking",
+      "label": "ch:aspect-not-time",
+      "canDo": "I can say that the two past tenses differ in viewpoint rather than in time.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C48-dos-miradas",
+        "kind": "task",
+        "summary": "Complete ES-C48-dos-miradas: say whether the two pasts differ in when, and identify which one views an event from outside.",
+        "assesses": [
+          "ES-GRAMMAR-ASPECT-NOT-TIME",
+          "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+          "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
+        ],
+        "note": "No new form. The chapter's work is to stop the reader looking for a rule about time, because there is not one."
+      }
+    },
+    {
+      "chapter": 107,
+      "title": "Cuando --- Both Pasts in One Sentence",
+      "label": "ch:cuando",
+      "canDo": "I can join a scene and an event with cuando, using the right tense for each.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C48-cuando",
+        "kind": "task",
+        "summary": "Complete ES-C48-cuando: build estudiaba cuando hablo Ana and say which tense sets the room.",
+        "assesses": [
+          "ES-LEX-CUANDO",
+          "ES-GRAMMAR-BACKDROP-AND-EVENT",
+          "ES-ETYMON-QUANDO"
+        ],
+        "note": "Fills a gap while it is needed: cuando was never taught, and the contrast cannot be shown in a single sentence without it."
+      }
+    },
+    {
+      "chapter": 108,
+      "title": "Tenia and Tuve --- When the Tense Changes the Meaning",
+      "label": "ch:aspect-changes-meaning",
+      "canDo": "I can say why tuve una casa means I got one, and predict what a state verb's preterite will mean.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C48-tenia-tuve",
+        "kind": "task",
+        "summary": "Complete ES-C48-tenia-tuve: contrast tenia and tuve, and say what any state verb's preterite will mean.",
+        "assesses": [
+          "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+          "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+          "ES-GRAMMAR-ER-IMPERFECT-SINGULAR"
+        ],
+        "note": "Derives the meaning change from the aspect rule rather than listing it: a state forced to have edges gives you the moment it began."
+      }
+    },
+    {
+      "chapter": 109,
+      "title": "Review --- One Question, Three Answers",
+      "label": "ch:review-two-pasts",
+      "canDo": "I can state the single question that chooses between the two past tenses.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C48-repaso-dos-pasados",
+        "kind": "task",
+        "summary": "Complete ES-C48-repaso-dos-pasados: state the question, identify the scene verb, and name the pair that changes meaning.",
+        "assesses": [
+          "ES-GRAMMAR-ASPECT-NOT-TIME",
+          "ES-GRAMMAR-BACKDROP-AND-EVENT",
+          "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
+        ],
+        "note": "Deliberately gives a question rather than a list of trigger words, because trigger lists fail exactly where the choice is interesting."
+      }
+    },
+    {
+      "chapter": 110,
+      "title": "Synthesis --- A Small Story",
+      "label": "ch:synthesis-story",
+      "canDo": "I can narrate four sentences using both past tenses, with a background and a foreground.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C48-sintesis-una-historia",
+        "kind": "task",
+        "summary": "Complete ES-C48-sintesis-una-historia: identify the two layers of the story and say why tuve belongs to the foreground.",
+        "assesses": [
+          "ES-GRAMMAR-BACKDROP-AND-EVENT",
+          "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+          "ES-LEX-CUANDO"
+        ],
+        "note": "First narration in the book. The same verb appears in both layers doing different jobs, and nothing about it is irregular."
+      }
+    },
+    {
+      "chapter": 111,
+      "title": "Hablado, Comido, Vivido --- The Participle",
+      "label": "ch:participle",
+      "canDo": "I can form the participle of any regular verb, and know it never changes for person.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C49-participio",
+        "kind": "task",
+        "summary": "Complete ES-C49-participio: form the three participles and say whether the form changes with the speaker.",
+        "assesses": [
+          "ES-GRAMMAR-PAST-PARTICIPLE",
+          "ES-ETYMON-PARTICIPIUM"
+        ],
+        "note": "One new ending and one the reader can predict: -er and -ir merge here for the same reason they merged in the preterite."
+      }
+    },
+    {
+      "chapter": 112,
+      "title": "He Hablado --- A Verb With No Meaning Left",
+      "label": "ch:perfect-first-person",
+      "canDo": "I can say he hablado, and say what haber contributes to it.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C49-he-hablado",
+        "kind": "task",
+        "summary": "Complete ES-C49-he-hablado: produce he hablado espanol and say what haber means there.",
+        "assesses": [
+          "ES-LEX-HABER",
+          "ES-GRAMMAR-PERFECT-FIRST-PERSON",
+          "ES-ETYMON-HABERE"
+        ],
+        "note": "Answers the question learners actually have: haber means nothing here. Spanish gave the meaning to tener, exactly as English hollowed out have."
+      }
+    },
+    {
+      "chapter": 113,
+      "title": "Has, Ha, Hemos, Habeis, Han",
+      "label": "ch:perfect-complete",
+      "canDo": "I can use every form of haber with a participle.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C49-haber-completo",
+        "kind": "task",
+        "summary": "Complete ES-C49-haber-completo: give all six forms and say why haber is shorter than an ordinary verb.",
+        "assesses": [
+          "ES-GRAMMAR-PERFECT-COMPLETE",
+          "ES-ETYMON-HABERE"
+        ],
+        "note": "Five of six forms are one syllable, and the reason is frequency -- the same reason ser and ir are worn strange."
+      }
+    },
+    {
+      "chapter": 114,
+      "title": "Hecho, Dicho, Visto, Puesto",
+      "label": "ch:irregular-participles",
+      "canDo": "I can use the four irregular participles and say why those four.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C49-participios-irregulares",
+        "kind": "task",
+        "summary": "Complete ES-C49-participios-irregulares: give the four forms, name the English noun that is hecho, and say why these four break the rule.",
+        "assesses": [
+          "ES-GRAMMAR-IRREGULAR-PARTICIPLES",
+          "ES-ETYMON-FACTUM-DICTUM"
+        ],
+        "note": "They are not broken forms; they are Latin participles inherited whole, older than the -ado/-ido machinery that replaced them everywhere else."
+      }
+    },
+    {
+      "chapter": 115,
+      "title": "Review --- A Tense You Build",
+      "label": "ch:review-perfect",
+      "canDo": "I can name the two pieces of the perfect and say which carries the person.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C49-repaso-perfecto",
+        "kind": "task",
+        "summary": "Complete ES-C49-repaso-perfecto: name the two pieces and say why this tense cost less than the present or preterite.",
+        "assesses": [
+          "ES-GRAMMAR-PERFECT-COMPLETE",
+          "ES-GRAMMAR-PAST-PARTICIPLE",
+          "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+        ],
+        "note": "Names the shape: a tense that is BUILT costs a fixed amount, not a per-verb amount -- and Spanish reuses these same two pieces for more tenses later."
+      }
+    },
+    {
+      "chapter": 116,
+      "title": "Synthesis --- Two Shores, Two Answers",
+      "label": "ch:synthesis-perfect",
+      "canDo": "I can say what the perfect does that the preterite does not, and that today takes different tenses in Spain and Latin America.",
+      "spineNodes": [
+        "SPINE-TALK-ABOUT-PAST"
+      ],
+      "payoff": {
+        "lesson": "ES-C49-sintesis-dos-orillas",
+        "kind": "task",
+        "summary": "Complete ES-C49-sintesis-dos-orillas: contrast he comido with comi, and say which tense Madrid and Mexico City choose for today.",
+        "assesses": [
+          "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT",
+          "ES-GRAMMAR-PERFECT-COMPLETE"
+        ],
+        "note": "Third split decided by geography rather than meaning, after vosotros and os. Stated with a default so the reader is not left choosing in the dark."
+      }
+    },
+    {
+      "chapter": 117,
+      "title": "The Future --- Saying What Will Happen",
+      "label": "ch:spanish-futuro",
+      "canDo": "I can say what I will do, in the singular, across all three verb families.",
       "spineNodes": [
         "SPINE-TALK-ABOUT-FUTURE"
       ],
       "payoff": {
-        "lesson": "ES-C17-practice",
+        "lesson": "ES-C17-vivir-futuro",
         "kind": "task",
-        "summary": "Complete ES-C17-practice and retrieve the bounded singular future and conditional rows for hablar, comer, and vivir plus the learned har-, tendr-, and podr- stems.",
+        "summary": "The future endings ride on the whole infinitive, one family at a time.",
         "assesses": [
-          "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
           "ES-GRAMMAR-AR-FUTURE-SINGULAR",
-          "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL",
           "ES-PATTERN-ER-FUTURE-SINGULAR",
-          "ES-GRAMMAR-IR-FUTURE-SINGULAR",
-          "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
-          "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
-          "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
-          "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR",
-          "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
-          "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
-          "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
-        ],
-        "note": "The payoff retrieves all twelve Chapter-17 atoms with mapped activities and deliberately defers every plural form, additional irregular stem, auxiliary paradigm, object-pronoun frame, and clock-time conjecture."
+          "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+        ]
       }
     },
     {
-      "chapter": 18,
-      "title": "The Subjunctive --- the Mood of the Not-Yet-Real",
-      "label": "ch:subjunctive",
-      "canDo": "I can distinguish an asserted event from a wanted one and use the learned singular present-subjunctive forms after quiero que or ojalá.",
+      "chapter": 118,
+      "title": "The Conditional --- Saying What Would Happen",
+      "label": "ch:spanish-condicional",
+      "canDo": "I can say what I would do, in the singular, across all three verb families.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C17-vivir-condicional",
+        "kind": "task",
+        "summary": "The same infinitive, a different auxiliary tense on the end.",
+        "assesses": [
+          "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-ER-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-IR-CONDITIONAL-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 119,
+      "title": "One Stem, Two Tenses",
+      "label": "ch:spanish-future-conditional-stems",
+      "canDo": "I can use the irregular stems that serve the future and the conditional alike.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C17-practice",
+        "kind": "task",
+        "summary": "hare, tendre, podre - stems shared by both tenses, so learning one buys the other.",
+        "assesses": [
+          "ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR",
+          "ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 120,
+      "title": "Synthesis --- Promising, and Supposing",
+      "label": "ch:spanish-synthesis-future-conditional",
+      "canDo": "I can choose between a promise and a supposition, and say why the endings differ.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C17-sintesis-futuro-condicional",
+        "kind": "dialogue",
+        "summary": "Haber glued on twice - present for the promise, past for the guess.",
+        "assesses": [
+          "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL",
+          "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+          "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
+        ]
+      }
+    },
+    {
+      "chapter": 121,
+      "title": "Wanting, Not Asserting",
+      "label": "ch:spanish-quiero-que",
+      "canDo": "I can tell an asserted event apart from a wanted one, and say why the verb changes.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-WANT"
+      ],
+      "payoff": {
+        "lesson": "ES-C18-quiero-que",
+        "kind": "task",
+        "summary": "Hablas espanol asserts; quiero que hables asserts nothing at all.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+          "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST"
+        ]
+      }
+    },
+    {
+      "chapter": 122,
+      "title": "The Subjunctive, Regular",
+      "label": "ch:spanish-subjuntivo-regular",
+      "canDo": "I can form the singular present subjunctive of a regular verb in any of the three families.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-WANT"
+      ],
+      "payoff": {
+        "lesson": "ES-C18-vivir-subjuntivo",
+        "kind": "task",
+        "summary": "hable, coma, viva - the vowels swap sides, and -er and -ir agree again.",
+        "assesses": [
+          "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 123,
+      "title": "The Subjunctive Built From the Yo Form",
+      "label": "ch:spanish-subjuntivo-yo-stem",
+      "canDo": "I can build the subjunctive of an irregular verb from its yo form.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-WANT"
+      ],
+      "payoff": {
+        "lesson": "ES-C18-hacer-subjuntivo",
+        "kind": "task",
+        "summary": "quiera, pueda, haga - each one is its own yo form with the vowel swapped.",
+        "assesses": [
+          "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+          "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR"
+        ]
+      }
+    },
+    {
+      "chapter": 124,
+      "title": "Ojala --- a Prayer That Outlived Its Religion",
+      "label": "ch:spanish-ojala",
+      "canDo": "I can wish for something with ojala, and say where the word came from.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-WANT"
       ],
       "payoff": {
         "lesson": "ES-C18-practice",
-        "kind": "task",
-        "summary": "Complete ES-C18-practice and choose asserted versus wanted meaning before retrieving the singular forms of hablar, comer, vivir, querer, poder, and hacer in the two learned trigger frames.",
+        "kind": "dialogue",
+        "summary": "wa-sha' allah, carried through al-Andalus and kept long after.",
         "assesses": [
-          "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-          "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-          "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
-          "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP",
-          "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS",
-          "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-          "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
-          "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
-          "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
-          "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
           "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
           "ES-ETYMON-OJALA-HISPANIC-ARABIC"
-        ],
-        "note": "The payoff retrieves all twelve Chapter-18 atoms with mapped activities and deliberately defers plural persons, additional irregular verbs, object pronouns, person nouns, and additional subjunctive triggers."
-      }
-    },
-    {
-      "chapter": 19,
-      "title": "Yes and No",
-      "label": "ch:spanish-basic-responses",
-      "canDo": "I can answer yes or no in Spanish and negate a sentence by putting no in front of the verb.",
-      "spineNodes": [
-        "SPINE-RESPOND-BASIC"
-      ],
-      "payoff": {
-        "lesson": "ES-C19-no",
-        "kind": "task",
-        "summary": "Answer ¿Hablas inglés? with a bare no, then negate the sentence itself — No hablo inglés — with the same one word doing both jobs.",
-        "assesses": [
-          "ES-LEX-NO-01",
-          "ES-GRAMMAR-NO-02"
         ]
       }
     },
     {
-      "chapter": 20,
+      "chapter": 125,
+      "title": "Synthesis --- Claiming, and Not Claiming",
+      "label": "ch:spanish-synthesis-subjuntivo",
+      "canDo": "I can choose the mood by deciding whether I am willing to assert the thing at all.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-WANT"
+      ],
+      "payoff": {
+        "lesson": "ES-C18-sintesis-subjuntivo",
+        "kind": "dialogue",
+        "summary": "Indicative: this is so. Subjunctive: I am not saying this is so.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+          "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+        ]
+      }
+    },
+    {
+      "chapter": 126,
+      "title": "Habla --- Telling Somebody To Do Something",
+      "label": "ch:command-tu",
+      "canDo": "I can give an informal positive command using a form I already hold.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C50-habla",
+        "kind": "task",
+        "summary": "Complete ES-C50-habla: give a tu command and name the form it reuses.",
+        "assesses": [
+          "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+          "ES-ETYMON-IMPERARE"
+        ],
+        "note": "Costs nothing: the tu command IS the he/she present. Spanish reuses a form and lets context sort it out."
+      }
+    },
+    {
+      "chapter": 127,
+      "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+      "label": "ch:command-irregular",
+      "canDo": "I can use the eight irregular informal commands and say why they are all one syllable.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C50-ocho-cortos",
+        "kind": "task",
+        "summary": "Complete ES-C50-ocho-cortos: give the eight forms and say why they are so short.",
+        "assesses": [
+          "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+        ],
+        "note": "Not eight arbitrary exceptions: what the eight most-shouted verbs look like after two thousand years of being shouted."
+      }
+    },
+    {
+      "chapter": 128,
+      "title": "No Hables --- Telling Somebody Not To",
+      "label": "ch:command-negative",
+      "canDo": "I can give a negative informal command, and say why it takes the subjunctive.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C50-no-hables",
+        "kind": "task",
+        "summary": "Complete ES-C50-no-hables: produce no hables and say why the subjunctive is the right form.",
+        "assesses": [
+          "ES-GRAMMAR-COMMAND-NEGATIVE",
+          "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
+        ],
+        "note": "Not a borrowing: no hables asserts no speaking at all, so the non-asserting form is doing exactly its usual job."
+      }
+    },
+    {
+      "chapter": 129,
+      "title": "Hable Usted --- The Polite Command",
+      "label": "ch:command-usted",
+      "canDo": "I can give a formal command and say why the usted form is the polite one.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C50-hable-usted",
+        "kind": "task",
+        "summary": "Complete ES-C50-hable-usted: produce hable por favor and explain why the usted command is polite.",
+        "assesses": [
+          "ES-GRAMMAR-COMMAND-USTED",
+          "ES-GRAMMAR-USTED-THIRD-PERSON"
+        ],
+        "note": "Usted is a worn-down title, so the order is aimed past the listener rather than at them -- and that indirectness IS the politeness."
+      }
+    },
+    {
+      "chapter": 130,
+      "title": "Review --- Four Boxes",
+      "label": "ch:review-commands",
+      "canDo": "I can give all four command forms of a regular verb.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C50-repaso-mandatos",
+        "kind": "task",
+        "summary": "Complete ES-C50-repaso-mandatos: give all four boxes for comer and say what the rung genuinely cost.",
+        "assesses": [
+          "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+          "ES-GRAMMAR-COMMAND-NEGATIVE",
+          "ES-GRAMMAR-COMMAND-USTED",
+          "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+        ],
+        "note": "A whole mood whose only new material was eight one-syllable words. The messiest box is the most-used one, as it has been for every irregularity in the book."
+      }
+    },
+    {
+      "chapter": 131,
+      "title": "Synthesis --- Asking Without Sounding Rude",
+      "label": "ch:synthesis-commands",
+      "canDo": "I can pick the command form that matches my relationship to the listener.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C50-sintesis-pedir-bien",
+        "kind": "task",
+        "summary": "Complete ES-C50-sintesis-pedir-bien: command a friend and a stranger, and say where a Spanish command's politeness lives.",
+        "assesses": [
+          "ES-CULTURE-COMMAND-REGISTER",
+          "ES-GRAMMAR-COMMAND-USTED",
+          "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE"
+        ],
+        "note": "The English speaker's mistake here is not tone but person: politeness lives in the tu/usted choice, made before the command was spoken."
+      }
+    },
+    {
+      "chapter": 132,
       "title": "Lo Siento",
       "label": "ch:spanish-sorry",
       "canDo": "I can apologise in Spanish and choose between lo siento and perdón.",
@@ -528,7 +2650,7 @@
       }
     },
     {
-      "chapter": 21,
+      "chapter": 133,
       "title": "Days of the Week",
       "label": "ch:spanish-days-of-the-week",
       "canDo": "I can name all seven days of the week in Spanish and say why the last two broke away from the planet names.",
@@ -548,7 +2670,7 @@
       }
     },
     {
-      "chapter": 22,
+      "chapter": 134,
       "title": "Black, White, Red, and Blue",
       "label": "ch:spanish-black-white-red-blue",
       "canDo": "I can name black, white, red and blue in Spanish and say which of them Spanish borrowed rather than inherited.",
@@ -570,7 +2692,7 @@
       }
     },
     {
-      "chapter": 23,
+      "chapter": 135,
       "title": "Parents and Siblings",
       "label": "ch:spanish-family",
       "canDo": "I can name my parents and my siblings in Spanish and explain why hermano is not built on Latin's word for brother.",
@@ -590,7 +2712,7 @@
       }
     },
     {
-      "chapter": 24,
+      "chapter": 136,
       "title": "Head and Hand",
       "label": "ch:spanish-head-and-hand",
       "canDo": "I can name the head and the hand in Spanish and get la mano's gender right despite its -o ending.",
@@ -610,7 +2732,7 @@
       }
     },
     {
-      "chapter": 25,
+      "chapter": 137,
       "title": "The Seasons",
       "label": "ch:spanish-seasons",
       "canDo": "I can name the four seasons in Spanish and explain how verano moved from spring to summer.",
@@ -629,7 +2751,7 @@
       }
     },
     {
-      "chapter": 26,
+      "chapter": 138,
       "title": "Water, Wine, and Bread",
       "label": "ch:spanish-water-wine-bread",
       "canDo": "I can name water, wine and bread in Spanish and say why a compañero is someone who shares bread with me.",
@@ -648,7 +2770,27 @@
       }
     },
     {
-      "chapter": 27,
+      "chapter": 139,
+      "title": "La Bebo --- The Pronoun Tells the Truth",
+      "label": "ch:pronoun-evidence",
+      "canDo": "I can use an object pronoun to reveal a gender the article hides.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-la-bebo",
+        "kind": "task",
+        "summary": "Complete ES-C55-la-bebo: say la bebo for el agua and explain why the pronoun can report a gender the article hides.",
+        "assesses": [
+          "ES-GRAMMAR-PRONOUN-REVEALS-GENDER",
+          "ES-GRAMMAR-DIRECT-OBJECT-LA",
+          "ES-GRAMMAR-AGUA-ARTICLE-03"
+        ],
+        "note": "A third proof, after the adjective and the plural, and the cheapest of the three: nothing sits in front of a pronoun, so no vowels collide and it reports the gender straight. Turns a memorised exception into a test the reader can run."
+      }
+    },
+    {
+      "chapter": 140,
       "title": "The Months",
       "label": "ch:spanish-months",
       "canDo": "I can name the twelve months in Spanish and explain why diciembre carries the Latin word for ten.",
@@ -668,7 +2810,7 @@
       }
     },
     {
-      "chapter": 28,
+      "chapter": 141,
       "title": "Noon and Midnight",
       "label": "ch:spanish-noon-midnight",
       "canDo": "I can say that it is noon or midnight in Spanish and break both words into their two living halves.",
@@ -686,7 +2828,7 @@
       }
     },
     {
-      "chapter": 29,
+      "chapter": 142,
       "title": "Telling Time",
       "label": "ch:spanish-telling-time",
       "canDo": "I can tell the time in Spanish and choose correctly between es la una and son las dos.",
@@ -705,7 +2847,7 @@
       }
     },
     {
-      "chapter": 30,
+      "chapter": 143,
       "title": "The Weather",
       "label": "ch:spanish-weather",
       "canDo": "I can talk about the weather in Spanish and know why llueve refuses to join hace.",
@@ -728,7 +2870,7 @@
       }
     },
     {
-      "chapter": 31,
+      "chapter": 144,
       "title": "Numbers Eleven to Twenty",
       "label": "ch:spanish-numbers-eleven-to-twenty",
       "canDo": "I can count from eleven to twenty in Spanish and say where the fused Latin teens stop and the ten-and-X ones begin.",
@@ -751,7 +2893,7 @@
       }
     },
     {
-      "chapter": 32,
+      "chapter": 145,
       "title": "Dog and Cat",
       "label": "ch:spanish-dog-and-cat",
       "canDo": "I can name a dog and a cat in Spanish and say which of the two words still has no agreed origin.",
@@ -771,7 +2913,7 @@
       }
     },
     {
-      "chapter": 33,
+      "chapter": 146,
       "title": "Green and Yellow",
       "label": "ch:spanish-green-and-yellow",
       "canDo": "I can name green and yellow in Spanish and explain why amarillo is built on the word for bitter.",
@@ -791,41 +2933,223 @@
       }
     },
     {
-      "chapter": 34,
-      "title": "Four Verbs of the Mind",
-      "label": "ch:spanish-verbs-of-the-mind",
-      "canDo": "I can say what I think, understand, read and write in Spanish, and break the stems of pensar and entender the way a stem-changer requires.",
+      "chapter": 147,
+      "title": "Synthesis --- Saying Something About Your Own Life",
+      "label": "ch:spanish-synthesis-describing",
+      "canDo": "I can describe things around me with the nouns and colours I hold, choosing un rather than el.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C40-sintesis-describir",
+        "kind": "dialogue",
+        "summary": "Fourteen chapters of nouns and colours, combined for the first time - and the article that makes it possible.",
+        "assesses": [
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+          "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+          "ES-LEX-PERRO-03"
+        ]
+      }
+    },
+    {
+      "chapter": 148,
+      "title": "Pensar — Thinking Is Weighing",
+      "label": "ch:spanish-pensar",
+      "canDo": "I can say what I think, and break pensar's stem the way a stem-changer requires.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C34-pensar",
+        "kind": "task",
+        "summary": "Run pensar through the e→ie boot, and find the scales still inside pensive and peso.",
+        "assesses": [
+          "ES-LEX-PENSAR-01",
+          "ES-ETYMON-PENSAR-02"
+        ]
+      }
+    },
+    {
+      "chapter": 149,
+      "title": "Entender — Understanding Is Stretching Toward",
+      "label": "ch:spanish-entender",
+      "canDo": "I can say what I understand, and see the verb inside the no entiendo I have used since chapter 14.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C34-entender",
+        "kind": "task",
+        "summary": "The second e→ie stem-changer, and the moment a chapter-14 formula turns out to have parts.",
+        "assesses": [
+          "ES-LEX-ENTENDER-03",
+          "ES-ETYMON-ENTENDER-04",
+          "ES-LEX-NO-ENTIENDO-01"
+        ]
+      }
+    },
+    {
+      "chapter": 150,
+      "title": "Leer — Reading Is Gathering",
+      "label": "ch:spanish-leer",
+      "canDo": "I can say what I read, with a verb whose stem does not break.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C34-leer",
+        "kind": "task",
+        "summary": "legere, the root that gathers: collect, select, elect, and intellect.",
+        "assesses": [
+          "ES-LEX-LEER-05",
+          "ES-ETYMON-LEER-06"
+        ]
+      }
+    },
+    {
+      "chapter": 151,
+      "title": "Escribir — Writing Is Scratching",
+      "label": "ch:spanish-escribir",
+      "canDo": "I can say what I write, and explain the propped-up e- in front of it.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C34-escribir",
         "kind": "task",
-        "summary": "Run pensar and entender through the e→ie boot, then leer and escribir as the pair that does not break, and close on the propped-up e- that turns scrībere into escribir and schola into escuela.",
+        "summary": "scrībere, to scratch, and Spanish refusing to begin a word with sc-.",
         "assesses": [
-          "ES-LEX-PENSAR-01",
-          "ES-LEX-LEER-05",
-          "ES-ETYMON-LEER-06",
           "ES-LEX-ESCRIBIR-07",
           "ES-ETYMON-ESCRIBIR-08"
         ]
       }
     },
     {
-      "chapter": 35,
-      "title": "Taking, Asking, Helping — and the Backwards Verb",
-      "label": "ch:spanish-backwards-verb",
-      "canDo": "I can say I take, ask and help in Spanish, and build a sentence with gustar the way Spanish actually builds it — with the thing liked as the subject.",
+      "chapter": 152,
+      "title": "Review --- Four Verbs of the Mind",
+      "label": "ch:spanish-review-verbs-of-mind",
+      "canDo": "I can hold all four mind-verbs at once and name the physical act inside each one.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C34-repaso-mente",
+        "kind": "dialogue",
+        "summary": "Four abstractions, four labourers: weighing, stretching, gathering, scratching.",
+        "assesses": [
+          "ES-ETYMON-PENSAR-02",
+          "ES-ETYMON-ENTENDER-04",
+          "ES-ETYMON-LEER-06",
+          "ES-ETYMON-ESCRIBIR-08"
+        ]
+      }
+    },
+    {
+      "chapter": 153,
+      "title": "Synthesis --- What You Understand, and What You Don't",
+      "label": "ch:spanish-synthesis-verbs-of-mind",
+      "canDo": "I can report which part of what I heard landed and which did not, instead of only signalling that I am lost.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C34-sintesis-mente",
+        "kind": "dialogue",
+        "summary": "The chapter-14 distress signal becomes a sentence with moving parts.",
+        "assesses": [
+          "ES-LEX-NO-ENTIENDO-01",
+          "ES-LEX-ENTENDER-03",
+          "ES-ETYMON-ENTENDER-04"
+        ]
+      }
+    },
+    {
+      "chapter": 154,
+      "title": "Tomar — Taking, and a Word With No Past",
+      "label": "ch:spanish-tomar",
+      "canDo": "I can say what I take, and explain why this everyday verb has no agreed origin.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-tomar",
+        "kind": "task",
+        "summary": "tomar, the honest gap — and coger, the verb Latin actually left.",
+        "assesses": [
+          "ES-LEX-TOMAR-01",
+          "ES-LEX-COGER-02"
+        ]
+      }
+    },
+    {
+      "chapter": 155,
+      "title": "Preguntar — Asking, and Sounding a Depth",
+      "label": "ch:spanish-preguntar",
+      "canDo": "I can ask a question with preguntar, and choose it over pedir.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-preguntar",
+        "kind": "task",
+        "summary": "percontari, to sound a depth with a pole; and why English's one ask becomes two Spanish verbs.",
+        "assesses": [
+          "ES-LEX-PREGUNTAR-03",
+          "ES-GRAMMAR-ASK-SPLIT-04"
+        ]
+      }
+    },
+    {
+      "chapter": 156,
+      "title": "Ayudar — the Same Word as Aid",
+      "label": "ch:spanish-ayudar",
+      "canDo": "I can say that I help, and hear English aid inside the Spanish word.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-ayudar",
+        "kind": "task",
+        "summary": "adiutare straight through to aid, and the -di- that also gave hodie -> hoy.",
+        "assesses": [
+          "ES-LEX-AYUDAR-05",
+          "ES-ETYMON-AYUDAR-06"
+        ]
+      }
+    },
+    {
+      "chapter": 157,
+      "title": "Review --- Three Verbs That Behave",
+      "label": "ch:spanish-review-ordinary-verbs",
+      "canDo": "I can use all three verbs and say what they have in common: the sentence is about the one doing it.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-repaso-tres",
+        "kind": "dialogue",
+        "summary": "Three origins - tidy, reshaped, and genuinely unknown - and the shared shape about to be broken.",
+        "assesses": [
+          "ES-LEX-TOMAR-01",
+          "ES-LEX-PREGUNTAR-03",
+          "ES-LEX-AYUDAR-05",
+          "ES-ETYMON-AYUDAR-06"
+        ]
+      }
+    },
+    {
+      "chapter": 158,
+      "title": "Gustar — the Verb Built the Other Way Round",
+      "label": "ch:spanish-gustar",
+      "canDo": "I can build a gustar sentence the way Spanish builds it, with the thing liked as the subject.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C35-gustar",
         "kind": "task",
-        "summary": "Say tomar, preguntar and ayudar, then turn gustar around: me gusta el libro is the book pleasing me, so the verb agrees with the thing and the person moves into the little word in front.",
+        "summary": "me gusta el libro is the book pleasing me, so the verb agrees with the book.",
         "assesses": [
-          "ES-LEX-TOMAR-01",
-          "ES-LEX-AYUDAR-05",
           "ES-LEX-GUSTAR-07",
           "ES-ETYMON-GUSTAR-08",
           "ES-GRAMMAR-GUSTAR-INVERSION-09"
@@ -833,7 +3157,26 @@
       }
     },
     {
-      "chapter": 36,
+      "chapter": 159,
+      "title": "Synthesis --- What You Like, and Who Does the Liking",
+      "label": "ch:spanish-synthesis-gustar",
+      "canDo": "I can say what I like without translating I like word by word, and hear mucho gusto as the same word.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C35-sintesis-gustar",
+        "kind": "dialogue",
+        "summary": "Liking started at the tongue; and the chapter-5 phrase turns out to be gustar's noun.",
+        "assesses": [
+          "ES-GRAMMAR-GUSTAR-INVERSION-09",
+          "ES-ETYMON-GUSTAR-08",
+          "ES-LEX-GUSTO"
+        ]
+      }
+    },
+    {
+      "chapter": 160,
       "title": "Hearing, Sleeping, Walking, Running",
       "label": "ch:spanish-hear-sleep-walk-run",
       "canDo": "I can say I hear, sleep, walk and run in Spanish, write oír's y where the spelling demands it, and break dormir's o to ue the way a boot verb does.",
@@ -863,7 +3206,7 @@
       }
     },
     {
-      "chapter": 37,
+      "chapter": 161,
       "title": "Opening, Closing, Sitting Down, Standing Up",
       "label": "ch:spanish-open-close-sit-stand",
       "canDo": "I can say I open, close, sit down and stand up in Spanish, and use the reflexive pronoun that makes sentarse and levantarse land the action back on me.",
@@ -894,7 +3237,7 @@
       }
     },
     {
-      "chapter": 38,
+      "chapter": 162,
       "title": "Telling What Happened",
       "label": "ch:spanish-narrating",
       "canDo": "I can tell a short connected story about something that happened — ordering the events with luego, giving a reason with porque, and choosing the imperfect for the scene and the preterite for the events.",
@@ -918,38 +3261,121 @@
       }
     },
     {
-      "chapter": 39,
-      "title": "Bringing, Getting, Playing, Meeting",
-      "label": "ch:spanish-bring-get-play-meet",
-      "canDo": "I can say I bring, get, play and meet in Spanish, and name what each verb does to its yo-form or its stem: traigo grows a hard g, consigo breaks e to i and drops a silent u, juego breaks u to ue alone in the language, and conozco keeps a cluster the other forms lost.",
+      "chapter": 163,
+      "title": "Traer --- Bringing, and Latin for Dragging",
+      "label": "ch:spanish-traer",
+      "canDo": "I can say what I bring, and choose traer over llevar by where I am standing.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-traer",
+        "kind": "task",
+        "summary": "trahere, to drag - the root under tractor, attract and abstract.",
+        "assesses": [
+          "ES-LEX-TRAER-01",
+          "ES-ETYMON-TRAER-02",
+          "ES-GRAMMAR-TRAER-LLEVAR-03"
+        ]
+      }
+    },
+    {
+      "chapter": 164,
+      "title": "Conseguir --- Getting Is Following Until You Have It",
+      "label": "ch:spanish-conseguir",
+      "canDo": "I can say what I get, and make the e-to-i stem change.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-conseguir",
+        "kind": "task",
+        "summary": "consequi, to follow after - the root of sequence and consequence.",
+        "assesses": [
+          "ES-LEX-CONSEGUIR-04",
+          "ES-ETYMON-CONSEGUIR-05",
+          "ES-GRAMMAR-STEM-E-I-06"
+        ]
+      }
+    },
+    {
+      "chapter": 165,
+      "title": "Jugar --- Playing Was Joking",
+      "label": "ch:spanish-jugar",
+      "canDo": "I can say what I play, with the only u-to-ue verb in Spanish.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-jugar",
+        "kind": "task",
+        "summary": "iocari, to joke - and Latin's own play-verb ludere left Spanish entirely.",
+        "assesses": [
+          "ES-LEX-JUGAR-07",
+          "ES-ETYMON-JUGAR-08",
+          "ES-GRAMMAR-STEM-U-UE-09"
+        ]
+      }
+    },
+    {
+      "chapter": 166,
+      "title": "Conocer --- Coming to Know",
+      "label": "ch:spanish-conocer",
+      "canDo": "I can say who and what I am acquainted with, and choose conocer over saber.",
       "spineNodes": [
         "SPINE-SAY-WHAT-I-DO"
       ],
       "payoff": {
         "lesson": "ES-C39-conocer",
         "kind": "task",
-        "summary": "Run the chapter's four verbs in the yo-form — traigo, consigo, juego, conozco — and say what each one does to itself, then name its Latin root and what that root meant: trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know. Choose conocer for a person and saber for a fact, and say which of the four carries a thing toward you rather than away. The chapter also reaches back for oigo, the yo-form that first grew a hard g, and for padre beside English father, the model for saying that Spanish and English words can be siblings rather than borrowings.",
+        "summary": "cognoscere, whose -sc- means BEGIN to know; English know is its Germanic sibling.",
         "assesses": [
-          "ES-LEX-TRAER-01",
-          "ES-ETYMON-TRAER-02",
-          "ES-GRAMMAR-TRAER-LLEVAR-03",
-          "ES-LEX-CONSEGUIR-04",
-          "ES-ETYMON-CONSEGUIR-05",
-          "ES-GRAMMAR-STEM-E-I-06",
-          "ES-LEX-JUGAR-07",
-          "ES-ETYMON-JUGAR-08",
-          "ES-GRAMMAR-STEM-U-UE-09",
           "ES-LEX-CONOCER-10",
           "ES-ETYMON-CONOCER-11",
-          "ES-GRAMMAR-CONOCER-SABER-12",
-          "ES-GRAMMAR-OIR-Y-03",
-          "ES-LEX-PARENTS-01",
-          "ES-ETYMON-PARENTS-02"
+          "ES-GRAMMAR-CONOCER-SABER-12"
         ]
       }
     },
     {
-      "chapter": 40,
+      "chapter": 167,
+      "title": "Review --- All Four Stem Changes",
+      "label": "ch:spanish-review-stem-changes",
+      "canDo": "I can name all four stem-change patterns and the single verb that owns one of them.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-repaso-cambios",
+        "kind": "dialogue",
+        "summary": "The system closes at four - and u-to-ue has exactly one member.",
+        "assesses": [
+          "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+          "ES-GRAMMAR-STEM-E-I-06",
+          "ES-GRAMMAR-STEM-U-UE-09"
+        ]
+      }
+    },
+    {
+      "chapter": 168,
+      "title": "Synthesis --- The Choices English Never Makes You Make",
+      "label": "ch:spanish-synthesis-verb-splits",
+      "canDo": "I can choose correctly between three verb pairs where English offers only one word.",
+      "spineNodes": [
+        "SPINE-SAY-WHAT-I-DO"
+      ],
+      "payoff": {
+        "lesson": "ES-C39-sintesis-elegir",
+        "kind": "dialogue",
+        "summary": "preguntar/pedir, traer/llevar, conocer/saber - the decision carries the meaning.",
+        "assesses": [
+          "ES-GRAMMAR-TRAER-LLEVAR-03",
+          "ES-GRAMMAR-CONOCER-SABER-12",
+          "ES-GRAMMAR-ASK-SPLIT-04"
+        ]
+      }
+    },
+    {
+      "chapter": 169,
       "title": "Waiting, Answering, Buying",
       "label": "ch:spanish-wait-answer-buy",
       "canDo": "I can say I wait, answer and buy in Spanish — three verbs whose endings never surprise me — and I know that esperar alone carries wait, hope and expect, so context does the work English hands to three separate verbs.",
@@ -984,7 +3410,7 @@
       }
     },
     {
-      "chapter": 41,
+      "chapter": 170,
       "title": "Saying Why",
       "label": "ch:spanish-giving-reasons",
       "canDo": "I can give a reason for what I think and what I plan — stating an opinion with creo que, running forward to its consequence with así que, and naming an obligation with debo.",
@@ -1006,6 +3432,396 @@
           "ES-ETYMON-PLICARE-08",
           "ES-GRAMMAR-REASON-CHAIN-09"
         ]
+      }
+    },
+    {
+      "chapter": 171,
+      "title": "Para --- For, Pointing Forward",
+      "label": "ch:para",
+      "canDo": "I can use para for a destination, a deadline, a recipient or a purpose.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-para",
+        "kind": "task",
+        "summary": "Complete ES-C51-para: produce para ti and para manana, and name the Latin piece inside para that means toward.",
+        "assesses": [
+          "ES-LEX-PARA",
+          "ES-GRAMMAR-PARA-FORWARD",
+          "ES-ETYMON-PER-AD"
+        ],
+        "note": "Replaces the usual list of twelve uses with one direction. The forward-pointing is inside the word: para is per + ad, and ad is the ad of advance and admit."
+      }
+    },
+    {
+      "chapter": 172,
+      "title": "Por --- And Three Phrases You Already Owned",
+      "label": "ch:por",
+      "canDo": "I can use por for a cause, a route or an exchange, and say what por favor literally means.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-por",
+        "kind": "task",
+        "summary": "Complete ES-C51-por: say what por favor literally means and name the English word that is the per inside por.",
+        "assesses": [
+          "ES-LEX-POR",
+          "ES-GRAMMAR-POR-THROUGH-BECAUSE",
+          "ES-ETYMON-PRO-PER"
+        ],
+        "note": "The reader has carried por favor, por que and porque since the opening chapters without ever being told what por means. This chapter explains three old phrases at once."
+      }
+    },
+    {
+      "chapter": 173,
+      "title": "Which Way Is the Arrow Pointing?",
+      "label": "ch:por-para-contrast",
+      "canDo": "I can choose between por and para with one question instead of a list of rules.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-la-flecha",
+        "kind": "task",
+        "summary": "Complete ES-C51-la-flecha: contrast para ti with por ti and state the arrow test.",
+        "assesses": [
+          "ES-GRAMMAR-POR-PARA-CONTRAST",
+          "ES-ETYMON-PER-AD",
+          "ES-ETYMON-PRO-PER"
+        ],
+        "note": "The test is not a mnemonic: para contains ad (toward) and por contains per (through), so it describes the words and keeps working on uses the book never showed."
+      }
+    },
+    {
+      "chapter": 174,
+      "title": "Review --- One Arrow",
+      "label": "ch:review-por-para",
+      "canDo": "I can state both directions and place my old por phrases under them.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-repaso-flecha",
+        "kind": "task",
+        "summary": "Complete ES-C51-repaso-flecha: give both directions, name three old phrases containing por, and say what it means when a sentence takes either.",
+        "assesses": [
+          "ES-GRAMMAR-POR-PARA-CONTRAST",
+          "ES-LEX-POR-FAVOR",
+          "ES-LEX-PORQUE-03"
+        ],
+        "note": "Mostly re-files old Spanish under a heading that explains it, and says so -- much of what looks like late grammar is a name for something already done blindly."
+      }
+    },
+    {
+      "chapter": 175,
+      "title": "Synthesis --- The Gift and the Motive",
+      "label": "ch:synthesis-por-para",
+      "canDo": "I can change the meaning of a sentence by choosing between por and para.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C51-sintesis-regalo-motivo",
+        "kind": "task",
+        "summary": "Complete ES-C51-sintesis-regalo-motivo: say the dinner sentence both ways and say what a wrong choice actually produces.",
+        "assesses": [
+          "ES-GRAMMAR-POR-PARA-CONTRAST",
+          "ES-LEX-PARA",
+          "ES-LEX-POR"
+        ],
+        "note": "First place where the smallest word carries the sentence's emotional content. A wrong choice is not bad grammar -- it is a true sentence about a different situation."
+      }
+    },
+    {
+      "chapter": 176,
+      "title": "Se Habla Espanol --- Nobody in Particular",
+      "label": "ch:se-impersonal",
+      "canDo": "I can read and use the impersonal se, where no person is named.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-se-habla",
+        "kind": "task",
+        "summary": "Complete ES-C52-se-habla: write the sign and say who is doing the speaking.",
+        "assesses": [
+          "ES-GRAMMAR-SE-IMPERSONAL"
+        ],
+        "note": "English needs a passive or a fake subject to be this vague. Spanish leaves the person out, and the se is the mark that says so."
+      }
+    },
+    {
+      "chapter": 177,
+      "title": "Se Compran Libros --- The Verb Tells On Itself",
+      "label": "ch:se-agreement",
+      "canDo": "I can make the verb agree with the thing, and say why it does.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-se-venden",
+        "kind": "task",
+        "summary": "Complete ES-C52-se-venden: produce se compran libros and read it as if se still meant themselves.",
+        "assesses": [
+          "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+          "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON"
+        ],
+        "note": "The agreement is the fossil: books buy themselves. The impersonal grew out of the reflexive rather than being borrowed from anywhere."
+      }
+    },
+    {
+      "chapter": 178,
+      "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
+      "label": "ch:como-se-dice",
+      "canDo": "I can ask how something is said, and say which se that is.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-como-se-dice",
+        "kind": "task",
+        "summary": "Complete ES-C52-como-se-dice: ask the question politely and say why it is impersonal rather than aimed at the listener.",
+        "assesses": [
+          "ES-LEX-COMO-SE-DICE",
+          "ES-GRAMMAR-SE-IMPERSONAL"
+        ],
+        "note": "The one sentence that lets a conversation repair itself: it gets the reader a word they do not have, from the person in front of them, mid-conversation."
+      }
+    },
+    {
+      "chapter": 179,
+      "title": "Review --- The Three Se's",
+      "label": "ch:review-three-se",
+      "canDo": "I can tell the three se's apart and say which two are really one word.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-tres-ses",
+        "kind": "task",
+        "summary": "Complete ES-C52-tres-ses: say which two se's are one word and what marks the impostor.",
+        "assesses": [
+          "ES-GRAMMAR-SE-IMPERSONAL",
+          "ES-GRAMMAR-SE-FOR-LE",
+          "ES-ETYMON-GELO"
+        ],
+        "note": "Unifies material learned a hundred chapters apart: Spanish has two se's and a coincidence, not three."
+      }
+    },
+    {
+      "chapter": 180,
+      "title": "Synthesis --- Reading the Window",
+      "label": "ch:synthesis-se",
+      "canDo": "I can read impersonal signs and ask my way past the words I do not have.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-sintesis-el-letrero",
+        "kind": "task",
+        "summary": "Complete ES-C52-sintesis-el-letrero: read the signs, ask for an unknown word, and say what the missing person buys a notice.",
+        "assesses": [
+          "ES-GRAMMAR-SE-IMPERSONAL",
+          "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+          "ES-LEX-COMO-SE-DICE"
+        ],
+        "note": "This construction is written at the reader rather than spoken to them, so the skill is reading it off the world -- and the missing person is what gives a sign its authority."
+      }
+    },
+    {
+      "chapter": 181,
+      "title": "El Libro Que Compro --- One Sentence Out of Two",
+      "label": "ch:relative-que",
+      "canDo": "I can join two sentences with que so a noun carries a clause.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-que-relativo",
+        "kind": "task",
+        "summary": "Complete ES-C53-que-relativo: join two sentences with que and name the question words that share its root.",
+        "assesses": [
+          "ES-GRAMMAR-RELATIVE-QUE",
+          "ES-ETYMON-QUI-RELATIVE"
+        ],
+        "note": "The point where sentences stop having one verb each. Que is a worn-down question word, and a question and a relative clause both fill a gap."
+      }
+    },
+    {
+      "chapter": 182,
+      "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
+      "label": "ch:relative-obligatory",
+      "canDo": "I can supply the que that English deletes.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-que-no-se-cae",
+        "kind": "task",
+        "summary": "Complete ES-C53-que-no-se-cae: produce el libro que compre and name the English pattern that always needs a que.",
+        "assesses": [
+          "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+        ],
+        "note": "The error that outlives the others, because the learner thinks the English first and the gap is invisible. English can delete the joint because its word order is rigid; Spanish moves its pieces, so it cannot."
+      }
+    },
+    {
+      "chapter": 183,
+      "title": "Lo Que --- What, Out of Two Old Words",
+      "label": "ch:lo-que",
+      "canDo": "I can use lo que for a thing that is never named.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-lo-que",
+        "kind": "task",
+        "summary": "Complete ES-C53-lo-que: produce lo que digo and contrast it with lo digo.",
+        "assesses": [
+          "ES-GRAMMAR-LO-QUE",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO"
+        ],
+        "note": "A noun-shaped hole with a sentence attached, built from two words the reader already held. The chapter introduces no new vocabulary."
+      }
+    },
+    {
+      "chapter": 184,
+      "title": "Review --- Three Jobs, No New Words",
+      "label": "ch:review-relative",
+      "canDo": "I can use all three relative patterns and name the error that outlives the others.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-repaso-que",
+        "kind": "task",
+        "summary": "Complete ES-C53-repaso-que: say how many new words the rung added and name the trap.",
+        "assesses": [
+          "ES-GRAMMAR-RELATIVE-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+          "ES-GRAMMAR-LO-QUE"
+        ],
+        "note": "Answer: none. The last big structural piece a beginner's course owes, and it cost no vocabulary at all."
+      }
+    },
+    {
+      "chapter": 185,
+      "title": "Synthesis --- Sentences Worth Saying",
+      "label": "ch:synthesis-relative",
+      "canDo": "I can build a sentence containing other sentences.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-sintesis-frases-largas",
+        "kind": "task",
+        "summary": "Complete ES-C53-sintesis-frases-largas: build a three-verb sentence and say why length is not difficulty.",
+        "assesses": [
+          "ES-GRAMMAR-LO-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+        ],
+        "note": "A relative clause adds a slot, not grammar. From here the growth is more of what the reader has, arranged more deeply -- what remains hard is vocabulary and hearing speed, and both are time."
+      }
+    },
+    {
+      "chapter": 186,
+      "title": "Hay --- There Is, There Are, Same Word",
+      "label": "ch:hay",
+      "canDo": "I can say there is and there are with one form that never changes.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C54-hay",
+        "kind": "task",
+        "summary": "Complete ES-C54-hay: produce hay una casa and hay libros, and say what hay agrees with.",
+        "assesses": [
+          "ES-LEX-HAY",
+          "ES-GRAMMAR-HAY-NO-AGREEMENT"
+        ],
+        "note": "The one common Spanish verb form that counts nothing at all -- visible as a gift only now, after 167 chapters of agreement."
+      }
+    },
+    {
+      "chapter": 187,
+      "title": "Ha + Y --- The Fossil in a Three-Letter Word",
+      "label": "ch:hay-etymology",
+      "canDo": "I can say what hay is made of and name the French phrase built from the same pieces.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C54-ha-mas-y",
+        "kind": "task",
+        "summary": "Complete ES-C54-ha-mas-y: name the two pieces, say where else the y appears, and name the French equivalent.",
+        "assesses": [
+          "ES-ETYMON-HAY-IBI"
+        ],
+        "note": "The y is Latin ibi, 'there', a word Spanish otherwise lost completely; it survives only because it was welded to a verb. French kept it separate as il y a."
+      }
+    },
+    {
+      "chapter": 188,
+      "title": "Hay Que --- Somebody Has To, and Nobody in Particular",
+      "label": "ch:hay-que",
+      "canDo": "I can express an obligation without naming who is obliged.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C54-hay-que",
+        "kind": "task",
+        "summary": "Complete ES-C54-hay-que: produce hay que hablar espanol and name the other construction that leaves the person out.",
+        "assesses": [
+          "ES-GRAMMAR-HAY-QUE",
+          "ES-GRAMMAR-SE-IMPERSONAL"
+        ],
+        "note": "Pairs with the impersonal se: one says something happens without a doer, the other says something must happen without one."
+      }
+    },
+    {
+      "chapter": 189,
+      "title": "Review --- Three Letters",
+      "label": "ch:review-hay",
+      "canDo": "I can use all three jobs of hay and say what it never does.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C54-repaso-hay",
+        "kind": "task",
+        "summary": "Complete ES-C54-repaso-hay: give the three uses and say why a three-letter word needed four chapters.",
+        "assesses": [
+          "ES-LEX-HAY",
+          "ES-GRAMMAR-HAY-NO-AGREEMENT",
+          "ES-GRAMMAR-HAY-QUE",
+          "ES-ETYMON-HAY-IBI"
+        ],
+        "note": "Names the pattern: the smallest words need the most explaining, because constant use wears them into fossils that no longer explain themselves."
+      }
+    },
+    {
+      "chapter": 190,
+      "title": "Synthesis --- Describing Where You Are",
+      "label": "ch:synthesis-hay",
+      "canDo": "I can describe a place using existence, relative clauses and impersonal obligation together.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C54-sintesis-lo-que-hay",
+        "kind": "task",
+        "summary": "Complete ES-C54-sintesis-lo-que-hay: build lo que hay, hay que comerlo and say what remains to be learned.",
+        "assesses": [
+          "ES-LEX-HAY",
+          "ES-GRAMMAR-HAY-QUE",
+          "ES-GRAMMAR-LO-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE"
+        ],
+        "note": "Final synthesis of the HL10 rung audit. Four pieces from four chapters stack in one line, and the reader can read comerlo without ever having been taught it."
       }
     }
   ]

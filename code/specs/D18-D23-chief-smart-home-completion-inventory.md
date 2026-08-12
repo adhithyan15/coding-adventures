@@ -178,20 +178,26 @@ turning runtime into a Hue integration or process manager:
 
 ## Current Durable Discovery Service Slice
 
-This slice gives the supervised mDNS pass an actor-owned lifecycle and durable
-restart boundary:
+This slice gives the supervised mDNS pass an actor-owned lifecycle against the
+central durable runtime boundary:
 
-- `smart-home-discovery-service` owns the D23 runtime, mDNS executor,
-  report adapter, and repository-owned `StorageBackend` inside one actor state.
+- `smart-home-discovery-service` receives the shared
+  `smart-home-controller-runtime` owner and keeps only the mDNS executor,
+  report adapter, service-health journal, and run-report journal inside its
+  actor state.
 - Typed tick messages drive due runs sequentially, and the runtime still emits
   exactly the selected-interface IPv4/IPv6 requests through the injectable
   executor boundary.
-- Every tick persists worker cadence and retry pressure, a compact run journal,
-  and service health. Reopening against the same backend restores that state
-  before another network request can run.
+- Schedule registration and every tick mutate the central runtime through one
+  revision-guarded transaction. The central snapshot now retains worker
+  cadence and retry pressure, while the service backend retains compact run
+  journals and service health.
+- Reopening the central owner restores schedule state before another request
+  can run. Legacy service-owned schedules import only when absent, so the
+  central record wins conflicts and repeated startup does not churn revisions.
 - Local-folder restart tests prove successful cadence, named-interface binding,
-  failed-run backoff, service counters, and durable run audits survive process
-  replacement.
+  failed-run backoff, service counters, durable run audits, stale-owner CAS
+  rejection, and idempotent legacy import survive process replacement.
 
 ## Current Discovery Observability Slice
 
@@ -372,9 +378,16 @@ keeps the raw credential out of model-visible values, reports, and durable
 audit rows. Executable tests cover approved and approval-denied jobs plus
 one-shot, revoked, malformed, and unknown lease behavior.
 
-These items are Chief of Staff architecture, not smart-home platform work:
-
-- No remaining items within the D18 Chief architecture completion boundary.
+These packages complete many Chief of Staff primitives, but they do not yet
+complete the production composition boundary. The runnable Chief daemon owns
+host lifecycle and the encrypted Level 1 data plane, while the Home
+Assistant-compatible controller, discovery services, pairing services, and
+Chief smart-home tool bridge still create or restore separate D23 runtime
+instances. The production host data plane also has no provider-neutral tool
+call operation. Closing D18 therefore requires one durable D23 mutation owner,
+migration of supervised smart-home services onto that owner, a thread-safe
+Chief tool adapter, authenticated host tool dispatch, and one executable Chief
+to D23 end-to-end path.
 
 ## Current Durable Runtime Persistence Slice
 
@@ -415,6 +428,26 @@ controller instead of another fixture wrapper:
   fresh store instance and prove failed persistence leaves no in-memory
   mutation behind.
 
+## Current Central Controller Ownership Slice
+
+This slice replaces the local controller's hand-assembled runtime, automation,
+storage, and scheduler ownership with one reusable durable coordinator:
+
+- `smart-home-controller-runtime` restores `SmartHomeRuntime`,
+  `SmartHomeAutomationRuntime`, and `SmartHomeRuntimeStore` as one authority.
+- Serialized transactions clone the live runtime pair, persist the complete
+  candidate before publishing it, and preserve the exact prior live state when
+  mutation or compare-and-swap persistence fails.
+- The coordinator exposes shared runtime handles only as adapter boundaries for
+  the existing Home Assistant HTTP surface and future supervised discovery,
+  pairing, and Chief tool services.
+- The production local controller uses the coordinator for startup restore,
+  synchronous HTTP persistence, startup snapshots, and scheduled automation
+  evaluation instead of independently assembling those responsibilities.
+- Restart, failed-persistence, and concurrent-mutation tests prove one durable
+  owner survives process recreation, does not publish rejected candidates, and
+  does not lose serialized updates.
+
 ## Current Automation Runtime Slice
 
 This slice turns the previously opaque automation storage boundary into an
@@ -434,6 +467,26 @@ executable, restart-safe rules runtime:
 - Executable tests cover scene planning, conditions, event matching,
   idempotency across snapshot restore, durable state validation, and the full
   create-preview-execute-audit HTTP lifecycle.
+
+## Current Production Hue Discovery Composition Slice
+
+This slice runs the existing Hue discovery stack inside the production local
+controller without creating another D23 runtime owner:
+
+- `smart-home-local-controller --hue-mdns-interface NAME` explicitly enables a
+  Hue DNS-SD worker for one selected local interface; discovery remains off by
+  default so controller startup never assumes a network device name.
+- The production process installs `smart-home-discovery-service` in an actor
+  system with the UDP mDNS executor and Hue report adapter, while every schedule
+  registration and run result commits through the same
+  `smart-home-controller-runtime` used by HTTP and automations.
+- Repeated startup preserves existing cadence and retry pressure when the
+  configured worker is unchanged, while an intentional interface change
+  replaces its configuration through a serialized central transaction.
+- `RuntimeDurableSnapshot` now retains normalized discovery records as well as
+  worker schedules, so accepted Hue observations and their bridge candidates
+  survive process replacement. Missing discovery fields still deserialize as
+  empty for backward compatibility with older snapshots.
 
 ## Current Z-Wave Runtime Integration Slice
 
@@ -998,6 +1051,28 @@ keeping session and media boundaries explicit:
 - Production requires Frigate's authenticated HTTPS origin. Plain HTTP remains
   loopback-test-only, and an exact protocol test proves login-body isolation,
   cookie-only authenticated reads, bounded parsing, and redirecting logout.
+
+## Current Frigate Snapshot Slice
+
+This slice composes the installed Frigate camera identity with the camera-media
+authorization and lease boundary without persisting a JWT or reusable secret:
+
+- Exact D23 Human Approval runs before Vault resolution or transport I/O. The
+  host then revalidates the installed Frigate bridge, credential reference,
+  native camera-name identifier, snapshot capability, and reviewed pinned
+  address before registering one process-local endpoint.
+- One bounded Vault credential envelope is installed only in the dedicated
+  executor for one delivery. The executor logs in at `/api/login`, sends the
+  validated JWT cookie only to the same-origin `/api/{camera}/latest.jpg`,
+  accepts one bounded JPEG, and explicitly calls `/api/logout` after every
+  authenticated success or failure.
+- Credentials, cookies, and endpoint state are zeroized or removed after the
+  delivery attempt. Strict HTTPS uses the reviewed address with the canonical
+  host retained for certificate validation; HTTP remains loopback-test-only.
+- Tests prove denial before Vault, exact-target and malformed-envelope refusal,
+  repeated sealed-Vault deliveries, cleanup after executor failure, percent-
+  encoded camera names, pinned TLS, cookie-only image authentication, and
+  logout after both successful and invalid-image outcomes.
 
 ## Current Synology Surveillance Station Inspection Slice
 
@@ -1746,19 +1821,201 @@ Synology Surveillance Station server without persisting session material:
   interrupted-commit recovery, exact replacement cleanup, and cleanup-drift
   refusal.
 
+## Current Hue Pairing Central Ownership Slice
+
+This slice moves the completed Hue pairing executor onto the same durable
+authority as discovery, automations, and the Home Assistant-compatible local
+controller:
+
+- `smart-home-controller-runtime` exposes coherent combined snapshots,
+  exact-revision transactions, and D23 pairing completion while retaining its
+  clone-persist-publish failure boundary.
+- `smart-home-pairing-transaction` now targets a runtime-authority contract.
+  Existing store-backed services retain their behavior while Hue pairing uses
+  the central controller for recovery and commit.
+- `smart-home-hue-pairing-service` no longer restores or replaces a private
+  runtime copy. Authorization and stale-revision checks still precede LAN,
+  Vault, and journal activity, and committed opaque credential references are
+  immediately visible to every shared controller consumer.
+- Tests prove central commit visibility, stale-request rejection after an
+  intervening central transaction, restart recovery, exact rollback and
+  replacement cleanup, and secret-free durable state.
+
+## Current ONVIF Pairing Central Ownership Slice
+
+This slice moves the completed ONVIF credential executor onto the same durable
+authority as Hue pairing, discovery, automations, and the local controller:
+
+- `smart-home-onvif-pairing-service` receives the shared central controller
+  instead of restoring and replacing an actor-private runtime copy.
+- Authorization, exact endpoint-reference validation, and live revision checks
+  still precede credential input, authenticated camera inspection, Vault, and
+  transaction-journal activity.
+- Pairing transaction recovery and exact-revision completion now publish
+  directly through the controller authority, so every shared consumer sees the
+  installed opaque ONVIF credential reference immediately.
+- Tests prove central commit visibility, stale-request rejection after another
+  controller commit, restart recovery, replacement cleanup, and secret-free
+  durable state.
+
+## Current Axis Pairing Central Ownership Slice
+
+This slice moves the completed Axis credential executor onto the shared durable
+authority used by discovery, automations, Hue pairing, ONVIF pairing, and the
+local controller:
+
+- `smart-home-axis-pairing-service` receives the shared central controller
+  instead of restoring and replacing an actor-private runtime copy.
+- Authorization, exact HTTPS endpoint and installed-camera validation, and live
+  revision checks still precede credential input, authenticated VAPIX
+  inspection, Vault, and transaction-journal activity.
+- Pairing transaction recovery and exact-revision completion now publish
+  directly through the controller authority, so every shared consumer sees the
+  installed opaque Axis credential reference immediately.
+- Tests prove central commit visibility, stale-request rejection after another
+  controller commit, restart recovery, replacement cleanup, and secret-free
+  durable state.
+
+## Current ZoneMinder Pairing Central Ownership Slice
+
+This slice moves the completed ZoneMinder credential executor onto the shared
+durable authority used by discovery, automations, Hue pairing, ONVIF pairing,
+Axis pairing, and the local controller:
+
+- `smart-home-zoneminder-pairing-service` receives the shared central controller
+  instead of restoring and replacing an actor-private runtime copy.
+- Authorization, exact HTTPS endpoint and installed-monitor validation, and
+  live revision checks still precede credential input, authenticated API 2.0
+  inspection, Vault, and transaction-journal activity.
+- Pairing transaction recovery and exact-revision completion now publish
+  directly through the controller authority, so every shared consumer sees the
+  installed opaque ZoneMinder credential reference immediately.
+- Tests prove central commit visibility, stale-request rejection after another
+  controller commit, restart recovery, replacement cleanup, and secret-free
+  durable state.
+
+## Current Synology Pairing Central Ownership Slice
+
+This slice moves the completed Synology credential executor onto the shared
+durable authority used by discovery, automations, the other migrated pairing
+services, and the local controller:
+
+- `smart-home-synology-pairing-service` receives the shared central controller
+  instead of restoring and replacing an actor-private runtime copy.
+- Authorization, reviewed connection-target and installed-camera validation,
+  and live revision checks still precede credential input, authenticated
+  Surveillance Station inspection, Vault, and transaction-journal activity.
+- Pairing transaction recovery and exact-revision completion now publish
+  directly through the controller authority, so every shared consumer sees the
+  installed opaque Synology credential reference immediately.
+- Tests prove central commit visibility, stale-request rejection after another
+  controller commit, restart recovery, replacement cleanup, and secret-free
+  durable state.
+
+## Current Reolink Pairing Central Ownership Slice
+
+This slice moves the completed direct-camera and NVR credential executor onto
+the shared durable authority used by discovery, automations, the other migrated
+pairing services, and the local controller:
+
+- `smart-home-reolink-pairing-service` receives the shared central controller
+  instead of restoring and replacing an actor-private runtime copy.
+- Authorization, exact reviewed HTTPS target and installed camera/NVR identity
+  validation, and live revision checks still precede credential input,
+  authenticated CGI inspection, Vault, and transaction-journal activity.
+- Pairing transaction recovery and exact-revision completion now publish
+  directly through the controller authority, so every shared consumer sees the
+  installed opaque Reolink credential reference immediately.
+- Tests prove central commit visibility, stale-request rejection after another
+  controller commit, restart recovery, replacement cleanup, and secret-free
+  durable state.
+
+## Current Chief Controller Adapter Slice
+
+This slice moves the existing D18D `smart_home.*` bridge onto the same durable
+authority used by discovery, automations, pairing services, and the local
+controller:
+
+- `chief-of-staff-smart-home-tools` receives `SmartHomeControllerRuntime`
+  instead of an actor-local `Rc<RefCell<SmartHomeRuntime>>`.
+- Every Chief tool invocation runs as one serialized controller transaction;
+  runtime and authorization-audit changes are persisted before they become
+  visible to shared consumers.
+- The adapter remains thin: D18D owns tool validation, policy, event streams,
+  terminal results, and journals, while D23 continues to own smart-home state,
+  authorization, command, discovery, pairing, and supervision semantics.
+- Tests prove the bridge is `Send + Sync` over the storage backend and that a
+  Chief read or denied command advances the durable revision while publishing
+  the same audit state to the shared runtime handle.
+
+## Current Provider-Neutral Model Tool Contract Slice
+
+This slice gives the Chief model boundary a reusable tool-use vocabulary
+without allowing the model gateway to authorize or execute D18D calls:
+
+- `llm-gateway` accepts bounded JSON-schema-shaped tool declarations,
+  automatic, required, or named selection, and prior structured tool results.
+- One turn returns exactly one final-text value or one model-requested call with
+  a stable call id, repository-owned tool name, and structured arguments.
+- Existing text-only providers inherit a deterministic JSON prompt polyfill;
+  native providers and the strict mock can override the same contract.
+- Invalid catalogs, unknown named choices, malformed responses, unoffered
+  calls, refusals, and truncated outputs fail closed with the existing provider
+  identity and error taxonomy.
+- Distinct bounded request/response tags now carry the catalog, selection policy,
+  replayable prior calls/results, and structured result over the authenticated
+  Chief host session. The child `LlmClient`, process supervisor, and exact-model
+  authority-backed data plane preserve the merged gateway contract end to end.
+- D18D dispatch and production daemon injection remain separate ownership steps
+  below.
+
+## Current Chief Host D18D Dispatch Slice
+
+This slice composes the provider-neutral host contract with the central durable
+smart-home authority:
+
+- The authenticated host protocol carries a model-returned call through a
+  distinct execute-tool request and returns the exact structured result.
+- The authority-backed data plane requires the whole offered catalog to equal
+  its injected dispatcher catalog, then invokes D18D outside the model gateway.
+- An authorized child can discover the exact binding-aware catalog before a
+  tool turn; the completion must still echo that entire catalog exactly.
+- The process supervisor carries all seven authenticated operations over the
+  real cross-platform child pipe.
+- The production daemon restores the central `SmartHomeControllerRuntime`,
+  injects a bounded ten-tool `smart_home.*` catalog, and dispatches each call
+  through the existing D18D `SmartHomeToolBridge`.
+- D23 remains the source of truth for authorization, state, commands, pairing,
+  supervision, durable revisions, and audit evidence.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
+The reusable central owner, discovery service transaction migration,
+production Hue mDNS composition, and Hue, ONVIF, Axis, ZoneMinder, Synology,
+and Reolink pairing migrations are complete. The remaining central-composition
+backlog takes priority over adding another isolated integration or Chief read
+model. The thread-safe Chief controller adapter, exact host catalog, catalog
+discovery, D18D dispatcher, and production daemon injection are now complete:
+
+1. Add a bounded Level One host tool loop that discovers the exact catalog,
+   requests and executes a tool call, replays the structured result, and ends
+   with final text or a strict turn cap.
+2. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+   including durable audit/state and Home Assistant API readback.
+
+The protocol- and vendor-specific backlog below remains valid after those
+central ownership steps:
+
 No additional camera snapshot slice is currently executable without a concrete
 authentication prerequisite. Blue Iris documents `/image/{camera}` and secure
 JSON sessions independently, but does not document how a secure session binds
 to that image request; the only documented direct URL credentials require
-disabling secure sessions and are rejected. Frigate snapshot delivery remains
-blocked on a cookie-capable media authentication boundary. Revision-guarded
-D23 pairing completion, its recoverable cross-store journal, and production
-Hue, ONVIF, ZoneMinder, Axis, direct Reolink RLC, Reolink NVR, and Synology
+disabling secure sessions and are rejected. Revision-guarded D23 pairing
+completion, its recoverable cross-store journal, and production Hue, ONVIF,
+ZoneMinder, Axis, direct Reolink RLC, Reolink NVR, Synology, and Frigate
 compositions are now available. The camera pairing services prove bounded
 host-owned secret input, D23 principal propagation, authenticated exact-bridge
 inspection, durable runtime revision ownership, startup recovery, actor-state
@@ -1825,13 +2082,12 @@ MQTT after firmware no longer logs plaintext credentials.
    checks, bounded semantics, and readable postcondition verification.
 20. Add Frigate event and review push only after a concrete authenticated event
    or WebSocket host and supervised subscription lifecycle exist.
-21. Add bounded Frigate snapshots through the completed camera-media HTTPS
-    executor after process-local endpoint registration and credential lifetime
-    are wired; recordings, export, and playback still require a concrete
-    supervised resource executor.
-22. Add Frigate commands or configuration mutations only with operation-specific
+21. Add Frigate commands or configuration mutations only with operation-specific
    D23 contracts, least-privilege role checks, and readable postcondition
    verification.
+22. Add Frigate recordings, export, and playback only after a supervised
+   resource executor owns bounded transfer, cancellation, retention, and
+   resource lifecycle semantics.
 23. Add bounded Blue Iris snapshots only after an official interface documents
     how an isolated secure JSON session authenticates `/image/{camera}`, or a
     concrete cookie/session-bound media executor exists. Never disable secure

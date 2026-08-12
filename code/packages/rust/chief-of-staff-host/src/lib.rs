@@ -5,19 +5,26 @@
 
 use chief_of_staff_host_control_protocol::{
     ChannelBindingAccess, CompletionCall, CompletionFinishReason, CompletionProvider,
-    CompletionResult, DataPlaneFailure, DataPlaneResponse, LaunchBindings, PromptMessage,
-    PromptRole,
+    CompletionResult, DataPlaneFailure, DataPlaneResponse, LaunchBindings,
+    ModelToolCall as WireModelToolCall, ModelToolChoice as WireModelToolChoice,
+    ModelToolDefinition as WireModelToolDefinition, ModelToolResult as WireModelToolResult,
+    PromptMessage, PromptRole, ToolCompletionCall as WireToolCompletionCall,
+    ToolCompletionOutput as WireToolCompletionOutput,
+    ToolCompletionResult as WireToolCompletionResult,
 };
 use chief_of_staff_host_runtime::{
     verify_agent_package, AgentPackageRuntime, PackageKeyring, PackageVerificationError,
 };
 use chief_of_staff_process_supervisor::{ChildProcessControl, ProcessSupervisorError};
 use chief_of_staff_skill_runtime::{
-    LevelOneLaunchPlan, LevelOneRuntimeError, LevelOneSkillRuntime, LEVEL_ONE_RESPONSE_CONTENT_TYPE,
+    LevelOneLaunchPlan, LevelOneResponse, LevelOneRuntimeError, LevelOneSkillRuntime,
+    LevelOneToolTurn, LEVEL_ONE_RESPONSE_CONTENT_TYPE,
 };
 use llm_gateway::{
     Capabilities, CompletionJsonResponse, CompletionRequest, CompletionResponse, FinishReason,
-    JsonSchema, LlmClient, LlmError, MessageContent, ProviderIdentity, Role, TokenUsage,
+    JsonSchema, LlmClient, LlmError, MessageContent, ModelToolCall, ModelToolChoice,
+    ModelToolDefinition, ModelToolResult, ProviderIdentity, Role, TokenUsage, ToolCompletionOutput,
+    ToolCompletionRequest, ToolCompletionResponse,
 };
 use std::collections::BTreeMap;
 use std::ffi::OsString;
@@ -33,6 +40,7 @@ const PACKAGE_RUNTIME_ARGUMENT: &str = "--package-runtime";
 const SKILL_RUNTIME_LABEL: &str = "skill";
 const IDLE_POLL_INTERVAL: Duration = Duration::from_millis(250);
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(1);
+const MAX_LEVEL_ONE_MODEL_TURNS: usize = 8;
 
 /// Normal terminal condition for one concrete host process.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -60,6 +68,8 @@ pub enum HostError {
     DataPlane(DataPlaneFailure),
     /// A successful response did not have the exact locally required shape.
     ResponseShape,
+    /// The model exhausted the bounded tool-turn budget without final text.
+    ToolTurnLimit,
     /// An internal control lock was poisoned by an earlier failure.
     ControlPoisoned,
 }
@@ -75,6 +85,7 @@ impl Display for HostError {
             Self::Control(_) => "chief-host: authenticated control failed",
             Self::DataPlane(_) => "chief-host: data-plane operation failed",
             Self::ResponseShape => "chief-host: invalid data-plane response",
+            Self::ToolTurnLimit => "chief-host: model tool-turn limit reached",
             Self::ControlPoisoned => "chief-host: control state is unavailable",
         })
     }
@@ -226,12 +237,12 @@ where
     };
     let input =
         std::str::from_utf8(&message.payload).map_err(|_| LevelOneRuntimeError::NonUtf8Input)?;
-    let response = match runtime.respond(input, &message.content_type) {
+    let response = match respond_level_one(control, runtime, input, &message.content_type) {
         Ok(response) => response,
         Err(_error) if terminated.load(Ordering::SeqCst) => {
             return Err(HostError::Control(ProcessSupervisorError::Terminated))
         }
-        Err(error) => return Err(error.into()),
+        Err(error) => return Err(error),
     };
     let published = lock_control(control)?.request_publish(
         write_channel,
@@ -249,6 +260,83 @@ where
         DataPlaneResponse::Acknowledged { .. } => Ok(HostStep::Processed),
         DataPlaneResponse::Failed { failure, .. } => Err(HostError::DataPlane(failure)),
         _ => Err(HostError::ResponseShape),
+    }
+}
+
+fn respond_level_one<R, W>(
+    control: &Mutex<ChildProcessControl<R, W>>,
+    runtime: &LevelOneSkillRuntime<'_>,
+    input: &str,
+    input_content_type: &str,
+) -> Result<LevelOneResponse, HostError>
+where
+    R: Read + Send,
+    W: Write + Send,
+{
+    let catalog = match lock_control(control)?.request_model_tools()? {
+        DataPlaneResponse::ModelToolsListed { tools, .. } => tools,
+        DataPlaneResponse::Failed {
+            failure: DataPlaneFailure::Unavailable,
+            ..
+        } => {
+            return runtime
+                .respond(input, input_content_type)
+                .map_err(Into::into)
+        }
+        DataPlaneResponse::Failed { failure, .. } => return Err(HostError::DataPlane(failure)),
+        _ => return Err(HostError::ResponseShape),
+    };
+    let tools = catalog
+        .iter()
+        .cloned()
+        .map(|tool| ModelToolDefinition {
+            name: tool.name,
+            description: tool.description,
+            input_schema: tool.input_schema,
+        })
+        .collect::<Vec<_>>();
+    let mut results = Vec::new();
+    for turn in 0..MAX_LEVEL_ONE_MODEL_TURNS {
+        match runtime.respond_with_tools(
+            input,
+            input_content_type,
+            tools.clone(),
+            results.clone(),
+        )? {
+            LevelOneToolTurn::Final(response) => return Ok(response),
+            LevelOneToolTurn::ToolCall(call) => {
+                require_tool_execution_budget(turn)?;
+                let wire_call = WireModelToolCall {
+                    call_id: call.call_id.clone(),
+                    name: call.name.clone(),
+                    arguments: call.arguments.clone(),
+                };
+                let response = lock_control(control)?.request_tool_execution(wire_call.clone())?;
+                let result = match response {
+                    DataPlaneResponse::ToolExecuted { result, .. } if result.call == wire_call => {
+                        *result
+                    }
+                    DataPlaneResponse::Failed { failure, .. } => {
+                        return Err(HostError::DataPlane(failure));
+                    }
+                    _ => return Err(HostError::ResponseShape),
+                };
+                results.push(ModelToolResult {
+                    call,
+                    output: result.output,
+                    is_error: result.is_error,
+                });
+            }
+        }
+    }
+    Err(HostError::ToolTurnLimit)
+}
+
+fn require_tool_execution_budget(turn: usize) -> Result<(), HostError> {
+    if turn >= MAX_LEVEL_ONE_MODEL_TURNS - 1 {
+        Err(HostError::ToolTurnLimit)
+    } else {
+        Ok(())
     }
 }
 
@@ -374,6 +462,76 @@ impl<'a, R: Read + Send, W: Write + Send> ControlLlmClient<'a, R, W> {
             latency_ms: result.latency_ms,
         })
     }
+
+    fn tool_completion_call(
+        &self,
+        request: ToolCompletionRequest,
+    ) -> Result<WireToolCompletionCall, CompletionAdapterError> {
+        Ok(WireToolCompletionCall {
+            completion: self.completion_call(request.completion)?,
+            tools: request
+                .tools
+                .into_iter()
+                .map(|tool| WireModelToolDefinition {
+                    name: tool.name,
+                    description: tool.description,
+                    input_schema: tool.input_schema,
+                })
+                .collect(),
+            choice: match request.choice {
+                ModelToolChoice::Auto => WireModelToolChoice::Auto,
+                ModelToolChoice::Required => WireModelToolChoice::Required,
+                ModelToolChoice::Named(name) => WireModelToolChoice::Named(name),
+            },
+            results: request
+                .results
+                .into_iter()
+                .map(|result| WireModelToolResult {
+                    call: WireModelToolCall {
+                        call_id: result.call.call_id,
+                        name: result.call.name,
+                        arguments: result.call.arguments,
+                    },
+                    output: result.output,
+                    is_error: result.is_error,
+                })
+                .collect(),
+        })
+    }
+
+    fn tool_completion_response(
+        &self,
+        result: WireToolCompletionResult,
+    ) -> Result<ToolCompletionResponse, CompletionAdapterError> {
+        let input_tokens = usize::try_from(result.usage.input_tokens)
+            .map_err(|_| CompletionAdapterError::Usage)?;
+        let output_tokens = usize::try_from(result.usage.output_tokens)
+            .map_err(|_| CompletionAdapterError::Usage)?;
+        let cached_tokens = usize::try_from(result.usage.cached_tokens)
+            .map_err(|_| CompletionAdapterError::Usage)?;
+        Ok(ToolCompletionResponse {
+            output: match result.output {
+                WireToolCompletionOutput::FinalText(text) => ToolCompletionOutput::FinalText(text),
+                WireToolCompletionOutput::ToolCall(call) => {
+                    ToolCompletionOutput::ToolCall(ModelToolCall {
+                        call_id: call.call_id,
+                        name: call.name,
+                        arguments: call.arguments,
+                    })
+                }
+            },
+            model: result.model,
+            usage: TokenUsage {
+                input_tokens,
+                output_tokens,
+                cached_tokens,
+            },
+            finish_reason: protocol_finish_reason(result.finish_reason),
+            provider_id: provider_identity(result.provider),
+            latency_ms: result.latency_ms,
+            polyfill_used: result.polyfill_used,
+        })
+    }
 }
 
 impl<R: Read + Send, W: Write + Send> LlmClient for ControlLlmClient<'_, R, W> {
@@ -424,6 +582,67 @@ impl<R: Read + Send, W: Write + Send> LlmClient for ControlLlmClient<'_, R, W> {
         _schema: &JsonSchema,
     ) -> Result<CompletionJsonResponse, LlmError> {
         Err(self.error("structured completion is unavailable"))
+    }
+
+    fn complete_with_tools(
+        &self,
+        request: ToolCompletionRequest,
+    ) -> Result<ToolCompletionResponse, LlmError> {
+        let call = self
+            .tool_completion_call(request)
+            .map_err(|error| self.error(error.message()))?;
+        let response = self
+            .control
+            .lock()
+            .map_err(|_| self.error("host control is unavailable"))?
+            .request_tool_completion(call.clone());
+        let response = match response {
+            Ok(response) => response,
+            Err(ProcessSupervisorError::Terminated) => {
+                self.terminated.store(true, Ordering::SeqCst);
+                return Err(self.error("host termination requested"));
+            }
+            Err(_) => return Err(self.error("host control is unavailable")),
+        };
+        match response {
+            DataPlaneResponse::ToolCompleted { result, .. } => {
+                if !wire_tool_output_allowed(&result.output, &call.tools, &call.choice) {
+                    return Err(self.error("tool completion selected an unoffered output"));
+                }
+                self.tool_completion_response(*result)
+                    .map_err(|error| self.error(error.message()))
+            }
+            DataPlaneResponse::Failed { .. } => Err(self.error("tool completion failed")),
+            _ => Err(self.error("invalid tool completion response")),
+        }
+    }
+}
+
+fn protocol_finish_reason(reason: CompletionFinishReason) -> FinishReason {
+    match reason {
+        CompletionFinishReason::Stop => FinishReason::Stop,
+        CompletionFinishReason::MaxTokens => FinishReason::MaxTokens,
+        CompletionFinishReason::Refusal => FinishReason::Refusal,
+        CompletionFinishReason::Other => FinishReason::Other,
+    }
+}
+
+fn wire_tool_output_allowed(
+    output: &WireToolCompletionOutput,
+    tools: &[WireModelToolDefinition],
+    choice: &WireModelToolChoice,
+) -> bool {
+    match output {
+        WireToolCompletionOutput::FinalText(text) => {
+            !text.is_empty() && matches!(choice, WireModelToolChoice::Auto)
+        }
+        WireToolCompletionOutput::ToolCall(call) => {
+            tools.iter().any(|tool| tool.name == call.name)
+                && match choice {
+                    WireModelToolChoice::Named(name) => name == &call.name,
+                    WireModelToolChoice::Auto | WireModelToolChoice::Required => true,
+                }
+        }
     }
 }
 
@@ -501,6 +720,50 @@ mod tests {
         assert!(matches!(
             sole_level_one_channels(&multiple_reads),
             Err(HostError::UnsupportedTopology)
+        ));
+    }
+
+    #[test]
+    fn tool_response_must_match_the_offered_catalog_and_choice() {
+        let tools = vec![WireModelToolDefinition {
+            name: "smart_home.list_entities".to_string(),
+            description: "List normalized entities".to_string(),
+            input_schema: serde_json::json!({"type": "object"}),
+        }];
+        let offered = WireToolCompletionOutput::ToolCall(WireModelToolCall {
+            call_id: "call-1".to_string(),
+            name: "smart_home.list_entities".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        let unoffered = WireToolCompletionOutput::ToolCall(WireModelToolCall {
+            call_id: "call-2".to_string(),
+            name: "smart_home.command".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        assert!(wire_tool_output_allowed(
+            &offered,
+            &tools,
+            &WireModelToolChoice::Required
+        ));
+        assert!(!wire_tool_output_allowed(
+            &unoffered,
+            &tools,
+            &WireModelToolChoice::Auto
+        ));
+        assert!(!wire_tool_output_allowed(
+            &WireToolCompletionOutput::FinalText("done".to_string()),
+            &tools,
+            &WireModelToolChoice::Named("smart_home.list_entities".to_string())
+        ));
+    }
+
+    #[test]
+    fn eighth_model_turn_cannot_execute_another_tool() {
+        assert!(require_tool_execution_budget(0).is_ok());
+        assert!(require_tool_execution_budget(6).is_ok());
+        assert!(matches!(
+            require_tool_execution_budget(7),
+            Err(HostError::ToolTurnLimit)
         ));
     }
 }

@@ -222,6 +222,11 @@ fn spinner_interface_matches_spec() {
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
     assert_eq!(slot_names, vec!["size", "variant", "aria-label"]);
     assert!(c.emits.is_empty(), "Spinner has no emits");
+    let mll_src = read_source("Spinner.mll");
+    assert!(
+        mll_src.contains("aria-label : slot: aria-label"),
+        "Spinner must wire its public accessible name into Icon"
+    );
 }
 
 /// Toast — bottom-anchored notification with title/message/open/variant
@@ -516,6 +521,38 @@ fn accordion_interface_matches_spec() {
     assert_eq!(slot_names, vec!["headers", "bodies", "open-index"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onToggle"]);
+}
+
+#[test]
+fn accordion_projects_the_body_matching_each_header_index() {
+    let mil_out = mosmodel_compiler::compile(&read_source("Accordion.mil")).unwrap();
+    let mll_src = read_source("Accordion.mll");
+    assert!(
+        mll_src.contains("content : ( bodies[i] )"),
+        "Accordion must render one body value, not the entire bodies list"
+    );
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("Accordion body indexing should compile against its interface");
+
+    fn find_body(node: &moslayout_compiler::LayoutNode) -> Option<&moslayout_compiler::LayoutNode> {
+        if node.part_name.as_deref() == Some("accordion-body") {
+            return Some(node);
+        }
+        node.children.iter().find_map(find_body)
+    }
+
+    let body = find_body(&mll_out.def.root).expect("compiled Accordion body node");
+    assert!(
+        body.props.iter().any(|prop| match &prop.value {
+            moslayout_compiler::LayoutPropValue::Expr(expression) if prop.name == "content" => {
+                expression.chars().filter(|c| !c.is_whitespace()).collect::<String>()
+                    == "(bodies[i])"
+            }
+            _ => false,
+        }),
+        "compiled body props: {:?}",
+        body.props
+    );
 }
 
 /// Tabs — horizontal tab bar + body panel. Host owns active-index

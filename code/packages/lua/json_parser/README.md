@@ -34,6 +34,10 @@ json_lexer → lexer → grammar_tools (parse_token_grammar)
 
 The canonical Unix and Windows BUILD recipes install the shared `lexer` rock
 before `json_lexer`, preserving the complete clean-tree transitive closure.
+The installed rocks also contain exact Lua projections of `json.tokens` and
+`json.grammar`; byte-for-byte drift tests keep those payloads aligned with the
+canonical language-neutral fixtures, so parsing requires no ambient filesystem
+authority or source checkout.
 
 ## Running tests
 

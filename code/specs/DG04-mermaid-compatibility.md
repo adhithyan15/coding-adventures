@@ -103,6 +103,67 @@ Sharing a domain IR does not require sharing a source AST. For example,
 Sequence Diagram and ZenUML should have different parsers but may lower into
 the same participant/message/lifeline IR.
 
+### State Native Slice
+
+The initial Mermaid 11.16.1 state slice is grammar-backed and covers
+`stateDiagram`/`stateDiagram-v2` headers, simple declarations and quoted
+aliases, standalone `State: description` labels, labeled transitions, document
+direction, modern or legacy title statements, and `[*]` start/end edge states.
+Titles survive graph IR and layout, then use the existing shaped Paint title
+pipeline on native backends. The family lowers into the shared graph IR,
+graph layout, and backend-neutral
+PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
+both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. The family
+remains partial until the pinned upstream corpus passes without unsupported
+forms or lossy semantics.
+Repeated `State: description` statements accumulate as ordered multiline
+semantic labels; graph layout reserves line-aware node geometry before Paint
+shapes each authored line without backend soft wrapping.
+Fork and join pseudostates accept both upstream marker spellings and lower to a
+compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
+instructions.
+Inline `style` statements preserve fill, stroke, text color, and stroke width
+through graph IR, layout style resolution, and backend-neutral Paint geometry
+and glyph instructions, including comma-delimited node and composite targets.
+Named `classDef` declarations and comma-delimited
+`class` assignments resolve the same properties into graph IR, including
+assignments that precede their declaration. The `:::` shorthand applies named
+classes to standalone states and either endpoint of a transition, including
+start/end pseudostates. Inline and named styles can target composite groups and
+survive resolved layout style into backend-neutral Paint rectangles and labels.
+Single-line and `end note` multiline `note left of`/`note right of` statements
+lower to semantic note nodes and note-association edges. Quoted `note ... as`
+statements lower to standalone note nodes. Graph layout reserves line-aware note
+geometry, and the Paint lowering emits folded note and dashed connector paths
+for every backend.
+Single-line `accTitle`/`accDescr` and braced multiline `accDescr` statements
+survive graph semantic IR and layout IR, then export as backend-neutral
+PaintScene accessibility metadata.
+State `click` statements, including the `href` spelling and optional tooltips,
+survive graph semantic and layout IR. PaintScene exports each URL, tooltip, and
+resolved node bounds as backend-neutral hit-test metadata.
+Nested `state Name { ... }` composites preserve parent/child containment in
+graph-group semantic IR. Graph layout computes padded nested bounds, while
+Paint lowering draws group outlines and shaped labels behind member geometry.
+Quoted `state "Label" as Id { ... }` composites preserve distinct semantic IDs
+and display labels through the same pipeline.
+`--` dividers preserve ordered concurrent-region membership in graph-group IR.
+Graph layout stacks direct region members into deterministic lanes and Paint
+lowering emits horizontal divider paths for every backend.
+Composite-local `direction` statements remain scoped to their group in semantic
+IR and arrange direct region members independently of the document direction.
+`scale N width` preserves the requested canvas width in graph IR. Layout scales
+all geometry and resolved stroke, corner, and font sizes uniformly before the
+backend-neutral Paint scene reaches Metal or another renderer.
+`hide empty description` survives graph semantic and layout IR; Paint lowering
+omits unlabeled state geometry and glyphs while retaining graph connectivity.
+State labels, transition labels, notes, titles, and accessibility text decode
+Mermaid decimal or named entities and HTML line breaks before line-aware layout
+and backend-neutral Paint glyph shaping.
+Transitions entering or leaving a composite retain the group ID as their
+semantic endpoint. Graph layout attaches those edges to the resolved group
+boundary before existing Paint paths and arrowheads render them.
+
 ### Sequence Native Slice
 
 The first sequence vertical slice is grammar-backed and covers participant and
@@ -111,16 +172,48 @@ arrows, open/filled/cross/point arrowheads, bidirectional messages, notes,
 activation/deactivation, titles, and automatic numbering. It lowers through
 `diagram-layout-sequence` to existing path, rectangle, dashed-stroke, and glyph
 PaintInstructions and is exercised by a Mermaid-to-Metal-to-PNG fixture.
+Grammar-backed `actor` declarations retain their semantic kind through layout
+and lower to backend-neutral ellipse/path instructions for UML stick figures.
+Sequence layout mirrors participant and actor headers below the interaction,
+matching Mermaid's default lifeline presentation through the same Paint IR.
 
 Nested Mermaid 11.16.1 control blocks (`loop`, `opt`, `alt`/`else`, `par`/`and`,
 `par_over`, `critical`/`option`, `break`, and `rect`) lower into ordered semantic
 block events. Sequence layout resolves those events into nested frames and
-branch dividers before existing PaintInstructions render them. Participant
-`create` and `destroy` statements lower into lifecycle events; layout uses them
-to place dynamic participant headers, bound lifelines, and emit destruction
-markers. Singular and JSON-map actor-menu links lower through semantic IR and
+branch dividers before existing PaintInstructions render them.
+`par_over` frames retain their distinct semantics by overlaying sibling notes
+at the parallel content origin while preserving the tallest content extent.
+Participant `create` and `destroy` statements lower into lifecycle events;
+layout uses them to place dynamic participant headers and footers and bound
+lifelines. Created headers and destroyed footers are centered on their
+associated message lines, those messages terminate at the participant edge,
+and destroyed lifelines and open activation bars terminate on that line.
+Lifecycle declarations bind to
+Mermaid's required following message:
+created participants must receive it, while destroyed participants must send or
+receive it. Created participant IDs must be new, and an existing participant
+cannot be reassigned between participant boxes. Nested message and statement
+activations retain stack order in semantic
+events and lower to depth-offset bars through backend-neutral Paint rectangles.
+Messages entering or leaving active participants terminate at the visible edge
+of the current activation bar, including a bar opened by that message. Paint
+ordering keeps those message paths and arrowheads above activation rectangles.
+Self-messages on active participants anchor to the outer edge of the current
+activation stack rather than falling back to the lifeline center.
+Their source and destination tips remain distinct through Paint lowering so
+reverse and bidirectional arrowheads and central markers use the correct ends.
+Explicit activation and deactivation statements update that stack without
+creating synthetic event rows or vertical gaps.
+Explicit and message-suffix deactivation is validated against that semantic
+stack and fails when the participant is inactive, matching Mermaid 11.16.1.
+Central connections use distinct grammar alternatives and reject `+` or `-`
+message suffixes; their marked endpoints provide the activation semantics.
+Singular and JSON-map actor-menu links lower through semantic IR and
 layout into PaintScene metadata. Actor `properties` preserve arbitrary JSON
-values through the same pipeline. DOM-referenced `details` element IDs also
+values through the same pipeline. Mermaid's built-in `@clock` and `@computer`
+property icons lower to backend-neutral ellipse, rectangle, and path
+instructions; external image-property resolution remains a host concern.
+DOM-referenced `details` element IDs also
 survive the pipeline as scene metadata; host-document resolution remains
 embedding-layer compatibility work. Participant `box` declarations now lower into
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
@@ -134,10 +227,22 @@ Sequence `accTitle`, single-line `accDescr`, and multiline `accDescr` blocks
 preserve accessibility semantics in PaintScene metadata.
 Sequence newlines and semicolons are interchangeable statement terminators at
 the document level and inside control blocks.
+Mermaid preprocessor directives are removed before sequence grammar parsing
+without changing source line positions. The global `wrap` directive updates
+default participant, message, note, and control labels in semantic IR; host
+configuration from `init` remains outside diagram semantics.
+Leading YAML front matter is likewise removed without changing source line
+positions; interpreting its title and configuration values remains a host-level
+preprocessing concern.
 Both modern `title Text` and legacy `title: Text` sequence title forms lower
 through the same title semantics and native text pipeline.
 Sequence text decodes Mermaid decimal and HTML named entity codes to Unicode
 before layout and Paint glyph shaping.
+Message, note, participant, and control labels reconstruct skipped whitespace
+from token source columns so punctuation, angle text, embedded arrows, and
+keyword-shaped words retain their authored spelling without synthetic spaces.
+Sequence `#` comments are discarded by the grammar-driven lexer while numeric
+and named `#...;` entities remain semantic label text.
 Message and note `<br>`, `<br/>`, and `<br />` tags become semantic newlines;
 sequence layout reserves line-aware geometry before Paint glyph shaping.
 Message and note `wrap:` and `nowrap:` directives lower to explicit semantic
@@ -154,16 +259,29 @@ interior identifier hyphen from Mermaid's post-arrow deactivation marker.
 Inline participant configuration now carries `type` and `alias` into semantic
 IR. Boundary, control, entity, database, collections, and queue kinds lower to
 backend-neutral path, ellipse, and rectangle symbols and have Metal PNG coverage.
+Quoted configuration aliases retain embedded commas instead of being split into
+spurious fields. Double-quoted JSON escapes and doubled single quotes decode
+with Mermaid's YAML JSON-schema configuration semantics before semantic IR.
 Mermaid 11.16.1 half arrows are grammar-backed across every solid/dotted,
 normal/reverse, filled/stick, and top/bottom form. Their endpoint semantics
 survive layout and lower to backend-neutral Paint paths.
 Central connection syntax (`()->>`, `->>()`, and `()->>()`) lowers to explicit
-source/destination endpoint semantics and Paint ellipse markers layered above
-activation bars.
+source/destination endpoint semantics. Each marked endpoint opens its own
+validated activation stack entry before layout emits the activation bars and
+Paint ellipse markers.
 Automatic numbering preserves Mermaid 11.15+ decimal start and increment
-values through semantic IR, layout, and shaped Paint labels.
+values through semantic IR, layout, and shaped Paint labels. Re-enabling a
+paused counter without arguments resumes its current value and increment;
+layout rounds every increment to Mermaid's two-decimal sequence precision.
+Semantic validation rejects contiguous number tokens so thousandths cannot be
+misread as a valid start/increment pair, matching the pinned lexer boundary.
 Nested `rect` background highlights carry RGB/RGBA fills and normalized HSL/HSLA
-fills through semantic block events, layout frames, and Paint.
+fills through semantic block events, layout frames, and Paint. Empty `rect`
+headers preserve Mermaid's theme-default background intent, and CSS named
+colors remain backend-neutral Paint values.
+Sequence headers, statement keywords, placements, and control words match
+case-insensitively as required by Mermaid 11.16.1's Jison lexer, while actor IDs
+and user-authored text retain their original case through semantic IR and Paint.
 
 ### Structural Groups
 

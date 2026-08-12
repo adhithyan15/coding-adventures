@@ -16,9 +16,11 @@ serial must match the installed camera when one exists, and camera 1 must be
 enabled with VAPIX HTTP version 3 and JPEG support. The service encodes the same
 versioned username/password envelope consumed by
 `smart-home-axis-snapshot-host`. The opaque reference is committed through
-`smart-home-pairing-transaction`. Startup resolves all pending journals before
-accepting work, and replacement cleanup remains bound to the captured Vault
-revision.
+`smart-home-pairing-transaction` against the shared
+`SmartHomeControllerRuntime` authority. Startup resolves all pending journals
+before accepting work, replacement cleanup remains bound to the captured Vault
+revision, and successful commits are immediately visible to every controller
+consumer without an actor-private runtime copy.
 
 Snapshot delivery remains read-only and never provisions credentials.
 

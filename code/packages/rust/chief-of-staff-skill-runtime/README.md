@@ -5,6 +5,12 @@ the parsed skill instructions and each verified channel message through the
 repository `LlmClient`, publishes the text response, and acknowledges the input
 only after publication succeeds.
 
+`respond_with_tools` constructs one provider-neutral tool-aware model turn from
+an exact offered catalog and the complete prior call/result transcript. It
+returns either final text with the existing provider audit fields or one
+structured tool call. The runtime never executes the call itself, leaving
+authorization, execution, replay bounds, and publication to the host.
+
 `LevelOneSkillRuntime::from_verified_package` binds the exact instructions
 retained by sealed-package verification. Loading rejects non-Skill runtimes and
 packages whose signed manifest differs from the policy derived from the signed
@@ -15,9 +21,9 @@ and read/write direction of pipeline-authorized channel names to match that
 signed policy. It retains only their canonical UUIDs and converts the bounded
 authenticated model binding into the existing provider-neutral runtime config.
 
-The package performs no operating-system access. Channel endpoints and the LLM
-provider are injected, so tests remain deterministic and deployments can swap
-storage, transport, crypto, and model implementations independently.
+The package performs no operating-system or tool access. Channel endpoints and
+the LLM provider are injected, so tests remain deterministic and deployments can
+swap storage, transport, crypto, and model implementations independently.
 
 ## Validation
 

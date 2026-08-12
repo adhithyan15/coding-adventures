@@ -51,7 +51,7 @@ const lesson = (id: string, language: string, concept: string): Lesson => ({
   script: "latin",
   etymologyHook: "",
   body: "",
-  activities: [],
+  activities: [], introducesAtoms: [],
   estMinutes: 3,
 });
 

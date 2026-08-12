@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Resolve Flutter's selected Rust engine through Dart's bundled code-asset
+  contract after the explicit environment override, so generated native apps
+  need no platform-specific loader path or global library installation.
+- Resolve SwiftUI's selected Rust engine from its SwiftPM `Runtime` resource
+  bundle after the explicit environment override, so generated apps need no
+  global dylib installation.
+- Resolve XAML's conventional `mosaic_app.dll` from `AppContext.BaseDirectory`
+  after the explicit environment override and before global lookup.
+- Resolve Qt's conventional Mosaic application library beside the native
+  executable after the explicit environment override and before global lookup.
+- Resolve Compose's conventional Mosaic application library from the installed
+  native-distribution resources after explicit property/environment overrides
+  and before falling back to a global library name.
 - Add direct required-runtime and required-prop APIs to the standard Qt binding.
   Strict shells now reject missing Rust libraries and incomplete prop envelopes,
   while consistently mapping MIL slot names onto generated QML properties.

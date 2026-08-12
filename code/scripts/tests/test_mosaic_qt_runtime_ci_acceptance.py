@@ -18,6 +18,13 @@ QT_CONFORMANCE = (
     / "conformance"
     / "qt"
 )
+QT_PACKAGE = (
+    Path(__file__).resolve().parents[2]
+    / "packages"
+    / "rust"
+    / "mosaic-app-conformance"
+    / "package"
+)
 SPEC = importlib.util.spec_from_file_location("mosaic_qt_runtime_ci_acceptance", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -41,6 +48,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-capi",
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
+            "rust/task-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -98,6 +106,11 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
 
     def test_workflow_routes_rust_qt_and_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
+        qt_runtime_step = workflow.split(
+            "- name: Round-trip Rust engine through standard Qt binding", 1
+        )[1].split(
+            "- name: Round-trip Rust engine through standard Flutter binding", 1
+        )[0]
         self.assertIn(
             "needs_mosaic_qt_runtime: "
             "${{ steps.mosaic-qt-runtime.outputs.required }}",
@@ -109,17 +122,58 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Qt binding", workflow)
         self.assertIn("needs_mosaic_qt_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
-        self.assertIn("--backend qt --output \"$output\" --emit-project", workflow)
+        self.assertIn("timeout-minutes: 15", workflow)
+        self.assertIn(
+            "--backend qt --output \"$bundled_output\" --emit-project --profile native-complete",
+            workflow,
+        )
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
         self.assertIn("qt/MosaicHost.cpp", workflow)
         self.assertIn("cmake --build \"$harness/build\"", workflow)
-        self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("--runtime-library \"$runtime_library\"", workflow)
+        self.assertIn("cmake --install \"$bundled_output/qt/build\"", workflow)
+        self.assertIn("find \"$bundled_output/install\"", workflow)
+        self.assertIn("cmp \"$runtime_library\" \"$installed_runtime\"", workflow)
+        self.assertIn("env -u MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("installed_harness", workflow)
         self.assertIn("--expect-missing-prop-failure", workflow)
         self.assertIn("--expect-required-failure", workflow)
+        self.assertIn("mosaic-qt-taskapp", workflow)
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app",
+            workflow,
+        )
+        self.assertIn(
+            "pkg code/programs/mosaic/task-app --backend qt", workflow
+        )
+        self.assertNotIn('"accessibility.table-semantics-missing"', qt_runtime_step)
+        self.assertIn(
+            "pkg code/programs/mosaic/task-app --backend qt --output \"$taskapp_output\" --emit-project --profile native-complete --runtime-library \"$task_runtime_library\"",
+            workflow,
+        )
+        self.assertIn(
+            "'.nativeComplete == true and (.degradations | length == 0)' \"$taskapp_output/qt/mosaic-degradations.json\"",
+            workflow,
+        )
+        self.assertNotIn('"runtime.sample-fallback"', qt_runtime_step)
+        self.assertIn('cmake --build "$taskapp_output/qt/build"', workflow)
+        self.assertIn('QT_QPA_PLATFORM=offscreen timeout 5s "$installed_taskapp"', workflow)
+        self.assertIn(
+            '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"',
+            workflow,
+        )
+        self.assertIn("mosaic-qt-toolkit", workflow)
+        self.assertIn(
+            "pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt",
+            workflow,
+        )
+        self.assertIn(
+            'cmake --build "$toolkit_output/qt/build"',
+            workflow,
+        )
         self.assertIn(
             "--backend qt --output \"$strict_output\" --emit-project --profile native-complete",
             workflow,
@@ -136,6 +190,11 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         cmake = (QT_CONFORMANCE / "CMakeLists.txt").read_text(encoding="utf-8")
         self.assertIn("Qt6::Core", cmake)
         self.assertIn("CMAKE_AUTOMOC", cmake)
+
+    def test_conformance_engine_has_a_real_mosaic_package(self) -> None:
+        self.assertTrue((QT_PACKAGE / "mosaic-package.toml").is_file())
+        for suffix in ("mil", "mll", "msl"):
+            self.assertTrue((QT_PACKAGE / "src" / f"Counter.{suffix}").is_file())
 
 
 if __name__ == "__main__":

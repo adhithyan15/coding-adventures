@@ -50,6 +50,91 @@ confirmed via the List view's done glyph and the progress ring), the
 critical border rendering correctly and cleanly swapping as a card's
 overdue-ness changes, zero console errors.
 
+### Added - zero-degradation native-complete XAML TaskApp
+
+Board cards and calendar items now use native WinUI drag/drop events with the
+same accepted-drop lifecycle for pointer, touch, and keyboard operation.
+Component-local target scoping, authored kind filtering, disabled states, RTL
+keyboard order, focus semantics, and UI Automation announcements preserve UI35's
+cross-backend contract. Together with the existing native Sheet semantics and
+concrete Rust runtime, Windows CI now emits and builds the complete TaskApp under
+the strict `native-complete` profile with zero degradations.
+
+### Added - native XAML Sheet table semantics
+
+The canonical dynamic Sheet now keeps its existing WinUI visuals and editable
+cell subtree while generated component-scoped automation peers expose native
+UIA Table/Grid and TableItem/GridItem patterns. Narrator and other automation
+clients receive table dimensions, column-header associations, row/column
+coordinates, accessible cell names, and arrow-key cell navigation. The concrete
+TaskApp report now contains exactly the four remaining drag/drop degradations.
+
+### Added - concrete Rust TaskApp runtime in the XAML WinUI artifact
+
+The Windows acceptance lane now builds `task-mosaic-app`, supplies it while
+emitting the complete TaskApp WinUI project, and verifies that the DLL copied
+beside `TaskApp.exe` is byte-for-byte identical. A task-specific .NET console
+fixture loads that app-local DLL through the generated standard binding, checks
+initial TaskApp props, dispatches `newTaskNameChange`, and checks the revised prop
+without `MOSAIC_APP_LIBRARY`.
+
+At this historical milestone the generated XAML report still contained exactly
+four inert drag/drop paths; the native drag milestone above subsequently closes
+them. Visible WinUI launch remains an interactive Windows-worker gate because hosted
+GitHub workers cannot reliably initialize a desktop surface.
+
+### Added - concrete Rust TaskApp runtime on SwiftUI for macOS
+
+SwiftUI's strict acceptance lane now keeps ABI conformance on its dedicated
+counter runtime, then separately bundles `task-mosaic-app` into the generated
+TaskApp resource bundle. CI requires zero degradations, checks the bundled dylib
+byte-for-byte, and launches the generated macOS executable from outside its build
+directory without `MOSAIC_APP_LIBRARY`, rejecting runtime, required-prop, and
+Swift fatal-error output. A separate permissive build continues to compile the
+same generated UI for iOS 16 without treating the macOS dylib as an iOS artifact.
+
+### Added - concrete Rust TaskApp runtime on Compose Desktop
+
+Compose Desktop's strict acceptance lane now keeps ABI conformance on its
+dedicated counter runtime, then separately bundles `task-mosaic-app` into the
+generated TaskApp distributable. CI checks the installed runtime byte-for-byte
+and launches the packaged Linux application under a virtual display without
+`MOSAIC_APP_LIBRARY`, rejecting runtime, required-prop, JVM exception, and error
+output.
+
+### Added - concrete Rust TaskApp runtime on Flutter
+
+Flutter's strict acceptance lane now bundles `task-mosaic-app` rather than the
+counter conformance fixture, verifies that the Linux bundle contains the exact
+library built from this checkout, and launches the generated desktop app under a
+virtual display without `MOSAIC_APP_LIBRARY`. The counter runtime and harness stay
+in a separate build, preserving an independent proof of the standard ABI while the
+TaskApp launch proves that the complete MIL prop surface reaches a real native host.
+
+### Added - concrete Rust application adapter and strict Qt app
+
+TaskApp now has a concrete `task-mosaic-app` native runtime instead of borrowing
+the unrelated counter conformance engine. The adapter owns portable UI state,
+delegates domain behavior to `task-core`, covers the complete MIL slot/event
+surface, preserves transactional errors, snapshots/restores state, and exports the
+standard Mosaic C ABI.
+
+The Qt acceptance lane builds and bundles that exact library, requires a
+zero-degradation `native-complete` report, compiles and installs the generated app,
+verifies the installed runtime byte-for-byte, and launches the installed TaskApp
+without `MOSAIC_APP_LIBRARY`. Exercising its non-empty project list found a Qt
+emitter defect that sample-fallback launches had hidden: Bound Repeater delegates
+could not see implicit `modelData`/`index`. Generated `For` delegates now declare
+those inputs explicitly, eliminating the startup `ReferenceError`/`TypeError`s.
+
+### Added - first zero-degradation native-complete backend
+
+The package-expanded TaskApp now passes Flutter's `native-complete` profile
+with no known degradations. Its spreadsheet view is emitted with native
+`DataTable` semantics, its board and calendar retain native accessible drag and
+drop, the generated shell requires the standard Rust application runtime, and
+CI analyzes and builds the complete output as a native Flutter desktop app.
+
 ### Added - icon/SVG assets: pill dot, progress ring, real theme-toggle icon, group-count badge, composer plus, brand mark
 
 Closes most of the "Icon/SVG assets" line of the design-fidelity gap

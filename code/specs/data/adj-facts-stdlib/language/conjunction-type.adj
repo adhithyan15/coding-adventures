@@ -1,0 +1,61 @@
+% ============================================================================
+% conjunction-type — three named categories of conjunction and what each
+% actually does (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A conjunction's JOB depends on WHICH kind it is -- some conjunctions join
+% equal-rank pieces of a sentence, some come in matched pairs, and some
+% attach a dependent clause onto an independent one. Recall is a binding
+% query:
+%
+%     ? conjunction_type(subordinating_conjunction, $D)
+%       % joins_dependent_clauses_to_independent_clauses
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `conjunction_type(type, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a conjunction-related term that is not one
+% of these three. The query also runs BACKWARD — bind a description and
+% recall the type it names:
+%
+%     ? conjunction_type($T, are_pairs_of_conjunctions_that_work_together)
+%       % correlative_conjunction
+%
+% The three conjunction types, as a little truth table:
+%
+%     type                          description                                                     quote (verbatim)
+%     -----------------------------  --------------------------------------------------------------  --------------------------------------------------------------------------------
+%     coordinating_conjunction       joins_words_phrases_and_clauses_of_equal_grammatical_rank         "Coordinating conjunctions allow you to join words, phrases, and clauses of equal grammatical rank in a sentence."
+%     correlative_conjunction        are_pairs_of_conjunctions_that_work_together                      "Correlative conjunctions are pairs of conjunctions that work together by framing and connecting grammatically identical sentence elements."
+%     subordinating_conjunction      joins_dependent_clauses_to_independent_clauses                    "Subordinating conjunctions join dependent clauses to the independent clauses of sentences, signaling cause and effect, comparison, contrast, time, or some other kind of relationship between the clauses."
+%
+% Provenance: quoted verbatim from Grammarly's "Conjunctions" article,
+% which introduces each of these three categories in its own complete
+% sentence before moving on to worked examples. WebFetch-verified before
+% writing (twice — the second pass specifically re-confirmed the
+% coordinating and correlative sentences were complete, with no truncation
+% or missing clauses). `trust consensus` — Grammarly is a reputable
+% secondary reference, the same tier the sibling `noun-type.adj`/
+% `verb-type.adj`/`pronoun-type.adj`/`preposition-type.adj` (the other
+% libraries in this directory) already use for their Grammarly citations.
+% A conjunction-related term that is NOT one of these three — "conjunctive_adverb",
+% a real category the same page also names ("A conjunctive adverb is an
+% adverb that does the job of a conjunction"), but one that belongs to a
+% DIFFERENT word class (an adverb, not a conjunction) rather than being a
+% fourth type of conjunction itself — is deliberately NOT a row, so a
+% recall ABSTAINS on it rather than inventing a description. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table conjunction_type {
+    columns type, description
+
+    row (coordinating_conjunction, joins_words_phrases_and_clauses_of_equal_grammatical_rank)
+    row (correlative_conjunction, are_pairs_of_conjunctions_that_work_together)
+    row (subordinating_conjunction, joins_dependent_clauses_to_independent_clauses)
+
+    source "Coordinating conjunctions allow you to join words, phrases, and clauses of equal grammatical rank in a sentence."
+    locator "https://www.grammarly.com/blog/parts-of-speech/conjunctions/"
+    trust consensus
+}

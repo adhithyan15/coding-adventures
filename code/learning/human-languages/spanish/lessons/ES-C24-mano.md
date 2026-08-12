@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C24-mano
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1420
-chapter: 24
+sequence: 1700
+chapter: 136
 type: word
 headword: la mano
 gloss: the hand — feminine despite ending in -o, Spanish's most famous gender exception
@@ -34,7 +34,7 @@ reviews_of: [ES-C24-cabeza]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 2s] You've been trusting "-o words are masculine, -a words are
-feminine" since Chapter 1. Here's the word that breaks it — and everyone
+feminine" since your first chapters. Here's the word that breaks it — and everyone
 learning Spanish has to memorize this one by name.
 
 ## Grammar Lens: la mano and its gender

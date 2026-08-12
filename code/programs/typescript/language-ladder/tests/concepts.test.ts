@@ -26,6 +26,7 @@ const TAXONOMY = taxonomy as unknown as Taxonomy;
 /** A Lesson with everything defaulted, so a test states only what it cares about. */
 function lesson(over: Partial<Lesson> & { id: string }): Lesson {
   return {
+    introducesAtoms: [],
     language: "spanish",
     headword: "",
     gloss: "",

@@ -220,6 +220,10 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the general
+    // console-output primitive every frontend now emits in place of the
+    // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
+    Feature::ConsoleIO,
 ];
 
 impl Backend for JavaScriptBackend {
@@ -994,9 +998,10 @@ mod tests {
             "got:\n{}",
             a.source
         );
-        // Top-level print of a direct call.
+        // Top-level print of a direct call. SIR28 §2: `print` lowers to
+        // `__sys_write__`, which this backend maps to `__Sir.write(...)`.
         assert!(
-            a.source.contains("__Sir.print(add(1, 2))"),
+            a.source.contains("__Sir.write(\"stdout\", \"none\", false, add(1, 2))"),
             "got:\n{}",
             a.source
         );

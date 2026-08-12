@@ -2,12 +2,59 @@
 
 The host-neutral VLT-PM05 application core for the local-first password
 manager. The current slices define lossless canonical persistence for local
-device secrets, item revisions, and catalog snapshots, plus domain-separated
-V1 encrypted object framing and an authority-anchored repository verifier for
-the single authorized Phase 1A device. It also defines the exact canonical
+device secrets, item revisions, catalog snapshots, and signed VLT-PM15
+operation events, plus domain-separated V1 encrypted object framing and an
+authority-anchored repository verifier for the single authorized Phase 1A
+device. Audit-first generation zero now binds a signed encrypted
+`VaultInitialize` genesis into the initial commit, retry journal, and intended
+active owner state. The separate legacy pre-audit preparation boundary remains
+available for migration and recovery compatibility. Audit events use their
+own authenticated object-kind domain; durable
+owner state can now journal a redacted per-device event head and refuses to
+activate a later publication that omits or reuses that head. Once such a head
+exists, every item mutation and portable import constructs an encrypted signed
+event and advances it atomically with the repository commit. Legacy local state
+decodes with auditing disabled. Complete audit verification now follows any
+durable event head back to its explicit genesis and authenticates every event
+against its signed repository commit. A dedicated audit-only journal can now
+advance that event head and device counter while reusing only the exact active
+catalog root; ambiguous provider success retains and replays the exact pending
+bytes. A first session-consuming audited access boundary now publishes an
+access success or post-authentication failure before releasing any redacted
+list, one-item show, search, bounded history, or conflict-candidate result.
+Successful item reads bind the exact selected live revision; missing and
+tombstoned items become audited `NotFound` results. All covered methods share
+one publish-before-release completion path, and publication failure releases
+neither result nor original error while leaving the exact pending journal
+recoverable. Complete verification, coarse diagnostics, and encrypted portable
+export now use that same boundary, including failed export-input attempts.
+Exact current-revision capabilities, whole secret-bearing documents, and
+schema-specific secret fields are also held until their succeeded, denied, or
+failed event is durable. A combined item-bound variant resolves the sole
+current live revision internally, so ordinary CLI composition never receives
+that capability or a complete secret-bearing document. The production
+migration boundary can start one explicit audit epoch. Explicit authenticated
+audit-history reads now publish their own successful `AuditRead` event first,
+re-verify the complete newly
+advanced chain, and return a bounded newest-first secret-free projection or an
+exact trace lookup. The projection includes stable item and revision selectors
+only for this explicit surface; default debug output redacts every stable
+identity. An authenticated host-side item-create input failure can now consume
+the unlocked session through a dedicated boundary that publishes a failed
+`ItemCreate` event against the already-reserved item identity before returning
+control to the host. CLI rendering remains a later slice. It also defines the
+exact canonical
 `PreparedInit -> Active -> PendingPublication -> Active` owner-state machine,
 retry-stable publication journals, encrypted local-secret custody, and
 byte-oriented bootstrap/local-state store contracts.
+
+An unlocked pre-audit vault can now begin its one explicit audit epoch through
+a production session-consuming boundary. The successful `AuditEpochStart`
+event has no fabricated predecessor, advances the owner-private event head and
+device counter through the exact audit-only pending journal, and returns only
+after the next owner state is durable. Repeat activation fails closed. Hosts
+must not expose this transition until every authenticated path can continue
+the chain or fail closed.
 
 The crate also supplies the production object-safe application repository
 factory over an injected VLT-PM02 store. It derives no address itself, requires
@@ -15,12 +62,13 @@ an unlocked authority-anchored verifier at connection time, consumes exact
 publication batches by value, and translates storage and integrity failures to
 a closed payload-free application error surface.
 
-Generation-zero preparation is also complete as a pure no-write boundary. It
-consumes an owned zeroizing passphrase, bounded KDF policy, advisory time, and
-one caller-filled CSPRNG block, then returns the exact `PreparedInit` state,
-bootstrap locator, repository address, and mandatory verifier. All root,
-signing, device, passphrase, and randomness material is held in wipe-on-drop
-containers.
+Generation-zero preparation is also complete as pure no-write boundaries.
+Both consume an owned zeroizing passphrase, bounded KDF policy, advisory time,
+and one caller-filled CSPRNG block, then return the exact `PreparedInit` state,
+bootstrap locator, repository address, and mandatory verifier. The product
+boundary additionally consumes a fresh trace and encrypted-event randomness
+and creates the `VaultInitialize` audit genesis. All root, signing, device,
+passphrase, trace, and randomness material is held in wipe-on-drop containers.
 
 Durable `PreparedInit` journals can be passphrase-rehydrated after process
 loss without any external write. Rehydration authenticates the root wrap,
@@ -96,11 +144,30 @@ and a provider or final-local-write interruption remains recoverable by the
 existing pending-publication workflow. The mutation consumes its unlocked
 session so callers must reopen before observing or mutating the new pins.
 
+Mutation entropy blocks reserve one independent operation trace and one audit
+object frame in addition to the existing revision, catalog, and commit material.
+When an audit epoch is active, create, update, delete, restore, conflict choice,
+authored conflict merge, and portable import bind their action, exact basis
+heads, device counter, prior event, selected revision where applicable, and
+result revision into the event. The event object, logical mutation objects, and
+commit share the same write-ahead journal and activation compare-exchange.
+
+The item-bound audited conflict chooser validates both the item and selected
+current candidate inside the application. Missing, unconflicted, and wrong or
+cross-item selectors publish failed `ItemConflictResolve` events before their
+closed errors; success publishes the fresh all-candidate-parent resolution and
+its selected-revision event atomically.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct
 causal parent is that expected revision. Item identity, content schema, and
 creation time are immutable; every unrelated catalog candidate is preserved.
+The typed login replacement input owns the complete ordered URL list and
+optional notes in wipe-on-drop values. It accepts existing multi-URL logins and
+replaces all authored login fields without truncating or implicitly preserving
+an uneditable tail.
+
 Absent items return the payload-free `NotFound` error, while stale, tombstoned,
 or conflicted candidates return `ConflictRequired` before any local write.
 Replacement uses an owned wipe-on-drop 240-byte entropy block and the same exact
@@ -164,7 +231,8 @@ the application never guesses which current, conflicted, or historical
 candidate a host intended.
 
 Hosts can now narrow that exact revision to one schema-specific first-party
-secret field. The selector covers login passwords, secure-note bodies, card
+secret field. The selector covers login passwords and optional notes,
+secure-note bodies, card
 numbers and CVVs, raw TOTP seeds, API tokens, and database passwords; a selector
 for the wrong schema or an opaque record fails closed. The resulting
 `RevealedSecretV1` distinguishes UTF-8 from binary bytes but implements no
@@ -176,6 +244,16 @@ unsafe non-interactive output after both flag opt-in and a host-emitted stderr
 warning. The application validates those facts before repository traversal.
 Actual TTY inspection, warning rendering, clipboard writes, ownership checks,
 and timed clear remain host responsibilities.
+
+Audited variants consume the session before returning an exact current
+revision capability, whole secret-bearing document, or selected field. They
+publish the item and exact successfully reached revision before release;
+unconfirmed disclosure ceremonies publish `Denied` without revision traversal,
+while missing revisions and field/schema mismatches publish `Failed`. An audit
+publication failure withholds the capability, secret, and original error.
+The item-bound current-field boundary records refusal as `Denied` without item
+traversal, ambiguity or absence as `Failed` without a revision, schema mismatch
+as `Failed` with the reached revision, and success with that exact revision.
 
 Long-lived hosts can retain an explicit `VaultAccessV1` lifecycle boundary.
 It begins with only a redacted `LockedVaultV1` locator handle, authenticates a
@@ -198,10 +276,20 @@ workflow repeats verified repository discovery relative to durable local pins,
 requires one exact pinned commit matching the local device counter, catalog,
 and certificate, walks complete bounded ancestry from every current head, and
 authenticates and decrypts every distinct reachable catalog and catalog-named
-item revision. Success returns only aggregate announcement, commit, catalog,
-revision, and item counts plus `integrity_verified = true`; any provider,
+item revision. If an audit epoch exists, it also decrypts the complete bounded
+per-device event chain, verifies every event with the authority-certified
+device key, and cross-checks its counter, basis heads, timestamp, event-object
+membership, selected revision, and mutation result against the corresponding
+signed commit. It rejects chain cycles, counter gaps, skipped durable heads,
+wrong roots, signers, or commit bindings. Success returns only aggregate
+announcement, commit, catalog, revision, item, and audit-event counts plus
+`integrity_verified = true`; pre-audit vaults report zero events. Any provider,
 format, graph, anchor, cryptographic, or domain failure returns the closed
 application error taxonomy without a partial report.
+
+The audited verification method consumes the unlocked session and releases
+this aggregate report or its closed failure only after publishing a signed
+`VaultVerify` event and durable next owner state.
 
 The lifecycle boundary also exposes a read-only `doctor` workflow with one
 closed coarse outcome. Locked checks distinguish absent/prepared
@@ -213,6 +301,9 @@ bootstrap retained by the session, then run the complete audit to distinguish
 healthy, repository-unavailable, unsupported, and integrity-failure states.
 The report carries no counts or vault, device, item, revision, object, locator,
 or provider identities, and the workflow never repairs state or accepts pins.
+The audited unlocked workflow likewise consumes the session and publishes a
+signed `VaultDiagnose` event before releasing this coarse report; an unhealthy
+report is still a successful completed diagnosis.
 
 An unlocked session can now produce one canonical authenticated portable
 export. The caller supplies the exact active signed bootstrap, a separately
@@ -227,7 +318,13 @@ and search data; public diagnostics reveal no bytes, while passphrase, key,
 plaintext, encoded revisions, and hash preimages are wiped on drop.
 
 The host receives only exact encrypted bytes and remains responsible for an
-explicit destination and safe file replacement.
+explicit destination and safe file persistence. The audited export workflow
+holds those bytes until its signed `PortableExport` event and next owner state
+are durable, and records invalid export inputs as failed attempts. A separate
+session-consuming host-failure boundary lets CLI composition publish a failed
+itemless `PortableExport` event when distinct-passphrase collection fails after
+an active-epoch unlock, without passing a partial secret or destination into
+the event.
 
 Untrusted artifacts can now be opened through a separate no-write boundary.
 The caller supplies the owned export passphrase plus an explicit maximum
@@ -258,11 +355,31 @@ complete restore crash-resumable without partial logical visibility. The source
 snapshot, imported plaintexts, and entropy remain non-printable and wipe on
 drop.
 
+An audit-enabled target may retain any number of audit-only attempts while
+remaining logically empty. Host/artifact failures publish itemless failed
+`PortableImport` events, target-side validation failures publish before their
+closed error, and success keeps its `PortableImport` event atomic with every
+re-identified candidate and the new catalog.
+
+Before import consumes an authenticated snapshot, the application can derive
+an opaque `PortableRestoreExpectationV1`. It normalizes only the item identity
+that import replaces, canonical-encodes every complete live or tombstone state,
+hashes sorted candidate groups, and retains source identities for disjointness
+checks. An independently reopened target can consume that token through
+`audited_verify_portable_restore`: source vault/item/revision reuse, retained
+causal parents, grouping drift, or any schema, timestamp, deletion, CRDT, or
+record-value change yields one closed integrity failure. Match and mismatch
+publish a dedicated itemless `PortableRestoreVerify` event before the caller
+receives an aggregate count proof or the error.
+The companion session-consuming host-failure boundary records artifact-read,
+passphrase-prompt, no-write-open, and expectation-preparation failures under
+the same action before CLI composition can expose their closed error.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-portable import/restore, and richer host-side path, authorization,
-quota, and cache checks land in later slices.
+portable target creation and CLI restore-verification composition, and richer
+host-side path, authorization, quota, and cache checks land in later slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -314,15 +431,18 @@ tombstone selection, authored merged-secret persistence, complete multi-parent
 causality, immutable live-identity preservation, immutable losing-candidate
 retention, missing/unconflicted/all-tombstone rejection before
 compare-exchange, and entropy redaction/wiping.
-Portable-export/open/import tests prove the exact canonical encrypted vector, separate
-passphrase authentication, header/ciphertext tamper rejection, exact active
-bootstrap binding, plaintext-secret exclusion, complete snapshot count/hash,
-signed-bootstrap validation, host KDF-ceiling enforcement, candidate identity
-and ordering validation, live-document recovery, bounded credential rejection,
-lossless retention of every current conflicting tombstone, exact import entropy
-sizing, cross-vault item/revision re-identification, target-only encryption,
-atomic publication, conflict/deletion preservation, and independent target
-reopen with aggregate and revealed-secret comparison.
+Portable-export/open/import tests prove the exact canonical encrypted vector,
+separate passphrase authentication, header/ciphertext tamper rejection, exact
+active bootstrap binding, plaintext-secret exclusion, complete snapshot
+count/hash, signed-bootstrap validation, host KDF-ceiling enforcement,
+candidate identity and ordering validation, live-document recovery, bounded
+credential rejection, lossless retention of every current conflicting
+tombstone, exact import entropy sizing, cross-vault item/revision
+re-identification, target-only encryption, atomic publication, and
+conflict/deletion preservation. Restore-verifier tests independently reopen the
+target, match canonical normalized candidate groups, reject same-count semantic
+drift, source identity reuse, and retained parents, and prove failed/succeeded
+comparison events are durable before their result.
 
 ## Development
 

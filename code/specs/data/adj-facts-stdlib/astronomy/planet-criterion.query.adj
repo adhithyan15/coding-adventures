@@ -1,0 +1,15 @@
+% ============================================================================
+% planet-criterion.query.adj — worked recall over the planet-criterion
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% criterion require?" (direct) or "which criterion matches this
+% requirement?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "planet-criterion.adj"
+
+? planet_criterion(roundness, $R)                                                                       % expect is_mostly_round (direct)
+? planet_criterion($C, orbits_its_host_star)                                                             % expect orbit (reverse)
+? planet_criterion(dwarf_planet, $R)                                                                      % expect abstain -- a real classification the source covers, but a compound category built FROM these three criteria (meets 2, fails 1), not a fourth criterion itself

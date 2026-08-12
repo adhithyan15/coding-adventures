@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+mod access;
 mod audit;
 mod codec;
 mod crypto;
@@ -18,16 +19,20 @@ mod lifecycle;
 mod mutation;
 mod open;
 mod repository;
+mod restore;
 mod search;
 mod state;
 mod status;
 mod verifier;
 
-pub use audit::AuditVerificationV1;
+pub use access::AuditedAccessResultV1;
+pub use audit::{
+    AuditEventViewV1, AuditVerificationV1, DEFAULT_AUDIT_HISTORY_LIMIT, MAX_AUDIT_HISTORY_LIMIT,
+};
 pub use codec::{
-    decode_device_certificate, decode_item_revision, decode_signed_commit,
-    encode_device_certificate, encode_item_revision, encode_signed_commit, CatalogV1,
-    LocalSecretV1,
+    decode_device_certificate, decode_item_revision, decode_signed_audit_event,
+    decode_signed_commit, encode_device_certificate, encode_item_revision,
+    encode_signed_audit_event, encode_signed_commit, CatalogV1, LocalSecretV1,
 };
 pub use crypto::{
     open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,
@@ -44,25 +49,29 @@ pub use export::{
     MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
 };
 pub use initialize::{
-    complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
-    GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
+    complete_generation_zero, prepare_audited_generation_zero, prepare_generation_zero,
+    rehydrate_prepared_init, AuditedGenerationZeroRandomness, GenerationZeroPolicyV1,
+    GenerationZeroRandomness, PreparedGenerationZero, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
     GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use lifecycle::{LockedVaultV1, VaultAccessV1};
 pub use mutation::{
-    portable_import_random_bytes, AddItemRandomnessV1, DeleteItemRandomnessV1,
-    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
-    RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES,
-    REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    portable_import_random_bytes, AddItemRandomnessV1, AuditedAccessRandomnessV1,
+    DeleteItemRandomnessV1, PortableImportRandomnessV1, ReplaceItemRandomnessV1,
+    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
-    open_active_vault, recover_pending_publication, ItemHistoryViewV1, UnlockedVaultV1,
+    open_active_vault, recover_pending_publication, AuditedLoginEditPreparationV1,
+    ItemHistoryViewV1, LoginEditInputV1, LoginEditPreparationV1, UnlockedVaultV1,
     DEFAULT_ITEM_HISTORY_LIMIT, MAX_ITEM_HISTORY_LIMIT,
 };
 pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
     V1ApplicationRepositoryFactory,
 };
+pub use restore::{PortableRestoreExpectationV1, PortableRestoreVerificationV1};
 pub use state::{
     ActiveStateV1, AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError,
     LocalStateStore, LocalStateStoreError, LocalVaultStateV1, PreparedInitV1, PublicationJournalV1,

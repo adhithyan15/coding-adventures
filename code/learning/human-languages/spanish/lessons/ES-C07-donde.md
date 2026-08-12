@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-donde
 spine_node: SPINE-ASK-LOCATION
-sequence: 620
-chapter: 7
+sequence: 680
+chapter: 36
 type: word
 headword: dónde
 gloss: where?

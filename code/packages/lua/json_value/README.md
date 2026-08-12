@@ -30,6 +30,11 @@ json_parser  (provides AST)
 parser, grammar_tools, json_lexer, lexer, state_machine, directed_graph
 ```
 
+The canonical Unix and Windows BUILD recipes install that complete unpublished
+sibling chain leaf-to-root with dependency fetching disabled. They finish with
+a neutral-directory smoke that loads only the deployed LuaRocks tree, parses a
+nested JSON value, evaluates it, and serializes it deterministically.
+
 ## Usage
 
 ```lua

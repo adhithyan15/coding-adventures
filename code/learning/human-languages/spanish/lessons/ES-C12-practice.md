@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C12-practice
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1000
-chapter: 12
+sequence: 1140
+chapter: 65
 type: practice-mix
 headword: (practice)
 gloss: singular doing, making, saying, and the learned tengo · hago · digo comparison
@@ -76,5 +76,5 @@ outside this checkpoint.
 [PAUSE 3s] Give both three-form sets. (*Hago, haces, hace; digo, dices,
 dice.*) Which three learned **yo** forms share **-go**? (*Tengo, hago, digo.*)
 Why is that comparison a memory aid rather than a prediction rule? (Its mixed
-history does not license unseen forms.) Chapter 13 may now introduce its own
+history does not license unseen forms.) The next chapter may now introduce its own
 verbs one at a time.

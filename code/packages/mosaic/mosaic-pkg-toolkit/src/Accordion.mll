@@ -33,7 +33,7 @@ layout Accordion {
           onClick : emit: onToggle
         )
         Text [ accordion-body ] (
-          content : slot: bodies
+          content : ( bodies[i] )
         )
       }
     }

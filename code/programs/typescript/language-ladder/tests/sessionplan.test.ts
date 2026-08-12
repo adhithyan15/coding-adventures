@@ -10,7 +10,7 @@ function L(language: string, concept: string, id: string, roots: string[] = []):
   return {
     id, language, headword: `${language}:${concept}`, gloss: concept, type: "word",
     chapter: 1, concept, prerequisites: [], reviewsOf: [], roots,
-    romanization: "x", script: language, etymologyHook: "", body: "", activities: [], estMinutes: 5,
+    romanization: "x", script: language, etymologyHook: "", body: "", activities: [], introducesAtoms: [], estMinutes: 5,
   };
 }
 

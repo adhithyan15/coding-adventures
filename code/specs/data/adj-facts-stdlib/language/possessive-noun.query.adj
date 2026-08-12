@@ -1,0 +1,20 @@
+% ============================================================================
+% possessive-noun.query.adj — a worked recall over the possessive-noun
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of
+% possessive noun is this?": it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `possessive_noun` rows and returns the
+% category + the table's own source/locator/trust. A noun the table does
+% not carry abstains honestly — the engine never invents a classification.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli possessive-noun.query.adj
+% ============================================================================
+
+import "possessive-noun.adj"
+
+? possessive_noun(dog, $Category)        % expect singular_possessive
+? possessive_noun($Word, plural_possessive) % expect bottles
+? possessive_noun(cat, $Category)        % expect abstain -- no example sentence is shipped for this noun

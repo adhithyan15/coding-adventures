@@ -20,6 +20,7 @@ use hue_core::{
     hue_registration_request, HueBridgePairingPlan, HueError, CLIP_V2_EVENT_STREAM_PATH,
     HUE_APPLICATION_KEY_HEADER,
 };
+use smart_home_controller_runtime::{ControllerPersistenceError, SmartHomeControllerRuntime};
 use smart_home_core::{AgentId, Bridge, BridgeId, IntegrationId, VaultRef};
 use smart_home_local_http::{
     LocalHttpEndpoint, LocalHttpError, LocalHttpRequestPlan, LocalHttpScheme,
@@ -31,9 +32,6 @@ use smart_home_pairing_transaction::{
 use smart_home_runtime::{
     PairingSessionStatus, RuntimeCompletePairingToolRequest, RuntimeError, RuntimePairingSessionId,
     SmartHomeRuntime,
-};
-use smart_home_runtime_store::{
-    DurableAutomationDefinition, RestoredSmartHomeRuntime, RuntimeStoreError, SmartHomeRuntimeStore,
 };
 use storage_core::{Revision, StorageBackend};
 use tls_platform::{default_connector, TlsConfig, TlsConnector, TlsError};
@@ -59,7 +57,7 @@ pub enum HuePairingServiceError {
     Hue(HueError),
     Transport(HuePairingTransportError),
     Runtime(RuntimeError),
-    RuntimeStore(RuntimeStoreError),
+    Controller(ControllerPersistenceError),
     Transaction(PairingTransactionError),
     Entropy(String),
     MissingDurableRuntime,
@@ -94,7 +92,7 @@ impl fmt::Display for HuePairingServiceError {
             Self::Hue(error) => write!(formatter, "Hue registration failed: {error}"),
             Self::Transport(error) => write!(formatter, "Hue LAN transport failed: {error}"),
             Self::Runtime(error) => write!(formatter, "Hue runtime completion failed: {error}"),
-            Self::RuntimeStore(error) => write!(formatter, "Hue runtime store failed: {error}"),
+            Self::Controller(error) => write!(formatter, "Hue controller failed: {error}"),
             Self::Transaction(error) => {
                 write!(formatter, "Hue pairing transaction failed: {error}")
             }
@@ -143,9 +141,9 @@ impl From<RuntimeError> for HuePairingServiceError {
     }
 }
 
-impl From<RuntimeStoreError> for HuePairingServiceError {
-    fn from(error: RuntimeStoreError) -> Self {
-        Self::RuntimeStore(error)
+impl From<ControllerPersistenceError> for HuePairingServiceError {
+    fn from(error: ControllerPersistenceError) -> Self {
+        Self::Controller(error)
     }
 }
 
@@ -422,12 +420,8 @@ pub struct HuePairingReport {
 }
 
 pub struct HuePairingServiceActorState<T, J, R> {
-    runtime: SmartHomeRuntime,
-    automation_definitions: Vec<DurableAutomationDefinition>,
-    automation_state: Option<serde_json::Value>,
-    runtime_revision: Revision,
+    controller: SmartHomeControllerRuntime<R>,
     journal_backend: J,
-    runtime_store: SmartHomeRuntimeStore<R>,
     vault: Arc<SealedStore>,
     transport: T,
     snapshot: HuePairingServiceSnapshot,
@@ -443,29 +437,19 @@ where
     pub fn restore(
         journal_backend: J,
         vault: Arc<SealedStore>,
-        runtime_store: SmartHomeRuntimeStore<R>,
+        controller: SmartHomeControllerRuntime<R>,
         transport: T,
     ) -> Result<Self, HuePairingServiceError> {
-        let mut restored = runtime_store
-            .load()?
+        controller
+            .durable_snapshot()?
             .ok_or(HuePairingServiceError::MissingDurableRuntime)?;
         let recovered_transaction_count = {
             let coordinator =
-                PairingTransactionCoordinator::new(&journal_backend, &vault, &runtime_store);
+                PairingTransactionCoordinator::new(&journal_backend, &vault, &controller);
             let pending = coordinator.pending_transaction_ids()?;
             let recovered_count = pending.len() as u64;
             for transaction_id in pending {
-                match coordinator.recover(&transaction_id)? {
-                    PairingTransactionOutcome::Committed {
-                        restored: committed,
-                        ..
-                    } => restored = *committed,
-                    PairingTransactionOutcome::RolledBack { .. } => {
-                        restored = runtime_store
-                            .load()?
-                            .ok_or(HuePairingServiceError::MissingDurableRuntime)?;
-                    }
-                }
+                let _ = coordinator.recover(&transaction_id)?;
             }
             if !coordinator.pending_transaction_ids()?.is_empty() {
                 return Err(HuePairingServiceError::InvalidRequest(
@@ -474,31 +458,25 @@ where
             }
             recovered_count
         };
-        Ok(Self::from_restored(
-            restored,
+        Ok(Self::new(
             journal_backend,
             vault,
-            runtime_store,
+            controller,
             transport,
             recovered_transaction_count,
         ))
     }
 
-    fn from_restored(
-        restored: RestoredSmartHomeRuntime,
+    fn new(
         journal_backend: J,
         vault: Arc<SealedStore>,
-        runtime_store: SmartHomeRuntimeStore<R>,
+        controller: SmartHomeControllerRuntime<R>,
         transport: T,
         recovered_transaction_count: u64,
     ) -> Self {
         Self {
-            runtime: restored.runtime,
-            automation_definitions: restored.automation_definitions,
-            automation_state: restored.automation_state,
-            runtime_revision: restored.revision,
+            controller,
             journal_backend,
-            runtime_store,
             vault,
             transport,
             snapshot: HuePairingServiceSnapshot {
@@ -509,12 +487,18 @@ where
         }
     }
 
-    pub fn runtime(&self) -> &SmartHomeRuntime {
-        &self.runtime
+    pub fn runtime(&self) -> Result<SmartHomeRuntime, HuePairingServiceError> {
+        Ok(self
+            .controller
+            .durable_snapshot()?
+            .ok_or(HuePairingServiceError::MissingDurableRuntime)?
+            .runtime)
     }
 
-    pub fn runtime_revision(&self) -> &Revision {
-        &self.runtime_revision
+    pub fn runtime_revision(&self) -> Result<Revision, HuePairingServiceError> {
+        self.controller
+            .revision()?
+            .ok_or(HuePairingServiceError::MissingDurableRuntime)
     }
 
     pub fn snapshot(&self) -> &HuePairingServiceSnapshot {
@@ -555,7 +539,11 @@ where
         &mut self,
         request: HuePairingRequest,
     ) -> Result<HuePairingReport, HuePairingServiceError> {
-        let session = self
+        let restored = self
+            .controller
+            .durable_snapshot()?
+            .ok_or(HuePairingServiceError::MissingDurableRuntime)?;
+        let session = restored
             .runtime
             .pairing_session(&request.session_id)
             .cloned()
@@ -566,7 +554,7 @@ where
                 status: session.status,
             });
         }
-        let bridge = self
+        let bridge = restored
             .runtime
             .registry()
             .bridge(&session.bridge_id)
@@ -578,7 +566,7 @@ where
             ));
         }
 
-        if request.expected_runtime_revision != self.runtime_revision {
+        if request.expected_runtime_revision != restored.revision {
             return Err(HuePairingServiceError::InvalidRequest(
                 "expected runtime revision is stale".to_string(),
             ));
@@ -589,7 +577,7 @@ where
             VaultRef::trusted("vault://smart-home/hue/authorization-preflight"),
             request.completed_at_ms,
         );
-        self.runtime.clone().execute_complete_pairing_tool(
+        restored.runtime.clone().execute_complete_pairing_tool(
             request.principal_id.clone(),
             authorization_probe,
             request.completed_at_ms,
@@ -641,16 +629,14 @@ where
         let outcome = PairingTransactionCoordinator::new(
             &self.journal_backend,
             &self.vault,
-            &self.runtime_store,
+            &self.controller,
         )
         .execute(transaction, &secret)?;
-        let PairingTransactionOutcome::Committed { restored, .. } = outcome else {
+        let PairingTransactionOutcome::Committed { .. } = outcome else {
             return Err(HuePairingServiceError::TransactionRolledBack(
                 transaction_id,
             ));
         };
-        self.install_restored_runtime(*restored);
-
         Ok(HuePairingReport {
             session_id: request.session_id,
             bridge_id: plan.bridge_id().clone(),
@@ -658,13 +644,6 @@ where
             completed_at_ms: request.completed_at_ms,
             client_key_present,
         })
-    }
-
-    fn install_restored_runtime(&mut self, restored: RestoredSmartHomeRuntime) {
-        self.runtime = restored.runtime;
-        self.automation_definitions = restored.automation_definitions;
-        self.automation_state = restored.automation_state;
-        self.runtime_revision = restored.revision;
     }
 }
 
@@ -994,6 +973,7 @@ mod tests {
         IntegrationId, Metadata, PrivilegeTier, VaultRef,
     };
     use smart_home_runtime::RuntimePairingSession;
+    use smart_home_runtime_store::SmartHomeRuntimeStore;
     use storage_core::{
         StorageBackend, StorageError, StorageLease, StorageListOptions, StoragePage,
         StoragePutInput, StorageRecord, StorageStat,
@@ -1091,18 +1071,31 @@ mod tests {
 
     type LocalService<T> =
         HuePairingServiceActorState<T, LocalFolderStorageBackend, LocalFolderStorageBackend>;
+    type LocalController = SmartHomeControllerRuntime<LocalFolderStorageBackend>;
+
+    fn restore_service_with_controller<T: HueRegistrationTransport>(
+        root: &Path,
+        vault: Arc<SealedStore>,
+        transport: T,
+    ) -> Result<(LocalService<T>, LocalController), HuePairingServiceError> {
+        let controller =
+            SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(runtime_root(root)))
+                .expect("test controller must restore");
+        let service = HuePairingServiceActorState::restore(
+            LocalFolderStorageBackend::new(journal_root(root)),
+            vault,
+            controller.clone(),
+            transport,
+        )?;
+        Ok((service, controller))
+    }
 
     fn restore_service<T: HueRegistrationTransport>(
         root: &Path,
         vault: Arc<SealedStore>,
         transport: T,
     ) -> Result<LocalService<T>, HuePairingServiceError> {
-        HuePairingServiceActorState::restore(
-            LocalFolderStorageBackend::new(journal_root(root)),
-            vault,
-            SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(runtime_root(root))),
-            transport,
-        )
+        restore_service_with_controller(root, vault, transport).map(|(service, _)| service)
     }
 
     fn request<T: HueRegistrationTransport>(
@@ -1112,7 +1105,7 @@ mod tests {
         HuePairingRequest::new(
             RuntimePairingSessionId::trusted("pairing-1"),
             AgentId::trusted("operator"),
-            service.runtime_revision().clone(),
+            service.runtime_revision().unwrap(),
             "coding-adventures",
             "test-host",
             completed_at_ms,
@@ -1174,9 +1167,13 @@ mod tests {
         let vault = open_vault(&root.join("vault"), password);
         let runtime = runtime_for_bridge(address, true, None);
         let initial_revision = persist_runtime(&root, &runtime);
-        let mut service =
-            restore_service(&root, vault.clone(), HueLanRegistrationTransport::default()).unwrap();
-        assert_eq!(service.runtime_revision(), &initial_revision);
+        let (mut service, controller) = restore_service_with_controller(
+            &root,
+            vault.clone(),
+            HueLanRegistrationTransport::default(),
+        )
+        .unwrap();
+        assert_eq!(service.runtime_revision().unwrap(), initial_revision);
 
         let pairing_request = request(&service, 2_000);
         let report = service.pair(pairing_request).unwrap().clone();
@@ -1187,16 +1184,29 @@ mod tests {
         assert!(!report.vault_ref.as_str().contains("raw-application-key"));
         assert!(report.client_key_present);
 
-        let bridge = service
-            .runtime()
+        let committed_runtime = service.runtime().unwrap();
+        let bridge = committed_runtime
             .registry()
             .bridge(&BridgeId::trusted("001788fffeabcdef"))
             .unwrap();
         assert_eq!(bridge.auth_ref.as_ref(), Some(&report.vault_ref));
         assert_eq!(bridge.health, Health::Online);
-        assert_ne!(service.runtime_revision(), &initial_revision);
+        assert_ne!(service.runtime_revision().unwrap(), initial_revision);
+        let central = controller.durable_snapshot().unwrap().unwrap();
+        assert_eq!(central.revision, service.runtime_revision().unwrap());
+        assert_eq!(
+            central
+                .runtime
+                .registry()
+                .bridge(&BridgeId::trusted("001788fffeabcdef"))
+                .unwrap()
+                .auth_ref
+                .as_ref(),
+            Some(&report.vault_ref)
+        );
         let audit_text = service
             .runtime()
+            .unwrap()
             .registry()
             .events()
             .flat_map(|event| event.metadata.iter())
@@ -1267,6 +1277,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
                 .unwrap()
                 .status,
@@ -1304,6 +1315,42 @@ mod tests {
         assert!(matches!(
             service.pair(pairing_request).unwrap_err(),
             HuePairingServiceError::Runtime(_)
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        assert!(vault
+            .list(HUE_VAULT_NAMESPACE, Default::default())
+            .unwrap()
+            .is_empty());
+        assert!(LocalFolderStorageBackend::new(journal_root(&root))
+            .list("smart-home-pairing-transactions", Default::default())
+            .unwrap()
+            .records
+            .is_empty());
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn intervening_central_commit_rejects_stale_request_before_external_io() {
+        let root = test_directory("central-revision-drift");
+        let vault = open_vault(&root.join("vault"), b"test-only-vault-password");
+        let runtime = runtime_for_bridge("http://127.0.0.1:80".to_string(), true, None);
+        persist_runtime(&root, &runtime);
+        let calls = Arc::new(AtomicUsize::new(0));
+        let (mut service, controller) = restore_service_with_controller(
+            &root,
+            vault.clone(),
+            CountingSuccessfulTransport(calls.clone()),
+        )
+        .unwrap();
+        let stale_request = request(&service, 2_000);
+
+        controller.save_snapshot(1_900).unwrap();
+
+        assert!(matches!(
+            service.pair(stale_request).unwrap_err(),
+            HuePairingServiceError::InvalidRequest(message)
+                if message == "expected runtime revision is stale"
         ));
         assert_eq!(calls.load(Ordering::SeqCst), 0);
         assert!(vault
@@ -1470,6 +1517,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
                 .unwrap()
                 .status,
@@ -1516,6 +1564,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
                 .unwrap()
                 .status,
@@ -1561,6 +1610,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .registry()
                 .bridge(&BridgeId::trusted("001788fffeabcdef"))
                 .unwrap()

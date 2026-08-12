@@ -16,9 +16,11 @@ non-empty returned monitor set must exactly match every already installed
 positive `monitor_id`. The service encodes the same versioned username/password
 envelope consumed by `smart-home-zoneminder-snapshot-host`; access and refresh
 tokens remain process-local and are never persisted. The opaque reference is
-committed through `smart-home-pairing-transaction`. Startup resolves all pending
-journals before accepting work, and replacement cleanup remains bound to the
-captured Vault revision.
+committed through `smart-home-pairing-transaction` against the shared
+`SmartHomeControllerRuntime` authority. Startup resolves all pending journals
+before accepting work, replacement cleanup remains bound to the captured Vault
+revision, and successful commits are immediately visible to every controller
+consumer without an actor-private runtime copy.
 
 Snapshot delivery remains read-only and never provisions credentials.
 

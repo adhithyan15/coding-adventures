@@ -1,5 +1,108 @@
 # Changelog — gc-core
 
+## 0.36.0 — 2026-08-11 — re-export the NaN-box tag constants at the crate root (AOT00-T10 PR-3 follow-up)
+
+- **`NAN_BOX_REF_TAG`/`NAN_BOX_TAG_BITS`/`NAN_BOX_TAG_MASK` now re-exported from
+  `gc_core::` directly**, alongside `FlatHeap`/`HeapRef`/etc. 0.35.0 defined these as
+  `pub const` inside `flat_heap`, reachable as `gc_core::flat_heap::NAN_BOX_REF_TAG`,
+  but never added them to the crate-root re-export list — so `vm-core` (AOT00-T10
+  PR-3) can now derive its own tag constants from these canonical definitions instead
+  of duplicating the same three literals, closing the "two definitions of one
+  convention" gap the tagged-kind design explicitly set out to avoid. No behavior
+  change; purely a visibility fix.
+
+## 0.35.0 — 2026-08-11 — tagged-field kind registration (AOT00-T10 PR-2)
+
+- **New `KindLayout.tagged: bool` + `FlatHeap::register_tagged_kind()`** — a second
+  field-encoding mode for registered kinds, alongside the original ("boxed") mode
+  `register_kind`/`register_ref_array_kind` use. Boxed mode assumes every `fixed`/
+  `tail` slot is *always* a reference-candidate word (raw or NaN-box-tagged with an
+  arbitrary tag — both forms tried); tagged mode instead trusts the word's own low 3
+  bits exactly: a slot is a reference *iff* its tag equals the new `NAN_BOX_REF_TAG`
+  constant, and anything else is *provably* not a reference, not merely probably.
+- **Why this exists** — see `code/specs/AOT00-T10-tagged-field-kinds.md` and
+  lessons.md's "vm-core kind registration soundness note": boxed mode is unsound for
+  an object whose fields can legitimately hold either a reference or a non-reference
+  scalar in the *same* dynamically-typed slot (e.g. `vm-core`'s cons-cell car/cdr,
+  where `Value::Int` and `Value::HeapRef` share the same ref-shaped slot,
+  disambiguated only by a tag bit). Under boxed mode, compaction's `fixup_ref_fields`
+  would rewrite a non-reference field's bits whenever they coincidentally match a
+  moved object's old address — an actual, if astronomically unlikely, wrong-direction
+  correctness bug (an int silently corrupted to a stale pointer), not a safe
+  over-approximation.
+- **The entire fix is filtering `for_each_ref_slot`** — the single choke point every
+  consumer (`scan_payload`'s mark path, `precise_children`/`classify_mobility`,
+  `fixup_ref_fields`, `points_to_live_young`) already goes through to enumerate a
+  kind's ref slots. A tagged-mode slot whose current word doesn't carry
+  `NAN_BOX_REF_TAG` is simply never yielded — none of the four consumers need their
+  own tagged/boxed branch, and `forwarded()`'s existing raw-lookup-then-tag-stripped
+  logic is already exactly right for a word it's genuinely asked to consider.
+- **New constants** `NAN_BOX_TAG_BITS`/`NAN_BOX_TAG_MASK`/`NAN_BOX_REF_TAG` — the
+  canonical definition of the tag scheme `vm-core`'s own field-store path (AOT00-T1v
+  §2.4) already implements; a follow-up PR replaces `vm-core`'s duplicate
+  `FIELD_TAG_*` literals with these.
+- **Purely additive.** `register_kind`/`register_ref_array_kind`'s existing
+  signatures, behavior, and every existing boxed-mode kind (native-AOT/LLVM's
+  cons/record/ref-array kinds, and the C ABI `__gc_register_kind` that wraps
+  `register_kind` for them) are untouched — `tagged: false` for all of them,
+  byte-for-byte the pre-T10 code path. No `gc-core-capi` change in this PR (vm-core,
+  this mode's only consumer so far, links `gc-core` directly as a Rust dependency).
+- **2 new tests, the headline regression proof and its contrasting twin:**
+  `tagged_kind_never_rewrites_a_non_reference_field_that_coincidentally_matches_a_moved_address`
+  engineers a real collision (a tagged-mode object's non-reference field deliberately
+  set to an independently-rooted, independently-moved object's old base address) and
+  proves the field is untouched after compaction, while the genuine reference field
+  in the same object IS correctly relocated.
+  `boxed_mode_twin_shows_the_defect_tagged_mode_closes` runs the *identical* setup
+  through `register_kind` instead and proves the corruption actually happens —
+  concrete demonstration of the bug, not just its absence under the fix.
+- Verification: `cargo test`/`clippy` clean (164 tests, up from 162); both new tests
+  confirmed Miri-clean (`cargo +nightly miri test tagged_kind_never` /
+  `boxed_mode_twin`).
+
+## 0.34.0 — 2026-08-11 — `should_compact_minor`: moving-minor pacing (AOT00-T9 §5, PR-5)
+
+- **New `FlatHeap::should_compact_minor()`** — whether a paced minor collection
+  that's already been decided (via `should_collect_minor`) should also **compact**
+  (evacuate its young survivors into a compact arena via `collect_minor_compacting`,
+  instead of sweeping them in place). The last piece of AOT00-T9's own §5, marked
+  optional follow-up when PR-4 landed — see that spec's updated status banner.
+- **Deliberately does not reuse `AdaptivePolicy::evaluate`'s single top-priority
+  pick**, unlike `should_compact`/`should_collect_minor` themselves. `evaluate`
+  returns one mutually-exclusive recommendation (Incremental, then Generational,
+  then Compacting) — so on any cycle where `should_collect_minor` has already
+  observed `evaluate` recommend Generational, that same call can *never* also
+  recommend Compacting; re-asking it here would be structurally unable to ever
+  answer "yes". Instead this checks the narrower, independent question
+  "is fragmentation alone over `AdaptivePolicy`'s configured threshold" — reusing
+  that policy's own `compacting_fragmentation_threshold`/`min_cycles_before_advice`
+  fields, so a tuned policy still governs both signals identically, just as two
+  independent sub-questions instead of one priority pick. A low survival ratio and
+  high fragmentation can legitimately hold at once — that combination is exactly
+  what this method exists to detect, not a conflict to arbitrate away (proven by
+  `should_collect_minor_outranks_should_compact`, the existing test showing
+  `should_compact` itself must lose that exact race).
+- Pure policy, like its siblings: names no roots, runs no collection, and does not
+  itself gate on `auto_minor` — the caller is expected to have already gone through
+  `should_collect_minor`'s gate (or an equivalent one) first.
+- **`auto_minor`'s field/`set_auto_minor` doc comments updated** (AOT00-T9 §7): (a)
+  corrected a now-stale claim that native-AOT/LLVM code generators don't emit the
+  write barrier — `field_store`/`array_set` now do, on all three native backends,
+  though that alone hasn't been shown *sufficient* (no exhaustive per-backend
+  mutation-site audit has run); (b) documented the strengthened barrier-fidelity
+  obligation a *moving* minor cycle imposes versus a non-moving one (per
+  `collect_minor_compacting`'s own Safety doc and `AOT00-T9-moving-minor-collector.md`
+  §7's residual-dependency note) — `should_compact_minor`/`collect_minor_compacting`
+  share the exact same `auto_minor` flag, so an embedder attesting is attesting to
+  the stricter bar too, not just the non-moving case.
+- 2 new unit tests: the fragmentation-independent-of-generational-signal proof
+  (mirroring `should_collect_minor_outranks_should_compact`'s own scenario, but
+  showing `should_compact_minor` correctly answers "yes" where `should_compact`
+  answers "no"), and a contract pin that `should_compact_minor` doesn't itself gate
+  on `auto_minor`.
+- Verification: `cargo test`/`clippy` clean (162 tests, up from 160); the two new
+  tests confirmed Miri-clean (`cargo +nightly miri test should_compact_minor`).
+
 ## 0.33.2 — 2026-08-10 — harden the incremental-mark reentrancy guard (security fix)
 
 - **The 11 `mark_in_progress` reentrancy guards across `flat_heap.rs` were

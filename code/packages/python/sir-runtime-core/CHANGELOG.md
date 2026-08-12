@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.5.0 — SIR28 §7: remove dead `sir_print`/`sir_puts`
+
+Every SIR frontend now emits `__sys_write__` (`semantic-ir-to-python`'s
+`_sir_write`, this package's `sir_write`) instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so `sir_print`/`sir_puts`/`_puts_one`
+were fully dead. Removed:
+
+- `sir_print`, `_puts_one`, and `sir_puts` (the module's own `_write_
+  puts_one` is a fully independent duplicate — confirmed via grep that
+  nothing else called `_puts_one` — so this is a straight deletion; the
+  array-flatten + cycle-guard documentation that lived on `_puts_one`
+  moved onto `_write_puts_one`, which now has no sibling to defer to).
+- `"print"`/`"puts"` from the `call_builtin` dispatch table.
+- `sir_print`/`sir_puts`, and the `print` module-level alias, from the
+  public `__init__.py` exports.
+
+This is a breaking change for anything importing `sir_print`/`sir_puts`/
+`print` directly — nothing in this monorepo does, as of SIR28 Slice 6.
+Requires `semantic-ir-to-python` >= 0.12.0 (which stops importing the
+removed names).
+
+Test suite: the dedicated `sir_print`/`sir_puts` unit tests are removed
+outright (equivalent coverage — array-flattening, cycle-termination,
+newline policy — already exists in the `sir_write` test section, since
+every scenario they exercised has a `terminator`-parameterized
+equivalent there).
+
+## 0.4.0 — `sir_write`, the SIR28 console-output primitive
+
+Adds `sir_write(stream, terminator, unpack_arrays, *values)`, generalizing
+the existing `sir_print`/`sir_puts` into one function parameterized by
+`stream` ("stdout"/"stderr"), `terminator` ("none"/"per_value"/"once"),
+and `unpack_arrays` — the policy axes
+[SIR28](../../../specs/SIR28-syscall-primitives.md) §2.1 defines. This is
+the runtime function `semantic-ir-to-python`'s new `__sys_write__` emit
+arm calls.
+
+Deliberately does NOT replicate `sir_puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — a pre-existing
+divergence from the other backends' own `puts`, orthogonal to and not
+fixed by SIR28; `sir_write`'s `per_value` terminator always appends
+exactly one newline per value, matching SIR28 §2.1's table and every
+other backend's `__sys_write__` faithfully.
+
+Adds `import sys` (needed for `sys.stdout`/`sys.stderr`). Purely
+additive: `sir_print`/`sir_puts` and every existing `print`/`puts`-sourced
+program are unchanged.
+
 ## 0.3.0 — `shift_left` (Ruby's `<<` operator)
 
 Part of "Python/JS backends: implement shift-operator runtime dispatch".

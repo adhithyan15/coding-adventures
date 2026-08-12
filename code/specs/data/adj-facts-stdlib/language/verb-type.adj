@@ -1,0 +1,63 @@
+% ============================================================================
+% verb-type — three named verb types and what each actually is
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Verbs fall into several overlapping categories: an action verb describes
+% a physical action or activity that can be seen or heard, a linking verb
+% connects the subject to other words in the sentence, and an auxiliary
+% ("helping") verb changes another verb's tense, voice, or mood. Recall is
+% a binding query:
+%
+%     ? verb_type(action_verb, $D)
+%       % physical_action_or_activity_that_can_be_seen_or_heard
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `verb_type(type, description)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on a verb type that is not one of these three. The query also
+% runs BACKWARD — bind a description and recall the verb type it names:
+%
+%     ? verb_type($T, changes_another_verbs_tense_voice_or_mood)
+%       % auxiliary_verb
+%
+% The three verb types, as a little truth table:
+%
+%     type              description                                             quote (verbatim)
+%     ----------------  --------------------------------------------------------  --------------------------------------------------------------------------------
+%     action_verb        physical_action_or_activity_that_can_be_seen_or_heard    "Most verbs describe a physical action or activity, something external that can be seen or heard."
+%     linking_verb        connects_the_subject_to_other_words_in_the_sentence      "A linking verb is any verb, dynamic or stative, that directly connects or \"links\" the sentence's subject to other words in the sentence."
+%     auxiliary_verb       changes_another_verbs_tense_voice_or_mood                "Auxiliary verbs, or \"helping verbs,\" are used in English to change another verb's tense, voice, or mood."
+%
+% Provenance: quoted verbatim from Grammarly's "Verbs: Definition and
+% Examples" article, which also gives clean single-sentence definitions
+% for stative verbs, modal auxiliary verbs, and phrasal verbs. WebFetch-
+% verified before writing (twice). `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources and the same
+% source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
+% `noun-type.adj`. Picked using the mandatory full-tree-grep-before-
+% scoping discipline — `grep -rilE "\bverb_type\b|\baction_verb\b|
+% \blinking_verb\b|\bauxiliary_verb\b|\bhelping_verb\b|\btransitive_verb\b"
+% code/specs/data/adj-facts-stdlib/` found ZERO hits, confirming a
+% completely fresh topic before this file was written. A verb-related
+% concept that is NOT one of these three — "transitive_verb", a real verb
+% category the same page also covers, but only through worked examples
+% and category description rather than a single formal definition
+% sentence the way it does for the three tabled here — is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a
+% definition. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table verb_type {
+    columns type, description
+
+    row (action_verb, physical_action_or_activity_that_can_be_seen_or_heard)
+    row (linking_verb, connects_the_subject_to_other_words_in_the_sentence)
+    row (auxiliary_verb, changes_another_verbs_tense_voice_or_mood)
+
+    source "Most verbs describe a physical action or activity, something external that can be seen or heard."
+    locator "https://www.grammarly.com/blog/parts-of-speech/verbs/"
+    trust consensus
+}

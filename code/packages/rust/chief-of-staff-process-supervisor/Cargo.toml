@@ -18,6 +18,7 @@ chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding_adventures_uuid = { path = "../uuid" }
 coding_adventures_x3dh = { path = "../x3dh" }
 storage-core = { path = "../storage-core" }
+serde_json = "1"
 
 [dev-dependencies]
 coding_adventures_ed25519 = { path = "../ed25519" }

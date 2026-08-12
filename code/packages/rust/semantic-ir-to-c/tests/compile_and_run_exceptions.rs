@@ -92,7 +92,15 @@ fn bc(name: &str, args: Vec<Expr>) -> Expr {
     Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
 }
 fn puts(arg: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: bc("puts", vec![arg]), span: s() }
+    Stmt::ExprStmt { expr: bc(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "per_value".into(), span: s() },
+            Expr::BoolLit { value: true, span: s() },
+            arg,
+        ],
+    ), span: s() }
 }
 fn raise_(arg: Option<Expr>) -> Stmt {
     Stmt::ExprStmt { expr: bc("raise", arg.into_iter().collect()), span: s() }
@@ -126,7 +134,7 @@ fn trycatch(body: Vec<Stmt>, rescues: Vec<RescueClause>, ensure_body: Option<Vec
 fn exc_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "excprog".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Exceptions, Feature::Strings]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Exceptions, Feature::Strings]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -152,7 +160,7 @@ fn exc_module(stmts: Vec<Stmt>) -> Module {
 fn exc_class_module(stmts: Vec<Stmt>) -> Module {
     Module {
         name: "excprog".into(),
-        manifest: FeatureManifest::from_features(&[
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, 
             Feature::Exceptions,
             Feature::Strings,
             Feature::Classes,

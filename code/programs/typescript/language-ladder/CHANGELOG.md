@@ -2,6 +2,797 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Spanish reaches 190 chapters
+
+- Re-pin the Spanish chapter table from the generated manifest.
+
+### Changed — Spanish reaches 189 chapters
+
+- Re-pin the Spanish chapter table from the generated manifest.
+
+### Changed — Spanish reaches 186 chapters
+
+- Re-pin the Spanish chapter table from the generated manifest.
+
+### Changed — Spanish reaches 182 chapters
+
+- Re-pin the Spanish chapter table from the generated manifest.
+
+### Fixed — the bundle staleness guard no longer trips on book builds
+
+- Count only files the bundler can import when deciding whether `dist/` is stale.
+  A local LaTeX run rewrites `.log`, `.aux` and `.pdf` under the corpus tree, which
+  left the guard permanently tripped — teaching the exact habit it exists to prevent.
+- Re-pin the Spanish chapter table from the generated manifest: 181 chapters.
+
+### Added — cited Chinese 请 ductus (HL-C09CQ)
+
+- Render **请** in fourteen source-aligned movements across ten strokes.
+- Preserve 讠-before-青 order, all four joined turns, and nine lifts in Noto Sans SC.
+### Added — cited Chinese 谢 ductus (HL-C09CP)
+
+- Render **谢** in seventeen source-aligned movements across twelve strokes.
+- Preserve 讠-before-身-before-寸 order, all five joined turns, and eleven lifts in Noto Sans SC.
+
+### Added — cited Chinese 字 ductus (HL-C09CO)
+
+- Render **字** in nine source-aligned movements across six strokes.
+- Preserve 宀-before-子 order, all three joined turns, and five lifts in Noto Sans SC.
+
+### Added — cited Chinese 名 ductus (HL-C09CN)
+
+- Render **名** in eight source-aligned movements across six strokes.
+- Preserve 夕-before-口 order, both joined turns, and five lifts in Noto Sans SC.
+
+### Added — cited Chinese 不 ductus (HL-C09CM)
+
+- Render **不** in four separately placed source-aligned strokes.
+- Preserve the top-horizontal-first order and three lifts in Noto Sans SC.
+### Added — cited Chinese 是 ductus (HL-C09CL)
+
+- Render **是** in ten source-aligned movements across nine strokes.
+- Preserve 日-first order, its joined corner, and eight lifts in Noto Sans SC.
+
+### Added — cited Chinese 我 ductus (HL-C09CK)
+
+- Render **我** in nine source-aligned movements across seven strokes.
+- Preserve the hooked vertical, six lifts, and the Noto Sans SC outline fit.
+
+### Changed — Spanish runs 1..178 (HL-C88)
+
+- Re-pin the Spanish book-hash table for the five friends chapters inserted at
+  23; chapters after them shift by five.
+
+### Changed — Spanish runs 1..173 (HL-C107)
+
+- Re-pin the Spanish book-hash table for the pronoun-evidence chapter inserted
+  at 122; chapters after it shift by one.
+
+### Added — cited Chinese 好 ductus (HL-C09CJ)
+
+- Render **好** in nine source-aligned frames: all three 女 strokes first,
+  followed by 子's joined top turn, joined vertical hook, and middle horizontal.
+- Fit all six source runs to Noto Sans SC while preserving three internal
+  joins, five pen lifts, and component order.
+- Reduce Chinese's remaining verified-ductus inventory to 13 entries.
+
+### Added — voice playback of a lesson (HL-C87, HL10 §10.2)
+
+- Add `voicescript.ts`: flatten a chapter's generated narration into an ordered
+  list of speak / wait / respond instructions. It parses nothing — the
+  narration generator already emits typed segments.
+- Add `voiceplayer.ts`: drive that script through `speechSynthesis`, with a
+  per-track BCP-47 tag and a cancel token, because `cancel()` fires pending
+  `onend` handlers and a naive player resumes after being stopped.
+- Add `narration-sources.ts`, loading one chapter's narration on demand so 344
+  files per track stay out of the eager chunk.
+- Show a "Play this lesson aloud" control on the frontier card, with a line of
+  what is being said; leaving Learn mode stops the audio.
+- Recognition is deliberately not wired: it needs a microphone permission and a
+  device to verify against, and a `respond` step waits its authored budget
+  instead.
+
+### Added — cited Chinese 你 ductus (HL-C09CI)
+
+- Render **你** in nine source-aligned frames: write 亻, then 尔's falling
+  stroke, two joined hooks, and separately placed lower dots.
+- Fit all seven source runs to Noto Sans SC while preserving both joined hooks,
+  six pen lifts, and component order.
+- Reduce Chinese's remaining verified-ductus inventory to 14 entries.
+
+### Added — synthesis drills generated from held atoms (HL-C87, HL10 §10.3)
+
+- Add `synthesisdrill.ts`: 2–4 pieces the learner holds, drawn from different
+  domains, with an instruction to combine them. The pieces have been practised;
+  the combination has not.
+- Gate on mastery — the forward-reference rule run backwards: no drill uses an
+  atom the learner does not currently hold.
+- Derive domains from the corpus's own `concept_tag` prefixes, and exclude
+  grammar-only tags, because "use a rule in a sentence" is not an instruction.
+- Check honestly: report which pieces the answer contained, and say plainly
+  that whether the surrounding sentence is good Spanish is not something the
+  check can judge.
+- Load the full corpus in the background before offering a drill. Learn mode
+  holds only the frontier and completed lessons — two Spanish lessons for a
+  beginner — so a drill built from those can never find two domains.
+
+### Added — cited Chinese 宀 ductus (HL-C09CH)
+
+- Render **宀** in four source-aligned frames: draw its top dot, restart for the
+  left-side drop, then restart for a roof that hooks down-left without breaking.
+- Fit all three source runs to Noto Sans SC while preserving the joined final
+  hook, two pen lifts, and the source order.
+- Reduce Chinese's remaining verified-ductus inventory to 15 entries.
+
+### Added — the app schedules from atom strength (HL-C87, HL10 §10.1)
+
+- Add `atomschedule.ts`: greedy set cover over the learner's due atoms, picking
+  the completed lessons that refresh the most of them. Deterministic — ties
+  break on lesson id, so the queue never reshuffles between renders.
+- Show a **Due for review** section at the top of Learn, naming what each pick
+  refreshes rather than asking for review without a reason.
+- Fix a credit/schedule mismatch found by driving the built app: scheduling read
+  only activity `assesses` while a meaning check credits `introducesAtoms`, so a
+  lesson with no authored activity — including the first lesson of the Spanish
+  course — could come due and never be clearable. `refreshesOf()` now unions
+  both, with a test pinning the invariant.
+
+### Added — cited Chinese 氵 ductus (HL-C09CG)
+
+- Render **氵** in four source-aligned frames: draw its two falling dots, then
+  restart for a bottom stroke that turns slightly left and rises to the right.
+- Fit all three source runs to Noto Sans SC while preserving the joined final
+  turn, two pen lifts, and the upper-to-lower order.
+- Reduce Chinese's remaining verified-ductus inventory to 16 entries.
+
+### Added — per-atom mastery, recorded (HL-C87, HL10 §10.1)
+
+- Add `atommastery.ts`: a pure engine for what this learner holds atom by atom.
+  Strength moves asymptotically on a hit and multiplicatively on a miss, decays
+  with a 10-day half-life, and schedules on a cubic interval.
+- Add `masterystore.ts`, persisting it under its own key in the `reviewstore.ts`
+  style — untrusted blob, every field clamped, bad rows dropped.
+- Carry `introducesAtoms` on the browser `Lesson`, so a meaning check can credit
+  what the lesson exists to teach.
+- Credit both answer paths: an authored activity credits its own `assesses`
+  list; a meaning check credits the lesson's introduced atoms.
+- Nothing schedules from this yet. The record is deliberately made trustworthy
+  before anything is allowed to depend on it.
+
+### Added — cited Chinese 讠 ductus (HL-C09CF)
+
+- Render **讠** in four source-aligned frames: draw the dot, then restart for a
+  horizontal that turns down and rises to the upper right without breaking.
+- Fit both source runs to Noto Sans SC while preserving both turns inside the
+  second stroke and one pen lift.
+- Reduce Chinese's remaining verified-ductus inventory to 17 entries.
+
+### Changed — Spanish runs 1..172 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five `hay` chapters appended at
+  168, completing the HL10 rung audit.
+
+### Added — cited Chinese 日 ductus (HL-C09CE)
+
+- Render **日** in five source-aligned frames: descend the left side, cross the
+  top and turn down the right without lifting, draw the middle, then close.
+- Fit all four source runs to Noto Sans SC while preserving the joined corner,
+  three pen lifts, and the inside-before-close rule.
+- Reduce Chinese's remaining verified-ductus inventory to 18 entries.
+
+### Changed — Spanish runs 1..167 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five relative-clause chapters
+  appended at 163.
+
+### Added — cited Chinese 子 ductus (HL-C09CD)
+
+- Render **子** in five source-aligned frames: cross the top and turn down-left,
+  restart for the central descent and joined base hook, then cross the middle.
+- Fit all three source runs to Noto Sans SC while preserving both internal
+  turns, two pen lifts, and the left-to-right final héng.
+- Reduce Chinese's remaining verified-ductus inventory to 19 entries.
+
+### Changed — Spanish runs 1..162 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five impersonal-se chapters
+  appended at 158.
+
+### Added — cited Chinese 女 ductus (HL-C09CC)
+
+- Render **女** in four source-aligned frames: descend left, turn and sweep
+  down-right without lifting, restart for the left-falling stroke, then cross
+  the middle with a separately started horizontal.
+- Fit all three source runs to Noto Sans SC while preserving the first internal
+  turn, two pen lifts, and left-to-right final héng.
+- Reduce Chinese's remaining verified-ductus inventory to 20 entries.
+
+### Changed — Spanish runs 1..157 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five por/para chapters appended at
+  153. No renumbering: the arc lands at the end of the course.
+
+### Added — cited Chinese 口 ductus (HL-C09CB)
+
+- Render **口** in four source-aligned frames: left side, top bar, the joined
+  turn down the right side, and a separately closing bottom bar.
+- Fit all three source runs to Noto Sans SC while preserving the héngzhé corner,
+  two pen lifts, and close-last rule.
+- Reduce Chinese's remaining verified-ductus inventory to 21 entries.
+
+### Changed — Spanish runs 1..152 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the six command chapters inserted at
+  109; chapters after them shift by six.
+
+### Added — cited Chinese 亻 ductus (HL-C09CA)
+
+- Render **亻** in two source-aligned frames: draw the long left-falling piě,
+  then lift once for the vertical shù from the central junction.
+- Fit the radical's own pinned medians independently to its narrow Noto Sans SC
+  outline instead of deriving them from the full 人 form.
+- Reduce Chinese's remaining verified-ductus inventory to 22 entries.
+
+### Changed — Spanish runs 1..146 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the six present-perfect chapters
+  inserted at 94; chapters after them shift by six.
+
+### Added — cited Chinese 人 ductus (HL-C09BZ)
+
+- Render **人** in two evidence-aligned frames: left-falling piě first, then
+  lift once and draw right-falling nà from the central junction.
+- Pin the per-character Hanzi Writer Data record derived from Make Me a Hanzi's
+  documented PRC stroke order, while fitting its medians to Noto Sans SC.
+- Establish a reusable source convention for the remaining Chinese inventory.
+
+### Fixed — the lesson-source map leaves the eager chunk (HL-C110)
+
+- Move `import.meta.glob` for lesson sources into `src/lesson-sources.ts` and
+  reach it with `import()`. The map compiles to one entry per lesson — a full
+  path plus a preload wrapper, ~200 bytes each — and at 1,793 lessons it was
+  **363,818 bytes of the eager chunk**, growing with every lesson added.
+- `bundledLessonIds()` and `loadBundledLessons()` are now async. The single
+  synchronous consumer was already inside an async function.
+- Largest eager chunk: **498,326 → 381,819 bytes**. It is now `script-data`,
+  which is per-script and does not grow with the lesson corpus.
+
+### Added — cited Hebrew Tav ductus (HL-C09BY)
+
+- Render **ת** in four evidence-aligned frames: draw the top bar and right side
+  together, then lift once for the separate left leg and its small foot.
+- Preserve the adjacent purple cursive form's continuous retrace and right arch
+  while keeping the printed form's two runs explicit.
+- Close the Hebrew inventory and reprioritize to the smallest actionable script.
+
+### Changed — Spanish runs 1..140 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five preterite/imperfect chapters
+  inserted at 89; chapters after them shift by five.
+
+### Added — cited Hebrew Shin ductus (HL-C09BX)
+
+- Render **ש** in three evidence-aligned frames: descend the right branch and
+  round through the base into the left branch, then lift once for the middle.
+- Preserve the adjacent purple cursive form's compact one-run loop while keeping
+  the printed form's two runs explicit.
+- Queue the adjacent Tav demonstration as the final Hebrew inventory entry.
+
+### Fixed — the eager bundle, and the check that could not see it (HL-C110)
+
+- Load the book-hash manifest (136 kB) and all 22 chapter ledgers (580 kB)
+  **lazily**. They were statically imported to compute one diagnostic word in a
+  metadata line, and together they were the largest eager chunk in the app.
+- Add `whenBookHashesReady()`; the status reads `not-generated` until the data
+  lands, and `main.ts` re-renders when it does.
+- Derive the eager chunk set from `dist/index.html` — the entry script plus
+  every `modulepreload` — instead of a hardcoded name pattern that went stale
+  the moment a chunk became lazy.
+- Refuse to report on a stale `dist/`: if any source or corpus file is newer
+  than the built entry HTML, `check:bundle` exits non-zero.
+- Largest eager chunk: 497,216 bytes against the 500,000 ceiling.
+
+### Changed — Spanish runs 1..135 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five double-object chapters
+  inserted at 76; chapters after them shift by five.
+
+### Added — cited Hebrew Resh ductus (HL-C09BW)
+
+- Render **ר** in two evidence-aligned frames: draw the top bar left-to-right,
+  round its outer corner, and descend the right side without lifting.
+- Preserve the adjacent purple cursive form's rounder one-run hook while keeping
+  the printed form's continuous motion explicit.
+- Queue the adjacent Shin demonstration as the next counted inventory entry.
+
+### Changed — Spanish runs 1..130 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five indirect-object chapters
+  inserted at 71; chapters after them shift by five.
+
+### Added — cited Hebrew Qof ductus (HL-C09BV)
+
+- Render **ק** in three evidence-aligned frames: draw the top and slanted right
+  body together, then lift once for the separate below-line stem.
+- Preserve the adjacent purple cursive form's one-run hook while keeping the
+  printed form's lift and descender explicit.
+- Queue the adjacent Resh demonstration as the next counted inventory entry.
+
+### Changed — Spanish runs 1..125 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five plural object-pronoun
+  chapters inserted at 66; chapters after them shift by five.
+
+### Added — cited Hebrew Tsadi ductus (HL-C09BU)
+
+- Render **צ** in three evidence-aligned frames: descend the long diagonal into
+  the leftward base, then lift once for the short upper-right arm.
+- Preserve the adjacent purple cursive form's compact one-run shape while
+  keeping the printed form's lift explicit.
+- Record that intervening final Tsadi is already a form, then queue the later
+  Qof demonstration as the next counted inventory entry.
+
+### Added — cited Hebrew Pe ductus (HL-C09BT)
+
+- Render **פ** in four evidence-aligned frames: draw the top, right side, and
+  returning base in one run, then lift once for the short inner curl.
+- Preserve the adjacent purple cursive form's one-run inward spiral while
+  keeping the printed form's lift explicit.
+- Record that the intervening final Pe is already a form, then queue the later
+  Tsadi demonstration as the next counted inventory entry.
+
+### Added — cited Hebrew Ayin ductus (HL-C09BS)
+
+- Render **ע** in three evidence-aligned frames: descend the right branch into
+  the base, sweep left, then turn back and climb the left branch without lifting.
+- Preserve the adjacent purple cursive form's compact loop while keeping the
+  source's single printed run explicit.
+- Queue Pe from the same full-alphabet source.
+
+### Added — cited Hebrew Samekh ductus (HL-C09BR)
+
+- Render **ס** in four evidence-aligned frames: draw the flat top, round down
+  the right side, sweep left along the base, and climb to close without lifting.
+- Preserve the adjacent purple cursive form's rounder oval while keeping the
+  source's single clockwise printed run explicit.
+- Repair the README's Hebrew path inventory and queue Ayin from the same source.
+
+### Added — cited Hebrew Nun ductus (HL-C09BQ)
+
+- Replace the queued expository Nun video with Aural Writing's auditable
+  print/cursive source.
+- Render **נ** in three evidence-aligned frames: draw the small head, continue
+  down the right side, and turn left along the base without lifting.
+- Preserve the rounder purple cursive hook and queue Samekh from the same source.
+
+### Changed — Spanish runs 1..120 (HL-C108)
+
+- Re-pin the Spanish book-hash table for the five plural-article chapters
+  inserted at 56; chapters after them shift by five.
+
+### Added — cited Hebrew Mem ductus (HL-C09BP)
+
+- Render **מ** in five evidence-aligned frames: draw the detached angled left
+  part, lift once, then join the upper shoulder, right side, and base.
+- Keep the source's open two-stroke print order explicit while preserving its
+  narrow N-like handwritten alternative.
+- Queue the independently published Nun lesson (`3gYCaDgB-Nk`) next.
+
+### Changed — Spanish runs 1..115 (HL-C106, HL-C105)
+
+- Re-pin the Spanish book-hash table for the three noun chapters and the five
+  object-pronoun chapters inserted at 53; chapters after them shift by eight.
+
+### Added — cited Hebrew Lamed ductus (HL-C09BO)
+
+- Render **ל** in three evidence-aligned frames: descend the tall left stroke,
+  continue right along the middle bar, and turn diagonally down-left without lifting.
+- Keep the source's one-stroke angular print order explicit while preserving its
+  rounded looping handwritten alternative.
+- Queue the same lesson's Mem demonstration next.
+
+### Changed — Spanish runs 1..107 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the consolidation chapter that derives
+  the remaining irregular plurals; chapters after it shift by one.
+
+### Added — cited Hebrew Kaf ductus (HL-C09BN)
+
+- Render **כ** in three evidence-aligned frames: draw the top bar left-to-right,
+  continue down the rounded right side, and turn left along the base without lifting.
+- Keep the source's one-stroke printed corners explicit while preserving its
+  rounded handwritten half-circle alternative.
+- Queue the series' Lamed/Mem lesson (`CBU6aSCcPrE`) next.
+
+### Changed — Spanish runs 1..106 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `tener` and `ir` gained plural
+  chapters, so old Spanish chapters 43–104 shifted to 45–106.
+- Eager bundle 487,797 / 500,000 bytes.
+
+### Added — cited Hebrew Yod ductus (HL-C09BM)
+
+- Render **י** in two evidence-aligned frames: draw its tiny head left-to-right
+  and continue down the short stem without lifting.
+- Keep the source's one-stroke printed angle explicit while preserving its
+  comma-like handwritten alternative.
+- Queue the series' dedicated Kaf lesson (`EcQ0gL-NM-k`) next.
+
+### Changed — Spanish runs 1..104 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `estar` gained a plural
+  chapter beside `ser`'s, so old Spanish chapters 42–103 shifted to 43–104.
+- Eager bundle 486,989 / 500,000 bytes.
+
+### Added — cited Hebrew Tet ductus (HL-C09BL)
+
+- Render **ט** in four evidence-aligned frames: descend the left side and turn
+  right along the base, then restart once at the lower-right, climb, and hook inward.
+- Keep the source's printed two-stroke order explicit while preserving its unusual
+  bottom-up, one-run rounded handwritten alternative.
+- Queue the same lesson's Yod demonstration next.
+
+### Added — cited Hebrew Heit ductus (HL-C09BK)
+
+- Render **ח** in three evidence-aligned frames: draw the top bar left-to-right
+  and continue down the right side, then restart once for the joined left leg.
+- Keep the source's sharp printed two-stroke order explicit while preserving its
+  rounded handwritten alternative in the source variation note.
+- Queue the series' Tet/Yod lesson (`NBUtBPVKchk`) next.
+
+### Added — cited Hebrew Zayin ductus (HL-C09BJ)
+
+- Render **ז** in two evidence-aligned frames: draw the short head left-to-right
+  and continue down through the curved stem without lifting.
+- Preserve the source's rounded handwritten single run while adapting it to Noto
+  Sans Hebrew and recording its contrast with mirrored Gimel and narrower Vav.
+- Queue the same lesson's Heit demonstration next.
+
+### Added — cited Hebrew Vav ductus (HL-C09BI)
+
+- Render **ו** in two evidence-aligned frames: draw the small head left-to-right
+  and continue straight down the stem without lifting.
+- Keep the source's explicit one-stroke, top-to-bottom order while recording its
+  simpler handwritten variation and excluding later vowel marks from base ו.
+- Queue the series' Zayin/Heit lesson (`XTqG_1dsFSU`) next.
+
+### Changed — Spanish runs 1..103 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `ser` gained a plural chapter,
+  so old Spanish chapters 41–102 shifted to 42–103.
+- Eager bundle 486,164 / 500,000 bytes.
+
+### Added — cited Hebrew Hei ductus (HL-C09BH)
+
+- Render **ה** in three evidence-aligned frames: join the left-to-right top bar
+  to the right descent, then restart once for the detached left leg.
+- Keep the source's printed two-stroke, one-lift order explicit while recording
+  its curved handwritten alternative.
+- Queue the series' dedicated Vav/Hirik/Shuruk lesson next.
+
+### Changed — Spanish runs 1..102, and a sentinel that kept rotting (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the `-er`/`-ir` plurals added
+  four chapters, so old Spanish chapters 34–98 shifted to 38–102.
+- The "no such chapter" sentinel moves 99 → 9999. It had already moved 42 → 99
+  for the same reason; 9999 cannot become a real chapter.
+- Eager bundle 485,353 / 500,000 bytes.
+
+### Added — cited Hebrew Dalet ductus (HL-C09BG)
+
+- Render **ד** in two evidence-aligned frames: draw the top bar left-to-right,
+  then continue around the sharp right heel and down without lifting.
+- Preserve the source's explicit one-curve, zero-lift cursive order while
+  recording its adaptation to Noto Sans Hebrew's angular block outline.
+- Queue the series' dedicated Hei lesson next.
+
+### Changed — Spanish runs 1..98 (HL-C105)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the `-ar` present plural added
+  five chapters, so old Spanish chapters 29–93 shifted to 34–98.
+- Eager bundle 484,346 / 500,000 bytes.
+
+### Added — cited Hebrew Gimel ductus (HL-C09BF)
+
+- Render **ג** in four evidence-aligned frames: join the short top bar, right
+  stem, and short lower-right leg, then restart once for the longer left leg.
+- Keep the source's printed two-stroke, one-lift order explicit while recording
+  its visibly different rounded cursive Gimel as a handwriting variation.
+- Queue the same lesson's one-curve Dalet demonstration next.
+
+### Changed — Spanish runs 1..93 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: a synthesis chapter now closes
+  the fourteen-chapter vocabulary run, so old chapters 70–92 shifted to 71–93.
+- Eager bundle 483,296 / 500,000 bytes.
+
+### Added — cited Hebrew Bet ductus (HL-C09BE)
+
+- Render **ב** in three evidence-aligned frames: draw the top bar into the right
+  descent without lifting, then restart once for the left-to-right baseline.
+- Keep the optional dagesh outside base U+05D1's one-lift count while fitting
+  the source's block-style handwriting to the vendored Noto Sans Hebrew outline.
+- Queue the series' dedicated Gimel/Dalet lesson as the next source-recovery
+  tranche.
+
+### Changed — Spanish runs 1..92 (HL-C104)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `un`/`una` entered as a new
+  chapter 3, so old Spanish chapters 3–91 shifted to 4–92.
+- Eager bundle 483,055 / 500,000 bytes.
+
+### Added — cited Hebrew Alef ductus (HL-C09BD)
+
+- Render **א** in three evidence-aligned frames: draw the main descending
+  diagonal, lift once, then carry the opposing run from the upper-right arm
+  through the crossing and down the lower-left leg.
+- Keep the dedicated lesson's two pen-down runs and one lift explicit while
+  fitting its compact X-like handwriting to the vendored Noto Sans Hebrew
+  block outline.
+- Record the blocked Arabic Mim and Nun sources and the recovered future Faa
+  inventory source before reprioritizing to Hebrew.
+
+### Changed — Spanish runs 1..91 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the preterite split into three,
+  so old Spanish chapters 40–89 shifted to 42–91.
+- Eager bundle 482,464 / 500,000 bytes.
+
+### Added — cited Arabic independent-waw ductus (HL-C09AZ)
+
+- Render **و** in two evidence-aligned frames: close the small head loop from
+  its lower-right junction, then continue down and left through the tail without
+  lifting.
+- Keep the directly linked MOV's one pen-down run, zero lifts, one-way-connector
+  context, and consonant/long-vowel roles explicit while fitting Noto Naskh.
+- Preserve Arabic Waw independently of the existing Persian record for the same
+  Unicode glyph, and queue source recovery for independent Arabic **م** next.
+
+### Changed — Spanish runs 1..89 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the imperfect split into four,
+  so old Spanish chapters 41–86 shifted to 44–89.
+- Eager bundle 482,224 / 500,000 bytes.
+
+### Changed — Spanish runs 1..86 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the subjunctive chapter split
+  into five, so old Spanish chapters 46–82 shifted to 50–86.
+- Eager bundle 482,015 / 500,000 bytes.
+
+### Changed — Spanish runs 1..82 (HL-C100)
+
+- Regenerate the `bookhashes` chapter-lesson pin: the future+conditional chapter
+  split into four, so old Spanish chapters 42–79 shifted to 45–82.
+- Eager bundle 481,805 / 500,000 bytes.
+
+### Added — cited Arabic independent-heh ductus (HL-C09AY)
+
+- Render **ه** in three evidence-aligned frames: close the lower counter, thread
+  through the centre into the upper-right counter, then sweep left along the
+  baseline without lifting.
+- Keep the directly linked MOV's one pen-down run, zero lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Heh independently of the existing Persian record for the same
+  Unicode glyph, and queue the page's directly linked independent **و** source.
+
+### Added — cited Arabic independent-yaa ductus (HL-C09AX)
+
+- Render **ي** in four evidence-aligned frames: descend into the independent
+  bowl, sweep left without lifting, then restart for the lower-left and
+  lower-right dots in that order.
+- Keep the directly linked MOV's three pen-down runs, two lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Yaa U+064A independently of Urdu Ye U+06CC, whose isolated
+  body has no lower dots and retains separate provenance.
+
+### Added — cited Arabic independent-lam ductus (HL-C09AW)
+
+- Render **ل** in two evidence-aligned frames: descend the tall upright, then
+  continue left through the base bowl without lifting.
+- Keep the directly linked MOV's one pen-down run, zero lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Lam independently of the existing Persian and Urdu records
+  for the same Unicode glyph, and queue the page's directly linked **ي** source.
+
+### Changed — Spanish runs 1..79 (HL-C101)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `espanol` and the first built
+  sentence moved ahead of the `-ar` synthesis chapter.
+
+### Changed — Spanish runs 1..78 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: `trabajar` and `estudiar` took
+  a chapter each, so old Spanish chapters 21–76 shifted to 23–78.
+
+### Added — cited Arabic independent-kaf ductus (HL-C09AV)
+
+- Render **ك** in three evidence-aligned frames: descend the main upright, turn
+  left along the baseline without lifting, then restart once for the inner arm.
+- Keep the directly linked MOV's two pen-down runs, one lift, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic Kaf independently of Urdu **ک**'s different Unicode glyph and
+  provenance, and queue the same page's directly linked independent **ل** source.
+
+### Changed — Spanish runs 1..76 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 30 split into five, so
+  old Spanish chapters 31–72 shifted to 35–76.
+- Eager bundle 481,588 / 500,000 bytes.
+
+### Added — cited Arabic independent-ayn ductus (HL-C09AU)
+
+- Render **ع** in two evidence-aligned frames: shape its open head from the
+  upper-right tip, then continue down and around the broad lower bowl.
+- Keep the directly linked MOV's one pen-down run, zero lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Ayn independently of adjacent dotted Ghayn and queue the directly
+  linked independent **ك** source next.
+
+### Changed — Spanish runs 1..72 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 21 split into four, so
+  old Spanish chapters 22–69 shifted to 25–72.
+- Eager bundle 481,152 / 500,000 bytes.
+
+### Changed — Spanish runs 1..69 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 62 split into six, so
+  old Spanish chapters 63–64 shifted to 68–69.
+- Eager bundle 480,127 / 500,000 bytes.
+
+### Added — cited Arabic independent-daad ductus (HL-C09AT)
+
+- Render **ض** in four evidence-aligned frames: its clockwise oval, joined
+  shoulder, separately restarted trailing bowl, and separately placed upper dot.
+- Keep the embedded lesson's three pen-down runs, two lifts, and
+  two-way-connector context explicit while fitting the vendored Noto Naskh outline.
+- Record the direct short MOV's audit-time 403 honestly, preserve the accessible
+  embedded primary evidence, and queue the source-backed **ع** lesson next.
+
+### Changed — Spanish runs 1..64 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 53 split into six, so
+  old Spanish chapters 54–59 shifted to 59–64.
+- Eager bundle 479,716 / 500,000 bytes.
+
+### Changed — Spanish runs 1..59 (HL-C99)
+
+- Regenerate the `bookhashes` chapter-lesson pin: chapter 47's four mind-verbs
+  each took a chapter, plus a review and a synthesis chapter, so old Spanish
+  chapters 48–54 shifted to 53–59.
+- Eager bundle 479,308 / 500,000 bytes.
+
+### Added — cited Arabic independent-saad ductus (HL-C09AS)
+
+- Render **ص** in three evidence-aligned frames: its clockwise oval, the joined
+  rise into the short shoulder, and the separately restarted trailing bowl.
+- Keep the source's two pen-down runs, one lift, and two-way-connector context
+  explicit while fitting the vendored Noto Naskh outline.
+- Preserve Saad's evidence independently of adjacent Seen and Shiin, with the
+  same page's directly linked Daad MOV queued next.
+
+### Changed — Spanish runs 1..54 (HL-C98)
+
+- Regenerate the `bookhashes` chapter-lesson pin from the lesson files: the
+  first paradigm became five chapters (one grammar cell each, plus a review and
+  a synthesis chapter), so old Spanish chapters 16–50 shifted to 20–54. This pin
+  lives in the consumer, so the data package's own suite passes while this one
+  fails — which is exactly why the app is built in CI.
+- Eager bundle 478,900 / 500,000 bytes.
+
+### Added — cited Arabic independent-shiin ductus (HL-C09AR)
+
+- Render **ش** in five evidence-aligned frames: two joined body movements,
+  followed by the lower-left, lower-right, and centered upper dots.
+- Keep the source's four pen-down runs, three lifts, and two-way-connector
+  context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic provenance independently of Urdu **ش**, with the same page's
+  directly linked Saad MOV queued next.
+
+### Added — cited Arabic independent-seen ductus (HL-C09AQ)
+
+- Render **س** in two evidence-aligned frames: three close teeth shaped
+  right-to-left, then the connected flow into the final bowl.
+- Keep the source's single pen-down run, zero lifts, and two-way-connector
+  context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic provenance independently of Persian and Urdu **س**, with the
+  same page's directly linked Shiin MOV queued next.
+
+### Added — cited Arabic independent-raa ductus (HL-C09AP)
+
+- Render **ر** in two evidence-aligned frames: the upper-tip descent through its
+  short stroke, then the connected sweep left through the lower curve.
+- Keep the source's single pen-down run, zero lifts, and one-way-connector
+  context explicit while fitting the vendored Noto Naskh outline.
+- Preserve Arabic provenance independently of Urdu **ر**, with the next
+  measured Arabic **س** queued from its page's directly linked MOV source.
+
+### Added — cited Arabic independent-daal ductus (HL-C09AO)
+
+- Render **د** in two evidence-aligned frames: the upper-tip descent through its
+  curved shoulder, then the connected turn left along the baseline.
+- Preserve the source's single pen-down run with zero lifts while fitting the
+  isolated Noto Naskh outline.
+- Keep one-way-connector context and script-scoped Arabic provenance, with the
+  same page's directly linked Raa demonstration queued next.
+
+### Added — cited Arabic independent-khaa ductus (HL-C09AN)
+
+- Resolve the page's Khaa QuickTime attachment and render **خ** in three
+  evidence-aligned frames: its short upper head, continuous bowl, and lifted
+  upper dot.
+- Keep Khaa's body-first motion distinct from Haa's restarted stem while fitting
+  the same isolated Noto Naskh skeleton as adjacent Jeem and Haa.
+- Preserve two-way-connector context and script-scoped Arabic provenance, with
+  Daal queued from the next directly linked source.
+
+### Added — cited Arabic independent-haa ductus (HL-C09AM)
+
+- Resolve the source page's hidden Haa attachment and render **ح** in three
+  evidence-aligned frames: its short left stem, a lifted restart near the stem's
+  top, and the continuous dotless bowl.
+- Keep the one-lift, stem-first motion distinct from adjacent Jeem's body-first
+  path while fitting the same isolated Noto Naskh skeleton.
+- Preserve two-way-connector context and script-scoped Arabic provenance, with
+  Khaa queued from the same attachment ledger.
+
+### Added — cited Arabic independent-jeem ductus (HL-C09AL)
+
+- Record that the page's linked Thaa asset actually writes another two-dot Taa,
+  leaving **ث** on its conventional fallback rather than inventing source data.
+- Reprioritize to **ج** and render its body-first motion as three frames: a short
+  left-to-right upper head, the continuous descent and rounded bowl, then one
+  lifted dot below.
+- Keep two-way-connector context, Noto Naskh geometry, and Arabic-scoped
+  provenance distinct from Urdu's dot-first Jeem path.
+
+### Added — cited Arabic independent-taa ductus (HL-C09AJ)
+
+- Verify independent **ت** with the page's separately demonstrated Arabic bowl
+  followed by left and right upper dots as two individually lifted strokes.
+- Keep the evidence split explicit because the Taa clip opens on the completed
+  body, while preserving two-way-connector context and Arabic-scoped provenance.
+- Render a real three-frame filmstrip whose source, prose, Noto Naskh geometry,
+  two-lift summary, and distinct identity agree without inheriting Persian ت.
+
+### Added — cited Arabic independent-baa ductus (HL-C09AI)
+
+- Verify independent **ب** from the University of Oregon's adjacent video as a
+  continuous right-to-left bowl followed by one lift and the dot below.
+- Preserve the lesson's two-way-connector context and isolate Arabic provenance
+  from the Persian record for the same Unicode glyph.
+- Render a real two-frame filmstrip whose source, prose, Noto Naskh geometry,
+  one-lift summary, and Arabic-scoped identity agree.
+
+### Added — cited Arabic independent-alif ductus (HL-C09AH)
+
+- Verify independent **ا** from the University of Oregon's *Introduction to
+  Arabic* video as one continuous top-to-bottom stroke with zero lifts.
+- Preserve the lesson's one-way-connector context and isolate Arabic provenance
+  from the Persian and Urdu records for the same Unicode glyph.
+- Render a real one-frame filmstrip whose source, prose, Noto Naskh geometry,
+  zero-lift summary, and Arabic-scoped identity agree.
+
+### Added — cited Urdu independent-baṛī-ye ductus (HL-C09AG)
+
+- Add Urdu independent ے from Northwestern's *Zer o Zabar* animations as one
+  continuous folded bowl from the upper right through the leftward sweep and
+  far-left curl, then rightward along the lower fold.
+- Keep the zero-lift path and all three learner movements on the vendored Noto
+  Naskh fallback while preserving the source's positional distinction.
+- Render a real three-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree, completing the Urdu starter inventory.
+
+### Added — cited Urdu independent-nun-ghunna ductus (HL-C09AF)
+
+- Add Urdu independent ں from Northwestern's *Zer o Zabar* animations as the
+  same right-to-left, below-baseline bowl as ن, without its dot or a pen lift.
+- Preserve the source's ordinary-nūn initial/medial forms and verify that Noto
+  Naskh U+06BA exactly shares U+0646's body contour with the dot removed.
+- Render a real one-frame filmstrip whose one stroke, zero lifts, source,
+  prose, geometry, and summary agree.
+
 ### Added — cited Urdu independent-ye ductus (HL-C09AE)
 
 - Add Urdu independent ی from Northwestern's *Zer o Zabar* animations as one

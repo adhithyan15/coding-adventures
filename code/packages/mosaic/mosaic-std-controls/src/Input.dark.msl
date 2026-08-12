@@ -1,0 +1,11 @@
+style Input {
+  part input-root {
+    background    : $foundation-color-surface-dark ;
+    color         : $foundation-color-text-dark ;
+    border-color : $foundation-color-border-dark ;
+    border-width : 1 ;
+    border-radius: $foundation-radius-sm ;
+    padding      : $foundation-space-sm ;
+    font-size    : $foundation-font-body ;
+  }
+}

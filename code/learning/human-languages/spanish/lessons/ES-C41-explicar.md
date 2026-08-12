@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C41-explicar
 spine_node: SPINE-GIVE-REASONS
-sequence: 1910
-chapter: 41
+sequence: 2190
+chapter: 170
 type: word
 headword: explicar
 gloss: to explain — literally to unfold, and the verb that names what this whole chapter has been building
@@ -68,7 +68,7 @@ and Spanish keeps it in the plainest verb of the set.
 
 *Explicar* is regular — it takes the plain *-ar* endings of *hablar*, with no
 stem change at all: **explico**, **explicas**, **explica**, **explicamos**,
-**explican**. (*Contar*, back in chapter 38, breaks its *o* to *ue*; this one does
+**explican**. (*Contar*, which you met earlier, breaks its *o* to *ue*; this one does
 not, and there is nothing to remember.)
 
 Here is a whole explanation, with every piece something this book has taught:

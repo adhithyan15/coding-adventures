@@ -138,11 +138,25 @@
           "required": false
         },
         {
+          "id": "token-palette",
+          "long": "token-palette",
+          "description": "Path to a schema-versioned JSON token palette. Global tokens style the package and all dependencies; an optional matching backends.<backend> map applies target-specific overrides.",
+          "type": "string",
+          "required": false
+        },
+        {
           "id": "profile",
           "long": "profile",
           "description": "Build policy: 'permissive' emits artifacts plus mosaic-degradations.json; 'native-complete' rejects known native degradations before emitting application artifacts",
           "type": "enum",
           "enum_values": ["permissive", "native-complete"],
+          "required": false
+        },
+        {
+          "id": "runtime-library",
+          "long": "runtime-library",
+          "description": "Target Rust application cdylib to bundle into the generated native project. Compose, Flutter, and Qt support .dylib, .so, and .dll; SwiftUI supports .dylib; XAML supports .dll. Requires --emit-project and is mandatory for all five native backends' native-complete artifacts.",
+          "type": "string",
           "required": false
         }
       ],

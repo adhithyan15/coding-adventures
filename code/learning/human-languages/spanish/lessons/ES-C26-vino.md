@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C26-vino
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1450
-chapter: 26
+sequence: 1730
+chapter: 138
 type: word
 headword: el vino
 gloss: wine — one Latin root that reached English by three separate roads, plus one English built at home

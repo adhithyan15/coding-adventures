@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-llamar
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 140
-chapter: 3
+chapter: 4
 type: word
 headword: llamo
 gloss: I call (from llamar, to call)

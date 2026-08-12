@@ -10,8 +10,10 @@
 //!     puts
 //!     puts [1, 2, 3]
 //!
-//! emits Rust, compiles it with `rustc`, runs the binary, and asserts stdout
-//! is **exactly** `hello\n\n1\n2\n3\n` — the Ruby reference output.
+//! — which, since SIR28 §2, lowers to `__sys_write__(stdout, "per_value",
+//! true, ...)` rather than a bare `BuiltinCall("puts", ...)` — emits Rust,
+//! compiles it with `rustc`, runs the binary, and asserts stdout is
+//! **exactly** `hello\n\n1\n2\n3\n` — the Ruby reference output.
 //!
 //! Gates on `rustc` being available and degrades gracefully when the host
 //! linker is missing (mirrors `compile_and_run_loops.rs`).
@@ -40,12 +42,19 @@ fn var(name: &str) -> Expr {
     Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
 }
 
-/// `puts(args…)` as an effectful statement (MayPrint, matching the frontend).
+/// `puts(args…)` as an effectful statement (MayPrint, matching the frontend)
+/// — since SIR28 §2, a `puts`-shaped `__sys_write__` call.
 fn puts_stmt(args: Vec<Expr>) -> Stmt {
+    let mut sys_args = vec![
+        Expr::StrLit { value: "stdout".into(), span: s() },
+        Expr::StrLit { value: "per_value".into(), span: s() },
+        Expr::BoolLit { value: true, span: s() },
+    ];
+    sys_args.extend(args);
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args,
+            name: "__sys_write__".into(),
+            args: sys_args,
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -63,7 +72,7 @@ fn demo_module() -> Module {
 
     Module {
         name: "puts_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings, Feature::ConsoleIO]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -108,7 +117,7 @@ fn cyclic_module() -> Module {
 
     Module {
         name: "puts_cyclic".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings, Feature::ConsoleIO]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

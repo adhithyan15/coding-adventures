@@ -97,7 +97,19 @@ import {
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { generatedFigureUrl } from "./figures.ts";
-import { bookHashStatus } from "./bookhashes.ts";
+import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
+// Per-atom mastery (HL10 §10.1). The scheduler still runs on lessons; this
+// records what the learner actually holds, atom by atom, so a later slice can
+// schedule from it. Recording first and scheduling second is deliberate: the
+// record has to exist and be trustworthy before anything is allowed to depend
+// on it.
+import { practiseAll } from "./atommastery.ts";
+import { type ReviewPick, refreshesOf, reviewPicks } from "./atomschedule.ts";
+import { type SynthesisDrill, piecesUsed, synthesisDrill } from "./synthesisdrill.ts";
+import { buildVoiceScript, type NarrationLesson } from "./voicescript.ts";
+import { type VoiceHandle, browserSpeech, playVoiceScript } from "./voiceplayer.ts";
+import { loadNarration } from "./narration-sources.ts";
+import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
   ductusFilmstrip,
@@ -140,7 +152,28 @@ let mode: Mode = "learn";
 // The one new thing is that this state SURVIVES: it is keyed by lesson id and
 // written to localStorage (see progress.ts), so the app finally remembers you.
 const REVIEW_STORAGE = browserStorage();
-const BUNDLED_LESSON_IDS = new Set(bundledLessonIds());
+// Filled on the first corpus load. It cannot be built at module load any more:
+// the id list comes from the lesson-source map, which is deliberately lazy so
+// its ~27 kB of paths stay out of the eager chunk (HL-C110).
+let BUNDLED_LESSON_IDS: Set<string> | null = null;
+
+// The learner's per-atom record, loaded once and written back on every answer.
+// Kept beside the other stores rather than inside them: this is a third,
+// genuinely different thing (see masterystore.ts).
+let MASTERY = loadMastery(masteryStorage());
+
+/**
+ * Credit one answer against every atom it assessed.
+ *
+ * `assesses` is authored per activity, so this is the exact set the learner was
+ * just tested on — not the whole lesson, which would credit atoms they never
+ * had to produce.
+ */
+function recordAtomAnswer(atoms: readonly string[] | undefined, correct: boolean): void {
+  if (!atoms || atoms.length === 0) return;
+  MASTERY = practiseAll(MASTERY, atoms, correct, Date.now());
+  saveMastery(masteryStorage(), MASTERY);
+}
 let LESSONS: Lesson[] = [];
 let LESSON_IDS: string[] = [];
 const AVAILABLE_LANGUAGE_IDS = LANGUAGE_CHAIN.filter((language) =>
@@ -259,8 +292,10 @@ function learnLessonIds(): Set<string> {
 }
 
 async function loadLearnCorpus(): Promise<void> {
+  BUNDLED_LESSON_IDS ??= new Set(await bundledLessonIds());
+  const known = BUNDLED_LESSON_IDS;
   const missing = [...learnLessonIds()].filter(
-    (id) => BUNDLED_LESSON_IDS.has(id) && !LESSON_BY_ID.has(id),
+    (id) => known.has(id) && !LESSON_BY_ID.has(id),
   );
   if (missing.length > 0) installLessons(await loadBundledLessons(missing));
 }
@@ -975,6 +1010,14 @@ function renderLanguagePicker(): HTMLElement {
       reviewCell = null;
       lessonIndex = null;
       void refreshCorpus(loadLearnCorpus);
+
+// The book-hash manifest is 136 kB and loads lazily (see bookhashes.ts), so
+// the "book synced / stale" note in a lesson's metadata line is absent on
+// first paint. Re-render once it lands rather than leaving it permanently
+// blank. A failed load resolves too, and simply leaves the note off.
+void whenBookHashesReady().then(() => {
+  render();
+});
     };
     const text = el("span", "");
     text.textContent = `${definition.name} · ${definition.script}`;
@@ -1086,6 +1129,7 @@ function renderTeachingStep(
       card.appendChild(hook);
     }
     if (lesson.body.trim() !== "") card.appendChild(renderLessonBody(lesson));
+  card.appendChild(renderVoiceControls(lesson));
   }
 
   // The threads back to earlier languages — the spiral, made literal. Each is a
@@ -1220,9 +1264,11 @@ function renderFocusedCheck(
     form.append(label, budget, input, submit);
     form.onsubmit = (event) => {
       event.preventDefault();
+      const correct = activityAnswerIsCorrect(input.value, activity);
+      recordAtomAnswer(activity.assesses, correct);
       focusedAttempt = {
         lessonId: lesson.id,
-        state: activityAnswerIsCorrect(input.value, activity) ? "correct" : "wrong",
+        state: correct ? "correct" : "wrong",
       };
       learnNotice = null;
       render();
@@ -1243,9 +1289,13 @@ function renderFocusedCheck(
     form.append(label, input, submit);
     form.onsubmit = (event) => {
       event.preventDefault();
+      const correct = meaningAnswerIsCorrect(input.value, lesson.gloss);
+      // A meaning check has no authored `assesses` list, so it credits what the
+      // lesson exists to teach: its own introduced atoms.
+      recordAtomAnswer(lesson.introducesAtoms, correct);
       focusedAttempt = {
         lessonId: lesson.id,
-        state: meaningAnswerIsCorrect(input.value, lesson.gloss) ? "correct" : "wrong",
+        state: correct ? "correct" : "wrong",
       };
       learnNotice = null;
       render();
@@ -1316,6 +1366,219 @@ function renderFrontierEncounter(
   return card;
 }
 
+// Which drill the learner is on. A counter rather than a clock, so the drill
+// does not change under them mid-answer and "another one" is a deliberate act.
+/**
+ * How many tracked atoms before a drill is worth loading the full corpus for.
+ *
+ * Low enough that a learner who has done a handful of lessons gets drills, high
+ * enough that a brand-new visitor never pays for a corpus they cannot use. Six
+ * is roughly three completed lessons.
+ */
+const DRILL_CORPUS_THRESHOLD = 6;
+
+// Voice mode (HL10 §10.2). One lesson plays at a time; starting another stops
+// the first, and leaving the view stops it too — audio that outlives the thing
+// that started it is the worst bug this feature can have.
+let voice: { lessonId: string; handle: VoiceHandle; step: string } | null = null;
+
+function stopVoice(): void {
+  voice?.handle.stop();
+  voice = null;
+}
+
+/**
+ * Speak one lesson, from the narration the corpus already generates.
+ *
+ * The learner's half of the loop — recognition — is deliberately absent: a
+ * `respond` step waits its authored budget and moves on. That is what a
+ * cassette course did, it needs no microphone permission, and it is genuinely
+ * useful to somebody driving. Scoring speech is a later slice.
+ */
+async function speakLesson(lesson: (typeof LESSONS)[number]): Promise<void> {
+  stopVoice();
+  const speech = browserSpeech(lesson.language);
+  if (!speech) {
+    learnNotice = "This browser has no speech synthesis, so lessons cannot be read aloud here.";
+    render();
+    return;
+  }
+  const chapter = (await loadNarration(lesson.language, lesson.chapter)) as
+    | { lessons?: NarrationLesson[] }
+    | null;
+  const source = chapter?.lessons?.find((candidate) => candidate.id === lesson.id);
+  if (!source) {
+    learnNotice = "No narration has been generated for this lesson yet.";
+    render();
+    return;
+  }
+  const steps = buildVoiceScript(source);
+  const handle = playVoiceScript(steps, speech, {
+    onStep: (_index, step) => {
+      if (!voice) return;
+      voice.step =
+        step.kind === "speak"
+          ? step.text
+          : step.kind === "respond"
+            ? `Your turn: ${step.instruction}`
+            : "…";
+      render();
+    },
+    onDone: () => {
+      voice = null;
+      render();
+    },
+  });
+  voice = { lessonId: lesson.id, handle, step: "…" };
+  render();
+}
+
+let drillSeed = 0;
+let drillAnswer: { seed: number; used: string[]; total: number } | null = null;
+
+/**
+ * A synthesis drill: pieces held, combination unseen.
+ *
+ * The check is honest about its own limits. It can tell you whether each piece
+ * appeared, which is exactly what the drill claims to test; it cannot tell you
+ * whether the sentence around them is good Spanish, and it does not pretend to.
+ */
+function renderSynthesisDrill(drill: SynthesisDrill): HTMLElement {
+  const section = el("section", "drill");
+  const heading = el("h2", "learn__concept");
+  heading.textContent = "Put it together";
+  section.appendChild(heading);
+  const prompt = el("p", "drill__prompt");
+  prompt.textContent = drill.prompt;
+  section.appendChild(prompt);
+
+  const list = el("ul", "drill__pieces");
+  for (const piece of drill.pieces) {
+    const item = el("li", "drill__piece");
+    item.textContent = `${piece.headword} — ${piece.gloss} (${piece.domain})`;
+    list.appendChild(item);
+  }
+  section.appendChild(list);
+
+  const shown = drillAnswer?.seed === drillSeed ? drillAnswer : null;
+  if (shown) {
+    const verdict = el("p", shown.used.length === shown.total ? "drill__verdict yes" : "drill__verdict");
+    verdict.textContent =
+      shown.used.length === shown.total
+        ? `All ${shown.total} pieces used. Whether the sentence around them is good Spanish is not something this check can judge — say it aloud and see if it sounds like something a person would say.`
+        : `Used ${shown.used.length} of ${shown.total}. Missing: ${drill.pieces
+            .filter((piece) => !shown.used.includes(piece.headword))
+            .map((piece) => piece.headword)
+            .join(", ")}.`;
+    section.appendChild(verdict);
+  }
+
+  const form = el("form", "drill__form") as HTMLFormElement;
+  const input = document.createElement("input");
+  input.className = "drill__input";
+  input.type = "text";
+  input.autocomplete = "off";
+  input.setAttribute("aria-label", "Your sentence");
+  const submit = el("button", "next") as HTMLButtonElement;
+  submit.type = "submit";
+  submit.textContent = "Check my sentence";
+  form.append(input, submit);
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    drillAnswer = {
+      seed: drillSeed,
+      used: piecesUsed(input.value, drill.pieces).map((piece) => piece.headword),
+      total: drill.pieces.length,
+    };
+    render();
+  };
+  section.appendChild(form);
+
+  const another = el("button", "opt") as HTMLButtonElement;
+  another.textContent = "Another combination";
+  another.onclick = () => {
+    drillSeed += 1;
+    drillAnswer = null;
+    render();
+  };
+  section.appendChild(another);
+  return section;
+}
+
+/**
+ * Play/stop for one lesson, plus what is being said right now.
+ *
+ * The line of current text is not decoration. Voice mode is for somebody whose
+ * eyes are elsewhere, but the same page is used by somebody sitting down, and a
+ * button that produces sound with no visible sign of what it is doing is
+ * indistinguishable from a broken one.
+ */
+function renderVoiceControls(lesson: (typeof LESSONS)[number]): HTMLElement {
+  const bar = el("div", "voice");
+  const playing = voice?.lessonId === lesson.id;
+  const button = el("button", "opt voice__button") as HTMLButtonElement;
+  button.textContent = playing ? "Stop" : "Play this lesson aloud";
+  button.onclick = () => {
+    if (playing) {
+      stopVoice();
+      render();
+      return;
+    }
+    void speakLesson(lesson);
+  };
+  bar.appendChild(button);
+  if (playing) {
+    const now = el("p", "muted voice__now");
+    now.textContent = voice!.step;
+    bar.appendChild(now);
+  }
+  return bar;
+}
+
+/** Every lesson id the learner has passed, across all selected paths. */
+function completedLessonIds(): Set<string> {
+  const done = new Set<string>();
+  for (const completed of learnCompletion.values()) {
+    for (const id of completed) done.add(id);
+  }
+  return done;
+}
+
+/**
+ * The review the learner owes, chosen by atom rather than by lesson.
+ *
+ * Each row says what it would refresh, because "review this" with no reason is
+ * the thing that makes review feel arbitrary. The learner can see that these
+ * three lessons are between them carrying nine atoms they have started to lose.
+ */
+function renderDueReview(picks: ReviewPick[]): HTMLElement {
+  const section = el("section", "due-review");
+  const heading = el("h2", "learn__concept");
+  const owed = new Set(picks.flatMap((pick) => pick.covers)).size;
+  heading.textContent = `Due for review — ${owed} atom${owed === 1 ? "" : "s"}`;
+  section.appendChild(heading);
+  const gloss = el("p", "muted learn__gloss");
+  gloss.textContent =
+    "Chosen from your own record rather than from lesson order: these are the lessons that" +
+    " refresh the most of what you have started to forget.";
+  section.appendChild(gloss);
+  for (const pick of picks) {
+    const lesson = LESSONS.find((candidate) => candidate.id === pick.lessonId);
+    if (!lesson) continue;
+    const card = el("article", "due-review__card");
+    const title = el("p", "due-review__head");
+    title.textContent = `${languageName(pick.language)} · ${lesson.headword}`;
+    const covers = el("p", "muted due-review__covers");
+    covers.textContent =
+      `Refreshes ${pick.covers.length} due atom${pick.covers.length === 1 ? "" : "s"}: ` +
+      pick.covers.slice(0, 4).join(", ") +
+      (pick.covers.length > 4 ? `, and ${pick.covers.length - 4} more` : "");
+    card.append(title, covers, renderLessonBody(lesson));
+    section.appendChild(card);
+  }
+  return section;
+}
+
 function renderLearn(): HTMLElement {
   const wrap = el("div", "learn");
   wrap.appendChild(renderLanguagePicker());
@@ -1342,6 +1605,45 @@ function renderLearn(): HTMLElement {
     notice.textContent = learnNotice;
     wrap.appendChild(notice);
   }
+
+  // Atom-driven review (HL10 §10.1). Everything below this point schedules by
+  // lesson; this one section schedules by what the learner has actually
+  // forgotten, and it goes first because a debt is more urgent than a frontier.
+  const duePicks = reviewPicks(
+    MASTERY,
+    LESSONS.filter((lesson) => selectedLanguages.includes(lesson.language)).map((lesson) => ({
+      id: lesson.id,
+      language: lesson.language,
+      refreshes: refreshesOf(lesson),
+    })),
+    completedLessonIds(),
+    Date.now(),
+  );
+  if (duePicks.length > 0) wrap.appendChild(renderDueReview(duePicks));
+
+  // Synthesis drills (HL10 §10.3). Practice the course could not have authored:
+  // pieces the learner holds, in a combination no lesson ever showed. Offered
+  // AFTER review, because refreshing something you are losing beats stretching
+  // something you have.
+  //
+  // A drill needs the WHOLE corpus, not the learn frontier. Learn mode keeps
+  // only the frontier and the completed lessons in memory -- two Spanish
+  // lessons for a beginner -- and a drill built from those can never find two
+  // different domains to combine. So the first time a learner holds enough to
+  // be drilled, pull the rest of the corpus in the background; until it lands,
+  // no drill is offered rather than a wrong one.
+  if (MASTERY.size >= DRILL_CORPUS_THRESHOLD && !fullCorpusLoaded && !corpusLoading) {
+    void refreshCorpus(loadFullCorpus);
+  }
+  const drill = fullCorpusLoaded
+    ? synthesisDrill(
+      MASTERY,
+      LESSONS.filter((lesson) => selectedLanguages.includes(lesson.language)),
+      Date.now(),
+      drillSeed,
+    )
+    : null;
+  if (drill) wrap.appendChild(renderSynthesisDrill(drill));
 
   const frontier = mixedCurriculumFrontier(selectedLanguages, learnCompletion);
   const activeAttempt = focusedAttempt && frontier.steps.some((step) => step.lessonId === focusedAttempt!.lessonId);
@@ -1857,6 +2159,7 @@ function render(): void {
     app!.appendChild(renderTabs());
   }
 
+  if (mode !== "learn") stopVoice();
   if (mode === "learn") {
     app!.appendChild(renderLearn());
   } else if (mode === "concepts") {

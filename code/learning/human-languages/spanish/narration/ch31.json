@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 31,
-  "title": "Numbers Eleven to Twenty",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:96d1c45d4a4ca6a3",
+  "title": "Synthesis --- The Decoder",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:62ab06597adb3224",
   "lessons": [
     {
-      "id": "ES-C31-once-quince",
-      "sequence": 1530,
-      "title": "once — quince: five words with a seam you can no longer see",
-      "headword": "once — quince",
-      "romanization": "once — quince",
-      "gloss": "11-15 — five single opaque words, each one a Latin compound worn down until the seam disappeared",
+      "id": "ES-C57-sintesis-descifrar",
+      "sequence": 547,
+      "title": "Synthesis — the decoder",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — etymology stops being history and becomes a decoder you carry",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d051928bb9223bdb",
+      "sourceHash": "fnv1a64:d9391b39a841931b",
       "notice": null,
       "blocks": [
         {
@@ -35,177 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish counts past ten in two completely different ways, and the join between them is a real boundary in the language, not a place someone drew a line. Today: the first five, which you simply have to learn as words."
+              "text": "Four sound laws and three endings. Before the practice: what do you do with an unfamiliar word starting h-? One starting ll-? One starting es-?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: once through quince",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "Spanish",
-                "from Latin"
+                "what you see",
+                "what to try",
+                "example"
               ],
-              "columns": 2,
-              "rowCount": 5,
+              "columns": 3,
+              "rowCount": 7,
               "utterances": [
-                "Spanish: once. from Latin: undecim (\"one-ten\").",
-                "Spanish: doce. from Latin: duodecim (\"two-ten\").",
-                "Spanish: trece. from Latin: tredecim (\"three-ten\").",
-                "Spanish: catorce. from Latin: quattuordecim (\"four-ten\").",
-                "Spanish: quince. from Latin: quindecim (\"five-ten\")."
+                "what you see: -ch-. what to try: Latin -ct-. example: noche becomes nocturnal.",
+                "what you see: h-. what to try: put an f back. example: hijo becomes filial.",
+                "what you see: ll-. what to try: try cl-, pl-, fl-. example: llave becomes clavicle.",
+                "what you see: es- + consonant. what to try: take the e- off. example: escuela becomes school.",
+                "what you see: -ción. what to try: -tion. example: nación becomes nation.",
+                "what you see: -dad. what to try: -ty. example: ciudad becomes city.",
+                "what you see: -mente. what to try: -ly. example: claramente becomes clearly."
               ]
             },
             {
               "kind": "speech",
-              "text": "Every one of these was a compound — a number plus -decim (\"ten,\" the same root as diez). But these five are the numbers people say most often, and heavy use wears words smooth. Centuries of everyday speech fused each pair into a single, opaque word: no Spanish speaker hears \"one-ten\" in once any more than an English speaker hears \"two-ten\" in twelve."
-            },
-            {
-              "kind": "speech",
-              "text": "Listen for the ghost, though. The -ce ending on doce, trece, catorce, quince is all that survives of Latin's -decim. It is the same \"ten\" you already say in diez, ground down to two letters."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"once, doce, trece, catorce, quince\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"once, doce, trece, catorce, quince\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "just the endings — \"-ce, -ce, -ce, -ce\" — the worn-down ten",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: just the endings — \"-ce, -ce, -ce, -ce\" — the worn-down *ten*]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count eleven to fifteen. (Once, doce, trece, catorce, quince.) What are these five, structurally? (Fused Latin compounds — number plus -decim, \"ten.\") Which piece of each word is the old \"ten\"? (The -ce ending — diez worn down.) Next: the numbers where the seam is still wide open."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C31-dieciseis-diecinueve",
-      "sequence": 1540,
-      "title": "dieciséis — diecinueve: where the seam reopens",
-      "headword": "dieciséis — diecinueve",
-      "romanization": "dieciséis — diecinueve",
-      "gloss": "16-19 — not words to memorise but a formula, diez y X, with the seam still visible",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7ae87a0614eb6409",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You just learned five numbers whose insides had been ground smooth. Now say fifteen and then sixteen — quince, dieciséis — and hear the language change gear. From here you are not memorising words; you are following a rule."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: dieciséis through diecinueve",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "literally"
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "Spanish: dieciséis. literally: diez y seis, \"ten and six\".",
-                "Spanish: diecisiete. literally: diez y siete, \"ten and seven\".",
-                "Spanish: dieciocho. literally: diez y ocho, \"ten and eight\".",
-                "Spanish: diecinueve. literally: diez y nueve, \"ten and nine\"."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "No fusion. You can hear diez plainly at the front of every one, and the number you already know sitting right behind it."
+              "text": "Seven rules, and between them they will get you through a great deal of written Spanish this book has no room to teach. They also stack: estación gives up both ends at once."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: a formula, not a list",
+          "title": "Grammar Lens: what a decoder is not",
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the structural difference that makes 15/16 a real boundary in Spanish rather than a convenient place to pause:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "11-15",
-                "16-19"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "how you get the word. 11-15: remember it. 16-19: build it.",
-                "the \"ten\" inside. 11-15: worn to -ce. 16-19: still spelled dieci-.",
-                "can you hear the parts? 11-15: no. 16-19: yes."
-              ]
+              "text": "Be exact about what you have, because overclaiming it will disappoint you at the worst moment. This is a reading tool, and mostly a first-guess one: it will not tell you how to say something, will not give you gender or conjugation, and will sometimes point at the wrong English word."
             },
             {
               "kind": "speech",
-              "text": "So once through quince are vocabulary, and dieciséis through diecinueve are grammar: one template, dieci- + digit, filled four times. Learn the template once and all four are already yours."
+              "text": "What it does is remove the feeling that an unfamiliar Spanish word is a wall. Usually it is not — it is a word you already know, wearing clothes you have learned to recognise. That change of expectation is worth more than any word in this chapter: it is what lets you read above your level and get most of it."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the decoder fails, that is information too. A word that resists every rule is usually from one of Spanish's non-Latin layers — Arabic, Basque, or the Americas — worth noticing precisely because it breaks a rule you hold."
             }
           ]
         },
@@ -223,29 +102,100 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"dieciséis, diecisiete, dieciocho, diecinueve\"",
+              "instruction": "the seven rules, in order",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"dieciséis, diecisiete, dieciocho, diecinueve\"]"
+              "source": "[YOU SAY: the seven rules, in order]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the seam out loud — \"diez y seis\" then \"dieciséis\"",
+              "instruction": "\"hoja, lleno, noche\" and name the law behind each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the seam out loud — \"diez y seis\" then \"dieciséis\"]"
+              "source": "[YOU SAY: \"hoja, lleno, noche\" and name the law behind each]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the boundary — \"quince\" (remembered), \"dieciséis\" (built)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the boundary — \"quince\" (remembered), \"dieciséis\" (built)]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-sintesis-descifrar-h",
+              "prompt": "Decode hoja.",
+              "assesses": [
+                "ES-SOUND-F-TO-H"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "folia, leaf, as in foliage",
+                "leaf",
+                "foliage, portfolio"
+              ],
+              "feedback": {
+                "correct": "Put the f back and the English appears.",
+                "incorrect": "Foja, folia. Leaf — as in foliage."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-sintesis-descifrar-ll",
+              "prompt": "Decode lleno.",
+              "assesses": [
+                "ES-SOUND-CLUSTER-TO-LL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "plenum, full, as in plenty",
+                "full",
+                "plenty, plenary"
+              ],
+              "feedback": {
+                "correct": "pl- was the right one of the three.",
+                "incorrect": "Try pl-: plenum. Full, as in plenty."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-sintesis-descifrar-mix",
+              "prompt": "Decode la conservacion de la ciudad.",
+              "assesses": [
+                "ES-FRIEND-CION-TION",
+                "ES-FRIEND-DAD-TY"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the conservation of the city",
+                "conservation of the city"
+              ],
+              "feedback": {
+                "correct": "Two endings, one phrase, nothing memorised.",
+                "incorrect": "The conservation of the city."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-sintesis-descifrar-limits",
+              "prompt": "A word resists every rule you have. What does that suggest?",
+              "assesses": [
+                "ES-SOUND-F-TO-H"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "it is probably not from latin",
+                "it may be arabic, basque or from the americas"
+              ],
+              "feedback": {
+                "correct": "The exceptions are informative too.",
+                "incorrect": "That it is probably from one of Spanish's non-Latin layers — Arabic, Basque, or the Americas."
+              }
             }
           ]
         },
@@ -262,255 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count sixteen to nineteen. (Dieciséis, diecisiete, dieciocho, diecinueve.) Are these fused or transparent? (Transparent — plain \"ten and X.\") Which of the two groups do you have to memorise, and which can you generate? (Memorise 11-15; generate 16-19 from dieci- plus the digit.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C31-teens-latinos",
-      "sequence": 1550,
-      "title": "duodēvīgintī — the quirk Spanish threw away",
-      "headword": "duodēvīgintī, ūndēvīgintī",
-      "romanization": "duodēvīgintī, ūndēvīgintī",
-      "gloss": "why 18 and 19 are the interesting ones — Latin counted them backwards from twenty, and Spanish refused to",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:236f8af21463cfb4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Dieciocho and diecinueve look like the least interesting words in the chapter — just two more ten-and-X compounds. They are actually the most interesting, because of what Latin said instead."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "dieciséis — diecinueve — the dieci- plus digit template."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: Latin counted 18 and 19 backwards",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You would expect dieciocho and diecinueve to carry on whatever Latin did for 18 and 19. Latin did something else entirely. Its everyday words for those two numbers were subtractive — counted down from twenty:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "number",
-                "Latin",
-                "literally"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "number: 18. Latin: duodēvīgintī. literally: \"two from twenty\".",
-                "number: 19. Latin: ūndēvīgintī. literally: \"one from twenty\"."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "(You still meet this habit in English clock-talk: \"ten to four.\")"
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish did not inherit either word. It built dieciocho and diecinueve fresh, on exactly the same simple template as 16 and 17 — quietly regularising away an irregularity that existed in its own parent language. Languages are usually described as wearing down and getting messier; here is a clean case of one tidying up."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "Latin's way — \"two from twenty\" — then Spanish's — \"dieciocho\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: Latin's way — \"two from twenty\" — then Spanish's — \"dieciocho\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dieciocho, diecinueve\" — addition, not subtraction",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dieciocho, diecinueve\" — addition, not subtraction]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How did Latin say 18 and 19? (Subtractively — duodēvīgintī, \"two from twenty,\" and ūndēvīgintī, \"one from twenty.\") Did Spanish keep that? (No — it built dieciocho and diecinueve on the regular ten-and-X template.) So which language is the irregular one here? (Latin — Spanish simplified.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C31-veinte",
-      "sequence": 1560,
-      "title": "veinte — the number the teens were counting toward",
-      "headword": "veinte",
-      "romanization": "veinte",
-      "gloss": "twenty — the ceiling of the teens, and a word that was worn but never fused",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:aec387ce76b2b2ff",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Latin's own 18 and 19 were counted down from twenty. So it is worth meeting twenty itself — the number the whole run has been aiming at."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: veinte",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "veinte (\"twenty\") from Latin vīgintī. It was worn down by ordinary sound change — the g softened away, the vowels shifted — but notice what did not happen to it: it was never fused out of two separate words the way once through quince were. Vīgintī was already a single word for a single round number, so there is no seam inside veinte to look for."
-            },
-            {
-              "kind": "speech",
-              "text": "Three different histories, then, in one short chapter:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "words",
-                "what happened"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "words: once - quince. what happened: two words fused into one.",
-                "words: dieciséis - diecinueve. what happened: two words built into one, seam visible.",
-                "words: veinte. what happened: one word, simply worn."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"once, doce, trece, catorce, quince\" — the five fused Latins",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"once, doce, trece, catorce, quince\" — the five fused Latins]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"dieciséis, diecisiete, dieciocho, diecinueve\" — built, not fused",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"dieciséis, diecisiete, dieciocho, diecinueve\" — built, not fused]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"veinte\" — twenty, worn but never fused",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"veinte\" — twenty, worn but never fused]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Count eleven to twenty. Where is the boundary between remembering and building, and why is it there? (After quince — 11-15 are fused Latin compounds, 16-19 are dieci- plus a digit.) Did Spanish inherit Latin's subtractive 18 and 19? (No — it regularised them.) Was veinte fused from two words? (No — Latin vīgintī was already one word; it was only worn down.)"
+              "text": "How many rules do you now hold? (Seven — four laws and three endings.) What are they for? (Reading, mostly first guesses.) And what has really changed? (An unfamiliar word is no longer a wall.)"
             }
           ]
         }

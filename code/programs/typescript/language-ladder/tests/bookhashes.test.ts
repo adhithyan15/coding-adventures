@@ -1,8 +1,14 @@
-import { describe, expect, it } from "vitest";
-import { actualChapterHash, bookHashStatus, expectedBookHash } from "../src/bookhashes.ts";
+import { beforeAll, describe, expect, it } from "vitest";
+import { actualChapterHash, bookHashStatus, expectedBookHash, whenBookHashesReady } from "../src/bookhashes.ts";
 import { REAL_LESSONS } from "./real-lessons.ts";
 
 const loadLessons = () => REAL_LESSONS;
+
+// The manifest is loaded lazily so it stays out of the app's eager chunk.
+// Every assertion below reads it, so wait for it once before any of them run.
+beforeAll(async () => {
+  await whenBookHashesReady();
+});
 
 describe("generated book source hashes", () => {
   it.each([
@@ -10,12 +16,240 @@ describe("generated book source hashes", () => {
     // into thirty-three prerequisite-ordered micro-lessons: ch3 12->14,
     // ch4 13->15, ch6 7->9. The generated-book manifest and the lesson files
     // agree on these numbers; only this app-side pin was stale.
+    //
+    // HL-C94 split the four over-budget opening chapters into twelve; HL-C95 then
+    // moved si/no to chapter 6 and collapsed the chapter they left empty, so
+    // Spanish runs 1..50 and these counts are regenerated from the lesson files
+    // rather than hand-edited. This pin lives in the CONSUMER, so the data
+    // package's own suite passes while this one fails -- which is exactly why
+    // the downstream app is built in CI.
+    // HL-C98 gave the first paradigm one cell per chapter (hablo / hablas /
+    // habla), plus a review chapter and a synthesis chapter, so Spanish runs
+    // 1..54 and old chapters 16..50 shifted to 20..54.
+    // HL-C99 gave each of the four mind-verbs its own chapter, plus a review
+    // and a synthesis chapter, so Spanish runs 1..59 and old 48..54 -> 53..59.
+    // HL-C99b split chapter 53 (tomar/preguntar/ayudar/gustar) into six, so
+    // Spanish runs 1..64 and old 54..59 -> 59..64.
+    // HL-C99c split chapter 62 (traer/conseguir/jugar/conocer) into six, so
+    // Spanish runs 1..69 and old 63..64 -> 68..69.
+    // HL-C99d split chapter 21: comer now owns a chapter with one -er cell per
+    // lesson, vivir and beber take their own, and a synthesis chapter closes the
+    // three families. Spanish runs 1..72; old 22..69 -> 25..72.
+    // HL-C99e split chapter 30 (poner/salir/venir) into five, closing the -go
+    // club with a review and a synthesis chapter. Spanish runs 1..76.
+    // HL-C99f gave trabajar and estudiar a chapter each. Spanish runs 1..78.
+    // HL-C101 moved espanol and the first built sentence ahead of the -ar
+    // synthesis chapter, so the synthesis can finally say hablo espanol.
+    // Spanish runs 1..79.
+    // HL-C100 split the future+conditional chapter into four: the future, the
+    // conditional, their shared irregular stems, and a synthesis. Spanish 1..82.
+    // HL-C100 split the subjunctive chapter into five: the non-assertion idea,
+    // the regular forms, the yo-stem irregulars, ojala, and a synthesis. 1..86.
+    // HL-C100 split the imperfect into four: the regular forms, ver, the three
+    // irregulars, and a synthesis. Spanish runs 1..89.
+    // HL-C100 split the preterite into three: the regular forms, the strong
+    // preterites, and a synthesis. Spanish runs 1..91.
+    // HL-C100 inserted un/una as a new chapter 3 - the indefinite article had
+    // never been taught anywhere. Spanish runs 1..92.
+    // HL-C100 added a synthesis chapter after the fourteen-chapter vocabulary
+    // run - the first place those nouns are combined. Spanish runs 1..93.
+    // HL-C105 opened rung 10: the -ar present PLURAL, which the book had never
+    // taught. Five chapters, and Spanish runs 1..98.
+    // HL-C105 completed the present tense: the -er/-ir plurals, where the two
+    // families part in exactly two slots. Spanish runs 1..102.
+    // HL-C105 gave ser its plural. Spanish runs 1..103.
+    // HL-C105 gave estar its plural, beside ser. Spanish runs 1..104.
+    // HL-C105 completed tener and ir in the plural. Spanish runs 1..106.
     [1, 7],
-    [2, 5],
-    [3, 14],
-    [4, 15],
-    [5, 7],
-    [6, 9],
+    [2, 6],
+    [3, 3],
+    [4, 4],
+    [5, 5],
+    [6, 8],
+    [7, 5],
+    [8, 4],
+    [9, 4],
+    [10, 3],
+    [11, 5],
+    [12, 4],
+    [13, 4],
+    [14, 3],
+    [15, 3],
+    [16, 3],
+    [17, 1],
+    [18, 1],
+    [19, 1],
+    [20, 1],
+    [21, 1],
+    [22, 2],
+    [23, 1],
+    [24, 1],
+    [25, 1],
+    [26, 1],
+    [27, 1],
+    [28, 1],
+    [29, 1],
+    [30, 1],
+    [31, 1],
+    [32, 1],
+    [33, 1],
+    [34, 5],
+    [35, 1],
+    [36, 4],
+    [37, 1],
+    [38, 1],
+    [39, 1],
+    [40, 1],
+    [41, 1],
+    [42, 1],
+    [43, 2],
+    [44, 1],
+    [45, 1],
+    [46, 1],
+    [47, 5],
+    [48, 5],
+    [49, 4],
+    [50, 4],
+    [51, 1],
+    [52, 1],
+    [53, 1],
+    [54, 1],
+    [55, 4],
+    [56, 1],
+    [57, 1],
+    [58, 1],
+    [59, 1],
+    [60, 1],
+    [61, 1],
+    [62, 2],
+    [63, 2],
+    [64, 5],
+    [65, 4],
+    [66, 1],
+    [67, 1],
+    [68, 1],
+    [69, 2],
+    [70, 1],
+    [71, 3],
+    [72, 1],
+    [73, 1],
+    [74, 1],
+    [75, 1],
+    [76, 1],
+    [77, 1],
+    [78, 1],
+    [79, 1],
+    [80, 2],
+    [81, 1],
+    [82, 1],
+    [83, 1],
+    [84, 1],
+    [85, 1],
+    [86, 1],
+    [87, 1],
+    [88, 1],
+    [89, 1],
+    [90, 1],
+    [91, 1],
+    [92, 1],
+    [93, 1],
+    [94, 1],
+    [95, 1],
+    [96, 1],
+    [97, 1],
+    [98, 3],
+    [99, 2],
+    [100, 3],
+    [101, 2],
+    [102, 3],
+    [103, 1],
+    [104, 3],
+    [105, 2],
+    [106, 1],
+    [107, 1],
+    [108, 1],
+    [109, 1],
+    [110, 1],
+    [111, 1],
+    [112, 1],
+    [113, 1],
+    [114, 1],
+    [115, 1],
+    [116, 1],
+    [117, 3],
+    [118, 3],
+    [119, 2],
+    [120, 1],
+    [121, 1],
+    [122, 3],
+    [123, 3],
+    [124, 2],
+    [125, 1],
+    [126, 1],
+    [127, 1],
+    [128, 1],
+    [129, 1],
+    [130, 1],
+    [131, 1],
+    [132, 2],
+    [133, 2],
+    [134, 4],
+    [135, 3],
+    [136, 2],
+    [137, 1],
+    [138, 3],
+    [139, 1],
+    [140, 1],
+    [141, 1],
+    [142, 1],
+    [143, 3],
+    [144, 4],
+    [145, 2],
+    [146, 2],
+    [147, 1],
+    [148, 1],
+    [149, 1],
+    [150, 1],
+    [151, 1],
+    [152, 1],
+    [153, 1],
+    [154, 1],
+    [155, 1],
+    [156, 1],
+    [157, 1],
+    [158, 1],
+    [159, 1],
+    [160, 4],
+    [161, 4],
+    [162, 4],
+    [163, 1],
+    [164, 1],
+    [165, 1],
+    [166, 1],
+    [167, 1],
+    [168, 1],
+    [169, 3],
+    [170, 4],
+    [171, 1],
+    [172, 1],
+    [173, 1],
+    [174, 1],
+    [175, 1],
+    [176, 1],
+    [177, 1],
+    [178, 1],
+    [179, 1],
+    [180, 1],
+    [181, 1],
+    [182, 1],
+    [183, 1],
+    [184, 1],
+    [185, 1],
+    [186, 1],
+    [187, 1],
+    [188, 1],
+    [189, 1],
+    [190, 1],
   ])("matches the browser-loaded Spanish Chapter %i AST across %i lessons", (chapter, count) => {
     const lessons = loadLessons();
     const expected = expectedBookHash("spanish", chapter);
@@ -305,6 +539,9 @@ describe("generated book source hashes", () => {
       lesson.id === "ES-C01-hola" ? { ...lesson, sourceHash: "fnv1a64:changed" } : lesson,
     );
     expect(bookHashStatus(changed, "spanish", 1)).toBe("stale");
-    expect(bookHashStatus(lessons, "spanish", 42)).toBe("not-generated");
+    // Sentinel for "no such chapter". This was 42, then 99, and each time Spanish
+    // grew past it the test started asserting against a real chapter. 9999 is
+    // chosen so it can never become one.
+    expect(bookHashStatus(lessons, "spanish", 9999)).toBe("not-generated");
   });
 });

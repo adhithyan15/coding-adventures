@@ -1,0 +1,55 @@
+% ============================================================================
+% part-of-speech — an example word and which grammatical part of speech it
+% is, in a sentence that shows it doing that job (adj-facts-stdlib,
+% LANGUAGE).
+% ============================================================================
+% Every English word plays one of a small set of grammatical roles: a noun
+% names a person, place, thing, or idea; a verb names an action or state; an
+% adjective describes a noun. Recall is a binding query:
+%
+%     ? part_of_speech(queen, $Category)
+%       % noun
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `part_of_speech(word, category)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% category WITH its source, on the CPU, with zero model calls, and abstains
+% on any word the source does not classify this way. The query also runs
+% BACKWARD — bind a category and recall which example word it names:
+%
+%     ? part_of_speech($Word, verb)
+%       % run
+%
+% Provenance: quoted verbatim from Grammarly's "The 8 Parts of Speech"
+% article, which gives one worked example sentence per part of speech
+% covered here:
+%
+%     word (this table's atom label)   category    example sentence (verbatim)
+%     --------------------------------  ----------  ---------------------------------------------
+%     queen                             noun        "Cleopatra was the last queen of ancient Egypt."
+%     run                                verb        "Run as fast as you can."
+%     brown                             adjective   "I have a brown dog."
+%
+% WebFetch-verified TWICE before writing. `trust consensus` — Grammarly is a
+% reputable, widely-cited grammar-content company, the same tier this
+% stdlib already reserves for other non-.gov language sources (7ESL,
+% Speakspeak) and the same source family already cited by
+% `sentence-type.adj`. A word that is NOT one of these three — e.g.
+% "slowly," a real word and an adverb, but not one of the three parts of
+% speech this table covers — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a classification the source never
+% gave. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table part_of_speech {
+    columns word, category
+
+    row (queen, noun)
+    row (run, verb)
+    row (brown, adjective)
+
+    source "Cleopatra was the last queen of ancient Egypt."
+    locator "https://www.grammarly.com/blog/parts-of-speech/the-8-parts-of-speech/"
+    trust consensus
+}

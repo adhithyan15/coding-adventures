@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.30.0 - 2026-08-11
+
+- Bound still-open activation bars to a destroyed participant's final message instead of the diagram footer.
+
+## 0.29.0 - 2026-08-11
+
+- Move destroyed participant footers to their associated message and terminate messages at the footer edge.
+
+## 0.28.0 - 2026-08-11
+
+- Anchor active self-messages to the outer edge of the current activation stack.
+
+## 0.27.0 - 2026-08-11
+
+- Keep explicit activation and deactivation statements on the current sequence event row instead of adding synthetic vertical gaps.
+
+## 0.26.0 - 2026-08-11
+
+- Terminate sequence messages at active activation-bar edges, including the bar opened by a message suffix.
+
+## 0.22.0 - 2026-08-11
+
+- Offset nested sequence activation bars by semantic stack depth instead of painting them directly on top of one another.
+
+## 0.21.0 - 2026-08-11
+
+- Resume sequence autonumber counters after `off` and round each increment to Mermaid's two-decimal precision.
+
+## 0.20.0 - 2026-08-11
+
+- Emit mirrored footer participants and terminate active lifelines at their header edge.
+
+## 0.19.0 - 2026-08-11
+
+- Reserve deterministic sequence header geometry for UML actor symbols.
+
+## 0.18.0 - 2026-08-11
+
+- Apply ordered sequence autonumber visibility changes and counter resets during layout.
+
+## 0.17.0 - 2026-08-11
+
+- Resolve wrapped participant-box labels into deterministic group header geometry.
+
+## 0.16.0 - 2026-08-11
+
+- Resolve wrapped participant aliases into deterministic, shared header geometry.
+
 ## 0.15.0 - 2026-08-10
 
 - Resolve wrapped sequence control and branch labels into deterministic frame geometry.

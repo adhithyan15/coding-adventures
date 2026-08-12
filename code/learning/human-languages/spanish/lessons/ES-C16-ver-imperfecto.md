@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C16-ver-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1134
-chapter: 16
+sequence: 1374
+chapter: 104
 type: grammar
 headword: veía
 gloss: the singular imperfect of ver — veía, veías, veía
@@ -74,4 +74,4 @@ one letter.”
 
 [PAUSE 3s] Give the three learned forms. (*Veía, veías, veía.*) Which vowel
 stays before **-ía**? (**e**.) Which earlier form displays it? (**Veer**.) Next:
-retrieve every Chapter 16 row and make a few bounded contrasts.
+retrieve every row of this chapter and make a few bounded contrasts.

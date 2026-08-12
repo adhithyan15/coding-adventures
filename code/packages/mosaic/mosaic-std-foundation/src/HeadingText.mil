@@ -1,0 +1,4 @@
+// Standard section heading with native heading semantics.
+component HeadingText {
+  slot content : text ;
+}

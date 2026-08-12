@@ -1,0 +1,58 @@
+% ============================================================================
+% solar-eclipse-type — three named solar eclipse types and what each
+% actually is (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A solar eclipse happens when the Moon passes between the Sun and Earth,
+% but not every solar eclipse looks the same: whether the Sun's face is
+% completely blocked, only partly blocked, or blocked with a bright ring
+% left showing depends on how exactly the three bodies line up and how far
+% the Moon is from Earth at the time. Recall is a binding query:
+%
+%     ? solar_eclipse_type(total_solar_eclipse, $D)
+%       % completely_blocking_the_face_of_the_sun
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `solar_eclipse_type(type, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on an eclipse type that is not one of these
+% three. The query also runs BACKWARD — bind a description and recall the
+% eclipse type it names:
+%
+%     ? solar_eclipse_type($T, moon_at_or_near_its_farthest_point_from_earth)
+%       % annular_solar_eclipse
+%
+% The three eclipse types, as a little truth table:
+%
+%     type                        description                                       quote (verbatim)
+%     ---------------------------  -------------------------------------------------  --------------------------------------------------------------------------------
+%     total_solar_eclipse           completely_blocking_the_face_of_the_sun            "A total solar eclipse happens when the Moon passes between the Sun and Earth, completely blocking the face of the Sun."
+%     annular_solar_eclipse         moon_at_or_near_its_farthest_point_from_earth      "An annular solar eclipse happens when the Moon passes between the Sun and Earth, but when it is at or near its farthest point from Earth."
+%     partial_solar_eclipse         sun_moon_and_earth_not_perfectly_lined_up          "A partial solar eclipse happens when the Moon passes between the Sun and Earth but the Sun, Moon, and Earth are not perfectly lined up."
+%
+% Provenance: quoted verbatim from NASA's "Types of Solar Eclipses" page,
+% which defines each of these three eclipse types in its own single
+% sentence. WebFetch-verified before writing (twice). `trust
+% authoritative` — NASA is a primary .gov source, the same tier the
+% sibling `moon-phases.adj` (the other library in this directory) already
+% uses for its NASA citation. An eclipse type that is NOT one of these
+% three — "hybrid_solar_eclipse", a real eclipse type the same page also
+% names, but whose own explanation takes TWO sentences (how Earth's curved
+% surface lets an eclipse shift between annular and total) rather than one
+% clean quotable sentence like the three tabled here — is deliberately NOT
+% a row, so a recall ABSTAINS on it rather than inventing a
+% single-sentence description the source never gave. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table solar_eclipse_type {
+    columns type, description
+
+    row (total_solar_eclipse, completely_blocking_the_face_of_the_sun)
+    row (annular_solar_eclipse, moon_at_or_near_its_farthest_point_from_earth)
+    row (partial_solar_eclipse, sun_moon_and_earth_not_perfectly_lined_up)
+
+    source "A total solar eclipse happens when the Moon passes between the Sun and Earth, completely blocking the face of the Sun."
+    locator "https://science.nasa.gov/eclipses/types/"
+    trust authoritative
+}

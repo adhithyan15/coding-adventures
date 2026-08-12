@@ -1,34 +1,40 @@
-Spanish, chapter 25: The Seasons.
+Spanish, chapter 25: -mente --- With No Upper Limit.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-la primavera, el verano, el otoño, el invierno — three plain, one surprising.
+-mente — with no upper limit.
 
 Warm-up.
 [pause 2 seconds]
-Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another.
+Two endings so far, and each was worth a fixed number of words. This one has no number, because you can make it yourself.
 
-The words, taken apart: three straightforward seasons.
-la primavera ("spring") from Latin prīma vēra, literally "first spring" (vēr, "spring," + prīma, "first"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)
-el otoño ("autumn") from Latin autumnus — the same root behind French automne and English autumn itself.
-el invierno ("winter") from Latin hībernum (tempus), "the wintry [season]" — the same root as French hiver and English hibernate, "to spend the winter."
+Grammar Lens: -mente is -ly.
+Spanish -mente is English -ly.
+rápidamente becomes rapidly, claramente becomes clearly, perfectamente becomes perfectly, naturalmente becomes naturally.
+And unlike the last two endings, this one is a machine rather than a list: take an adjective, put it in its feminine form, add -mente.
+rápido becomes rápida becomes rápidamente claro becomes clara becomes claramente.
+That feminine step looks arbitrary and is not — the next section says why. But the practical effect is that every adjective you ever learn comes with a free adverb, which is why this ending has no count attached. Its reach is however many adjectives you end up knowing.
 
-Why it's said this way: verano.
-You might expect verano ("summer") to come from Latin aestas, "heat" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), "of spring" — built on the very same vēr, "spring," behind primavera.
-So how did a word meaning "spring-ish" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera ("first spring") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a "vernal" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, "spring," ended up naming two different seasons.
+The word, taken apart.
+-mente is not an ending at all, historically. It is the Latin noun mente, "with a mind" — and mente is feminine, which is the whole explanation for that feminine adjective.
+Latin said clārā mente, "with a clear mind," and the adjective agreed with the noun because that is what adjectives do. Then the phrase fused, the noun stopped being a noun, and the agreement was left behind as a rule nobody could explain any more.
+So rápidamente is, at the bottom, "with a rapid mind." Every Spanish adverb in -mente is quietly a phrase about somebody's state of mind.
+English does exactly the same thing with a different body part. -ly is Old English -līce, from līc, "body, form" — so clearly is "in a clear form." Two languages, two fused nouns, the same idea.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "primavera, verano, otoño, invierno" — the four seasons]
+[your turn — say: "rápido, rápida, rápidamente" — watch the feminine step]
 [pause 8 seconds for the answer]
-[your turn — say: "primavera = prima vera, first spring"]
+[your turn — say: "claramente" and hear "with a clear mind" underneath it]
 [pause 8 seconds for the answer]
-[your turn — say: the surprise — "verano ALSO comes from vēr, 'spring' — but its meaning moved to summer"]
-[pause 8 seconds for the answer]
-[your turn — say: "invierno hibernate"]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Make an adverb from rapido.
+[question — say your answer, then pause 12 seconds]
+Why does the adjective go feminine before -mente?
+[question — say your answer, then pause 10 seconds]
+What does rapidamente literally say?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does primavera literally mean? ("First spring" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, "of spring," the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)
+English -ly becomes? (-mente.) What do you do to the adjective first? (Make it feminine.) And why? (Because mente was a feminine noun meaning mind.) Next: the three of them together.

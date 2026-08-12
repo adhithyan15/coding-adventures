@@ -2,25 +2,36 @@
   "version": 1,
   "language": "spanish",
   "chapter": 10,
-  "title": "Going, and the Future You Can Already Say",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8f2029488988ce30",
+  "title": "The Written Accent",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:06130b946ce85324",
   "lessons": [
     {
-      "id": "ES-C10-ir",
-      "sequence": 880,
-      "title": "ir — “to go,” from more than one historical stem",
-      "headword": "ir",
-      "romanization": "ir",
-      "gloss": "to go — with the three singular present forms voy, vas, and va",
+      "id": "ES-W01-acento",
+      "sequence": 350,
+      "title": "á é í ó ú — the acute accent, and the two jobs it does",
+      "headword": "á é í ó ú",
+      "romanization": "á é í ó ú",
+      "gloss": "the acute accent as a visible exception to Spanish's default stress rules",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-type",
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:e4fa3390809549f7",
-      "notice": null,
+      "sourceHash": "fnv1a64:561222668343de75",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — shape and stroke"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — shape and stroke until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,249 +46,174 @@
             },
             {
               "kind": "speech",
-              "text": "You already match different verb forms with tú and usted, and you can ask ¿Dónde…?, “Where…?” Today, add one new verb and only its three singular-person forms."
+              "text": "You've been reading accented words since your very first noun — día, cómo, está, más. Time to make that little stroke make sense. Spanish uses one mark to write exceptional stress — the acute accent, ´, leaning right — and it does two jobs in the words you know. Learn the stress job now; the next lesson adds its grammar-label job."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "script",
+          "title": "Script — shape and stroke",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-i — ir is one clear syllable, like ear without a glide."
-            },
-            {
-              "kind": "speech",
-              "text": "diphthong-oy — voy ends with the sound in English boy."
+              "text": "A short stroke rising left-to-right, sitting on top of a vowel: á é í ó ú. (On the í, it replaces the dot.) One clean up-stroke — the opposite lean from the French grave accent à. Spanish never uses grave or circumflex; if it leans the wrong way, it isn't Spanish."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the mark records exceptional stress",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir means “to go.” Its infinitive descends from Latin īre, also “to go.” The present forms below followed a different Latin verb, vādere, “to go forward” or “advance.” English invade and evade preserve that vad- family."
+              "text": "Spanish stress is regular, so most words need no mark. The default:"
             },
             {
               "kind": "speech",
-              "text": "One modern verb built from historically different stems is called suppletive. English does the same thing when go changes to went, an old form borrowed from wend."
+              "text": "word ends in a vowel, -n, or -s becomes stress the second-to-last syllable (ho-la, lla-mo, gus-to)."
+            },
+            {
+              "kind": "speech",
+              "text": "word ends in any other consonant becomes stress the last syllable (us-ted, re-gu-lar, es-tar)."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent appears only when a word breaks that rule — it marks the exception. está ends in a vowel, so the rule wants ES-ta; the accent overrides it to es-TÁ. cómo ends in a vowel (rule wants co-MO) but is stressed CÓ-mo, so it gets the mark. The accent is a spoken stress you can see — it never changes the vowel's sound, only which syllable you hit."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: only three forms today",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hola, llamo, gusto” — second-to-last stress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hola, llamo, gusto” — second-to-last stress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“usted, regular, estar” — final stress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “usted, regular, estar” — final stress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"está, cómo\" — the accent overrides the default",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"está, cómo\" — the accent overrides the default]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many accent marks does Spanish have, and which way does it lean? (One — the acute, ´, rising left-to-right.) Its two jobs? (Mark irregular stress; the next step covers its look-alike job.) When does a word ending in a vowel, -n, or -s need an accent? (When its stress breaks the second-to-last default.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-W01-tilde-diacritica",
+      "sequence": 360,
+      "title": "el or él? — the accent as a meaning label",
+      "headword": "el / él",
+      "romanization": "el / él",
+      "gloss": "the acute accent separates the article el from the pronoun él",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:76337bd27b8b94e5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know el as the article “the.” Add one acute accent and the same two letters do a different job."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one mark, two grammatical jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The tilde diacrítica separates words that otherwise look alike:"
+            },
             {
               "kind": "table",
               "headers": [
-                "person",
-                "present of ir"
+                "no accent",
+                "with accent"
               ],
               "columns": 2,
-              "rowCount": 3,
+              "rowCount": 1,
               "utterances": [
-                "person: yo. present of ir: voy.",
-                "person: tú. present of ir: vas.",
-                "person: él / ella / usted. present of ir: va."
+                "no accent: el = the. with accent: él = he."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say the small set as voy, vas, va. The plural forms are deliberately left for a later lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "The known question word now gives you a useful prompt:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Dónde va usted? — “Where are you going?”"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“ir — voy, vas, va”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “ir — voy, vas, va”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“¿Dónde va usted?”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Dónde va usted?”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“īre gives ir; vādere gives the present set”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “īre gives ir; vādere gives the present set”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-singular-forms",
-              "prompt": "Give the three learned singular present forms of ir: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
-              ],
-              "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Use the three singular forms: voy, vas, va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-formal-question",
-              "prompt": "Complete the formal question: ¿Dónde ___ usted?",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "va",
-                "¿dónde va usted?",
-                "donde va usted?"
-              ],
-              "feedback": {
-                "correct": "Right: usted takes va — ¿Dónde va usted?",
-                "incorrect": "Usted uses the third-person singular form va."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ir mean? (“To go.”) Give the three forms learned today. (Voy, vas, va.) Why do they look unlike ir? (The infinitive and present set come through different Latin stems.) Next: place a and a known infinitive after this small set to talk about what is coming."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C10-ir-a-futuro",
-      "sequence": 890,
-      "title": "voy a + infinitive — moving toward the near future",
-      "headword": "voy a + infinitive",
-      "romanization": "voy a + infinitive",
-      "gloss": "I am going to… — the near future with ir, a, and a known infinitive",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:dfe5a6bf08c4baf2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know voy, vas, va and the infinitives hablar, comer, vivir. This lesson joins those owned pieces with one short new word."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — a",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish a means “to” or “toward.” It descends from Latin ad, “toward,” which English keeps in words such as advance."
-            },
-            {
-              "kind": "speech",
-              "text": "Movement toward a place easily becomes movement toward a future event. English uses the same picture in “I am going to speak.” Spanish keeps a visible: voy a hablar."
+              "text": "The two words are pronounced alike. Here the accent does not move stress; it labels meaning and grammar. Other pairs will arrive only when you know both words, so this lesson asks you to hold one contrast, not memorize a list."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: ir + a + an unchanged infinitive",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "near-future frame",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. near-future frame: voy a hablar. meaning: I am going to speak.",
-                "person: tú. near-future frame: vas a comer. meaning: you are going to eat.",
-                "person: usted. near-future frame: va a vivir. meaning: you are going to live."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Only ir changes for the person. The second verb stays in its known dictionary form: hablar, comer, or vivir. No new plural person or infinitive is hidden in the pattern."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -290,259 +226,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar”",
+              "instruction": "“el” — the",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar”]"
+              "source": "[YOU SAY: “el” — the]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“vas a comer”",
+              "instruction": "“él” — he",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “vas a comer”]"
+              "source": "[YOU SAY: “él” — he]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“va a vivir”",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "el / él, adding the meaning-label accent only to the pronoun",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “va a vivir”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-voy-hablar",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + the unchanged infinitive hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-ir-a-futuro-vas-comer",
-              "prompt": "Say 'You are going to eat' to one friend in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vas a comer.",
-                "vas a comer"
-              ],
-              "feedback": {
-                "correct": "Right: Vas a comer.",
-                "incorrect": "Use the tú form vas, then a, then comer."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is the frame? (Ir in the present + a + an infinitive.) Does the second verb change for the person? (No.) What idea connects physical going with future time? (Motion toward a destination becomes motion toward an event.) Next: say whose already-known café it is."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C10-mi-tu-su",
-      "sequence": 900,
-      "title": "mi, tu, su — whose café?",
-      "headword": "mi, tu, su",
-      "romanization": "mi, tu, su",
-      "gloss": "my, your informal, and your formal or his or her — before a singular noun",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:57f79e4665d0f93b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You already know café, and you distinguish informal tú from formal usted. Now put one small ownership word before that one known noun."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "Latin source",
-                "meaning in today's frame"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "Spanish: mi. Latin source: meus. meaning in today's frame: my.",
-                "Spanish: tu. Latin source: tuus. meaning in today's frame: your, to one informal tú.",
-                "Spanish: su. Latin source: suus. meaning in today's frame: your, to formal usted; also his or her."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "English my helps recall mi. Older English thy, “your,” helps recall Latin tuus and Spanish tu. The ownership word tu has no written accent; the person word tú that you already know keeps its accent."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: put the ownership word before the noun",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "phrase",
-                "meaning"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "mi café means my coffee.",
-                "tu café means your coffee, informal.",
-                "su café means your coffee, formal; or his or her coffee."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "The situation tells you which person su points to. Every noun phrase in this lesson is singular. Forms used before plural things are left for a later step, so there is no new number pattern to learn here."
+              "source": "[YOU WRITE: **el / él**, adding the meaning-label accent only to the pronoun]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“mi café”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“tu café” to tú",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “tu café” to *tú*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“su café” to usted",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “su café” to *usted*]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-mi-tu-su-my-coffee",
-              "prompt": "Say 'my coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "mi café",
-                "mi cafe"
-              ],
-              "feedback": {
-                "correct": "Right: mi café.",
-                "incorrect": "Put mi before the known noun café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-mi-tu-su-formal-your-coffee",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: formal usted pairs here with su café.",
-                "incorrect": "For formal usted, put su before café."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -554,26 +265,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three ownership words. (Mi, tu, su.) Where do they go? (Before the noun.) Which one addresses usted? (Su.) Which Latin sources sit behind them? (Meus, tuus, suus.) Next: retrieve the chapter without adding a new word, form, or noun."
+              "text": "What is the accent's second job? (Separate look-alike words.) Which means “the”? (El, no accent.) Which means “he”? (Él, with the accent.) Does this mark change their stress? (No — it labels the job.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C10-practice",
-      "sequence": 910,
-      "title": "Practice — going, approaching events, and ownership",
+      "id": "ES-W01-repaso-acento",
+      "sequence": 365,
+      "title": "The written accent — putting it together",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "singular ir, the near future, and mi, tu, or su before café",
+      "gloss": "The written accent — putting the chapter together",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d00e9396b191d69c",
+      "sourceHash": "fnv1a64:a336b13438a6ddd0",
       "notice": null,
       "blocks": [
         {
@@ -589,49 +300,29 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve voy, vas, va; build the near future with a and a known infinitive; then put mi, tu, or su before the known noun café."
+              "text": "Two lessons on one small mark that changes both sound and meaning. Nothing new in this lesson — only what you already have."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir, singular: voy, vas, va."
-            },
-            {
-              "kind": "speech",
-              "text": "near future: voy a hablar, vas a comer, va a vivir."
-            },
-            {
-              "kind": "speech",
-              "text": "ownership before one singular known noun: mi café, tu café, su café."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural person forms of ir and possessives before plural nouns remain deferred."
+              "text": "está is not esta. él is not el."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — retrieve the history",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "ir continues Latin īre, while voy, vas, va continue vādere."
-            },
-            {
-              "kind": "speech",
-              "text": "a continues Latin ad, “toward”; motion toward a goal became motion toward a coming event."
-            },
-            {
-              "kind": "speech",
-              "text": "mi, tu, su continue Latin meus, tuus, suus."
+              "text": "You can hear where the stress falls and see why the mark is there."
             }
           ]
         },
@@ -649,121 +340,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy, vas, va”",
+              "instruction": "the whole exchange, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy, vas, va”]"
+              "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“voy a hablar, vas a comer, va a vivir”",
+              "instruction": "it again, faster, and let it sound like speech rather than recital",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “voy a hablar, vas a comer, va a vivir”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“mi café, tu café, su café”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “mi café, tu café, su café”]"
+              "source": "[YOU SAY: it again, faster, and let it sound like speech rather than recital]"
             },
             {
               "kind": "repeat",
               "times": 2,
               "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“Voy a hablar. Su café.”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-ir-forms",
-              "prompt": "Give the learned singular forms of ir: yo, tú, then usted.",
-              "assesses": [
-                "ES-LEX-IR",
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "voy, vas, va",
-                "voy vas va",
-                "voy / vas / va"
-              ],
-              "feedback": {
-                "correct": "Right: voy, vas, va.",
-                "incorrect": "Retrieve only the learned singular set: voy, vas, va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-formal-going",
-              "prompt": "Ask formal you 'Where are you going?' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿dónde va usted?",
-                "dónde va usted?",
-                "donde va usted?",
-                "¿donde va usted?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Dónde va usted?",
-                "incorrect": "Use dónde with the usted form va."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-near-future",
-              "prompt": "Say 'I am going to speak' in Spanish.",
-              "assesses": [
-                "ES-LEX-A",
-                "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "voy a hablar.",
-                "voy a hablar"
-              ],
-              "feedback": {
-                "correct": "Right: Voy a hablar.",
-                "incorrect": "Use voy + a + hablar."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C10-practice-possessive",
-              "prompt": "Addressing usted, say 'your coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-POSSESSIVES-MI-TU-SU",
-                "ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN",
-                "ES-LEX-CAFE",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "su café",
-                "su cafe"
-              ],
-              "feedback": {
-                "correct": "Right: su café.",
-                "incorrect": "Formal usted uses su before café."
-              }
             }
           ]
         },
@@ -780,7 +375,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the singular ir set. (Voy, vas, va.) Build “You are going to eat” for one friend. (Vas a comer.) Say “my coffee” and formal “your coffee.” (Mi café; su café.) Chapter 11 can now extend the grammar from this small, closed frontier."
+              "text": "Run it once more from memory. If a word does not come, go back one lesson rather than pushing on — this chapter is short on purpose."
             }
           ]
         }

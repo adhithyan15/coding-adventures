@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 103,
+  "title": "Ver --- Seeing",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:361b329004885029",
+  "lessons": [
+    {
+      "id": "ES-C16-ver",
+      "sequence": 1362,
+      "title": "ver — learn the verb before its past",
+      "headword": "ver",
+      "romanization": "ver",
+      "gloss": "to see — veo, ves, ve",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d76d08e1dfd9642d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three present forms",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present: veo.",
+                "person: tú. present: ves.",
+                "person: él / ella / usted. present: ve."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“ver — to see”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “ver — to see”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“veo, ves, ve”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “veo, ves, ve”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“ver comes through veer from vidēre”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “ver comes through veer from vidēre”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-ver-meaning",
+              "prompt": "What does Spanish ver mean?",
+              "assesses": [
+                "ES-LEX-VER"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "to see",
+                "see"
+              ],
+              "feedback": {
+                "correct": "Right: ver means 'to see'.",
+                "incorrect": "Ver is the infinitive 'to see'."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-ver-present-singular",
+              "prompt": "Give the learned present forms of ver: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-VER",
+                "ES-GRAMMAR-VER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "veo, ves, ve",
+                "veo ves ve",
+                "veo / ves / ve"
+              ],
+              "feedback": {
+                "correct": "Right: veo, ves, ve.",
+                "incorrect": "Retrieve the short row: veo, ves, ve."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-ver-history",
+              "prompt": "Which Latin verb stands behind Spanish ver: vidēre or īre?",
+              "assesses": [
+                "ES-ETYMON-VER-VIDERE",
+                "ES-LEX-VER"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "vidēre",
+                "videre"
+              ],
+              "feedback": {
+                "correct": "Right: ver continues Latin vidēre.",
+                "incorrect": "Choose the sight verb vidēre; īre is the source of ir."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

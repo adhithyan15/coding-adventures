@@ -6,6 +6,49 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Non-whitespace character data rejected after a template-owned `col` now
+  reports the required column-group parse error while remaining ignored.
+  ASCII whitespace is retained, while ordinary content, real column groups and
+  cells, nested templates, foreign template-named elements, and synthetic
+  template fragment contexts retain their existing diagnostic behavior.
+- Start tags rejected at a template-driven column-group boundary now report
+  the required parse error while remaining ignored. Additional columns,
+  nested templates, columns outside templates, and ordinary `colgroup`
+  recovery retain their existing diagnostic behavior.
+- Matching HTML `template` end tags now thoroughly generate implied end tags
+  and report the required parse error when a non-template element remains
+  current. Directly current templates, implied descendants, foreign
+  template-named elements, and synthetic template fragment contexts remain
+  quiet.
+- A `template` end tag with no authored open HTML template now reports the
+  required parse error and remains ignored. Matching HTML templates, foreign
+  template-named elements, and synthetic template fragment contexts retain
+  their distinct closure and diagnostic behavior.
+- EOF reached with authored open templates now reports one dedicated
+  template-mode parse error per open template before preserving any residual
+  table, select, or generic EOF diagnostic. Synthetic template fragment
+  contexts and closed templates remain quiet.
+- EOF reached while table structure or foster parenting remains active now
+  reports the dedicated in-table parse error instead of the broader unclosed
+  elements diagnostic.
+- `center` end tags processed while table foster parenting is active now
+  report the required in-table parse error while preserving non-current end-tag
+  recovery and DOM placement.
+- Generic `div` and `span` end tags processed while table foster parenting is
+  active now report the required in-table parse error without changing DOM
+  recovery. The same end tags outside tables and inside cells remain quiet.
+- `img` start tags processed directly in table structure now report the
+  required parse error and foster before the table, while preserving the
+  existing center/font reconstruction behavior.
+- `li` start tags processed in table foster-parenting state now report the
+  required parse error while preserving repeated-list-item recovery and DOM
+  placement before the table.
+- Generic start tags handled by the in-table "anything else" path, including
+  paragraph-boundary elements, `br`, `p`, and `plaintext`, now report the
+  required parse error before retaining their foster-parented DOM placement.
+- `select` start tags processed directly in table structure now report the
+  required general parse error before retaining their existing foster-parented
+  DOM placement. Selects outside tables and inside cells remain quiet.
 - Non-hidden `input` start tags processed in table mode now report the required
   general parse error before retaining their existing foster-parented DOM
   placement. Hidden inputs keep their specialized in-table behavior and

@@ -208,37 +208,70 @@ def sir_fmt_float_c(value, precision, kind)
   end
 end
 
-# `puts`'s ARRAY-UNPACKING rule -- distinct from `sir_fmt`'s general case
-# (`v.to_s`, which bracket-displays an Array, e.g. `"[1, 2, 3]"`), and from
-# `print` below, which never unpacks. Real Ruby's `Kernel#puts` special-cases
-# an Array argument: each element gets its OWN line, RECURSIVELY flattening
-# nested arrays, and an EMPTY array prints nothing at all (not even a blank
-# line) -- `puts [1, [2, 3], 4]` -> "1\n2\n3\n4\n"; `puts []` -> (nothing).
-# A Hash argument is NOT unpacked (only Array), so this checks `Array`
-# specifically. No depth cap is needed here (unlike the C backend's
-# `_sir_puts_one`): a self-referential array would raise Ruby's own
-# `SystemStackError` on infinite recursion -- safe, since this runs under a
-# real Ruby VM with its own stack-overflow protection, not raw C recursion.
-def sir_puts_one(x)
+# `per_value`'s ARRAY-UNPACKING rule (`unpack_arrays: true`, `puts`'s
+# behavior) -- distinct from `sir_fmt`'s general case (`v.to_s`, which
+# bracket-displays an Array, e.g. `"[1, 2, 3]"`). Real Ruby's `Kernel#puts`
+# special-cases an Array argument: each element gets its OWN line,
+# RECURSIVELY flattening nested arrays, and an EMPTY array prints nothing
+# at all (not even a blank line) -- `puts [1, [2, 3], 4]` ->
+# "1\n2\n3\n4\n"; `puts []` -> (nothing). A Hash argument is NOT unpacked
+# (only Array), so this checks `Array` specifically. No depth cap is
+# needed here (unlike the C backend's `_sir_puts_one`): a self-referential
+# array would raise Ruby's own `SystemStackError` on infinite recursion --
+# safe, since this runs under a real Ruby VM with its own stack-overflow
+# protection, not raw C recursion.
+#
+# SIR28 §2.1: `__sys_write__`, the general console-output primitive every
+# frontend lowers `print`/`puts`/`console.log`/etc. to. It generalizes what
+# used to be several backend-hardcoded newline policies into ONE operation
+# parameterized by policy flags carried as DATA (validated by
+# `semantic-ir`'s validator against a closed enum, SIR28 §2.2) -- the root
+# cause SIR28 exists to fix: real Ruby's `print` never newline-terminates,
+# Python's `print()`/JS's `console.log` always do, but before SIR28 all
+# three lowered to the identical `BuiltinCall("print", ...)` this backend
+# had no way to tell apart.
+#
+# `stream`: "stdout" | "stderr". `terminator`: "none" (write each value
+# back to back, no newline -- matches Ruby's `print`) | "per_value" (one
+# newline per value, honouring `unpack_arrays` -- matches Ruby's `puts`) |
+# "once" (Python `print`/JS `console.log` -- space-join every value, one
+# trailing newline). Unlike the C/Go/Rust backends, no
+# compile-time dispatch is needed here -- `stream`/`terminator` arrive as
+# ordinary Ruby string arguments (already validated to a closed set by
+# `semantic-ir` before this backend ever sees them) and this function
+# branches on them directly at Ruby runtime, exactly like every other
+# `sir_*` helper in this file.
+def sir_write_puts_one(out, x)
   if x.is_a?(Array)
-    x.each { |e| sir_puts_one(e) }
+    x.each { |e| sir_write_puts_one(out, e) }
   else
-    STDOUT.write(sir_fmt(x))
-    STDOUT.write("\n")
+    out.write(sir_fmt(x))
+    out.write("\n")
   end
 end
 
-def sir_puts(*xs)
-  if xs.empty?
-    STDOUT.write("\n")
+def sir_write(stream, terminator, unpack_arrays, *xs)
+  out = stream == "stderr" ? STDERR : STDOUT
+  case terminator
+  when "per_value"
+    if xs.empty?
+      out.write("\n")
+    else
+      xs.each do |x|
+        if unpack_arrays
+          sir_write_puts_one(out, x)
+        else
+          out.write(sir_fmt(x))
+          out.write("\n")
+        end
+      end
+    end
+  when "once"
+    out.write(xs.map { |x| sir_fmt(x) }.join(" "))
+    out.write("\n")
   else
-    xs.each { |x| sir_puts_one(x) }
+    xs.each { |x| out.write(sir_fmt(x)) }
   end
-  nil
-end
-
-def sir_print(*xs)
-  xs.each { |x| STDOUT.write(sir_fmt(x)) }
   nil
 end
 
@@ -261,8 +294,6 @@ def sir_builtin_dispatch(name, args)
   when "pair?"   then sir_is_pair(args[0])
   when "number?" then sir_is_number(args[0])
   when "symbol?" then sir_is_symbol(args[0])
-  when "print" then sir_print(*args)
-  when "puts"  then sir_puts(*args)
   else
     STDERR.puts("sir: undefined builtin '#{name}'")
     exit(1)

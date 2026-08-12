@@ -16,15 +16,20 @@ fn main_fn(m: &Module) -> &Function {
     m.functions.iter().find(|f| f.name == "main").expect("main function")
 }
 
-/// The `Expr` inside the sole `print(...)` wrapper of a bare-expression
-/// top-level statement.
+/// The `Expr` inside the sole `__sys_write__(...)` wrapper of a
+/// bare-expression top-level statement (SIR28 §2 — auto-print lowers to
+/// `__sys_write__`, not a bare `BuiltinCall("print", ...)`).
 fn printed_value(stmt: &Stmt) -> &Expr {
     match stmt {
-        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } if name == "print" => {
-            assert_eq!(args.len(), 1, "print should take exactly one argument");
-            &args[0]
+        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } if name == "__sys_write__" => {
+            // 3 envelope args (stream/terminator/unpack_arrays) + 1 value.
+            assert_eq!(args.len(), 4, "__sys_write__ should carry exactly one value");
+            assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "stdout"));
+            assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "once"));
+            assert!(matches!(args[2], Expr::BoolLit { value: false, .. }));
+            &args[3]
         }
-        other => panic!("expected ExprStmt(print(..)), got {other:?}"),
+        other => panic!("expected ExprStmt(__sys_write__(..)), got {other:?}"),
     }
 }
 

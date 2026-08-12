@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C23-hermano-hermana
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 1390
-chapter: 23
+sequence: 1670
+chapter: 135
 type: word
 headword: el hermano, la hermana
 gloss: brother and sister — NOT from frater/soror, but from an adjective meaning "of the same seed"

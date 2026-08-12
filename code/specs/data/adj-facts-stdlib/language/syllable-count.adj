@@ -1,0 +1,75 @@
+% ============================================================================
+% syllable-count — how many syllables a word has, as a teacher demonstrates it
+% by placing one card per syllable (adj-facts-stdlib, LANGUAGE). CCSS RF.K.2.b
+% "Count, pronounce, blend, and segment syllables in spoken words."
+% ============================================================================
+% A SECOND literacy sub-skill in this loop's curriculum sweep, deliberately
+% DIFFERENT in shape from `word-families.adj`'s rhyme-family DERIVATION: this
+% is a genuinely new phonological-awareness skill (syllable segmentation, RF.
+% K.2.b) rather than another word family (RF.K.2.a). Recall is a binding
+% query:
+%
+%     ? syllable_count(peanut, $N)      % 2  (peanut has two syllables)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `syllable_count(word, count)` carrying the Reading Rockets
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the count WITH its source, on the CPU, with zero model
+% calls, and abstains on any word the cited page does not explicitly
+% segment (it never guesses a syllable count from spelling heuristics, which
+% are notoriously unreliable in English). The query also runs BACKWARD — bind
+% a count and recall every word the source segments to that many syllables:
+%
+%     ? syllable_count($W, 2)           % peanut, pencil, sunset, laptop
+%
+% Provenance: Reading Rockets' "Phonological and Phonemic Awareness: In
+% Practice" module demonstrates syllable segmentation as a classroom
+% technique — the teacher says a word, then places one index card per
+% syllable while saying each part aloud. Four words are explicitly
+% segmented this way on the page, and every one below is confirmed by its
+% own quoted sentence (WebFetch-verified TWICE for consistency before
+% writing — the first pass over-eagerly attributed a syllable count to
+% "classroom" that the second, more careful pass found was NOT actually
+% syllable-segmented on this page, just used in an unrelated sentence; only
+% the four genuinely confirmed words below are shipped):
+%
+%   peanut -> 2
+%     "I say the whole word: 'Peanut'. I say each syllable and put down a
+%      card: 'pea' [place a card] 'nut' [place a card so it appears
+%      left-to-right for students]."
+%   pencil -> 2
+%     "The word is: 'pencil'. 'Pen' 'cil' [place a card for each syllable
+%      so it appears left-to-right for students]."
+%   sunset -> 2
+%     "I say the whole word: 'sunset'. I say each syllable and put down a
+%      card: 'sun' [place a card] 'set' [place a card so it appears
+%      left-to-right for students]."
+%   laptop -> 2
+%     "I say each syllable and put down a card: 'lap' [place a card] 'top'
+%      [place a card so it appears left-to-right for students]."
+%
+% All four happen to be two-syllable words in this cited source — the page's
+% classroom demonstration does not segment any one- or three-syllable word,
+% so none is asserted here (a future slice can add contrast once a
+% comparably clean citation for a different count is found; this is the same
+% "keep each slice small and citable, only what is actually stated" discipline
+% every prior curriculum item in this loop has used, even where it yields a
+% narrower first slice than would be pedagogically ideal). `trust consensus`,
+% not `authoritative`: Reading Rockets is a respected literacy-education
+% secondary reference, not a primary/official standards body (the same tier
+% `word-families.adj` already uses). (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table syllable_count {
+    columns word, count
+
+    row (peanut, 2)
+    row (pencil, 2)
+    row (sunset, 2)
+    row (laptop, 2)
+
+    source "I say the whole word: 'Peanut'. I say each syllable and put down a card: 'pea' [place a card] 'nut' [place a card so it appears left-to-right for students]."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}

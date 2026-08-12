@@ -135,6 +135,15 @@ hosted backend. Later optional services may provide device discovery, sharing
 invitations, event delivery, recovery witnesses, or managed storage, but the
 file formats and clients must remain usable without them.
 
+### 3.9 Audit before effect or disclosure
+
+Every authenticated high-level edit or access produces one privacy-safe,
+device-signed, encrypted operation event. A mutation becomes active atomically
+with its event. A read or reveal is not returned to its host until its audit-only
+commit is durable. Audit failure therefore fails the operation closed instead
+of silently creating an untraceable effect or disclosure. The shared contract
+is `VLT-PM15-operation-audit.md`.
+
 ## 4. Delivery milestones
 
 | Phase | Deliverable | Storage | Client surface | Independently useful result |
@@ -246,7 +255,7 @@ and merge semantics are shared even when the host execution model differs.
 | multi-recipient wrapping | `vault-recipients` | passphrase and X25519 wraps | signed recipient/device registry and revocation ceremony |
 | authentication | `vault-auth` | password and TOTP factors | WebAuthn/FIDO2-PRF and replay state where enabled |
 | policy | `vault-policy` | local RBAC/decorators | product action/resource vocabulary |
-| audit | `vault-audit` | canonical signed chain | persistent encrypted segments and cross-device chain semantics |
+| audit | `vault-audit`, `vault-pm-audit` | generic signed chain plus closed product operation events | encrypted repository integration, access enforcement, and cross-device witnesses |
 | sync | `vault-sync` | version vectors, conflict types, OR-set | persistent signed commit DAG and no-loss conflict archive |
 | history | `vault-revisions` | retention and restore semantics | repository-backed encrypted implementation |
 | search | `vault-search` | local trigram/BM25 index | rebuildable index projection and field policy per record type |
@@ -860,10 +869,11 @@ where the format explicitly defines an extension map.
 
 ```text
 vault-pm init [--vault NAME] [--storage NAME]
-vault-pm status [--json]
+vault-pm vault create NAME
+vault-pm [--vault NAME] status [--json]
 vault-pm shell
 
-vault-pm item add login|note|card|totp|custom
+vault-pm item add login|secure-note|card|totp|custom
 vault-pm item show ITEM [--field FIELD] [--copy|--reveal]
 vault-pm item edit ITEM
 vault-pm item list [--collection ID] [--tag TAG]
@@ -892,10 +902,14 @@ vault-pm storage check NAME
 vault-pm storage migrate SOURCE TARGET [--mirror]
 
 vault-pm sync status|pull|push|run
+vault-pm audit enable
 vault-pm audit verify
 vault-pm doctor
 vault-pm gc plan|run
 ```
+
+The leading `--vault NAME` selector may prefix any command that operates on an
+existing vault. It is command-scoped and never rewrites `default_vault`.
 
 Phase 1A implements `init`, `status`, `shell`, item CRUD/list, search, history,
 password generation, portable export, audit verification, and `doctor`.
@@ -1380,8 +1394,11 @@ changelog, focused build, and downstream validation.
    7d-2b. completed atomic cross-vault portable import, consuming the opaque
        opened snapshot into an untouched generation-zero vault, allocating new
        item/revision/object/encryption identities, preserving every current
-       live, tombstone, and conflict candidate, and independently reopening and
-       comparing the restored target; and
+       live, tombstone, and conflict candidate; and
+   7d-2c. completed opaque source-semantic expectation plus independently
+       reopened target comparison, proving exact current state, candidate
+       grouping, removed source parents, and identity disjointness before an
+       audited aggregate result is released;
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;
@@ -1434,11 +1451,151 @@ changelog, focused build, and downstream validation.
 9b-2b-1. redacted authenticated revision history listing using
          `VLT-PM13-cli-history-list.md`.
 9b-2b-2. redacted authenticated search plus non-login show renderers.
+9b-2c-1. completed storage-neutral signed operation-audit event primitive using
+         `VLT-PM15-operation-audit.md`.
+9b-2c-2. completed distinct encrypted application-object kind and strict
+         canonical wrapper for signed audit events.
+9b-2c-3. completed backward-compatible owner-private audit-event head state and
+         crash-resumable journal advancement that cannot silently skip an event
+         after activation.
+9b-2c-4a. completed atomic encrypted mutation-event publication for item create,
+          update, delete, restore, conflict choice/merge, and portable import
+          after activation, including exact trace, basis-head, prior-event,
+          selected/result revision, counter, and write-ahead journal binding.
+9b-2c-4b. completed repository verification of audit signatures, basis heads,
+          per-device links/counters, genesis roots, mutation resource shape,
+          selected revisions, and edit results, with aggregate-only reporting
+          and backward-compatible zero-event verification for pre-audit vaults.
+9b-2c-5a. completed audit-only crash journal and repository publication
+          substrate, reusing only the exact active encrypted catalog while a
+          newly supplied encrypted event advances the commit, device counter,
+          and durable audit head; exact replay after ambiguous provider success
+          is covered before any access command adopts the boundary.
+9b-2c-5b-1. completed reusable application access result/entropy boundary and
+            audited item-list proof: the session is consumed; success and
+            post-authentication failure publish before release; publication
+            failure exposes neither and retains exact recovery state.
+9b-2c-5b-2a. completed application redacted show/search/history/current-conflict
+              access boundaries over the shared publish-before-release path,
+              including selected-revision binding, `NotFound`, invalid input,
+              conflict, and repository-failure outcomes.
+9b-2c-5b-2b. completed application verify, diagnose, and encrypted portable
+              export boundaries over the shared publish-before-release path,
+              including verification failures and invalid export-input
+              attempts.
+9b-2c-5b-2c. completed secret disclosure, whole secret-bearing revision, and
+              exact current-revision capability access, including succeeded,
+              denied, and failed outcomes without exposing a secret or
+              mutation capability before publication.
+9b-2c-5b-3a. completed backward-compatible CLI enforcement for active-epoch
+              list, show, history-list, verification, and unlocked-diagnostic
+              reads, with rendering only after durable event publication.
+9b-2c-5b-3b-1. completed application-selected active-epoch delete handling:
+                the CLI never receives the current revision capability;
+                successful deletion and its event publish atomically, while
+                missing, tombstoned, and conflicted attempts publish failed
+                delete events before their closed errors become observable.
+9b-2c-5b-3b-2a. completed item-bound active-epoch restore handling: bounded
+                 history selection stays inside the application; successful
+                 restore and its event publish atomically; invalid selection
+                 outcomes publish failed events before their errors.
+9b-2c-5b-3b-2b. completed opaque application-owned edit preparation and
+                 active-epoch CLI completion: current revisions and existing
+                 secret documents stay out of orchestration; precondition,
+                 prompt, entropy, and input failures publish before their
+                 errors; successful updates remain atomic mutations.
+9b-2c-5b-3c. completed item-bound active-epoch interactive secret reveal:
+               exact-`yes` terminal confirmation, application-owned current
+               revision selection, durable denied/failed/succeeded outcomes,
+               publish-before-release direct controlling-terminal delivery,
+               escaped controls, and empty ordinary process output, using
+               `VLT-PM25-cli-secret-reveal.md`.
+9b-2c-5c-1. completed bounded newest-first application audit projection and
+             exact trace lookup: each call publishes its own successful
+             `AuditRead` first, fully verifies the newly advanced chain, and
+             exposes only explicit audit-surface facts with redacted debug.
+9b-2c-5c-2. completed CLI audit list/show with canonical trace-aware rendering,
+             audited missing lookups, tamper-with-no-output enforcement,
+             ambiguous-provider recovery, and real-process PTY acceptance.
+9b-2c-5d. completed active-epoch item-create host-failure enforcement: item,
+           mutation, metadata, trace, and audit-publication randomness are
+           reserved before authentication; later prompt failures publish a
+           failed item-scoped `ItemCreate` before their CLI error, with
+           real-process trace lookup acceptance.
+9b-2c-4c-1. completed production application boundary for a single durable,
+             crash-resumable pre-audit-vault migration epoch.
+9b-2c-4c-2. completed explicit authenticated CLI audit migration after every
+             exposed edit and access path can advance the chain or fail
+             closed, including real-process proof that an edit prompt failure
+             is durable before its process error.
 9b-3a-1. revision-safe authenticated login replacement using
          `VLT-PM12-cli-login-replace.md`.
-9b-3a-2. remaining record creation plus richer notes/multiple-URL editing.
-9b-3b. authenticated delete, restore, and conflict-resolution mutations.
-9b-4. portable export/import CLI host composition and destination policy.
+9b-3a-2a. completed secure-note creation and redacted read through shared
+           audited create/list/show boundaries, using
+           `VLT-PM16-cli-secure-note-create.md`.
+9b-3a-2b-1. completed audited payment-card creation with bounded metadata,
+             hidden wipe-on-drop PAN/CVV input, closed offline validation,
+             redacted observation, separate reveal reuse, and real-process
+             plaintext exclusion, using `VLT-PM26-cli-card-create.md`.
+9b-3a-2b-2. completed audited API-key creation with a hidden token, closed
+             scope/expiry validation, metadata-only rendering, separate token
+             reveal, and plaintext exclusion, using
+             `VLT-PM27-cli-api-key-create.md`.
+9b-3a-2b-3. completed audited static database-credential creation with closed
+             engine/port validation, hidden password input, metadata-only
+             rendering, separate reveal, and plaintext exclusion, using
+             `VLT-PM28-cli-database-credential-create.md`.
+9b-3a-2b-4. completed audited TOTP creation with canonical hidden Base32 seed
+             input, closed algorithm/digit/period validation, metadata-only
+             rendering, separately authorized audited Base32 reveal, and
+             plaintext exclusion, using `VLT-PM29-cli-totp-create.md`.
+9b-3a-2b-5. completed audited rich login creation/replacement with a bounded
+             ordered URL list, hidden optional notes, metadata-only rendering,
+             separate audited notes reveal, and plaintext exclusion, using
+             `VLT-PM30-cli-rich-login-edit.md`.
+9b-3b-1. reversible authenticated item deletion and exact historical restore
+         using `VLT-PM14-cli-delete-restore.md`.
+9b-3b-2a. completed authenticated redacted current-conflict inspection and
+           choose-existing-candidate resolution, including item-bound selector
+           validation, publish-before-error failed attempts, atomic successful
+           mutation events, immutable losing history, and command-scoped named
+           target selection, using `VLT-PM24-cli-conflict-resolution.md`.
+9b-3b-2b. remaining candidate-specific secret-field reveal plus user-authored
+           merged-document conflict resolution.
+9b-4a. completed authenticated encrypted portable export with a separately
+        confirmed hidden passphrase, pre-authentication audit reservation,
+        publish-before-release ordering, and an explicit create-new durable
+        destination policy, using `VLT-PM17-cli-portable-export.md`.
+9b-4b-1. completed bounded no-write portable opening and audited atomic
+          cross-vault import into a separately initialized empty target, with
+          traceable host/artifact failures, retry-safe audit-only prefixes,
+          fresh target identities, and restart-backed redacted observation,
+          using `VLT-PM18-cli-portable-import.md`.
+9b-4b-2a. completed opaque application-owned semantic expectation and
+           independently reopened target comparison, including exact candidate
+           grouping/value equality, cross-vault identity disjointness, removed
+           source parents, and publish-before-release succeeded/failed audit
+           events, using `VLT-PM19-portable-restore-verification.md`.
+9b-4b-2b-1. completed retryable audit-required CLI semantic verification against
+             the current target, including bounded artifact reopen, fixed
+             hidden passphrase input, host-failure events, aggregate-only
+             success, and real-process restart proof, using
+             `VLT-PM20-cli-portable-restore-verify.md`.
+9b-4b-2b-1a. completed audit-first generation zero for every new CLI vault,
+              binding the signed encrypted `VaultInitialize` genesis into the
+              initial commit, retry journal, and active owner head while
+              retaining explicit legacy migration, using
+              `VLT-PM21-audit-first-generation-zero.md`.
+9b-4b-2b-2a. completed audit-first named target creation with a distinct
+              adapter namespace, trace-before-config crash recovery, and
+              command-scoped selection that preserves the source default,
+              using `VLT-PM22-cli-named-targets.md`.
+9b-4b-2b-2b. completed automatic import-plus-independently-reopened-verifier
+              composition against an explicit non-default named target, with
+              one artifact authentication, two target sessions, ordered audit
+              events, aggregate-only completed-and-verified output, and the
+              standalone verifier retained for interruption recovery, using
+              `VLT-PM23-cli-verified-restore.md`.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
@@ -1498,13 +1655,33 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM04-repository.md`, `VLT-PM05-application.md`,
   `VLT-PM06-local-host.md`, `VLT-PM07-config.md`, `VLT-PM08-cli-host.md`,
   `VLT-PM09-cli-bootstrap.md`, `VLT-PM10-cli-authenticated-verification.md`,
-  `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`, and
-  `VLT-PM13-cli-history-list.md` —
+  `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
+  `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`,
+  `VLT-PM15-operation-audit.md`, `VLT-PM16-cli-secure-note-create.md`, and
+  `VLT-PM17-cli-portable-export.md`, `VLT-PM18-cli-portable-import.md`, and
+  `VLT-PM19-portable-restore-verification.md`, and
+  `VLT-PM20-cli-portable-restore-verify.md`, and
+  `VLT-PM21-audit-first-generation-zero.md`, and
+  `VLT-PM22-cli-named-targets.md`, and
+  `VLT-PM23-cli-verified-restore.md`, and
+  `VLT-PM24-cli-conflict-resolution.md`, and
+  `VLT-PM25-cli-secret-reveal.md`, and
+  `VLT-PM26-cli-card-create.md`, and
+  `VLT-PM27-cli-api-key-create.md`, and
+  `VLT-PM28-cli-database-credential-create.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
-  first CRUD-vertical, revision-safe replacement, and redacted history
-  contracts.
+  first CRUD vertical, revision-safe replacement, redacted history, and
+  reversible delete/restore, first-class operation-audit contracts, and
+  secure-note CLI composition, audited encrypted recovery-artifact
+  export/import, independently audited semantic restore verification, and its
+  retryable local CLI ceremony, plus an initialization audit genesis for every
+  new CLI vault, independently selectable audited named targets, and automatic
+  import-plus-independent-verification composition, plus audited redacted
+  current-conflict selection and choose-existing resolution, plus audited
+  interactive current-secret terminal delivery, plus audited payment-card and
+  API-key and static database-credential creation with redacted observation.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

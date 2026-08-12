@@ -171,23 +171,25 @@ accessibility semantics. Specifically:
 | React         | `<table><thead><tr><th>…</th></tr></thead><tbody><tr><td>…</td></tr></tbody></table>` — real HTML table elements. NOT `<div role="grid">`.                                  |
 | HTML          | Same as React (static markup).                                                                                                                                              |
 | WebComponent  | Shadow-DOM real `<table>` elements. NOT `<div role="grid">`.                                                                                                                |
-| SwiftUI       | `SwiftUI.Table` (macOS 12+ / iOS 16+). Older deployment targets must fall back to `List` with rows — never `LazyVGrid` of `HStack`, which loses table semantics.            |
+| SwiftUI       | `SwiftUI.Table` for statically defined columns (macOS 12+ / iOS 16+). Mosaic's canonical runtime-sized Grid columns use `TableColumnForEach` on macOS 14.4+ / iOS 17.4+ and fall back to `List` with `Section` rows on older systems — never `LazyVGrid` of `HStack`, which loses table semantics. |
 | Qt            | `QtQuick.Controls.TableView` (Qt 6.2+). NOT a `Repeater` of `RowLayout` of `Text`.                                                                                          |
-| Flutter       | `DataTable` widget. NOT a `Column` of `Row` of `Text`.                                                                                                                       |
-| WinUI / XAML  | `Microsoft.UI.Xaml.Controls.DataGrid` from the Windows Community Toolkit. If unavailable, `Grid` with `Grid.RowDefinitions`/`ColumnDefinitions` + `AutomationProperties.Name` per cell to preserve table semantics for Narrator. NEVER `StackPanel` of `StackPanel`. |
+| Flutter       | `DataTable` widget. NOT a `Column` of `Row` of `Text`. Generated shells require Flutter 3.32+, the first stable release whose underlying `Table` exposes explicit table/row/cell semantics roles. |
+| WinUI / XAML  | Component-scoped `Grid`/cell controls whose automation peers implement UIA Table/Grid and TableItem/GridItem patterns for the canonical indexed dynamic shape. The visual tree remains `Grid`/`ItemsRepeater`, preserving arbitrary interactive cell content without the archived Community Toolkit DataGrid dependency. Unsupported shapes keep a structural `Grid` fallback and an explicit native-completeness degradation. NEVER claim table semantics from a plain layout Grid. |
 
 **Verification.** Every UI31-K-* PR's test suite MUST include a
 test that grep-asserts the generated output contains the native
 element name. React/HTML/WebComp tests grep for `<table` and
 `<thead`. Flutter tests grep for `DataTable(`. Qt tests grep for
 `TableView`. SwiftUI tests grep for `SwiftUI.Table` or `Table {`.
-XAML tests grep for `<DataGrid` (or document the `Grid` fallback
-explicitly). Tests that fail this gate block the PR — no exceptions,
+XAML tests grep for the generated MosaicTable controls and UIA provider
+interfaces, and separately pin the conservative `Grid` fallback. Tests that fail
+this gate block the PR — no exceptions,
 no "we'll do it in a follow-up."
 
-**Keyboard navigation comes from the native widget.** None of the
-emitters need to hand-roll arrow-key handlers — the platform widget
-ships them. Selected-cell tracking flows through the `selected-row`
+**Keyboard navigation follows the native semantic control.** Backends use the
+platform widget when one exists. WinUI's generated semantic cell control supplies
+arrow-key focus movement because WinUI has no core DataGrid. Selected-cell
+tracking flows through the `selected-row`
 / `selected-col` slots so the host's state model stays in sync with
 the platform's selection model.
 
@@ -212,7 +214,7 @@ Specifically:
 | SwiftUI       | Inherits from `Environment(\.layoutDirection)`. The `HostTable`'s `dir` slot, when set, wraps the rendered `Table` in `.environment(\.layoutDirection, .rightToLeft)`. |
 | Qt            | `LayoutMirroring.enabled: true` on the root container when `dir == rtl`. Inherits from parent otherwise.                                          |
 | Flutter       | Wraps the `DataTable` in `Directionality(textDirection: TextDirection.rtl, …)` when `dir == rtl`. Inherits from `Directionality.of(context)` otherwise. |
-| WinUI / XAML  | `FlowDirection="RightToLeft"` on the root `<DataGrid>` (or `<Grid>` fallback). Inherits from `<Window FlowDirection="…">` when unset.            |
+| WinUI / XAML  | `FlowDirection="RightToLeft"` on the generated MosaicTable root (or structural `<Grid>` fallback). Inherits from `<Window FlowDirection="…">` when unset.            |
 
 **Verification.** Every UI31-K-* PR's test suite MUST include a
 test that flips the `dir` input (or its emitter-side equivalent)

@@ -1,0 +1,89 @@
+% ============================================================================
+% animal-habitat — each animal and the name of the biome it lives in
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling fact to `animal-homes.adj`, but a DIFFERENT axis: not the built
+% STRUCTURE an animal lives in (a hive, a nest, a burrow), but the broad
+% ENVIRONMENT TYPE — its biome — that the animal calls home. "A polar bear
+% lives in the arctic; a giraffe lives on the grassland." Recall is a binding
+% query:
+%
+%     ? animal_habitat(polar_bear, $Biome)   % arctic
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `animal_habitat(animal, biome)` carrying the table's citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% biome's name WITH its source, on the CPU, with zero model calls, and
+% abstains on an animal (or a non-animal) that is not in the table.
+%
+% Each animal and the name of its biome, as a truth table:
+%
+%     animal           biome        a beginner's cue
+%     --------------   ----------   ----------------------------------------
+%     polar_bear       arctic       polar bears live on Arctic shores and sea ice
+%     bactrian_camel   desert       Bactrian camels live in the rocky deserts of Asia
+%     giraffe          grassland    a giraffe's habitat is the African grassland
+%
+% The query also runs BACKWARD — bind the biome and recall which animal:
+%
+%     ? animal_habitat($Animal, desert)   % bactrian_camel
+%
+% Note that a word that is NOT one of these three animals — `dog`, `shark`,
+% or a made-up animal — is deliberately NOT a row, so a habitat recall
+% ABSTAINS on it rather than inventing a biome. That honest-abstention
+% property is what makes the table safe to build a reasoner on: it answers
+% exactly the pairs it can ground, and only those.
+%
+% NOT A DUPLICATE of `animal-homes.adj`: that table names the physical
+% STRUCTURE an animal builds or uses (bee->hive, bird->nest, spider->web,
+% rabbit->burrow, beaver->lodge) — a different column semantic and a
+% disjoint set of example animals from the BIOME/environment-type axis this
+% table names. Confirmed via a full-tree grep of adj-facts-stdlib/ for
+% "habitat"/"biome" before writing this file (see
+% ../README.md's "Known overlapping tables" section for the standing
+% discipline this check follows).
+%
+% ----------------------------------------------------------------------------
+% Provenance (byte-quotable, per the ADJ-facts standard).
+% ----------------------------------------------------------------------------
+% Every row is quoted verbatim from National Geographic (education.
+% nationalgeographic.org / kids.nationalgeographic.com) — hence `trust
+% consensus` (NOT `authoritative`, which is reserved for a primary/official
+% .gov/.edu or standards source), the same tier this stdlib already reserves
+% for National Geographic Education's rainforest-layer.adj citation. Nothing
+% here is asserted from memory. Because ADJ tables carry ONE shared
+% provenance envelope (per-row provenance is a documented future extension —
+% see ADJ-TABLES §6), the envelope below cites the polar bear fact page at
+% its `locator`, and the `source` quotes that page's habitat sentence
+% verbatim. For full auditability, here is the exact span that grounds EACH
+% row, copied character-for-character, with the page it was read from:
+%
+%   polar_bear → arctic     — "Polar bears live along shores and on sea ice
+%                              in the icy cold Arctic."
+%                              https://kids.nationalgeographic.com/animals/mammals/facts/polar-bear
+%
+%   bactrian_camel → desert — "Bactrian camels live in Central and East
+%                              Asia's rocky deserts where it gets very cold
+%                              in the winter and hot in the summer."
+%                              https://kids.nationalgeographic.com/animals/mammals/facts/bactrian-camel
+%
+%   giraffe → grassland     — "Grassland, for example, is the habitat of the
+%                              giraffe, but the animal's range is central,
+%                              eastern and southern Africa."
+%                              https://education.nationalgeographic.org/resource/habitat
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_habitat {
+    columns animal, biome
+
+    row (polar_bear, arctic)
+    row (bactrian_camel, desert)
+    row (giraffe, grassland)
+
+    source "Polar bears live along shores and on sea ice in the icy cold Arctic."
+    locator "https://kids.nationalgeographic.com/animals/mammals/facts/polar-bear"
+    trust consensus
+}

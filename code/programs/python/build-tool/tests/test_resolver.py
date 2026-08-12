@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,10 @@ from build_tool.resolver import (
     DirectedGraph,
     MetadataEncodingError,
     _build_known_names,
+    _build_known_names_for_language,
+    _dependency_scope,
+    _in_dependency_scope,
+    _parse_build_tool_deps,
     _parse_python_deps,
     _parse_ruby_deps,
     _parse_go_deps,
@@ -22,6 +27,9 @@ from build_tool.resolver import (
 )
 
 FIXTURES = Path(__file__).parent / "fixtures"
+CONFORMANCE_CASES = (
+    Path(__file__).parents[4] / "specs" / "fixtures" / "build-tool-v1" / "cases"
+)
 
 
 class TestDirectedGraph:
@@ -424,3 +432,225 @@ class TestResolveDependencies:
         assert groups[0] == ["python/pkg-d"]
         assert sorted(groups[1]) == ["python/pkg-b", "python/pkg-c"]
         assert groups[2] == ["python/pkg-a"]
+
+
+class TestFieldAwareManifestResolution:
+    """Consume the shared Cabal, Gradle, and .NET resolution contracts."""
+
+    @staticmethod
+    def _materialize_case(
+        tmp_path: Path, fixture_name: str
+    ) -> tuple[dict, list[Package]]:
+        case = json.loads(
+            (CONFORMANCE_CASES / fixture_name).read_text(encoding="utf-8")
+        )
+        for member in case["workspace"]["files"]:
+            path = tmp_path / member["path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(member["content_utf8"], encoding="utf-8")
+
+        packages = []
+        for build_file in sorted(tmp_path.glob("code/*/*/*/BUILD")):
+            relative = build_file.relative_to(tmp_path)
+            family = relative.parts[1]
+            language = relative.parts[2]
+            package_dir = build_file.parent
+            name = f"{language}/{package_dir.name}"
+            if family == "programs":
+                name = f"{language}/programs/{package_dir.name}"
+            packages.append(
+                Package(
+                    name=name,
+                    path=package_dir,
+                    language=language,
+                    build_content=build_file.read_text(encoding="utf-8"),
+                )
+            )
+        return case, packages
+
+    @pytest.mark.parametrize(
+        "fixture_name",
+        [
+            "resolution-haskell-field-aware.json",
+            "resolution-gradle-java-field-aware.json",
+            "resolution-gradle-kotlin-field-aware.json",
+            "resolution-dotnet-csharp-field-aware.json",
+            "resolution-dotnet-fsharp-field-aware.json",
+            "resolution-dotnet-cross-language-field-aware.json",
+        ],
+    )
+    def test_shared_resolution_fixture(self, tmp_path, fixture_name):
+        case, packages = self._materialize_case(tmp_path, fixture_name)
+        language = case["input"]["options"].get("language", "all")
+        if language != "all":
+            packages = [
+                package for package in packages if package.language == language
+            ]
+
+        graph = resolve_dependencies(packages)
+
+        assert set(graph.edges()) == {
+            tuple(edge) for edge in case["expected"]["result"]["edges"]
+        }
+
+    @pytest.mark.parametrize(
+        ("fixture_name", "changed", "unexpected"),
+        [
+            (
+                "resolution-haskell-field-aware.json",
+                "haskell/gamma",
+                "haskell/alpha",
+            ),
+            (
+                "resolution-gradle-java-field-aware.json",
+                "java/gamma",
+                "java/alpha",
+            ),
+            (
+                "resolution-gradle-kotlin-field-aware.json",
+                "kotlin/gamma",
+                "kotlin/alpha",
+            ),
+            (
+                "resolution-dotnet-csharp-field-aware.json",
+                "csharp/gamma",
+                "csharp/alpha",
+            ),
+            (
+                "resolution-dotnet-fsharp-field-aware.json",
+                "fsharp/gamma",
+                "fsharp/alpha",
+            ),
+        ],
+    )
+    def test_comment_and_string_examples_do_not_expand_affected_closure(
+        self, tmp_path, fixture_name, changed, unexpected
+    ):
+        _, packages = self._materialize_case(tmp_path, fixture_name)
+
+        graph = resolve_dependencies(packages)
+
+        assert unexpected not in graph.affected_nodes({changed})
+
+    def test_gradle_self_and_interpolation_paths_do_not_create_edges(
+        self, tmp_path
+    ):
+        alpha = tmp_path / "alpha"
+        interpolated = tmp_path / "${target}"
+        alpha.mkdir()
+        interpolated.mkdir()
+        (alpha / "settings.gradle.kts").write_text(
+            'includeBuild(".")\nincludeBuild("../${target}")\n', encoding="utf-8"
+        )
+        packages = [
+            Package(name="java/alpha", path=alpha, language="java"),
+            Package(
+                name="java/interpolated", path=interpolated, language="java"
+            ),
+        ]
+
+        graph = resolve_dependencies(packages)
+
+        assert graph.edges() == []
+
+    def test_dotnet_languages_share_only_the_dotnet_scope(self):
+        assert _dependency_scope("csharp") == "dotnet"
+        assert _dependency_scope("fsharp") == "dotnet"
+        assert _dependency_scope("dotnet") == "dotnet"
+        assert all(
+            _in_dependency_scope(language, "dotnet")
+            for language in ("csharp", "fsharp", "dotnet")
+        )
+        assert not _in_dependency_scope("java", "dotnet")
+
+
+class TestEcosystemScopedAliases:
+    """Consume the language-neutral same-name collision contract."""
+
+    @staticmethod
+    def _materialize_case(tmp_path: Path) -> tuple[dict, list[Package]]:
+        case = json.loads(
+            (CONFORMANCE_CASES / "resolution-ecosystem-scoped-aliases.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for member in case["workspace"]["files"]:
+            path = tmp_path / member["path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(member["content_utf8"], encoding="utf-8")
+
+        packages = []
+        for build_file in sorted(tmp_path.glob("code/packages/*/*/BUILD")):
+            relative = build_file.relative_to(tmp_path)
+            language = relative.parts[2]
+            package_dir = build_file.parent
+            packages.append(
+                Package(
+                    name=f"{language}/{package_dir.name}",
+                    path=package_dir,
+                    language=language,
+                    build_content=build_file.read_text(encoding="utf-8"),
+                )
+            )
+        return case, packages
+
+    def test_same_spelled_aliases_resolve_only_within_ecosystem(self, tmp_path):
+        case, packages = self._materialize_case(tmp_path)
+
+        graph = resolve_dependencies(packages)
+        expected = {tuple(edge) for edge in case["expected"]["result"]["edges"]}
+
+        assert set(graph.edges()) == expected
+
+    def test_wrong_ecosystem_build_is_not_selected(self, tmp_path):
+        _, packages = self._materialize_case(tmp_path)
+
+        graph = resolve_dependencies(packages)
+
+        assert graph.affected_nodes({"python/shared"}) == {
+            "python/shared",
+            "python/consumer",
+        }
+        assert graph.affected_nodes({"lua/shared"}) == {
+            "lua/shared",
+            "lua/consumer",
+            "python/bridge",
+        }
+
+    def test_scoped_map_preserves_library_over_program_priority(self):
+        program = Package(
+            name="python/programs/shared-tool",
+            path=Path("/fake/programs/python/shared"),
+            language="python",
+        )
+        library = Package(
+            name="python/shared",
+            path=Path("/fake/packages/python/shared"),
+            language="python",
+        )
+        lua = Package(
+            name="lua/shared",
+            path=Path("/fake/packages/lua/shared"),
+            language="lua",
+        )
+
+        known = _build_known_names_for_language([program, lua, library], "python")
+
+        assert known == {"coding-adventures-shared": "python/shared"}
+
+    def test_qualified_build_comments_ignore_unsafe_or_unknown_entries(self):
+        package = Package(
+            name="python/bridge",
+            path=Path("/fake/packages/python/bridge"),
+            language="python",
+            build_content=(
+                "# build-tool: deps=lua/shared, unknown/package, "
+                "python/bridge, lua/shared\n"
+                'echo "# build-tool: deps=perl/shared"\n'
+            ),
+        )
+
+        assert _parse_build_tool_deps(
+            package,
+            {"python/bridge", "lua/shared", "perl/shared"},
+        ) == ["lua/shared"]

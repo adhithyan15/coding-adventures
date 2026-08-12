@@ -2,6 +2,66 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.5] - 2026-08-12
+
+### Fixed
+
+- **Field-aware .NET resolution**: C#, F#, and shared dotnet programs now
+  resolve only literal `ProjectReference Include` paths from root project
+  files against already discovered project identities, without reading or
+  following referenced targets.
+- **Closed XML and MSBuild grammar**: comments, CDATA, processing instructions,
+  namespaces, entity-escaped attributes, properties, globs, absolute paths,
+  unknown targets, nested test projects, self-references, and duplicates cannot
+  create dependency edges.
+- **Safe C# and F# filters**: `--language csharp` and `--language fsharp` now
+  share the canonical discovery registry, preserve program identities, and map
+  to the existing `dotnet` CI toolchain.
+
+## [0.3.4] - 2026-08-11
+
+### Fixed
+
+- **Safe Haskell and JVM filters**: `--language haskell`, `java`, and `kotlin`
+  now share the canonical language registry after their Cabal and Gradle
+  resolvers became field-aware.
+- **Canonical discovery buckets**: language inference now accepts only the
+  direct `packages/<language>` and `programs/<language>` buckets instead of
+  borrowing a later path component, and skips generated Cabal
+  `dist-newstyle` trees.
+- **Program identity preservation**: discovered programs retain the
+  `<language>/programs/<name>` identity, keeping same-named packages and
+  programs distinct and matching the language-neutral discovery corpus.
+
+## [0.3.3] - 2026-08-11
+
+### Fixed
+
+- **Field-aware Cabal resolution**: exactly one root manifest contributes
+  dependencies, and only `build-depends` fields are scanned. Directory,
+  legacy-prefixed, and declared package names resolve inside the Haskell scope.
+- **Lexical Gradle composite resolution**: multiline `includeBuild` calls are
+  parsed outside nested comments and unrelated strings, normalized without
+  opening targets, and matched only to discovered Java or Kotlin roots.
+- **Shared adversarial conformance**: Python now consumes the strengthened
+  Haskell, Java, and Kotlin fixtures, including wrong-BUILD affected-closure
+  assertions; the Go oracle consumes the same fixture revisions.
+
+## [0.3.2] - 2026-08-10
+
+### Fixed
+
+- **Ecosystem-scoped dependency aliases**: dependency manifests now resolve
+  against one alias table per language, preventing a same-spelled package in a
+  different ecosystem from redirecting a local dependency edge or selecting
+  the wrong BUILD commands.
+- **Qualified cross-language BUILD edges**: exact `# build-tool: deps=` package
+  identities remain supported without reopening ordinary cross-ecosystem alias
+  matching. Duplicate, unknown, and self references are ignored deterministically.
+- **Shared adversarial conformance**: Python and Go consume the same 58th
+  language-neutral case covering Lua, Perl, Python, Haskell, and a deliberate
+  qualified cross-language bridge.
+
 ## [0.3.1] - 2026-08-02
 
 ### Fixed

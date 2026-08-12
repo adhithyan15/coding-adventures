@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-regular
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 330
-chapter: 4
+chapter: 9
 type: word
 headword: regular
 gloss: so-so / not great (also "más o menos")
@@ -34,13 +34,13 @@ reviews_of: [ES-C01-bien, ES-C04-como-estas-register, ES-C04-como-esta]
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 [PAUSE 2s] You asked *¿cómo estás?* Now you can answer three ways: great,
-middling, or a wave of the hand. You already have **bien** ("well," Chapter 1).
+middling, or a wave of the hand. You already have **bien** ("well").
 Today, the *middling* answers — because nobody is *bien* every day.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[ES-LEX-REGULAR, ES-LEX-MAS-O-MENOS]; assesses=[] -->
 
-[PAUSE 2s] Recall from Chapter 1: **bien** — "well." Root? (Latin *bene*, "well"
+[PAUSE 2s] Recall **bien** — "well." Root? (Latin *bene*, "well"
 — same as *bene*fit, *bene*volent.) So *estoy bien* = "I'm well." Now the answer
 for when you're *not* quite bien.
 

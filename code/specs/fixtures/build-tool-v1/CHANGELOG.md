@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-08-12
+
+- Expanded the canonical discovery registry with paired C# and F# package and
+  program identities so every consumer must preserve the `programs` segment
+  before exposing the established .NET lanes as filters.
+
+## 2026-08-11
+
+- Expanded the canonical discovery registry with colliding package/program
+  basenames for Haskell, Java, and Kotlin so every consumer must retain the
+  `programs` identity segment for the newly exposed Python filter lanes.
+- Added a Cabal `dist-newstyle` decoy to the discovery registry so generated
+  Haskell build output can never become a package or break a repository scan.
+- Strengthened the Haskell field-aware case with plain directory and declared
+  Cabal aliases plus fail-closed ambiguous root manifests.
+- Strengthened the Java and Kotlin Gradle cases with duplicate declarations,
+  nested block comments, interpolated unknown paths, and multiline real calls.
+
+## 2026-08-10
+
+- Added an adversarial ecosystem-scoped alias-resolution case. Same-spelled
+  Lua, Perl, Python, and Haskell packages must resolve locally, while one exact
+  qualified BUILD dependency preserves an intentional cross-language edge.
+
 ## 2026-08-08
 
 - Added the process-free `lua_windows_sibling_parity` validation check and an

@@ -1,5 +1,149 @@
 # Changelog
 
+## 0.66.0
+
+- Apply one inline state style statement to comma-delimited nodes and groups.
+
+## 0.65.0
+
+- Decode Mermaid entities and HTML line breaks in state text before layout.
+
+## 0.64.0
+
+- Preserve grammar-backed `hide empty description` rendering semantics.
+
+## 0.63.0
+
+- Preserve grammar-backed state `scale N width` requests in graph IR.
+
+## 0.62.0
+
+- Preserve local `direction` statements on composite state groups.
+
+## 0.61.0
+
+- Preserve repeated state descriptions as ordered multiline labels.
+
+## 0.60.0
+
+- Preserve modern and legacy state diagram titles in graph semantic IR.
+
+## 0.59.0
+
+- Preserve composite state IDs as transition endpoints without synthetic nodes.
+
+## 0.58.0
+
+- Preserve grammar-backed concurrent state regions as ordered group membership.
+
+## 0.57.0
+
+- Parse quoted composite-state aliases and apply inline or named styles to graph groups.
+
+## 0.56.0
+
+- Parse nested composite states into graph-group semantic IR.
+
+## 0.55.0
+
+- Preserve state click URLs and optional tooltips as graph node links.
+
+## 0.54.0
+
+- Preserve state accessibility titles and descriptions in graph semantic IR.
+
+## 0.53.0
+
+- Parse multiline attached notes and quoted floating notes into graph note IR.
+
+## 0.52.0
+
+- Parse single-line state notes into note nodes and note-association edges in graph IR.
+
+## 0.51.0
+
+- Resolve state `:::` class shorthand on standalone states and transition endpoints.
+
+## 0.50.0
+
+- Parse state `classDef` and `class` statements and resolve reusable styles into graph IR.
+
+## 0.49.0
+
+- Parse state inline fill, stroke, text-color, and stroke-width styles into shared graph IR.
+
+## 0.48.0
+
+- Parse Mermaid state fork/join markers and lower them to compact, styled graph-IR bars.
+
+## 0.47.0
+
+- Parse both Mermaid state choice marker spellings and lower choices to graph-IR diamonds.
+
+## 0.46.0
+
+- Parse Mermaid state description statements without a leading `state` keyword and carry their labels through graph IR.
+
+## 0.45.0
+
+- Parse an initial grammar-backed Mermaid 11.16.1 state-diagram slice into graph IR for native layout and Paint lowering.
+
+## 0.44.0
+
+- Blank leading YAML front matter before sequence grammar parsing while preserving source line positions.
+
+## 0.43.0
+
+- Preprocess Mermaid directives before sequence grammar parsing and apply the global `wrap` directive to default-wrapped semantic labels.
+
+## 0.42.0
+
+- Reject `+` and `-` activation suffixes on central sequence connections, matching the pinned Mermaid grammar alternatives.
+
+## 0.37.0
+
+- Reject explicit and message-suffix deactivation of inactive sequence participants.
+
+## 0.36.0
+
+- Reject duplicate participant IDs in `create` declarations and participants assigned to multiple boxes.
+
+## 0.35.0
+
+- Bind `create` and `destroy` declarations to their required following messages and reject invalid lifecycle sequences.
+
+## 0.34.0
+
+- Give start-only sequence `autonumber` statements their Mermaid 11.16.1 default increment of one.
+
+## 0.33.0
+
+- Parse Mermaid 11.16.1 sequence headers and keywords case-insensitively.
+
+## 0.32.0
+
+- Decode Mermaid 11.16.1 YAML/JSON-schema escapes in quoted sequence participant configuration values.
+
+## 0.31.0
+
+- Preserve commas inside quoted sequence participant configuration aliases.
+
+## 0.30.0
+
+- Accept Mermaid 11.16.1 sequence `#` comments without losing entity-coded text.
+
+## 0.29.0
+
+- Preserve ordered sequence `autonumber`, `autonumber off`, and counter-reset statements.
+
+## 0.28.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence participant-box labels.
+
+## 0.27.0
+
+- Preserve `wrap:` and `nowrap:` directives on sequence participant aliases.
+
 ## 0.26.0
 
 - Preserve `wrap:` and `nowrap:` directives on sequence control-block and branch labels.

@@ -49,6 +49,39 @@ typedef _Destroy = void Function(Pointer<Void>);
 typedef _InputOperation = int Function(_MosaicBytes, Pointer<_MosaicBuffer>);
 typedef _OutputOperation = int Function(Pointer<_MosaicBuffer>);
 
+@Native<_CreateNative>(symbol: 'mosaic_app_create')
+external int _bundledCreate(
+  _MosaicBytes input,
+  Pointer<Pointer<Void>> appOut,
+  Pointer<_MosaicBuffer> output,
+);
+
+@Native<_DispatchNative>(symbol: 'mosaic_app_dispatch')
+external int _bundledDispatch(
+  Pointer<Void> app,
+  _MosaicBytes input,
+  Pointer<_MosaicBuffer> output,
+);
+
+@Native<_SnapshotNative>(symbol: 'mosaic_app_snapshot')
+external int _bundledSnapshot(
+  Pointer<Void> app,
+  Pointer<_MosaicBuffer> output,
+);
+
+@Native<_RestoreNative>(symbol: 'mosaic_app_restore')
+external int _bundledRestore(
+  Pointer<Void> app,
+  _MosaicBytes input,
+  Pointer<_MosaicBuffer> output,
+);
+
+@Native<_BufferFreeNative>(symbol: 'mosaic_buffer_free')
+external void _bundledBufferFree(_MosaicBuffer buffer);
+
+@Native<_DestroyNative>(symbol: 'mosaic_app_destroy')
+external void _bundledDestroy(Pointer<Void> app);
+
 /// Package-independent Flutter host for the fixed Mosaic Rust application ABI.
 ///
 /// The public const constructor remains available for injected test and
@@ -99,24 +132,39 @@ class MosaicHost {
 
 final class _MosaicRuntime {
   _MosaicRuntime(DynamicLibrary library)
-    : _create = library.lookupFunction<_CreateNative, _Create>(
-        'mosaic_app_create',
-      ),
-      _dispatch = library.lookupFunction<_DispatchNative, _Dispatch>(
-        'mosaic_app_dispatch',
-      ),
-      _snapshot = library.lookupFunction<_SnapshotNative, _Snapshot>(
-        'mosaic_app_snapshot',
-      ),
-      _restore = library.lookupFunction<_RestoreNative, _Restore>(
-        'mosaic_app_restore',
-      ),
-      _bufferFree = library.lookupFunction<_BufferFreeNative, _BufferFree>(
-        'mosaic_buffer_free',
-      ),
-      _destroy = library.lookupFunction<_DestroyNative, _Destroy>(
-        'mosaic_app_destroy',
-      ) {
+    : this._(
+        library.lookupFunction<_CreateNative, _Create>('mosaic_app_create'),
+        library.lookupFunction<_DispatchNative, _Dispatch>(
+          'mosaic_app_dispatch',
+        ),
+        library.lookupFunction<_SnapshotNative, _Snapshot>(
+          'mosaic_app_snapshot',
+        ),
+        library.lookupFunction<_RestoreNative, _Restore>('mosaic_app_restore'),
+        library.lookupFunction<_BufferFreeNative, _BufferFree>(
+          'mosaic_buffer_free',
+        ),
+        library.lookupFunction<_DestroyNative, _Destroy>('mosaic_app_destroy'),
+      );
+
+  _MosaicRuntime.bundled()
+    : this._(
+        _bundledCreate,
+        _bundledDispatch,
+        _bundledSnapshot,
+        _bundledRestore,
+        _bundledBufferFree,
+        _bundledDestroy,
+      );
+
+  _MosaicRuntime._(
+    this._create,
+    this._dispatch,
+    this._snapshot,
+    this._restore,
+    this._bufferFree,
+    this._destroy,
+  ) {
     final appOut = calloc<Pointer<Void>>();
     try {
       latestUpdate = _requireMap(
@@ -144,6 +192,7 @@ final class _MosaicRuntime {
   }
 
   static const int _protocolVersion = __MOSAIC_PROTOCOL_VERSION__;
+  static const bool _hasBundledRuntime = __MOSAIC_BUNDLED_RUNTIME__;
 
   final _Create _create;
   final _Dispatch _dispatch;
@@ -161,6 +210,8 @@ final class _MosaicRuntime {
     if (requested != null && requested.trim().isNotEmpty) {
       return _MosaicRuntime(DynamicLibrary.open(requested));
     }
+
+    if (_hasBundledRuntime) return _MosaicRuntime.bundled();
 
     final candidates = <DynamicLibrary Function()>[
       DynamicLibrary.process,
@@ -242,8 +293,9 @@ final class _MosaicRuntime {
     final input = calloc<_MosaicBytes>();
     final output = calloc<_MosaicBuffer>();
     try {
-      if (encoded.isNotEmpty)
+      if (encoded.isNotEmpty) {
         bytes.asTypedList(encoded.length).setAll(0, encoded);
+      }
       input.ref
         ..ptr = encoded.isEmpty ? nullptr : bytes
         ..len = encoded.length;

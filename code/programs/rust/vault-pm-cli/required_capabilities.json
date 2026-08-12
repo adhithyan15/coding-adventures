@@ -6,8 +6,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "platform-resolved owner-private vault-pm roots",
-      "justification": "Composes the audited local host and filesystem storage adapters to read durable local vault state."
+      "target": "platform-resolved owner-private vault-pm roots or one explicit portable-import source",
+      "justification": "Composes the audited local host and filesystem storage adapters to read durable local vault state or one bounded encrypted portable artifact."
     },
     {
       "category": "fs",
@@ -18,8 +18,8 @@
     {
       "category": "fs",
       "action": "create",
-      "target": "platform-resolved owner-private vault-pm roots",
-      "justification": "Creates first-use private roots, configuration, journals, bootstraps, and encrypted immutable records."
+      "target": "platform-resolved owner-private vault-pm roots or one explicit portable-export destination",
+      "justification": "Creates first-use private roots, configuration, journals, bootstraps, encrypted immutable records, or one create-new already-encrypted portable artifact selected by the user."
     },
     {
       "category": "ffi",

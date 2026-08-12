@@ -48,7 +48,9 @@
 //! `return` → the body [`Block`](semantic_ir::Block)'s value, calls →
 //! [`DirectCall`](semantic_ir::Expr::DirectCall) /
 //! [`IndirectCall`](semantic_ir::Expr::IndirectCall), and `console.log`
-//! → [`BuiltinCall`](semantic_ir::Expr::BuiltinCall)`("print", …)`.
+//! → SIR28's `__sys_write__` primitive
+//! ([`BuiltinCall`](semantic_ir::Expr::BuiltinCall)`("__sys_write__", …)`,
+//! see `code/specs/SIR28-syscall-primitives.md` §2.1).
 //! Function-name collection is two-pass (so forward references and mutual
 //! recursion resolve); an early (non-tail) `return` is a positioned error.
 //!
@@ -1121,14 +1123,16 @@ mod tests {
 
     #[test]
     fn console_log_lowers_to_builtin_print() {
+        // SIR28 §2: `console.log` lowers to `__sys_write__`, not a bare
+        // `BuiltinCall("print", ...)`.
         let m = lower("let x = 1; console.log(x);");
         assert_valid(&m);
         // The call is a statement (its value is unobservable at top level);
-        // find the print BuiltinCall in the block.
+        // find the `__sys_write__` BuiltinCall in the block.
         let has_print = main_block(&m).stmts.iter().any(|s| {
-            matches!(s, Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "print")
-        }) || matches!(&main_block(&m).value, Expr::BuiltinCall { name, .. } if name == "print");
-        assert!(has_print, "expected a print BuiltinCall in main");
+            matches!(s, Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "__sys_write__")
+        }) || matches!(&main_block(&m).value, Expr::BuiltinCall { name, .. } if name == "__sys_write__");
+        assert!(has_print, "expected a __sys_write__ BuiltinCall in main");
     }
 
     // ── C3: member-method calls → `__method__` dispatch ────────────
@@ -1259,15 +1263,22 @@ mod tests {
     #[test]
     fn console_log_still_lowers_to_print_not_method_dispatch() {
         // Guard against a regression: `console.log` must keep its dedicated
-        // `print` lowering rather than being swept into `__method__`.
+        // `__sys_write__` lowering (SIR28 §2) rather than being swept into
+        // `__method__`.
         let m = lower("console.log(1);");
         assert_valid(&m);
         match main_value(&m) {
-            Expr::BuiltinCall { name, .. } => {
-                assert_eq!(name, "print", "console.log must stay a print builtin");
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__sys_write__", "console.log must stay a __sys_write__ builtin");
+                assert_eq!(args.len(), 4);
+                assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "stdout"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "once"));
+                assert!(matches!(args[2], Expr::BoolLit { value: false, .. }));
+                assert!(matches!(args[3], Expr::IntLit { value: 1, .. }));
             }
-            other => panic!("expected print BuiltinCall, got {other:?}"),
+            other => panic!("expected __sys_write__ BuiltinCall, got {other:?}"),
         }
+        assert!(m.manifest.contains(Feature::ConsoleIO));
     }
 
     #[test]

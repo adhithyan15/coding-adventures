@@ -31,16 +31,39 @@ builds. `BuildProfile::Permissive` emits the normal artifacts and a deterministi
 same report but rejects the build before application artifacts are emitted when
 the selected backend has a known degradation.
 
-The inventory identifies passive drag/drop lowerings, native table lowerings
-without table semantics, Flutter's dialog placeholder and missing URL effect
-host, ignored tri-state checkbox and radio-group properties, and generated
-native project shells that can fall back to sample props. Compose, Flutter, Qt,
-SwiftUI, and XAML now have closed shells: their strict profiles
+The inventory identifies the passive drag/drop lowering on XAML,
+native table lowerings without table semantics (excluding canonical UI31/Grid
+shapes on Flutter, Compose, Qt, SwiftUI, and XAML), Flutter's
+dialog placeholder and missing URL effect
+host, ignored tri-state checkbox and radio-group properties, XAML dialog state
+that still requires code-behind, ignored XAML/SwiftUI dialog lifecycle events,
+ignored XAML/SwiftUI external-link activation events, and generated native
+project shells that can fall back to sample props. Compose, Flutter, Qt, SwiftUI,
+and XAML now have closed shells: their strict profiles
 require Mosaic's standard Rust runtime, wait for the first props envelope,
 reject missing required props, and omit sample-data and optional-host fallbacks.
 The overall native-complete milestone remains open while ignored properties,
 events, styles, effects, and
 accessibility metadata are added to the inventory.
+
+Flutter, Compose, Qt, SwiftUI, and XAML drag primitives are no longer reported as
+inert: those emitters use native pointer/touch drag targets plus the UI35
+keyboard, accepted-drop, component-scoping, and announcement contracts.
+
+The package-expanded TaskApp is the full strict-profile proof point for Flutter,
+Compose, Qt, SwiftUI on macOS, and XAML/WinUI. SwiftUI emits `Table` with dynamic columns on
+macOS 14.4 / iOS 17.4 and a native `List` compatibility path on the package's
+older deployment targets. Each strict desktop output has no known degradations,
+bundles the standard Rust runtime, verifies that installed runtime against the
+selected artifact, and launches without an injected library path. SwiftUI's iOS
+16 build remains a separate source-portability gate rather than packaging the
+macOS dylib. XAML also bundles the concrete `task-mosaic-app` adapter, verifies
+the DLL installed beside `TaskApp.exe`, and drives the generated .NET binding with
+that app-local engine. The complete TaskApp now passes XAML's strict
+`native-complete` profile with zero degradations: its Sheet carries native UIA
+table/grid semantics and its board/calendar use native WinUI drag, drop, keyboard,
+acceptance, and accessibility behavior. Hosted Windows CI still does not claim a
+visible interactive launch.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false
@@ -49,9 +72,21 @@ For example, Compose/Flutter/SwiftUI report an authored, non-false
 explicit `indeterminate: false` is a semantic no-op and does not fail a strict
 build.
 
+Dialog/link degradations are likewise value-sensitive. SwiftUI's modal
+`HostDialog.onClose` and XAML/SwiftUI internal-link `onActivate` dispatch are
+supported, while SwiftUI's non-modal close event and external-link activation
+events are rejected until those emitter paths preserve the authored behavior.
+
 `compose_component` is the canonical in-memory entry point shared by package
 builds and standalone three-file compilation. It returns the compiled model,
 resolved layout, and merged style definition without selecting a backend.
+
+`build_package_with_tokens` and
+`build_package_with_profile_runtime_and_tokens` accept one resolved token map
+for the full composition. The map is used for both the root package and every
+recursive dependency style, so reusable controls inherit app branding without
+copying or editing their MSL. Existing entry points retain the built-in Mosaic
+palette for source compatibility.
 
 Package references such as `pkg::mosaic-pkg-card::Card` are inlined before
 backend emission. Styles from referenced packages are compiled and merged first,
@@ -72,13 +107,34 @@ owns the Rust application handle, buffer lifecycle, startup context, event
 sequence, and JSON updates; applications no longer need to rebuild that FFI
 adapter. Permissive builds try the binding before the legacy optional host hook
 and retain sample props for previews. `native-complete` builds require the
-binding and runtime-provided props before mounting the component.
+binding and runtime-provided props before mounting the component. Use
+`build_package_with_profile_and_runtime` with a target `.dylib`, `.so`, or `.dll`
+to copy the selected Rust engine into Compose's platform-specific application
+resources, Flutter's bundled Dart code assets, Qt's CMake install tree, SwiftUI's
+SwiftPM resource bundle, or XAML's WinUI output directory under its conventional
+`mosaic_app` filename. Flutter emits `hook/build.dart` so the Flutter toolchain
+packages and resolves the selected target library without application-specific
+runner edits. The Compose and SwiftUI bindings resolve their installed
+resources, while the Qt and XAML bindings resolve the engine beside the
+installed executable before global lookup. A strict project build on any of the
+five native backends without that selection reports
+`runtime.library-not-bundled`. Selecting a runtime also makes the generated
+shell require that engine even under the permissive reporting profile. This
+allows an app with unrelated, explicitly reported UI degradations to ship a
+fail-closed engine boundary without retaining preview/sample props.
+Every exported Compose component is mirrored into the generated Gradle source
+set, so `gradle compileKotlin` type-checks the complete package even though the
+shell mounts the manifest's first export as its entry component.
 SwiftUI package shells likewise install Mosaic's standard Foundation host plus
-a tiny C dynamic-loader target. Set `MOSAIC_APP_LIBRARY` to the application
-`cdylib` path (or package it as `libmosaic_app.dylib`); the generated host owns
-the Rust handle, buffers, sequence, snapshots, and updates. Permissive builds
+a tiny C dynamic-loader target. A selected `.dylib` is copied into SwiftPM's
+`Runtime` resource bundle and its `Bundle.module` path is passed to the generated
+host; `MOSAIC_APP_LIBRARY` remains a development override. The generated host
+owns the Rust handle, buffers, sequence, snapshots, and updates. Permissive builds
 can fall back to the legacy reflection hook; `native-complete` builds require
 the standard binding and runtime-provided props before mounting the view.
+Every exported SwiftUI view is mirrored into the generated SwiftPM application
+target, so `swift build` type-checks the complete package while `App.swift`
+continues to mount the manifest's first export.
 XAML project shells install a standard .NET host that uses built-in native
 loading and JSON APIs. The generated window prefers that runtime when its DLL is
 available, then retains the app-owned reflection host only as a permissive
@@ -91,12 +147,19 @@ runtime while preserving `MosaicApp(mosaicHost: ...)` injection. Set
 target platform's conventional `mosaic_app` name. Permissive builds retain the
 injectable/optional preview path; `native-complete` builds require the binding
 and Rust-provided props before mounting the generated widget.
+Every exported Flutter widget is mirrored into the generated application's
+`lib/` source set, so `dart analyze lib` type-checks the complete package while
+`main.dart` continues to mount the manifest's first export. Native CI also
+bootstraps the documented Linux runner and builds the toolkit desktop app.
 Qt project shells install a standard QObject host backed by `QLibrary` and
 Qt JSON/variant APIs. Explicit package host assets can still replace
 `MosaicHost.h/.cpp` for specialized native surfaces and effects. Permissive
 builds retain the optional-host seam; `native-complete` builds compile the
 standard binding unconditionally, validate Rust-provided required MIL props
 before QML construction, and never mount an inert or sample-backed component.
+Every exported QML component is listed in the generated
+`qt_add_qml_module`, so CMake and Qt's QML cache compiler validate the complete
+package while the application continues to mount the manifest's first export.
 
 Packages may declare optional `[host_assets]` file copies in
 `mosaic-package.toml`. Matching backend assets are copied from package-relative

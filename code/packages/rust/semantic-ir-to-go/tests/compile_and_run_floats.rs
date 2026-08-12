@@ -49,8 +49,13 @@ fn call(name: &str, args: Vec<Expr>) -> Expr {
 fn print_stmt(expr: Expr) -> semantic_ir::Stmt {
     semantic_ir::Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -90,7 +95,7 @@ fn demo_module() -> Module {
 
     Module {
         name: "floats_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Floats, Feature::ShortCircuit]),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings, Feature::Floats, Feature::ShortCircuit]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

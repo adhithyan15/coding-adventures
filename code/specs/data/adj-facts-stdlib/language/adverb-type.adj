@@ -1,0 +1,78 @@
+% ============================================================================
+% adverb-type — four named adverb types and what each actually describes
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Adverbs modify a verb, adjective, or another adverb, and grammar
+% references sort them into overlapping categories by WHAT question they
+% answer: an adverb of manner answers "how", an adverb of place answers
+% "where", an adverb of frequency answers "how often", and an adverb of
+% duration answers "how long". Recall is a binding query:
+%
+%     ? adverb_type(manner, $D)
+%       % describes_how_an_action_is_performed
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `adverb_type(type, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the description WITH its source, on the CPU, with zero model
+% calls, and abstains on an adverb type that is not one of these four. The
+% query also runs BACKWARD — bind a description and recall the adverb type
+% it names:
+%
+%     ? adverb_type($T, describes_how_long_an_action_lasts)
+%       % duration
+%
+% The four adverb types, as a little truth table:
+%
+%     type          description                                quote (verbatim)
+%     ------------  -----------------------------------------  ------------------------------------------------------
+%     manner         describes_how_an_action_is_performed        "Adverbs of manner describe how an action is performed"
+%     place          describes_where_an_action_happens            "Adverbs of place describe where an action happens"
+%     frequency      describes_how_often_an_action_occurs         "Adverbs of frequency describe how often an action occurs"
+%     duration       describes_how_long_an_action_lasts           "Adverbs of duration describe how long an action lasts"
+%
+% Provenance: quoted verbatim from Grammarly's "What Is an Adverb?
+% Definition and Examples" article's "Types of adverbs" table. WebFetch-
+% verified twice — the second pass pulled every row of that table,
+% confirming manner/place/frequency/duration are each stated as their own
+% clean, single-fact sentence ("Adverbs of X describe/describes <one
+% thing>"), while a fifth row, adverbs of TIME, is deliberately excluded
+% (see below). `trust consensus` — Grammarly is a reputable, widely-cited
+% grammar-content company, the same tier this stdlib already reserves for
+% other non-.gov language sources and the same source family already
+% cited by `verb-type.adj`/`sentence-type.adj`/`part-of-speech.adj`/
+% `noun-type.adj`/`preposition-type.adj`. Picked using the mandatory
+% full-tree-grep-before-scoping discipline — `grep -rilE
+% "\badverb_type\b|\badverbs_of_manner\b"
+% code/specs/data/adj-facts-stdlib/` found ZERO hits, confirming a
+% completely fresh topic before this file was written; closes out
+% adverbs as the last major part-of-speech family this stdlib had not yet
+% named on its own (noun/pronoun/verb/preposition/conjunction/determiner
+% already shipped as sibling `*-type.adj` tables).
+%
+% Honest abstention on "time": the SAME table on the same page also names
+% adverbs of time, but its own defining sentence — "Adverbs of time
+% describe when, how long, or how often something happens" — bundles
+% THREE distinct facts (when, how long, how often) into one sentence
+% rather than stating a single clean fact the way manner/place/frequency/
+% duration each do (and duration/frequency individually already cover two
+% of those three questions on their own). This is the same "reject
+% bundled facts" discipline applied across recent slices (fossil-
+% preservation-type, lunar-eclipse-type, comma-rule, sun-layer) — prefer
+% a smaller honestly-scoped table over one padded with a compound
+% sentence. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table adverb_type {
+    columns type, description
+
+    row (manner, describes_how_an_action_is_performed)
+    row (place, describes_where_an_action_happens)
+    row (frequency, describes_how_often_an_action_occurs)
+    row (duration, describes_how_long_an_action_lasts)
+
+    source "Adverbs of manner describe how an action is performed"
+    locator "https://www.grammarly.com/blog/parts-of-speech/adverb/"
+    trust consensus
+}

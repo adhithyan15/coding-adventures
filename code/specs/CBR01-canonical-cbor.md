@@ -1,162 +1,178 @@
-# CBR01 — Canonical CBOR Codec
+# CBR01 - Canonical CBOR Codec
 
 ## Overview
 
-A from-scratch implementation of [CBOR (RFC 8949)](https://www.rfc-editor.org/rfc/rfc8949)
-in the **deterministic / canonical** profile of §4.2.3 — "Length-
-First Map Key Ordering," the profile used by COSE (RFC 9052), CTAP2
-(FIDO2), and WebAuthn.
+This contract defines a from-scratch codec for CBOR (RFC 8949) using the
+deterministic profile in section 4.2.3, "Length-First Map Key Ordering." That is
+the ordering used by COSE, CTAP2, and WebAuthn.
 
-Lives at the same layer as other format primitives. Consumed by
-VLT02 (`vault-records`), VLT05 (`vault-auth` for COSE-Key), and
-VLT09 (audit log entries).
-
-This document specifies the supported value types, the canonical
-profile, the public API, and what is deliberately out of scope. The
-implementation lives at `code/packages/rust/canonical-cbor/`.
+Canonical CBOR lives beside the repository's other pure format primitives. It
+is consumed by Vault records, authentication material, password-manager formats,
+and audit entries. The contract is language-neutral. Rust is the first
+established implementation; C and C++ are independent emerging-lane reference
+oracles. No implementation is normative by itself.
 
 ## Why this primitive exists
 
-Vault records need a wire format where **one logical value maps to
-exactly one byte sequence**. Plain CBOR (and plain JSON) does not
-have that property:
+Vault layers require one logical value to have exactly one byte sequence. Plain
+CBOR allows several encodings of the same integer, arbitrary map order, and
+indefinite lengths. Those choices break byte-bound authentication, deterministic
+revision comparison, COSE-Key interoperability, and reproducible audit hashes.
 
-- The integer 0 has five legal CBOR encodings (`0x00`, `0x18 0x00`,
-  …, `0x1B 00 00 00 00 00 00 00 00`).
-- `{"a":1,"b":2}` and `{"b":2,"a":1}` are both legal CBOR maps for
-  the same logical map.
-- Lengths can be definite or indefinite (with `0xFF` break markers).
+## Value model
 
-Vault layers above us assume stable bytes:
+| Neutral kind | Payload | CBOR major/simple type |
+|---|---|---|
+| `unsigned` | unsigned 64-bit integer | major 0 |
+| `negative` | unsigned 64-bit `n`, representing `-1 - n` | major 1 |
+| `bytes` | byte sequence | major 2 |
+| `text` | valid UTF-8 scalar sequence | major 3 |
+| `array` | ordered values | major 4 |
+| `map` | key/value pairs before canonicalization | major 5 |
+| `tag` | unsigned 64-bit tag plus one value | major 6 |
+| `bool` | false or true | simple 20 or 21 |
+| `null` | no payload | simple 22 |
 
-1. **AEAD AAD binding** in VLT01 ties a ciphertext to its
-   `(namespace, key)` slot. If the same logical record can re-encode
-   to different bytes, the tag stops verifying.
-2. **Sync conflict detection** in VLT10 compares revision bytes
-   directly. Floating encoding kills this.
-3. **COSE-Key** in VLT05's WebAuthn / FIDO2-PRF flows is a
-   canonical-CBOR-derived format that other implementations refuse
-   to consume if our bytes don't match the profile exactly.
-4. **Audit log hash chains** in VLT09 reproduce only if the bytes
-   are stable across re-encodes.
+Floats and `undefined` are outside v1. Floats require their own shortest-form
+preserve-the-value rule; deterministic callers use `null` for absence.
 
-## Supported value types
+## Canonical profile
 
-```rust
-pub enum CborValue {
-    Unsigned(u64),        // major type 0
-    Negative(u64),        // major type 1; encodes -1 - n
-    Bytes(Vec<u8>),       // major type 2
-    Text(String),         // major type 3 (UTF-8 validated)
-    Array(Vec<CborValue>),// major type 4
-    Map(Vec<(CborValue, CborValue)>),  // major type 5
-    Tag(u64, Box<CborValue>),          // major type 6
-    Bool(bool),           // major type 7 / 20|21
-    Null,                 // major type 7 / 22
-}
-```
+The encoder produces and the decoder enforces all of these rules:
 
-Out of scope in v1:
+| Rule | Encoder | Decoder |
+|---|---|---|
+| Definite lengths only | always definite | rejects additional info 31 |
+| Smallest-form arguments | uses inline, 1, 2, 4, or 8 bytes minimally | rejects expanded integers, lengths, and tags |
+| Length-first map keys | sorts encoded keys by length, then unsigned bytewise lexicographic order | requires keys to be strictly increasing under the same order |
+| Unique map keys | rejects identical encoded keys | rejects duplicates as non-canonical order |
+| Reserved additional info | never emits 28, 29, or 30 | rejects 28, 29, and 30 |
+| UTF-8 text | accepts language strings | validates all text bytes |
+| Closed simple values | emits false, true, and null | rejects every other simple value |
+| No floats | never emits floats | rejects half, single, and double floats |
+| Exactly one item | emits one item | rejects trailing bytes |
+| Payload-blind errors | returns only stable identifiers and literal diagnostics | never reflects input bytes in an error |
 
-- **Floats.** Vault records do not need them; supporting them
-  correctly requires the "shortest of half/single/double that
-  preserves the value" rule (RFC 8949 §4.2.2). We will add this when
-  a downstream layer needs it.
-- **`undefined`** (simple value 23). RFC 8949 explicitly discourages
-  it in deterministic encodings. We use `Null` for "absent."
+## Language-neutral operations
 
-## Canonical profile (RFC 8949 §4.2.3)
+Each implementation exposes the following behavior with language-native names
+and result types:
 
-Encoder produces, decoder enforces:
+- `encode_checked(value) -> bytes | error` validates the whole value before it
+  publishes any bytes.
+- `decode(bytes) -> value | error` consumes exactly one canonical item.
+- An append-oriented checked encoder, when offered, leaves the destination
+  unchanged on failure.
+- A legacy infallible convenience wrapper may remain for source compatibility,
+  but it must delegate to the checked encoder and must never emit bytes for an
+  invalid value.
 
-| Rule                                                           | Encoder                                          | Decoder rejects                                                   |
-|----------------------------------------------------------------|--------------------------------------------------|--------------------------------------------------------------------|
-| **Definite length only**                                       | Always definite                                  | Indefinite-length items (info 31; bytes `0x9F`/`0xBF`/`0x5F`/`0x7F`/`0xFF` break) — `Indefinite` |
-| **Smallest-form integer encoding**                             | Picks shortest of inline / 1B / 2B / 4B / 8B     | "Expanded" forms (e.g. `0x18 0x05` for 5) — `NonMinimalInteger`   |
-| **Length-first map keys**                                      | Sorts encoded keys length-first then bytewise lex | Out-of-order keys, duplicate keys — `NonCanonicalMapOrder`         |
-| **Reserved additional-info values 28–30 are illegal**          | Never emits                                      | `Reserved`                                                         |
-| **Major type 3 is UTF-8**                                      | `String` is UTF-8 by definition                  | Invalid UTF-8 — `InvalidUtf8`                                      |
-| **Only `true`/`false`/`null` simple values**                   | Emits 0xF4/0xF5/0xF6                             | `undefined`, unassigned simple — `UnsupportedSimple`               |
-| **No floats**                                                  | Never emits                                      | `0xF9`/`0xFA`/`0xFB` — `FloatNotSupported`                          |
-| **One item per `decode` call; no trailing bytes**              | Single item from `encode`                        | Trailing bytes — `TrailingBytes`                                   |
-| **Errors source from literals only**                           | n/a                                              | All `Display` strings start with `"canonical-cbor:"` and contain no input bytes |
+## Portable resource limits
 
-## Public API
+The v1 profile fixes two limits:
 
-```rust
-pub fn encode(v: &CborValue) -> Vec<u8>;
-pub fn encode_into(v: &CborValue, out: &mut Vec<u8>);
-pub fn decode(bytes: &[u8]) -> Result<CborValue, CborError>;
+- `max_nesting_depth = 128`. The root is depth zero. Exactly 128 nested arrays
+  or tags are accepted. A value requiring depth 129 is `encode-too-deep` while
+  encoding or `too-deep` while decoding.
+- `max_encoded_bytes = 1_048_576`. This includes the complete item, headers
+  included. A checked encoder rejects a larger result before publishing bytes
+  with `encode-too-large`.
 
-pub enum CborError {
-    UnexpectedEof,
-    TrailingBytes,
-    Reserved,
-    Indefinite,
-    NonMinimalInteger,
-    InvalidUtf8,
-    NonCanonicalMapOrder,
-    UnsupportedSimple,
-    FloatNotSupported,
-}
-```
+Higher layers may impose smaller limits. They may not silently increase these
+portable-oracle limits.
 
-`Display` strings for every variant start with the literal prefix
-`"canonical-cbor:"` (asserted by a test).
+## Stable error identifiers
 
-## Length-first ordering, in detail
+| Error ID | Meaning |
+|---|---|
+| `unexpected-eof` | input ended within an item |
+| `trailing-bytes` | bytes remain after one item |
+| `reserved` | additional info 28, 29, or 30 |
+| `indefinite` | an indefinite item or break marker |
+| `non-minimal-integer` | integer, length, or tag used a longer form |
+| `invalid-utf8` | a text payload is not UTF-8 |
+| `non-canonical-map-order` | decoded keys are not strictly length-first |
+| `unsupported-simple` | simple value is not false, true, or null |
+| `float-not-supported` | half, single, or double float |
+| `too-deep` | decoded nesting exceeds 128 |
+| `length-too-large` | a declared input length/count cannot fit or exceeds remaining bytes |
+| `duplicate-map-key` | two input keys have identical canonical encodings |
+| `encode-too-deep` | value nesting exceeds 128 during encoding |
+| `encode-too-large` | encoded item would exceed 1,048,576 bytes |
 
-Given a map with entries `[(k₁, v₁), …, (kₙ, vₙ)]`:
+Allocation failure is a language/runtime host error, not a wire-conformance
+identifier. Implementations with explicit allocation results may expose it as a
+separate status.
 
-1. Compute `enc(kᵢ)` for each key (canonical CBOR encoding of the
-   key value).
-2. Sort the entries by `enc(kᵢ)`:
-   - First by `enc(kᵢ).len()` ascending.
-   - Ties broken by bytewise lex of `enc(kᵢ)`.
-3. Emit `header(major=5, len=n)` then `enc(kᵢ) ‖ enc(vᵢ)` for each
-   entry in sorted order.
+Every human-readable conformance diagnostic begins with the literal prefix
+`canonical-cbor:` and contains no payload-derived value, key material, numeric
+length, offset, or input byte.
 
-The decoder verifies that every consecutive pair `(prev_key,
-cur_key)` satisfies `prev_key ≺ cur_key` strictly under the same
-ordering — this catches both "out of order" and "duplicate key"
-with one comparison.
+## Map ordering in detail
 
-### Why length-first and not bytewise (§4.2.1)?
+Given a map with entries `(key, value)`:
 
-§4.2.1 (the modern bytewise-only ordering) is preferred for new
-applications, but **COSE-Key and CTAP2 require §4.2.3** length-first.
-Since vault auth (VLT05) needs to interoperate with FIDO2 / WebAuthn
-authenticators that consume COSE-Key, we pick §4.2.3 as the default.
-A future v2 may add a bytewise-only mode as a flag.
+1. Compute the checked canonical encoding of every key.
+2. Sort by encoded-key length ascending, then unsigned bytewise lexicographic
+   order.
+3. If adjacent encoded keys are equal, fail with `duplicate-map-key` and emit no
+   map bytes.
+4. Emit the definite map header followed by each encoded key and checked value
+   in the strict order.
 
-## Threat model & validation
+The decoder compares the exact on-wire key spans. Every consecutive key must be
+strictly greater under the same ordering, which rejects both duplicates and
+out-of-order keys.
 
-| Threat                                                         | Defence                                                  | Test                                       |
-|----------------------------------------------------------------|----------------------------------------------------------|---------------------------------------------|
-| Adversary submits non-canonical bytes hoping for collision     | Strict canonical decoder rejects                         | All `decode_rejects_*` tests (10+)          |
-| Adversary submits oversized integer encoding                   | `NonMinimalInteger`                                      | `decode_rejects_one_byte_form_holding_small_value` and similar |
-| Adversary submits indefinite-length item                       | `Indefinite`                                             | `decode_rejects_indefinite_array`/`_map`    |
-| Adversary submits invalid UTF-8 in text strings                | `InvalidUtf8`                                            | `decode_rejects_invalid_utf8`               |
-| Adversary submits unsorted or duplicate map keys               | `NonCanonicalMapOrder`                                   | `decode_rejects_non_canonical_map_order`, `_duplicate_map_keys` |
-| Error message injects attacker-controlled bytes into logs      | `Display` strings are static literals only               | `error_messages_are_static`                 |
-| Adversary submits trailing bytes after a valid item            | `TrailingBytes`                                          | `decode_rejects_trailing_bytes`             |
-| Adversary submits truncated input                              | `UnexpectedEof`                                          | `decode_rejects_eof_in_*`                   |
+Section 4.2.1's bytewise-only order is preferred for some new protocols, but
+COSE-Key and CTAP2 require section 4.2.3. A future profile may add bytewise-only
+ordering explicitly; v1 never guesses between them.
 
-## Specification non-goals
+## Threat model and validation
 
-- We do not implement floats. Add later if needed.
-- We do not implement streaming encode/decode. Vault records are
-  small; large blobs go through VLT14 which has its own framing.
-- We do not implement the full CBOR diagnostic notation parser.
-- We do not interpret tag semantics (e.g. tag 0 = ISO-8601 datetime
-  string). Tags pass through as `Tag(n, inner)`.
+| Threat | Defense |
+|---|---|
+| Alternative encodings create hash/authentication collisions | strict shortest-form decoder and deterministic encoder |
+| Duplicate logical keys create ambiguous objects | checked encoder rejects duplicate encoded keys; decoder requires strict order |
+| Invalid UTF-8 reaches higher layers | decoder validates scalar sequences |
+| Deep nesting exhausts the stack | encode and decode depth caps at 128 |
+| Huge output exhausts memory | checked encoder caps the complete item at 1 MiB |
+| Huge declared input length triggers allocation | decoder checks platform width and remaining bytes before allocation |
+| Malicious bytes enter logs | static payload-blind error identifiers and diagnostics |
+| A valid prefix hides trailing data | decode consumes exactly one item |
+
+## Shared conformance fixture
+
+`code/specs/fixtures/canonical-cbor-v1/cases.json` is the normative executable
+corpus. Its schema pins the profile, both limits, exact accepted hex encodings,
+stable rejection identifiers, and encode-only hostile-value builders.
+
+`canonical_cbor_vectors.h` is a generated dependency-free projection consumed
+by the C, C++, and Rust reference tests. The repository fixture test regenerates
+it in memory and requires byte-for-byte equality, so the projection cannot drift
+from the JSON source.
+
+The corpus covers:
+
+- all integer and length header boundaries;
+- bytes, UTF-8 text, arrays, maps, tags, booleans, and null;
+- heterogeneous length-first key ordering and input-order independence;
+- duplicate keys, non-minimal arguments, indefinite forms, reserved values,
+  floats, unsupported simple values, invalid UTF-8, truncation, trailing bytes,
+  hostile lengths, depth 128/129, and the encode-size limit;
+- static error mapping with no input reflection.
+
+## Non-goals
+
+- floats;
+- streaming encode/decode;
+- CBOR diagnostic notation;
+- tag semantics;
+- cryptographic framing, schema evolution, signatures, storage, or I/O.
 
 ## Citations
 
-- RFC 8949 — *Concise Binary Object Representation (CBOR)*. The
-  encoder enforces §4.2 deterministic encoding rules and the decoder
-  rejects non-conforming inputs.
-- §4.2.3 specifies the length-first map ordering this crate uses.
-- RFC 9052 (COSE) §1.4 references this ordering.
-- FIDO2 CTAP 2.1 §6 specifies the same ordering for authenticator
-  messages.
+- RFC 8949, *Concise Binary Object Representation (CBOR)*, especially sections
+  4.2 and 4.2.3.
+- RFC 9052 (COSE), section 1.4.
+- FIDO2 CTAP 2.1, section 6.

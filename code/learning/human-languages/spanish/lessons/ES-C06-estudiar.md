@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C06-estudiar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 540
-chapter: 6
+sequence: 528
+chapter: 21
 type: word
 headword: estudiar
 gloss: to study (a third -ar verb — the pattern is automatic now)

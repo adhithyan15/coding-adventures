@@ -1,0 +1,232 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 53,
+  "title": "-ista --- Jobs You Can Already Read",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c5cfd5efab66db52",
+  "lessons": [
+    {
+      "id": "ES-C09-ista",
+      "sequence": 970,
+      "title": "-ista",
+      "headword": "-ista",
+      "romanization": "-ista",
+      "gloss": "the ending that names what someone does — and it is the same -ist English uses",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:def50be48db93be9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does -ante make? (The one doing it.) Say \"I am a student.\" (Soy estudiante.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a job you can already read",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish -ista is English -ist."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek -istēs named the doer of an action. Latin borrowed it, and Spanish and English both still use it — so this ending needs almost no learning."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "artista means artist.",
+                "dentista means dentist.",
+                "turista means tourist.",
+                "periodista means journalist."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three of those four you could read before this chapter opened. That is the point: the ending is doing the work, not your memory."
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth is the interesting one. Periodista is not periodist — it is built on periódico, a newspaper, which is a periodical, something that comes round at a period. The ending is regular; the root is the surprise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ista never changes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Like -ante, an -ista word is the same for a man or a woman — and it keeps its -a either way:"
+            },
+            {
+              "kind": "speech",
+              "text": "Él es artista., Ella es artista."
+            },
+            {
+              "kind": "speech",
+              "text": "The -a is not feminine here. It is just how the word ends. Only the article moves: el artista, la artista."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And still no un: Soy artista, not Soy un artista."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "artista, dentista, turista",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *artista, dentista, turista*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Soy — and one of them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Soy* — and one of them]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-ista-decode",
+              "prompt": "Decode dentista.",
+              "assesses": [
+                "ES-FRIEND-ISTA-IST"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "dentist",
+                "a dentist"
+              ],
+              "feedback": {
+                "correct": "-ista to -ist.",
+                "incorrect": "Dentist."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-ista-say",
+              "prompt": "Say: she is an artist.",
+              "assesses": [
+                "ES-LEX-ARTISTA",
+                "ES-GRAMMAR-BARE-PROFESSION"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "es artista",
+                "ella es artista"
+              ],
+              "feedback": {
+                "correct": "No un, and no change for her.",
+                "incorrect": "Es artista."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-ista-root",
+              "prompt": "Periodista is built on periodico. What is a periodico?",
+              "assesses": [
+                "ES-FRIEND-ISTA-IST"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "a newspaper",
+                "newspaper",
+                "a periodical"
+              ],
+              "feedback": {
+                "correct": "A periodical — it comes round at a period.",
+                "incorrect": "A newspaper, which is a periodical."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is -ista in English? (-ist.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does it change for a woman? (No.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

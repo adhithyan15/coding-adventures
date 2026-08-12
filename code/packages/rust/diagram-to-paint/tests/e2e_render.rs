@@ -23,7 +23,7 @@ mod apple {
     use layout_ir::font_spec;
     use mermaid_parser::{
         parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_sankey,
-        parse_sequence_diagram, parse_to_diagram as parse_mermaid_to_diagram,
+        parse_sequence_diagram, parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
     use paint_metal::render;
@@ -151,6 +151,65 @@ mod apple {
             glyph_runs > 0,
             "expected at least one PaintGlyphRun from shaping pipeline"
         );
+    }
+
+    #[test]
+    fn render_mermaid_state_to_png() {
+        let graph = parse_state_diagram(
+            "stateDiagram-v2\naccTitle: Native state lifecycle\naccDescr {\nState flow rendered through Metal\nwith native accessibility metadata\n}\ndirection LR\nReady: Awaiting work\nstate Decision <<choice>>\nstate WorkFork <<fork>>\nstate WorkJoin [[join]]\nstyle Ready fill:#dbeafe,stroke:#1d4ed8,color:#1e3a8a,stroke-width:3px\nclassDef active fill:#dcfce7,stroke:#166534,color:#14532d\nclassDef phase fill:#fef3c7,stroke:#b45309,color:#78350f\nclass Auditing active\nclick Ready \"https://example.com/ready\" \"Open ready state\"\nstate \"Processing Queue\" as Processing {\nQueued --> Running\n--\nAuditing --> Reviewing\n}\nclass Processing phase\n[*] --> Ready\nReady --> Processing: enter\nProcessing --> Decision: inspect\nDecision --> WorkFork: start\nWorkFork --> Running:::active\nWorkFork --> Auditing\nnote right of Running\nNative Metal note\nSecond shaped line\nend note\nnote \"Detached reminder\" as Reminder\nRunning --> WorkJoin\nAuditing --> WorkJoin\nWorkJoin --> [*]: stop\nDecision --> Ready: wait\n",
+        )
+        .expect("Mermaid state parse failed");
+        let layout = layout_graph_diagram(&graph, None, None);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_state_e2e.png").expect("PNG write failed");
+
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native state lifecycle");
+        assert!(metadata["accessibility.description"].contains("rendered through Metal"));
+        assert_eq!(
+            metadata["graph.node.Ready.link.url"],
+            "https://example.com/ready"
+        );
+        assert!(metadata.contains_key("graph.node.Ready.link.bounds"));
+        let group = layout
+            .groups
+            .iter()
+            .find(|group| group.id == "Processing")
+            .expect("aliased composite group");
+        assert_eq!(group.label.text, "Processing Queue");
+        assert_eq!(group.style.fill, "#fef3c7");
+        assert_eq!(group.divider_y.len(), 1);
+        assert!(layout
+            .edges
+            .iter()
+            .any(|edge| edge.to_node_id == "Processing"));
+        assert!(layout
+            .edges
+            .iter()
+            .any(|edge| edge.from_node_id == "Processing"));
     }
 
     #[test]
@@ -349,7 +408,7 @@ mod apple {
     #[test]
     fn render_mermaid_sequence_to_png() {
         let mut diagram = parse_sequence_diagram(
-            "sequenceDiagram;title: Native Mermaid sequence;accTitle: Native transfer sequence;accDescr {\n  Banking transfer\n  interaction\n}\nautonumber\nbox hsl(180, 100%, 50%) Client tier\nactor Banking User-Primary as User\nparticipant API@{ \"type\": \"boundary\" } as Banking API\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger\" }\nend\nalt wrap: Transfer accepted after a deliberately detailed native policy and compliance evaluation\nBanking User-Primary->>+API: wrap: Submit a deliberately detailed native transfer request\ncreate participant Worker as Audit Worker\nAPI()->>()Worker: Start audit\nWorker--|\\API: Audit complete\ndestroy Worker\nloop Persist until committed\nAPI->>DB: Record transaction\nDB-->>API: Committed\nend\nnote right of API: Metal #9829;<br/>native scene\nAPI-->>-Banking User-Primary: Transfer complete\nelse wrap: Transfer rejected after a deliberately detailed native policy and compliance evaluation\nAPI-->>Banking User-Primary: Validation failed\nend",
+            "---\ntitle: Host-owned front matter title\nconfig:\n  theme: neutral\n---\n%%{init: {'logLevel': 0}}%%\nSeQuEnCeDiAgRaM;%%{wrap}%%\nTiTlE: Native Mermaid sequence;AcCtItLe: Native transfer sequence;AcCdEsCr {\n  Banking transfer\n  interaction\n}\nautonumber\nbox hsl(180, 100%, 50%) wrap: A deliberately detailed client application tier\nactor Banking User-Primary as User # actor comment\nparticipant API@{ \"type\": \"boundary\" } as wrap: A deliberately detailed public application programming interface\nend\nbox Services\nparticipant DB@{ \"type\": \"database\", \"alias\": \"Ledger, \\\"primary\\\"\" }\nend\nalt wrap: Transfer accepted after a deliberately detailed native policy and compliance evaluation\nBanking User-Primary->>+API: wrap: Submit a deliberately detailed native transfer request\nautonumber off\ncreate participant Worker as Audit Worker\nAPI()->>()Worker: Start audit\nactivate Worker\nactivate Worker\nWorker()->>()Worker: Check nested audit state\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\ndeactivate Worker\nautonumber 20.05 0.1\ndestroy Worker\nWorker--|\\API: Audit complete\nloop Persist until committed\nautonumber off\nAPI->>DB: Record transaction # persistence comment\nautonumber\nDB-->>API: Committed\nend\npar_over Reconcile with parallel annotations\nAPI->>DB: Reconcile ledger\nnote left of API: Client view\nnote right of DB: Ledger view\nend\nnote right of API: Metal #9829;<br/>native scene # note comment\nAPI-->>-Banking User-Primary: Transfer complete\nelse wrap: Transfer rejected after a deliberately detailed native policy and compliance evaluation\nAPI-->>Banking User-Primary: Validation failed\nend",
         )
         .expect("Mermaid sequence parse failed");
         diagram.auto_number_start = 10.5;
@@ -373,6 +432,10 @@ mod apple {
         diagram.participants[0].properties.push(SequenceProperty {
             name: "role".into(),
             value_json: "\"administrator\"".into(),
+        });
+        diagram.participants[0].properties.push(SequenceProperty {
+            name: "icon".into(),
+            value_json: "\"@clock\"".into(),
         });
         diagram.participants[0].details_reference = Some("user-details".into());
         let layout = layout_sequence_diagram(&diagram);
@@ -452,7 +515,7 @@ mod apple {
                 .map(String::as_str),
             Some("Banking transfer\n  interaction")
         );
-        assert!(scene.instructions.iter().any(|instruction| matches!(
+        assert!(!scene.instructions.iter().any(|instruction| matches!(
             instruction,
             paint_instructions::PaintInstruction::Path(path)
                 if path.stroke.as_deref() == Some("#dc2626")
@@ -474,8 +537,52 @@ mod apple {
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
+            paint_instructions::PaintInstruction::Ellipse(ellipse)
+                if ellipse.rx == 7.0 && ellipse.ry == 7.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
             paint_instructions::PaintInstruction::Rect(rect)
                 if rect.fill.as_deref() == Some("rgba(255, 200, 100, 0.12)")
+        )));
+    }
+
+    #[test]
+    fn render_mermaid_sequence_default_rect_to_png() {
+        let diagram = parse_sequence_diagram(
+            "sequenceDiagram\nrect\nAlice->>Bob: Theme default background\nend\n",
+        )
+        .expect("Mermaid sequence default rect parse failed");
+        let layout = layout_sequence_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_sequence(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 17.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_sequence_default_rect_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            paint_instructions::PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#fff7ed")
         )));
     }
 }

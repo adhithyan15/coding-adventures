@@ -1,0 +1,15 @@
+% ============================================================================
+% monarch-life-cycle.query.adj — worked recall over the monarch life-cycle
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what position is this
+% stage in the life cycle?" (direct) or "which stage comes first/second/
+% etc.?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "monarch-life-cycle.adj"
+
+? monarch_life_stage(pupa, $N)    % expect 3 (direct: what position is the pupa/chrysalis stage?)
+? monarch_life_stage($S, 1)       % expect egg (reverse: which stage comes first?)
+? monarch_life_stage(nymph, $N)   % expect abstain -- "nymph" is not one of the monarch's four stages

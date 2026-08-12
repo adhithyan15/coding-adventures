@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add an authenticated installed-model-tool catalog request/response pair using
+  the same exact bounded definition encoding required by tool completions.
+- Add a distinct authenticated execute-tool request/response pair so a
+  model-returned call can cross to parent-owned D18D execution and return its
+  exact structured result without giving the child direct tool authority.
+- Add distinct authenticated tool-completion request/response tags with bounded
+  unique catalogs, auto/required/named choice, replayable prior calls/results,
+  object-shaped JSON, and retained provider/polyfill audit metadata. Existing
+  text-completion tags and bytes remain unchanged.
 - Expose response validation so injected data-plane services can reject malformed
   or oversized provider/channel output before authenticated framing.
 - Add an exactly-once pre-ready `LaunchBindings` record with canonical bounded

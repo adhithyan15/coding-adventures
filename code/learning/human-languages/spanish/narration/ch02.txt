@@ -1,8 +1,8 @@
 Spanish, chapter 2: The Rest of the Greetings.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 tarde — "afternoon," and the "late" hiding inside it.
 
 Warm-up.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 What did Latin tardus originally mean, before "afternoon"? (Slow, late — as in tardy, retard.) And how do you make tarde plural? (tardes — vowel + -s.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 buenas tardes — assembled, and now the feminine side of agreement.
 
 Warm-up.
@@ -49,11 +49,8 @@ tarde — the noun tardes.
 The word, taken apart — by assembling it.
 buenas tardes = buena ("good") + tardes ("afternoons") = literally "good afternoons."
 
-Grammar Lens: agreement, the feminine case.
-Back in buenos días, bueno became buenos — masculine plural, because día is masculine. Now: tarde is a feminine noun (la tarde). So bueno has to become feminine plural to match — buenas. Same rule, other gender:
-días (masculine, plural) becomes buenos días.
-tardes (feminine, plural) becomes buenas tardes.
-That single vowel — the o vs. a at the end of buenos/buenas — is the adjective reporting the gender of the noun it's attached to. You now control all four shapes in the wild: bueno, buena, buenos, buenas.
+Why it's said this way.
+Buenos días in the morning; buenas tardes in the afternoon. The ending changes, and there is a reason for it — the same reason that comes later, with the rest of the pattern. For now: two greetings, two shapes, both said whole.
 
 Why it's said this way.
 Same fossil blessing as the morning greeting: buenas tardes is short for "Buenas tardes os dé Dios." One cultural note on timing — tardes runs from after the midday meal until it's genuinely dark, which in much of the Spanish-speaking world is late. Spanish follows the daylight, not the clock; there's no fixed "12:00 = afternoon" line.
@@ -72,7 +69,7 @@ Wrap-up Recall.
 Why is it buenas tardes but buenos días? (tarde is feminine, día is masculine — the adjective agrees with each.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 noche — "night," and a Latin sound-change you can now spot.
 
 Warm-up.
@@ -106,7 +103,7 @@ Wrap-up Recall.
 What English word is equi- + noche's root? (Equinox, "equal night.") And what Latin sound did the -ch- in noche come from? (-ct-, as in noctem becomes noche.)
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 buenas noches — good evening and good night.
 
 Warm-up.
@@ -140,7 +137,50 @@ Wrap-up Recall.
 What's unusual about when you can use buenas noches? (Both hello and goodbye.) And why buenas, not buenos? (noche is feminine.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
+buenos or buenas — the rule you have been using all along.
+
+Warm-up.
+[pause 2 seconds]
+Say all three greetings, in order through the day: buenos días, buenas tardes, buenas noches.
+You have been saying them for two chapters without being told why the first one differs. Now it is worth knowing.
+
+You'll want to know first.
+Two things you already have:
+Every Spanish noun is masculine or feminine. Día is masculine; tarde and noche are feminine.
+Adding -s makes a noun plural: días, tardes, noches.
+
+Grammar Lens: the describing word copies the noun.
+In Spanish a describing word copies the noun it sits next to — it matches both the masculine-or-feminine and the one-or-many.
+Bueno is the describing word in all three greetings. It copies:
+días is masculine and plural, so bueno becomes buenos.
+tardes is feminine and plural, so bueno becomes buenas.
+noches is feminine and plural, so again buenas.
+That is the whole rule. One word changing its last letter to agree with the word beside it.
+
+The word, taken apart.
+The -o and the -a are old. Latin marked masculine with -us and feminine with -a: bonus and bona, "good." Spanish wore bonus down to bueno and kept bona as buena, and the two endings have been doing this same job for two thousand years.
+English lost this entirely. Good is good, whatever it sits beside.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "buenos días" — and say why it is buenos: días is masculine.]
+[pause 8 seconds for the answer]
+[your turn — say: "buenas tardes" — and why buenas: tardes is feminine.]
+[pause 8 seconds for the answer]
+[your turn — say: all three in order, morning to night.]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Why does bueno become buenos in buenos dias?
+[question — say your answer, then pause 8 seconds]
+And why buenas in buenas tardes?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why buenos días but buenas tardes? (Día is masculine, tarde is feminine, and the describing word copies the noun.) Which Latin endings are hiding in -o and -a? (-us and -a.) Does English do this? (No — good never changes.)
+
+
+Lesson 6 of 6.
 Practice — the four greetings.
 
 Warm-up.

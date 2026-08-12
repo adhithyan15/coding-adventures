@@ -118,13 +118,13 @@ enter cross-language review only after focused retrieval.
 <!-- BEGIN GENERATED TRACK PROGRESS -->
 | Language | Family / script | Canonical lessons | Mapped lessons | Book progress |
 |---|---|---:|---:|---|
-| [Spanish](./spanish/README.md) | Romance / Latin | 188 | 188 | 41 chapters; through Ch. 41; 41 generated |
+| [Spanish](./spanish/README.md) | Romance / Latin | 336 | 336 | 190 chapters; through Ch. 190; 190 generated |
 | [Latin](./latin/README.md) | Italic / Latin | 88 | 88 | 43 chapters; through Ch. 43; 42 generated |
 | [French](./french/README.md) | Romance / Latin | 105 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
-| [Tamil](./tamil/README.md) | Dravidian / Tamil | 128 | 124 | 38 chapters; through Ch. 38; 33 generated |
+| [Tamil](./tamil/README.md) | Dravidian / Tamil | 132 | 128 | 39 chapters; through Ch. 39; 34 generated |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada | 88 | 84 | 40 chapters; through Ch. 40; 35 generated |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu | 74 | 70 | 34 chapters; through Ch. 34; 29 generated |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 78 | 74 | 34 chapters; through Ch. 34; 29 generated |

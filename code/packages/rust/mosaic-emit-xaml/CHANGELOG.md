@@ -1,5 +1,29 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — portable Text accessibility
+
+`Text` now emits UI Automation names, heading levels, and raw-view hiding from
+Mosaic accessibility metadata, including live `x:Bind` accessible-name slots.
+
+## [Unreleased] — native WinUI drag and drop
+
+`HostDraggable` and `HostDropTarget` now lower to component-scoped WinUI
+controls backed by native pointer/touch drag events and equivalent keyboard
+operation. Generated code applies authored acceptance and disabled-state rules,
+keeps repeated/nested component scopes isolated, sends every lifecycle event
+through the existing MIL dispatcher, and exposes focus, names, help, and live
+announcements through UI Automation.
+
+## [Unreleased] — native UI Automation table semantics
+
+Canonical dynamic UI31 tables now emit component-scoped WinUI table, header,
+and cell controls. Their automation peers implement the native UIA Table/Grid
+and TableItem/GridItem provider patterns, publish dimensions and column-header
+associations, preserve the authored interactive cell subtree, and support
+arrow-key movement between realized cells. Unsupported or ambiguous table
+shapes keep the existing structural Grid rendering instead of overstating their
+accessibility contract.
+
 ## [Unreleased] — native-complete runtime-required shell
 
 `EmitOptions::require_runtime` now emits a direct standard-runtime WinUI host.

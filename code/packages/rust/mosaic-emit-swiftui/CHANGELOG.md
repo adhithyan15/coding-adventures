@@ -4,6 +4,46 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - portable Text accessibility
+
+`Text` now lowers literal or slot-backed accessible names, heading traits, and
+intentional accessibility hiding to native SwiftUI modifiers. Mosaic-authored
+headings no longer lose their semantic level when emitted outside the web
+backend.
+
+### Added - native accessible dynamic tables
+
+Canonical UI31/Grid `HostTable` trees now lower to SwiftUI's native `Table`
+with runtime-sized `TableColumnForEach` definitions, stable row identity,
+bounds-safe cell and width lookup, and the authored interactive Cell subtree.
+Generated macOS 13 and iOS 16 packages use a native `List`/`Section` fallback
+before the dynamic-column API's macOS 14.4 / iOS 17.4 availability. Unsupported
+HostTable structures retain the visual fallback and remain explicit
+native-complete degradations.
+
+### Added - native accessible drag and drop
+
+`HostDraggable` and `HostDropTarget` now lower to SwiftUI's native drag/drop
+system with component-local payload isolation, accepts and disabled filtering,
+before/into/after hover proposals, accepted-only drag completion, and an
+equivalent keyboard workflow with platform accessibility announcements. The
+complete generated TaskApp is compiled through SwiftPM as the regression gate.
+
+### Fixed - empty-event project shells
+
+Components with no authored events keep their uninhabited event enum but now
+emit the standard wire helpers with exhaustive empty switches. Generated host
+state can therefore type-check its unreachable dispatch seam, allowing minimal
+Rust-driven SwiftUI packages to compile through SwiftPM.
+
+### Added - native icons and progress
+
+`Icon` now lowers semantic glyph names to SF Symbols with authored or default
+accessibility labels. The semantic `spinner` glyph becomes SwiftUI's native
+indeterminate `ProgressView`. Indexed text expressions also use the enclosing
+`ForEach` integer shadow, allowing Accordion's `bodies[i]` projection to remain
+type-correct alongside number-typed loop comparisons.
+
 ### Added - native-complete runtime-required shell
 
 `EmitOptions::require_runtime` now generates a SwiftUI shell that requires the

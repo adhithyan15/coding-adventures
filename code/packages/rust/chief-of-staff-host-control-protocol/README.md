@@ -8,9 +8,12 @@ its own verification keyring and independently verifies its signed package. The
 orchestrator then authenticates pipeline-authorized signed-name-to-UUID channel
 bindings and, for Level 1, bounded model settings. Only after matching those
 bindings to signed policy does the child send `Ready(package_hash)`, heartbeats,
-and serialized channel or
-provider-neutral completion requests. The orchestrator sends exact correlated
-responses or `Terminate`.
+and serialized channel or provider-neutral text/tool-aware completion requests.
+Before a tool turn, the child can request the exact non-empty catalog installed
+for its authorized binding; it must echo that catalog in the completion request.
+A model-returned tool call crosses back as a separate authenticated execute-tool
+request; the orchestrator returns the exact structured D18D result. The
+orchestrator otherwise sends exact correlated responses or `Terminate`.
 
 The wrapper runs over `chief-of-staff-secure-host-channel`, enforces role and
 lifecycle ordering, and fails closed after malformed, unauthenticated,
@@ -20,8 +23,8 @@ its trusted monotonic receive time after authentication. The data plane permits 
 request in flight, uses
 strictly increasing non-zero IDs, and fails closed on skipped, duplicate,
 wrong-operation, or unsolicited responses. Receive, publish, acknowledge, and
-text completion records have explicit aggregate and field bounds below the
-secure channel's one-megabyte frame limit.
+text completion, catalog discovery, tool-aware completion, and tool-execution records have explicit
+aggregate and field bounds below the secure channel's one-megabyte frame limit.
 
 The crate owns no clock, file descriptor, process, stream, filesystem, or network
 channel-storage, model-provider, or authorization capability. A concrete process

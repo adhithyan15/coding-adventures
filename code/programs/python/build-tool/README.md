@@ -33,6 +33,15 @@ build-tool --jobs 4
 
 # Only build Python packages
 build-tool --language python
+
+# Safely plan the field-aware Haskell and JVM lanes
+build-tool --language haskell --dry-run
+build-tool --language java --dry-run
+build-tool --language kotlin --dry-run
+
+# Safely plan the field-aware .NET lanes
+build-tool --language csharp --dry-run
+build-tool --language fsharp --dry-run
 ```
 
 ## How it fits in the stack
@@ -42,9 +51,45 @@ the entire coding-adventures monorepo. It understands the recursive `BUILD`
 discovery convention used throughout the repository and orchestrates every
 language listed by `build-tool --help`.
 
+Discovery infers a language only from an exact `packages/<language>` or
+`programs/<language>` bucket. Package identities use `<language>/<name>`;
+program identities preserve their role as `<language>/programs/<name>`, so a
+package and program with the same basename never collide. Haskell, Java,
+Kotlin, C#, and F# are available as explicit filters because their manifest
+resolvers are field-aware. C# and F# both request the shared `dotnet` CI
+toolchain.
+
 Lua rockspec metadata is decoded as strict UTF-8. Invalid text fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic rather than using a host locale or
 silently replacing bytes.
+
+Ordinary dependency aliases are resolved only inside the package's ecosystem.
+For example, the same `coding-adventures-shared` name in Lua, Perl, Python, and
+Haskell maps to four distinct package identities. A legacy BUILD file may name
+an intentional cross-language dependency only with its exact qualified identity:
+
+```text
+# build-tool: deps=lua/shared
+```
+
+Unknown, unqualified, and self-referential comment entries are ignored. Library
+packages retain priority over same-named programs within one ecosystem.
+
+Haskell resolution accepts exactly one root Cabal manifest and reads only its
+`build-depends` fields. Plain directory names, the legacy
+`coding-adventures-` form, and the declared Cabal package name are aliases in
+the Haskell scope. Java and Kotlin resolution scans real multiline
+`includeBuild("...")` calls outside nested comments and example strings, then
+normalizes their relative paths lexically against already discovered roots in
+the same language. Referenced targets are never opened or followed.
+
+C# and F# resolution scans only `.csproj` and `.fsproj` files directly inside
+each discovered root. It accepts literal quoted `Include` attributes from
+unqualified `ProjectReference` start elements, normalizes `/` and `\` paths
+lexically, and matches exact project files already discovered in the shared
+C#/F#/dotnet scope. It does not evaluate XML entities, MSBuild properties,
+conditions, wildcards, package references, or nested test projects, and it
+never opens or follows a referenced target.
 
 ## Installation
 

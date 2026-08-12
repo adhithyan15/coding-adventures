@@ -1,5 +1,71 @@
 # Changelog
 
+## 0.40.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` emit
+arm, runtime functions, and by-name builtin dispatch entries are dead
+code. Removed:
+
+- The `"print"`/`"puts"` arms from `emit_builtin_call`'s helper-name
+  match.
+- `print`, `puts`, and `puts_one` from `runtime.rs` (these were fully
+  independent of `write`/`write_one` — confirmed via grep that nothing
+  else called them — so this is a straight deletion, not a refactor).
+- The `"print"`/`"puts"` arms from the by-name builtin dispatch match.
+
+Also fixed a stale doc comment on `write_one` that referenced the
+deleted `puts_one`.
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: every local test helper that hand-built bare `print`/`puts`
+`BuiltinCall`s purely to observe hand-constructed IR's output (unrelated
+to testing print semantics itself) now builds the equivalent
+`__sys_write__` envelope instead, plus `Feature::ConsoleIO` (and, where
+missing, `Feature::Strings`) added to each affected manifest. A
+single-value `print`-shaped helper maps to `terminator: "once"` (not
+`"none"`) since the old Rust backend's bare `print` always
+newline-terminated (via `println!`) — this preserves existing
+`stdout.lines()`-based test assertions exactly, since these helpers
+were never asserting on real Ruby `print` semantics to begin with.
+
+## 0.39.5 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__"` `emit_sys_write` arm (mirroring `emit_method_dispatch`'s
+"lift compile-time-known literals to Rust literals, degrade gracefully
+rather than panic on the unexpected" discipline) and a new runtime
+function, `write`/`write_to`/`write_one`, generalizing the existing
+`print`/`puts` into one function parameterized by `stream` (stdout/stderr),
+`terminator` (none/per_value/once), and `unpack_arrays` — the policy axes
+SIR28 §2.1 defines. Declares `Feature::ConsoleIO`.
+
+`stream`/`terminator` are lifted to Rust `&str` literals at emit time
+(same rationale as the method-dispatch name lift: keeps the runtime's
+`match` on a compile-time-known `&str`, closed dispatch) rather than
+passed through as runtime `Value`s.
+
+Deliberately does NOT replicate `puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — that's a pre-existing
+divergence from the C/Go backends' own `puts` (neither has this
+suppression either), orthogonal to and not fixed by SIR28; `__sys_write__`'s
+`per_value` terminator always appends exactly one newline per value,
+matching SIR28 §2.1's table and every other backend's `__sys_write__`
+faithfully — this is a case where staying faithful to the new spec means
+NOT copying an existing helper's extra behavior.
+
+Purely additive: nothing emits `__sys_write__` yet, so `print`/`puts` and
+every existing `print`/`puts`-sourced program are unchanged.
+
+New `tests/compile_and_run_sys_write.rs` (mirrors
+`compile_and_run_case_eq.rs`'s hand-built-`Module` + real-`rustc` pattern):
+hand-builds a `Module` directly per stream/terminator/unpack_arrays
+combination (no frontend emits the op yet), emits Rust, compiles with a
+real `rustc`, runs, and asserts stdout/stderr — covering all three
+`terminator` modes, `unpack_arrays` true/false, the `stderr` stream, and
+the empty-args `per_value` edge case.
+
 ## 0.39.4 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
 
 Documentation-only, no behavior change. Per `SIR25-language-agnostic-

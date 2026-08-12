@@ -1,0 +1,59 @@
+% ============================================================================
+% plural-s-sound — regular plural nouns whose final -s/-es ending is
+% pronounced with a different SOUND depending on the sound before it
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The TWELFTH literacy sub-skill library in this loop's sweep, and a sibling
+% phonics pattern to `past-tense-ed-sound.adj`: the regular plural -s/-es
+% suffix is spelled the same way (or -es when the base word ends in a
+% sibilant), but PRONOUNCED one of three different ways depending on the
+% final sound of the singular noun. Recall is a binding query:
+%
+%     ? plural_s_sound(hats, $Sound)
+%       % s_sound
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `plural_s_sound(word, sound)` carrying the source citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the sound
+% WITH its source, on the CPU, with zero model calls, and abstains on any
+% plural word not one of these three source-cited examples. The query also
+% runs BACKWARD — bind a sound and recall which example word carries it:
+%
+%     ? plural_s_sound($W, iz_sound)
+%       % boxes
+%
+% Provenance: quoted verbatim from Speakspeak's "Pronunciation of 's' and
+% 'es' plural endings" article, which states the three voicing rules and
+% gives worked examples for each:
+%
+%     word    sound      rule (verbatim)                                                  example (verbatim)
+%     -----   --------   ---------------------------------------------------------------   -------------------
+%     hats    s_sound    "After the following sounds we pronounce 's' as /s/: ... after     "2 hats /s/"
+%                        a /t/ sound"
+%     dogs    z_sound    "In all other cases we pronounce 's' as /z/"                        "2 dogs /z/"
+%     boxes   iz_sound   "When the plural form has the 'es' ending, the pronunciation is     "2 boxes /iz/"
+%                        always /iz/"
+%
+% WebFetch-verified before writing. `trust consensus` — a general
+% ESL-learning site, not a primary government or research-institution
+% source, the same tier this stdlib already reserves for its other non-.gov
+% language sources (e.g. 7ESL's past-tense -ed article already cited in
+% `past-tense-ed-sound.adj`). A plural word not one of these three — e.g.
+% `cats` (also pronounced with the /s/ sound, but not one of the three
+% example words this source's own worked examples name) — is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a sound.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table plural_s_sound {
+    columns word, sound
+
+    row (hats, s_sound)
+    row (dogs, z_sound)
+    row (boxes, iz_sound)
+
+    source "In all other cases we pronounce 's' as /z/"
+    locator "https://speakspeak.com/resources/pronunciation/pronunciation-of-s-and-es-endings"
+    trust consensus
+}

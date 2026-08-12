@@ -2662,6 +2662,79 @@ occasionally-flaky `freed >= 1` into a *deterministically failing* "still alive"
 every one of the four affected tests. This is not a bug in the collector; it's what
 conservative scanning is supposed to do.
 
+## A "make it unreachable in a callee, then collect in the caller" GC differential is not reliable on `aarch64-backend` — the callee's vacated frame sits inside the always-conservative `[sp, start_fp)` gap (AOT00-T8, write-barrier follow-up)
+
+Building a real compiled-and-executed proof for `aarch64-backend`'s new `field_store`
+write-barrier emission (mirroring the LLVM-backend sibling test, which *does* work —
+see `iir-to-llvm`'s changelog), I tried: `main` allocates `parent`, minor-collects it
+to tenure it old, calls `helper(parent)` (a separate `IIRFunction`) which allocates
+`child` and `field_store`s it into `parent`, then `main` minor-collects again and
+checks `child`'s survival via `gc_live_bytes()`. The idea: once `helper` returns,
+`child`'s only named local is gone from every currently-live frame, so its survival
+should depend purely on the barrier's remembered-set edge.
+
+It passed — with the barrier call *and* with it temporarily removed (a `TEMP-REVERT-
+CHECK` comment, `git diff` restored immediately after). A vacuous pass, confirmed via
+a full `cargo clean -p aarch64-backend -p twig-aot` rebuild both times (ruling out
+stale-binary caching, a mistake this session already hit once with the LLVM sibling
+test — see that lesson if it exists). Diagnostic instrumentation (returning
+`gc_live_bytes()`/`freed` at each stage as the exit code) showed the object was never
+even freed by the **already-shipped, already-well-tested** `__gc_collect_precise` in
+the identical shape — with *no* barrier or `parent`/`field_store` involved at all,
+just "allocate `child` in a helper, never reference it again, minor/precise-collect in
+the caller." So this was never about the barrier, or about my new code; it's a
+property of the collector's own stack walk.
+
+Root cause: `gc-core-capi/src/precise_walk.rs`'s own module doc names it explicitly —
+`[sp, start_fp)`, "the collector's own frames, below the first walked frame," is
+**always** scanned conservatively, with no stack map, regardless of what used to be
+there. `start_fp` is the first frame-pointer-mapped frame reached by walking up from
+the collector's own entry — i.e. the caller (`main`, in this test). Since the stack
+grows down, *every* function `main` has ever called and returned from — including
+`helper`, long after it returned — occupies addresses strictly below `main`'s own
+frame pointer, i.e. **inside** this exact gap. The collector cannot distinguish "my
+own internal call frames" from "some long-since-returned user frame that happens to
+sit in the same address range" — both get the identical bias-to-leak conservative
+scan. So `child`'s stale address, sitting untouched in whatever stack slot `helper`
+last wrote it to, is conservatively rediscovered on every subsequent collect call made
+from `main`, no matter how many frames deep or how long ago `helper` returned — the
+"once popped, a callee's locals are gone" intuition a heap-allocated-object test
+naturally reaches for **does not hold** across this specific gap.
+
+**This is not a bug** — it's the same deliberate bias-to-leak / never-under-mark
+design every collect entry in this codebase already documents, and changing it (e.g.
+zeroing callee frames on return) would be a real, unrelated engineering project with
+its own costs, not a quick fix. It also is not specific to the new minor-collect
+entry: the already-shipped `__gc_collect_precise` reproduces it identically, in a
+shape with zero write-barrier involvement, proving the *test's* premise was wrong, not
+the code under test (the exact same "swap in the pre-existing, already-shipped
+collector and reproduce the identical failure" diagnostic move as the lesson directly
+above — it is worth repeating as a default first step whenever a *new* GC entry point
+looks broken).
+
+**Fix (this session): don't chase a real-execution differential for this backend
+across a callee-return boundary.** Fall back to the unit-level relocation-symbol
+assertion (`aarch64-backend`'s own `compile_with_relocs` — assert the expected
+`BL __twig_gc_write_barrier` relocation is emitted, confirmed load-bearing via a
+revert-check at that level) as the primary evidence, exactly as `array_ref_tracing.rs`
+concluded for a different but structurally similar reason ("the actual, reliable
+regression proof lives at the `gc-core` level," not the compiled pipeline) — and say
+so plainly in the PR: this GC-codegen change has strictly weaker end-to-end
+verification than its LLVM-backend sibling, which *does* have a working real-execution
+differential (LLVM's own SSA-value liveness/register allocation, not this backend's
+per-function whole-lifetime stack-map declaration plus this specific conservative
+gap, is presumably why that one works) — a genuine, structural asymmetry between the
+two backends' testability, not a gap this session chose to leave open.
+
+**If a real-execution differential across this exact boundary is ever needed again:**
+the gap is a property of *where the collect call sits relative to the first mapped
+frame*, not of the object itself — a design that kept the collect call and the
+target object at a *shallower* call depth than any already-returned frame (so the
+returned frame's memory is genuinely below, not overlapping, the conservative-gap
+scan) or that deliberately clobbered the vacated stack region before collecting might
+work, but is fragile by construction and wasn't pursued here given the unit-level
+signal was already sufficient and reliable.
+
 **Actual fix:** allocate a **batch** of dead objects (`DEAD_BATCH = 64`), none ever
 bound to a Rust local that outlives its own loop iteration — so no *specific* address
 needs to survive the collect call for verification. An unoptimized debug build's stray
@@ -2673,6 +2746,126 @@ reference anywhere on the stack. `freed >= DEAD_BATCH - STRAY_TOLERANCE` (tolera
 is then a deterministic, generous bound — confirmed via 20 consecutive local runs, all
 clean, after being flaky often enough in CI to get flagged as a known issue in the first
 place. Applied to `gc-core-capi/src/stack_scan.rs`'s four affected tests.
+
+## `iir-to-llvm`'s own real-execution write-barrier differential is NOT automatically portable from `field_store` to `array_set` — a within-one-frame vacuous pass, no callee-return boundary needed (AOT00-T8 follow-up)
+
+Adding `array_set`'s generational write-barrier emission (mirroring `field_store`'s —
+see `iir-to-llvm/src/lib.rs`'s `lower_array_set`/`lower_field_store` — and the
+aarch64/x86_64 siblings' identical fix), I built a real-execution differential mirroring
+`lang-aot/tests/llvm_gc_write_barrier.rs` (`field_store`'s own, which genuinely works —
+confirmed via a `TEMP-REVERT-CHECK` that correctly turns the assertion red): allocate
+`parent` (a 1-element `array<i64>`), minor-collect to tenure it old, allocate `child`,
+`array_set parent, 0, child`, minor-collect again, assert `gc_live_bytes() == 32`
+(both survived) via the barrier's remembered-set edge, with neither `parent` nor
+`child` referenced by any local past the store — same shape as `field_store`'s test,
+same reasoning for why nothing else should root either object into the second collect.
+
+It passed — with the barrier call present, **and** with it fully deleted (no barrier
+call, no address computed at all, i.e. behaving exactly like the code before this PR).
+Unlike the aarch64 lesson directly above, this is **not** a callee-return-boundary
+gap — everything happens in one `main` frame, no calls into a separate `IIRFunction`.
+Root cause (probable, not fully isolated): `array_set`'s codegen is structurally
+heavier than `field_store`'s — it emits `emit_bounds_check`'s conditional branch
+(`icmp uge` + `br` to a trap block) in addition to the element `getelementptr`+`store`,
+where `field_store` is straight-line with no branch at all. A branch forces `%handle`
+to be available on both edges, which is exactly the kind of live-range shape an
+unoptimized (`-O0`, no `opt` passes ever run on this hand-written IR) codegen path
+spills to a stack slot rather than a register — and unlike a register, a stack slot
+that nothing later reuses keeps its stale bit pattern for the rest of the frame,
+conservatively rediscoverable by any later collect regardless of the write barrier.
+Since `parent`'s own address is what leaks, and a **directly root-reachable** old
+object is traced into on every collect regardless of remembered-set membership (see
+`code/specs/AOT00-T9-moving-minor-collector.md` §3's identical point about
+root/region-reachable old objects), `child` — sitting in `parent`'s own payload —
+is found either way. This was verified by *removing* every barrier-adjacent
+instruction (not just the call), so it is not an artifact of leftover dead-code
+computed for the barrier itself; the pre-existing, unfixed `array_set` would be
+equally vacuous under this exact test shape.
+
+**Fix: don't ship the differential.** Deleted it rather than keep a passing-either-way
+test in the suite (a false-positive regression guard is worse than no guard — it would
+silently stop catching a reverted fix). Relied instead on: `iir-to-llvm`'s own
+IR-string unit tests (`array_set_calls_the_generational_write_barrier` et al. in
+`tests/test_backend.rs` — these DID catch a real bug during development: an earlier
+draft passed `handle` itself as the barrier's `parent`, which is `raw_payload + 8`
+in this backend's `alloc_array` lowering, not the true base `write_barrier` needs);
+`field_store`'s own already-working differential, which proves the barrier
+*mechanism* end-to-end for a call shape where it demonstrably matters; and
+`gc-core`'s own generic, already-reviewed `write_barrier` tests. Exactly the same
+call the aarch64 PR (lesson above) and `array_ref_tracing.rs` (`lang-aot` — "This
+file does NOT attempt to prove the reclamation bug end-to-end… The actual, reliable
+regression proof lives at the gc-core level instead") already made for structurally
+similar reasons: **don't chase a real-execution differential across a scan gap this
+codebase already knows is conservative-biased; the unit-level proof is the reliable
+one.** If a real-execution proof for this specific op is ever needed again: forcing
+`%handle`'s stack slot to be reused before the second collect (e.g. by doing enough
+unrelated allocation/branching work in between) is the same "make it churn" approach
+`gc-core-capi/src/stack_scan.rs`'s `DEAD_BATCH` fix above took, but wasn't pursued
+here given the unit-level signal was already sufficient.
+
+## Registering a `{0,8}`-style movable GC kind for `vm-core`'s generic `gc_alloc` is NOT a safe drop-in, unlike native-AOT's `__dyn_cons`/records — vm-core's fields are tagged words, not always-boxed (AOT00-T9 PR-5 follow-up scouting)
+
+While scoping the next GC work item after AOT00-T9 PR-5 (moving-minor pacing) landed, I
+looked at `vm-core`'s own "not yet load-bearing for relocation" limitation that PR-5's
+changelog documents: every `vm-core` `gc_alloc` registers kind `0` (opaque/conservative),
+so `collect_compacting`/`collect_minor_compacting` never actually relocate anything when
+driven by vm-core — they degrade to non-moving behavior every time, safely but with zero
+payoff. The obvious-looking fix: mirror native-AOT's own `__dyn_cons`, which lazily
+registers a `{0,8}` kind (both 8-byte fields are reference slots) via
+`__gc_register_kind` and allocates through `__gc_alloc_kind` instead of the opaque
+`__gc_alloc` — `FlatHeap::register_kind`/`alloc(n, kind)` are already `pub`, so wiring
+this into `vm-core::handle_gc_alloc` looks like a small, mechanical change.
+
+**It is not sound, and I did not implement it.** Native-AOT's `{0,8}` cons/record kind
+is safe only because native's own object model guarantees every field of a
+kind-registered allocation is **boxed** — a genuine heap reference, never a raw scalar
+(see the "records precise + movable" PR: "Record fields are boxed (constructor params
+typed `any`) → `{0,8}` sound"). `vm-core`'s object model is different: `handle_gc_field_store`
+(`vm-core/src/dispatch.rs`) stores a **tagged word** per field — `Value::HeapRef` gets one
+tag (`FIELD_TAG_HEAP_REF`, `0b111`), `Value::Int` gets a different one (shifted, no `0b111`
+low bits) — so a field vm-core allocates via `gc_alloc` can legitimately hold a raw integer,
+not just a reference. This is true even restricted to cons cells specifically: `(cons 1 2)`
+routinely stores bare integers as car/cdr, so "just register cons kind, not the generic
+`alloc`" doesn't dodge the problem — cons is precisely the case where a field is sometimes a
+ref and sometimes not.
+
+Traced why this matters for *compaction* specifically (not just marking, which already
+tolerates this fine): `mark_word` (`gc-core/src/flat_heap.rs`) tag-strips before checking
+`find_header`, so a raw tagged int is simply never found as a live block — safe, standard
+over-approximation-is-fine marking. But `fixup_ref_fields`'s `forwarded()` helper — the
+function that decides whether to *rewrite* a precise field's bits during a moving
+collection — looks the word (raw or tag-stripped) up as a **key in the `forward`
+HashMap** (the set of addresses that were *actually* relocated this cycle) and only
+rewrites on a hit. A raw int field is therefore rewritten **only if its bit pattern
+happens to exactly equal some unrelated object's old base address** — astronomically
+unlikely in practice, but a real, wrong-direction correctness bug if it ever fired (an
+int's value silently corrupted to a stale pointer bit pattern), not a "safe
+over-approximation" the way conservative-scan false positives are. This is a
+categorically different risk from the pin-when-unsure/bias-to-leak arguments that justify
+every *other* accepted probabilistic-collision case in this codebase (all of which retain
+*too much*, never rewrite something wrongly).
+
+**Not pursued further this session** — fixing this for real needs either (a) type-directed
+field maps so vm-core can tell gc-core which specific field offsets are *always* references
+for a given allocation site (a real new feature: field-level type tracking doesn't exist in
+vm-core's IIR-op interface today), or (b) an explicit, reviewed decision to accept the
+collision risk with a written soundness argument bounding it (this codebase's security
+reviews have not been asked to accept this exact class of risk before, unlike the
+already-reviewed conservative-scan collision cases). Either is a real design decision, not
+a quick follow-up PR — flagging it here so a future session doesn't rediscover the same
+trap by implementing the "obvious" mechanical version.
+
+**Resolved in AOT00-T10** (2026-08-11, following an explicit owner directive that vm-core,
+being unreleased, is free to change design rather than work around it: "We shouldn't have
+10 different GC implementations"). Option (a) above — type-directed field maps — turned out
+not to be the only way to give gc-core "which words are references" ground truth: vm-core
+already computes that ground truth *dynamically*, once per store, via the tag bits this exact
+lesson describes (`FIELD_TAG_HEAP_REF` vs. everything else). `gc-core` gained a second,
+**tagged** kind-registration mode (`FlatHeap::register_tagged_kind`) that trusts a slot's own
+tag bits at scan time instead of assuming every slot is always a reference — closing the
+`forwarded()` collision risk exactly, not just bounding it. See
+`code/specs/AOT00-T10-tagged-field-kinds.md` for the full design and `vm-core`'s
+`VMCore::pair_kind` for the wiring.
 
 ## A blanket `--testTimeout` override during local verification hides timeout failures
 

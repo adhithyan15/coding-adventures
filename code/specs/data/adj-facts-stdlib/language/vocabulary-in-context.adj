@@ -1,0 +1,64 @@
+% ============================================================================
+% vocabulary-in-context — words whose meaning a primary source teaches via
+% a worked context-clue example sentence (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The TENTH literacy sub-skill library in this loop's sweep. Recall is a
+% binding query:
+%
+%     ? vocabulary_in_context(ornithology, $Meaning)
+%       % scientific_study_of_birds
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `vocabulary_in_context(word, meaning)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the meaning WITH its source, on the CPU, with zero model
+% calls, and abstains on any word the source does not define this way.
+% The query also runs BACKWARD — bind a meaning and recall which word it
+% belongs to:
+%
+%     ? vocabulary_in_context($W, hidden_or_not_easily_seen)
+%       % inconspicuous
+%
+% DESIGN NOTE — why `meaning` is a short constant-style label rather than
+% a full-sentence definition: `fable-moral.adj` (shipped earlier in this
+% loop) discovered that the ADJ query grammar accepts a quoted-string
+% literal as a `table` row VALUE but NOT as a query ARGUMENT — a query can
+% only ground an atom/number or bind a $Var. Using a short atom label here
+% (rather than a full-sentence meaning, as `fable-moral.adj`'s `moral`
+% column does) keeps BOTH the direct query (`vocabulary_in_context(word,
+% $Meaning)`) and the reverse query (`vocabulary_in_context($W,
+% meaning_label)`) usable as ordinary ground-argument binding queries,
+% without hitting that limitation.
+%
+% Provenance: quoted verbatim from Reading Rockets' "Using Context Clues
+% to Understand Word Meanings" article, which gives three worked
+% context-clue examples — a target word, an example sentence containing
+% it, and the word's meaning as revealed by that sentence's own context:
+%
+%     word            example sentence (verbatim)                                                                          meaning (this table's label)
+%     -------------   --------------------------------------------------------------------------------------------------   -----------------------------------
+%     ornithology     "People who study birds are experts in ornithology."                                                 scientific_study_of_birds
+%     frugivorous     "Frugivorous birds prefer eating fruit to any other kind of food."                                   eats_fruit_as_primary_food
+%     inconspicuous   "Some birds like to build their nests in inconspicuous spots — high up in the tops of trees,         hidden_or_not_easily_seen
+%                      well hidden by leaves."
+%
+% WebFetch-verified before writing. `trust consensus` — the same tier as
+% the other Reading Rockets citations already shipped in this directory.
+% A word that is NOT one of these three — e.g. `arboreal`, a real
+% vocabulary word but not defined by this specific cited page — is
+% deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a meaning the source never gave. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vocabulary_in_context {
+    columns word, meaning
+
+    row (ornithology, scientific_study_of_birds)
+    row (frugivorous, eats_fruit_as_primary_food)
+    row (inconspicuous, hidden_or_not_easily_seen)
+
+    source "People who study birds are experts in ornithology."
+    locator "https://www.readingrockets.org/topics/vocabulary/articles/using-context-clues-understand-word-meanings"
+    trust consensus
+}

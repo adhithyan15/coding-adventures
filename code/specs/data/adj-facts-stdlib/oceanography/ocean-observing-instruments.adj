@@ -1,0 +1,61 @@
+% ============================================================================
+% ocean-observing-instruments — each common ocean-observing instrument and
+% the ONE quantity it measures or detects (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A THIRD "observation and measurement" axis in the Major Gap ADJ-STDLIB-
+% COVERAGE.md 5.1 names for K-8 science, after the already-shipped
+% `chemistry/measuring-tools.adj` (lab tools) and
+% `meteorology/weather-instruments.adj` (weather-observing instruments) —
+% this one covers OCEAN-observing instruments:
+% `ocean_instrument(instrument, quantity)`. Recall is a binding query:
+%
+%     ? ocean_instrument(tide_gauge, $Q)   % sea_level
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `ocean_instrument(instrument, quantity)`, so the lookup above is the
+% ordinary SLD binding query — the engine returns the quantity WITH its
+% source, on the CPU, with zero model calls, and abstains on an instrument
+% not one of the three the cited pages name. The query also runs
+% BACKWARD — bind a quantity and recall the instrument that measures it:
+%
+%     ? ocean_instrument($I, underwater_sound)   % hydrophone
+%
+% UNLIKE `weather-instruments.adj` (six rows sharing ONE NOAA source page),
+% this table's three rows each have a DIFFERENT NOAA source page — the ADJ
+% table grammar (confirmed by reading `weather-instruments.adj` and
+% `word-families.adj` before writing this file) carries only ONE table-level
+% `source`/`locator`/`trust` block, so per this stdlib's established
+% discipline (`word-families.adj`'s multi-family extensions), the table's
+% own citation is the PRIMARY/first-listed source below, and each OTHER
+% row's own distinct citation is documented here in prose:
+%
+%     instrument   quantity            source page                                    quote
+%     ----------   -----------------   ---------------------------------------------   -----------------------------------------------------------------------------
+%     tide_gauge   sea_level           oceanservice.noaa.gov/facts/tide-gauge.html      "a tide gauge measures changes in sea level relative to a datum (a height reference)"
+%     hydrophone   underwater_sound    oceanservice.noaa.gov/facts/hydrophone.html      "A hydrophone is an underwater device that detects and records ocean sounds from all directions" (elsewhere: "measure ocean sounds with great precision")
+%     sonar        distance_to_object  oceanservice.noaa.gov/facts/sonar.html           determines "the range and orientation of the object" by measuring the time between an emitted sound pulse and its echo
+%
+% All three citations WebFetch-verified before writing. `trust authoritative`
+% for all three — every row's own source page is a primary U.S. government
+% (NOAA, .gov) source, the same tier `weather-instruments.adj`'s NOAA source
+% earned. An instrument not one of these three — a CTD, a buoy, an ocean
+% glider — has no row, so a recall on it ABSTAINS rather than inventing a
+% quantity (a CTD in particular measures MULTIPLE quantities at once —
+% conductivity, temperature, and depth — which does not fit this table's
+% one-instrument-one-quantity shape, so it is deliberately excluded rather
+% than force-picking one of its several measured quantities). (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_instrument {
+    columns instrument, quantity
+
+    row (tide_gauge, sea_level)
+    row (hydrophone, underwater_sound)
+    row (sonar, distance_to_object)
+
+    source "a tide gauge measures changes in sea level relative to a datum (a height reference)"
+    locator "https://oceanservice.noaa.gov/facts/tide-gauge.html"
+    trust authoritative
+}

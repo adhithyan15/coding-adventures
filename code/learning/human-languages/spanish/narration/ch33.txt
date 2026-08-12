@@ -1,54 +1,42 @@
-Spanish, chapter 33: Green and Yellow.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 33: Putting the -ar Verbs to Work.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-verde — the colour named after being alive.
-
-Warm-up.
-[pause 2 seconds]
-After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing.
-
-The word, taken apart: verde.
-verde ("green") from Latin viridis (worn down through virdis), which comes from the verb virēre, "to be green, to flourish, to be vigorous."
-So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris ("green of Greece").
-One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "verde" — green]
-[pause 8 seconds for the answer]
-[your turn — say: the root — "virēre, to flourish" becomes "verde"]
-[pause 8 seconds for the answer]
-[your turn — say: "verde" then English "verdant" — and not "green"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Latin verb gives verde, and what does it mean? (Virēre, "to be green, to flourish.") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all.
-
-
-Lesson 2 of 2.
-amarillo — the colour that started as a taste.
+Lesson 1 of 1.
+Practice — making sentences with -ar verbs.
 
 Warm-up.
 [pause 2 seconds]
-Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them.
+A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic.
 
-The word, taken apart: amarillo.
-amarillo ("yellow") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, "a little bitter," a diminutive of amarus, "bitter."
-A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning "somewhat bitter" came to mean "the yellowish look of a bitter thing," then simply "yellowish," and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour.
-You can still check the family in a living word: amargo ("bitter") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there.
+Grammar Lens: conjugate on command.
+[pause 1 second]
+Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:
+hablar: hablo, hablas, habla.
+trabajar: trabajo, trabajas, trabaja.
+estudiar: estudio, estudias, estudia.
+Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular.
+
+The exchange — say something real.
+— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada.
+
+What you've built this chapter.
+por favor — please ( from "for a favour"), completing gracias / de nada / por favor.
+the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar.
+hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student).
+Hablo español — your first self-assembled sentence (pro-drop, no article).
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "verde, amarillo" — green and yellow]
+[your turn — say: conjugate all three verbs for I / tú / usted, without stopping]
 [pause 8 seconds for the answer]
-[your turn — say: "amarillo, amargo" — hear the shared amar-]
+[your turn — say: answer “¿Hablas español?” and “¿Estudias español?” about yourself]
 [pause 8 seconds for the answer]
-[your turn — say: the path — "a little bitter" becomes "yellowish" becomes "yellow"]
+[your turn — say: request “Café, por favor” and run the full gracias/de nada loop]
 [pause 8 seconds for the answer]
+[repeat that twice]
+Ask and answer “¿Hablas español? — Hablo español.”
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does amarillo come from a Latin word for yellow? (No — from amarellus, "a little bitter," a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, "bitter.") And verde? (From virēre, "to flourish" — a colour named after being alive, as this one is named after a taste.)
+What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families.

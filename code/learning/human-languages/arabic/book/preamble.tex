@@ -28,7 +28,7 @@
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
-\usepackage{titlesec}
+\usepackage[raggedright]{titlesec}
 \input{../../_shared/visual.tex}
 
 \usepackage{polyglossia}
@@ -114,10 +114,173 @@
 }
 
 \titleformat{\chapter}[display]
-  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge}
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge\raggedright}
 
 % Chapter opening (HL09 §8): what the reader will be able to do by the end.
 % Generated from the HL05 capability ledger, never hand-written.
 \newenvironment{chapteropening}%
-  {\begin{quote}\itshape\small}%
+  {\begin{quote}\itshape\small\raggedright}%
   {\end{quote}\par\medskip}
+
+% ---------------------------------------------------------------------------
+% Table-of-contents number width (HL-C109).
+%
+% `book.cls` reserves 1.5em for a chapter number in the table of contents:
+%
+%     \newcommand*\l@chapter[2]{... \setlength\@tempdima{1.5em} ...}
+%
+% That is enough for two digits and not for three. At 10.95pt bold, "100" is
+% 2.46pt wider than the box, so the number runs into its own title and TeX
+% reports an overfull \hbox for every such line. A track notices nothing until
+% it crosses a hundred chapters -- and then the bug arrives all at once, one
+% line per chapter, which is exactly how it surfaced here.
+%
+% Below is `book.cls`'s own \l@chapter with a single number changed: 1.5em
+% becomes 2.8em, which holds four bold digits with room to spare. A course that
+% reached 100 chapters can reach 1000, and the fix should not need revisiting
+% then. The section and subsection indents move by the same amount so the
+% columns still line up under the widened chapter number.
+\makeatletter
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    \addpenalty{-\@highpenalty}%
+    \vskip 1.0em \@plus\p@
+    \setlength\@tempdima{2.8em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil
+      \nobreak\hb@xt@\@pnumwidth{\hss #2%
+                                 \kern-\p@\kern\p@}\par
+      \penalty\@highpenalty
+    \endgroup
+  \fi}
+\renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+\makeatother
+
+% ---------------------------------------------------------------------------
+% Line-breaking tolerance (HL-C109).
+%
+% These books mix ordinary prose with tokens TeX cannot break: lesson ids
+% (ES-C14-practice), slash-separated form lists (fui/fuiste/fue), and Latin
+% etymons carrying macrons that a modern language's hyphenation patterns will
+% not touch. Inside a narrow measure -- a quote block or a list item -- one such
+% token forces the previous line to stretch, and TeX reports an underfull hbox.
+% (The slash lists are handled directly further down; see HL-C109b.)
+%
+% \tolerance and \emergencystretch change how a paragraph is BROKEN, not how it
+% is reported: TeX may accept a looser line early enough to find a break
+% sequence that avoids a very loose one, and gets a final pass with extra
+% stretchability instead of an overfull line. \hbadness and \hfuzz are
+% deliberately left at their defaults -- raising those would silence the
+% warnings rather than fix the paragraphs, and the CI log scanner would then be
+% reading a muted log.
+\tolerance=2000
+
+% ---------------------------------------------------------------------------
+% A slash is a place a line may break (HL-C109b).
+%
+% The note above has named slash-separated form lists -- fui/fuiste/fue, or
+% qitt/cattus/gato/chat/Katze -- as an unbreakable token class since it was
+% written, without ever doing anything about it. A run like that is several
+% words wide and TeX treats it as one, so a line holding it has almost nowhere
+% to break and must stretch the few interword spaces it has instead. That is an
+% underfull hbox, and it is the same defect the callout rule above fixes, from a
+% different direction.
+%
+% A slash is a natural break point: readers already parse `fui/fuiste/fue' as
+% three items, and a line that ends after one of them reads correctly. So say so.
+%
+% XeTeX offers exactly the right hook. Every character belongs to an
+% "interchar class", and tokens can be injected at a class BOUNDARY -- here,
+% wherever a slash is followed by anything else. Nothing about the slash itself
+% changes: its catcode stays 12, so \url, \includegraphics and file names are
+% untouched, and the glyph, its kerning and its spacing are identical. All that
+% is added is permission to break.
+%
+% Twenty-one of the twenty-two books paginate identically afterwards; tamil
+% loses a page (249 -> 248), which is the change doing its job -- a slash run
+% that had been forcing a loose line now breaks, the paragraph sets in fewer
+% lines, and the saving reaches the end of the book. Overfull stays at 0 in
+% every track and no glyph goes missing.
+%
+% \allowbreak is invalid in math mode, and $a/b$ is ordinary in these books, so
+% the injection is guarded. Class 0 is "everything else"; class 255 is the
+% boundary class TeX uses at the edges of a paragraph or box.
+\XeTeXinterchartokenstate=1
+\newXeTeXintercharclass\hlslashclass
+\XeTeXcharclass`\/ \hlslashclass
+\XeTeXinterchartoks \hlslashclass 0   = {\ifmmode\else\allowbreak\fi}
+\XeTeXinterchartoks \hlslashclass 255 = {\ifmmode\else\allowbreak\fi}
+
+% ---------------------------------------------------------------------------
+% An opening delimiter must not cost a word its hyphenation (HL-C109c).
+%
+% TeX only hyphenates a word that follows glue. A word preceded by an opening
+% delimiter -- ( [ or an opening quote -- is therefore never hyphenated at all,
+% and becomes one unbreakable unit as wide as the whole phrase. In latin that
+% was the phrase ("tomorrow") on the first line of a paragraph: nowhere to
+% break, so the line stretched to badness 3088.
+%
+% That the cause really was hyphenation, and not merely the extra width, was
+% settled by keeping the delimiters and writing to\-mor\-row by hand. The box
+% went, at unchanged length.
+%
+% \nobreak\hskip0pt is zero-width glue behind an infinite penalty: it restarts
+% TeX's word scan, so the following word can hyphenate, while forbidding a break
+% after the delimiter itself -- a line must never end with a dangling `('.
+%
+% The \relax is load-bearing. A glue specification absorbs a following `plus' or
+% `minus' keyword, and `(plus a few invented for Slavic sounds)' is ordinary
+% English -- russian has exactly that sentence. Without \relax, \hskip0pt reads
+% on into `plus a' and stops with "Missing number, treated as zero", failing the
+% whole book. \fi does not help: it is expandable, so it is expanded away during
+% the scan for the number rather than ending it.
+%
+% The two kinds of delimiter need two different mechanisms, which is worth
+% knowing before editing this. Inter-character classes act on characters read
+% from the SOURCE: ( and [ are exactly that, so a class reaches them. The quotes
+% are not -- the book generator emits \textquotedblleft{}, a command -- so a
+% class keyed on U+201C compiles cleanly and does nothing whatsoever. Those have
+% to be wrapped at the command.
+\newXeTeXintercharclass\hlopenclass
+\XeTeXcharclass`\( \hlopenclass
+\XeTeXcharclass`\[ \hlopenclass
+\XeTeXinterchartoks \hlopenclass 0 = {\ifmmode\else\nobreak\hskip0pt\relax\fi}
+\let\hlorigopenquote\textquotedblleft
+\renewcommand{\textquotedblleft}{\hlorigopenquote\nobreak\hskip0pt\relax}
+\let\hlorigopensingle\textquoteleft
+\renewcommand{\textquoteleft}{\hlorigopensingle\nobreak\hskip0pt\relax}
+
+% Callout boxes are set ragged right (HL-C88).
+%
+% Every callout runs at a narrower measure than the body, and its content is the
+% densest part of the book: bold Spanish forms, Latin etymons carrying macrons,
+% and arrows between them. None of those hyphenate under English patterns, so a
+% justified line inside a callout has almost nowhere to break and must stretch
+% the few interword spaces it has -- which is precisely an underfull hbox.
+%
+% Ragged right removes the stretch rather than hiding it: the line simply ends
+% where the last word ended. Block callouts set ragged right is ordinary
+% typography, and it is what \chapteropening already does above.
+\tcbset{before upper=\raggedright}
+\emergencystretch=2em
+
+% ---------------------------------------------------------------------------
+% Running heads (HL-C109).
+%
+% Chapter titles here are deliberately descriptive -- "Answering, Meeting, and
+% Three Ways to Play" -- and `book.cls` puts the whole title into the verso
+% running head as one unbreakable line. Past a certain length it simply
+% overflows the text block, once per verso page for the length of the chapter,
+% which is how a single long title produced four identical overfull boxes.
+%
+% The head shows "Chapter N" instead. That keeps it useful and stable, and it
+% cannot overflow no matter what a chapter is called. Spanish has done this for
+% a while; this is the same rule, applied to every track.
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection}}

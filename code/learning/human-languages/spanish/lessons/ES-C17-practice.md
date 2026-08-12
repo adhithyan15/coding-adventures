@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-practice
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1168
-chapter: 17
+sequence: 1448
+chapter: 119
 type: practice-mix
 headword: (practice)
 gloss: a singular checkpoint for the simple future and conditional
@@ -94,5 +94,5 @@ not a one-step story or a recipe using modern **haber**.
 viviré.*) Give the three regular conditional yo forms. (*Hablaría, comería,
 viviría.*) Which three learned stems replace a whole infinitive? (**Har-,
 tendr-, podr-.**) What is the careful historical bridge? (Infinitive plus
-forms of Latin **habēre**, reshaped through Romance.) Chapter 18 can now begin
+forms of Latin **habēre**, reshaped through Romance.) The next chapter can now begin
 without borrowing plural persons, new auxiliaries, or clock-time vocabulary.

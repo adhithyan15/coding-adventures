@@ -1,0 +1,15 @@
+% ============================================================================
+% plant-life-cycle.query.adj — worked recall over the plant life-cycle
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what position is this
+% stage in the life cycle?" (direct) or "which stage comes first/second/
+% etc.?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "plant-life-cycle.adj"
+
+? plant_life_stage(germination, $N)   % expect 2 (direct: what position is germination?)
+? plant_life_stage($S, 1)             % expect seed (reverse: which stage comes first?)
+? plant_life_stage(flowering, $N)     % expect abstain -- "flowering" is a real later stage but not one of the three tabled here

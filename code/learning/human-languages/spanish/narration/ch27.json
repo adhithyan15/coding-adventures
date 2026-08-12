@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 27,
-  "title": "The Months",
+  "title": "Synthesis --- Reading What You Were Never Taught",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1221fb0b96f61360",
+  "sourceHash": "fnv1a64:74d6278b675cf0a5",
   "lessons": [
     {
-      "id": "ES-C27-los-meses",
-      "sequence": 1470,
-      "title": "los meses — the calendar's gods and Caesars",
-      "headword": "los meses",
-      "romanization": "los meses",
-      "gloss": "the months — Roman gods and emperors, marching almost unchanged from Latin",
+      "id": "ES-C56-sintesis-leer",
+      "sequence": 541,
+      "title": "Synthesis — reading what you were never taught",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — read a Spanish sentence containing four words this book has never taught you",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b5026e865212425",
+      "sourceHash": "fnv1a64:3cccf0e58239ef54",
       "notice": null,
       "blocks": [
         {
@@ -35,55 +35,78 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters."
+              "text": "You are about to read a sentence with four words in it that this book has never shown you. Read it before you read the explanation."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The months, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "who / what"
-              ],
-              "columns": 3,
-              "rowCount": 12,
-              "utterances": [
-                "Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.",
-                "Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.",
-                "Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!",
-                "Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, \"to open\" (buds opening).",
-                "Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.",
-                "Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.",
-                "Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, \"the 5th [month]\" — renamed for Julius Caesar after his death.",
-                "Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, \"the 6th [month]\" — renamed for the emperor Augustus.",
-                "Spanish: septiembre. from Latin: september. who / what: \"7th\" (septem).",
-                "Spanish: octubre. from Latin: octōber. who / what: \"8th\" (octō).",
-                "Spanish: noviembre. from Latin: november. who / what: \"9th\" (novem).",
-                "Spanish: diciembre. from Latin: december. who / what: \"10th\" (decem)."
-              ]
+              "kind": "speech",
+              "text": "La universidad tiene una reputación internacional, naturalmente."
             },
             {
               "kind": "speech",
-              "text": "Two payoffs land at once:"
+              "text": "Say it aloud. Then say what it means."
             },
             {
               "kind": "speech",
-              "text": "marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other."
+              "text": "The university has an international reputation, naturally."
             },
             {
               "kind": "speech",
-              "text": "The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named \"7th.\" Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally \"5th\" and \"6th\" — renamed in their honor after the fact. The names stuck; the months themselves were never new."
+              "text": "Now count what you were given. Four of those words are new, and you read all four:"
+            },
+            {
+              "kind": "speech",
+              "text": "universidad — -dad is -ty."
+            },
+            {
+              "kind": "speech",
+              "text": "reputación — -ción is -tion."
+            },
+            {
+              "kind": "speech",
+              "text": "internacional — a plain friend; it needed no rule at all."
+            },
+            {
+              "kind": "speech",
+              "text": "naturalmente — -mente is -ly."
+            },
+            {
+              "kind": "speech",
+              "text": "Three chapters of endings, and a sentence of adult Spanish came free."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what has actually changed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Something is different about this chapter and it is worth naming."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other lesson so far has taught you a word or a form and then asked you to use it. This one asked you to read words nobody taught you, and you could, because a rule reaches further than a word."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the shape of the rest of your Spanish, and it is worth expecting. You will keep learning individual words — there is no way around casa or comer — but the reading you can do will run far ahead of the words you were handed, as long as you keep collecting rules alongside them."
+            },
+            {
+              "kind": "speech",
+              "text": "A warning that costs nothing. These endings are reliable, not perfect. A few words wearing a familiar ending have drifted somewhere unexpected, and you will meet them later as false friends — memorable precisely because the rule is otherwise so dependable."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -96,34 +119,104 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twelve — \"enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre\"",
+              "instruction": "the whole sentence, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twelve — \"enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre\"]"
+              "source": "[YOU SAY: the whole sentence, twice]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the tie-back — \"marzo / martes — both Mars, the war-god\"",
+              "instruction": "the four new words alone, and name the rule that gave you each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the tie-back — \"marzo / martes — both Mars, the war-god\"]"
+              "source": "[YOU SAY: the four new words alone, and name the rule that gave you each]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"septiembre = 7, diciembre = 10\" — the old March-start year",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"septiembre = 7, diciembre = 10\" — the old March-start year]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-leer-read",
+              "prompt": "What does La universidad tiene una reputacion internacional mean?",
+              "assesses": [
+                "ES-FRIEND-DAD-TY",
+                "ES-FRIEND-CION-TION"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the university has an international reputation",
+                "the university has international reputation"
+              ],
+              "feedback": {
+                "correct": "Three new words, read rather than recalled.",
+                "incorrect": "The university has an international reputation."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-leer-count",
+              "prompt": "How many words in that sentence had you never been taught?",
+              "assesses": [
+                "ES-FRIEND-CION-TION",
+                "ES-FRIEND-MENTE-LY"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "four",
+                "4"
+              ],
+              "feedback": {
+                "correct": "And you read every one.",
+                "incorrect": "Four: universidad, reputacion, internacional, naturalmente."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-leer-shape",
+              "prompt": "Why can a rule be worth more than a word?",
+              "assesses": [
+                "ES-FRIEND-CION-TION"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "a rule reaches words you were never taught",
+                "it applies to thousands of words at once"
+              ],
+              "feedback": {
+                "correct": "The shape of the rest of your Spanish.",
+                "incorrect": "Because it reaches every word of that shape, including ones no lesson covers."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-leer-limit",
+              "prompt": "Are these endings perfectly reliable?",
+              "assesses": [
+                "ES-FRIEND-DAD-TY"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no, a few have drifted",
+                "mostly, but there are false friends"
+              ],
+              "feedback": {
+                "correct": "Reliable enough to trust, with a few memorable exceptions ahead.",
+                "incorrect": "Very nearly. A few words wearing a familiar ending have drifted, and those come later as false friends."
+              }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -135,7 +228,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for \"ten\"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis (\"5th\"/\"6th\"), simply renamed in their honor.)"
+              "text": "How many words in that sentence were new? (Four.) What let you read them? (Three endings.) And what does that tell you about the rest of the book? (That rules reach further than words — collect both.)"
             }
           ]
         }

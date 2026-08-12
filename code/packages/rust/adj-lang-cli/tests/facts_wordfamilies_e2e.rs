@@ -195,13 +195,52 @@ fn rhymes_with_isolates_a_fourth_family_and_abstains_on_excluded_blend_words() {
 }
 
 #[test]
+fn rhymes_with_isolates_a_fifth_family_and_abstains_on_excluded_blend_words() {
+    let dir = scratch("fifth_family");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"word-families.adj\"\n\
+         ? rhymes_with(dog, $W)\n\
+         ? word_family(frog, $F)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Every other member of the -og family rhymes with "dog" (plus itself).
+    for w in ["dog", "hog", "fog", "log", "jog"] {
+        assert!(
+            out.contains(&format!("\"W\":\"{w}\"")),
+            "dog rhymes with {w}: {out}"
+        );
+    }
+    // No cross-contamination: no -an, -at, -ig, or -ug family member should appear as a rhyme of "dog".
+    for w in [
+        "pan", "fan", "ran", "man", "tan", "van", "cat", "bat", "fat", "sat", "rat", "pat", "mat",
+        "hat", "pig", "big", "fig", "dig", "wig", "tug", "rug", "hug", "mug", "bug", "jug", "dug",
+    ] {
+        assert!(
+            !out.contains(&format!("\"W\":\"{w}\"")),
+            "-an/-at/-ig/-ug member {w} must NOT rhyme with -og member dog: {out}"
+        );
+    }
+    // "frog" is deliberately excluded (a four-letter consonant-blend word, out of CVC scope) --
+    // honest abstention, never invented.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "frog has no shipped row -- honest abstention: {out}"
+    );
+}
+
+#[test]
 fn word_family_abstains_honestly_on_an_unshipped_word() {
     let dir = scratch("abstain");
     place_lib(&dir);
     std::fs::write(
         dir.join("case.adj"),
         "import \"word-families.adj\"\n\
-         ? word_family(dog, $F)\n",
+         ? word_family(cup, $F)\n",
     )
     .unwrap();
 
@@ -209,6 +248,6 @@ fn word_family_abstains_honestly_on_an_unshipped_word() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "\"dog\" has no shipped row -- honest abstention, never invented: {out}"
+        "\"cup\" has no shipped row -- honest abstention, never invented: {out}"
     );
 }

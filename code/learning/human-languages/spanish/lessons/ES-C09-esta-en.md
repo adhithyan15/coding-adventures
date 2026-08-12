@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-esta-en
 spine_node: SPINE-ASK-LOCATION
-sequence: 860
-chapter: 9
+sequence: 900
+chapter: 48
 type: phrase
 headword: está en…
 gloss: is in or at… — locate someone with estar and the already-known en
@@ -33,7 +33,7 @@ reviews_of: [ES-C04-estar-estado, ES-C07-donde, ES-C09-ser-vs-estar, ES-C09-soy-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-GRAMMAR-ESTAR-ESTA-ESTAS, ES-GRAMMAR-STATE-LOCATION-ESTAR, ES-LEX-DONDE, ES-LEX-EN] -->
 
-[PAUSE 2s] In Chapter 7, **¿Dónde vives? — Vivo en Madrid** asked about where
+[PAUSE 2s] You have already asked **¿Dónde vives? — Vivo en Madrid** about where
 someone lives. Now use the same **dónde** and **en** with *estar* to ask about a
 current location.
 

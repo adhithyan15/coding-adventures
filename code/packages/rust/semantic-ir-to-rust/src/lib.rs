@@ -207,6 +207,11 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // backend cannot lower) is rejected cleanly by `reject_const_ref`
     // below, keeping this acceptance sound.
     Feature::Constants,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the reserved
+    // console-output primitive `print`/`puts` will migrate to. Additive:
+    // nothing emits it yet, so this declares acceptance ahead of any
+    // frontend using it.
+    Feature::ConsoleIO,
 ];
 
 impl Backend for RustBackend {
@@ -829,7 +834,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("fn add("));
         assert!(a.source.contains("__sir::plus(vec!["));
-        assert!(a.source.contains("__sir::print(add("));
+        // SIR28 §2: `print` lowers to `__sys_write__`, which this backend
+        // maps to `__sir::write(...)`.
+        assert!(a.source.contains("__sir::write(\"stdout\", \"none\", false, vec![add("));
     }
 
     #[test]

@@ -59,7 +59,8 @@ nonzero bits fail before path or terminal access.
 
 The following are rejected:
 
-- every item kind other than `login`;
+- every kind spelling in this command branch other than `login` (the separate
+  `secure-note` branch is specified by VLT-PM16);
 - missing, duplicate, or trailing positionals;
 - inline title, username, URL, password, JSON, environment, file, or file
   descriptor inputs;
@@ -103,10 +104,12 @@ Every command:
 3. loads and strictly parses the exact configuration;
 4. selects the configured default vault and Phase 1A local filesystem store;
 5. rejects remote stores or any mismatched location/credential declaration;
-6. constructs the storage-neutral application and repository adapters;
-7. obtains the passphrase only from the fixed controlling-terminal unlock
+6. for create only, reserves advisory time, item/mutation randomness, metadata
+   operation randomness, and audit-failure randomness before authentication;
+7. constructs the storage-neutral application and repository adapters;
+8. obtains the passphrase only from the fixed controlling-terminal unlock
    prompt; and
-8. completes the VLT-PM05 authenticated open before reading or collecting item
+9. completes the VLT-PM05 authenticated open before reading or collecting item
    fields.
 
 Unconfigured, unsupported, malformed, busy, unavailable, or authentication
@@ -115,13 +118,23 @@ synchronously locks the lifecycle boundary, and only then renders output.
 
 ## 6. Login creation
 
-After collecting the four item fields, the CLI obtains:
+Before authentication, the CLI obtains:
 
 - one advisory Unix-millisecond wall time;
 - exactly `ADD_ITEM_RANDOM_BYTES` of fresh OS CSPRNG output for the item ID and
-  three encrypted publication frames; and
+  encrypted publication frames;
 - an independent 32-byte OS CSPRNG block for the initial favorite-register
-  operation ID.
+  operation ID; and
+- exactly `AUDITED_ACCESS_RANDOM_BYTES` reserved for a possible authenticated
+  host-input failure.
+
+This pre-authentication reservation means entropy or clock failure is not an
+authenticated operation. Once unlock succeeds, a title, username, password,
+or URL prompt failure in an active audit epoch consumes the session and makes
+one failed item-scoped `ItemCreate` event durable before the CLI returns the
+closed error. The reserved failure entropy is wiped unused after a successful
+form; the successful mutation uses the trace and event randomness already
+partitioned inside `AddItemRandomnessV1`.
 
 It constructs one VLT-PM03 `ItemDocument` with:
 
@@ -180,7 +193,8 @@ Each URL has its own fixed `URL:` line; an empty list renders `URL: none`.
 Title, username, and URLs use the same escaped quoted syntax. Password bytes,
 notes text, revision IDs, collection/tag/attachment identities, paths,
 locators, and provider details are never included. A non-login view returns
-the stable unsupported class until its exact renderer is specified.
+the stable unsupported class until its exact renderer is specified; VLT-PM16
+later specifies the secure-note renderer without changing this login grammar.
 
 ## 8. Output and failure contract
 

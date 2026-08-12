@@ -1,6 +1,6 @@
-//! diagram-ir v0.19.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.33.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.33.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -14,10 +14,12 @@ pub enum DiagramDirection {
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramShape {
     Rect,
+    Bar,
     #[default]
     RoundedRect,
     Ellipse,
     Diamond,
+    Note,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -85,6 +87,7 @@ pub fn resolve_style_with_base(
 pub enum EdgeKind {
     Directed,
     Undirected,
+    NoteAssociation,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -106,9 +109,33 @@ pub struct GraphEdge {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct GraphLink {
+    pub node_id: String,
+    pub url: String,
+    pub tooltip: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct GraphGroup {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub parent_id: Option<String>,
+    pub node_ids: Vec<String>,
+    pub regions: Vec<Vec<String>>,
+    pub direction: Option<DiagramDirection>,
+    pub style: Option<DiagramStyle>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphDiagram {
     pub direction: DiagramDirection,
+    pub requested_width: Option<f64>,
+    pub hide_empty_descriptions: bool,
     pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub links: Vec<GraphLink>,
+    pub groups: Vec<GraphGroup>,
     pub nodes: Vec<GraphNode>,
     pub edges: Vec<GraphEdge>,
 }
@@ -144,9 +171,29 @@ pub struct LayoutedGraphEdge {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedGraphGroup {
+    pub id: String,
+    pub label: DiagramLabel,
+    pub parent_id: Option<String>,
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub divider_y: Vec<f64>,
+    pub direction: Option<DiagramDirection>,
+    pub style: ResolvedDiagramStyle,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedGraphDiagram {
     pub direction: DiagramDirection,
+    pub requested_width: Option<f64>,
+    pub hide_empty_descriptions: bool,
     pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
+    pub links: Vec<GraphLink>,
+    pub groups: Vec<LayoutedGraphGroup>,
     pub width: f64,
     pub height: f64,
     pub nodes: Vec<LayoutedGraphNode>,
@@ -170,6 +217,7 @@ pub enum SequenceParticipantKind {
 pub struct SequenceParticipant {
     pub id: String,
     pub label: DiagramLabel,
+    pub label_wrap: SequenceTextWrap,
     pub kind: SequenceParticipantKind,
     pub style: Option<DiagramStyle>,
     pub group_id: Option<String>,
@@ -196,6 +244,7 @@ pub struct SequenceProperty {
 pub struct SequenceParticipantGroup {
     pub id: String,
     pub label: Option<String>,
+    pub label_wrap: SequenceTextWrap,
     pub fill: Option<String>,
 }
 
@@ -258,6 +307,11 @@ pub enum SequenceBlockKind {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum SequenceEvent {
+    AutoNumber {
+        visible: bool,
+        start: Option<f64>,
+        step: Option<f64>,
+    },
     Message {
         from: String,
         to: String,
@@ -319,6 +373,7 @@ pub enum LayoutedSequenceItem {
     ParticipantGroup {
         id: String,
         label: Option<String>,
+        label_height: f64,
         fill: Option<String>,
         x: f64,
         y: f64,
@@ -328,6 +383,8 @@ pub enum LayoutedSequenceItem {
     ParticipantBox {
         id: String,
         label: String,
+        label_height: f64,
+        mirrored: bool,
         kind: SequenceParticipantKind,
         links: Vec<SequenceLink>,
         properties: Vec<SequenceProperty>,
@@ -946,8 +1003,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_19_0() {
-        assert_eq!(VERSION, "0.19.0");
+    fn version_is_0_24_0() {
+        assert_eq!(VERSION, "0.33.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1004,7 +1061,13 @@ mod tests {
         };
         let d = GraphDiagram {
             direction: DiagramDirection::Lr,
+            requested_width: None,
+            hide_empty_descriptions: false,
             title: Some("G".into()),
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
             nodes: vec![node],
             edges: vec![edge],
         };

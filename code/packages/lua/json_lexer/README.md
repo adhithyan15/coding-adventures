@@ -1,6 +1,6 @@
 # coding-adventures-json-lexer (Lua)
 
-A JSON lexer that tokenizes JSON source text into a flat stream of typed tokens. It is a thin wrapper around the grammar-driven `GrammarLexer` from `coding-adventures-lexer`, configured by the shared `json.tokens` grammar file.
+A JSON lexer that tokenizes JSON source text into a flat stream of typed tokens. It is a thin wrapper around the grammar-driven `GrammarLexer` from `coding-adventures-lexer`, configured by a deployed projection of the shared `json.tokens` grammar file.
 
 ## What it does
 
@@ -60,8 +60,13 @@ GrammarLexer  (coding-adventures-lexer)
     ↓  wrapped by
 json_lexer  ← you are here
     ↓  feeds
-json_parser  (future)
+json_parser  (AST consumer)
 ```
+
+`code/grammars/json/json.tokens` remains the canonical language-neutral
+fixture. The rock ships an exact Lua payload projection so installed execution
+does not need repository filesystem access; a drift test compares the two byte
+for byte.
 
 ## Dependencies
 

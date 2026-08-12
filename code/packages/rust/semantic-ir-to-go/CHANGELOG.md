@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.38.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` emit
+arms, runtime helpers, and by-name builtin dispatch entries are dead
+code. Removed:
+
+- The `"print" => "_sir_print"` / `"puts" => "_sir_puts"` arms from
+  `emit_builtin`'s helper-name match.
+- `_sir_print`, `_sir_puts`, and `_sir_puts_one` from `runtime.rs` (these
+  were fully independent of `_sir_write`/`_sir_write_one` — confirmed via
+  grep that nothing else called them — so this is a straight deletion,
+  not a refactor).
+- The `case "print":` / `case "puts":` arms from
+  `_sir_call_builtin_by_name`.
+
+Also fixed two stale doc-comment references to the deleted functions
+(the `flatten` case in `_sir_call_method` and `_sir_flatten_into`'s doc
+comment now cite `_sir_write`'s `per_value` terminator instead).
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: every local test helper that hand-built bare `print`/`puts`
+`BuiltinCall`s purely to observe hand-constructed IR's output (unrelated
+to testing print semantics itself) now builds the equivalent
+`__sys_write__` envelope instead, plus `Feature::ConsoleIO` (and, where
+missing, `Feature::Strings`) added to each affected manifest. A
+single-value `print`-shaped helper maps to `terminator: "once"` (not
+`"none"`) where the backend's old bare `print` historically always
+newline-terminated (true for Go, via the deleted `_sir_print`'s
+`fmt.Println`) — this preserves existing `stdout.lines()`-based test
+assertions exactly, since these helpers were never asserting on real
+Ruby `print` semantics to begin with.
+
+## 0.37.3 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__"` emit arm (mirroring `__new__`'s "lift a
+compile-time-known `StrLit` to a quoted Go string literal" discipline) and
+a new runtime function, `_sir_write`/`_sir_write_one`, generalizing the
+existing `_sir_print`/`_sir_puts` into one function parameterized by
+`stream` (stdout/stderr), `terminator` (none/per_value/once), and
+`unpackArrays` — the policy axes SIR28 §2.1 defines. Declares
+`Feature::ConsoleIO`. Adds `"os"` to the always-emitted import list
+(needed for `os.Stdout`/`os.Stderr`).
+
+`stream`/`terminator` are lifted to quoted Go string literals at emit
+time (same rationale as the OOP envelope's class/method-name lifts:
+keeps the runtime's `switch` on a compile-time-known string, closed
+dispatch) rather than passed through as runtime values.
+
+Deliberately does NOT replicate `_sir_puts`'s trailing-newline-suppression
+nuance (`puts "x\n"` prints `x\n`, not `x\n\n`) — a pre-existing
+divergence from the C backend's own `puts`, orthogonal to and not fixed
+by SIR28; `__sys_write__`'s `per_value` terminator always appends exactly
+one newline per value, matching SIR28 §2.1's table and every other
+backend's `__sys_write__` faithfully.
+
+Purely additive: nothing emits `__sys_write__` yet, so `_sir_print`/
+`_sir_puts` and every existing `print`/`puts`-sourced program are
+unchanged.
+
+New `tests/compile_and_run_sys_write.rs` (mirrors
+`compile_and_run_case_eq.rs`'s hand-built-`Module` + real-`go run`
+pattern): hand-builds a `Module` directly per
+stream/terminator/unpack_arrays combination, emits Go, runs it with `go
+run`, and asserts stdout/stderr.
+
 ## 0.37.2 — doc-comment reframing: SIR25 §2 is the dispatch authority, not "matches Ruby"
 
 Documentation-only, no behavior change. Per `SIR25-language-agnostic-

@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C06-hablar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 510
-chapter: 6
+chapter: 16
 type: word
 headword: hablar
 gloss: to speak / to talk — at root, "to tell stories"
@@ -35,7 +35,7 @@ reviews_of: [ES-C06-por-favor]
 
 [PAUSE 2s] Fixed phrases got you this far. **Hablar** ("to speak") is the
 first verb you will take apart and put back together. Today: the word
-itself. Next lesson: the pattern it unlocks.
+itself. Next lesson: one ending, and it becomes about you.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ES-SOUND-F-TO-H]; assesses=[] -->
@@ -78,4 +78,4 @@ let you test how broadly that *f- → h-* pattern reaches.
 [PAUSE 3s] What Latin word is *hablar* from, and what English word shares
 it? (*Fābulārī* ← *fābula* — **fable**.) What happened to its initial Latin
 *f-*? (It weakened away, leaving the written but **silent** Spanish *h-*.)
-Next: the ending pattern that turns this one verb into a machine.
+Next: swap the *-ar* for one letter, and *hablar* becomes *I speak*.

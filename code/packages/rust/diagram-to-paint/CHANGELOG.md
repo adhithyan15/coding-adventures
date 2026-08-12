@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+- Omit empty graph-state shapes and labels when the semantic directive requests it.
+- Shape multiline graph-node descriptions without backend soft rewrapping.
+- Lower concurrent state-region dividers to backend-neutral Paint paths.
+- Lower resolved composite graph-group colors and stroke geometry to Paint.
+- Lower composite graph groups to backend-neutral background rectangles and shaped labels.
+- Export graph node URLs, tooltips, and hit-test bounds through PaintScene metadata.
+- Export graph-family accessibility metadata through PaintScene metadata.
+- Lower graph note nodes and dashed note associations to backend-neutral paths.
+- Lower compact graph-IR bar nodes to backend-neutral rectangles for state fork/join rendering.
+- Render destroyed participants through their message-positioned footer geometry instead of adding an unconditional destruction cross.
+- Resolve self-message source and destination tips independently for reverse/bidirectional arrowheads and central endpoint markers.
+- Paint sequence activation bars behind message paths so arrowheads remain visible at activation edges.
+- Validate message-bound sequence create/destroy events through Metal PNG rendering.
+- Render depth-offset nested sequence activation bars through backend-neutral rectangles.
+- Validate resumed, two-decimal sequence autonumber counters through Metal PNG rendering.
+- Validate mixed-case sequence syntax through Metal PNG rendering.
+- Validate escaped participant configuration aliases through Metal PNG rendering.
+- Validate comma-bearing participant configuration aliases through Metal PNG rendering.
+- Render mirrored sequence footer participants with backend-neutral instructions.
+- Validate sequence hash comments and adjacent entities through native Metal PNG rendering.
+- Render grammar-backed sequence `actor` declarations as backend-neutral UML stick figures.
+- Validate ordered sequence autonumber toggles and resets through PaintScene and Metal PNG.
+- Shape resolved multiline sequence participant-box labels without backend soft rewrapping.
+- Shape resolved multiline sequence participant aliases without backend soft rewrapping.
 - Shape resolved multiline sequence control labels without backend soft rewrapping.
 - Validate hyphenated sequence actor IDs through the native Metal PNG pipeline.
 - Validate multiword sequence actor IDs through the native Metal PNG pipeline.

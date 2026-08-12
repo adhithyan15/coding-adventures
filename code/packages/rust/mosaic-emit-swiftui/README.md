@@ -113,6 +113,7 @@ does not install automatic press tracking.
 | `Text`           | `Text("literal")` or `Text(slotName)`         |
 | `Spacer`         | `Spacer()`                                    |
 | `Image`          | `Image(systemName: "...")` placeholder        |
+| `Icon`           | SF Symbols, or `ProgressView` for `spinner`    |
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
 | `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
@@ -120,8 +121,40 @@ does not install automatic press tracking.
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
-| `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
+| `HostDraggable`  | Native SwiftUI drag transfer plus accessible keyboard grab/drop *(UI35)* |
+| `HostDropTarget` | Native SwiftUI drop delegate with accepts filtering and proposal dispatch *(UI35)* |
+| `HostTable`      | Canonical dynamic Grid shapes use native `SwiftUI.Table` / `TableColumnForEach`; older systems use `List`, and unsupported shapes retain the structural fallback *(UI31)* |
 | `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
+
+### Native drag and drop
+
+`HostDraggable` uses SwiftUI's native drag session and exposes the authored
+content as a plain-style accessible button for keyboard operation. Space or
+Enter grabs and drops, macOS arrow keys move through compatible targets in
+reading order, and Escape cancels. Named previous-target, next-target, and
+cancel accessibility actions provide the equivalent assistive path on touch
+platforms. `HostDropTarget` uses a native `DropDelegate`,
+enforces `accepts` and disabled state, and reports pointer position as
+`before`, `into`, or `after`. A private scope is created per mounted component,
+so payloads cannot cross component instances. Pointer/touch and keyboard drops
+share one accepted-drop function and therefore emit the same proposal payload.
+Announcements use the platform accessibility notification API.
+
+### Native data tables
+
+The canonical UI31 Grid shape (`HostTableHead > Row > For` plus
+`HostTableBody > For > Row > For`) lowers to SwiftUI's native `Table`. Dynamic
+headers become `TableColumnForEach` definitions, each runtime row receives a
+stable integer identity, authored column widths are bounds-checked before
+reaching `TableColumn.width`, and the existing interactive Cell subtree remains
+the column content. This gives VoiceOver the platform table/header/cell model
+and preserves native keyboard traversal and column resizing.
+
+`TableColumnForEach` begins at macOS 14.4 and iOS 17.4. The generated package
+still targets macOS 13 and iOS 16, so older systems render the same rows through
+a native `List`/`Section` compatibility path. Structurally ambiguous tables
+retain the prior VStack/HStack visual fallback and remain a strict-profile
+degradation rather than being certified as accessible.
 
 ### `HostInput` binding choice
 
@@ -196,7 +229,7 @@ business logic.
 - `HostTable` lowers to a structural `VStack` of `HStack` rows (see
   primitive table above); the data-driven `SwiftUI.Table` form waits on
   a follow-up that wires `For`-inside-table.
-- `Icon`, `Grid` (v2), legacy `Scroll` / `Input` (pre-UI29 names) — return
+- `Grid` (v2) and legacy `Scroll` (pre-UI29 name) — return
   `UnknownPrimitive` errors today; each lands in its own follow-up.
 - `connects` wiring (gesture / event modifiers beyond what `HostButton` /
   `HostInput` already wire).

@@ -64,7 +64,15 @@ fn method(recv: Expr, name: &str, extra: Vec<Expr>) -> Expr {
 
 fn print_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
-        expr: builtin("print", vec![expr]),
+        expr: builtin(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
+        ),
         span: s(),
     }
 }
@@ -104,6 +112,7 @@ fn module_from(stmts: Vec<Stmt>) -> Module {
         Feature::Closures,
         Feature::MutableBindings,
         Feature::DynamicTyping,
+        Feature::ConsoleIO,
     ];
     Module {
         name: "typed_err_demo".into(),

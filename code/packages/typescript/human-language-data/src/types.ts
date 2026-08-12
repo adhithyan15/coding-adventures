@@ -94,9 +94,43 @@ export interface LanguageRegistry {
   languages: LanguageDefinition[];
 }
 
+/**
+ * HL10 section 2: the eight parallel ladders the curriculum runs.
+ *
+ * Before this existed there was one organising line -- FUNCTION, "I can greet
+ * someone" -- and grammar, culture and etymology rode inside whichever lesson
+ * happened to need them. That is workable at 188 lessons and unfalsifiable at
+ * 5,000: you cannot ask whether the grammar ramp is gentle when grammar is not
+ * a thing the data model knows about.
+ *
+ * Universality differs by strand, and section 4 of HL10 turns that into a
+ * contract other tracks depend on:
+ *   FUNCTION, TEXT              fully universal, node for node
+ *   GRAMMAR, SOUND, ETYMOLOGY   universal SLOTS, filled per language
+ *   CULTURE, IDIOM              universal HOOKS, content entirely local
+ */
+export const CURRICULUM_STRANDS = [
+  "FUNCTION",
+  "GRAMMAR",
+  "LEXICON",
+  "SOUND",
+  "ETYMOLOGY",
+  "CULTURE",
+  "IDIOM",
+  "TEXT",
+] as const;
+
+export type CurriculumStrand = (typeof CURRICULUM_STRANDS)[number];
+
 export interface SpineNode {
   id: string;
   stage: CurriculumStage;
+  /**
+   * Which of the eight ladders this node advances. Exactly one -- a node that
+   * genuinely serves two is two nodes, because a rung you can reach by two
+   * different routes cannot be ordered against the rest of either ladder.
+   */
+  strand: CurriculumStrand;
   canDo: string;
   prerequisites: string[];
   core: boolean;
@@ -107,6 +141,9 @@ export interface SpineNode {
 export interface CurriculumSpine {
   version: number;
   stages: CurriculumStage[];
+  /** The declared strand vocabulary. Authoritative over CURRICULUM_STRANDS at load time. */
+  strands?: CurriculumStrand[];
+  strandNote?: string;
   nodes: SpineNode[];
 }
 
@@ -244,6 +281,115 @@ export interface TrackChapters {
  * precisely so they can be tightened as the corpus matures without hunting through
  * code — the same reasoning that put the five-minute budget in the lesson schema.
  */
+/**
+ * HL10 section 5.1 -- one individually teachable slot of a verb paradigm.
+ *
+ * Language-neutral by contract. No id or gloss in the universal inventory may
+ * name a form from any particular language, because the other 21 tracks fill
+ * these same slots; a track lacking one declares an omission rather than
+ * leaving a hole.
+ */
+export interface GrammarSlot {
+  id: string;
+  kind: "finite" | "imperative" | "compound" | "non-finite";
+  gloss: string;
+  mood?: string;
+  tense?: string;
+  person?: string;
+  conjugation?: string;
+  polarity?: string;
+  form?: string;
+}
+
+export interface GrammarSlotInventory {
+  version: number;
+  note?: string;
+  counts?: Record<string, number>;
+  dimensions?: Record<string, string[]>;
+  slots: GrammarSlot[];
+}
+
+/** One language's filling of a universal slot, plus where it sits in the ramp. */
+export interface GrammarCell {
+  id: string;
+  slot: string;
+  /**
+   * Cells that must be taught first. This is what makes the inventory a ramp
+   * rather than a list: singular before plural one person at a time, and the
+   * present subjunctive behind the present indicative 1SG its stem comes from.
+   */
+  prerequisites: string[];
+  conjugationEnding?: string;
+  spanishName?: string;
+  /** False where the language keeps a form only for recognition. */
+  productive?: boolean;
+  receptiveOnlyBecause?: string;
+}
+
+/**
+ * One verb's one cell that deviates from the regular pattern.
+ *
+ * Kept separate from the regular cells because a learner never meets "the
+ * irregular verbs" as a category. They meet the regular row, then the one verb
+ * that breaks it, one cell at a time -- so every overlay hangs off the regular
+ * cell it deviates from and the DAG gains depth rather than breadth.
+ */
+export interface GrammarCellOverlay {
+  id: string;
+  verb: string;
+  kind: string;
+  conjugation: string;
+  /** The regular cell this one breaks. Always a real id in `cells`. */
+  deviatesFrom: string;
+  prerequisites: string[];
+  note: string;
+}
+
+export interface TrackGrammarCells {
+  version: number;
+  language: string;
+  note?: string;
+  conjugationClasses?: Record<string, string>;
+  counts?: Record<string, unknown>;
+  cells: GrammarCell[];
+  overlays?: GrammarCellOverlay[];
+}
+
+/** HL10 section 7.5 -- one word for talking about language, and when it is earned. */
+export interface MetalanguageTerm {
+  id: string;
+  term: string;
+  stage: string;
+  order: number;
+  /** What the learner must already be able to DO before the term is named. */
+  introduceAfter: string;
+  /**
+   * False for a word an adult reader already owns -- word, sound, past, plural.
+   * True is the actionable set, and deliberately includes noun/verb/adjective:
+   * for a reader who never studied grammar, "a doing word" lands and "verb"
+   * does not.
+   */
+  technical?: boolean;
+  /**
+   * What a lesson must say instead, until the term is introduced.
+   *
+   * The field that makes the rule actionable rather than merely restrictive: a
+   * gate can tell an author what to write, not only what not to.
+   */
+  plainAlternative: string;
+}
+
+export interface MetalanguageInventory {
+  version: number;
+  note?: string;
+  measuredAt?: string;
+  corpusFinding?: string;
+  universality?: string;
+  stages?: string[];
+  counts?: Record<string, number>;
+  terms: MetalanguageTerm[];
+}
+
 export interface ChapterPolicy {
   version: number;
   /** Minimum share of a chapter's introduced atoms its payoff must assess (0..1). */
@@ -261,6 +407,25 @@ export interface ChapterPolicy {
    * lineariser's own measured default.
    */
   maxLinearisableTableColumns?: number;
+  /**
+   * HL10 section 2.2: the per-strand ceilings.
+   *
+   * All optional, so a policy file written before HL10 still loads and the gates
+   * that read them simply do not run. Each measures a burden the atom budget
+   * cannot see.
+   */
+  /** Most paradigm CELLS one lesson may introduce. A cell is `hablo`, not the six-form table. */
+  maxNewGrammarCellsPerLesson?: number;
+  maxNewIdiomsPerLesson?: number;
+  /** Polysemy is not vocabulary: each sense of `quedar` is its own atom and its own lesson. */
+  maxNewSensesPerLesson?: number;
+  maxNewCultureClaimsPerLesson?: number;
+  /** The info-dump gate. One rule statement per lesson. */
+  maxRuleStatementsPerLesson?: number;
+  /** No dead ends: an introduced atom some later lesson never requires or practises. */
+  minDownstreamReach?: number;
+  /** An etymon must be cashed in by at least this many later lessons to earn its place. */
+  rootLedgerMinReuse?: number;
   /**
    * HL08: most NEW target-script glyphs one lesson may put in front of the reader.
    *

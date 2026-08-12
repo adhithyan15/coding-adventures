@@ -1309,6 +1309,80 @@ frontend, and #10312 adds lossless retained observed-set persistence to the
 Vault domain owner. These identity-neutral changes do not alter the selected
 Lua tranche.
 
+PR #10317 was merged externally as `75861d6a838a` on August 10. The required
+post-merge refresh at `5415ba120d1a` is collision-clean and contains 1,298
+established identities and 4,454 package slots across the same 15 lanes, with
+173 high-consensus packages and 269 missing slots, 848 singletons and 11,872
+missing singleton slots, 652 Rust singletons, zero canonical collisions, and
+zero unknown buckets. Its exact package-identity delta is twelve one-slot Rust
+singletons, all assigned before the next selection:
+
+- `mosaic-app-conformance` is an applicable-platform native ABI fixture owned
+  by a blocked review over the portable runtime and existing C ABI/generated
+  wrapper owners, not a fifteen-language product algorithm.
+- Axis, ONVIF, Reolink, Synology, and ZoneMinder pairing services are concrete
+  filesystem, entropy, sealed-Vault, actor, vendor-network, and runtime hosts.
+  Five blocked native-authority reviews depend on the portable recoverable
+  pairing transaction and the matching snapshot-host review.
+- `vault-pm-application`, `vault-pm-application-storage-core`, and
+  `vault-pm-config` are empty-capability portable contracts with new fixture and
+  established-lane owners. The application chain remains dependency-blocked;
+  configuration is an unblocked future leaf.
+- `vault-pm-cli-host` and `vault-pm-local-host` have blocked terminal, entropy,
+  filesystem, locking, environment, and FFI reviews. The normalized
+  package/program `vault-pm-cli` identity is split between a portable command
+  contract and a blocked native composition review.
+
+The leverage pass therefore selects the already audited
+`build-file-lua-json-value-transitive-closure`: both of its prerequisites are
+merged, it closes a real one-package Unix/Windows front door, and it is the
+smallest coherent successor to the completed Lattice/parser wave. Vault config
+is queued behind its language-neutral fixture specification; the new native and
+wrapper owners remain excluded from autonomous selection.
+
+The JSON closure must prove more than source-tree tests. Its canonical recipes
+install every unpublished sibling rock in leaf-to-root order with dependency
+fetching disabled, then exercise `json_value.from_string` from the installed
+LuaRocks tree in a neutral directory. Because the current JSON lexer and parser
+walk out of their deployed rocks to read repository grammar files, this tranche
+must also bundle byte-locked Lua projections of the canonical `json.tokens` and
+`json.grammar` fixtures, remove their ambient filesystem claims, and keep drift
+tests as the specification guard. The files under `code/grammars/json/` remain
+the language-neutral source of truth; deployable payloads are generated
+projections, not competing grammars.
+
+The final pre-publication base advanced identity-neutrally through #10512,
+#10513, #10514, #10515, #10516, and #10517 to `fc8be1789c6b`. Those merges
+extend already owned human-language, ADJ, HTML frontend, Mermaid sequence, and
+Language Ladder surfaces, add no package directory, and do not overlap this Lua
+tranche or change its leverage ranking. The collision-checked counts and twelve
+new-owner classification therefore remain exact at the newer revision.
+
+PR #10521 merged externally as `3add9a1b954d` on August 10 after all required
+checks reached terminal green. The mandatory post-merge refresh at
+`dda47210d304` is identity-neutral and keeps the schema-3 inventory exact at
+1,298 established identities, 4,454 package slots, 848 singletons, 11,872
+singleton gaps, 652 Rust singletons, zero canonical collisions, and zero
+unknown buckets. The dependency audit adds two previously implicit foundations:
+language-neutral canonical-CBOR conformance followed by fourteen-lane parity,
+which now block both Vault format and Vault records, and a cross-lane
+data-store clock-truthfulness owner because nine additional engines and several
+facades repeat the Lua ambient-clock mismatch.
+
+The leverage and security pass selects
+`build-tool-python-ecosystem-scoped-alias-resolution` as the sole in-progress
+item. Python currently merges every ecosystem's aliases into one table, so a
+same-spelled package in another lane can redirect a dependency edge and cause
+the wrong local shell `BUILD` to enter a plan; the audited repository already
+misbinds 251 of 258 canonical Lua rock aliases. This pure repair defines a
+language-neutral adversarial collision fixture, scopes ordinary aliases by
+ecosystem, preserves only exact qualified cross-language `BUILD` edges and
+within-ecosystem library-over-program precedence, and compares real-lane graphs
+with the Go oracle. Haskell discovery and Haskell/Java/Kotlin filter exposure
+remain dependent on this repair so default all-language resolution cannot widen
+over the known trust-boundary defect. Canonical CBOR remains the highest-leverage
+portable-package foundation queued after this build-tool prerequisite.
+
 This loop delivers only deterministic, authority-free package contracts and
 implementations. DNS/UDP/TCP/TLS, endpoint review, credentials and Vault,
 capability approval, runtime mutation, native executors, and host hardening are
@@ -1316,7 +1390,7 @@ reviewed native-host exceptions and are not selectable parity work. ONVIF is
 excluded from this parity tranche. Mixed smart-home packages enter the backlog
 only through their portable cores and shared language-neutral fixtures.
 
-The August 9 lane audit at `61cdb3ef14` is:
+The August 10 lane audit at `fc8be1789c6b` is:
 
 | Established lane | Packages present | High-consensus gaps | Rust/Python-core coverage |
 |---|---:|---:|---:|
@@ -1332,7 +1406,7 @@ The August 9 lane audit at `61cdb3ef14` is:
 | Perl | 251 | 0 | 63.3% |
 | Python | 496 | 1 | 100% |
 | Ruby | 294 | 0 | 70.3% |
-| Rust | 1050 | 0 | 100% |
+| Rust | 1062 | 0 | 100% |
 | Swift | 160 | 51 | 37.8% |
 | TypeScript | 440 | 0 | 82.2% |
 
@@ -2855,6 +2929,173 @@ Bootstrap order:
 After promotion, start the OCaml portable-core queue with `http-core -> http1`,
 then recompute dependency-shaped high-consensus work alongside the existing
 Dart, Java/Kotlin, Swift, and Haskell lanes.
+
+## Post-#10564 Refresh and Canonical-CBOR Selection
+
+External review merged PR #10564 at `ded37da774f13dda0755bde4da2751184732a361`
+after every required check passed. The collision-checked `2a6dab3ae0` refresh is
+identity-neutral: 15 established lanes still contain 1,298 normalized
+identities and 4,454 slots, with 173 high-consensus identities and 269 missing
+slots, 848 singletons and 11,872 singleton gaps, 652 Rust singletons, zero
+canonical collisions, and zero unknown buckets.
+
+The intervening range nevertheless exposed behavior ownership that the
+directory inventory cannot express:
+
+- `semantic-ir-sys-write-portable-conformance` owns SIR28 stream selection,
+  terminators, recursive unpacking, frontend lowering, and backend/runtime
+  behavior. SIR28 §7 (removal of the legacy bare `print`/`puts` paths) is
+  now complete across all 7 backends, including the JavaScript backend's
+  load-bearing SIR23 evaluator special-case and the 6 external CAS-frontend
+  crates whose test harnesses depended on it.
+- `gc-core-portable-conformance` owns moving-minor pacing, remembered sets,
+  barriers, tagged layouts, relocation, and fixups. Separate dependent owners
+  cover VM integration, the native C ABI, and the target-specific LLVM runtime
+  bridge; the native reviews are not autonomous parity targets, and the core is
+  temporarily blocked while PR #10593 overlaps it.
+- Python Haskell/Java/Kotlin filter exposure now waits for a dedicated
+  field-aware Cabal/Gradle resolution tranche. Accepting a filter while comments
+  and descriptive fields can create dependency edges would make the apparent
+  language support unsafe.
+- Data-store clock remediation now follows one shared injected-clock fixture;
+  the earlier Lua-first dependency direction could not establish cross-lane
+  TTL, expiry, reset, and provider-consistency semantics.
+
+The loop selected `canonical-cbor-language-neutral-conformance` next. It is
+dependency-free, pure, has no live PR overlap, and unlocks established-lane
+canonical-CBOR parity, both Vault format roots, and the wider Vault application
+and CLI chain. The tranche is not documentation-only: the C, C++, and Rust
+reference encoders currently sort but retain duplicate encoded map keys and do
+not bound encoder depth or output size. CBR01, the shared fixture, and all three
+reference consumers must therefore define and enforce one fallible,
+payload-blind contract before those implementations can serve as parity
+oracles. The fourteen missing established implementations remain a separate
+dependent item.
+
+A late pre-publication refresh rebased this tranche onto `6c3b19b27b35`. The
+intervening GC, HTML, Mermaid, Mosaic, SIR28, ADJ, Spanish, and handwriting
+changes modify only existing package identities. Merged PR #10599 adds the
+empty-capability Rust `vault-pm-audit` singleton, so the collision-checked
+inventory is now 1,299 identities and 4,455 slots, with 849 singletons, 11,886
+singleton gaps, 653 Rust singletons, and zero collisions or unknown buckets.
+The new `vault-pm-audit-portable-conformance` owner waits on canonical-CBOR and
+Vault domain/format parity; it also becomes a dependency of the application
+owner. Open PR #10608 overlaps only that downstream application integration,
+while open #10605 and #10607 overlap the already blocked HTML and GC owners.
+None overlaps canonical CBOR.
+
+## Post-#10612 Refresh and Python Resolver Selection
+
+External review merged ready-for-review PR #10612 at
+`431a8fcc829724507cc50f707ec9b7c0f8c39824` after all required checks passed.
+The late collision-checked `44dc4b563ef` refresh covers 15 established lanes,
+1,300 normalized implementation identities, and 4,456 established slots. It
+reports 173 high-consensus identities with 269 missing slots, 850 singletons
+with 11,900 missing singleton slots, 654 Rust singletons, zero canonical
+collisions, and zero unknown buckets.
+
+The range from the original `96f58be046bb` selection base through this late
+refresh contains only identity-neutral HTML, Mermaid, Mosaic, ALGOL, ADJ, and
+human-language changes. None overlaps the resolver or shared fixture paths.
+
+The sole topology addition since the prior inventory is the Rust
+`smart-home-frigate-snapshot-host` from merged PR #10602. It directly composes
+Human Approval, Vault and sealed-secret reads, wall time, OS entropy,
+reviewed-address-pinned TCP/TLS, credential and cookie custody, snapshot I/O,
+logout, and cleanup without `required_capabilities.json`. A blocked native
+authority owner now tracks that review; the package is not an all-language
+port. Deterministic installed-identity, approval ordering, request and envelope
+construction, response bounds, cleanup, and stable errors remain assigned to
+the camera-media portable core.
+
+The canonical-CBOR umbrella became dependency-ready, but a fourteen-language
+change is not one reviewable implementation unit. The state graph now treats
+that item as a blocked completion umbrella over selectable per-lane children,
+pairing only the shared .NET and JVM toolchains. This preserves the Vault
+dependency chain without forcing one oversized parity PR.
+
+The loop selected `build-tool-python-haskell-gradle-field-aware-resolution`.
+It is a bounded, standard-library-only repair of an affected-plan trust
+boundary: Python previously scanned whole Cabal files, registered only legacy
+prefixed Haskell names, and line-matched Gradle settings. The tranche consumes
+the shared Haskell, Java, and Kotlin fixtures, accepts only one root Cabal
+manifest and its `build-depends` fields, registers directory and declared Cabal
+aliases, and lexically matches real multiline `includeBuild` calls against
+same-lane discovered roots without opening referenced targets. The downstream
+Python language-filter owner remains pending until exact Python-versus-Go graph
+equality is proven.
+
+## Post-#10751 Refresh and Haskell/JVM Filter Selection
+
+External review merged ready-for-review PR #10751 as
+`c4e8e8399f1a102651cec4002cde84ca1c1aa133` after all 20 checks reached a
+terminal success, neutral, or expected skipped state with no failures. The
+collision-checked `38ecfd9ff014` late refresh covers 15 established lanes, 1,301
+normalized implementation identities, and 4,457 established slots. It reports
+173 high-consensus identities with 269 missing slots, 851 singletons with
+11,914 missing singleton slots, 655 Rust singletons, zero canonical collisions,
+and zero unknown buckets. The tranche was selected at `a4ad42e1f71a`; the
+intervening curriculum, HTML, Mermaid, Mosaic, ALGOL, Vault, and Semantic-IR
+changes modify only existing identities and do not overlap this tranche.
+
+The sole topology addition is Rust `smart-home-controller-runtime` from merged
+PR #10791. It is an authority-free orchestration package over an injected
+storage backend and caller-supplied timestamps, so a new portable-conformance
+owner tracks its clone-mutate-persist-publish transaction, atomic combined
+snapshot, CAS, rollback, serialization, and stable-error behavior. Concrete
+storage, HTTP, scheduling, and worker authority remains with native hosts.
+
+The audit also found that Python still omits the established C#, F#, and Dart
+lanes from discovery, dependency resolution, and filtering. Separate pending
+.NET and Dart field-aware owners now track the shared project-file and pubspec
+fixture work; those manifest families do not widen this Haskell/JVM tranche.
+
+The loop selected `build-tool-python-haskell-language-filter`. The merged
+field-aware resolver work now makes 206 Haskell, 129 Java, and 133 Kotlin build
+roots safe to select explicitly. This tranche consumes the shared discovery
+registry, recognizes only exact `packages|programs/<language>` buckets,
+preserves `<language>/programs/<name>` identities, and derives CLI choices from
+the canonical registry. Canonical-CBOR lane children remain ready, but each
+advances only one dependency of the twelve-child completion umbrella.
+
+## Post-#10828 Refresh and .NET Resolver Selection
+
+External review merged ready-for-review PR #10828 as
+`399a87fff348db21258b14a6410fef6612d4ed41` after all 20 required, neutral, and
+expected skipped checks reached a terminal success state. The collision-checked
+refresh covers 15 established lanes, 1,302 normalized implementation identities,
+and 4,458 established slots. It reports 173 high-consensus identities with 269
+missing slots, 852 singletons with 11,928 missing singleton slots, 656 Rust
+singletons, zero canonical collisions, and zero unknown buckets.
+
+The sole topology addition since the prior inventory is Rust `task-mosaic-app`
+from merged PR #10859. This TaskApp-specific cdylib/rlib maps the authored MIL
+slot and event vocabulary to the separately owned pure `task-core` engine,
+uses `mosaic-app-runtime` for deterministic transactions and snapshots, and
+exports the reviewed fixed `mosaic-app-capi` ABI to generated native hosts. A
+blocked native-wrapper applicability owner now tracks complete mapping,
+rollback, stable errors, ABI symbol/lifetime/panic behavior, platform evidence,
+and missing empty capability metadata. Reusable runtime and domain semantics
+remain with their existing portable owners; fifteen application-specific ABI
+copies would not be honest parity.
+
+The dependency/leverage pass selected
+`build-tool-python-dotnet-field-aware-resolution-and-filter`. Its Haskell/JVM
+filter prerequisite is now merged, and the existing language-neutral .NET
+fixtures define one closed `ProjectReference` grammar for both established
+lanes. A single bounded standard-library tranche therefore makes 198 C# roots
+with 238 edges and 197 F# roots with 239 edges safe to discover, resolve, and
+filter while preserving package/program identities and the shared `dotnet`
+toolchain mapping. The 83-root Dart manifest family and Windows atomic plan
+replacement remain separate owners. Canonical-CBOR lane children remain ready,
+but none independently unlocks their twelve-child completion umbrella.
+
+A late pre-publication rebase moved the tranche to `7bb2b558c85`. The
+intervening Mermaid, language-ladder, ALGOL, ADJ, and final ADJ state-only
+changes, plus Vault named-target integration, modify only existing identities
+and do not overlap this work. The collision-checked counts remain exactly 1,302
+identities, 4,458 slots, 852 singletons, 11,928 singleton gaps, 656 Rust
+singletons, zero collisions, and zero unknown buckets.
 
 ## Autonomous Loop Protocol
 

@@ -1,0 +1,8 @@
+// Standard single-line text input with native editing semantics.
+component Input {
+  slot value : text = "" ;
+  slot placeholder : text = "" ;
+  slot disabled : bool = false ;
+  emit onChange ( value : text ) ;
+  emit onCommit ;
+}

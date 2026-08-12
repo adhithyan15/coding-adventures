@@ -1,5 +1,231 @@
 # Changelog
 
+## [Unreleased] - default authored-child package expansion
+
+- Package references splice their default inline MLL child block into a typed
+  `node`/`list<node>` mount before backend emission.
+- One acceptance fixture proves the expanded tree remains `native-complete` on
+  SwiftUI, Qt/QML, XAML, Flutter, and Compose.
+- A surviving child mount receives the stable
+  `composition.child-slot-parameter-unimplemented` degradation, keeping direct
+  standalone component artifacts honest until backend child parameters land.
+
+## [Unreleased] - portable Text accessibility capability
+
+- Native-complete analysis accepts the cross-backend `Text` contract for
+  literal or slot-backed accessible names, heading/none roles, and static
+  hidden state.
+- Unsupported label forms, text roles, and dynamic hidden state now produce
+  stable property-level degradation codes instead of being silently ignored.
+
+## [Unreleased] - application token palettes
+
+- Added token-aware composition and package-build entry points.
+- One override map now applies to root and recursively referenced package
+  styles, enabling reusable components to inherit app branding.
+- Package manifests may declare scoped token defaults. Dependency palettes are
+  lower precedence than consuming-package palettes, while explicit application
+  input wins last; project-shell and degradation-analysis paths use the same
+  resolved palette.
+- Existing build and composition APIs retain the built-in Mosaic palette.
+
+## [Unreleased] - XAML native drag capability
+
+- Native-complete analysis recognizes XAML `HostDraggable` and
+  `HostDropTarget` now that the emitter supplies native pointer, touch,
+  keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- The package-expanded TaskApp now reports zero XAML degradations and can be
+  emitted under the strict `native-complete` profile.
+
+## [Unreleased] - XAML native table capability
+
+- Native-complete analysis recognizes the canonical indexed UI31/Grid shape
+  when the XAML emitter supplies native UIA Table/Grid and
+  TableItem/GridItem provider patterns.
+- Unsupported or structurally ambiguous XAML HostTable trees retain the stable
+  `accessibility.table-semantics-missing` degradation.
+- Concrete TaskApp XAML output retained four drag/drop paths at this historical
+  milestone; the native drag capability above subsequently closes them.
+
+## [Unreleased] - selected runtimes are required
+
+- Passing `--runtime-library` now emits a runtime-required native shell even
+  under the permissive degradation-reporting profile. This removes the sample
+  fallback without suppressing unrelated capability reports, allowing XAML
+  TaskApp to bundle its concrete engine while its drag/drop gaps remain explicit.
+
+## [Unreleased] - SwiftUI native table capability
+
+- Native-complete analysis recognizes the canonical dynamic UI31/Grid shape
+  when the SwiftUI emitter supplies native `Table` / `TableColumnForEach`
+  semantics and the version-gated `List` fallback.
+- Unsupported or structurally ambiguous SwiftUI HostTable trees retain the
+  stable `accessibility.table-semantics-missing` degradation.
+- Permissive TaskApp SwiftUI output now reports only the sample-runtime
+  fallback before compiling on both macOS and the iOS 16 deployment target.
+
+## [Unreleased] - SwiftUI native drag capability
+
+- Native-complete analysis no longer reports SwiftUI `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
+  touch, keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- TaskApp's SwiftUI degradation report now retains only the separate native
+  table-semantics gap plus permissive-shell fallback when applicable.
+
+## [Unreleased] - Qt native table capability
+
+- Native-complete analysis recognizes the canonical UI31/Grid structure when
+  the Qt emitter supplies `TableView`, `HorizontalHeaderView`, and a generated
+  `QAbstractTableModel` adapter.
+- Unsupported or structurally ambiguous Qt HostTable trees retain the stable
+  `accessibility.table-semantics-missing` degradation.
+- Permissive TaskApp Qt acceptance now reports only the sample-runtime fallback
+  before compiling and launching the generated native application.
+
+## [Unreleased] - Qt native drag capability
+
+- Native-complete analysis no longer reports Qt `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
+  touch, keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- Complete TaskApp Qt acceptance now requires exactly the remaining table
+  semantics degradation plus the permissive sample-runtime fallback, then
+  compiles and launches the generated native application headlessly.
+
+## [Unreleased] - analyzer-clean Flutter project bootstrap
+
+- Flutter project shells install Mosaic-owned `analysis_options.yaml` and
+  `test/widget_test.dart` files alongside the matching lint dependency.
+- The generated smoke test imports the actual pub package name and replaces
+  Flutter's stock `MyApp` counter test before `flutter create` adds runners.
+- Package artifacts now report both bootstrap files to callers.
+
+## [Unreleased] - Flutter Rust engine bundling
+
+- Flutter project shells accept a selected target Rust cdylib, copy it under
+  Mosaic's conventional name, and register it through a generated stable Dart
+  build hook as a bundled code asset.
+- Strict Flutter builds report `runtime.library-not-bundled` and stop before
+  application emission when no engine was selected.
+- Native acceptance builds the generated Flutter app, verifies the installed
+  engine, and runs the standard binding conformance without
+  `MOSAIC_APP_LIBRARY`.
+
+## [Unreleased] - SwiftUI Rust engine bundling
+
+- SwiftUI project shells accept a selected target Rust dylib and copy it into
+  the SwiftPM `Runtime` resource bundle under Mosaic's conventional name.
+- Strict SwiftUI builds report `runtime.library-not-bundled` and stop before
+  application emission when no engine was selected.
+- macOS acceptance verifies the bundled bytes and runs the standard binding
+  conformance through the app-local path without `MOSAIC_APP_LIBRARY`.
+
+## [Unreleased] - XAML Rust engine bundling
+
+- XAML project shells accept a selected target Rust DLL, install it as
+  `mosaic_app.dll`, and use the existing MSBuild native-library copy target to
+  place it beside the WinUI executable.
+- Strict XAML builds report `runtime.library-not-bundled` and stop before
+  application emission when no engine was selected.
+- Windows acceptance verifies the copied engine hash and runs the exact .NET
+  binding conformance from its output directory without `MOSAIC_APP_LIBRARY`.
+
+## [Unreleased] - Qt Rust engine bundling
+
+- Qt project shells accept the selected target Rust engine, copy it beside the
+  built executable, and include it in the CMake install tree under Mosaic's
+  conventional runtime filename.
+- Strict Qt installable builds report `runtime.library-not-bundled` and stop
+  before application emission when no engine was selected.
+- Linux acceptance verifies the installed library bytes, launches the generated
+  native QML app, and runs the exact Qt binding conformance from the install
+  directory without `MOSAIC_APP_LIBRARY`.
+
+## [Unreleased] - Compose Rust engine bundling
+
+- Add a target-library-aware profiled build API. Compose project shells copy a
+  selected `.dylib`, `.so`, or `.dll` into the platform-specific application
+  resources under Mosaic's conventional runtime filename.
+- Strict Compose distributable builds now report
+  `runtime.library-not-bundled` and stop before application emission when no
+  engine was selected.
+- Native packaging acceptance composes the shared Rust engine with a real
+  Mosaic package, verifies the installed library bytes, and exercises the
+  app-relative loader without `MOSAIC_APP_LIBRARY`.
+
+## [Unreleased] - Compose native drag capability
+
+- Native-complete analysis no longer reports Compose `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
+  keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- SwiftUI and XAML retain the stable `interaction.drag-drop-inert`
+  degradation until their native implementations land.
+
+## [Unreleased] - Compose native table capability
+
+- Native-complete analysis recognizes the canonical UI31/Grid shape as a
+  semantic Compose collection now that the emitter publishes table dimensions,
+  heading metadata, and per-cell row/column coordinates.
+- Unsupported or structurally ambiguous Compose HostTable trees retain the
+  stable `accessibility.table-semantics-missing` degradation.
+- The complete package-expanded TaskApp is now a zero-degradation strict
+  Compose build and is packaged as a native desktop application in CI.
+
+## [Unreleased] - Flutter native table capability
+
+- Native-complete analysis recognizes the canonical UI31/Grid shape as a
+  semantic Flutter table now that the emitter produces `DataTable`/
+  `DataColumn`/`DataRow`/`DataCell` widgets.
+- Unsupported or structurally ambiguous Flutter HostTable trees retain the
+  stable `accessibility.table-semantics-missing` degradation.
+- The complete package-expanded TaskApp is now a zero-degradation strict
+  Flutter build and is compiled as a native desktop application in CI.
+
+## [Unreleased] - Flutter native drag capability
+
+- Native-complete analysis no longer reports Flutter `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native
+  pointer/touch, keyboard, acceptance, lifecycle, and accessibility behavior.
+- SwiftUI and XAML retain the stable
+  `interaction.drag-drop-inert` degradation until their native implementations
+  land.
+
+## [Unreleased] - ignored native dialog and link contract inventory
+
+- Native-complete analysis now rejects XAML dialogs whose open state still
+  requires application code-behind, XAML's unsupported no-dismiss policy, and
+  ignored dialog lifecycle events in XAML and SwiftUI.
+- External `HostLink.onActivate` event loss in XAML and SwiftUI is now reported
+  at the exact package-expanded property path. Supported internal-link dispatch
+  and SwiftUI modal-close shapes remain clean.
+
+## [Unreleased] - complete Flutter package source set
+
+- Generated Flutter project shells now copy every exported widget into `lib/`
+  while continuing to mount the first export as the application entry widget.
+- Whole-package Dart analysis can no longer miss a broken sibling component
+  that was emitted only as a top-level distribution artifact.
+
+## [Unreleased] - complete Qt package QML module
+
+- Generated Qt project shells now list every exported QML component in
+  `qt_add_qml_module` while continuing to mount the first export.
+- Whole-package Qt compilation can no longer miss a broken sibling QML file.
+
+## [Unreleased] - complete SwiftUI package source set
+
+- Generated SwiftUI project shells now copy every exported view into the
+  SwiftPM application target while continuing to mount the first export.
+- Whole-package Swift compilation can no longer miss a broken sibling view
+  that was emitted only as a top-level distribution artifact.
+
+## [Unreleased] - complete Compose package source set
+
+- Generated Compose project shells now copy every exported component into the
+  Gradle Kotlin source set while continuing to mount the first export as the
+  application entry component.
+- Whole-package Kotlin compilation can no longer miss a broken sibling
+  component that was emitted only as a top-level distribution artifact.
+
 ## [Unreleased] - ignored native control property inventory
 
 - Native-complete analysis now reports stable, property-level degradations for

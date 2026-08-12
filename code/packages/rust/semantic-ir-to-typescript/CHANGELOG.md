@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.12.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` emit-name
+entries are dead code. Removed the `"print"`/`"puts"` arms from the emit
+helper-name match — unknown builtins already route through the generic
+`__Sir.callBuiltin(name, args)` fallback, so no other emit path changes.
+
+Requires `@coding-adventures/sir-runtime-core` >= 0.4.0 (which removes
+`print`/`puts`/`putsOne` entirely — see that package's own changelog).
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: hand-built unit/integration tests that used bare `print`
+purely to observe hand-constructed IR's output (unrelated to testing
+print semantics itself) now build the equivalent `__sys_write__`
+envelope (`terminator: "once"`, matching this backend's old bare
+`print`'s always-newline behavior via native `console.log`), plus
+`Feature::ConsoleIO`/`Feature::Strings` added to each affected manifest.
+The `tests/run_with_node.rs`/`tests/polymorphic_operators.rs` inline
+`__Sir` node-execution stubs were updated the same way, replacing their
+`print`/`puts` functions with `write`.
+
+## 0.11.3 — `__sys_write__`, the SIR28 console-output primitive
+
+Part of the SIR28 arc: one primitive (`__sys_write__`) that the
+long-standing `print`/`console.log`/etc. family generalizes into, so a
+future frontend migration can carry newline/stream semantics as explicit
+IR data instead of an implicit per-frontend assumption (see
+[SIR28](../../../specs/SIR28-syscall-primitives.md)). Purely additive —
+no frontend emits `__sys_write__` yet, `print`/`puts` are unchanged.
+
+Added `"__sys_write__" => "__Sir.write"` to the emitter's helper-name
+table, a plain pass-through matching `print`/`puts` (no compile-time
+literal extraction, unlike the C/Go/Rust backends — this backend's OOP
+envelope precedent already routes stream/terminator through the runtime
+at call time). Added `Feature::ConsoleIO` to `ACCEPTED_FEATURES`.
+
+`write`/`writeOne` land in `@coding-adventures/sir-runtime-core` 0.3.0
+(this backend's runtime package) — see that package's own CHANGELOG.
+
+New `tests/compile_and_run_sys_write.rs`: 7 tests hand-building a
+`Module` directly (no frontend emits this yet), compiling to TypeScript,
+transforming to runnable JS via the same import-swap/type-strip
+technique `run_with_node.rs` uses, and executing under `node` — covering
+all three terminator modes, `unpack_arrays` true/false on a nested
+array, the `stderr` stream, and the zero-values `per_value` edge case.
+
+`semantic-ir-to-typescript` 0.11.2 -> 0.11.3.
+
 ## 0.11.2 — `<<` (Ruby's shift operator) as a top-level builtin
 
 Part of "TypeScript backend: implement shift-operator runtime dispatch".

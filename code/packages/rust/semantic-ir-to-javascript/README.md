@@ -95,6 +95,7 @@ lowering is direct.
 | `NDArrays` (SIR22 base cut)     |                                          |
 | `MatrixOps` (SIR22 base cut)    |                                          |
 | `ArrayColumnMajor` (SIR22)      |                                          |
+| `ConsoleIO` (SIR28)             |                                          |
 
 `accepts_intrinsics()` is empty. The accept-set is deliberately matched
 to what `emit` handles, so a module using a deferred node is turned away
@@ -123,6 +124,17 @@ the O2 Ruby frontend's OOP builtins (`__new__`, `__super__`,
 `__def_method__`, `__def_class_method__`, `__self__`) lower to the inlined
 `__Sir` OOP runtime — instantiation, method dispatch, `super`, `self`, and
 `@ivar`/`@@cvar` access all execute end-to-end.
+
+**`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
+"none"|"per_value"|"once", unpackArrays, ...values)` → `__Sir.write(...)`
+— a plain pass-through (no compile-time literal extraction, unlike the
+C/Go/Rust backends): JS branches on the `stream`/`terminator` strings at
+runtime. `write` is now the ONLY console-output primitive the backend
+emits, promoted to a top-level `__Sir` member — bare `"print"`/`"puts"`
+`BuiltinCall`s and the `print`/`puts` functions that used to implement
+them were removed once every frontend finished migrating to
+`__sys_write__` (SIR28 §7) — see
+[SIR28](../../../specs/SIR28-syscall-primitives.md).
 
 ### User-defined-class OOP (O3)
 
@@ -205,7 +217,7 @@ try {
 } catch (__exc) {
   if (__Sir.rescueMatches(__exc, ["StandardError"])) {
     const e = __exc;
-    __Sir.print("caught");
+    __Sir.write("stdout", "once", false, "caught");
   } else {
     throw __exc;
   }
@@ -258,10 +270,10 @@ const __Sir = (() => {
   function intern(name) { /* one Sym per name */ }
   function applyClosure(c, args) { /* invoke a Closure */ }
   function truthy(v) { /* only false / null are falsy */ }
-  function format(v) { /* Lisp-ish display for print */ }
-  const builtins = { "+": …, "cons": …, "range": …, "print": … };
+  function format(v) { /* Lisp-ish display for console output */ }
+  const builtins = { "+": …, "cons": …, "range": … };
   return { Sym, Pair, Closure, intern, applyClosure, truthy,
-           format, print, builtins, builtinClosure, callBuiltin };
+           format, write, builtins, builtinClosure, callBuiltin };
 })();
 ```
 
@@ -294,7 +306,8 @@ a runtime call:
 - `= != < > <= >=` (2 args) → `(a === b)`, `(a !== b)`, …
 - `not` (1 arg) → `(!__Sir.truthy(a))`; `neg` → `(-(a))`
 - `len` (1 arg) → `(a).length` (arrays and strings)
-- `print` (1 arg) → `__Sir.print(a)` (consistent stringification)
+- `__sys_write__` → `__Sir.write(stream, terminator, unpackArrays, …values)`
+  (the console-output primitive every frontend lowers `print`/`puts`/etc. to)
 
 A **variadic** operator (`(+ 1 2 3)` — more than two args) and any
 unrecognised builtin fall back to `__Sir.callBuiltin("+", […])`, so a new

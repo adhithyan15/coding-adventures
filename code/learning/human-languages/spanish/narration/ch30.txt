@@ -1,90 +1,49 @@
-Spanish, chapter 30: The Weather.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 30: Es- --- the Vowel Spanish Put in Front.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-el tiempo — one word doing two jobs.
-
-Warm-up.
-[pause 2 seconds]
-Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking "what time does it make?" — because tiempo does not split "time" from "weather" the way English does.
-
-The word, taken apart: el tiempo.
-el tiempo = both "time" and "weather" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed.
-English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed.
-How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is "I have no time," ¿qué tiempo hace? is "what's the weather like?"
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el tiempo" — time, or weather, depending on context]
-[pause 8 seconds for the answer]
-[your turn — say: "¿qué tiempo hace?" — what's the weather like?]
-[pause 8 seconds for the answer]
-[your turn — say: "tiempo" then English "tempo, temporal" — the tempus family]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only "time.") Next: how to actually answer ¿qué tiempo hace?
-
-
-Lesson 2 of 3.
-hace calor, hace frío, hace sol — the weather Spanish makes.
+Lesson 1 of 1.
+es- + consonant — the little e- Spanish put in front of words that started with two consonants — and why English kept them bare.
 
 Warm-up.
 [pause 2 seconds]
-You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, "to make."
+Say "to be" — the one about how and where. (Estar.) Now say "to study." (Estudiar.)
+[pause 1 second]
+You have known both since your first chapters. Today they explain each other.
 
-The words, taken apart: calor, frío, sol.
-calor from Latin calor, "heat, warmth" becomes English calorie, caloric, cauldron.
-frío from Latin frigidus, "cold" (the middle syllable syncopated away) becomes English frigid, refrigerate.
-sol from Latin sol, "sun," unchanged becomes English solar, solstice, parasol.
-Here is the part worth noticing: all three are nouns, not adjectives. Calor is "heat," not "hot." That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one.
-hace calor — "it's hot," literally "it makes heat" hace frío — "it's cold," literally "it makes cold" hace sol — "it's sunny," literally "it makes sun".
-French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into "it is hot" with an adjective.
+Grammar Lens: a word cannot start like that.
+Latin words beginning s + a consonant grew an e- in front.
+Latin was happy to start a word with st-, sp- or sc-. Spanish was not — the mouth wants a vowel there — so it put one in.
+stāre becomes estar, studēre becomes estudiar.
+Nothing was added to the meaning. A vowel was added to the front, because the alternative was a beginning Spanish could not say.
+English borrowed the very same Latin words and never needed the vowel:
+[a table of 5 rows, read aloud]
+Spanish: estar. from: stāre. English kept it bare: state, stay, status.
+Spanish: estudiar. from: studēre. English kept it bare: study, student, studio.
+Spanish: escuela. from: schola. English kept it bare: school, scholar.
+Spanish: especial. from: speciālis. English kept it bare: special, species.
+Spanish: espíritu. from: spīritus. English kept it bare: spirit.
+So the rule runs in both directions, and the backwards one is the useful one: take the e- off the front, and an English word is often standing there.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hace calor. hace frío. hace sol."]
+Take the e- off and say what you see.
+[your turn — say: estación becomes stación becomes station]
 [pause 8 seconds for the answer]
-[your turn — say: the literal reading — "it makes heat, it makes cold, it makes sun"]
+[your turn — say: estudiante becomes studiante becomes student]
 [pause 8 seconds for the answer]
-[your turn — say: "calor" then English "calorie"; "frío" then "refrigerate"]
+[your turn — say: espacio becomes spacio becomes space]
 [pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "it's hot," "it's cold," "it's sunny." (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a "to be" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)
-
-
-Lesson 3 of 3.
-llueve — the one weather word that will not join hacer.
-
-Warm-up.
 [pause 2 seconds]
-Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own.
+Estación took two rules at once: the e- came off the front, and the -ción you learned seven chapters ago became -tion at the back. That is what these rules are for — they stack.
 
-Grammar Lens: rain brings its own verb.
-llueve = "it's raining." Not hace lluvia, not "it makes rain" — just llueve, a single word that is a complete sentence.
-It comes from llover, "to rain," and llover is impersonal: it has no subject at all, not even a "it" you could point to. Compare the two shapes side by side:
-[a table of 2 rows, read aloud]
-pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).
-pattern: dedicated verb. example: llueve. what carries the weather: the verb itself.
-English does exactly the same split, which makes it easy to feel: you say "it is hot" with an adjective, but "it rains" with a verb built for the job. Spanish just draws the line in the same place.
-
-The word, taken apart: llover.
-llover from Latin pluere, "to rain." Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, "key") and llama ( from flamma, "flame"). Latin's cl-, fl- and pl- clusters all became Spanish ll-.
-So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "¿qué tiempo hace?" then "hace calor. hace frío. hace sol."]
-[pause 8 seconds for the answer]
-[your turn — say: "llueve" — one word, a whole sentence, no hacer]
-[pause 8 seconds for the answer]
-[your turn — say: the family — "llamar, llave, llama, llover" — four Latin clusters, one Spanish ll-]
-[pause 8 seconds for the answer]
+Why it's said this way.
+A word you would expect to fit, and it does not.
+Español looks like a perfect example. It is not. Its Es- is not an added vowel — it is what is left of Latin Hispānia, whose H was already silent. España is Hispania with the h gone, not spaña with an e glued on.
+So check before you claim one. The rule is about words that began with two consonants in Latin. When the e was there all along, there is nothing to take off.
 
 Wrap-up Recall.
-[pause 3 seconds]
-Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)
+[pause 2 seconds]
+Say the rule in your own words.
+[pause 2 seconds]
+Then take the e- off estilo and say the English word you find. (Style.)

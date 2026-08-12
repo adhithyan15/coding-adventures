@@ -1,0 +1,4 @@
+// Portable visual grouping with one default authored-child region.
+component Surface {
+  slot children : list<node> ;
+}

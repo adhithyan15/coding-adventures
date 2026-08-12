@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C15-preterite-fuertes
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1100
-chapter: 15
+sequence: 1340
+chapter: 100
 type: grammar
 headword: estuve
 gloss: the strong singular preterite of estar — estuve, estuviste, estuvo

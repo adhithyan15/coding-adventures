@@ -147,3 +147,26 @@ def test_compute_languages_needed_includes_safe_jvm_ci_workflow_toolchains():
     assert needed["java"] is True
     assert needed["kotlin"] is True
     assert needed["dotnet"] is False
+
+
+def test_compute_languages_needed_collapses_csharp_and_fsharp_to_dotnet():
+    packages = [
+        Package(
+            name=f"{language}/demo",
+            path=Path(f"/repo/code/packages/{language}/demo"),
+            build_commands=[],
+            language=language,
+        )
+        for language in ("csharp", "fsharp")
+    ]
+
+    needed = _compute_languages_needed(
+        packages,
+        {"csharp/demo", "fsharp/demo"},
+        False,
+        frozenset(),
+    )
+
+    assert needed["dotnet"] is True
+    assert "csharp" not in needed
+    assert "fsharp" not in needed

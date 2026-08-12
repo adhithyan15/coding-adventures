@@ -1,0 +1,77 @@
+% ============================================================================
+% soil-texture-class — the three soil particle-size separates (sand, silt,
+% clay) and the diameter range that actually defines each
+% (adj-facts-stdlib, EARTH-SCIENCE).
+% ============================================================================
+% Soil is made of mineral particles of many different sizes, and soil
+% science sorts them into three named "separates" purely by how big each
+% particle is — not by what it's made of, how it feels, or what it's used
+% for. Recall is a binding query:
+%
+%     ? soil_texture_class(clay, $D)
+%       % less_than_two_thousandths_of_a_millimeter_in_diameter
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `soil_texture_class(class, description)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on a soil-related term that is not one of these three particle-
+% size classes. The query also runs BACKWARD — bind a description and
+% recall the class it names:
+%
+%     ? soil_texture_class($C, larger_than_five_hundredths_of_a_millimeter_in_diameter)
+%       % sand
+%
+% The three particle-size classes, smallest to largest, as a little truth
+% table:
+%
+%     class   description                                                      quote (verbatim)
+%     ------  -------------------------------------------------------------  ------------------------------------------------------------------------------------
+%     clay     less_than_two_thousandths_of_a_millimeter_in_diameter           "The smallest particles are clay particles and are classified as having diameters of less than 0.002 mm."
+%     silt     between_two_thousandths_and_five_hundredths_of_a_millimeter     "The next smallest particles are silt particles and have diameters between 0.002 mm and 0.05 mm (in USDA Soil Taxonomy)."
+%     sand     larger_than_five_hundredths_of_a_millimeter_in_diameter         "The largest particles are sand particles and are larger than 0.05 mm in diameter."
+%
+% Provenance: quoted verbatim from Wikipedia's "Soil texture" article, which
+% states each of the three particle-size classes in its own dedicated
+% sentence, smallest to largest. WebFetch-verified before writing. `trust
+% consensus` — the same tier this stdlib already reserves for other
+% Wikipedia citations (e.g. the element-to-periodic-table-group-family
+% table in `chemistry/`).
+%
+% The description atoms spell the decimal millimeter figures out in words
+% ("two_thousandths", "five_hundredths") rather than embedding a literal
+% decimal point — ADJ atoms cannot contain a `.` (confirmed empirically: a
+% `less_than_0.002_millimeters` atom fails to parse, "Expected COMMA or
+% RPAREN, got \".002\""). The exact verbatim figures ("0.002 mm", "0.05 mm")
+% are preserved unaltered in each row's quoted `source` span above, so the
+% precise number stays independently checkable even though the atom itself
+% is a word-only paraphrase.
+%
+% Picked using the mandatory full-tree-grep-before-scoping discipline —
+% zero hits for `soil_texture_class`/`sand`/`silt`/`clay` before writing.
+% Distinct from the sibling `soil-horizons.adj` (also EARTH-SCIENCE), which
+% tables a completely different axis — the VERTICAL layers (O/A/E/B/C/R) a
+% soil pit exposes, not the particle-size classes that make up any one of
+% those layers; the two tables answer different questions (how deep is
+% this material? vs. how big are its grains?) and neither supersedes the
+% other. Honest abstention on `loam`: a real, extremely common soil-science
+% term for a soil texture CLASS made of a mix of sand, silt, and clay in
+% particular proportions — but it is not itself one of the three particle-
+% size separates this table names, and the source article's loam-related
+% material is a composite classification (the full USDA soil-texture
+% triangle) rather than a single clean particle-size sentence the way
+% clay/silt/sand each get. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table soil_texture_class {
+    columns class, description
+
+    row (clay, less_than_two_thousandths_of_a_millimeter_in_diameter)
+    row (silt, between_two_thousandths_and_five_hundredths_of_a_millimeter)
+    row (sand, larger_than_five_hundredths_of_a_millimeter_in_diameter)
+
+    source "The smallest particles are clay particles and are classified as having diameters of less than 0.002 mm."
+    locator "https://en.wikipedia.org/wiki/Soil_texture"
+    trust consensus
+}

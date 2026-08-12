@@ -223,10 +223,254 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   upper right and keep the dotless S-shaped body and below-baseline bowl in one
   continuous sweep to the rising left tip. The learner path preserves the
   source's two dots as an initial/medial feature rather than inventing lifted
-  marks on the independent form.
-  The remaining **197** prose part orders across eight scripts (`arabic` 21,
-  `chinese` 24, `cyrillic` 33, `devanagari` 28, `gujarati` 33, `hebrew` 22,
-  `japanese` 34, `urdu-nastaliq` 2) are explicitly **unverified for pen lifts**.
+  marks on the independent form. Urdu **ں** returns to Chapter 6: both
+  independent nūn-e ġhunna animations keep the same right-to-left,
+  below-baseline bowl as **ن** in one zero-lift run. The prose identifies final
+  and independent nūn-e ġhunna as nūn without its dot, while the initial and
+  medial forms remain ordinary nūn; Noto Naskh's U+06BA contour exactly matches
+  the U+0646 body with that dot removed. Urdu **ے** then completes the starter
+  inventory from Chapter 4: both independent baṛī ye animations descend from
+  the upper right, sweep left across the broad bowl, curl back underneath at
+  the far left, and continue right along the lower fold in one zero-lift run.
+  The prose's initial/medial tooth and independent/final sound distinctions
+  remain explicit while the learner path follows Noto Naskh's folded contour.
+  Arabic **ا** then opens the smallest remaining starter inventory from the
+  University of Oregon's *Introduction to Arabic* video: the independent alif
+  descends top-to-bottom in one uninterrupted 00:05–00:07 movement. Its
+  zero-lift learner path stays on the isolated Noto Naskh outline, while a
+  script-scoped key keeps its Arabic source distinct from Persian and Urdu ا;
+  the adjacent lesson's one-way-connector label and printed final form remain
+  explicit. The page's adjacent **ب** video then starts at the upper-right tip,
+  sweeps continuously right-to-left through the shallow bowl, turns up at the
+  left tip, and lifts once for the dot below. Its two-frame learner path stays
+  on the isolated Noto Naskh outline, while Arabic-scoped provenance remains
+  distinct from Persian ب and the lesson's two-way-connector context remains
+  explicit. The later **ت** clip opens with that shared bowl already complete,
+  then places the left and right dots above as two separate strokes. Its
+  three-frame learner path therefore cites the page's Baa demonstration for the
+  independently shown bowl and the Taa clip for the two lifted dots instead of
+  inferring a hidden body motion. Arabic-scoped provenance remains distinct from
+  Persian ت and the two-way-connector context stays explicit. The page's next
+  link is labeled **ث**, but the underlying `taa.mp4` is another Taa lesson: its
+  first form has only two upper dots, so ث remains unverified instead of gaining
+  an invented third-dot order. The next viable **ج** video draws the short upper
+  head left-to-right, continues down and around the bowl without lifting, then
+  lifts once for the dot below. Its three-frame path preserves the lesson's
+  two-way-connector context, Arabic-scoped provenance, and the deliberate
+  contrast with Urdu's dot-first ج while following the isolated Noto Naskh
+  outline. The page body does not link Haa, but its WordPress attachment ledger
+  exposes `Haa.mov`. That clip opens while **ح**'s short left stem is already
+  underway, visibly lengthens it downward through 00:00.15, then lifts once and
+  restarts near its top at 00:00.32. The second run sweeps down-right and around
+  the dotless bowl through 00:00.82. Its three-frame path therefore preserves a
+  source-specific stem-first order instead of copying Jeem's body-first motion.
+  The page's `kha.mov` then verifies a different order for **خ**: draw the short
+  upper head left-to-right and continue around the bowl in one run from
+  00:02.8–00:03.9, then lift once for the upper dot at 00:04.2–00:04.4. Its
+  three-frame path follows Khaa's own body-first evidence rather than assuming
+  either Jeem's lower dot or Haa's restarted stem. The next alphabet page's
+  `letter-daal-2.mp4` verifies independent **د** at 00:07.0–00:07.6: begin at
+  the upper tip, descend down-right through the curved shoulder, then turn left
+  along the baseline without lifting. Its two-frame path preserves that
+  zero-lift motion, one-way-connector context, and Arabic-scoped provenance.
+  The same page's `raa.mp4` verifies independent **ر** at 00:08.8–00:09.3:
+  begin at the upper tip, descend through the short stroke, then sweep left
+  through the lower curve without lifting. Its two-frame path preserves that
+  zero-lift motion, one-way-connector context, and Arabic-scoped provenance
+  independently of Urdu ر. The next page's `FullSizeRender-8.mov` verifies
+  independent **س** at 00:01.6–00:02.8: shape the three close teeth
+  right-to-left, then flow directly into the final bowl without lifting. Its
+  two-frame path preserves that continuous motion, two-way-connector context,
+  and Arabic-scoped provenance independently of Persian and Urdu س. The page's
+  `FullSizeRender-7.mov` then verifies independent **ش**: draw the same body in
+  one run at 00:00.7–00:02.2, then lift for the lower-left, lower-right, and
+  centered upper dots through 00:03.0. Its five-frame path preserves those
+  three lifts, two-way-connector context, and Arabic-scoped provenance
+  independently of Urdu ش. The page's `FullSizeRender-6.mov` then verifies
+  independent **ص** in two runs: close the oval clockwise and rise into its
+  short shoulder at 00:01.1–00:02.4, then lift once and restart at the baseline
+  junction for the trailing bowl at 00:02.6–00:03.3. Its three-frame path keeps
+  Saad's motion distinct from adjacent Seen and Shiin. The page's embedded Daad
+  lesson then verifies **ض** independently at 00:43.1–00:46.3: repeat those two
+  body runs, lift a second time, and place the upper dot last. Its four-frame
+  path records that three-stroke order while the directly linked short MOV's
+  audit-time HTTP 403 remains explicit. The next page's directly linked
+  `ayn.mov` verifies independent **ع** in one run at 00:03.1–00:04.0: shape the
+  open head from the upper-right tip, then continue down and around the lower
+  bowl without lifting. Its two-frame path preserves zero lifts independently
+  of adjacent Ghayn. The `Alphabet ي ك ل` page's directly linked `kaf.mov`
+  then verifies independent **ك** in two runs at 00:11.8–00:13.4: descend the
+  main upright and turn left along the baseline without lifting, then lift once
+  and draw the inner arm from upper right down-left. Its three-frame path keeps
+  Arabic Kaf distinct from Urdu **ک**'s different Unicode glyph and provenance.
+  The same page's directly linked `lam.mov` verifies independent **ل** in one
+  run at 00:01.9–00:02.4: descend the tall upright, turn left through the base
+  bowl, and rise at its outer edge without lifting. Its two-frame path keeps
+  Arabic Lam distinct from the Persian and Urdu records for the same Unicode
+  glyph. The directly linked `yaa.mov` verifies independent **ي** at
+  00:33.2–00:35.0: descend and sweep left through its shallow bowl without
+  lifting, then place the lower-left and lower-right dots in separate runs.
+  Its four-frame path keeps Arabic Yaa U+064A distinct from Urdu Ye U+06CC,
+  whose independent body has no lower dots. The next **ه و ي** page's directly
+  linked `letter-haa.mov` verifies independent **ه** in one run at
+  00:04.9–00:06.0: close the lower counter, thread through the centre into the
+  upper-right counter, then sweep left along the baseline without lifting. Its
+  three-frame path fits that compact demonstration to the wider isolated Noto
+  Naskh outline while keeping Arabic and Persian provenance separate. The same
+  page's directly linked `waw.mov` verifies independent **و** in one run at
+  00:45.7–00:46.9: sweep left from the lower-right junction to close the small
+  head loop, then continue down and left through the tail without lifting. Its
+  two-frame path preserves Waw's one-way-connector and w/long-ū roles while
+  keeping Arabic and Persian provenance separate. Hebrew **א** then opens the
+  next-smallest inventory from HebrewPod101's
+  dedicated Alef lesson: draw the main diagonal down and right, lift once, then
+  draw the opposing diagonal from the upper right through the crossing and down
+  the lower-left leg. Its three-frame path fits that compact handwritten order
+  to the vendored Noto Sans Hebrew block outline and records the variation
+  explicitly. The same lesson's second, block-style **ב** then draws its top bar
+  into the right descent, lifts once, and draws the baseline left-to-right. Its
+  three-frame path excludes the separately placed optional dagesh from base
+  U+05D1's lift count. The dedicated Gimel/Dalet lesson then verifies printed
+  **ג**: its short top bar joins the right stem and short lower-right leg,
+  then one lift precedes the longer diagonal leg down-left. The four-frame path
+  follows the Noto Sans Hebrew outline while preserving the lesson's visibly
+  different rounded cursive form as a documented variation. The
+  source-adjacent cursive **ד** then sweeps one broad arch through a small
+  loop and into its descending tail without lifting. Its two-frame path keeps
+  that explicitly described "one curve" order while fitting Noto Sans Hebrew's
+  angular top bar and right downstroke. The dedicated Hei lesson then verifies
+  printed **ה**: its left-to-right top bar continues down the right side, then
+  one lift precedes the detached left leg from top to bottom. Its three-frame
+  path follows Noto Sans Hebrew's angular outline while preserving the lesson's
+  explicitly contrasted curved handwritten form. The dedicated Vav lesson
+  verifies printed **ו** as one stroke: draw the small head left-to-right, then
+  turn directly down the stem without lifting. Its two-frame path follows Noto
+  Sans Hebrew and excludes the lesson's later vowel marks from the base letter's
+  zero-lift count. The Zayin/Heit lesson then verifies handwritten **ז** as one
+  rounded run: rise briefly to the right, then curve down and around the base
+  without lifting. Its two-frame block-font adaptation keeps Zayin distinct from
+  both mirrored handwritten Gimel and the narrower Vav. The same lesson then
+  verifies printed **ח**: draw the top bar left-to-right and continue down the
+  right side, lift once, then draw the joined left leg from top to bottom. Its
+  three-frame Noto Sans Hebrew path keeps the printed corners sharp while
+  preserving the lesson's rounded handwritten form as a documented variation.
+  The Tet/Yod lesson then verifies printed **ט** in two strokes: the left side
+  descends and turns right along the base, then after one lift the right side
+  climbs from the lower-right and turns down-left into the inward hook. Its
+  four-frame Noto Sans Hebrew path preserves the source's unusual bottom-up,
+  single-run rounded handwriting as a documented variation. The same lesson
+  verifies printed **י** as one tiny run: draw its head left-to-right and turn
+  directly down through the short stem. Its two-frame Noto Sans Hebrew path
+  preserves the comma-like handwritten form and the source's small print angle.
+  The dedicated Kaf lesson then verifies printed **כ** in one continuous run:
+  draw the top bar left-to-right, turn down the rounded right side, and turn
+  left along the base. Its three-frame Noto Sans Hebrew path preserves the
+  source's rounded handwritten half-circle while sharpening the printed corners.
+  The Lamed/Mem lesson next verifies printed **ל** in one tall run: descend the
+  left stroke, continue right along the middle bar, then turn diagonally
+  down-left. Its three-frame Noto Sans Hebrew path preserves the source's
+  rounded looping handwriting while keeping the demonstrated angular order.
+  The same lesson verifies printed **מ** in two runs: draw the detached angled
+  left part, lift once, then climb through the upper shoulder, turn down the
+  right side, and return left along the base. Its five-frame Noto Sans Hebrew
+  path preserves the narrow N-like cursive form while keeping print's bottom-left
+  gap explicit. Aural Writing's full-alphabet demonstration then verifies printed
+  **נ** in one run: draw the small head left-to-right, continue down the right
+  side, and turn left along the base. Its three-frame Noto Sans Hebrew path
+  preserves the source's rounder purple cursive hook while replacing a queued
+  expository video that never exposed pen order. The same source next verifies
+  printed **ס** as one clockwise loop: draw the flat top left-to-right, round
+  down the right side, sweep left along the base, then climb the left side to
+  close without lifting. Its four-frame path preserves the adjacent purple
+  cursive form's rounder oval while keeping the demonstrated zero-lift order.
+  Printed **ע** then descends the right branch into the base, sweeps left, and
+  turns back to climb the left branch without lifting. Its three-frame path
+  preserves the adjacent purple cursive form's compact loop while fitting the
+  demonstrated one-run order to Noto Sans Hebrew. Printed **פ** next draws its
+  outer top, right side, and returning base in one run, lifts once, then adds
+  the short inner curl left-to-right. Its four-frame Noto Sans Hebrew path
+  preserves the adjacent purple cursive form's one-run inward spiral. The
+  source demonstrates final Pe **ף** next; because it is already represented by
+  `פ.forms.final`, the later Tsadi demonstration is the next counted entry.
+  Printed **צ** then descends its long upper-left diagonal and turns left along
+  the base in one run, lifts once, and curves the short upper-right arm down-left
+  into the middle. Its three-frame Noto Sans Hebrew path preserves the adjacent
+  purple cursive form's compact one-run shape. The source demonstrates final
+  Tsadi **ץ** next; because it is already represented by `צ.forms.final`, the
+  later Qof demonstration is the next counted entry. Printed **ק** then draws
+  its top bar left-to-right and turns down-left through the right body in one
+  run, lifts once, and descends the separate inner-left stem below the writing
+  line. Its three-frame Noto Sans Hebrew path preserves the adjacent purple
+  cursive form's one-run hooked descent. The adjacent Resh demonstration is the
+  next counted entry. Printed **ר** then draws its top bar left-to-right, rounds
+  the top-right corner, and continues down the right side without lifting. Its
+  two-frame Noto Sans Hebrew path preserves the adjacent purple cursive form's
+  rounder one-run hook. Printed **ש** next descends the right branch, rounds
+  left through the base, and climbs the left branch in one run, then lifts once
+  for the middle branch descending into the base. Its three-frame Noto Sans
+  Hebrew path preserves the adjacent purple cursive form's compact one-run loop.
+  Printed **ת** closes the Hebrew inventory: its top bar travels left-to-right
+  and continues down the right side in one run, then one lift precedes the
+  separate left leg and its small leftward foot. Its four-frame Noto Sans
+  Hebrew path preserves the adjacent purple cursive form's one-run retracing
+  stem and right arch. Chinese **人** then opens the smallest actionable
+  inventory from Hanzi Writer Data's pinned, Make Me a Hanzi-derived PRC stroke
+  record: draw the left-falling stroke, lift once, then draw the right-falling
+  stroke. Its two-frame Noto Sans SC path preserves the source medians' order
+  and direction while documenting the source font's different proportions.
+  Chinese **亻** follows from its own pinned record: draw the long left-falling
+  stroke, lift once, then descend the vertical from the central junction. Its
+  two-frame path fits the narrow Noto Sans SC radical independently instead of
+  mechanically squeezing 人. Chinese **口** next establishes a joined corner:
+  descend the left side, lift for the top bar and right side in one continuous
+  héngzhé run, then lift and close the bottom left-to-right. Its four-frame Noto
+  Sans SC path makes the close-last rule visible. Chinese **女** follows with a
+  bent first run: descend left, turn without lifting, and sweep down-right;
+  lift for the separately left-falling stroke, then lift again for the middle
+  horizontal. Its four-frame Noto Sans SC path keeps the source's three strokes
+  and two lifts distinct. Chinese **子** then adds two joined turns: draw the
+  top horizontal and sweep down-left without lifting, lift for the central
+  descent and its leftward base hook, then lift again for the middle horizontal.
+  Its five-frame Noto Sans SC path keeps both turns visible. Chinese **日**
+  follows the same box family with one added inside bar: descend
+  the left side, lift for the joined top-and-right héngzhé, lift for the middle
+  horizontal, then lift once more to close the bottom. Its five-frame Noto Sans
+  SC path makes the inside-before-close rule visible. Chinese **讠** follows
+  with a down-right dot, then one lift before its horizontal, descending turn,
+  and rising finish stay joined in a single second stroke. Its four-frame Noto
+  Sans SC path keeps both source turns visible. Chinese **氵** next draws two
+  separately falling down-right dots, then lifts again for a bottom stroke
+  that turns slightly up-left before sweeping to the upper right. Its
+  four-frame Noto Sans SC path preserves all three source runs and keeps the
+  bottom turn joined to its rise. Chinese **宀** then draws a down-right dot,
+  lifts for its left-side down-left stroke, and lifts again before crossing
+  the roof left-to-right and hooking down-left without breaking. Its four-frame
+  Noto Sans SC path keeps the source's joined horizontal hook visible. The
+  full character **你** follows: write 亻 first, then the five strokes of 尔,
+  keeping its horizontal hook and central base hook joined before placing the
+  two lower dots separately. Its nine-frame Noto Sans SC path preserves all
+  seven source strokes and six lifts. **好** then writes all three strokes of
+  女 before all three strokes of 子, preserving the joined turns in each
+  component. Its nine-frame Noto Sans SC path preserves six source strokes and
+  five lifts. **我** adds seven separately ordered strokes, keeping only its
+  vertical and base hook joined; its nine-frame Noto Sans SC path also keeps
+  the long curved slash's upward hook joined and preserves all six lifts. **是**
+  then closes 日 in four strokes before adding five lower strokes; its ten-frame
+  Noto Sans SC path preserves nine source strokes and eight lifts. **不** follows
+  with four separately placed strokes: top horizontal, long falling stroke,
+  central vertical, and right-falling dot. Its four-frame Noto Sans SC path
+  preserves three lifts. **名** then completes 夕 in three strokes before drawing
+  口 in three more; its eight-frame Noto Sans SC path preserves both joined turns
+  and five lifts. **字** then completes 宀 before drawing 子; its nine-frame Noto
+  Sans SC path preserves the roof hook, 子's two joined turns, and five lifts.
+  **谢** writes 讠 before 身 and 寸 in twelve strokes; its seventeen-frame Noto
+  Sans SC path preserves all five joined turns and eleven lifts. **请** writes 讠
+  before 青 in ten strokes; its fourteen-frame Noto Sans SC path preserves all
+  four joined turns and nine lifts.
+  The remaining **137** prose part orders across six scripts
+  (`arabic` 3, `chinese` 6,
+  `cyrillic` 33, `devanagari` 28,
+  `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;

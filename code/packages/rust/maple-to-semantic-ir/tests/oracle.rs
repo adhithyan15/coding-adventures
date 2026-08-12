@@ -168,7 +168,7 @@ use std::process::Command;
 
 use coding_adventures_maple_runtime::eval as maple_eval;
 use maple_to_semantic_ir::compile_source;
-use semantic_ir::{EffectSet, Expr, Module, Stmt};
+use semantic_ir::{EffectSet, Expr, Feature, Module, Stmt};
 
 /// Is a `node` binary on `PATH`? Mirrors every sibling oracle file's
 /// identical `node_available`: the test below skips (logs, does not
@@ -692,13 +692,16 @@ fn ground_truth(source: &str) -> String {
 }
 
 /// Wrap every top-level statement's `expr` in the shared `"print"`
-/// builtin — see this file's own module doc comment's "A harness-only
+/// builtin (SIR28 §7's successor to the pre-SIR28 bare `"print"` builtin)
+/// — see this file's own module doc comment's "A harness-only
 /// 'make it observable' step" section for the full rationale. Runs AFTER
 /// `semantic_ir::validate` in [`compiled`] below, so validation itself
 /// still exercises exactly what `maple_to_semantic_ir::compile_source`
 /// actually shipped, unmodified. Mirrors `reduce-to-semantic-ir/tests/
-/// oracle.rs`'s own `wrap_top_level_in_print` exactly.
-fn wrap_top_level_in_print(module: &mut Module) {
+/// oracle.rs`'s own `wrap_top_level_in_sys_write` exactly.
+fn wrap_top_level_in_sys_write(module: &mut Module) {
+    module.manifest.add(Feature::ConsoleIO);
+    module.manifest.add(Feature::Strings);
     for f in &mut module.functions {
         if f.name != "main" {
             continue;
@@ -707,8 +710,13 @@ fn wrap_top_level_in_print(module: &mut Module) {
             if let Stmt::ExprStmt { expr, span } = stmt {
                 let inner = std::mem::replace(expr, Expr::NilLit { span: span.clone() });
                 *expr = Expr::BuiltinCall {
-                    name: "print".to_string(),
-                    args: vec![inner],
+                    name: "__sys_write__".to_string(),
+                    args: vec![
+                        Expr::StrLit { value: "stdout".to_string(), span: span.clone() },
+                        Expr::StrLit { value: "once".to_string(), span: span.clone() },
+                        Expr::BoolLit { value: false, span: span.clone() },
+                        inner,
+                    ],
                     effects: EffectSet::PURE,
                     span: span.clone(),
                 };
@@ -719,7 +727,7 @@ fn wrap_top_level_in_print(module: &mut Module) {
 
 /// Compiled path: run `source` (unchanged) through
 /// `maple_to_semantic_ir::compile_source`, `semantic_ir::validate`,
-/// [`wrap_top_level_in_print`], `semantic_ir_to_javascript::compile`, and
+/// [`wrap_top_level_in_sys_write`], `semantic_ir_to_javascript::compile`, and
 /// an actual `node` process. Mirrors `reduce-to-semantic-ir/tests/
 /// oracle.rs`'s own `compiled` exactly, down to the
 /// `OpenOptions::create_new(true)` temp-file handling (that file's own
@@ -736,7 +744,7 @@ fn compiled(name: &str, source: &str) -> String {
         "SIR validation failed for {name}: {:?}",
         report.issues
     );
-    wrap_top_level_in_print(&mut module);
+    wrap_top_level_in_sys_write(&mut module);
     let artifact = semantic_ir_to_javascript::compile(&module)
         .unwrap_or_else(|e| panic!("backend emit failed for {name}: {e:?}"));
 

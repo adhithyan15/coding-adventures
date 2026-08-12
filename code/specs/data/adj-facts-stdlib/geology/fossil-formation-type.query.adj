@@ -1,0 +1,15 @@
+% ============================================================================
+% fossil-formation-type.query.adj — worked recall over the
+% fossil-formation-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how did this fossil
+% form?" (direct) or "which formation type matches this description?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "fossil-formation-type.adj"
+
+? fossil_formation_type(amber, $D)                                  % expect preserved_in_hardened_tree_sap (direct)
+? fossil_formation_type($T, impression_of_a_living_organism)        % expect cast_or_mold (reverse)
+? fossil_formation_type(freezing, $D)                                % expect abstain -- a real preservation method the source covers, but not one of the three tabled here

@@ -28,6 +28,8 @@ pub enum ObjectKind {
     DeviceCertificate,
     /// One exact device-signed VLT-PM01 repository commit.
     Commit,
+    /// One exact device-signed VLT-PM15 operation-audit event.
+    AuditEvent,
 }
 
 impl ObjectKind {
@@ -38,6 +40,7 @@ impl ObjectKind {
             Self::Catalog => 2,
             Self::DeviceCertificate => 3,
             Self::Commit => 4,
+            Self::AuditEvent => 5,
         }
     }
 }
@@ -372,8 +375,11 @@ fn validate_plaintext_header(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{ApplicationError, CatalogV1};
+    use crate::{encode_signed_audit_event, ApplicationError, CatalogV1};
     use coding_adventures_canonical_cbor::{encode, CborValue};
+    use coding_adventures_vault_pm_audit::{AuditActionV1, AuditEventV1, AuditOutcomeV1};
+    use coding_adventures_vault_pm_domain::OperationId;
+    use coding_adventures_vault_pm_format::{DeviceId, ObjectId};
 
     fn keys() -> V1Keys {
         V1Keys::derive(VaultId::new([0x11; 16]), &[0x22; 32]).unwrap()
@@ -417,6 +423,38 @@ mod tests {
             &plaintext
         );
         assert_eq!(format!("{randomness:?}"), "ObjectRandomness(<redacted>)");
+    }
+
+    #[test]
+    fn signed_audit_event_seals_under_its_own_authenticated_kind() {
+        let keys = keys();
+        let event = AuditEventV1::new(
+            keys.vault_id(),
+            DeviceId::new([0x66; 16]),
+            2,
+            OperationId::new([0x77; 32]),
+            AuditActionV1::AuditEpochStart,
+            AuditOutcomeV1::Succeeded,
+            None,
+            None,
+            None,
+            None,
+            vec![ObjectId::new([0x88; 32])],
+            9,
+        )
+        .unwrap()
+        .sign(&[0x99; 32])
+        .unwrap();
+        let plaintext = encode_signed_audit_event(&event).unwrap();
+        let frame = seal_object(&keys, ObjectKind::AuditEvent, &plaintext, &randomness()).unwrap();
+        assert_eq!(
+            &*open_object(&keys, ObjectKind::AuditEvent, &frame).unwrap(),
+            &plaintext
+        );
+        assert_eq!(
+            open_object(&keys, ObjectKind::Commit, &frame).err(),
+            Some(ApplicationError::IntegrityFailure)
+        );
     }
 
     #[test]
@@ -582,5 +620,6 @@ mod tests {
         assert_eq!(ObjectKind::Catalog.code(), 2);
         assert_eq!(ObjectKind::DeviceCertificate.code(), 3);
         assert_eq!(ObjectKind::Commit.code(), 4);
+        assert_eq!(ObjectKind::AuditEvent.code(), 5);
     }
 }

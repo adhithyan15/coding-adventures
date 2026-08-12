@@ -4,9 +4,11 @@
 
 use coding_adventures_vault_sealed_store::{SealedStore, SealedStoreError};
 use serde::{Deserialize, Serialize};
+use smart_home_controller_runtime::SmartHomeControllerRuntime;
 use smart_home_core::{AgentId, BridgeId, Metadata, VaultRef};
 use smart_home_runtime::{
-    PairingSessionStatus, RuntimeCompletePairingToolRequest, RuntimeError, RuntimePairingSessionId,
+    PairingSessionStatus, RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest,
+    RuntimeError, RuntimePairingSessionId,
 };
 use smart_home_runtime_store::{
     RestoredSmartHomeRuntime, RuntimeStoreError, SmartHomeRuntimeStore,
@@ -134,6 +136,7 @@ pub enum PairingTransactionError {
     Vault(SealedStoreError),
     Runtime(RuntimeError),
     RuntimeStore(RuntimeStoreError),
+    RuntimeAuthority(String),
     Invariant(String),
 }
 
@@ -149,6 +152,9 @@ impl fmt::Display for PairingTransactionError {
             Self::Runtime(error) => write!(formatter, "pairing authorization failure: {error}"),
             Self::RuntimeStore(error) => {
                 write!(formatter, "pairing runtime-store failure: {error}")
+            }
+            Self::RuntimeAuthority(message) => {
+                write!(formatter, "pairing runtime-authority failure: {message}")
             }
             Self::Invariant(message) => {
                 write!(formatter, "pairing transaction invariant failed: {message}")
@@ -220,24 +226,98 @@ struct LoadedJournal {
     revision: Revision,
 }
 
-pub struct PairingTransactionCoordinator<'a, J: StorageBackend, R: StorageBackend> {
+pub trait PairingRuntimeAuthority {
+    fn load_pairing_runtime(
+        &self,
+    ) -> Result<Option<RestoredSmartHomeRuntime>, PairingTransactionError>;
+
+    fn complete_pairing(
+        &self,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        expected_revision: Revision,
+    ) -> Result<
+        (RuntimeCompletePairingToolOutput, Option<VaultRef>, Revision),
+        PairingTransactionError,
+    >;
+}
+
+impl<R: StorageBackend> PairingRuntimeAuthority for SmartHomeRuntimeStore<R> {
+    fn load_pairing_runtime(
+        &self,
+    ) -> Result<Option<RestoredSmartHomeRuntime>, PairingTransactionError> {
+        self.load().map_err(PairingTransactionError::RuntimeStore)
+    }
+
+    fn complete_pairing(
+        &self,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        expected_revision: Revision,
+    ) -> Result<
+        (RuntimeCompletePairingToolOutput, Option<VaultRef>, Revision),
+        PairingTransactionError,
+    > {
+        let mut restored = self.load()?.ok_or_else(|| {
+            PairingTransactionError::Invariant("runtime store is empty".to_string())
+        })?;
+        let definitions = restored.automation_definitions;
+        let automation_state = restored.automation_state;
+        SmartHomeRuntimeStore::complete_pairing(
+            self,
+            &mut restored.runtime,
+            principal_id,
+            request,
+            &definitions,
+            automation_state,
+            expected_revision,
+        )
+        .map_err(PairingTransactionError::RuntimeStore)
+    }
+}
+
+impl<B: StorageBackend> PairingRuntimeAuthority for SmartHomeControllerRuntime<B> {
+    fn load_pairing_runtime(
+        &self,
+    ) -> Result<Option<RestoredSmartHomeRuntime>, PairingTransactionError> {
+        self.durable_snapshot()
+            .map_err(|error| PairingTransactionError::RuntimeAuthority(error.to_string()))
+    }
+
+    fn complete_pairing(
+        &self,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        expected_revision: Revision,
+    ) -> Result<
+        (RuntimeCompletePairingToolOutput, Option<VaultRef>, Revision),
+        PairingTransactionError,
+    > {
+        let commit = SmartHomeControllerRuntime::complete_pairing(
+            self,
+            principal_id,
+            request,
+            expected_revision,
+        )
+        .map_err(|error| PairingTransactionError::RuntimeAuthority(error.to_string()))?;
+        Ok((commit.value.0, commit.value.1, commit.revision))
+    }
+}
+
+pub struct PairingTransactionCoordinator<'a, J: StorageBackend, A: PairingRuntimeAuthority> {
     journal_backend: &'a J,
     journal_namespace: String,
     vault: &'a SealedStore,
-    runtime_store: &'a SmartHomeRuntimeStore<R>,
+    runtime_authority: &'a A,
 }
 
-impl<'a, J: StorageBackend, R: StorageBackend> PairingTransactionCoordinator<'a, J, R> {
-    pub fn new(
-        journal_backend: &'a J,
-        vault: &'a SealedStore,
-        runtime_store: &'a SmartHomeRuntimeStore<R>,
-    ) -> Self {
+impl<'a, J: StorageBackend, A: PairingRuntimeAuthority> PairingTransactionCoordinator<'a, J, A> {
+    pub fn new(journal_backend: &'a J, vault: &'a SealedStore, runtime_authority: &'a A) -> Self {
         Self {
             journal_backend,
             journal_namespace: DEFAULT_JOURNAL_NAMESPACE.to_string(),
             vault,
-            runtime_store,
+            runtime_authority,
         }
     }
 
@@ -352,11 +432,14 @@ impl<'a, J: StorageBackend, R: StorageBackend> PairingTransactionCoordinator<'a,
                         .as_ref()
                         .map(|previous| previous.location.vault_ref.clone());
                     self.delete_journal(transaction_id, &loaded.revision)?;
-                    let restored = self.runtime_store.load()?.ok_or_else(|| {
-                        PairingTransactionError::Invariant(
-                            "runtime disappeared after pairing commit".to_string(),
-                        )
-                    })?;
+                    let restored =
+                        self.runtime_authority
+                            .load_pairing_runtime()?
+                            .ok_or_else(|| {
+                                PairingTransactionError::Invariant(
+                                    "runtime disappeared after pairing commit".to_string(),
+                                )
+                            })?;
                     return Ok(PairingTransactionOutcome::Committed {
                         restored: Box::new(restored),
                         previous_vault_ref,
@@ -379,9 +462,12 @@ impl<'a, J: StorageBackend, R: StorageBackend> PairingTransactionCoordinator<'a,
                 "transaction id is already in use".to_string(),
             ));
         }
-        let loaded = self.runtime_store.load()?.ok_or_else(|| {
-            PairingTransactionError::Invariant("runtime store is empty".to_string())
-        })?;
+        let loaded = self
+            .runtime_authority
+            .load_pairing_runtime()?
+            .ok_or_else(|| {
+                PairingTransactionError::Invariant("runtime store is empty".to_string())
+            })?;
         if loaded.revision != request.expected_runtime_revision {
             return Err(PairingTransactionError::Validation(
                 "expected runtime revision is stale".to_string(),
@@ -503,9 +589,12 @@ impl<'a, J: StorageBackend, R: StorageBackend> PairingTransactionCoordinator<'a,
         &self,
         loaded: LoadedJournal,
     ) -> Result<bool, PairingTransactionError> {
-        let mut restored = self.runtime_store.load()?.ok_or_else(|| {
-            PairingTransactionError::Invariant("runtime store is empty".to_string())
-        })?;
+        let restored = self
+            .runtime_authority
+            .load_pairing_runtime()?
+            .ok_or_else(|| {
+                PairingTransactionError::Invariant("runtime store is empty".to_string())
+            })?;
         match runtime_credential_state(&restored, &loaded.journal) {
             RuntimeCredentialState::Committed => {
                 let mut journal = loaded.journal;
@@ -526,8 +615,6 @@ impl<'a, J: StorageBackend, R: StorageBackend> PairingTransactionCoordinator<'a,
             return Ok(false);
         }
 
-        let definitions = restored.automation_definitions;
-        let automation_state = restored.automation_state;
         let expected_revision = restored.revision;
         let completion = RuntimeCompletePairingToolRequest::new(
             loaded.journal.session_id.clone(),
@@ -535,12 +622,9 @@ impl<'a, J: StorageBackend, R: StorageBackend> PairingTransactionCoordinator<'a,
             loaded.journal.completed_at_ms,
         )
         .with_metadata(loaded.journal.metadata.clone());
-        let (_, previous_vault_ref, committed_revision) = self.runtime_store.complete_pairing(
-            &mut restored.runtime,
+        let (_, previous_vault_ref, committed_revision) = self.runtime_authority.complete_pairing(
             loaded.journal.principal_id.clone(),
             completion,
-            &definitions,
-            automation_state,
             expected_revision,
         )?;
         let expected_previous = loaded

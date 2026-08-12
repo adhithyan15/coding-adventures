@@ -1,6 +1,9 @@
-# @version 1
+# @version 2
+# @case_insensitive true
 # Mermaid 11.16.1 sequence diagram token grammar.
 # Derived from packages/mermaid/src/diagrams/sequence/parser/sequenceDiagram.jison.
+
+case_sensitive: false
 
 skip:
   WHITESPACE            = /[ \t]+/
@@ -8,6 +11,7 @@ skip:
 
 NEWLINE                  = /\r?\n/
 ENTITY                   = /#(?:[0-9]+|[A-Za-z][A-Za-z0-9]+);/
+HASH_COMMENT             = /#[^\r\n]*/
 LINE_BREAK               = /<br[ \t]*\/?>/
 WRAP_DIRECTIVE           = /:?(?:no)?wrap:/
 SEMICOLON                = ";"
@@ -51,6 +55,7 @@ PLUS                     = "+"
 MINUS                    = "-"
 NUMBER                   = /(?:[0-9]+(?:\.[0-9]{1,2})?|\.[0-9]{1,2})/
 IDENTIFIER               = /[A-Za-z0-9_.$]+/
+ANGLE_TEXT               = /[<>]+/
 WORD                     = /[^ \t\r\n:,+-@;]+/
 
 keywords:

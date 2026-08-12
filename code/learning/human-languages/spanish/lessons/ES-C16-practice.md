@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C16-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1138
-chapter: 16
+sequence: 1378
+chapter: 105
 type: practice-mix
 headword: (practice)
 gloss: a singular checkpoint for the open past and the completed-past contrast
@@ -36,7 +36,7 @@ reviews_of: [ES-C16-imperfecto, ES-C16-comer-imperfecto, ES-C16-vivir-imperfecto
 the seven learned singular rows, then choose whether a known sentence presents
 the past as completed or leaves it open as background, progress, or habit.
 
-## Grammar Lens: the complete Chapter 16 frame
+## Grammar Lens: the complete frame for this chapter
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-IMPERFECT-SINGULAR, ES-GRAMMAR-SER-IMPERFECT-SINGULAR, ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR, ES-GRAMMAR-VER-IMPERFECT-SINGULAR] -->
 
 Regular rows:

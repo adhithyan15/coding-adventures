@@ -1,0 +1,5 @@
+import "ecosystem-factor-type.adj"
+
+? ecosystem_factor_type(biotic, $D)                                                                  % expect a_living_organism_that_shapes_its_environment (direct)
+? ecosystem_factor_type($F, a_non_living_part_of_an_ecosystem_that_shapes_its_environment)            % expect abiotic (reverse)
+? ecosystem_factor_type(producer, $D)                                                                 % expect abstain -- a real ecology term, but it names a food-chain ROLE (see food-chain-roles.adj), not a biotic/abiotic factor type

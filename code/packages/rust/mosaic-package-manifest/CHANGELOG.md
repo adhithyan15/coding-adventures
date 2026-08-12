@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added optional `[styles].token_palette` declarations for safe,
+  package-relative schema-v1 JSON token palettes.
 - Added optional `[host_assets]` support with `files = [{ backend, source, target }]`
   declarations so app packages can describe backend-specific host adapter files
   inside `mosaic-package.toml`.

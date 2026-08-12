@@ -62,7 +62,7 @@ pub fn emit_module(m: &Module) -> String {
     emit_banner(&mut out, m);
     out.push_str("package main\n\n");
     out.push_str(
-        "import (\n\t\"fmt\"\n\t\"math\"\n\t\"sort\"\n\t\"strconv\"\n\t\"strings\"\n)\n\n",
+        "import (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n\t\"sort\"\n\t\"strconv\"\n\t\"strings\"\n)\n\n",
     );
     // Suppress unused-import linter complaints if a tiny module
     // happens not to reference them (the runtime always does, so
@@ -1169,6 +1169,39 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
+    // SIR28 §2: the console-output primitive `print`/`puts` generalize
+    // into. `args = [StrLit(stream), StrLit(terminator),
+    // BoolLit(unpack_arrays), ...values]`, already validated by
+    // `semantic-ir`'s validator (SIR28 §3.1) against a closed set.
+    // `stream`/`terminator` are lifted to quoted Go string literals — same
+    // rationale as `__new__`'s class-name lift just above: keeps the
+    // runtime's `switch` on a compile-time-known string, closed dispatch.
+    if name == "__sys_write__" {
+        if let (
+            Some(Expr::StrLit { value: stream, .. }),
+            Some(Expr::StrLit { value: term, .. }),
+            Some(Expr::BoolLit { value: unpack, .. }),
+        ) = (args.first(), args.get(1), args.get(2))
+        {
+            let _ = write!(
+                out,
+                "_sir_write({}, {}, {}, []Value{{",
+                quote_go_string(stream),
+                quote_go_string(term),
+                unpack
+            );
+            if args.len() > 3 {
+                for (i, a) in args[3..].iter().enumerate() {
+                    if i > 0 {
+                        out.push_str(", ");
+                    }
+                    emit_expr(out, a, indent);
+                }
+            }
+            out.push_str("})");
+            return;
+        }
+    }
     if name == "__super__" {
         if let (Some(Expr::StrLit { value: meth, .. }), Some(Expr::StrLit { value: cls, .. })) =
             (args.first(), args.get(1))
@@ -1360,8 +1393,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "pair?" => "_sir_is_pair",
         "number?" => "_sir_is_number",
         "symbol?" => "_sir_is_symbol",
-        "print" => "_sir_print",
-        "puts" => "_sir_puts",
+        // SIR28 §2: `print`/`puts` are dead — every frontend emits
+        // `__sys_write__` instead (handled above, before this match).
         "global_set" => {
             // Two args, special signature.
             out.push_str("_sir_global_set(");
@@ -3103,62 +3136,66 @@ mod tests {
         );
     }
 
-    /// `puts` routes to the variadic `_sir_puts` runtime helper (same
-    /// call shape as `_sir_print`, passing all args as a `[]Value`).  This
-    /// lets `puts a, b` (multiple args) reach the runtime intact.
+    /// SIR28 §2: a `puts`-shaped `__sys_write__` call (`terminator:
+    /// "per_value"`, `unpack_arrays: true`) routes to the variadic
+    /// `_sir_write` runtime helper, all value args forwarded as a
+    /// `[]Value`. This lets `puts a, b` (multiple args) reach the runtime
+    /// intact — mirrors the pre-SIR28 `emit_puts_routes_to_sir_puts` test
+    /// this replaces.
     #[test]
-    fn emit_puts_routes_to_sir_puts() {
-        // Single arg.
-        let puts1 = Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![Expr::StrLit {
-                value: "hi".into(),
+    fn emit_sys_write_puts_shape_routes_to_sir_write() {
+        fn puts_shaped(args: Vec<Expr>) -> Expr {
+            let mut sys_args = vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "per_value".into(), span: s() },
+                Expr::BoolLit { value: true, span: s() },
+            ];
+            sys_args.extend(args);
+            Expr::BuiltinCall {
+                name: "__sys_write__".into(),
+                args: sys_args,
+                effects: EffectSet::PURE,
                 span: s(),
-            }],
-            effects: EffectSet::PURE,
-            span: s(),
-        };
+            }
+        }
+
+        // Single arg.
         let mut out = String::new();
-        emit_expr(&mut out, &puts1, 0);
-        assert_eq!(out, r#"_sir_puts([]Value{Value("hi")})"#);
+        emit_expr(&mut out, &puts_shaped(vec![Expr::StrLit { value: "hi".into(), span: s() }]), 0);
+        assert_eq!(out, r#"_sir_write("stdout", "per_value", true, []Value{Value("hi")})"#);
 
         // Multiple args — all forwarded (Ruby `puts a, b`).
-        let puts2 = Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![
-                Expr::StrLit {
-                    value: "a".into(),
-                    span: s(),
-                },
-                Expr::StrLit {
-                    value: "b".into(),
-                    span: s(),
-                },
-            ],
-            effects: EffectSet::PURE,
-            span: s(),
-        };
         let mut out2 = String::new();
-        emit_expr(&mut out2, &puts2, 0);
-        assert_eq!(out2, r#"_sir_puts([]Value{Value("a"), Value("b")})"#);
+        emit_expr(
+            &mut out2,
+            &puts_shaped(vec![
+                Expr::StrLit { value: "a".into(), span: s() },
+                Expr::StrLit { value: "b".into(), span: s() },
+            ]),
+            0,
+        );
+        assert_eq!(out2, r#"_sir_write("stdout", "per_value", true, []Value{Value("a"), Value("b")})"#);
 
         // No args — a bare `puts`.
-        let puts0 = Expr::BuiltinCall {
-            name: "puts".into(),
-            args: vec![],
-            effects: EffectSet::PURE,
-            span: s(),
-        };
         let mut out0 = String::new();
-        emit_expr(&mut out0, &puts0, 0);
-        assert_eq!(out0, "_sir_puts([]Value{})");
+        emit_expr(&mut out0, &puts_shaped(vec![]), 0);
+        assert_eq!(out0, r#"_sir_write("stdout", "per_value", true, []Value{})"#);
     }
 
+    /// SIR28 §2: a `print`-shaped `__sys_write__` call (`terminator:
+    /// "none"`, `unpack_arrays: false`) — used purely as filler
+    /// "observable statement" content in the `TryCatch`/`ensure` shape
+    /// tests below, not to test print semantics itself.
     fn print_stmt(v: Expr) -> Stmt {
         Stmt::ExprStmt {
             expr: Expr::BuiltinCall {
-                name: "print".into(),
-                args: vec![v],
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "none".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    v,
+                ],
                 effects: EffectSet::PURE,
                 span: s(),
             },

@@ -24,6 +24,64 @@ const load = (name: string) => {
   return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 };
 const tamil = () => parseFont(load("NotoSansTamil-Static.ttf"));
+const CHINESE_REN = DUCTUS[ductusKey("chinese", "人")];
+const CHINESE_PERSON_RADICAL = DUCTUS[ductusKey("chinese", "亻")];
+const CHINESE_MOUTH = DUCTUS[ductusKey("chinese", "口")];
+const CHINESE_WOMAN = DUCTUS[ductusKey("chinese", "女")];
+const CHINESE_CHILD = DUCTUS[ductusKey("chinese", "子")];
+const CHINESE_SUN = DUCTUS[ductusKey("chinese", "日")];
+const CHINESE_SPEECH_RADICAL = DUCTUS[ductusKey("chinese", "讠")];
+const CHINESE_WATER_RADICAL = DUCTUS[ductusKey("chinese", "氵")];
+const CHINESE_ROOF_RADICAL = DUCTUS[ductusKey("chinese", "宀")];
+const CHINESE_YOU = DUCTUS[ductusKey("chinese", "你")];
+const CHINESE_GOOD = DUCTUS[ductusKey("chinese", "好")];
+const CHINESE_I = DUCTUS[ductusKey("chinese", "我")];
+const CHINESE_BE = DUCTUS[ductusKey("chinese", "是")];
+const CHINESE_NOT = DUCTUS[ductusKey("chinese", "不")];
+const CHINESE_NAME = DUCTUS[ductusKey("chinese", "名")];
+const CHINESE_CHARACTER = DUCTUS[ductusKey("chinese", "字")];
+const CHINESE_THANK = DUCTUS[ductusKey("chinese", "谢")];
+const CHINESE_PLEASE = DUCTUS[ductusKey("chinese", "请")];
+const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
+const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
+const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
+const HEBREW_DALET = DUCTUS[ductusKey("hebrew", "ד")];
+const HEBREW_HEI = DUCTUS[ductusKey("hebrew", "ה")];
+const HEBREW_VAV = DUCTUS[ductusKey("hebrew", "ו")];
+const HEBREW_ZAYIN = DUCTUS[ductusKey("hebrew", "ז")];
+const HEBREW_HEIT = DUCTUS[ductusKey("hebrew", "ח")];
+const HEBREW_TET = DUCTUS[ductusKey("hebrew", "ט")];
+const HEBREW_YOD = DUCTUS[ductusKey("hebrew", "י")];
+const HEBREW_KAF = DUCTUS[ductusKey("hebrew", "כ")];
+const HEBREW_LAMED = DUCTUS[ductusKey("hebrew", "ל")];
+const HEBREW_MEM = DUCTUS[ductusKey("hebrew", "מ")];
+const HEBREW_NUN = DUCTUS[ductusKey("hebrew", "נ")];
+const HEBREW_SAMEKH = DUCTUS[ductusKey("hebrew", "ס")];
+const HEBREW_AYIN = DUCTUS[ductusKey("hebrew", "ע")];
+const HEBREW_PE = DUCTUS[ductusKey("hebrew", "פ")];
+const HEBREW_TSADI = DUCTUS[ductusKey("hebrew", "צ")];
+const HEBREW_QOF = DUCTUS[ductusKey("hebrew", "ק")];
+const HEBREW_RESH = DUCTUS[ductusKey("hebrew", "ר")];
+const HEBREW_SHIN = DUCTUS[ductusKey("hebrew", "ש")];
+const HEBREW_TAV = DUCTUS[ductusKey("hebrew", "ת")];
+const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
+const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
+const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
+const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
+const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
+const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
+const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
+const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
+const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
+const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
+const ARABIC_SAAD = DUCTUS[ductusKey("arabic", "ص")];
+const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
+const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
+const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
+const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
+const ARABIC_HEH = DUCTUS[ductusKey("arabic", "ه")];
+const ARABIC_WAW = DUCTUS[ductusKey("arabic", "و")];
+const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -33,8 +91,10 @@ const URDU_KAF = DUCTUS[ductusKey("urdu-nastaliq", "ک")];
 const URDU_LAM = DUCTUS[ductusKey("urdu-nastaliq", "ل")];
 const URDU_MIM = DUCTUS[ductusKey("urdu-nastaliq", "م")];
 const URDU_NUN = DUCTUS[ductusKey("urdu-nastaliq", "ن")];
+const URDU_GHUNNA = DUCTUS[ductusKey("urdu-nastaliq", "ں")];
 const URDU_HE = DUCTUS[ductusKey("urdu-nastaliq", "ہ")];
 const URDU_YE = DUCTUS[ductusKey("urdu-nastaliq", "ی")];
+const URDU_BARI_YE = DUCTUS[ductusKey("urdu-nastaliq", "ے")];
 
 const fontForDuctus = (letter: LetterDuctus) => {
   const script = SCRIPTS.find((candidate) => candidate.script === letter.script);
@@ -195,6 +255,611 @@ describe("handwriting ductus", () => {
   it("ம is written without lifting the pen (one stroke)", () => {
     expect(penLifts(DUCTUS["ம"])).toBe(0);
     expect(DUCTUS["ம"].strokes).toHaveLength(1);
+  });
+
+  it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {
+    expect(CHINESE_REN.script).toBe("chinese");
+    expect(penLifts(CHINESE_REN)).toBe(1);
+    expect(CHINESE_REN.strokes).toHaveLength(2);
+    expect(CHINESE_REN.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const left = CHINESE_REN.strokes[0].segments[0].path;
+    const right = CHINESE_REN.strokes[1].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(right[0].x).toBeLessThan(right.at(-1)!.x);
+  });
+
+  it("Chinese 亻 draws the left-falling stroke before the lifted vertical", () => {
+    expect(CHINESE_PERSON_RADICAL.script).toBe("chinese");
+    expect(penLifts(CHINESE_PERSON_RADICAL)).toBe(1);
+    expect(CHINESE_PERSON_RADICAL.strokes).toHaveLength(2);
+    expect(CHINESE_PERSON_RADICAL.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const left = CHINESE_PERSON_RADICAL.strokes[0].segments[0].path;
+    const vertical = CHINESE_PERSON_RADICAL.strokes[1].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
+    expect(vertical[0].y).toBeGreaterThan(vertical.at(-1)!.y);
+    expect(vertical[0].x).toBe(vertical.at(-1)!.x);
+  });
+
+  it("Chinese 口 descends the left, joins the top and right, then closes the bottom", () => {
+    expect(CHINESE_MOUTH.script).toBe("chinese");
+    expect(penLifts(CHINESE_MOUTH)).toBe(2);
+    expect(CHINESE_MOUTH.strokes).toHaveLength(3);
+    expect(CHINESE_MOUTH.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1]);
+    const left = CHINESE_MOUTH.strokes[0].segments[0].path;
+    const top = CHINESE_MOUTH.strokes[1].segments[0].path;
+    const right = CHINESE_MOUTH.strokes[1].segments[1].path;
+    const bottom = CHINESE_MOUTH.strokes[2].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(top.at(-1)).toEqual(right[0]);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(bottom[0].x).toBeLessThan(bottom.at(-1)!.x);
+  });
+
+  it("Chinese 女 keeps its first bend joined before the falling and horizontal strokes", () => {
+    expect(CHINESE_WOMAN.script).toBe("chinese");
+    expect(penLifts(CHINESE_WOMAN)).toBe(2);
+    expect(CHINESE_WOMAN.strokes).toHaveLength(3);
+    expect(CHINESE_WOMAN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const descent = CHINESE_WOMAN.strokes[0].segments[0].path;
+    const sweep = CHINESE_WOMAN.strokes[0].segments[1].path;
+    const falling = CHINESE_WOMAN.strokes[1].segments[0].path;
+    const horizontal = CHINESE_WOMAN.strokes[2].segments[0].path;
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent[0].x).toBeGreaterThan(descent.at(-1)!.x);
+    expect(descent.at(-1)).toEqual(sweep[0]);
+    expect(sweep[0].x).toBeLessThan(sweep.at(-1)!.x);
+    expect(sweep[0].y).toBeGreaterThan(sweep.at(-1)!.y);
+    expect(falling[0].x).toBeGreaterThan(falling.at(-1)!.x);
+    expect(falling[0].y).toBeGreaterThan(falling.at(-1)!.y);
+    expect(horizontal[0].x).toBeLessThan(horizontal.at(-1)!.x);
+  });
+
+  it("Chinese 子 keeps both hooks joined before its final horizontal", () => {
+    expect(CHINESE_CHILD.script).toBe("chinese");
+    expect(penLifts(CHINESE_CHILD)).toBe(2);
+    expect(CHINESE_CHILD.strokes).toHaveLength(3);
+    expect(CHINESE_CHILD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2, 1]);
+    const top = CHINESE_CHILD.strokes[0].segments[0].path;
+    const topTurn = CHINESE_CHILD.strokes[0].segments[1].path;
+    const vertical = CHINESE_CHILD.strokes[1].segments[0].path;
+    const baseHook = CHINESE_CHILD.strokes[1].segments[1].path;
+    const horizontal = CHINESE_CHILD.strokes[2].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(top.at(-1)).toEqual(topTurn[0]);
+    expect(topTurn[0].x).toBeGreaterThan(topTurn.at(-1)!.x);
+    expect(topTurn[0].y).toBeGreaterThan(topTurn.at(-1)!.y);
+    expect(vertical[0].y).toBeGreaterThan(vertical.at(-1)!.y);
+    expect(vertical.at(-1)).toEqual(baseHook[0]);
+    expect(baseHook[0].x).toBeGreaterThan(baseHook.at(-1)!.x);
+    expect(horizontal[0].x).toBeLessThan(horizontal.at(-1)!.x);
+  });
+
+  it("Chinese 日 writes the inside bar before separately closing the box", () => {
+    expect(CHINESE_SUN.script).toBe("chinese");
+    expect(penLifts(CHINESE_SUN)).toBe(3);
+    expect(CHINESE_SUN.strokes).toHaveLength(4);
+    expect(CHINESE_SUN.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1, 1]);
+    const left = CHINESE_SUN.strokes[0].segments[0].path;
+    const top = CHINESE_SUN.strokes[1].segments[0].path;
+    const right = CHINESE_SUN.strokes[1].segments[1].path;
+    const middle = CHINESE_SUN.strokes[2].segments[0].path;
+    const bottom = CHINESE_SUN.strokes[3].segments[0].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(top.at(-1)).toEqual(right[0]);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(middle[0].x).toBeLessThan(middle.at(-1)!.x);
+    expect(bottom[0].x).toBeLessThan(bottom.at(-1)!.x);
+  });
+
+  it("Chinese 讠 lifts after the dot and keeps both later turns joined", () => {
+    expect(CHINESE_SPEECH_RADICAL.script).toBe("chinese");
+    expect(penLifts(CHINESE_SPEECH_RADICAL)).toBe(1);
+    expect(CHINESE_SPEECH_RADICAL.strokes).toHaveLength(2);
+    expect(CHINESE_SPEECH_RADICAL.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 3]);
+    const dot = CHINESE_SPEECH_RADICAL.strokes[0].segments[0].path;
+    const horizontal = CHINESE_SPEECH_RADICAL.strokes[1].segments[0].path;
+    const descent = CHINESE_SPEECH_RADICAL.strokes[1].segments[1].path;
+    const rise = CHINESE_SPEECH_RADICAL.strokes[1].segments[2].path;
+    expect(dot[0].x).toBeLessThan(dot.at(-1)!.x);
+    expect(dot[0].y).toBeGreaterThan(dot.at(-1)!.y);
+    expect(horizontal[0].x).toBeLessThan(horizontal.at(-1)!.x);
+    expect(horizontal.at(-1)).toEqual(descent[0]);
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent.at(-1)).toEqual(rise[0]);
+    expect(rise[0].x).toBeLessThan(rise.at(-1)!.x);
+    expect(rise[0].y).toBeLessThan(rise.at(-1)!.y);
+  });
+
+  it("Chinese 氵 draws two falling dots before its joined rising bottom stroke", () => {
+    expect(CHINESE_WATER_RADICAL.script).toBe("chinese");
+    expect(penLifts(CHINESE_WATER_RADICAL)).toBe(2);
+    expect(CHINESE_WATER_RADICAL.strokes).toHaveLength(3);
+    expect(CHINESE_WATER_RADICAL.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2]);
+    const upper = CHINESE_WATER_RADICAL.strokes[0].segments[0].path;
+    const middle = CHINESE_WATER_RADICAL.strokes[1].segments[0].path;
+    const bottomTurn = CHINESE_WATER_RADICAL.strokes[2].segments[0].path;
+    const bottomRise = CHINESE_WATER_RADICAL.strokes[2].segments[1].path;
+    expect(upper[0].x).toBeLessThan(upper.at(-1)!.x);
+    expect(upper[0].y).toBeGreaterThan(upper.at(-1)!.y);
+    expect(middle[0].x).toBeLessThan(middle.at(-1)!.x);
+    expect(middle[0].y).toBeGreaterThan(middle.at(-1)!.y);
+    expect(bottomTurn[0].x).toBeGreaterThan(bottomTurn[1].x);
+    expect(bottomTurn.at(-1)).toEqual(bottomRise[0]);
+    expect(bottomRise[0].x).toBeLessThan(bottomRise.at(-1)!.x);
+    expect(bottomRise[0].y).toBeLessThan(bottomRise.at(-1)!.y);
+  });
+
+  it("Chinese 宀 draws two separate marks before its joined roof hook", () => {
+    expect(CHINESE_ROOF_RADICAL.script).toBe("chinese");
+    expect(penLifts(CHINESE_ROOF_RADICAL)).toBe(2);
+    expect(CHINESE_ROOF_RADICAL.strokes).toHaveLength(3);
+    expect(CHINESE_ROOF_RADICAL.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2]);
+    const dot = CHINESE_ROOF_RADICAL.strokes[0].segments[0].path;
+    const left = CHINESE_ROOF_RADICAL.strokes[1].segments[0].path;
+    const roof = CHINESE_ROOF_RADICAL.strokes[2].segments[0].path;
+    const hook = CHINESE_ROOF_RADICAL.strokes[2].segments[1].path;
+    expect(dot[0].x).toBeLessThan(dot.at(-1)!.x);
+    expect(dot[0].y).toBeGreaterThan(dot.at(-1)!.y);
+    expect(left[0].x).toBeGreaterThan(left.at(-1)!.x);
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(roof[0].x).toBeLessThan(roof.at(-1)!.x);
+    expect(roof.at(-1)).toEqual(hook[0]);
+    expect(hook[0].x).toBeGreaterThan(hook.at(-1)!.x);
+    expect(hook[0].y).toBeGreaterThan(hook.at(-1)!.y);
+  });
+
+  it("Chinese 你 writes 亻 before two joined hooks and two separate dots", () => {
+    expect(CHINESE_YOU.script).toBe("chinese");
+    expect(penLifts(CHINESE_YOU)).toBe(6);
+    expect(CHINESE_YOU.strokes).toHaveLength(7);
+    expect(CHINESE_YOU.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 2, 2, 1, 1]);
+    const personFall = CHINESE_YOU.strokes[0].segments[0].path;
+    const personVertical = CHINESE_YOU.strokes[1].segments[0].path;
+    const upperFall = CHINESE_YOU.strokes[2].segments[0].path;
+    const horizontal = CHINESE_YOU.strokes[3].segments[0].path;
+    const upperHook = CHINESE_YOU.strokes[3].segments[1].path;
+    const vertical = CHINESE_YOU.strokes[4].segments[0].path;
+    const baseHook = CHINESE_YOU.strokes[4].segments[1].path;
+    const leftDot = CHINESE_YOU.strokes[5].segments[0].path;
+    const rightDot = CHINESE_YOU.strokes[6].segments[0].path;
+    expect(personFall[0].x).toBeGreaterThan(personFall.at(-1)!.x);
+    expect(personVertical[0].y).toBeGreaterThan(personVertical.at(-1)!.y);
+    expect(upperFall[0].x).toBeGreaterThan(upperFall.at(-1)!.x);
+    expect(horizontal.at(-1)).toEqual(upperHook[0]);
+    expect(upperHook[0].x).toBeGreaterThan(upperHook.at(-1)!.x);
+    expect(vertical.at(-1)).toEqual(baseHook[0]);
+    expect(baseHook[0].x).toBeGreaterThan(baseHook.at(-1)!.x);
+    expect(leftDot[0].x).toBeGreaterThan(leftDot.at(-1)!.x);
+    expect(rightDot[0].x).toBeLessThan(rightDot.at(-1)!.x);
+  });
+
+  it("Chinese 好 writes 女 before 子 with three joined turns", () => {
+    expect(CHINESE_GOOD.script).toBe("chinese");
+    expect(penLifts(CHINESE_GOOD)).toBe(5);
+    expect(CHINESE_GOOD.strokes).toHaveLength(6);
+    expect(CHINESE_GOOD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 2, 2, 1]);
+    const womanBend = CHINESE_GOOD.strokes[0].segments[0].path;
+    const womanSweep = CHINESE_GOOD.strokes[0].segments[1].path;
+    const womanFall = CHINESE_GOOD.strokes[1].segments[0].path;
+    const womanBar = CHINESE_GOOD.strokes[2].segments[0].path;
+    const childBar = CHINESE_GOOD.strokes[3].segments[0].path;
+    const childTurn = CHINESE_GOOD.strokes[3].segments[1].path;
+    const childVertical = CHINESE_GOOD.strokes[4].segments[0].path;
+    const childHook = CHINESE_GOOD.strokes[4].segments[1].path;
+    const childMiddle = CHINESE_GOOD.strokes[5].segments[0].path;
+    expect(womanBend.at(-1)).toEqual(womanSweep[0]);
+    expect(womanSweep[0].x).toBeLessThan(womanSweep.at(-1)!.x);
+    expect(womanFall[0].x).toBeGreaterThan(womanFall.at(-1)!.x);
+    expect(womanBar[0].x).toBeLessThan(womanBar.at(-1)!.x);
+    expect(childBar.at(-1)).toEqual(childTurn[0]);
+    expect(childTurn[0].x).toBeGreaterThan(childTurn.at(-1)!.x);
+    expect(childVertical.at(-1)).toEqual(childHook[0]);
+    expect(childHook[0].x).toBeGreaterThan(childHook.at(-1)!.x);
+    expect(childMiddle[0].x).toBeLessThan(childMiddle.at(-1)!.x);
+  });
+
+  it("Chinese 我 preserves seven strokes and the joined vertical hook", () => {
+    expect(CHINESE_I.script).toBe("chinese");
+    expect(penLifts(CHINESE_I)).toBe(6);
+    expect(CHINESE_I.strokes).toHaveLength(7);
+    expect(CHINESE_I.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2, 1, 2, 1, 1]);
+    const vertical = CHINESE_I.strokes[2].segments[0].path;
+    const hook = CHINESE_I.strokes[2].segments[1].path;
+    expect(vertical.at(-1)).toEqual(hook[0]);
+    expect(hook[0].x).toBeGreaterThan(hook.at(-1)!.x);
+    const slash = CHINESE_I.strokes[4].segments[0].path;
+    const slashHook = CHINESE_I.strokes[4].segments[1].path;
+    expect(slash.at(-1)).toEqual(slashHook[0]);
+    expect(slashHook[0].y).toBeLessThan(slashHook.at(-1)!.y);
+  });
+
+  it("Chinese 是 closes 日 before its five-stroke lower body", () => {
+    expect(CHINESE_BE.script).toBe("chinese");
+    expect(penLifts(CHINESE_BE)).toBe(8);
+    expect(CHINESE_BE.strokes).toHaveLength(9);
+    expect(CHINESE_BE.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1, 1, 1, 1, 1, 1, 1]);
+    const top = CHINESE_BE.strokes[1].segments[0].path;
+    const right = CHINESE_BE.strokes[1].segments[1].path;
+    expect(top.at(-1)).toEqual(right[0]);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+  });
+
+  it("Chinese 不 keeps its four source strokes as four pen-down runs", () => {
+    expect(CHINESE_NOT.script).toBe("chinese");
+    expect(penLifts(CHINESE_NOT)).toBe(3);
+    expect(CHINESE_NOT.strokes).toHaveLength(4);
+    expect(CHINESE_NOT.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 1]);
+    expect(CHINESE_NOT.strokes[0].segments[0].path.at(-1)!.x).toBeGreaterThan(
+      CHINESE_NOT.strokes[0].segments[0].path[0].x,
+    );
+    expect(CHINESE_NOT.strokes[1].segments[0].path.at(-1)!.x).toBeLessThan(
+      CHINESE_NOT.strokes[1].segments[0].path[0].x,
+    );
+  });
+
+  it("Chinese 名 completes 夕 before 口 and preserves both joined turns", () => {
+    expect(CHINESE_NAME.script).toBe("chinese");
+    expect(penLifts(CHINESE_NAME)).toBe(5);
+    expect(CHINESE_NAME.strokes).toHaveLength(6);
+    expect(CHINESE_NAME.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1, 1, 2, 1]);
+    expect(CHINESE_NAME.strokes[1].segments[0].path.at(-1)).toEqual(CHINESE_NAME.strokes[1].segments[1].path[0]);
+    expect(CHINESE_NAME.strokes[4].segments[0].path.at(-1)).toEqual(CHINESE_NAME.strokes[4].segments[1].path[0]);
+  });
+
+  it("Chinese 字 completes 宀 before 子 and preserves all three joined turns", () => {
+    expect(CHINESE_CHARACTER.script).toBe("chinese");
+    expect(penLifts(CHINESE_CHARACTER)).toBe(5);
+    expect(CHINESE_CHARACTER.strokes).toHaveLength(6);
+    expect(CHINESE_CHARACTER.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2, 2, 2, 1]);
+    for (const strokeIndex of [2, 3, 4]) {
+      expect(CHINESE_CHARACTER.strokes[strokeIndex].segments[0].path.at(-1)).toEqual(
+        CHINESE_CHARACTER.strokes[strokeIndex].segments[1].path[0],
+      );
+    }
+  });
+
+  it("Chinese 谢 completes 讠, 身, and 寸 in order and preserves all five joined turns", () => {
+    expect(CHINESE_THANK.script).toBe("chinese");
+    expect(penLifts(CHINESE_THANK)).toBe(11);
+    expect(CHINESE_THANK.strokes).toHaveLength(12);
+    expect(CHINESE_THANK.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 2, 1,
+    ]);
+    for (const strokeIndex of [1, 4]) {
+      for (let segmentIndex = 0; segmentIndex < 2; segmentIndex++) {
+        expect(CHINESE_THANK.strokes[strokeIndex].segments[segmentIndex].path.at(-1)).toEqual(
+          CHINESE_THANK.strokes[strokeIndex].segments[segmentIndex + 1].path[0],
+        );
+      }
+    }
+    expect(CHINESE_THANK.strokes[10].segments[0].path.at(-1)).toEqual(
+      CHINESE_THANK.strokes[10].segments[1].path[0],
+    );
+  });
+
+  it("Chinese 请 completes 讠 before 青 and preserves all four joined turns", () => {
+    expect(CHINESE_PLEASE.script).toBe("chinese");
+    expect(penLifts(CHINESE_PLEASE)).toBe(9);
+    expect(CHINESE_PLEASE.strokes).toHaveLength(10);
+    expect(CHINESE_PLEASE.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 3, 1, 1, 1, 1, 1, 3, 1, 1,
+    ]);
+    for (const strokeIndex of [1, 7]) {
+      for (let segmentIndex = 0; segmentIndex < 2; segmentIndex++) {
+        expect(CHINESE_PLEASE.strokes[strokeIndex].segments[segmentIndex].path.at(-1)).toEqual(
+          CHINESE_PLEASE.strokes[strokeIndex].segments[segmentIndex + 1].path[0],
+        );
+      }
+    }
+  });
+
+  it("Hebrew א uses two crossed pen-down runs with one lift", () => {
+    expect(HEBREW_ALEF.script).toBe("hebrew");
+    expect(penLifts(HEBREW_ALEF)).toBe(1);
+    expect(HEBREW_ALEF.strokes).toHaveLength(2);
+    expect(HEBREW_ALEF.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2]);
+    const main = penPath(HEBREW_ALEF.strokes[0]);
+    const opposing = penPath(HEBREW_ALEF.strokes[1]);
+    expect(main[0].x).toBeLessThan(main.at(-1)!.x);
+    expect(main[0].y).toBeGreaterThan(main.at(-1)!.y);
+    expect(opposing[0].x).toBeGreaterThan(opposing.at(-1)!.x);
+    expect(opposing[0].y).toBeGreaterThan(opposing.at(-1)!.y);
+  });
+
+  it("Hebrew ב joins its top and right side before the lifted baseline", () => {
+    expect(HEBREW_BET.script).toBe("hebrew");
+    expect(penLifts(HEBREW_BET)).toBe(1);
+    expect(HEBREW_BET.strokes).toHaveLength(2);
+    expect(HEBREW_BET.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_BET.strokes[0].segments[0].path;
+    const down = HEBREW_BET.strokes[0].segments[1].path;
+    const base = HEBREW_BET.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(down[0]).toEqual(top.at(-1));
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(base[0].x).toBeLessThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew ה joins its top and right side before the detached left leg", () => {
+    expect(HEBREW_HEI.script).toBe("hebrew");
+    expect(penLifts(HEBREW_HEI)).toBe(1);
+    expect(HEBREW_HEI.strokes).toHaveLength(2);
+    expect(HEBREW_HEI.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_HEI.strokes[0].segments[0].path;
+    const down = HEBREW_HEI.strokes[0].segments[1].path;
+    const detached = HEBREW_HEI.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(down[0]).toEqual(top.at(-1));
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(detached[0].y).toBeGreaterThan(detached.at(-1)!.y);
+  });
+
+  it("Hebrew ו joins its small head directly to its descending stem", () => {
+    expect(HEBREW_VAV.script).toBe("hebrew");
+    expect(penLifts(HEBREW_VAV)).toBe(0);
+    expect(HEBREW_VAV.strokes).toHaveLength(1);
+    expect(HEBREW_VAV.strokes.map((stroke) => stroke.segments.length)).toEqual([2]);
+    const head = HEBREW_VAV.strokes[0].segments[0].path;
+    const stem = HEBREW_VAV.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(stem[0]).toEqual(head.at(-1));
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+  });
+
+  it("Hebrew ז joins its short head directly to its curved stem", () => {
+    expect(HEBREW_ZAYIN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_ZAYIN)).toBe(0);
+    expect(HEBREW_ZAYIN.strokes).toHaveLength(1);
+    expect(HEBREW_ZAYIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2]);
+    const head = HEBREW_ZAYIN.strokes[0].segments[0].path;
+    const stem = HEBREW_ZAYIN.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(stem[0]).toEqual(head.at(-1));
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+  });
+
+  it("Hebrew ח joins its top and right side before restarting the joined left leg", () => {
+    expect(HEBREW_HEIT.script).toBe("hebrew");
+    expect(penLifts(HEBREW_HEIT)).toBe(1);
+    expect(HEBREW_HEIT.strokes).toHaveLength(2);
+    expect(HEBREW_HEIT.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_HEIT.strokes[0].segments[0].path;
+    const down = HEBREW_HEIT.strokes[0].segments[1].path;
+    const joined = HEBREW_HEIT.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(down[0]).toEqual(top.at(-1));
+    expect(down[0].y).toBeGreaterThan(down.at(-1)!.y);
+    expect(joined[0].y).toBeGreaterThan(joined.at(-1)!.y);
+  });
+
+  it("Hebrew ט draws its left-and-base body before the bottom-up hooked side", () => {
+    expect(HEBREW_TET.script).toBe("hebrew");
+    expect(penLifts(HEBREW_TET)).toBe(1);
+    expect(HEBREW_TET.strokes).toHaveLength(2);
+    expect(HEBREW_TET.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2]);
+    const left = HEBREW_TET.strokes[0].segments[0].path;
+    const base = HEBREW_TET.strokes[0].segments[1].path;
+    const right = HEBREW_TET.strokes[1].segments[0].path;
+    const hook = HEBREW_TET.strokes[1].segments[1].path;
+    expect(left[0].y).toBeGreaterThan(left.at(-1)!.y);
+    expect(base[0]).toEqual(left.at(-1));
+    expect(base[0].x).toBeLessThan(base.at(-1)!.x);
+    expect(right[0]).toEqual(base.at(-1));
+    expect(right[0].y).toBeLessThan(right.at(-1)!.y);
+    expect(hook[0]).toEqual(right.at(-1));
+    expect(hook.at(-1)!.x).toBeLessThan(hook[0].x);
+  });
+
+  it("Hebrew י joins its tiny head directly to the short descending stem", () => {
+    expect(HEBREW_YOD.script).toBe("hebrew");
+    expect(penLifts(HEBREW_YOD)).toBe(0);
+    expect(HEBREW_YOD.strokes).toHaveLength(1);
+    expect(HEBREW_YOD.strokes[0].segments).toHaveLength(2);
+    const head = HEBREW_YOD.strokes[0].segments[0].path;
+    const stem = HEBREW_YOD.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(stem[0]).toEqual(head.at(-1));
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(Math.min(...stem.map((point) => point.y))).toBeGreaterThan(250);
+  });
+
+  it("Hebrew כ turns its top bar into the right side and base without lifting", () => {
+    expect(HEBREW_KAF.script).toBe("hebrew");
+    expect(penLifts(HEBREW_KAF)).toBe(0);
+    expect(HEBREW_KAF.strokes).toHaveLength(1);
+    expect(HEBREW_KAF.strokes[0].segments).toHaveLength(3);
+    const top = HEBREW_KAF.strokes[0].segments[0].path;
+    const side = HEBREW_KAF.strokes[0].segments[1].path;
+    const base = HEBREW_KAF.strokes[0].segments[2].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(side[0]).toEqual(top.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew ל descends, travels right, then turns diagonally down-left", () => {
+    expect(HEBREW_LAMED.script).toBe("hebrew");
+    expect(penLifts(HEBREW_LAMED)).toBe(0);
+    expect(HEBREW_LAMED.strokes).toHaveLength(1);
+    expect(HEBREW_LAMED.strokes[0].segments).toHaveLength(3);
+    const tall = HEBREW_LAMED.strokes[0].segments[0].path;
+    const bar = HEBREW_LAMED.strokes[0].segments[1].path;
+    const lower = HEBREW_LAMED.strokes[0].segments[2].path;
+    expect(tall[0].y).toBeGreaterThan(tall.at(-1)!.y);
+    expect(bar[0]).toEqual(tall.at(-1));
+    expect(bar[0].x).toBeLessThan(bar.at(-1)!.x);
+    expect(lower[0]).toEqual(bar.at(-1));
+    expect(lower[0].y).toBeGreaterThan(lower.at(-1)!.y);
+    expect(lower[0].x).toBeGreaterThan(lower.at(-1)!.x);
+  });
+
+  it("Hebrew מ lifts once between its detached angled part and joined right body", () => {
+    expect(HEBREW_MEM.script).toBe("hebrew");
+    expect(penLifts(HEBREW_MEM)).toBe(1);
+    expect(HEBREW_MEM.strokes).toHaveLength(2);
+    expect(HEBREW_MEM.strokes[0].segments).toHaveLength(2);
+    expect(HEBREW_MEM.strokes[1].segments).toHaveLength(3);
+    const diagonal = HEBREW_MEM.strokes[0].segments[0].path;
+    const inner = HEBREW_MEM.strokes[0].segments[1].path;
+    const upper = HEBREW_MEM.strokes[1].segments[0].path;
+    const side = HEBREW_MEM.strokes[1].segments[1].path;
+    const base = HEBREW_MEM.strokes[1].segments[2].path;
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+    expect(diagonal[0].y).toBeLessThan(diagonal.at(-1)!.y);
+    expect(inner[0]).toEqual(diagonal.at(-1));
+    expect(inner[0].y).toBeGreaterThan(inner.at(-1)!.y);
+    expect(upper[0].x).toBeLessThan(upper.at(-1)!.x);
+    expect(side[0]).toEqual(upper.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew נ joins its top head, right descent, and leftward base", () => {
+    expect(HEBREW_NUN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_NUN)).toBe(0);
+    expect(HEBREW_NUN.strokes).toHaveLength(1);
+    expect(HEBREW_NUN.strokes[0].segments).toHaveLength(3);
+    const head = HEBREW_NUN.strokes[0].segments[0].path;
+    const side = HEBREW_NUN.strokes[0].segments[1].path;
+    const base = HEBREW_NUN.strokes[0].segments[2].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(side[0]).toEqual(head.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+  });
+
+  it("Hebrew ס closes its printed loop clockwise without lifting", () => {
+    expect(HEBREW_SAMEKH.script).toBe("hebrew");
+    expect(penLifts(HEBREW_SAMEKH)).toBe(0);
+    expect(HEBREW_SAMEKH.strokes).toHaveLength(1);
+    expect(HEBREW_SAMEKH.strokes[0].segments).toHaveLength(4);
+    const [top, right, base, left] = HEBREW_SAMEKH.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(right[0]).toEqual(top.at(-1));
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(base[0]).toEqual(right.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(left[0]).toEqual(base.at(-1));
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(left.at(-1)).toEqual(top[0]);
+  });
+
+  it("Hebrew ע descends, sweeps left, and climbs without lifting", () => {
+    expect(HEBREW_AYIN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_AYIN)).toBe(0);
+    expect(HEBREW_AYIN.strokes).toHaveLength(1);
+    expect(HEBREW_AYIN.strokes[0].segments).toHaveLength(3);
+    const [right, base, left] = HEBREW_AYIN.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(base[0]).toEqual(right.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(left[0]).toEqual(base.at(-1));
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+  });
+
+  it("Hebrew פ draws its outer body before the lifted inner curl", () => {
+    expect(HEBREW_PE.script).toBe("hebrew");
+    expect(penLifts(HEBREW_PE)).toBe(1);
+    expect(HEBREW_PE.strokes).toHaveLength(2);
+    expect(HEBREW_PE.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    const [top, side, base] = HEBREW_PE.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const inner = HEBREW_PE.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(side[0]).toEqual(top.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+    expect(base[0]).toEqual(side.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(inner[0].x).toBeLessThan(inner.at(-1)!.x);
+  });
+
+  it("Hebrew צ turns its long diagonal into the base before the lifted arm", () => {
+    expect(HEBREW_TSADI.script).toBe("hebrew");
+    expect(penLifts(HEBREW_TSADI)).toBe(1);
+    expect(HEBREW_TSADI.strokes).toHaveLength(2);
+    expect(HEBREW_TSADI.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const diagonal = HEBREW_TSADI.strokes[0].segments[0].path;
+    const base = HEBREW_TSADI.strokes[0].segments[1].path;
+    const arm = HEBREW_TSADI.strokes[1].segments[0].path;
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+    expect(diagonal[0].y).toBeGreaterThan(diagonal.at(-1)!.y);
+    expect(base[0]).toEqual(diagonal.at(-1));
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    expect(arm[0].x).toBeGreaterThan(arm.at(-1)!.x);
+    expect(arm[0].y).toBeGreaterThan(arm.at(-1)!.y);
+  });
+
+  it("Hebrew ק joins its top and right body before the lifted descender", () => {
+    expect(HEBREW_QOF.script).toBe("hebrew");
+    expect(penLifts(HEBREW_QOF)).toBe(1);
+    expect(HEBREW_QOF.strokes).toHaveLength(2);
+    expect(HEBREW_QOF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const top = HEBREW_QOF.strokes[0].segments[0].path;
+    const body = HEBREW_QOF.strokes[0].segments[1].path;
+    const stem = HEBREW_QOF.strokes[1].segments[0].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(body[0]).toEqual(top.at(-1));
+    expect(body[0].x).toBeGreaterThan(body.at(-1)!.x);
+    expect(body[0].y).toBeGreaterThan(body.at(-1)!.y);
+    expect(stem[0].y).toBeGreaterThan(0);
+    expect(stem.at(-1)!.y).toBeLessThan(0);
+  });
+
+  it("Hebrew ר rounds its top bar directly into the right downstroke", () => {
+    expect(HEBREW_RESH.script).toBe("hebrew");
+    expect(penLifts(HEBREW_RESH)).toBe(0);
+    expect(HEBREW_RESH.strokes).toHaveLength(1);
+    expect(HEBREW_RESH.strokes[0].segments).toHaveLength(2);
+    const top = HEBREW_RESH.strokes[0].segments[0].path;
+    const side = HEBREW_RESH.strokes[0].segments[1].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(side[0]).toEqual(top.at(-1));
+    expect(side[0].y).toBeGreaterThan(side.at(-1)!.y);
+  });
+
+  it("Hebrew ש draws its outer bowl before the lifted middle branch", () => {
+    expect(HEBREW_SHIN.script).toBe("hebrew");
+    expect(penLifts(HEBREW_SHIN)).toBe(1);
+    expect(HEBREW_SHIN.strokes).toHaveLength(2);
+    expect(HEBREW_SHIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const outer = HEBREW_SHIN.strokes[0].segments[0].path;
+    const left = HEBREW_SHIN.strokes[0].segments[1].path;
+    const middle = HEBREW_SHIN.strokes[1].segments[0].path;
+    expect(outer[0].y).toBeGreaterThan(outer.at(-1)!.y);
+    expect(outer[0].x).toBeGreaterThan(outer.at(-1)!.x);
+    expect(left[0]).toEqual(outer.at(-1));
+    expect(left[0].y).toBeLessThan(left.at(-1)!.y);
+    expect(middle[0].y).toBeGreaterThan(middle.at(-1)!.y);
+  });
+
+  it("Hebrew ת joins its top and right side before the lifted left leg", () => {
+    expect(HEBREW_TAV.script).toBe("hebrew");
+    expect(penLifts(HEBREW_TAV)).toBe(1);
+    expect(HEBREW_TAV.strokes).toHaveLength(2);
+    expect(HEBREW_TAV.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2]);
+    const top = HEBREW_TAV.strokes[0].segments[0].path;
+    const right = HEBREW_TAV.strokes[0].segments[1].path;
+    const leg = HEBREW_TAV.strokes[1].segments[0].path;
+    const foot = HEBREW_TAV.strokes[1].segments[1].path;
+    expect(top[0].x).toBeLessThan(top.at(-1)!.x);
+    expect(right[0]).toEqual(top.at(-1));
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(leg[0].y).toBeGreaterThan(leg.at(-1)!.y);
+    expect(foot[0]).toEqual(leg.at(-1));
+    expect(foot[0].x).toBeGreaterThan(foot.at(-1)!.x);
   });
 
   it("அ lifts once before its separate right upright (two strokes)", () => {
@@ -382,6 +1047,17 @@ describe("handwriting ductus", () => {
     expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(0);
   });
 
+  it("Urdu independent ں reuses ن's below-baseline bowl without a dot or lift", () => {
+    expect(URDU_GHUNNA.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_GHUNNA)).toBe(0);
+    expect(URDU_GHUNNA.strokes).toHaveLength(1);
+    expect(URDU_GHUNNA.strokes[0].segments).toHaveLength(1);
+    const bowl = URDU_GHUNNA.strokes[0].segments[0].path;
+    expect(bowl).toEqual(URDU_NUN.strokes[0].segments[0].path);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(0);
+  });
+
   it("Urdu independent ہ closes its counterclockwise teardrop without lifting", () => {
     expect(URDU_HE.script).toBe("urdu-nastaliq");
     expect(penLifts(URDU_HE)).toBe(0);
@@ -408,6 +1084,270 @@ describe("handwriting ductus", () => {
     expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(-200);
     expect(bowl.at(-1)!.x).toBeLessThan(bowl[0].x);
     expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
+  });
+
+  it("Urdu independent ے folds its broad bowl back underneath without lifting", () => {
+    expect(URDU_BARI_YE.script).toBe("urdu-nastaliq");
+    expect(penLifts(URDU_BARI_YE)).toBe(0);
+    expect(URDU_BARI_YE.strokes).toHaveLength(1);
+    expect(URDU_BARI_YE.strokes[0].segments).toHaveLength(3);
+    const upper = URDU_BARI_YE.strokes[0].segments[0].path;
+    const curl = URDU_BARI_YE.strokes[0].segments[1].path;
+    const lower = URDU_BARI_YE.strokes[0].segments[2].path;
+    expect(upper.at(-1)).toEqual(curl[0]);
+    expect(curl.at(-1)).toEqual(lower[0]);
+    expect(upper[0].y).toBeGreaterThan(upper.at(-1)!.y);
+    expect(upper.at(-1)!.x).toBeLessThan(upper[0].x);
+    expect(Math.min(...curl.map((point) => point.x))).toBeLessThan(upper.at(-1)!.x);
+    expect(lower.at(-1)!.x).toBeGreaterThan(lower[0].x);
+  });
+
+  it("Arabic independent ا descends in one unbroken stroke", () => {
+    expect(penLifts(ARABIC_ALEF)).toBe(0);
+    expect(ARABIC_ALEF.strokes).toHaveLength(1);
+    expect(ARABIC_ALEF.strokes[0].segments).toHaveLength(1);
+    const path = penPath(ARABIC_ALEF.strokes[0]);
+    expect(path[0].y).toBeGreaterThan(path.at(-1)!.y);
+  });
+
+  it("Arabic independent ب sweeps right-to-left, then lifts once for the dot", () => {
+    expect(penLifts(ARABIC_BAA)).toBe(1);
+    expect(ARABIC_BAA.strokes).toHaveLength(2);
+    expect(ARABIC_BAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const bowl = penPath(ARABIC_BAA.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
+  it("Arabic independent ت uses the shared bowl, then two separately lifted dots", () => {
+    expect(penLifts(ARABIC_TAA)).toBe(2);
+    expect(ARABIC_TAA.strokes).toHaveLength(3);
+    expect(ARABIC_TAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const bowl = penPath(ARABIC_TAA.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(ARABIC_TAA.strokes[1].segments[0].path[0].x).toBeLessThan(
+      ARABIC_TAA.strokes[2].segments[0].path[0].x,
+    );
+  });
+
+  it("Arabic independent ج draws its body first, then lifts once for the dot", () => {
+    expect(penLifts(ARABIC_JEEM)).toBe(1);
+    expect(ARABIC_JEEM.strokes).toHaveLength(2);
+    expect(ARABIC_JEEM.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const head = ARABIC_JEEM.strokes[0].segments[0].path;
+    const bowl = ARABIC_JEEM.strokes[0].segments[1].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(
+      Math.min(...head.map((point) => point.y)),
+    );
+  });
+
+  it("Arabic independent ح draws a short stem, then lifts once for its dotless bowl", () => {
+    expect(penLifts(ARABIC_HAA)).toBe(1);
+    expect(ARABIC_HAA.strokes).toHaveLength(2);
+    expect(ARABIC_HAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2]);
+    const stem = ARABIC_HAA.strokes[0].segments[0].path;
+    const head = ARABIC_HAA.strokes[1].segments[0].path;
+    const bowl = ARABIC_HAA.strokes[1].segments[1].path;
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    expect(head[0]).toEqual(stem[0]);
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(
+      Math.min(...head.map((point) => point.y)),
+    );
+  });
+
+  it("Arabic independent خ draws its body first, then lifts once for the upper dot", () => {
+    expect(penLifts(ARABIC_KHAA)).toBe(1);
+    expect(ARABIC_KHAA.strokes).toHaveLength(2);
+    expect(ARABIC_KHAA.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const head = ARABIC_KHAA.strokes[0].segments[0].path;
+    const bowl = ARABIC_KHAA.strokes[0].segments[1].path;
+    const dot = ARABIC_KHAA.strokes[1].segments[0].path;
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...head.map((point) => point.y)),
+    );
+  });
+
+  it("Arabic independent د descends and turns left without lifting", () => {
+    expect(penLifts(ARABIC_DAAL)).toBe(0);
+    expect(ARABIC_DAAL.strokes).toHaveLength(1);
+    expect(ARABIC_DAAL.strokes[0].segments).toHaveLength(2);
+    const shoulder = ARABIC_DAAL.strokes[0].segments[0].path;
+    const baseline = ARABIC_DAAL.strokes[0].segments[1].path;
+    expect(shoulder[0].y).toBeGreaterThan(shoulder.at(-1)!.y);
+    expect(shoulder[0].x).toBeLessThan(shoulder.at(-1)!.x);
+    expect(shoulder.at(-1)).toEqual(baseline[0]);
+    expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
+  });
+
+  it("Arabic independent ر descends and sweeps left without lifting", () => {
+    expect(penLifts(ARABIC_RAA)).toBe(0);
+    expect(ARABIC_RAA.strokes).toHaveLength(1);
+    expect(ARABIC_RAA.strokes[0].segments).toHaveLength(2);
+    const descent = ARABIC_RAA.strokes[0].segments[0].path;
+    const curve = ARABIC_RAA.strokes[0].segments[1].path;
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent.at(-1)).toEqual(curve[0]);
+    expect(curve[0].x).toBeGreaterThan(curve.at(-1)!.x);
+  });
+
+  it("Arabic independent س joins its three close teeth directly to the final bowl", () => {
+    expect(ARABIC_SEEN.script).toBe("arabic");
+    expect(penLifts(ARABIC_SEEN)).toBe(0);
+    expect(ARABIC_SEEN.strokes).toHaveLength(1);
+    expect(ARABIC_SEEN.strokes[0].segments).toHaveLength(2);
+    const teeth = ARABIC_SEEN.strokes[0].segments[0].path;
+    const bowl = ARABIC_SEEN.strokes[0].segments[1].path;
+    expect(teeth[0].x).toBeGreaterThan(teeth.at(-1)!.x);
+    expect(teeth.at(-1)).toEqual(bowl[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+  });
+
+  it("Arabic independent ش writes its body before three separately lifted dots", () => {
+    expect(ARABIC_SHIIN.script).toBe("arabic");
+    expect(penLifts(ARABIC_SHIIN)).toBe(3);
+    expect(ARABIC_SHIIN.strokes).toHaveLength(4);
+    expect(ARABIC_SHIIN.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    const teeth = ARABIC_SHIIN.strokes[0].segments[0].path;
+    const bowl = ARABIC_SHIIN.strokes[0].segments[1].path;
+    expect(teeth.at(-1)).toEqual(bowl[0]);
+    const [lowerLeft, lowerRight, upper] = ARABIC_SHIIN.strokes.slice(1).map(
+      (stroke) => stroke.segments[0].path,
+    );
+    expect(lowerLeft[0].x).toBeLessThan(lowerRight[0].x);
+    expect(upper[0].y).toBeGreaterThan(lowerLeft[0].y);
+    expect(upper[0].y).toBeGreaterThan(lowerRight[0].y);
+  });
+
+  it("Arabic independent ص lifts once between its closed oval and trailing bowl", () => {
+    expect(ARABIC_SAAD.script).toBe("arabic");
+    expect(penLifts(ARABIC_SAAD)).toBe(1);
+    expect(ARABIC_SAAD.strokes).toHaveLength(2);
+    expect(ARABIC_SAAD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const oval = ARABIC_SAAD.strokes[0].segments[0].path;
+    const shoulder = ARABIC_SAAD.strokes[0].segments[1].path;
+    expect(oval[0]).toEqual(oval.at(-1));
+    expect(oval.at(-1)).toEqual(shoulder[0]);
+    expect(shoulder.at(-1)!.y).toBeGreaterThan(shoulder[0].y);
+    const bowl = ARABIC_SAAD.strokes[1].segments[0].path;
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    expect(bowl.at(-1)!.y).toBeGreaterThan(bowl[0].y);
+  });
+
+  it("Arabic independent ض repeats the ص body before a second lift places its dot", () => {
+    expect(ARABIC_DAAD.script).toBe("arabic");
+    expect(penLifts(ARABIC_DAAD)).toBe(2);
+    expect(ARABIC_DAAD.strokes).toHaveLength(3);
+    expect(ARABIC_DAAD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    expect(ARABIC_DAAD.strokes.slice(0, 2)).toEqual(ARABIC_SAAD.strokes);
+    const dot = ARABIC_DAAD.strokes[2].segments[0].path;
+    const bodyTop = Math.max(
+      ...ARABIC_DAAD.strokes.slice(0, 2).flatMap((stroke) =>
+        stroke.segments.flatMap((segment) => segment.path.map((point) => point.y)),
+      ),
+    );
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(bodyTop);
+    expect(dot[0]).toEqual(dot.at(-1));
+  });
+
+  it("Arabic independent ع joins its open head directly to the lower bowl", () => {
+    expect(ARABIC_AYN.script).toBe("arabic");
+    expect(penLifts(ARABIC_AYN)).toBe(0);
+    expect(ARABIC_AYN.strokes).toHaveLength(1);
+    expect(ARABIC_AYN.strokes[0].segments).toHaveLength(2);
+    const head = ARABIC_AYN.strokes[0].segments[0].path;
+    const bowl = ARABIC_AYN.strokes[0].segments[1].path;
+    expect(head[0].x).toBeGreaterThan(Math.min(...head.map((point) => point.x)));
+    expect(head.at(-1)).toEqual(bowl[0]);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    expect(bowl.at(-1)!.x).toBeGreaterThan(bowl[0].x);
+  });
+
+  it("Arabic independent ك turns along its base before lifting for the inner arm", () => {
+    expect(ARABIC_KAF.script).toBe("arabic");
+    expect(penLifts(ARABIC_KAF)).toBe(1);
+    expect(ARABIC_KAF.strokes).toHaveLength(2);
+    expect(ARABIC_KAF.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1]);
+    const upright = ARABIC_KAF.strokes[0].segments[0].path;
+    const base = ARABIC_KAF.strokes[0].segments[1].path;
+    expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
+    expect(upright.at(-1)).toEqual(base[0]);
+    expect(base[0].x).toBeGreaterThan(base.at(-1)!.x);
+    const inner = ARABIC_KAF.strokes[1].segments[0].path;
+    expect(inner[0].x).toBeGreaterThan(inner.at(-1)!.x);
+    expect(inner[0].y).toBeGreaterThan(inner.at(-1)!.y);
+  });
+
+  it("Arabic independent ل descends through its leftward bowl without lifting", () => {
+    expect(ARABIC_LAM.script).toBe("arabic");
+    expect(penLifts(ARABIC_LAM)).toBe(0);
+    expect(ARABIC_LAM.strokes).toHaveLength(1);
+    expect(ARABIC_LAM.strokes[0].segments).toHaveLength(2);
+    const upright = ARABIC_LAM.strokes[0].segments[0].path;
+    const bowl = ARABIC_LAM.strokes[0].segments[1].path;
+    expect(upright[0].y).toBeGreaterThan(upright.at(-1)!.y);
+    expect(upright.at(-1)).toEqual(bowl[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
+  });
+
+  it("Arabic independent ه closes both counters before its leftward baseline sweep", () => {
+    expect(ARABIC_HEH.script).toBe("arabic");
+    expect(penLifts(ARABIC_HEH)).toBe(0);
+    expect(ARABIC_HEH.strokes).toHaveLength(1);
+    expect(ARABIC_HEH.strokes[0].segments).toHaveLength(3);
+    const lower = ARABIC_HEH.strokes[0].segments[0].path;
+    const upperRight = ARABIC_HEH.strokes[0].segments[1].path;
+    const baseline = ARABIC_HEH.strokes[0].segments[2].path;
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(lower[0].y);
+    expect(lower.at(-1)).toEqual(upperRight[0]);
+    expect(Math.max(...upperRight.map((point) => point.x))).toBeGreaterThan(upperRight[0].x);
+    expect(upperRight.at(-1)).toEqual(baseline[0]);
+    expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
+  });
+
+  it("Arabic independent و closes its head before continuing through the leftward tail", () => {
+    expect(ARABIC_WAW.script).toBe("arabic");
+    expect(penLifts(ARABIC_WAW)).toBe(0);
+    expect(ARABIC_WAW.strokes).toHaveLength(1);
+    expect(ARABIC_WAW.strokes[0].segments).toHaveLength(2);
+    const head = ARABIC_WAW.strokes[0].segments[0].path;
+    const tail = ARABIC_WAW.strokes[0].segments[1].path;
+    expect(head[0]).toEqual(head.at(-1));
+    expect(Math.min(...head.map((point) => point.x))).toBeLessThan(head[0].x);
+    expect(Math.max(...head.map((point) => point.y))).toBeGreaterThan(head[0].y);
+    expect(head.at(-1)).toEqual(tail[0]);
+    expect(tail[0].x).toBeGreaterThan(tail.at(-1)!.x);
+    expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
+  });
+
+  it("Arabic independent ي completes its bowl before the lower-left and lower-right dots", () => {
+    expect(ARABIC_YAA.script).toBe("arabic");
+    expect(penLifts(ARABIC_YAA)).toBe(2);
+    expect(ARABIC_YAA.strokes).toHaveLength(3);
+    expect(ARABIC_YAA.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const descent = ARABIC_YAA.strokes[0].segments[0].path;
+    const bowl = ARABIC_YAA.strokes[0].segments[1].path;
+    expect(descent[0].y).toBeGreaterThan(descent.at(-1)!.y);
+    expect(descent.at(-1)).toEqual(bowl[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    const bodyFloor = Math.min(
+      ...ARABIC_YAA.strokes[0].segments.flatMap((segment) =>
+        segment.path.map((point) => point.y),
+      ),
+    );
+    const leftDot = ARABIC_YAA.strokes[1].segments[0].path;
+    const rightDot = ARABIC_YAA.strokes[2].segments[0].path;
+    expect(Math.max(...leftDot.map((point) => point.y))).toBeLessThan(bodyFloor);
+    expect(Math.max(...rightDot.map((point) => point.y))).toBeLessThan(bodyFloor);
+    expect(Math.max(...leftDot.map((point) => point.x))).toBeLessThan(
+      Math.min(...rightDot.map((point) => point.x)),
+    );
   });
 
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
@@ -531,6 +1471,112 @@ describe("handwriting ductus", () => {
   });
 
   it("routes each verified ductus to the owning script font", () => {
+    expect(verifiedLetterFont("人", CHINESE_REN.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("亻", CHINESE_PERSON_RADICAL.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("口", CHINESE_MOUTH.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("女", CHINESE_WOMAN.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("子", CHINESE_CHILD.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("日", CHINESE_SUN.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("讠", CHINESE_SPEECH_RADICAL.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("氵", CHINESE_WATER_RADICAL.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("宀", CHINESE_ROOF_RADICAL.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("你", CHINESE_YOU.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("好", CHINESE_GOOD.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
+    expect(verifiedLetterFont("我", CHINESE_I.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("是", CHINESE_BE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("不", CHINESE_NOT.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("名", CHINESE_NAME.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("字", CHINESE_CHARACTER.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("谢", CHINESE_THANK.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("请", CHINESE_PLEASE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ב", HEBREW_BET.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ג", HEBREW_GIMEL.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ד", HEBREW_DALET.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ה", HEBREW_HEI.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ו", HEBREW_VAV.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ז", HEBREW_ZAYIN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ח", HEBREW_HEIT.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ט", HEBREW_TET.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("י", HEBREW_YOD.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("כ", HEBREW_KAF.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ל", HEBREW_LAMED.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("מ", HEBREW_MEM.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("נ", HEBREW_NUN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ס", HEBREW_SAMEKH.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ע", HEBREW_AYIN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("פ", HEBREW_PE.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("צ", HEBREW_TSADI.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ק", HEBREW_QOF.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ר", HEBREW_RESH.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ש", HEBREW_SHIN.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
+    expect(verifiedLetterFont("ת", HEBREW_TAV.source.url)).toBe(
+      "_fonts/NotoSansHebrew-Static.ttf",
+    );
     expect(verifiedLetterFont("ம", DUCTUS["ம"].source.url)).toBe(
       "_fonts/NotoSansTamil-Static.ttf",
     );
@@ -543,7 +1589,489 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ا", URDU_ALEF.source.url)).toBe(
       "_fonts/NotoNaskhArabic-Static.ttf",
     );
+    expect(verifiedLetterFont("ا", ARABIC_ALEF.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ب", ARABIC_BAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ت", ARABIC_TAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ج", ARABIC_JEEM.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ح", ARABIC_HAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("خ", ARABIC_KHAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("د", ARABIC_DAAL.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
+    expect(verifiedLetterFont("ر", ARABIC_RAA.source.url)).toBe(
+      "_fonts/NotoNaskhArabic-Static.ttf",
+    );
     expect(verifiedLetterFont("و", "https://example.invalid/wrong-source")).toBeUndefined();
+  });
+
+  it("Chinese 人 traces its two medians to the pinned PRC-order dataset", () => {
+    const src = CHINESE_REN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BA%BA.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 人\.json.*ordered stroke paths and medians 1–2.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*two ordered strokes.*Median 1.*upper centre.*descends down-left.*median 2.*central junction.*descends down-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*one intervening pen lift.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 亻 traces its falling stroke and vertical to the pinned PRC-order dataset", () => {
+    const src = CHINESE_PERSON_RADICAL.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BA%BB.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 亻\.json.*ordered stroke paths and medians 1–2.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*two ordered strokes.*Median 1.*upper right.*bends slightly right.*descends down-left.*median 2.*central junction.*moves slightly down-right.*descends vertically.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*one intervening pen lift.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 口 traces its three-run closing order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_MOUTH.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%8F%A3.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 口\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*descends the left side.*median 2.*upper left.*crosses the top from left to right.*turns without lifting.*descends the right side.*median 3.*lower left.*closes the bottom from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*joined corner.*two intervening pen lifts.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 女 traces its bent first run and two lifted strokes to the pinned PRC-order dataset", () => {
+    const src = CHINESE_WOMAN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%A5%B3.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 女\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper centre.*short down-right entry.*bends down-left.*lower-left junction.*turns without lifting.*sweeps down-right.*median 2.*upper right.*falls down-left.*median 3.*left edge.*crosses the middle from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*first stroke's internal turn.*two intervening pen lifts.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 子 traces its two joined turns and final horizontal to the pinned PRC-order dataset", () => {
+    const src = CHINESE_CHILD.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%AD%90.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 子\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*crosses the top from left to right.*turns without lifting.*sweeps down-left.*median 2.*upper-left turn.*descends through the centre.*hooks left at the base without lifting.*median 3.*left edge.*crosses the middle from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*both internal turns.*two intervening pen lifts.*base hook is flatter.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 日 traces its joined corner and inside-before-close order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_SUN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%97%A5.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 日\.json.*ordered stroke paths and medians 1–4.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*four ordered strokes.*Median 1.*upper left.*descends the left side.*median 2.*upper left.*crosses the top from left to right.*turns without lifting.*descends the right side.*median 3.*left edge.*crosses the middle from left to right.*median 4.*lower left.*closes the bottom from left to right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*joined top-right corner.*inside-before-close order.*three intervening pen lifts.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 讠 traces its dot and joined turning stroke to the pinned PRC-order dataset", () => {
+    const src = CHINESE_SPEECH_RADICAL.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E8%AE%A0.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 讠\.json.*ordered stroke paths and medians 1–2.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*two ordered strokes.*Median 1.*upper left.*dot down-right.*median 2.*left edge.*rises slightly.*short horizontal.*turns without lifting.*descend.*turns again without lifting.*finishes up-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*both turns inside the second stroke.*one intervening pen lift.*squarer.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 氵 traces its falling dots and rising bottom stroke to the pinned PRC-order dataset", () => {
+    const src = CHINESE_WATER_RADICAL.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%B0%B5.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 氵\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*descends down-right.*median 2.*middle left.*descends down-right.*median 3.*bottom.*moves slightly up-left.*rises.*upper right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*source order.*two intervening pen lifts.*shallower turn.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 宀 traces its dot, left drop, and joined roof hook to the pinned PRC-order dataset", () => {
+    const src = CHINESE_ROOF_RADICAL.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%AE%80.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 宀\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*top dot down-right.*median 2.*left side.*descends down-left.*median 3.*left roof edge.*horizontally to the right.*hooks down-left without lifting.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*joined horizontal hook.*two intervening pen lifts.*squarer.*more vertical.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 你 traces its component order and two joined hooks to the pinned PRC-order dataset", () => {
+    const src = CHINESE_YOU.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BD%A0.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 你\.json.*ordered stroke paths and medians 1–7.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*seven ordered strokes.*Medians 1–2.*亻 first.*left-falling stroke.*separately started vertical.*Median 3.*upper right.*falls down-left.*median 4.*crosses rightward.*hooks down-left without lifting.*median 5.*centre.*descends.*hooks left without lifting.*medians 6–7.*lower-left dot down-left.*lower-right dot down-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*both joined hooks.*component order.*six intervening pen lifts.*squarer.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 好 traces 女-before-子 and three joined turns to the pinned PRC-order dataset", () => {
+    const src = CHINESE_GOOD.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%A5%BD.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 好\.json.*ordered stroke paths and medians 1–6.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*six ordered strokes.*Medians 1–3.*女 first.*bent stroke.*down-left.*sweeps right without lifting.*separately started stroke falls down-left.*horizontal crosses left-to-right.*Medians 4–6.*子.*horizontal turns down-left without lifting.*vertical descends and hooks left without lifting.*middle horizontal crosses left-to-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*女-before-子 component order.*all three joined turns.*five intervening pen lifts.*more angular.*flatter.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 我 traces seven strokes to the pinned PRC-order dataset", () => {
+    const src = CHINESE_I.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%88%91.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 我\.json.*medians 1–7.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /seven ordered strokes.*upper-left falling stroke.*upper horizontal.*hooked vertical.*lower rising stroke.*long curved slash.*hooks upward.*without lifting.*separate rising slash up-left.*final upper-right dot.*People's Republic of China stroke order.*Noto Sans SC.*both joined hooks.*six lifts/i,
+    );
+  });
+
+  it("Chinese 是 traces 日-first order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_BE.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%98%AF.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 是\.json.*medians 1–9.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /nine ordered strokes.*Medians 1–4.*日 first.*left vertical.*joined top and right sides.*inner horizontal.*closing bottom horizontal.*Medians 5–9.*wide horizontal.*central vertical.*short lower-right horizontal.*lower-left falling stroke.*long finishing stroke down-right.*People's Republic of China stroke order.*Noto Sans SC.*joined top-right corner.*eight intervening lifts/i,
+    );
+  });
+
+  it("Chinese 不 traces all four separate strokes to the pinned PRC-order dataset", () => {
+    const src = CHINESE_NOT.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B8%8D.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 不\.json.*medians 1–4.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /four ordered strokes.*top horizontal.*left to right.*long falling stroke.*down-left.*central vertical.*right-falling dot.*People's Republic of China stroke order.*Noto Sans SC.*three intervening lifts/i,
+    );
+  });
+
+  it("Chinese 名 traces 夕-before-口 order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_NAME.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%90%8D.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 名\.json.*medians 1–6.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /six ordered strokes.*Medians 1–3.*夕 first.*left-falling stroke.*horizontal.*down-left without lifting.*inner down-right dot.*Medians 4–6.*口.*left vertical.*top horizontal.*right side without lifting.*closing bottom horizontal.*People's Republic of China stroke order.*Noto Sans SC.*both joined turns.*five intervening lifts/i,
+    );
+  });
+
+  it("Chinese 字 traces 宀-before-子 order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_CHARACTER.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%AD%97.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 字\.json.*medians 1–6.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /six ordered strokes.*Medians 1–3.*宀 first.*down-right top dot.*left-side down-left stroke.*horizontal roof.*hooks down-left without lifting.*Medians 4–6.*子.*top horizontal.*turns down-left without lifting.*vertical.*hooks left without lifting.*final middle horizontal.*People's Republic of China stroke order.*Noto Sans SC.*all three joined turns.*five intervening lifts/i,
+    );
+  });
+
+  it("Chinese 谢 traces 讠-before-身-before-寸 order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_THANK.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E8%B0%A2.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 谢\.json.*medians 1–12.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /twelve ordered strokes.*Medians 1–2.*讠.*down-right dot.*short horizontal.*turns down.*finishes up-right without lifting.*Medians 3–9.*身.*upper falling stroke.*left side.*top horizontal.*right side.*hooks left.*two inner horizontals.*wide lower horizontal.*lower falling stroke down-left.*Medians 10–12.*寸.*horizontal.*vertical.*hooks left.*final down-right dot.*People's Republic of China stroke order.*Noto Sans SC.*all five internal turns.*eleven intervening lifts/i,
+    );
+  });
+
+  it("Chinese 请 traces 讠-before-青 order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_PLEASE.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E8%AF%B7.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 请\.json.*medians 1–10.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /ten ordered strokes.*Medians 1–2.*讠.*down-right dot.*short horizontal.*turns down.*finishes up-right without lifting.*Medians 3–10.*青.*two upper horizontals.*central vertical.*wide middle horizontal.*lower left side.*lower top horizontal.*right side.*hooks left.*two inner horizontals.*People's Republic of China stroke order.*Noto Sans SC.*all four internal turns.*nine intervening lifts/i,
+    );
+  });
+
+  it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
+    const src = HEBREW_ALEF.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=JBVpQzvrJ4w");
+    expect(src.citation).toMatch(/Hebrew Writing #1.*Alef and Beit.*01:33.0–01:35.8.*HebrewPod101/i);
+    expect(src.variation).toMatch(
+      /printed block Alef.*two handwritten variants.*descending main diagonal.*01:33.0–01:34.25.*lifts once.*opposing diagonal.*upper right.*crossing.*01:34.5–01:35.8.*styles vary.*X-like.*Noto Sans Hebrew.*two-stroke/i,
+    );
+  });
+
+  it("Hebrew ב traces its block-style body separately from the optional dagesh", () => {
+    const src = HEBREW_BET.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=JBVpQzvrJ4w");
+    expect(src.citation).toMatch(/Hebrew Writing #1.*Alef and Beit.*02:25.8–02:27.7.*HebrewPod101/i);
+    expect(src.variation).toMatch(
+      /two handwritten Bet styles.*second.*block-style.*top bar left-to-right.*right side.*without lifting.*02:25.8–02:26.7.*lifts once.*baseline left-to-right.*02:26.9–02:27.7.*dagesh.*02:27.9–02:28.2.*not part of the base ב glyph.*one-lift body.*Noto Sans Hebrew/i,
+    );
+  });
+
+  it("Hebrew ג traces its printed angular form without erasing the cursive alternative", () => {
+    const src = HEBREW_GIMEL.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tN6Mf7fxxS4");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Gimel, Dalet and Kamats.*00:54.2–00:55.9.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /contrasts.*rounded cursive Gimel.*00:48.4–00:50.1.*printed form.*top bar left-to-right.*right stem.*short lower-right leg.*00:54.2–00:55.4.*lifts once.*lower junction.*longer diagonal leg down-left.*00:55.4–00:55.9.*Noto Sans Hebrew.*handwriting variation/i,
+    );
+  });
+
+  it("Hebrew ד preserves its one-curve cursive order on the angular block outline", () => {
+    const src = HEBREW_DALET.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tN6Mf7fxxS4");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Gimel, Dalet and Kamats.*03:43.8–03:45.0.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /cursive Dalet.*broad arch left-to-right.*03:43.8–03:44.1.*small lower loop.*03:44.1–03:44.7.*descending tail.*03:45.0.*without lifting.*just one curve.*03:46.6–03:47.3.*printed Dalet.*angular.*Noto Sans Hebrew.*block top-bar-and-right-downstroke.*single continuous run.*zero-lift/i,
+    );
+  });
+
+  it("Hebrew ה traces its printed body separately from the detached left leg", () => {
+    const src = HEBREW_HEI.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=FtCuWlS6V7g");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Hei.*00:59.6–01:01.9.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /curved handwritten Hei.*00:53.7–00:55.1.*printed form.*sharp angles.*top bar left-to-right.*right side.*without lifting.*00:59.6–01:00.8.*lifts once.*detached left leg top-to-bottom.*01:01.2–01:01.9.*curved in handwriting.*sharp angles in print.*01:03.5–01:09.4.*Noto Sans Hebrew/i,
+    );
+  });
+
+  it("Hebrew ו keeps its printed head and stem in one sourced run", () => {
+    const src = HEBREW_VAV.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=kJUMyHR0zN4");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Vav, Hirik, and Shuruk.*01:08.6–01:09.8.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Vav.*top to bottom.*00:57.3–00:58.2.*printed form.*01:08.6–01:09.8.*head runs left-to-right.*vertical stem without lifting.*one stroke from top to bottom.*01:00.0–01:02.5.*print version.*small difference.*01:03.6–01:10.9.*Noto Sans Hebrew.*Hirik and Shuruk.*vowel marks.*not part of base U\+05D5.*zero-lift body count/i,
+    );
+  });
+
+  it("Hebrew ז preserves its rounded handwritten run on the block outline", () => {
+    const src = HEBREW_ZAYIN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=XTqG_1dsFSU");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Zayin and Heit.*00:44.0–00:45.4.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /rounded handwritten Zayin.*one uninterrupted run.*00:44.0–00:45.4.*opening rises to the right.*curves down the right side.*around the base without lifting.*mirror image.*handwritten Gimel.*00:49.9–00:55.7.*facing directions.*01:00.1–01:05.0.*printed form.*angular.*not to write Zayin like Vav.*01:17.6–01:24.2.*left-to-right start.*continuous descent.*Noto Sans Hebrew/i,
+    );
+  });
+
+  it("Hebrew ח traces its printed gate before restarting the joined left leg", () => {
+    const src = HEBREW_HEIT.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=XTqG_1dsFSU");
+    expect(src.citation).toMatch(
+      /Hebrew Writing.*Zayin and Heit.*02:44.6–02:46.3.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /rounded handwritten Heit.*02:35.7–02:36.9.*arched top.*right side.*one lift.*left leg.*top junction.*printed demonstration.*top bar left-to-right.*right side.*02:44.6–02:45.3.*lifts once.*joined left leg top-to-bottom.*02:45.6–02:46.3.*handwriting corners round.*02:39.0–02:41.6.*print version sharper.*02:47.9–02:52.5.*Noto Sans Hebrew.*rounded handwriting variation/i,
+    );
+  });
+
+  it("Hebrew ט traces its printed bowl before the unusual bottom-up hook", () => {
+    const src = HEBREW_TET.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=NBUtBPVKchk");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #6.*Tet and Yod.*00:54.2–00:56.3.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /rounded handwritten Tet.*00:44.9–00:46.0.*start at the bottom.*left curve.*right side.*curl inward.*unusual.*bottom up.*00:47.4–00:51.1.*printed demonstration.*left side top-to-bottom.*base.*00:54.2–00:55.4.*lifts once.*lower-right.*climbs the right side.*inward hook.*00:55.7–00:56.3.*rounding the printed corners.*handwritten form.*00:57.5–01:02.3.*Noto Sans Hebrew.*bottom-up handwritten variation/i,
+    );
+  });
+
+  it("Hebrew י traces its tiny printed head and stem in one run", () => {
+    const src = HEBREW_YOD.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=NBUtBPVKchk");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #6.*Tet and Yod.*02:00.7–02:01.2.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Yod.*tiny comma-like run.*01:53.4–01:53.8.*high on the writing line.*simplest letter.*01:50.4–01:51.0.*little comma.*upper-right.*01:54.0–01:57.2.*printed demonstration.*head left-to-right.*short stem.*without lifting.*02:00.7–02:01.2.*print is almost the same.*little angle.*02:03.7–02:07.1.*Noto Sans Hebrew.*comma-like handwritten variation/i,
+    );
+  });
+
+  it("Hebrew כ traces the sharp printed form in one continuous run", () => {
+    const src = HEBREW_KAF.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=EcQ0gL-NM-k");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #7.*Kaf.*00:51.3–00:53.2.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Kaf.*rounded half-circle.*upper-left.*00:40.2–00:41.4.*half a circle to the right.*upper-left side.*going down.*00:41.8–00:47.0.*printed demonstration.*top bar left-to-right.*right side.*left along the base.*without lifting.*00:51.3–00:53.2.*same but with sharp corners.*00:47.3–00:49.5.*Noto Sans Hebrew.*rounded handwritten variation/i,
+    );
+  });
+
+  it("Hebrew ל traces the tall printed form in one continuous run", () => {
+    const src = HEBREW_LAMED.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=CBU6aSCcPrE");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #8.*Lamed and Mem.*01:22.4–01:23.9.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Lamed.*rounded looping run.*00:52.8–00:53.7.*printed demonstration.*top.*tall left stroke.*descends.*middle junction.*right along the bar.*diagonally down-left.*without lifting.*01:22.4–01:23.9.*printed form is angular.*handwriting is looped and rounded.*Noto Sans Hebrew.*handwritten variation/i,
+    );
+  });
+
+  it("Hebrew מ traces the open printed form in two pen-down runs", () => {
+    const src = HEBREW_MEM.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=CBU6aSCcPrE");
+    expect(src.citation).toMatch(
+      /Hebrew Writing #8.*Lamed and Mem.*03:07.7–03:10.6.*HebrewPod101/i,
+    );
+    expect(src.variation).toMatch(
+      /handwritten Mem.*N-like cursive zigzag.*03:02.8–03:05.3.*printed demonstration.*detached left part.*lower tip.*corner.*down-right.*short inner leg.*lifts once.*angular right body.*climb diagonally right.*upper shoulder.*down the right side.*left along the base.*03:07.7–03:10.6.*open at the bottom-left.*Noto Sans Hebrew.*handwritten variation/i,
+    );
+  });
+
+  it("Hebrew נ traces the printed hook in one continuous run", () => {
+    const src = HEBREW_NUN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:04.1–02:04.6.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Nun.*one continuous run.*02:04.1–02:04.6.*top head.*left-to-right.*right side.*left along the base.*without lifting.*cursive Nun.*purple.*rounder, wider hook.*02:05.2–02:05.8.*without lifting.*previously queued.*Hebrew Letters - NUN.*3gYCaDgB-Nk.*religious exposition.*not used.*Noto Sans Hebrew.*handwritten variation/i,
+    );
+  });
+
+  it("Hebrew ס traces one printed clockwise loop and records the round cursive form", () => {
+    const src = HEBREW_SAMEKH.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:19.5–02:20.8.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Samekh.*one continuous clockwise run.*02:19.5–02:20.8.*flat top.*left-to-right.*right side.*left along the base.*left side.*close.*without lifting.*cursive Samekh.*purple.*rounder oval.*02:23.8–02:24.7.*one uninterrupted loop.*Noto Sans Hebrew.*cursive variation/i,
+    );
+  });
+
+  it("Hebrew ע traces one printed branch-and-base run and records cursive looping", () => {
+    const src = HEBREW_AYIN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:27.4–02:28.9.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Ayin.*one continuous run.*02:27.4–02:28.9.*right branch.*descends.*left into the base.*farther left.*turns back.*climbs the left branch.*without lifting.*cursive Ayin.*purple.*compact looped form.*02:31.6–02:32.7.*without lifting.*Noto Sans Hebrew.*cursive variation/i,
+    );
+  });
+
+  it("Hebrew פ traces its two-run printed form and records the cursive spiral", () => {
+    const src = HEBREW_PE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:36.3–02:38.9.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Pe.*two runs.*02:36.3–02:38.9.*outer body.*upper left.*right across the top.*right side.*left along the base.*one lift.*short inner curl.*left to right.*cursive Pe.*purple.*one inward spiral.*02:41.5–02:43.0.*without lifting.*Noto Sans Hebrew.*rounded cursive variation/i,
+    );
+  });
+
+  it("Hebrew צ traces its two-run printed form and records the compact cursive form", () => {
+    const src = HEBREW_TSADI.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*02:59.8–03:01.2.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Tsadi.*two runs.*02:59.8–03:01.2.*long diagonal.*upper left.*turns sharply left.*base.*without lifting.*one lift.*short upper-right arm.*down-left.*middle junction.*cursive Tsadi.*purple.*compact, rounded 3-like run.*03:03.2–03:04.0.*without lifting.*Noto Sans Hebrew.*compact cursive variation/i,
+    );
+  });
+
+  it("Hebrew ק traces its two-run printed form and records the cursive hook", () => {
+    const src = HEBREW_QOF.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:18.3–03:20.0.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Qof.*two runs.*03:18.3–03:20.0.*top bar.*left-to-right.*down-left.*right body.*without lifting.*one lift.*separate inner-left stem.*below the writing line.*cursive Qof.*purple.*one continuous hooked descent.*03:22.0–03:23.3.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
+  });
+
+  it("Hebrew ר traces its one-run printed form and records the rounder cursive hook", () => {
+    const src = HEBREW_RESH.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:26.2–03:27.1.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Resh.*one continuous run.*03:26.2–03:27.1.*top bar.*left-to-right.*rounds the top-right corner.*right side.*without lifting.*cursive Resh.*purple.*rounder hook.*03:29.3–03:30.0.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
+  });
+
+  it("Hebrew ש traces its two-run printed form and records the cursive loop", () => {
+    const src = HEBREW_SHIN.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:34.0–03:36.3.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Shin.*two runs.*03:34.0–03:36.3.*top of the right branch.*descends.*outer U-shaped base.*climbs the left branch.*without lifting.*one lift.*descends the middle branch.*cursive Shin.*purple.*one rounded inward loop.*short rightward exit.*03:39.2–03:40.2.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
+  });
+
+  it("Hebrew ת traces its two-run printed form and records the cursive retrace", () => {
+    const src = HEBREW_TAV.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=8wi_uPY9uZA");
+    expect(src.citation).toMatch(
+      /How to write the Hebrew alphabet in print and cursive.*03:45.2–03:47.3.*Aural Writing.*8 June 2022/i,
+    );
+    expect(src.variation).toMatch(
+      /printed Tav.*two runs.*03:45.2–03:47.3.*top bar.*left-to-right.*right side.*without lifting.*one lift.*separate left leg.*curves left.*small foot.*cursive Tav.*purple.*one continuous run.*03:49.0–03:50.9.*descend the left stem.*curl left.*retrace.*climb.*arch right.*short right side.*without lifting.*Noto Sans Hebrew.*one-run cursive variation/i,
+    );
   });
 
   it("ம's stroke order traces to the UT Austin primer, and records Tamil's variation", () => {
@@ -640,6 +2168,260 @@ describe("handwriting ductus", () => {
       /independent.*top-to-bottom.*one continuous stroke.*final.*bottom-to-top.*Noto Naskh.*Nastaliq/i,
     );
     expect(src.url).not.toBe(DUCTUS["ا"].source.url);
+  });
+
+  it("Arabic independent ا traces to the University of Oregon's top-to-bottom video", () => {
+    const src = ARABIC_ALEF.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%A8/",
+    );
+    expect(src.citation).toMatch(/Introduction to Arabic.*Alphabet ا ب.*00:05–00:07.*Oregon/i);
+    expect(src.variation).toMatch(
+      /one continuous top-to-bottom stroke.*no pen lift.*one-way connector.*isolated and final forms.*Noto Naskh.*Arabic provenance.*Persian and Urdu/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ا"].source.url);
+    expect(src.url).not.toBe(URDU_ALEF.source.url);
+  });
+
+  it("Arabic independent ب traces to the University of Oregon's bowl-first video", () => {
+    const src = ARABIC_BAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%D8%A8/",
+    );
+    expect(src.citation).toMatch(/Introduction to Arabic.*Alphabet ا ب.*Baa.*00:02–00:04.*Oregon/i);
+    expect(src.variation).toMatch(
+      /upper-right tip.*right-to-left.*shallow bowl.*left tip.*lifting once.*dot below.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ب"].source.url);
+  });
+
+  it("Arabic independent ت traces its bowl and separate dots to the University of Oregon", () => {
+    const src = ARABIC_TAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/two-way-connectors-%D8%A8-%D8%AA-%D8%AB-%D9%86-%D9%8A/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ب ت ث.*Baa.*00:02–00:04.*Taa.*00:00–00:01.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /Baa demonstration.*upper-right tip.*right-to-left.*turned-up left tip.*Taa demonstration opens.*complete bowl.*left dot.*00:00.45–00:00.70.*right dot.*00:00.75–00:01.00.*does not redraw.*rather than inferring.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ت"].source.url);
+  });
+
+  it("Arabic independent ج traces its body-first order to the University of Oregon", () => {
+    const src = ARABIC_JEEM.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ج ح خ.*Jeem.*00:05–00:06.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /body first.*00:05.1–00:05.8.*upper head.*left-to-right.*turns downward.*curls back left.*rounded bowl.*without lifting.*lifts once.*dot below.*00:06.3–00:06.5.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic body-first provenance.*Urdu dot-first/i,
+    );
+    expect(src.url).not.toBe(URDU_JIM.source.url);
+  });
+
+  it("Arabic independent ح traces its stem-first order to the page's Haa attachment", () => {
+    const src = ARABIC_HAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ج ح خ.*Haa.*00:00–00:01.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /Haa attachment.*two pen-down runs.*opens.*first mark already underway.*short left stem downward.*00:00.00–00:00.15.*lifts once.*restarts near the stem's upper portion.*00:00.32.*down-right and around the bowl.*without another lift.*00:00.82.*two-way connector.*contextual shapes.*no dot stroke.*stem-first order.*rather than inherited from ج.*Noto Naskh.*Arabic provenance/i,
+    );
+    expect(src.url).toBe(ARABIC_JEEM.source.url);
+  });
+
+  it("Arabic independent خ traces its body-first order to its own Khaa clip", () => {
+    const src = ARABIC_KHAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%AC-%D8%AD-%D8%AE/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: ج ح خ.*Khaa.*00:02–00:04.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /Khaa QuickTime clip.*body-first.*00:02.8–00:03.9.*upper head.*left-to-right.*same pen-down run.*turns downward.*curls around the bowl.*lifts once.*dot above.*00:04.2–00:04.4.*two-way connector.*contextual shapes.*own clip.*matches adjacent Jeem.*rather than Haa.*stem-first restart.*Noto Naskh.*Arabic provenance/i,
+    );
+    expect(src.url).toBe(ARABIC_JEEM.source.url);
+    expect(src.url).toBe(ARABIC_HAA.source.url);
+  });
+
+  it("Arabic independent د traces its unbroken turn to the University of Oregon", () => {
+    const src = ARABIC_DAAL.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/chapter-1/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: د ذ ر.*Daal.*00:07.0–00:07.6.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*00:07.0–00:07.6.*upper tip.*diagonally down and right.*curved shoulder.*turns left.*baseline.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*contextual form/i,
+    );
+  });
+
+  it("Arabic independent ر traces its unbroken curve to the University of Oregon", () => {
+    const src = ARABIC_RAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/chapter-1/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: د ذ ر.*Raa.*00:08.8–00:09.3.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*00:08.8–00:09.3.*upper tip.*descends through the short stroke.*sweeps left.*lower curve.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*Urdu ر source.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(URDU_RE.source.url);
+  });
+
+  it("Arabic independent س traces its continuous teeth and bowl to the University of Oregon", () => {
+    const src = ARABIC_SEEN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Seen.*00:01.6–00:02.8.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /FullSizeRender-8.mov.*one continuous pen-down run.*00:01.6–00:02.8.*upper right.*three close teeth.*right to left.*final bowl.*without lifting.*two-way connector.*contextual shapes.*Noto Naskh.*scoped to Arabic.*Persian or Urdu س sources.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["س"].source.url);
+    expect(src.url).not.toBe(URDU_SIN.source.url);
+  });
+
+  it("Arabic independent ش traces its body-first dots to the University of Oregon", () => {
+    const src = ARABIC_SHIIN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Shiin.*00:00.7–00:03.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /FullSizeRender-7.mov.*body-first.*one continuous pen-down run.*00:00.7–00:02.2.*three close teeth.*right to left.*final bowl.*lower-left dot.*00:02.4–00:02.5.*lower-right dot.*00:02.7–00:02.8.*centered upper dot.*00:02.9–00:03.0.*two-way connector.*contextual shapes.*four-stroke.*three-lift.*Noto Naskh.*scoped to Arabic.*Urdu ش source.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(URDU_SHIN.source.url);
+  });
+
+  it("Arabic independent ص traces its lifted trailing bowl to the University of Oregon", () => {
+    const src = ARABIC_SAAD.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Saad.*00:01.1–00:03.3.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /FullSizeRender-6.mov.*two pen-down runs.*00:01.1–00:02.4.*lower-left junction.*oval clockwise.*turns left.*short shoulder.*without lifting.*one lift.*00:02.6–00:03.3.*baseline junction.*descends.*trailing bowl.*sweeps left.*finishes above the baseline.*two-way connector.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*distinct from.*Seen and Shiin/i,
+    );
+  });
+
+  it("Arabic independent ض traces its Saad skeleton and final dot to the embedded Oregon lesson", () => {
+    const src = ARABIC_DAAD.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B3-%D8%B4-%D8%B5-%D8%B6/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: س ش ص ض.*Daad.*00:43.1–00:46.3.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /embedded Panopto Daad lesson.*three pen-down runs.*00:43.1–00:46.3.*00:43.1–00:45.0.*lower-left junction.*oval clockwise.*short shoulder.*without lifting.*one lift.*00:45.2–00:45.4.*baseline junction.*trailing bowl.*second lift.*upper dot last.*00:46.0–00:46.3.*FullSizeRender-5.mov.*HTTP 403.*accessible embedded primary lesson.*embedded Saad lesson.*direct Saad clip.*same two body runs.*two-way connector.*contextual shapes.*three-stroke.*two-lift.*Noto Naskh.*independently evidenced.*Saad/i,
+    );
+  });
+
+  it("Arabic independent ع traces its unbroken head and bowl to the Oregon MOV", () => {
+    const src = ARABIC_AYN.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%D8%B9-%D8%BA/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ع غ.*Ayn.*00:03.1–00:04.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked ayn.mov.*one continuous pen-down run.*00:03.1–00:04.0.*00:03.1–00:03.5.*upper-right tip.*sweeps left.*hooks downward.*open head.*without lifting.*00:03.5–00:04.0.*left side.*lower bowl.*floor.*finishes toward the right.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*distinct from.*Ghayn.*upper dot/i,
+    );
+  });
+
+  it("Arabic independent ك traces its joined outer body and restarted inner arm to the Oregon MOV", () => {
+    const src = ARABIC_KAF.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ي ك ل.*Kaf.*00:11.8–00:13.4.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked kaf.mov.*two pen-down runs.*00:11.8–00:12.9.*main upright.*turns left.*baseline.*without lifting.*one lift.*00:13.2–00:13.4.*upper right.*inner arm.*down-left.*two-way connector.*contextual shapes.*two-stroke.*one-lift.*Noto Naskh.*Arabic-scoped ك.*distinct from Urdu ک.*different Unicode glyph.*separate source-backed fallback order/i,
+    );
+    expect(src.url).not.toBe(URDU_KAF.source.url);
+    expect(ARABIC_KAF.glyph).not.toBe(URDU_KAF.glyph);
+  });
+
+  it("Arabic independent ل traces its unbroken upright and bowl to the Oregon MOV", () => {
+    const src = ARABIC_LAM.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ي ك ل.*Lam.*00:01.9–00:02.4.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked lam.mov.*one continuous pen-down run.*00:01.9–00:02.4.*descends the tall upright.*turns left.*base bowl.*without lifting.*rises.*outer edge.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*Arabic-scoped ل.*distinct from.*Persian and Urdu.*same Unicode glyph.*own source-backed orders/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ل"].source.url);
+    expect(src.url).not.toBe(URDU_LAM.source.url);
+    expect(ARABIC_LAM.glyph).toBe(DUCTUS["ل"].glyph);
+    expect(ARABIC_LAM.glyph).toBe(URDU_LAM.glyph);
+  });
+
+  it("Arabic independent ي traces its bowl and left-then-right lower dots to the Oregon MOV", () => {
+    const src = ARABIC_YAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/alphabet-%d9%82-%d9%84-%d9%85/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ي ك ل.*Yaa.*00:33.2–00:35.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked yaa.mov.*three pen-down runs.*upper right.*00:33.2.*descends.*sweeps left.*independent bowl.*without lifting.*00:34.4.*one lift.*lower-left dot.*00:34.5–00:34.7.*second lift.*lower-right dot.*00:34.8–00:35.0.*two-way connector.*contextual shapes.*three-stroke.*two-lift.*Noto Naskh.*U\+064A.*separate from Urdu ی.*U\+06CC.*no lower dots.*own source-backed order/i,
+    );
+    expect(src.url).not.toBe(URDU_YE.source.url);
+    expect(ARABIC_YAA.glyph).not.toBe(URDU_YE.glyph);
+  });
+
+  it("Arabic independent ه traces its two counters and baseline sweep to the Oregon MOV", () => {
+    const src = ARABIC_HEH.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%d9%87-%d9%88-%d9%8a/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ه و ي.*Heh.*00:04.9–00:06.0.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked letter-haa.mov.*one continuous pen-down run.*00:04.9–00:06.0.*upper right.*00:04.9–00:05.4.*down-left.*lower counter.*without lifting.*centre.*upper-right counter.*00:05.4–00:05.7.*baseline.*00:06.0.*two-way connector.*contextual shapes.*one-stroke.*zero-lift.*Noto Naskh.*Arabic ه.*script-scoped provenance.*Persian.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["ه"].source.url);
+    expect(ARABIC_HEH.glyph).toBe(DUCTUS["ه"].glyph);
+  });
+
+  it("Arabic independent و traces its closed head and leftward tail to the Oregon MOV", () => {
+    const src = ARABIC_WAW.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/%d9%87-%d9%88-%d9%8a/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet ه و ي.*Waw.*00:45.7–00:46.9.*Oregon/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked waw.mov.*one continuous pen-down run.*00:45.7–00:46.9.*lower-right junction.*00:45.7–00:46.5.*sweeps left.*curves up and around.*small head loop.*without lifting.*00:46.5–00:46.9.*descends.*curls left.*tail.*one-way connector.*consonant w.*long-vowel ū.*one-stroke.*zero-lift.*Noto Naskh.*Arabic و.*script-scoped provenance.*Persian.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["و"].source.url);
+    expect(ARABIC_WAW.glyph).toBe(DUCTUS["و"].glyph);
   });
 
   it("Urdu independent ج traces to Zer o Zabar's dot-first pointed-head animation", () => {
@@ -768,6 +2550,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one uninterrupted dotless S-shaped body.*upper right.*descend through the upper curve.*sweep left around the below-baseline bowl.*rising tip.*without lifting.*independent and final chhoṭī ye.*ī sound.*initial and medial.*be-series tooth.*two dots below.*do not belong to the independent form.*Noto Naskh.*Nastaliq/i,
+    );
+  });
+
+  it("Urdu independent ں traces to Zer o Zabar's dotless nūn animations", () => {
+    const src = URDU_GHUNNA.source;
+    expect(src.url).toBe(
+      "https://openbooks.library.northwestern.edu/zerozabar/chapter/sin-shin-bari-he-nun-nun-ghunna/",
+    );
+    expect(src.citation).toMatch(
+      /Zer o Zabar.*independent ں.*calligraphic and handwriting animations.*Nasalization with nūn-e ġhunna instructions.*Northwestern/i,
+    );
+    expect(src.variation).toMatch(
+      /one uninterrupted right-to-left bowl.*below the baseline.*without lifting.*final and independent nūn-e ġhunna.*nūn without any dot.*initial and medial.*identical to regular nūn.*sukūn.*semicircular diacritic.*U\+06BA.*U\+0646.*body contour.*dot removed.*Nastaliq/i,
     );
   });
 

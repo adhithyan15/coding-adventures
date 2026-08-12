@@ -2,25 +2,34 @@
   "version": 1,
   "language": "spanish",
   "chapter": 19,
-  "title": "Yes and No",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:26065bd139568e43",
+  "title": "Review --- The Three Forms Side by Side",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:175ea881f20b8efa",
   "lessons": [
     {
-      "id": "ES-C19-si",
-      "sequence": 1280,
-      "title": "sí — yes",
-      "headword": "sí",
-      "romanization": "sí",
-      "gloss": "yes",
+      "id": "ES-C06-ar-presente",
+      "sequence": 524,
+      "title": "Review — the three forms, side by side",
+      "headword": "hablo · hablas · habla",
+      "romanization": "hablo · hablas · habla",
+      "gloss": "review — the three forms you already own, put side by side for the first time",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "wide-table"
       ],
-      "sourceHash": "fnv1a64:b17f3a4bbf08b693",
-      "notice": null,
+      "sourceHash": "fnv1a64:492908c359178db6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes for one table that cannot be read aloud"
+        ],
+        "waitUntilStopped": [
+          "Grammar Lens: the table you have earned"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,207 +44,62 @@
             },
             {
               "kind": "speech",
-              "text": "The smallest useful word — and the accent on it is doing real work."
+              "text": "Nothing new in this chapter. Not one word. Say the three forms you already have, in any order they come."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: sí and si",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sí = yes. One syllable, said see."
-            },
-            {
-              "kind": "speech",
-              "text": "The written accent is not decoration — it is the whole difference between two words:"
-            },
-            {
-              "kind": "speech",
-              "text": "sí (with the accent) = yes."
-            },
-            {
-              "kind": "speech",
-              "text": "si (no accent) = if."
-            },
-            {
-              "kind": "speech",
-              "text": "They sound almost identical, so Spanish uses the mark to tell them apart on the page: Sí, si quieres = \"Yes, if you want.\" Miss the accent and you've written \"if\" where you meant \"yes.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: where sí comes from",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sí is Latin sīc, \"thus, so\" — answering a question with \"just so,\" exactly the move Latin also made with ita (\"thus\" = yes, from the Latin yes/no lesson). Its Romance cousins kept the same root:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin sīc",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin sīc: Spanish. , which gives:: sí.",
-                "Latin sīc: Italian. , which gives:: sì.",
-                "Latin sīc: Portuguese. , which gives:: sim."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "French is the odd one out — it went a completely different way for \"yes\" (oui), which its own lesson tells. But say sí, sì, sim in a row and you hear one Latin word answering across three countries."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sí\" — see, and picture the accent",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sí\" — *see*, and picture the accent]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — \"sí\" (yes) vs \"si\" (if)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"sí\" (yes) vs \"si\" (if)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — \"sí, sì, sim\" — all from Latin sīc",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — \"sí, sì, sim\" — all from Latin *sīc*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How do you say yes in Spanish? (sí.) What is the only difference between sí \"yes\" and si \"if\"? (The written accent.) What Latin word is sí from, and what did it mean? (sīc — \"thus, so\".)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C19-no",
-      "sequence": 1290,
-      "title": "no — no / not",
-      "headword": "no",
-      "romanization": "no",
-      "gloss": "no / not",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d9bf248186007d54",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The easiest word yet — and it quietly does two jobs Spanish never splits apart."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: no",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "no = no. Said noh, a clean single vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "It is Latin nōn with almost nothing worn off — just the final consonant gone. Compare the family, all from the same nōn:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "Latin nōn",
-                ", which gives:"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "Latin nōn: Spanish. , which gives:: no.",
-                "Latin nōn: Italian. , which gives:: no.",
-                "Latin nōn: French. , which gives:: non."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: one word, two jobs",
+          "title": "Grammar Lens: the table you have earned",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the thing English splits and Spanish doesn't. English has \"no\" (the answer) and \"not\" (inside a sentence) — two different words. Spanish uses no for both:"
+              "text": "Three chapters, one form each. Now — and only now — they are worth seeing together:"
+            },
+            {
+              "kind": "table-skipped",
+              "reason": "too-wide",
+              "columns": 4,
+              "rowCount": 3,
+              "headers": [
+                "who",
+                "ending",
+                "hablar, which gives:",
+                "meaning"
+              ],
+              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: who, ending, hablar, which gives:, meaning. Come back and look at it when you have stopped."
             },
             {
               "kind": "speech",
-              "text": "as the answer: ¿Hablas inglés? — No."
+              "text": "A table like this one at the start would have been three things at once and you would have memorised it. Arriving here, it is a picture of something you can already do."
             },
             {
               "kind": "speech",
-              "text": "as the negator, placed right before the verb: No hablo inglés = \"I do not speak English.\""
+              "text": "This is the whole engine. Every regular -ar verb in Spanish — and there are thousands — runs on these three endings. You have not learned one verb. You have learned the pattern that fits all of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say what you do — hablo."
             },
             {
               "kind": "speech",
-              "text": "So learning no gives you the whole of Spanish negation for free: to make any sentence negative, drop no in front of the verb. One little word, two everyday jobs."
+              "text": "Ask or state what a friend does — hablas."
+            },
+            {
+              "kind": "speech",
+              "text": "Say what someone else does, or address someone politely — habla."
+            },
+            {
+              "kind": "speech",
+              "text": "Do all three without a pronoun, because the ending carries it."
             }
           ]
         },
@@ -253,29 +117,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"no\" — noh",
+              "instruction": "all three in order — \"hablo, hablas, habla\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"no\" — *noh*]"
+              "source": "[YOU SAY: all three in order — \"hablo, hablas, habla\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "as an answer — \"¿Hablas inglés? No.\"",
+              "instruction": "them out of order, as prompted: she, I, a friend, politely",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: as an answer — \"¿Hablas inglés? No.\"]"
+              "source": "[YOU SAY: them out of order, as prompted: *she* · *I* · *a friend* · *politely*]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "as a negator — \"No hablo inglés\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: as a negator — \"No hablo inglés\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the ending arrives before you have to think about it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-ar-presente-mix-1",
+              "prompt": "I speak.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-1SG"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablo",
+                "yo hablo"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "hablo — the -o is I."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-ar-presente-mix-2",
+              "prompt": "She speaks.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-3SG"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "habla",
+                "ella habla"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "habla — the -a covers he, she, and polite you."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C06-ar-presente-mix-3",
+              "prompt": "You speak, to a friend.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-2SG"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "hablas",
+                "tu hablas"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "hablas — the -as is tu."
+              }
             }
           ]
         },
@@ -292,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say no in Spanish? (no.) What Latin word is it from? (nōn.) Spanish no does the work of which two English words? (\"no\" the answer and \"not\" the negator — No hablo = \"I do not speak.\") Where does no go to negate a sentence? (Right before the verb.)"
+              "text": "Three endings — name them. (-o, -as, -a.) How many regular -ar verbs does this pattern fit? (All of them.) Next chapter you will not learn anything either — you will use this to say something you actually mean."
             }
           ]
         }

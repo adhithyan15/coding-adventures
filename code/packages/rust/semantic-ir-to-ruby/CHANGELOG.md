@@ -1,5 +1,60 @@
 # Changelog
 
+## 0.22.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` handling
+is dead code. Removed:
+
+- `"print"`/`"puts"` from `SUPPORTED_BUILTINS` (the validator allowlist
+  gate) and from `emit_builtin`'s match.
+- `sir_print`, `sir_puts`, and `sir_puts_one` from the embedded Ruby
+  runtime source in `runtime.rs` (fully independent of `sir_write`/
+  `sir_write_puts_one` — confirmed via grep that nothing else called
+  them, unlike the C backend's shared `_sir_puts_one` — so this is a
+  straight deletion, not a refactor).
+- The `"print"`/`"puts"` `when` arms from `sir_builtin_dispatch`'s
+  by-name dispatch.
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: the local test helper that hand-built bare `puts`
+`BuiltinCall`s purely to observe hand-constructed IR's output (unrelated
+to testing print semantics itself) now builds the equivalent
+`__sys_write__` envelope (`terminator: "per_value"`, `unpack_arrays:
+true` — every helper in this backend's tests was `puts`-shaped, not
+`print`-shaped), plus `Feature::ConsoleIO`/`Feature::Strings` added to
+every affected manifest across the file's many module-builder helpers.
+Two shape assertions that checked emitted `sir_puts(...)` text directly
+were updated to the new `sir_write(...)` shape.
+
+## 0.21.0 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__"` `emit_builtin` arm and a new runtime helper,
+`sir_write`, generalizing the existing `sir_print`/`sir_puts` into one
+function parameterized by `stream` (stdout/stderr), `terminator`
+(none/per_value/once), and `unpack_arrays` — the policy axes SIR28 §2.1
+defines. Declares `Feature::ConsoleIO`.
+
+Unlike the C backend (which must bake `stream`/`terminator` in as
+compile-time C int constants, since generated C can't easily branch on a
+string at the call site the way this crate's target language can), this
+backend just passes every arg — including the `stream`/`terminator`
+literals, already-validated by `semantic-ir`'s validator against a closed
+set — straight through to `sir_write` as ordinary Ruby string arguments,
+which branches on them directly at Ruby runtime. No compile-time literal
+extraction needed here.
+
+Purely additive: nothing emits `__sys_write__` yet, so `sir_print`/
+`sir_puts` and every existing `print`/`puts`-sourced program are unchanged.
+
+New `tests/sys_write_tests.rs`: hand-builds a `Module` directly per
+stream/terminator/unpack_arrays combination (no frontend emits the op
+yet), emits Ruby, runs it with a real `ruby` interpreter, and asserts
+stdout/stderr — covering all three `terminator` modes, `unpack_arrays`
+true/false, the `stderr` stream, and the empty-args `per_value` edge case.
+
 ## 0.20.1 — accept `c<<`, the C frontend's own bitwise left shift
 
 `c-to-semantic-ir` and `ruby-to-semantic-ir` both used to lower their

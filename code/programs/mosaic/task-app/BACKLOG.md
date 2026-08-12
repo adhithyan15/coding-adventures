@@ -41,14 +41,6 @@ off this now-mostly-resolved list.
   SVG-overlay host component) or product guidance on visual treatment
   before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
   "What does NOT ship" section for the full reasoning.
-- **Native drag support for HostDraggable/HostDropTarget.** Every non-web backend (SwiftUI,
-  Compose, Qt, Flutter, WinUI/XAML, webcomponent) currently degrades the drag family to a plain
-  static container — see `code/specs/UI35-host-drag-drop.md`. This means the board and the
-  calendar are both fully interactive on web but inert on every native shell. Spec-deferred
-  intentionally (native shells are Phase 10+), but tracked as a spawned task:
-  [background task](task_239f7f69) "Wire HostDraggable/HostDropTarget into mosaic-emit-xaml" — do
-  XAML first since it's the most-built-out native backend, then fan out the same pattern to the
-  rest.
 - **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
   see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
   the UI35 kernel today; time-blocking needs a time-of-day field on `TaskSchedule` that
@@ -99,6 +91,78 @@ off this now-mostly-resolved list.
   rendering and swapping cleanly, zero console errors (including a real
   React dev-mode shorthand/longhand border-property warning caught and fixed
   during verification — both card variants now declare the same style keys).
+- **Native XAML drag semantics.** WinUI now lowers UI35 to component-scoped
+  native drag/drop controls with pointer/touch events, equivalent keyboard
+  traversal, authored acceptance/disabled rules, RTL order, lifecycle dispatch,
+  and UI Automation announcements. This removes the board/calendar's final four
+  degradation reports and promotes complete TaskApp XAML generation to the strict
+  `native-complete` profile.
+
+- **Native XAML table semantics for the Sheet.** The canonical indexed UI31/Grid
+  shape now emits component-scoped WinUI table, header, and cell controls whose
+  peers implement UIA Table/Grid and TableItem/GridItem patterns. The authored
+  editable Cell subtree remains intact, while automation clients receive stable
+  dimensions, header associations, row/column coordinates, names, and arrow-key
+  movement. Ambiguous HostTable trees retain the visual fallback and explicit
+  degradation.
+
+- **Concrete Rust TaskApp engine in the XAML WinUI artifact.** Windows CI now
+  builds `task-mosaic-app`, emits the complete TaskApp with that selected DLL,
+  verifies `mosaic_app.dll` beside `TaskApp.exe` byte-for-byte, and drives initial
+  props plus a real `newTaskNameChange` event through the generated standard .NET
+  binding without `MOSAIC_APP_LIBRARY`. The app remains permissive for the four
+  explicitly asserted XAML drag/drop gaps, and visible launch remains an interactive
+  Windows-worker gate rather than a claim made from GitHub's hosted worker.
+
+- **Concrete Rust TaskApp engine on strict SwiftUI for macOS.** SwiftUI CI keeps
+  the counter ABI conformance package and harness independent, then emits TaskApp
+  with `task-mosaic-app`, requires zero degradations, compares the SwiftPM resource
+  `libmosaic_app.dylib` byte-for-byte with the adapter artifact, and launches the
+  generated macOS executable from `/` without an injected runtime path. The same
+  generated UI also compiles separately for iOS 16 without bundling the macOS dylib.
+
+- **Native SwiftUI table semantics for the Sheet.** The canonical dynamic
+  UI31/Grid shape now uses native `Table` and runtime-sized
+  `TableColumnForEach` definitions with stable row identity, safe width/cell
+  bounds, and the existing interactive Cell body. macOS 13 and iOS 16 use a
+  native `List`/`Section` compatibility path until the dynamic-column API is
+  available. The full generated TaskApp compiles on macOS and for the iOS 16
+  deployment target; SwiftUI's permissive report now retains only the sample
+  runtime fallback, so the concrete Rust adapter promotion is next.
+
+- **Native SwiftUI drag support for HostDraggable/HostDropTarget.** The UI35
+  family now uses native SwiftUI pointer/touch transfer and drop delegates,
+  with component-scoped payloads, accepts/disabled filtering,
+  before/into/after proposals, keyboard and assistive actions, RTL movement,
+  and platform accessibility announcements. Both the macOS and iOS 16
+  generated TaskApp targets compile; board and calendar drag interaction no
+  longer blocks strict TaskApp emission.
+
+- **Concrete Rust TaskApp engine on strict Compose Desktop.** Compose CI keeps
+  the counter ABI conformance distributable and harness independent, then emits
+  TaskApp with `task-mosaic-app`, requires zero degradations, compares the installed
+  `libmosaic_app.so` with the adapter artifact, and launches the packaged Linux app
+  under a virtual display without an injected runtime path.
+
+- **Concrete Rust TaskApp engine on strict Flutter.** Flutter CI keeps the small
+  counter ABI conformance build as an independent binding proof, then separately
+  emits TaskApp with `task-mosaic-app`, requires zero degradations, builds the Linux
+  desktop bundle, compares its `libmosaic_app.so` byte-for-byte with the adapter
+  artifact, and launches the packaged app under a virtual display without an
+  injected runtime path. This turns the earlier compile-only TaskApp shell into the
+  second concrete native application gate after Qt.
+
+- **Concrete Rust TaskApp engine adapter + strict Qt application.**
+  `task-mosaic-app` composes the pure `task-core` engine with portable presentation
+  state, emits every required TaskApp MIL slot, accepts every declared semantic
+  event, snapshots/restores the combined state, and exports the standard Mosaic C
+  ABI. Qt CI now builds this library, emits TaskApp with `native-complete`, requires
+  zero degradations, installs the app/runtime together, compares the bundled library
+  to the exact build artifact, and launches the installed app offscreen without an
+  injected path. The launch exposed and closed a real Qt `For` bug: under
+  `pragma ComponentBehavior: Bound`, non-empty Repeater delegates must declare
+  `modelData` and `index` as required properties. Empty sample data had hidden it.
+
 - **Icon/SVG assets.** Closes most of the design-fidelity gap's icon line —
   see `code/specs/task-app-icon-assets-v1.md`. Pill status dot
   (`currentColor`), group-count badge (a new appended `taskRows` cell),

@@ -1,5 +1,6 @@
 use crate::{ApplicationError, ObjectKind};
 use coding_adventures_canonical_cbor::{decode, encode, CborValue};
+use coding_adventures_vault_pm_audit::SignedAuditEventV1;
 use coding_adventures_vault_pm_domain::{
     AttachmentId, CollectionId, ContentType, ItemCandidate, ItemDocument, ItemId, ItemState,
     LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
@@ -319,6 +320,21 @@ pub fn encode_signed_commit(commit: &CommitV1) -> Result<Vec<u8>, ApplicationErr
 pub fn decode_signed_commit(encoded: &[u8]) -> Result<CommitV1, ApplicationError> {
     let exact = decode_signed_object(encoded, ObjectKind::Commit)?;
     CommitV1::decode(&exact).map_err(|_| ApplicationError::IntegrityFailure)
+}
+
+/// Wrap one exact device-signed VLT-PM15 operation event as a canonical
+/// authenticated application object.
+pub fn encode_signed_audit_event(event: &SignedAuditEventV1) -> Result<Vec<u8>, ApplicationError> {
+    encode_signed_object(ObjectKind::AuditEvent, event.encode())
+}
+
+/// Strictly unwrap and decode one device-signed VLT-PM15 operation event.
+///
+/// This proves the encrypted object's canonical shape. Callers must separately
+/// verify the event signature against the certified device public key.
+pub fn decode_signed_audit_event(encoded: &[u8]) -> Result<SignedAuditEventV1, ApplicationError> {
+    let exact = decode_signed_object(encoded, ObjectKind::AuditEvent)?;
+    SignedAuditEventV1::decode(&exact).map_err(|_| ApplicationError::IntegrityFailure)
 }
 
 fn encode_signed_object(kind: ObjectKind, exact: Vec<u8>) -> Result<Vec<u8>, ApplicationError> {
@@ -692,6 +708,8 @@ fn map_domain(error: coding_adventures_vault_pm_domain::DomainError) -> Applicat
 mod tests {
     use super::*;
     use coding_adventures_canonical_cbor::encode;
+    use coding_adventures_ed25519::generate_keypair;
+    use coding_adventures_vault_pm_audit::{AuditActionV1, AuditEventV1, AuditOutcomeV1};
     use coding_adventures_vault_pm_format::{ObjectId, PublicKey, Signature};
     use coding_adventures_vault_records::{Login, LOGIN_V1};
 
@@ -903,8 +921,36 @@ mod tests {
         );
         assert_eq!(decode_signed_commit(&encoded_commit).unwrap(), commit);
 
+        let audit_seed = [7; 32];
+        let (audit_public_key, _) = generate_keypair(&audit_seed);
+        let audit_event = AuditEventV1::new(
+            VaultId::new([1; 16]),
+            DeviceId::new([2; 16]),
+            2,
+            OperationId::new([8; 32]),
+            AuditActionV1::AuditEpochStart,
+            AuditOutcomeV1::Succeeded,
+            None,
+            None,
+            None,
+            None,
+            vec![ObjectId::new([9; 32])],
+            10,
+        )
+        .unwrap()
+        .sign(&audit_seed)
+        .unwrap();
+        let encoded_audit_event = encode_signed_audit_event(&audit_event).unwrap();
+        let decoded_audit_event = decode_signed_audit_event(&encoded_audit_event).unwrap();
+        assert_eq!(decoded_audit_event, audit_event);
+        decoded_audit_event.verify(&audit_public_key).unwrap();
+
         assert_eq!(
             decode_signed_commit(&encoded_certificate),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        assert_eq!(
+            decode_signed_audit_event(&encoded_commit),
             Err(ApplicationError::IntegrityFailure)
         );
         let malformed_nested = encode(&CborValue::Map(vec![

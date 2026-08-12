@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C19-no
 spine_node: SPINE-RESPOND-BASIC
-sequence: 1290
-chapter: 19
+sequence: 266
+chapter: 7
 type: word
 headword: no
 gloss: no / not
@@ -11,15 +11,15 @@ concept_tag: RESPONSE-NO
 prerequisites: [ES-C19-si]
 sounds: [vowel-o]
 roots: [non]
-etymology_hook: "no is Latin nōn barely touched — and does double duty: both 'no' the answer and 'not' the negator (no hablo)"
+etymology_hook: "no is Latin nōn barely touched — one short word that has hardly changed in two thousand years"
 duration:
   max_seconds: 180
 requires:
   knowledge: []
 introduces:
-  knowledge: [ES-LEX-NO-01, ES-GRAMMAR-NO-02]
+  knowledge: [ES-LEX-NO-01]
 practises:
-  knowledge: [ES-LEX-NO-01, ES-GRAMMAR-NO-02]
+  knowledge: [ES-LEX-NO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -50,33 +50,39 @@ gone. Compare the family, all from the same *nōn*:
 | Italian | **no** |
 | French | **non** |
 
-## Grammar Lens: one word, two jobs
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-NO-02]; assesses=[] -->
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 Here's the thing English splits and Spanish doesn't. English has **"no"** (the
 answer) and **"not"** (inside a sentence) — two different words. Spanish uses
 **no** for **both**:
 
-- as the **answer**: *¿Hablas inglés?* — **No.**
-- as the **negator**, placed right before the verb: ***No** hablo inglés* = "I
-  do **not** speak English."
+- as the **answer**. Someone asks you something — anything at all — and this
+  one syllable declines it. You do not need to understand the question to
+  answer it, which is exactly why this word comes early.
+- and later, as the word that turns a sentence around — but that needs a
+  sentence first, so it waits until you have one. For now: ***no*** is how you
+  decline, refuse, and disagree, which is most of what a beginner needs it for.
 
-So learning *no* gives you the whole of Spanish negation for free: to make any
-sentence negative, drop **no** in front of the verb. One little word, two
-everyday jobs.
+<!-- the negator sense is taught in ES-C06-hablo-espanol, the first lesson where
+     the learner has a verb to put it in front of. Named by lesson id, never by
+     chapter number: an earlier version of this comment gave a number, went stale
+     across three renumbers, was "fixed" with a fresh number, and went stale
+     again two PRs later. Chapter numbers move; lesson ids do not. -->
+
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-01, ES-GRAMMAR-NO-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "no" — *noh*]
-- [YOU SAY: as an answer — "¿Hablas inglés? No."]
-- [YOU SAY: as a negator — "No hablo inglés"]
+- [YOU SAY: "No." — flat, once, the way you would decline a second coffee]
+- [YOU SAY: "Sí." then "No." — the two shortest complete answers in Spanish]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-01, ES-GRAMMAR-NO-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-NO-01] -->
 
 [PAUSE 3s] How do you say no in Spanish? (**no**.) What Latin word is it from?
 (**nōn**.) Spanish *no* does the work of which **two** English words? (**"no"**
-the answer and **"not"** the negator — *No hablo* = "I do not speak.") Where does
+the answer, and later the word for "not.") Where does
 *no* go to negate a sentence? (**Right before the verb**.)

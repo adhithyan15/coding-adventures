@@ -148,6 +148,10 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // `Feature::ConsoleIO` (SIR28) — `__sys_write__`, the general
+    // console-output primitive every frontend now emits in place of the
+    // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
+    Feature::ConsoleIO,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -390,7 +394,9 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("function add(a: __Sir.Val, b: __Sir.Val)"));
         assert!(a.source.contains("__Sir.add(a, b)"));
-        assert!(a.source.contains("__Sir.print(add(1, 2))"));
+        // SIR28 §2: `print` lowers to `__sys_write__`, which this backend
+        // maps to `__Sir.write(...)`.
+        assert!(a.source.contains("__Sir.write(\"stdout\", \"none\", false, add(1, 2))"));
     }
 
     #[test]
@@ -555,8 +561,13 @@ mod tests {
         let body = Block {
             stmts: vec![Stmt::ExprStmt {
                 expr: Expr::BuiltinCall {
-                    name: "print".into(),
-                    args: vec![Expr::VarRef { name: "i".into(), scope: semantic_ir::Scope::Local, span: s() }],
+                    name: "__sys_write__".into(),
+                    args: vec![
+                        Expr::StrLit { value: "stdout".into(), span: s() },
+                        Expr::StrLit { value: "once".into(), span: s() },
+                        Expr::BoolLit { value: false, span: s() },
+                        Expr::VarRef { name: "i".into(), scope: semantic_ir::Scope::Local, span: s() },
+                    ],
                     effects: EffectSet::PURE,
                     span: s(),
                 },
@@ -575,7 +586,7 @@ mod tests {
                 span: s(),
             }],
             Expr::NilLit { span: s() },
-            &[Feature::Loops, Feature::MutableBindings],
+            &[Feature::Loops, Feature::MutableBindings, Feature::ConsoleIO, Feature::Strings],
         );
         let a = compile(&m).expect("compile");
         // `stop`/`step` evaluated once into temporaries; condition is

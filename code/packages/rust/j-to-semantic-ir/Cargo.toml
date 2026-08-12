@@ -1,6 +1,6 @@
 [package]
 name = "j-to-semantic-ir"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2021"
 description = "J CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-6e."
 

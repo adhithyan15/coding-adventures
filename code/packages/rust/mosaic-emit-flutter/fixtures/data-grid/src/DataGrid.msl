@@ -1,0 +1,5 @@
+style DataGrid {
+  part table {
+    width: 100% ;
+  }
+}

@@ -13,13 +13,14 @@ coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
 coding_adventures_zeroize = { path = "../zeroize" }
 serde_json = "1"
 smart-home-core = { path = "../smart-home-core" }
+smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
 smart-home-onvif-integration = { path = "../smart-home-onvif-integration" }
 smart-home-onvif-snapshot-host = { path = "../smart-home-onvif-snapshot-host" }
 smart-home-pairing-transaction = { path = "../smart-home-pairing-transaction" }
 smart-home-runtime = { path = "../smart-home-runtime" }
-smart-home-runtime-store = { path = "../smart-home-runtime-store" }
 storage-core = { path = "../storage-core" }
 
 [dev-dependencies]
 coding_adventures_vault_leases = { path = "../vault-leases" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
 storage-local-folder = { path = "../storage-local-folder" }

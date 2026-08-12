@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C11-practice
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 960
-chapter: 11
+sequence: 1100
+chapter: 64
 type: practice-mix
 headword: (practice)
 gloss: singular wanting, ability, vowel-change comparison, and our day or night
@@ -74,4 +74,4 @@ Plural persons and plural possessive agreement remain deferred.
 [PAUSE 3s] Give the two singular sets. (*Quiero, quieres, quiere; puedo,
 puedes, puede.*) Which vowel contrast organizes them? (**e → ie** beside
 **o → ue**.) Say “our day” and “our night.” (*Nuestro día; nuestra noche.*)
-Chapter 12 can now build from this closed singular frontier.
+The next chapter can now build from this closed singular frontier.

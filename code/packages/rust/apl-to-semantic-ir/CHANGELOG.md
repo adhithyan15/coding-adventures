@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.0] - 2026-08-11
+
+### Changed — SIR28 Slice 6: auto-print lowers to `__sys_write__`
+
+Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive
+family — see `code/specs/SIR28-syscall-primitives.md`). All 7 backends
+already implement it (Slice 3); `ruby-to-semantic-ir`,
+`python-to-semantic-ir`, and `javascript-to-semantic-ir` migrated first
+(Slices 4-5); this crate is part of Slice 6.
+
+**Behavior change**: a bare top-level `value_expr` statement (MA05 §4's
+auto-print) no longer lowers to `BuiltinCall("print", [v])`. It now
+lowers to `BuiltinCall("__sys_write__", [StrLit("stdout"), StrLit("once"),
+BoolLit(false), v])` — a single value, space-join is a no-op, one
+trailing newline (SIR28 §2.1's table). `Feature::ConsoleIO` is declared
+whenever auto-print fires. Also now sets `Effect::MayPrint` (previously
+unset on this call, unlike every backend's own print/puts convention
+already expects).
+
+`apl-to-semantic-ir` 0.1.5 -> 0.2.0.
+
 ## [0.1.5] - 2026-07-19
 
 ### Added

@@ -52,6 +52,16 @@ const naskhOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const hebrewOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansHebrew-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
+const chineseOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansSC-Subset.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -74,8 +84,124 @@ const RETROFLEX_NNA = DUCTUS["ண"];
 const retroflexNnaOutline = tamilOutline("ண");
 const DENTAL_NA = DUCTUS["ந"];
 const dentalNaOutline = tamilOutline("ந");
+const CHINESE_REN = ductusFor("人", "chinese")!;
+const chineseRenOutline = chineseOutline("人");
+const CHINESE_PERSON_RADICAL = ductusFor("亻", "chinese")!;
+const chinesePersonRadicalOutline = chineseOutline("亻");
+const CHINESE_MOUTH = ductusFor("口", "chinese")!;
+const chineseMouthOutline = chineseOutline("口");
+const CHINESE_WOMAN = ductusFor("女", "chinese")!;
+const chineseWomanOutline = chineseOutline("女");
+const CHINESE_CHILD = ductusFor("子", "chinese")!;
+const chineseChildOutline = chineseOutline("子");
+const CHINESE_SUN = ductusFor("日", "chinese")!;
+const chineseSunOutline = chineseOutline("日");
+const CHINESE_SPEECH_RADICAL = ductusFor("讠", "chinese")!;
+const chineseSpeechRadicalOutline = chineseOutline("讠");
+const CHINESE_WATER_RADICAL = ductusFor("氵", "chinese")!;
+const chineseWaterRadicalOutline = chineseOutline("氵");
+const CHINESE_ROOF_RADICAL = ductusFor("宀", "chinese")!;
+const chineseRoofRadicalOutline = chineseOutline("宀");
+const CHINESE_YOU = ductusFor("你", "chinese")!;
+const chineseYouOutline = chineseOutline("你");
+const CHINESE_GOOD = ductusFor("好", "chinese")!;
+const chineseGoodOutline = chineseOutline("好");
+const CHINESE_I = ductusFor("我", "chinese")!;
+const chineseIOutline = chineseOutline("我");
+const CHINESE_BE = ductusFor("是", "chinese")!;
+const chineseBeOutline = chineseOutline("是");
+const CHINESE_NOT = ductusFor("不", "chinese")!;
+const chineseNotOutline = chineseOutline("不");
+const CHINESE_NAME = ductusFor("名", "chinese")!;
+const chineseNameOutline = chineseOutline("名");
+const CHINESE_CHARACTER = ductusFor("字", "chinese")!;
+const chineseCharacterOutline = chineseOutline("字");
+const CHINESE_THANK = ductusFor("谢", "chinese")!;
+const chineseThankOutline = chineseOutline("谢");
+const CHINESE_PLEASE = ductusFor("请", "chinese")!;
+const chinesePleaseOutline = chineseOutline("请");
+const HEBREW_ALEF = ductusFor("א", "hebrew")!;
+const hebrewAlefOutline = hebrewOutline("א");
+const HEBREW_BET = ductusFor("ב", "hebrew")!;
+const hebrewBetOutline = hebrewOutline("ב");
+const HEBREW_GIMEL = ductusFor("ג", "hebrew")!;
+const hebrewGimelOutline = hebrewOutline("ג");
+const HEBREW_DALET = ductusFor("ד", "hebrew")!;
+const hebrewDaletOutline = hebrewOutline("ד");
+const HEBREW_HEI = ductusFor("ה", "hebrew")!;
+const hebrewHeiOutline = hebrewOutline("ה");
+const HEBREW_VAV = ductusFor("ו", "hebrew")!;
+const hebrewVavOutline = hebrewOutline("ו");
+const HEBREW_ZAYIN = ductusFor("ז", "hebrew")!;
+const hebrewZayinOutline = hebrewOutline("ז");
+const HEBREW_HEIT = ductusFor("ח", "hebrew")!;
+const hebrewHeitOutline = hebrewOutline("ח");
+const HEBREW_TET = ductusFor("ט", "hebrew")!;
+const hebrewTetOutline = hebrewOutline("ט");
+const HEBREW_YOD = ductusFor("י", "hebrew")!;
+const hebrewYodOutline = hebrewOutline("י");
+const HEBREW_KAF = ductusFor("כ", "hebrew")!;
+const hebrewKafOutline = hebrewOutline("כ");
+const HEBREW_LAMED = ductusFor("ל", "hebrew")!;
+const hebrewLamedOutline = hebrewOutline("ל");
+const HEBREW_MEM = ductusFor("מ", "hebrew")!;
+const hebrewMemOutline = hebrewOutline("מ");
+const HEBREW_NUN = ductusFor("נ", "hebrew")!;
+const hebrewNunOutline = hebrewOutline("נ");
+const HEBREW_SAMEKH = ductusFor("ס", "hebrew")!;
+const hebrewSamekhOutline = hebrewOutline("ס");
+const HEBREW_AYIN = ductusFor("ע", "hebrew")!;
+const hebrewAyinOutline = hebrewOutline("ע");
+const HEBREW_PE = ductusFor("פ", "hebrew")!;
+const hebrewPeOutline = hebrewOutline("פ");
+const HEBREW_TSADI = ductusFor("צ", "hebrew")!;
+const hebrewTsadiOutline = hebrewOutline("צ");
+const HEBREW_QOF = ductusFor("ק", "hebrew")!;
+const hebrewQofOutline = hebrewOutline("ק");
+const HEBREW_RESH = ductusFor("ר", "hebrew")!;
+const hebrewReshOutline = hebrewOutline("ר");
+const HEBREW_SHIN = ductusFor("ש", "hebrew")!;
+const hebrewShinOutline = hebrewOutline("ש");
+const HEBREW_TAV = ductusFor("ת", "hebrew")!;
+const hebrewTavOutline = hebrewOutline("ת");
 const PERSIAN_ALEF = DUCTUS["ا"];
 const persianAlefOutline = naskhOutline("ا");
+const ARABIC_ALEF = ductusFor("ا", "arabic")!;
+const arabicAlefOutline = naskhOutline("ا");
+const ARABIC_BAA = ductusFor("ب", "arabic")!;
+const arabicBaaOutline = naskhOutline("ب");
+const ARABIC_TAA = ductusFor("ت", "arabic")!;
+const arabicTaaOutline = naskhOutline("ت");
+const ARABIC_JEEM = ductusFor("ج", "arabic")!;
+const arabicJeemOutline = naskhOutline("ج");
+const ARABIC_HAA = ductusFor("ح", "arabic")!;
+const arabicHaaOutline = naskhOutline("ح");
+const ARABIC_KHAA = ductusFor("خ", "arabic")!;
+const arabicKhaaOutline = naskhOutline("خ");
+const ARABIC_DAAL = ductusFor("د", "arabic")!;
+const arabicDaalOutline = naskhOutline("د");
+const ARABIC_RAA = ductusFor("ر", "arabic")!;
+const arabicRaaOutline = naskhOutline("ر");
+const ARABIC_SEEN = ductusFor("س", "arabic")!;
+const arabicSeenOutline = naskhOutline("س");
+const ARABIC_SHIIN = ductusFor("ش", "arabic")!;
+const arabicShiinOutline = naskhOutline("ش");
+const ARABIC_SAAD = ductusFor("ص", "arabic")!;
+const arabicSaadOutline = naskhOutline("ص");
+const ARABIC_DAAD = ductusFor("ض", "arabic")!;
+const arabicDaadOutline = naskhOutline("ض");
+const ARABIC_AYN = ductusFor("ع", "arabic")!;
+const arabicAynOutline = naskhOutline("ع");
+const ARABIC_KAF = ductusFor("ك", "arabic")!;
+const arabicKafOutline = naskhOutline("ك");
+const ARABIC_LAM = ductusFor("ل", "arabic")!;
+const arabicLamOutline = naskhOutline("ل");
+const ARABIC_HEH = ductusFor("ه", "arabic")!;
+const arabicHehOutline = naskhOutline("ه");
+const ARABIC_WAW = ductusFor("و", "arabic")!;
+const arabicWawOutline = naskhOutline("و");
+const ARABIC_YAA = ductusFor("ي", "arabic")!;
+const arabicYaaOutline = naskhOutline("ي");
 const URDU_ALEF = ductusFor("ا", "urdu-nastaliq")!;
 const urduAlefOutline = naskhOutline("ا");
 const URDU_JIM = ductusFor("ج", "urdu-nastaliq")!;
@@ -94,10 +220,14 @@ const URDU_MIM = ductusFor("م", "urdu-nastaliq")!;
 const urduMimOutline = naskhOutline("م");
 const URDU_NUN = ductusFor("ن", "urdu-nastaliq")!;
 const urduNunOutline = naskhOutline("ن");
+const URDU_GHUNNA = ductusFor("ں", "urdu-nastaliq")!;
+const urduGhunnaOutline = naskhOutline("ں");
 const URDU_HE = ductusFor("ہ", "urdu-nastaliq")!;
 const urduHeOutline = naskhOutline("ہ");
 const URDU_YE = ductusFor("ی", "urdu-nastaliq")!;
 const urduYeOutline = naskhOutline("ی");
+const URDU_BARI_YE = ductusFor("ے", "urdu-nastaliq")!;
+const urduBariYeOutline = naskhOutline("ے");
 const PERSIAN_BEH = DUCTUS["ب"];
 const persianBehOutline = naskhOutline("ب");
 const PERSIAN_TEH = DUCTUS["ت"];
@@ -125,7 +255,7 @@ function collect(node: SvgNode, pick: (n: SvgNode) => boolean, out: SvgNode[] = 
 const byTag = (node: SvgNode, tag: string) => collect(node, (n) => n.tag === tag);
 
 describe("ductusFor — only cited letters have a ductus", () => {
-  it("finds all eleven authored Tamil letters, nine Persian letters, and Urdu ا, ج, ر, س, ش, ک, ل, م, ن, ہ, and ی", () => {
+  it("finds eleven Tamil letters, nine Persian letters, eighteen Arabic letters, and thirteen Urdu letters", () => {
     expect(ductusFor("ம")?.glyph).toBe("ம");
     expect(ductusFor("அ")?.glyph).toBe("அ");
     expect(ductusFor("ஆ")?.glyph).toBe("ஆ");
@@ -146,6 +276,18 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ن")?.glyph).toBe("ن");
     expect(ductusFor("و")?.glyph).toBe("و");
     expect(ductusFor("ه")?.glyph).toBe("ه");
+    expect(ductusFor("ا", "arabic")?.glyph).toBe("ا");
+    expect(ductusFor("ب", "arabic")?.glyph).toBe("ب");
+    expect(ductusFor("س", "arabic")?.glyph).toBe("س");
+    expect(ductusFor("ش", "arabic")?.glyph).toBe("ش");
+    expect(ductusFor("ص", "arabic")?.glyph).toBe("ص");
+    expect(ductusFor("ض", "arabic")?.glyph).toBe("ض");
+    expect(ductusFor("ع", "arabic")?.glyph).toBe("ع");
+    expect(ductusFor("ك", "arabic")?.glyph).toBe("ك");
+    expect(ductusFor("ل", "arabic")?.glyph).toBe("ل");
+    expect(ductusFor("ه", "arabic")?.glyph).toBe("ه");
+    expect(ductusFor("و", "arabic")?.glyph).toBe("و");
+    expect(ductusFor("ي", "arabic")?.glyph).toBe("ي");
     expect(ductusFor("ا", "urdu-nastaliq")?.glyph).toBe("ا");
     expect(ductusFor("ج", "urdu-nastaliq")?.glyph).toBe("ج");
     expect(ductusFor("ج", "perso-arabic")).toBeUndefined();
@@ -162,26 +304,51 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("م", "perso-arabic")?.glyph).toBe("م");
     expect(ductusFor("ن", "urdu-nastaliq")?.glyph).toBe("ن");
     expect(ductusFor("ن", "perso-arabic")?.glyph).toBe("ن");
+    expect(ductusFor("ں", "urdu-nastaliq")?.glyph).toBe("ں");
     expect(ductusFor("ہ", "urdu-nastaliq")?.glyph).toBe("ہ");
     expect(ductusFor("ی", "urdu-nastaliq")?.glyph).toBe("ی");
+    expect(ductusFor("ے", "urdu-nastaliq")?.glyph).toBe("ے");
   });
 
-  it("keeps the shared Persian and Urdu ا independently addressable", () => {
+  it("keeps the shared Arabic, Persian, and Urdu ا independently addressable", () => {
+    const arabic = ductusFor("ا", "arabic");
     const persian = ductusFor("ا", "perso-arabic");
     const urdu = ductusFor("ا", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
     expect(persian?.script).toBe("perso-arabic");
     expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(arabic?.source.url).not.toBe(persian?.source.url);
+    expect(arabic?.source.url).not.toBe(urdu?.source.url);
     expect(persian?.source.url).not.toBe(urdu?.source.url);
-    expect(ductusFor("ا", "arabic")).toBeUndefined();
   });
 
-  it("keeps the shared Persian and Urdu س independently addressable", () => {
+  it("keeps the shared Arabic and Persian ب independently addressable", () => {
+    const arabic = ductusFor("ب", "arabic");
+    const persian = ductusFor("ب", "perso-arabic");
+    expect(arabic?.script).toBe("arabic");
+    expect(persian?.script).toBe("perso-arabic");
+    expect(arabic?.source.url).not.toBe(persian?.source.url);
+  });
+
+  it("keeps the shared Arabic, Persian, and Urdu س independently addressable", () => {
+    const arabic = ductusFor("س", "arabic");
     const persian = ductusFor("س", "perso-arabic");
     const urdu = ductusFor("س", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
     expect(persian?.script).toBe("perso-arabic");
     expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(arabic?.source.url).not.toBe(persian?.source.url);
+    expect(arabic?.source.url).not.toBe(urdu?.source.url);
     expect(persian?.source.url).not.toBe(urdu?.source.url);
-    expect(ductusFor("س", "arabic")).toBeUndefined();
+  });
+
+  it("keeps the shared Arabic and Urdu ش independently addressable", () => {
+    const arabic = ductusFor("ش", "arabic");
+    const urdu = ductusFor("ش", "urdu-nastaliq");
+    expect(arabic?.script).toBe("arabic");
+    expect(urdu?.script).toBe("urdu-nastaliq");
+    expect(arabic?.source.url).not.toBe(urdu?.source.url);
+    expect(ductusFor("ش", "perso-arabic")).toBeUndefined();
   });
 
   it("keeps the shared Persian and Urdu م independently addressable", () => {
@@ -657,6 +824,1167 @@ describe("ந — a real cited three-stroke six-movement filmstrip", () => {
   });
 });
 
+describe("Chinese 人 — two cited falling strokes in PRC order", () => {
+  const steps = ductusSteps(CHINESE_REN);
+  const strip = ductusFilmstrip(CHINESE_REN, chineseRenOutline);
+
+  it("shows the left-falling stroke before restarting for the right-falling stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left-falling piě stroke from the upper centre",
+      "lift, then draw the right-falling nà stroke from the junction",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with the first stroke settled behind the second", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseRenOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CHINESE_REN.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_REN.strokes[1], 1),
+    );
+  });
+});
+
+describe("Chinese 亻 — a cited falling stroke followed by a vertical", () => {
+  const steps = ductusSteps(CHINESE_PERSON_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_PERSON_RADICAL, chinesePersonRadicalOutline);
+
+  it("shows the left-falling stroke before restarting for the vertical", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left-falling piě stroke from upper right to lower left",
+      "lift, then draw the vertical shù stroke from the junction to the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with the falling stroke settled behind the vertical", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chinesePersonRadicalOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CHINESE_PERSON_RADICAL.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_PERSON_RADICAL.strokes[1], 1),
+    );
+  });
+});
+
+describe("Chinese 口 — a cited three-run box that closes last", () => {
+  const steps = ductusSteps(CHINESE_MOUTH);
+  const strip = ductusFilmstrip(CHINESE_MOUTH, chineseMouthOutline);
+
+  it("shows the joined top-right corner before the separately closing bottom", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left vertical shù stroke from top to bottom",
+      "lift, then draw the top bar from left to right",
+      "turn the corner without lifting and descend the right side",
+      "lift, then close the bottom from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC box with the first two runs behind the closing bottom", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseMouthOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(CHINESE_MOUTH.strokes[0], 1), penPathD(CHINESE_MOUTH.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_MOUTH.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 女 — a cited bent first run followed by two lifted strokes", () => {
+  const steps = ductusSteps(CHINESE_WOMAN);
+  const strip = ductusFilmstrip(CHINESE_WOMAN, chineseWomanOutline);
+
+  it("keeps the first bend joined before the falling and horizontal strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the first piědiǎn stroke down and left",
+      "turn without lifting and sweep down to the lower right",
+      "lift, then draw the left-falling piě stroke from upper right to lower left",
+      "lift, then draw the middle horizontal héng from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with both earlier runs behind the middle horizontal", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseWomanOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(CHINESE_WOMAN.strokes[0], 1), penPathD(CHINESE_WOMAN.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_WOMAN.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 子 — two cited joined turns followed by a final horizontal", () => {
+  const steps = ductusSteps(CHINESE_CHILD);
+  const strip = ductusFilmstrip(CHINESE_CHILD, chineseChildOutline);
+
+  it("keeps each turn joined inside its stroke before the final horizontal", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top horizontal héng from left to right",
+      "turn without lifting and sweep down-left",
+      "lift, then descend the central vertical",
+      "hook left at the base without lifting",
+      "lift, then draw the middle horizontal héng from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1, 2]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with both hooked runs behind the final horizontal", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseChildOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(CHINESE_CHILD.strokes[0], 1), penPathD(CHINESE_CHILD.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_CHILD.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 日 — a cited joined corner with an inside-before-close order", () => {
+  const steps = ductusSteps(CHINESE_SUN);
+  const strip = ductusFilmstrip(CHINESE_SUN, chineseSunOutline);
+
+  it("draws the left side, joined top-right corner, inside bar, then closing bottom", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left vertical shù from top to bottom",
+      "lift, then draw the top horizontal héng from left to right",
+      "turn without lifting and descend the right side",
+      "lift, then draw the middle horizontal héng from left to right",
+      "lift, then close the bottom horizontal héng from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans SC glyph with the inside bar behind the closing bottom", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseSunOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([
+      penPathD(CHINESE_SUN.strokes[0], 1),
+      penPathD(CHINESE_SUN.strokes[1], 1),
+      penPathD(CHINESE_SUN.strokes[2], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_SUN.strokes[3], 1),
+    );
+  });
+});
+
+describe("Chinese 讠 — a cited dot followed by one double-turning stroke", () => {
+  const steps = ductusSteps(CHINESE_SPEECH_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_SPEECH_RADICAL, chineseSpeechRadicalOutline);
+
+  it("keeps the horizontal, descent, and rising finish joined after the dot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top dot down and right",
+      "lift, then draw the short horizontal from left to right",
+      "turn without lifting and descend the vertical",
+      "turn without lifting and rise to the upper right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with the completed dot behind the joined body", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseSpeechRadicalOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(CHINESE_SPEECH_RADICAL.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_SPEECH_RADICAL.strokes[1], 1),
+    );
+  });
+});
+
+describe("Chinese 氵 — two falling dots above one rising bottom stroke", () => {
+  const steps = ductusSteps(CHINESE_WATER_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_WATER_RADICAL, chineseWaterRadicalOutline);
+
+  it("keeps all three sourced strokes separate while joining the final rise", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the upper dot down and right",
+      "lift, then draw the middle dot down and right",
+      "lift, then begin the bottom stroke with a slight rise left",
+      "continue without lifting in a long rise to the upper right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with both completed dots behind the rising stroke", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseWaterRadicalOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CHINESE_WATER_RADICAL.strokes[0], 1),
+      penPathD(CHINESE_WATER_RADICAL.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_WATER_RADICAL.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 宀 — two separate marks before a joined roof hook", () => {
+  const steps = ductusSteps(CHINESE_ROOF_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_ROOF_RADICAL, chineseRoofRadicalOutline);
+
+  it("keeps the horizontal and down-left hook joined after two lifts", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top dot down and right",
+      "lift, then draw the left-side stroke down and left",
+      "lift, then draw the horizontal roof from left to right",
+      "hook down and left without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with both completed marks behind the roof hook", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseRoofRadicalOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CHINESE_ROOF_RADICAL.strokes[0], 1),
+      penPathD(CHINESE_ROOF_RADICAL.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_ROOF_RADICAL.strokes[2], 1),
+    );
+  });
+});
+
+describe("Chinese 你 — seven cited strokes with two joined hooks", () => {
+  const steps = ductusSteps(CHINESE_YOU);
+  const strip = ductusFilmstrip(CHINESE_YOU, chineseYouOutline);
+
+  it("writes 亻 first, keeps both hooks joined, and places both dots last", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3, 3, 4, 4, 5, 6]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, true, true, true, false, true, false, true, true,
+    ]);
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(6);
+    expect(strip.summary).toBe("7 strokes · 6 pen lifts · 9 movements");
+  });
+
+  it("draws the exact Noto Sans SC character with six completed strokes behind the final dot", () => {
+    const paths = byTag(strip.frames[8], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseYouOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual(
+      CHINESE_YOU.strokes.slice(0, 6).map((stroke) => penPathD(stroke, 1)),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_YOU.strokes[6], 1),
+    );
+  });
+});
+
+describe("Chinese 好 — six cited strokes with 女 before 子", () => {
+  const steps = ductusSteps(CHINESE_GOOD);
+  const strip = ductusFilmstrip(CHINESE_GOOD, chineseGoodOutline);
+
+  it("keeps all three internal turns joined across six component-ordered strokes", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3, 3, 4, 4, 5]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, false, true, true, true, false, true, false, true,
+    ]);
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 9 movements");
+  });
+
+  it("draws the exact Noto Sans SC character with five completed strokes behind the final bar", () => {
+    const paths = byTag(strip.frames[8], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseGoodOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual(
+      CHINESE_GOOD.strokes.slice(0, 5).map((stroke) => penPathD(stroke, 1)),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_GOOD.strokes[5], 1),
+    );
+  });
+});
+
+describe("Chinese 我 — seven cited strokes with one joined hook", () => {
+  const steps = ductusSteps(CHINESE_I);
+  const strip = ductusFilmstrip(CHINESE_I, chineseIOutline);
+
+  it("preserves seven strokes, one internal join, and six lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 2, 3, 4, 4, 5, 6]);
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(6);
+    expect(strip.summary).toBe("7 strokes · 6 pen lifts · 9 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the final dot", () => {
+    const paths = byTag(strip.frames[8], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseIOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_I.strokes[6], 1),
+    );
+  });
+});
+
+describe("Chinese 是 — nine cited strokes with 日 first", () => {
+  const steps = ductusSteps(CHINESE_BE);
+  const strip = ductusFilmstrip(CHINESE_BE, chineseBeOutline);
+
+  it("closes 日 before the lower body and preserves eight lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(strip.frames).toHaveLength(10);
+    expect(strip.penLifts).toBe(8);
+    expect(strip.summary).toBe("9 strokes · 8 pen lifts · 10 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the final sweep", () => {
+    const paths = byTag(strip.frames[9], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseBeOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_BE.strokes[8], 1),
+    );
+  });
+});
+
+describe("Chinese 不 — four separately placed cited strokes", () => {
+  const steps = ductusSteps(CHINESE_NOT);
+  const strip = ductusFilmstrip(CHINESE_NOT, chineseNotOutline);
+
+  it("keeps all four source strokes separate with three lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the final dot", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseNotOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_NOT.strokes[3], 1),
+    );
+  });
+});
+
+describe("Chinese 名 — 夕 before 口 in six cited strokes", () => {
+  const steps = ductusSteps(CHINESE_NAME);
+  const strip = ductusFilmstrip(CHINESE_NAME, chineseNameOutline);
+
+  it("preserves both joined turns and five lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 3, 4, 4, 5]);
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 8 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 口's closing stroke", () => {
+    const paths = byTag(strip.frames[7], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseNameOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_NAME.strokes[5], 1),
+    );
+  });
+});
+
+describe("Chinese 字 — 宀 before 子 in six cited strokes", () => {
+  const steps = ductusSteps(CHINESE_CHARACTER);
+  const strip = ductusFilmstrip(CHINESE_CHARACTER, chineseCharacterOutline);
+
+  it("preserves all three joined turns and five lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 2, 3, 3, 4, 4, 5]);
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 9 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 子's final horizontal", () => {
+    const paths = byTag(strip.frames[8], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseCharacterOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_CHARACTER.strokes[5], 1),
+    );
+  });
+});
+
+describe("Chinese 谢 — 讠 before 身 before 寸 in twelve cited strokes", () => {
+  const steps = ductusSteps(CHINESE_THANK);
+  const strip = ductusFilmstrip(CHINESE_THANK, chineseThankOutline);
+
+  it("preserves all five joined turns and eleven lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 1, 1, 2, 3, 4, 4, 4, 5, 6, 7, 8, 9, 10, 10, 11,
+    ]);
+    expect(strip.frames).toHaveLength(17);
+    expect(strip.penLifts).toBe(11);
+    expect(strip.summary).toBe("12 strokes · 11 pen lifts · 17 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 寸's final dot", () => {
+    const paths = byTag(strip.frames[16], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseThankOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_THANK.strokes[11], 1),
+    );
+  });
+});
+
+describe("Chinese 请 — 讠 before 青 in ten cited strokes", () => {
+  const steps = ductusSteps(CHINESE_PLEASE);
+  const strip = ductusFilmstrip(CHINESE_PLEASE, chinesePleaseOutline);
+
+  it("preserves all four joined turns and nine lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 1, 1, 2, 3, 4, 5, 6, 7, 7, 7, 8, 9,
+    ]);
+    expect(strip.frames).toHaveLength(14);
+    expect(strip.penLifts).toBe(9);
+    expect(strip.summary).toBe("10 strokes · 9 pen lifts · 14 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 青's final inner horizontal", () => {
+    const paths = byTag(strip.frames[13], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chinesePleaseOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_PLEASE.strokes[9], 1),
+    );
+  });
+});
+
+describe("Hebrew א — two crossed handwritten runs fitted to the block outline", () => {
+  const steps = ductusSteps(HEBREW_ALEF);
+  const strip = ductusFilmstrip(HEBREW_ALEF, hebrewAlefOutline);
+
+  it("shows the main diagonal before the lifted opposing run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the main diagonal down and right",
+      "lift, then descend from the upper-right arm to the crossing",
+      "continue through the crossing and down the lower-left leg",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("keeps the first run visible over the vendored Noto Sans Hebrew outline", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewAlefOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_ALEF.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_ALEF.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ב — its top and right side precede the lifted baseline", () => {
+  const steps = ductusSteps(HEBREW_BET);
+  const strip = ductusFilmstrip(HEBREW_BET, hebrewBetOutline);
+
+  it("shows the sourced three movements across two strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the right side without lifting",
+      "lift, then draw the baseline from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("keeps the joined top-and-right stroke over the Noto Sans Hebrew outline", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewBetOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_BET.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_BET.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ג — its joined top and right leg precede the lifted left leg", () => {
+  const steps = ductusSteps(HEBREW_GIMEL);
+  const strip = ductusFilmstrip(HEBREW_GIMEL, hebrewGimelOutline);
+
+  it("shows the sourced four movements across two strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short top bar from left to right",
+      "continue down the right stem without lifting",
+      "continue into the short lower-right leg",
+      "lift, restart at the lower junction, and draw the longer leg down-left",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("keeps the first angular run visible over the Noto Sans Hebrew outline", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewGimelOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_GIMEL.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_GIMEL.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ד — one sourced curve fitted to the angular block outline", () => {
+  const steps = ductusSteps(HEBREW_DALET);
+  const strip = ductusFilmstrip(HEBREW_DALET, hebrewDaletOutline);
+
+  it("keeps the top bar and right descent in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue around the sharp right corner and down without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the continuous path over Noto Sans Hebrew without a completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewDaletOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_DALET.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ה — joined top and right body plus a detached left leg", () => {
+  const steps = ductusSteps(HEBREW_HEI);
+  const strip = ductusFilmstrip(HEBREW_HEI, hebrewHeiOutline);
+
+  it("keeps the top and right side joined before restarting the left leg", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the right side without lifting",
+      "lift, then draw the detached left leg from top to bottom",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws Noto Sans Hebrew and preserves the completed body behind the detached leg", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewHeiOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(HEBREW_HEI.strokes[0], 2));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_HEI.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ו — one joined head-and-stem stroke", () => {
+  const steps = ductusSteps(HEBREW_VAV);
+  const strip = ductusFilmstrip(HEBREW_VAV, hebrewVavOutline);
+
+  it("keeps the small head joined to the top-to-bottom stem", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the small head from left to right",
+      "continue straight down without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws Noto Sans Hebrew with no completed-stroke overlay before the stem", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewVavOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_VAV.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ז — one joined head-and-curved-stem stroke", () => {
+  const steps = ductusSteps(HEBREW_ZAYIN);
+  const strip = ductusFilmstrip(HEBREW_ZAYIN, hebrewZayinOutline);
+
+  it("keeps the short head joined to the curved descent", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short head from left to right",
+      "continue down through the curved stem without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws Noto Sans Hebrew with no completed-stroke overlay before the stem", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewZayinOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_ZAYIN.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ח — joined top and right body plus a joined left leg", () => {
+  const steps = ductusSteps(HEBREW_HEIT);
+  const strip = ductusFilmstrip(HEBREW_HEIT, hebrewHeitOutline);
+
+  it("keeps the top and right side joined before restarting the left leg", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the right side without lifting",
+      "lift, then draw the joined left leg from top to bottom",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws Noto Sans Hebrew and preserves the completed body behind the left leg", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewHeitOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(HEBREW_HEIT.strokes[0], 2));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_HEIT.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ט — left-and-base body plus a bottom-up hooked side", () => {
+  const steps = ductusSteps(HEBREW_TET);
+  const strip = ductusFilmstrip(HEBREW_TET, hebrewTetOutline);
+
+  it("keeps each body pair joined with one restart at the lower right", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the left side from top to bottom",
+      "continue around the bottom from left to right without lifting",
+      "lift, restart at the lower-right, and climb the right side",
+      "turn down-left into the inward hook without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws Noto Sans Hebrew and preserves the first body behind the hooked side", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewTetOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(HEBREW_TET.strokes[0], 2));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_TET.strokes[1], 2),
+    );
+  });
+});
+
+describe("Hebrew י — one tiny joined head-and-stem stroke", () => {
+  const steps = ductusSteps(HEBREW_YOD);
+  const strip = ductusFilmstrip(HEBREW_YOD, hebrewYodOutline);
+
+  it("keeps the tiny head joined to its short stem", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the small head from left to right",
+      "continue down through the short angled stem without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact compact Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewYodOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_YOD.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew כ — one continuous sharp-cornered half-circle", () => {
+  const steps = ductusSteps(HEBREW_KAF);
+  const strip = ductusFilmstrip(HEBREW_KAF, hebrewKafOutline);
+
+  it("keeps the top, rounded side, and base in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the rounded right side without lifting",
+      "turn left along the base without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew Kaf in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewKafOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_KAF.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ל — one tall angular run", () => {
+  const steps = ductusSteps(HEBREW_LAMED);
+  const strip = ductusFilmstrip(HEBREW_LAMED, hebrewLamedOutline);
+
+  it("keeps the tall stroke, middle bar, and diagonal lower stroke joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the tall left stroke from top to bottom",
+      "continue right along the middle bar without lifting",
+      "turn diagonally down-left through the lower stroke without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact tall Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewLamedOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_LAMED.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew מ — detached angled part, then one joined angular body", () => {
+  const steps = ductusSteps(HEBREW_MEM);
+  const strip = ductusFilmstrip(HEBREW_MEM, hebrewMemOutline);
+
+  it("shows the source's five movements across two strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the detached left part from its lower tip up to the corner",
+      "turn down-right through its short inner leg without lifting",
+      "lift, then climb diagonally right through the upper shoulder",
+      "turn down the right side without lifting",
+      "turn left along the base without lifting, stopping before the left part",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1, 1]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("draws the exact open Noto Sans Hebrew glyph and preserves the diagonal", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewMemOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_MEM.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_MEM.strokes[1], 2),
+    );
+  });
+});
+
+describe("Hebrew נ — one joined printed hook", () => {
+  const steps = ductusSteps(HEBREW_NUN);
+  const strip = ductusFilmstrip(HEBREW_NUN, hebrewNunOutline);
+
+  it("keeps the head, right descent, and leftward base joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short top head from left to right",
+      "continue down the right side without lifting",
+      "turn left along the base without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewNunOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_NUN.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew ס — one closed clockwise printed loop", () => {
+  const steps = ductusSteps(HEBREW_SAMEKH);
+  const strip = ductusFilmstrip(HEBREW_SAMEKH, hebrewSamekhOutline);
+
+  it("keeps the top, right side, base, and closing left side joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the flat top from left to right",
+      "round down the right side without lifting",
+      "sweep left along the base without lifting",
+      "climb the left side and close the loop without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact closed Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewSamekhOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_SAMEKH.strokes[0], 3),
+    );
+  });
+});
+
+describe("Hebrew ע — one joined branch-and-base run", () => {
+  const steps = ductusSteps(HEBREW_AYIN);
+  const strip = ductusFilmstrip(HEBREW_AYIN, hebrewAyinOutline);
+
+  it("keeps the right descent, base, and left climb joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the right branch and curve left into the base",
+      "sweep left along the base without lifting",
+      "turn back and climb the left branch without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewAyinOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_AYIN.strokes[0], 2),
+    );
+  });
+});
+
+describe("Hebrew פ — an outer body followed by a lifted inner curl", () => {
+  const steps = ductusSteps(HEBREW_PE);
+  const strip = ductusFilmstrip(HEBREW_PE, hebrewPeOutline);
+
+  it("keeps the top, side, and base joined before the inner curl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the outer top from left to right",
+      "turn down the right side without lifting",
+      "return left along the base without lifting",
+      "lift, then draw the short inner curl from left to right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the outer body", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewPeOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_PE.strokes[0], 2),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_PE.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew צ — a joined diagonal and base followed by a lifted arm", () => {
+  const steps = ductusSteps(HEBREW_TSADI);
+  const strip = ductusFilmstrip(HEBREW_TSADI, hebrewTsadiOutline);
+
+  it("keeps the long diagonal joined to the base before the upper-right arm", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the long diagonal from the upper left",
+      "turn left along the base without lifting",
+      "lift, then curve the upper-right arm down-left into the junction",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the first run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewTsadiOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_TSADI.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_TSADI.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ק — a joined top and right body followed by a lifted stem", () => {
+  const steps = ductusSteps(HEBREW_QOF);
+  const strip = ductusFilmstrip(HEBREW_QOF, hebrewQofOutline);
+
+  it("keeps the top joined to the right body before the separate descender", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "turn down-left through the right body without lifting",
+      "lift, then descend the separate inner-left stem below the line",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the first run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewQofOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_QOF.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_QOF.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ר — one rounded top-and-right run", () => {
+  const steps = ductusSteps(HEBREW_RESH);
+  const strip = ductusFilmstrip(HEBREW_RESH, hebrewReshOutline);
+
+  it("keeps the top bar and rounded right descent joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "round the top-right corner and continue down without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph with no completed-stroke overlay", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewReshOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_RESH.strokes[0], 1),
+    );
+  });
+});
+
+describe("Hebrew ש — an outer bowl followed by a lifted middle branch", () => {
+  const steps = ductusSteps(HEBREW_SHIN);
+  const strip = ductusFilmstrip(HEBREW_SHIN, hebrewShinOutline);
+
+  it("keeps the outer bowl joined before the separate middle branch", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the right branch and round left along the base",
+      "continue up the left branch without lifting",
+      "lift, then descend the middle branch into the base",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves the outer run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewShinOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_SHIN.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_SHIN.strokes[1], 1),
+    );
+  });
+});
+
+describe("Hebrew ת — a joined top and right side, then a lifted left leg", () => {
+  const steps = ductusSteps(HEBREW_TAV);
+  const strip = ductusFilmstrip(HEBREW_TAV, hebrewTavOutline);
+
+  it("keeps the top and right side joined before the separate left leg and foot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the top bar from left to right",
+      "continue down the right side without lifting",
+      "lift, then descend the separate left leg",
+      "curve left into the small foot without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      true,
+      false,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Hebrew glyph and preserves both runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      hebrewTavOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(HEBREW_TAV.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(HEBREW_TAV.strokes[1], 1),
+    );
+  });
+});
+
 describe("Persian ا — the first cited right-to-left-script filmstrip", () => {
   const steps = ductusSteps(PERSIAN_ALEF);
   const strip = ductusFilmstrip(PERSIAN_ALEF, persianAlefOutline);
@@ -683,6 +2011,552 @@ describe("Persian ا — the first cited right-to-left-script filmstrip", () => 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(PERSIAN_ALEF.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ا — an independent, script-scoped filmstrip", () => {
+  const steps = ductusSteps(ARABIC_ALEF);
+  const strip = ductusFilmstrip(ARABIC_ALEF, arabicAlefOutline);
+
+  it("shows one downward movement with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual(["down"]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(ARABIC_ALEF.strokes[0].segments[0].path[0].y).toBeGreaterThan(
+      ARABIC_ALEF.strokes[0].segments[0].path.at(-1)!.y,
+    );
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("draws the vendored Noto Naskh outline behind the sourced path", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicAlefOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_ALEF.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ب — a script-scoped bowl-and-dot filmstrip", () => {
+  const steps = ductusSteps(ARABIC_BAA);
+  const strip = ductusFilmstrip(ARABIC_BAA, arabicBaaOutline);
+
+  it("shows the right-to-left bowl before the lifted dot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the dot below",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1]);
+    expect(ARABIC_BAA.strokes[0].segments[0].path[0].x).toBeGreaterThan(
+      ARABIC_BAA.strokes[0].segments[0].path.at(-1)!.x,
+    );
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline and retains the bowl during the dot", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicBaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(ARABIC_BAA.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_BAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic ت — a script-scoped bowl-and-two-dots filmstrip", () => {
+  const steps = ductusSteps(ARABIC_TAA);
+  const strip = ductusFilmstrip(ARABIC_TAA, arabicTaaOutline);
+
+  it("shows the shared right-to-left bowl before both separately lifted dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the left dot above",
+      "lift again and place the right dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2]);
+    expect(ARABIC_TAA.strokes[0].segments[0].path[0].x).toBeGreaterThan(
+      ARABIC_TAA.strokes[0].segments[0].path.at(-1)!.x,
+    );
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("draws the Noto Naskh outline and retains the bowl and left dot in the final frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicTaaOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual([penPathD(ARABIC_TAA.strokes[0], 1), penPathD(ARABIC_TAA.strokes[1], 1)]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_TAA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Arabic ج — a body-first hook-and-dot filmstrip", () => {
+  const steps = ductusSteps(ARABIC_JEEM);
+  const strip = ductusFilmstrip(ARABIC_JEEM, arabicJeemOutline);
+
+  it("keeps the sourced head and bowl in one stroke before the lifted dot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short upper head from left to right",
+      "continue down and around the bowl",
+      "lift once, then place the dot below",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("uses Noto Naskh and retains the body in the final dot frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicJeemOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(ARABIC_JEEM.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_JEEM.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic ح — a stem-first, dotless filmstrip", () => {
+  const steps = ductusSteps(ARABIC_HAA);
+  const strip = ductusFilmstrip(ARABIC_HAA, arabicHaaOutline);
+
+  it("keeps the short stem separate from the restarted head-and-bowl run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short left stem downward",
+      "lift once and restart near the stem's top",
+      "continue down and around the bowl",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, false]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("uses Noto Naskh and retains the separate stem in the final bowl frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicHaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(ARABIC_HAA.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_HAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic خ — a body-first hook-and-upper-dot filmstrip", () => {
+  const steps = ductusSteps(ARABIC_KHAA);
+  const strip = ductusFilmstrip(ARABIC_KHAA, arabicKhaaOutline);
+
+  it("keeps the sourced head and bowl in one stroke before the lifted upper dot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the short upper head from left to right",
+      "continue down and around the bowl",
+      "lift once, then place the dot above",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("uses Noto Naskh and retains the body in the final upper-dot frame", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicKhaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__done")!.attrs.d).toBe(
+      penPathD(ARABIC_KHAA.strokes[0], 1),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_KHAA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic د — an unbroken shoulder-and-baseline filmstrip", () => {
+  const steps = ductusSteps(ARABIC_DAAL);
+  const strip = ductusFilmstrip(ARABIC_DAAL, arabicDaalOutline);
+
+  it("keeps the sourced descent and leftward baseline turn in one stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "begin at the upper tip and descend diagonally down and right through the curved shoulder",
+      "turn left along the baseline without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicDaalOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_DAAL.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ر — an unbroken descending-curve filmstrip", () => {
+  const steps = ductusSteps(ARABIC_RAA);
+  const strip = ductusFilmstrip(ARABIC_RAA, arabicRaaOutline);
+
+  it("keeps the sourced descent and leftward lower curve in one stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "begin at the upper tip and descend through the short stroke",
+      "sweep left through the lower curve without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicRaaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_RAA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic س — an unbroken teeth-and-bowl filmstrip", () => {
+  const steps = ductusSteps(ARABIC_SEEN);
+  const strip = ductusFilmstrip(ARABIC_SEEN, arabicSeenOutline);
+
+  it("keeps the sourced three teeth and final bowl in one stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "form the three close teeth from right to left",
+      "flow directly into the final bowl without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicSeenOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_SEEN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ش — a complete س body followed by three dots", () => {
+  const steps = ductusSteps(ARABIC_SHIIN);
+  const strip = ductusFilmstrip(ARABIC_SHIIN, arabicShiinOutline);
+
+  it("shows the body first, then lower-left, lower-right, and upper dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "shape the three close teeth from right to left",
+      "flow directly into the final bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again, then place the lower-right dot",
+      "lift a third time, then place the centered upper dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("draws Noto Naskh and preserves completed strokes during the upper dot", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicShiinOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(3);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(ARABIC_SHIIN.strokes[0], 1),
+      penPathD(ARABIC_SHIIN.strokes[1], 1),
+      penPathD(ARABIC_SHIIN.strokes[2], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_SHIIN.strokes[3], 1),
+    );
+  });
+});
+
+describe("Arabic ص — an oval and shoulder followed by a lifted bowl", () => {
+  const steps = ductusSteps(ARABIC_SAAD);
+  const strip = ductusFilmstrip(ARABIC_SAAD, arabicSaadOutline);
+
+  it("shows the joined oval and shoulder before restarting for the bowl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "close the oval clockwise from its lower-left junction",
+      "turn left and rise into the short shoulder without lifting",
+      "lift, restart at the baseline junction, and sweep through the trailing bowl",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws Noto Naskh and preserves the completed body during the bowl", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicSaadOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(ARABIC_SAAD.strokes[0], 1));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_SAAD.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic ض — the ص body followed by a separately lifted dot", () => {
+  const steps = ductusSteps(ARABIC_DAAD);
+  const strip = ductusFilmstrip(ARABIC_DAAD, arabicDaadOutline);
+
+  it("shows the two body runs before placing the upper dot last", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "close the oval clockwise from its lower-left junction",
+      "turn left and rise into the short shoulder without lifting",
+      "lift, restart at the baseline junction, and sweep through the trailing bowl",
+      "lift again, then place the upper dot last",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws Noto Naskh and preserves both completed body strokes during the dot", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicDaadOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(2);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(ARABIC_DAAD.strokes[0], 1),
+      penPathD(ARABIC_DAAD.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_DAAD.strokes[2], 1),
+    );
+  });
+});
+
+describe("Arabic ع — an open head flowing into an unbroken lower bowl", () => {
+  const steps = ductusSteps(ARABIC_AYN);
+  const strip = ductusFilmstrip(ARABIC_AYN, arabicAynOutline);
+
+  it("shows both sourced movements in one unbroken stroke", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep left from the upper-right tip and shape the open head",
+      "continue down and around the lower bowl without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicAynOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_AYN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ك — a joined outer body and separately restarted inner arm", () => {
+  const steps = ductusSteps(ARABIC_KAF);
+  const strip = ductusFilmstrip(ARABIC_KAF, arabicKafOutline);
+
+  it("shows three sourced movements across two pen-down runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the main upright",
+      "turn left along the baseline without lifting",
+      "lift, then draw the inner arm from upper right down-left",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 3 movements");
+  });
+
+  it("draws Noto Naskh and keeps the completed outer body behind the inner arm", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicKafOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(ARABIC_KAF.strokes[0], 1));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_KAF.strokes[1], 1),
+    );
+  });
+});
+
+describe("Arabic ل — its upright continues through the leftward base bowl", () => {
+  const steps = ductusSteps(ARABIC_LAM);
+  const strip = ductusFilmstrip(ARABIC_LAM, arabicLamOutline);
+
+  it("shows two sourced movements in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the tall upright",
+      "continue left through the base bowl without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicLamOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_LAM.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ه — its two counters flow into one leftward finish", () => {
+  const steps = ductusSteps(ARABIC_HEH);
+  const strip = ductusFilmstrip(ARABIC_HEH, arabicHehOutline);
+
+  it("shows both counters and the baseline sweep without a lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curve down-left and close the lower counter",
+      "thread through the centre and close the upper-right counter without lifting",
+      "sweep left along the baseline without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicHehOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_HEH.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic و — its closed head flows directly into the leftward tail", () => {
+  const steps = ductusSteps(ARABIC_WAW);
+  const strip = ductusFilmstrip(ARABIC_WAW, arabicWawOutline);
+
+  it("shows the sourced head and tail without a lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep left from the lower-right junction and close the small head loop",
+      "continue down and left through the tail without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the Noto Naskh outline behind the completed sourced path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicWawOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_WAW.strokes[0], 1),
+    );
+  });
+});
+
+describe("Arabic ي — its independent bowl precedes the two lower dots", () => {
+  const steps = ductusSteps(ARABIC_YAA);
+  const strip = ductusFilmstrip(ARABIC_YAA, arabicYaaOutline);
+
+  it("shows the sourced body and left-then-right dot order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend from the upper right into the independent bowl",
+      "sweep left through the bowl without lifting",
+      "lift, then place the lower-left dot",
+      "lift again, then place the lower-right dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws Noto Naskh and keeps the completed body and first dot behind the second", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicYaaOutline.path,
+    );
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    expect(done).toHaveLength(2);
+    expect(done.map((path) => path.attrs.d)).toEqual([
+      penPathD(ARABIC_YAA.strokes[0], 1),
+      penPathD(ARABIC_YAA.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_YAA.strokes[2], 1),
     );
   });
 });
@@ -966,6 +2840,33 @@ describe("Urdu ن — its below-baseline bowl precedes the lifted dot", () => {
   });
 });
 
+describe("Urdu ں — its dotless bowl is one unbroken stroke", () => {
+  const steps = ductusSteps(URDU_GHUNNA);
+  const strip = ductusFilmstrip(URDU_GHUNNA, urduGhunnaOutline);
+
+  it("shows the sourced dotless nūn bowl with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the independent dotless bowl right to left below the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0]);
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("draws the Noto Naskh outline and finishes the complete sourced bowl", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduGhunnaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_GHUNNA.strokes[0], 1),
+    );
+  });
+});
+
 describe("Urdu ہ — its independent teardrop is one unbroken loop", () => {
   const steps = ductusSteps(URDU_HE);
   const strip = ductusFilmstrip(URDU_HE, urduHeOutline);
@@ -1017,6 +2918,35 @@ describe("Urdu ی — its independent S and bowl are one unbroken stroke", () =>
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(URDU_YE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Urdu ے — its broad bowl folds backward in one unbroken stroke", () => {
+  const steps = ductusSteps(URDU_BARI_YE);
+  const strip = ductusFilmstrip(URDU_BARI_YE, urduBariYeOutline);
+
+  it("shows the sourced upper sweep, curl, and lower fold with no lift", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend from the upper right and sweep left across the broad bowl",
+      "curl back underneath at the far left without lifting",
+      "continue right along the lower fold without lifting",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the Noto Naskh outline and finishes the complete sourced fold", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      urduBariYeOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(URDU_BARI_YE.strokes[0], 1),
     );
   });
 });

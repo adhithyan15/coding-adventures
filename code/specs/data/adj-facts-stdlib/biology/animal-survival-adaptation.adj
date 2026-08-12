@@ -1,0 +1,69 @@
+% ============================================================================
+% animal-survival-adaptation — a named animal and the ONE survival strategy
+% it is known for (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Animals survive their environments through adaptations — traits or
+% behaviors that help them navigate, stay warm, or fend off predators.
+% `animal_survival_adaptation(animal, adaptation)` names one specific
+% animal and the ONE adaptation it is known for. Recall is a binding
+% query:
+%
+%     ? animal_survival_adaptation(bats, $A)   % echolocation
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `animal_survival_adaptation(animal, adaptation)`, so the lookup above is
+% the ordinary SLD binding query — the engine returns the adaptation WITH
+% its source, on the CPU, with zero model calls, and abstains on an animal
+% not one of the three the cited pages name. The query also runs BACKWARD —
+% bind an adaptation and recall the animal known for it:
+%
+%     ? animal_survival_adaptation($X, insulation)   % polar_bear
+%
+% DESIGN NOTE — why this table uses a DIFFERENT predicate name from the
+% already-shipped `animal_adaptation` (`animal-adaptation.adj`): that table
+% already closed out arctic_fox/groundhog/canada_goose as its three rows;
+% this is a genuinely different set of animals and adaptations, so it gets
+% its own predicate rather than extending a closed table, mirroring how
+% `monarch_life_stage` and `frog_life_stage` used distinct predicate names
+% for the same shape applied to different organisms.
+%
+% Each row's animal is a DIFFERENT species and each names a DIFFERENT kind
+% of adaptation (an echolocating sense, a physical insulating trait, and a
+% visual warning display), so the table's own citation is the
+% PRIMARY/first-listed source below (mirroring `animal-adaptation.adj`'s
+% established multi-source discipline — an ADJ `table` carries only ONE
+% table-level `source`/`locator`/`trust` block), and each OTHER row's own
+% distinct citation is documented here in prose:
+%
+%     animal             adaptation           source page                                                        quote
+%     ------------------  -------------------  ------------------------------------------------------------------  -------------------------------------------------------------------------------------------------
+%     bats                echolocation         nationalgeographic.com/animals/mammals/facts/bats                   "To navigate dark caves and hunt after dark, microbats rely on echolocation, a system that allows them to locate objects using sound waves."
+%     polar_bear          insulation           nationalgeographic.com/animals/mammals/facts/polar-bear             "Polar bears live in one of the planet's coldest environments and depend on a thick coat of insulated fur, which covers a warming layer of fat."
+%     poison_dart_frog    warning_coloration   nationalgeographic.com/animals/amphibians/facts/poison-dart-frogs-1 "Their elaborate designs and hues are deliberately ostentatious to ward off potential predators, a tactic called aposematic coloration."
+%
+% All three citations WebFetch-verified before writing. `trust consensus`
+% for all three — nationalgeographic.com's main animal-facts pages are a
+% reputable, widely-cited science publisher (not a primary .gov source),
+% the same tier this stdlib already reserves for other National Geographic
+% sources (`animal-adaptation.adj`, `animal-habitat.adj`,
+% `rainforest-layer.adj`). Note the `polar_bear` atom also appears in
+% `animal-habitat.adj` for a DIFFERENT fact (its habitat, not this
+% adaptation) — not a conflict, since that is a different predicate. An
+% animal not one of these three — a chameleon, for example, real and
+% well-known for its own adaptations, but not one this specific set of
+% cited pages names here — has no row, so a recall on it ABSTAINS rather
+% than inventing an adaptation. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_survival_adaptation {
+    columns animal, adaptation
+
+    row (bats, echolocation)
+    row (polar_bear, insulation)
+    row (poison_dart_frog, warning_coloration)
+
+    source "To navigate dark caves and hunt after dark, microbats rely on echolocation, a system that allows them to locate objects using sound waves."
+    locator "https://www.nationalgeographic.com/animals/mammals/facts/bats"
+    trust consensus
+}

@@ -139,8 +139,9 @@ func materializeResolutionFixture(
 	return root, packages
 }
 
-func TestLuaResolutionConformanceFixtures(t *testing.T) {
+func TestSharedResolutionConformanceFixtures(t *testing.T) {
 	for _, name := range []string{
+		"resolution-ecosystem-scoped-aliases.json",
 		"resolution-build-deps-comment.json",
 		"resolution-lua-utf8.json",
 		"resolution-lua-invalid-utf8.json",
@@ -461,6 +462,22 @@ func TestGradleResolutionConformanceFixtures(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestHaskellResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-haskell-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
 	}
 }
 

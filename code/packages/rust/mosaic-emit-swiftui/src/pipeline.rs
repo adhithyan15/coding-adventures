@@ -55,10 +55,10 @@
 //!   PR. Payload-carrying emits work for the *enum case shape* (so the
 //!   host's switch is exhaustive) but dispatch sites still pass nothing.
 //!
-//! - **`Icon`, `Grid` (v2) primitives.** They still lower to
-//!   `UnknownPrimitive` errors today. `Stack`, `HostScroll`, `HostInput`,
-//!   and `HostButton` landed in v0.2.0 (UI29 kernel partial); the
-//!   remaining primitives get dedicated emitters in follow-ups.
+//! - **`Grid` (v2) primitive.** It still lowers to an
+//!   `UnknownPrimitive` error today. `Stack`, `HostScroll`, `HostInput`,
+//!   `HostButton`, and `Icon` have native SwiftUI lowerings; Grid gets a
+//!   dedicated emitter in a follow-up.
 //!
 //! ## UI29 kernel partial (v0.2.0 / v0.3.0 / v0.4.0)
 //!
@@ -72,7 +72,7 @@
 //! | `HostScroll`   | `ScrollView { ... }`                            |
 //! | `HostInput`    | `TextField(placeholder, text: .constant(value))` |
 //! | `HostButton`   | `Button(action:) { Text(label) }`               |
-//! | `HostTable`    | `VStack { HStack { ... } }` (see [`emit_host_table`]) |
+//! | `HostTable`    | canonical dynamic Grid shapes use native `SwiftUI.Table`; other shapes keep the structural fallback |
 //! | `For`          | `ForEach(...) { ... }` (see [`emit_for_swift`]) |
 //! | `If` / `Else`  | `if cond { ... } else { ... }` (see [`emit_if_swift`]) |
 //!
@@ -950,6 +950,12 @@ const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState: View
 }
 "#;
 
+const TABLE_ROW_HELPER_SWIFT: &str = r#"private struct _MosaicTableRow<Value>: Identifiable {
+    let id: Int
+    let values: [Value]
+}
+"#;
+
 // =====================================================================
 // HostTable column-widths threading — TableContext
 // =====================================================================
@@ -1165,6 +1171,19 @@ fn layout_uses_automatic_press(node: &LayoutNode, part_styles: &PartStyleMap) ->
             .children
             .iter()
             .any(|child| layout_uses_automatic_press(child, part_styles))
+}
+
+fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
+    node.tag == tag
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_tag(child, tag))
+}
+
+fn layout_contains_native_table(node: &LayoutNode) -> bool {
+    (node.tag == "HostTable" && host_table_has_native_semantics(node))
+        || node.children.iter().any(layout_contains_native_table)
 }
 
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
@@ -2080,6 +2099,17 @@ pub fn from_pipeline(
     )
     .unwrap();
     writeln!(out, "import SwiftUI").unwrap();
+    if layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget")
+    {
+        writeln!(out, "import Foundation").unwrap();
+        writeln!(out, "import UniformTypeIdentifiers").unwrap();
+        writeln!(out, "#if os(macOS)").unwrap();
+        writeln!(out, "import AppKit").unwrap();
+        writeln!(out, "#elseif os(iOS)").unwrap();
+        writeln!(out, "import UIKit").unwrap();
+        writeln!(out, "#endif").unwrap();
+    }
     writeln!(out).unwrap();
 
     if layout_uses_automatic_hover(&layout.root, &part_styles) {
@@ -2092,6 +2122,16 @@ pub fn from_pipeline(
     }
     if layout_uses_automatic_press(&layout.root, &part_styles) {
         out.push_str(PRESS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+    if layout_contains_native_table(&layout.root) {
+        out.push_str(TABLE_ROW_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+    if layout_contains_tag(&layout.root, "HostDraggable")
+        || layout_contains_tag(&layout.root, "HostDropTarget")
+    {
+        out.push_str(&emit_drag_helpers(name));
         writeln!(out).unwrap();
     }
 
@@ -2117,6 +2157,431 @@ pub fn from_pipeline(
 // =====================================================================
 // Section emitters
 // =====================================================================
+
+/// Emit UI35's component-local SwiftUI drag/drop runtime.
+///
+/// SwiftUI's native `onDrag` / `onDrop` APIs own pointer and touch transfer.
+/// A small registry supplies the equivalent Space/Enter, arrow-key, and
+/// Escape workflow without moving domain state in the view. The native and
+/// keyboard paths converge on the target state's `accept` method, which is
+/// the only place an authored `onDrop` proposal is emitted.
+fn emit_drag_helpers(_component: &str) -> String {
+    r#"private struct __COMPONENT__MosaicDragData: Equatable {
+    let scopeID: UUID
+    let key: String
+    let kind: String
+    let label: String
+
+    func encode() -> String {
+        let fields = [scopeID.uuidString, key, kind, label].map {
+            Data($0.utf8).base64EncodedString()
+        }
+        return "mosaic-drag-v1." + fields.joined(separator: ".")
+    }
+}
+
+private final class __COMPONENT__MosaicDropTargetState {
+    private unowned let scope: __COMPONENT__MosaicDragScope
+    var targetKey: String
+    var acceptsKinds: [String]?
+    var disabled: Bool
+    var height: CGFloat = 0
+    var position = "into"
+    var onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?
+    var onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?
+    var onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    var onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+
+    init(
+        scope: __COMPONENT__MosaicDragScope,
+        targetKey: String,
+        acceptsKinds: [String]?,
+        disabled: Bool,
+        onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    ) {
+        self.scope = scope
+        self.targetKey = targetKey
+        self.acceptsKinds = acceptsKinds
+        self.disabled = disabled
+        self.onDragEnter = onDragEnter
+        self.onDragLeave = onDragLeave
+        self.onDropHover = onDropHover
+        self.onDrop = onDrop
+    }
+
+    func update(
+        targetKey: String,
+        acceptsKinds: [String]?,
+        disabled: Bool,
+        onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    ) {
+        self.targetKey = targetKey
+        self.acceptsKinds = acceptsKinds
+        self.disabled = disabled
+        self.onDragEnter = onDragEnter
+        self.onDragLeave = onDragLeave
+        self.onDropHover = onDropHover
+        self.onDrop = onDrop
+    }
+
+    func accepts(_ data: __COMPONENT__MosaicDragData) -> Bool {
+        data.scopeID == scope.id && !disabled && (acceptsKinds?.contains(data.kind) ?? true)
+    }
+
+    func enter(_ data: __COMPONENT__MosaicDragData) {
+        if accepts(data) { onDragEnter?(data) }
+    }
+
+    func leave(_ data: __COMPONENT__MosaicDragData) {
+        if data.scopeID == scope.id { onDragLeave?(data) }
+    }
+
+    func hover(_ data: __COMPONENT__MosaicDragData, at point: CGPoint?) {
+        guard accepts(data) else { return }
+        if height > 0, let point {
+            let ratio = point.y / height
+            position = ratio < (1.0 / 3.0) ? "before" : (ratio > (2.0 / 3.0) ? "after" : "into")
+        } else {
+            position = "into"
+        }
+        onDropHover?(data, position)
+    }
+
+    func accept(_ data: __COMPONENT__MosaicDragData, keyboard: Bool = false) -> Bool {
+        guard accepts(data) else { return false }
+        let acceptedPosition = keyboard ? "into" : position
+        scope.markPointerAccepted(data)
+        onDrop?(data, acceptedPosition)
+        scope.announce("Dropped \(data.label) on \(targetKey).")
+        return true
+    }
+}
+
+private final class __COMPONENT__MosaicDragScope: ObservableObject {
+    let id = UUID()
+    @Published private(set) var announcement = "Drag and drop ready."
+    private var targets: [__COMPONENT__MosaicDropTargetState] = []
+    private var keyboardData: __COMPONENT__MosaicDragData?
+    private weak var keyboardTarget: __COMPONENT__MosaicDropTargetState?
+    private var keyboardEnd: ((Bool) -> Void)?
+    private var pointerData: __COMPONENT__MosaicDragData?
+    private var pointerEnd: ((Bool) -> Void)?
+    private var acceptedPointer: __COMPONENT__MosaicDragData?
+
+    func register(_ target: __COMPONENT__MosaicDropTargetState) {
+        if !targets.contains(where: { $0 === target }) { targets.append(target) }
+    }
+
+    func unregister(_ target: __COMPONENT__MosaicDropTargetState) {
+        targets.removeAll { $0 === target }
+        if keyboardTarget === target { keyboardTarget = nil }
+    }
+
+    func announce(_ message: String) {
+        announcement = message
+#if os(macOS)
+        NSAccessibility.post(
+            element: NSApp as Any,
+            notification: .announcementRequested,
+            userInfo: [.announcement: message]
+        )
+#elseif os(iOS)
+        UIAccessibility.post(notification: .announcement, argument: message)
+#endif
+    }
+
+    func toggleKeyboard(
+        _ data: __COMPONENT__MosaicDragData,
+        onStart: (() -> Void)?,
+        onEnd: ((Bool) -> Void)?
+    ) {
+        if keyboardData == nil {
+            keyboardData = data
+            keyboardTarget = nil
+            keyboardEnd = onEnd
+            onStart?()
+            announce("Grabbed \(data.label). Use arrow keys to choose a target, then press Space or Enter to drop.")
+        } else if !dropKeyboard() {
+            _ = cancelKeyboard()
+        }
+    }
+
+    func stepKeyboard(_ delta: Int) -> Bool {
+        guard let data = keyboardData else { return false }
+        let eligible = targets.filter { $0.accepts(data) }
+        guard !eligible.isEmpty else {
+            announce("No available drop targets.")
+            return true
+        }
+        let previous = keyboardTarget
+        let current = previous.flatMap { target in eligible.firstIndex(where: { $0 === target }) } ?? -1
+        let nextIndex = (current + delta + eligible.count) % eligible.count
+        let next = eligible[nextIndex]
+        if previous !== next {
+            previous?.leave(data)
+            next.enter(data)
+        }
+        next.hover(data, at: nil)
+        keyboardTarget = next
+        announce("Move to \(next.targetKey), position \(nextIndex + 1) of \(eligible.count).")
+        return true
+    }
+
+    private func dropKeyboard() -> Bool {
+        guard let data = keyboardData, let target = keyboardTarget, target.accept(data, keyboard: true) else {
+            return false
+        }
+        finishKeyboard(dropped: true)
+        return true
+    }
+
+    func cancelKeyboard() -> Bool {
+        guard let data = keyboardData else { return false }
+        keyboardTarget?.leave(data)
+        announce("Cancelled drag.")
+        finishKeyboard(dropped: false)
+        return true
+    }
+
+    private func finishKeyboard(dropped: Bool) {
+        let callback = keyboardEnd
+        keyboardData = nil
+        keyboardTarget = nil
+        keyboardEnd = nil
+        callback?(dropped)
+    }
+
+    func beginPointer(
+        _ data: __COMPONENT__MosaicDragData,
+        onStart: (() -> Void)?,
+        onEnd: ((Bool) -> Void)?
+    ) {
+        if let previous = pointerData { finishPointer(previous) }
+        pointerData = data
+        pointerEnd = onEnd
+        acceptedPointer = nil
+        onStart?()
+        announce("Grabbed \(data.label).")
+    }
+
+    func activePointerData() -> __COMPONENT__MosaicDragData? { pointerData }
+
+    func markPointerAccepted(_ data: __COMPONENT__MosaicDragData) {
+        if pointerData == data { acceptedPointer = data }
+    }
+
+    func finishPointer(_ data: __COMPONENT__MosaicDragData) {
+        guard pointerData == data else { return }
+        let dropped = acceptedPointer == data
+        let callback = pointerEnd
+        pointerData = nil
+        pointerEnd = nil
+        acceptedPointer = nil
+        if !dropped { announce("Cancelled drag.") }
+        callback?(dropped)
+    }
+}
+
+private struct __COMPONENT__MosaicDraggable<Content: View>: View {
+    @ObservedObject var scope: __COMPONENT__MosaicDragScope
+    let key: String
+    let kind: String
+    let label: String
+    let disabled: Bool
+    let onDragStart: (() -> Void)?
+    let onDragEnd: ((Bool) -> Void)?
+    let content: Content
+    @Environment(\.layoutDirection) private var layoutDirection
+
+    init(
+        scope: __COMPONENT__MosaicDragScope,
+        key: String,
+        kind: String,
+        label: String,
+        disabled: Bool,
+        onDragStart: (() -> Void)?,
+        onDragEnd: ((Bool) -> Void)?,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.scope = scope
+        self.key = key
+        self.kind = kind
+        self.label = label
+        self.disabled = disabled
+        self.onDragStart = onDragStart
+        self.onDragEnd = onDragEnd
+        self.content = content()
+    }
+
+    private var data: __COMPONENT__MosaicDragData {
+        __COMPONENT__MosaicDragData(scopeID: scope.id, key: key, kind: kind, label: label)
+    }
+
+    private var button: some View {
+        Button(action: {
+            if !disabled { scope.toggleKeyboard(data, onStart: onDragStart, onEnd: onDragEnd) }
+        }) {
+            content
+        }
+        .buttonStyle(.plain)
+        .disabled(disabled)
+        .accessibilityLabel(Text("Draggable \(label)"))
+        .accessibilityHint(Text("Press Space or Enter to grab, use arrow keys to choose a target, then press Space or Enter to drop."))
+        .accessibilityValue(Text(scope.announcement))
+        .accessibilityAction(named: Text("Previous drop target")) { _ = scope.stepKeyboard(-1) }
+        .accessibilityAction(named: Text("Next drop target")) { _ = scope.stepKeyboard(1) }
+        .accessibilityAction(named: Text("Cancel drag")) { _ = scope.cancelKeyboard() }
+    }
+
+    @ViewBuilder private var pointerBody: some View {
+        if disabled {
+            button
+        } else {
+            button
+                .onDrag {
+                    scope.beginPointer(data, onStart: onDragStart, onEnd: onDragEnd)
+                    return NSItemProvider(object: data.encode() as NSString)
+                }
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 8).onEnded { _ in
+                        let finished = data
+                        DispatchQueue.main.async { scope.finishPointer(finished) }
+                    }
+                )
+        }
+    }
+
+    @ViewBuilder var body: some View {
+#if os(macOS)
+        pointerBody
+            .onMoveCommand { direction in
+                switch direction {
+                case .down: _ = scope.stepKeyboard(1)
+                case .up: _ = scope.stepKeyboard(-1)
+                case .right: _ = scope.stepKeyboard(layoutDirection == .leftToRight ? 1 : -1)
+                case .left: _ = scope.stepKeyboard(layoutDirection == .leftToRight ? -1 : 1)
+                default: break
+                }
+            }
+            .onExitCommand { _ = scope.cancelKeyboard() }
+#else
+        pointerBody
+#endif
+    }
+}
+
+private struct __COMPONENT__MosaicDropDelegate: DropDelegate {
+    let state: __COMPONENT__MosaicDropTargetState
+    let scope: __COMPONENT__MosaicDragScope
+
+    func validateDrop(info: DropInfo) -> Bool {
+        scope.activePointerData().map(state.accepts) ?? false
+    }
+
+    func dropEntered(info: DropInfo) {
+        if let data = scope.activePointerData(), state.accepts(data) { state.enter(data) }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        guard let data = scope.activePointerData(), state.accepts(data) else {
+            return DropProposal(operation: .forbidden)
+        }
+        state.hover(data, at: info.location)
+        return DropProposal(operation: .move)
+    }
+
+    func dropExited(info: DropInfo) {
+        if let data = scope.activePointerData() { state.leave(data) }
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        guard let data = scope.activePointerData() else { return false }
+        return state.accept(data)
+    }
+}
+
+private struct __COMPONENT__MosaicDropTarget<Content: View>: View {
+    @ObservedObject var scope: __COMPONENT__MosaicDragScope
+    @State private var state: __COMPONENT__MosaicDropTargetState
+    let targetKey: String
+    let acceptsKinds: [String]?
+    let disabled: Bool
+    let onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?
+    let onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?
+    let onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    let onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?
+    let content: Content
+
+    init(
+        scope: __COMPONENT__MosaicDragScope,
+        targetKey: String,
+        acceptsKinds: [String]?,
+        disabled: Bool,
+        onDragEnter: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDragLeave: ((__COMPONENT__MosaicDragData) -> Void)?,
+        onDropHover: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        onDrop: ((__COMPONENT__MosaicDragData, String) -> Void)?,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.scope = scope
+        self.targetKey = targetKey
+        self.acceptsKinds = acceptsKinds
+        self.disabled = disabled
+        self.onDragEnter = onDragEnter
+        self.onDragLeave = onDragLeave
+        self.onDropHover = onDropHover
+        self.onDrop = onDrop
+        _state = State(initialValue: __COMPONENT__MosaicDropTargetState(
+            scope: scope,
+            targetKey: targetKey,
+            acceptsKinds: acceptsKinds,
+            disabled: disabled,
+            onDragEnter: onDragEnter,
+            onDragLeave: onDragLeave,
+            onDropHover: onDropHover,
+            onDrop: onDrop
+        ))
+        self.content = content()
+    }
+
+    var body: some View {
+        state.update(
+            targetKey: targetKey,
+            acceptsKinds: acceptsKinds,
+            disabled: disabled,
+            onDragEnter: onDragEnter,
+            onDragLeave: onDragLeave,
+            onDropHover: onDropHover,
+            onDrop: onDrop
+        )
+        return content
+            .background(
+                GeometryReader { proxy in
+                    Color.clear
+                        .onAppear { state.height = proxy.size.height }
+                        .onChange(of: proxy.size.height) { state.height = $0 }
+                }
+            )
+            .onAppear { scope.register(state) }
+            .onDisappear { scope.unregister(state) }
+            .onDrop(
+                of: [UTType.utf8PlainText],
+                delegate: __COMPONENT__MosaicDropDelegate(state: state, scope: scope)
+            )
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(Text("Drop target \(state.targetKey)"))
+            .accessibilityValue(Text(scope.announcement))
+    }
+}
+"#
+    .replace("__COMPONENT__", "_")
+}
 
 /// Emit the Swift `enum` modelling the discriminated event-union.
 ///
@@ -2150,6 +2615,7 @@ fn emit_event_union(component: &str, emits: &[EmitDecl]) -> Result<String, Pipel
         // expresses in TypeScript. Hosts importing `{Component}Event`
         // therefore get the same "no events can fire" signal.
         writeln!(out, "enum {component}Event {{}}").unwrap();
+        out.push_str(&emit_event_wire_extension(component, emits)?);
         return Ok(out);
     }
     writeln!(out, "enum {component}Event {{").unwrap();
@@ -2329,6 +2795,15 @@ fn emit_view_struct(
         writeln!(out, "    let {field}: {ty}").unwrap();
     }
     writeln!(out, "    let dispatch: ({component}Event) -> Void").unwrap();
+    if layout_contains_tag(layout_root, "HostDraggable")
+        || layout_contains_tag(layout_root, "HostDropTarget")
+    {
+        writeln!(
+            out,
+            "    @StateObject private var _mosaicDragScope = _MosaicDragScope()"
+        )
+        .unwrap();
+    }
     writeln!(out).unwrap();
 
     // Moslayout conditions use value truthiness, while Swift requires an
@@ -2379,6 +2854,43 @@ fn emit_view_struct(
         "    private func _mosaicButton(_ label: Any, action: @escaping () -> Void) -> AnyView {{ AnyView(Button(action: action) {{ _mosaicText(label) }}) }}"
     )
     .unwrap();
+    if layout_contains_tag(layout_root, "Icon") {
+        writeln!(
+            out,
+            "    private func _mosaicIconSymbol(_ name: String) -> String {{"
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        switch name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased().replacingOccurrences(of: \"_\", with: \"-\") {{"
+        )
+        .unwrap();
+        writeln!(out, "        case \"add\", \"plus\": return \"plus\"").unwrap();
+        writeln!(
+            out,
+            "        case \"close\", \"dismiss\", \"x\": return \"xmark\""
+        )
+        .unwrap();
+        writeln!(out, "        case \"home\": return \"house\"").unwrap();
+        writeln!(
+            out,
+            "        case \"refresh\", \"reload\": return \"arrow.clockwise\""
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"settings\", \"gear\": return \"gearshape\""
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "        case \"star\", \"favorite\": return \"star.fill\""
+        )
+        .unwrap();
+        writeln!(out, "        default: return \"questionmark.diamond\"").unwrap();
+        writeln!(out, "        }}").unwrap();
+        writeln!(out, "    }}").unwrap();
+    }
     if part_styles.contains_key(CONCRETE_MODIFIER_HELPERS_KEY) {
         writeln!(out, "    private func _mosaicForegroundColor(_ view: AnyView, _ color: Color) -> AnyView {{ AnyView(view.foregroundColor(color)) }}").unwrap();
         writeln!(out, "    private func _mosaicFont(_ view: AnyView, _ font: Font) -> AnyView {{ AnyView(view.font(font)) }}").unwrap();
@@ -2534,7 +3046,20 @@ fn emit_view_tree(
         // Leaf primitives — emit a single line, no children.
         // -----------------------------------------------------------------
         "Text" => {
-            let expr = swift_text_expression(node);
+            let mut expr = swift_text_expression(node, for_payload);
+            if let Some(label) = swift_accessibility_label(node) {
+                expr.push_str(&format!(".accessibilityLabel({label})"));
+            }
+            match find_keyword_prop(node, "a11y-role") {
+                Some("heading") => expr.push_str(".accessibilityAddTraits(.isHeader)"),
+                Some("none") => expr.push_str(".accessibilityHidden(true)"),
+                _ => {}
+            }
+            if matches!(find_keyword_prop(node, "a11y-hidden"), Some("true"))
+                && !expr.ends_with(".accessibilityHidden(true)")
+            {
+                expr.push_str(".accessibilityHidden(true)");
+            }
             format!("{pad}{expr}\n")
         }
         "Spacer" => format!("{pad}Spacer()\n"),
@@ -2548,6 +3073,7 @@ fn emit_view_tree(
             let escaped = escape_swift_string(symbol);
             format!("{pad}Image(systemName: \"{escaped}\")\n")
         }
+        "Icon" => emit_icon(node, indent)?,
         "Divider" => format!("{pad}Divider()\n"),
 
         // UI29 kernel partial — `HostInput` and `HostButton` are leaf
@@ -2579,32 +3105,23 @@ fn emit_view_tree(
         // view modifier on the wrapped child (macOS / iOS 16+), and
         // `HostNumberInput` to `TextField` with the `.number`
         // format binding (iOS 15+/macOS 12+).
-        // UI35 — the drag family. This backend does not implement dragging yet, so
-        // both lower to a plain vertical container: the card and the column still
-        // render, they just aren't draggable here.
-        //
-        // The alternative — erroring on an unknown primitive — means a layout that
-        // uses drag cannot be emitted to this backend AT ALL, which took down the
-        // task-app cross-backend tests the moment the app grew a board. Degrading to
-        // the content is the behaviour UI35 asks for: the view is still usable, minus
-        // the interaction. See `code/specs/UI35-host-drag-drop.md`.
-        "HostDraggable" | "HostDropTarget" => container(
-            "VStack",
-            node,
-            indent,
-            part_styles,
-            emits,
-            table_ctx,
-            for_payload,
-        )?,
+        // UI35 — native pointer/touch drag-and-drop plus an accessible
+        // keyboard path. Both paths share the target state's `accept` method,
+        // so the proposal payload cannot drift between input modalities.
+        "HostDraggable" => {
+            emit_host_draggable(node, indent, part_styles, emits, table_ctx, for_payload)?
+        }
+        "HostDropTarget" => {
+            emit_host_drop_target(node, indent, part_styles, emits, table_ctx, for_payload)?
+        }
 
         "HostLink" => emit_host_link(node, indent, emits, for_payload)?,
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, emits, for_payload)?,
         "HostNumberInput" => emit_host_number_input(node, indent)?,
 
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
-        // See [`emit_host_table`] for the lowering rationale (VStack +
-        // HStack rows, not SwiftUI.Table — for now).
+        // Canonical dynamic Grid trees lower to native SwiftUI.Table; other
+        // structural shapes retain the VStack/HStack visual fallback.
         //
         // `HostTable` is an entry point for [`TableContext`]: it discovers
         // a nested `HostTableColGroup`'s `For ( each: slot: column-widths
@@ -2791,6 +3308,83 @@ fn emit_view_tree(
     }
 
     Ok(inner)
+}
+
+/// Lower Mosaic's semantic icon vocabulary to native SwiftUI views.
+///
+/// Static and runtime glyph names share the same SF Symbols mapping. The
+/// semantic `spinner` name becomes SwiftUI's indeterminate `ProgressView`
+/// instead of a decorative image, and every icon receives an accessibility
+/// label even when the layout omits one.
+fn emit_icon(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let child_pad = " ".repeat(indent + 4);
+    let glyph_value = find_prop_value(node, "glyph")
+        .or_else(|| find_prop_value(node, "source"))
+        .or_else(|| find_prop_value(node, "name"));
+    let glyph = swift_icon_text_expression(glyph_value)?.unwrap_or_else(|| "\"star\"".to_string());
+    let literal_glyph = match glyph_value {
+        Some(LayoutPropValue::String(value)) => Some(value.as_str()),
+        _ => None,
+    };
+    let default_description = match literal_glyph {
+        Some(value) if value.eq_ignore_ascii_case("spinner") => "\"Loading\"".to_string(),
+        Some(value) => format!("\"{}\"", escape_swift_string(value)),
+        None => glyph.clone(),
+    };
+    let description_value = find_prop_value(node, "aria-label")
+        .or_else(|| find_prop_value(node, "content-description"));
+    let description = match description_value {
+        Some(LayoutPropValue::String(value)) if value.is_empty() => default_description,
+        Some(LayoutPropValue::String(value)) => {
+            format!("\"{}\"", escape_swift_string(value))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let binding = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("({binding}.isEmpty ? {default_description} : {binding})")
+        }
+        Some(LayoutPropValue::Expr(expression)) => expression.trim().to_string(),
+        _ => default_description,
+    };
+
+    let mut output = match literal_glyph {
+        Some(value) if value.eq_ignore_ascii_case("spinner") => {
+            format!("{pad}ProgressView()\n")
+        }
+        Some(_) => format!("{pad}Image(systemName: _mosaicIconSymbol({glyph}))\n"),
+        None => format!(
+            "{pad}Group {{\n\
+             {child_pad}if {glyph}.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == \"spinner\" {{\n\
+             {child_pad}    ProgressView()\n\
+             {child_pad}}} else {{\n\
+             {child_pad}    Image(systemName: _mosaicIconSymbol({glyph}))\n\
+             {child_pad}}}\n\
+             {pad}}}\n"
+        ),
+    };
+    output = output.trim_end_matches('\n').to_string();
+    output.push_str(&format!(
+        "\n{child_pad}.accessibilityLabel(Text(verbatim: {description}))\n"
+    ));
+    Ok(output)
+}
+
+fn swift_icon_text_expression(
+    value: Option<&LayoutPropValue>,
+) -> Result<Option<String>, PipelineEmitError> {
+    match value {
+        Some(LayoutPropValue::String(value)) => {
+            Ok(Some(format!("\"{}\"", escape_swift_string(value))))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let binding = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(binding))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(Some(expression.trim().to_string())),
+        _ => Ok(None),
+    }
 }
 
 fn erase_swiftui_view_type(source: &str, indent: usize, use_concrete_modifiers: bool) -> String {
@@ -3098,7 +3692,7 @@ fn emit_children(
 /// 2. `Text { content: @slot; }` → `_mosaicText(slotName)` referencing the
 ///    let property through one concrete, verbatim-text helper.
 /// 3. `Text { }` → `Text("")` placeholder.
-fn swift_text_expression(node: &LayoutNode) -> String {
+fn swift_text_expression(node: &LayoutNode, for_payload: Option<ForPayloadScope<'_>>) -> String {
     for prop in &node.props {
         if prop.name == "content" {
             match &prop.value {
@@ -3134,12 +3728,50 @@ fn swift_text_expression(node: &LayoutNode) -> String {
                     // gets the live cell text inside every body cell
                     // instead of the empty placeholder this branch used
                     // to emit before §3.4 made the scope rules explicit.
-                    return format!("_mosaicText({text})");
+                    return format!(
+                        "_mosaicText({})",
+                        swift_collection_index_expr(text, for_payload)
+                    );
                 }
             }
         }
     }
     "Text(\"\")".to_string()
+}
+
+/// Lower the portable Text accessible-name subset. String labels stay
+/// verbatim and slot labels use the same Any-to-Text helper as content.
+fn swift_accessibility_label(node: &LayoutNode) -> Option<String> {
+    match find_prop_value(node, "a11y-label")? {
+        LayoutPropValue::String(label) => Some(format!(
+            "Text(verbatim: \"{}\")",
+            escape_swift_string(label)
+        )),
+        LayoutPropValue::SlotRef(slot) => {
+            Some(format!("_mosaicText({})", to_camel_case_first_lower(slot)))
+        }
+        _ => None,
+    }
+}
+
+fn swift_collection_index_expr(
+    expression: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> String {
+    let Some(index) = for_payload.and_then(|scope| scope.index) else {
+        return expression.to_string();
+    };
+    let replacement = format!("[_swiftIdx{index}]");
+    let mut lowered = expression.to_string();
+    for authored in [
+        format!("[{index}]"),
+        format!("[ {index}]"),
+        format!("[{index} ]"),
+        format!("[ {index} ]"),
+    ] {
+        lowered = lowered.replace(&authored, &replacement);
+    }
+    lowered
 }
 
 // =====================================================================
@@ -3758,6 +4390,252 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
 }
 
 // =====================================================================
+// UI35 — HostDraggable / HostDropTarget emitters
+// =====================================================================
+
+#[allow(clippy::too_many_arguments)]
+fn emit_host_draggable(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let key = swift_drag_text_expr(node, "drag-key", "\"\"", for_payload)?;
+    let kind = swift_drag_text_expr(node, "drag-kind", "\"\"", for_payload)?;
+    let label = swift_drag_text_expr(node, "drag-label", &key, for_payload)?;
+    let disabled = swift_drag_disabled_expr(node, "drag-disabled", for_payload)?;
+    let start = swift_drag_event_dispatch(
+        node,
+        "onDragStart",
+        emits,
+        &[("key", key.as_str()), ("kind", kind.as_str())],
+    )?
+    .map(|dispatch| format!("{{ {dispatch} }}"))
+    .unwrap_or_else(|| "nil".to_string());
+    let end = swift_drag_event_dispatch(
+        node,
+        "onDragEnd",
+        emits,
+        &[
+            ("key", key.as_str()),
+            ("kind", kind.as_str()),
+            ("dropped", "dropped"),
+        ],
+    )?
+    .map(|dispatch| format!("{{ dropped in {dispatch} }}"))
+    .unwrap_or_else(|| "nil".to_string());
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_MosaicDraggable(").unwrap();
+    writeln!(out, "{inner}scope: _mosaicDragScope,").unwrap();
+    writeln!(out, "{inner}key: {key},").unwrap();
+    writeln!(out, "{inner}kind: {kind},").unwrap();
+    writeln!(out, "{inner}label: {label},").unwrap();
+    writeln!(out, "{inner}disabled: {disabled},").unwrap();
+    writeln!(out, "{inner}onDragStart: {start},").unwrap();
+    writeln!(out, "{inner}onDragEnd: {end}").unwrap();
+    writeln!(out, "{pad}) {{").unwrap();
+    out.push_str(&container(
+        "VStack",
+        node,
+        indent + 4,
+        part_styles,
+        emits,
+        table_ctx,
+        for_payload,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn emit_host_drop_target(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    table_ctx: Option<&TableContext>,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let target_key = swift_drag_text_expr(node, "drop-key", "\"\"", for_payload)?;
+    let disabled = swift_drag_disabled_expr(node, "drop-disabled", for_payload)?;
+    let accepts = swift_drag_accepts_expr(node, for_payload)?.unwrap_or_else(|| "nil".to_string());
+    let enter_values = [("key", "data.key"), ("kind", "data.kind")];
+    let drop_values = [
+        ("key", "data.key"),
+        ("kind", "data.kind"),
+        ("targetKey", target_key.as_str()),
+        ("position", "position"),
+    ];
+
+    let callback = |prop: &str,
+                    signature: &str,
+                    values: &[(&str, &str)]|
+     -> Result<String, PipelineEmitError> {
+        Ok(swift_drag_event_dispatch(node, prop, emits, values)?
+            .map(|dispatch| format!("{{ {signature} in {dispatch} }}"))
+            .unwrap_or_else(|| "nil".to_string()))
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_MosaicDropTarget(").unwrap();
+    writeln!(out, "{inner}scope: _mosaicDragScope,").unwrap();
+    writeln!(out, "{inner}targetKey: {target_key},").unwrap();
+    writeln!(out, "{inner}acceptsKinds: {accepts},").unwrap();
+    writeln!(out, "{inner}disabled: {disabled},").unwrap();
+    writeln!(
+        out,
+        "{inner}onDragEnter: {},",
+        callback("onDragEnter", "data", &enter_values)?
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}onDragLeave: {},",
+        callback("onDragLeave", "data", &enter_values)?
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}onDropHover: {},",
+        callback("onDropHover", "data, position", &drop_values)?
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{inner}onDrop: {}",
+        callback("onDrop", "data, position", &drop_values)?
+    )
+    .unwrap();
+    writeln!(out, "{pad}) {{").unwrap();
+    out.push_str(&container(
+        "VStack",
+        node,
+        indent + 4,
+        part_styles,
+        emits,
+        table_ctx,
+        for_payload,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+fn swift_drag_text_expr(
+    node: &LayoutNode,
+    name: &str,
+    fallback: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, name) {
+        Some(LayoutPropValue::String(value)) => Ok(format!("\"{}\"", escape_swift_string(value))),
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("String(describing: {field})"))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(format!(
+            "String(describing: {})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        )),
+        Some(LayoutPropValue::Number(number)) => Ok(format!("\"{number}\"")),
+        Some(LayoutPropValue::EmitRef(_)) | None => Ok(fallback.to_string()),
+    }
+}
+
+fn swift_drag_disabled_expr(
+    node: &LayoutNode,
+    specific: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let value = find_prop_value(node, specific).or_else(|| find_prop_value(node, "disabled"));
+    match value {
+        Some(LayoutPropValue::Keyword(value)) if value == "true" || value == "false" => {
+            Ok(value.clone())
+        }
+        Some(LayoutPropValue::SlotRef(slot)) | Some(LayoutPropValue::Keyword(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(format!("_mosaicTruthy({field})"))
+        }
+        Some(LayoutPropValue::Expr(expression)) => Ok(format!(
+            "_mosaicTruthy({})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        )),
+        Some(LayoutPropValue::Number(number)) => Ok((*number != 0.0).to_string()),
+        Some(LayoutPropValue::String(value)) => Ok((value == "true").to_string()),
+        Some(LayoutPropValue::EmitRef(_)) | None => Ok("false".to_string()),
+    }
+}
+
+fn swift_drag_accepts_expr(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, "accepts") else {
+        return Ok(None);
+    };
+    match value {
+        LayoutPropValue::String(kind) => Ok(Some(format!("[\"{}\"]", escape_swift_string(kind)))),
+        LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(field))
+        }
+        LayoutPropValue::Expr(expression) => Ok(Some(swift_collection_index_expr(
+            expression.trim(),
+            for_payload,
+        ))),
+        LayoutPropValue::Number(_) | LayoutPropValue::EmitRef(_) => Ok(Some("[]".to_string())),
+    }
+}
+
+fn swift_drag_event_dispatch(
+    node: &LayoutNode,
+    prop: &str,
+    emits: &[EmitDecl],
+    values: &[(&str, &str)],
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+        return Ok(None);
+    };
+    let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    validate_emit_name(&case_name)?;
+    let Some(emit) = emits.iter().find(|emit| emit.name == emit_name) else {
+        return Ok(Some(format!("dispatch(.{case_name})")));
+    };
+    if emit.params.is_empty() {
+        return Ok(Some(format!("dispatch(.{case_name})")));
+    }
+    let args = emit
+        .params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            let value = values
+                .iter()
+                .find_map(|(name, value)| (*name == field).then_some(*value))
+                .map(ToString::to_string)
+                .unwrap_or_else(|| match &param.r#type {
+                    EmitPayloadType::Text | EmitPayloadType::Color => "\"\"".to_string(),
+                    EmitPayloadType::Number => "0.0".to_string(),
+                    EmitPayloadType::Bool => "false".to_string(),
+                    EmitPayloadType::Component(_) => "AnyView(EmptyView())".to_string(),
+                });
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, PipelineEmitError>>()?;
+    Ok(Some(format!("dispatch(.{case_name}({}))", args.join(", "))))
+}
+
+// =====================================================================
 // UI29-4 — HostLink / HostTooltip / HostNumberInput emitters
 // =====================================================================
 
@@ -4040,22 +4918,347 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
 // UI29 kernel — HostTable emitter
 // =====================================================================
 
-/// Lower a UI29 `HostTable` node to a SwiftUI `VStack` of `HStack` rows.
+/// Canonical UI31/Grid structure that SwiftUI can lower to a native table.
 ///
-/// ## Why not `SwiftUI.Table`?
+/// SwiftUI's table columns are definitions rather than child views, so the
+/// native path deliberately accepts the package shape whose data loops can be
+/// re-bound as table rows and columns:
 ///
-/// SwiftUI's `Table` view is data-driven: it takes a `[RowType]` collection
-/// plus `TableColumn`s with key-paths, and is not naturally produced by a
-/// structural "compose from children" emitter — the data shape lives in the
-/// host, not in the layout IR. The follow-up that wires `For` into
-/// `HostTable` will revisit this and emit a real `Table { ... }` once the
-/// IR carries the row-data shape needed to drive it.
+/// ```text
+/// HostTable
+///   HostTableHead > Row > For > <header cell>
+///   HostTableBody > For > Row > For > <body cell>
+/// ```
 ///
-/// For now we do the simpler structural thing: emit a `VStack` whose
-/// children are `HStack` rows, with a `Divider` separating head from body.
-/// Headers render `.bold()`. The visual result is the same as
-/// `SwiftUI.Table` for static rows, just without the built-in sorting /
-/// selection / column-resize behaviour Table provides.
+/// Other structural HostTables retain the existing VStack/HStack rendering
+/// and remain visible to native-complete degradation analysis.
+#[derive(Clone, Copy)]
+struct SwiftUITableShape<'a> {
+    header_cells: &'a LayoutNode,
+    body_rows: &'a LayoutNode,
+    body_row: &'a LayoutNode,
+    body_cells: &'a LayoutNode,
+}
+
+fn safe_for_binding(node: &LayoutNode, prop: &str) -> Option<String> {
+    let binding = to_camel_case_first_lower(find_keyword_prop(node, prop)?);
+    is_safe_swift_identifier(&binding).then_some(binding)
+}
+
+fn swift_for_collection_expr(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|prop| prop.name == "each")?;
+    match &prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let slot = to_camel_case_first_lower(slot);
+            is_safe_swift_identifier(&slot).then_some(slot)
+        }
+        LayoutPropValue::Expr(expression) => Some(expression.clone()),
+        LayoutPropValue::Keyword(binding) => {
+            let binding = to_camel_case_first_lower(binding);
+            is_safe_swift_identifier(&binding).then_some(binding)
+        }
+        _ => None,
+    }
+}
+
+fn swiftui_table_shape(host_table: &LayoutNode) -> Option<SwiftUITableShape<'_>> {
+    if host_table.children.iter().any(|child| {
+        !matches!(
+            child.tag.as_str(),
+            "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+        )
+    }) {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    if header_row.tag != "Row" {
+        return None;
+    }
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    if header_cells.tag != "For" || header_cells.children.len() != 1 {
+        return None;
+    }
+
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    if body_rows.tag != "For" {
+        return None;
+    }
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    if body_row.tag != "Row" {
+        return None;
+    }
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    if body_cells.tag != "For" || body_cells.children.len() != 1 {
+        return None;
+    }
+
+    // The native adapter needs stable aliases for the same expressions the
+    // ordinary For emitter exposes. Requiring explicit indexes also keeps row
+    // identity and number-slot comparisons deterministic.
+    let _header_item = safe_for_binding(header_cells, "as")?;
+    let _header_index = safe_for_binding(header_cells, "index")?;
+    let row_item = safe_for_binding(body_rows, "as")?;
+    let row_index = safe_for_binding(body_rows, "index")?;
+    let cell_item = safe_for_binding(body_cells, "as")?;
+    let cell_index = safe_for_binding(body_cells, "index")?;
+    let _header_collection = swift_for_collection_expr(header_cells)?;
+    let _row_collection = swift_for_collection_expr(body_rows)?;
+
+    // The inner loop must iterate the outer row binding. Accepting an
+    // unrelated collection would render a different data model in the native
+    // and fallback branches.
+    let inner_collection = swift_for_collection_expr(body_cells)?;
+    if inner_collection != row_item {
+        return None;
+    }
+    let native_bindings = [&row_item, &row_index, &cell_item, &cell_index];
+    for (index, binding) in native_bindings.iter().enumerate() {
+        if native_bindings[..index].contains(binding) {
+            return None;
+        }
+    }
+
+    Some(SwiftUITableShape {
+        header_cells,
+        body_rows,
+        body_row,
+        body_cells,
+    })
+}
+
+/// Returns whether a HostTable has the canonical dynamic structure lowered to
+/// native SwiftUI `Table` / `TableColumnForEach` semantics.
+///
+/// Package capability analysis calls this same predicate so strict-profile
+/// reporting cannot drift from the emitter's actual lowering.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    swiftui_table_shape(host_table).is_some()
+}
+
+fn append_table_layout_direction(out: &mut String, node: &LayoutNode, indent: usize) {
+    let pad = " ".repeat(indent);
+    if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_swift_identifier(&camel) {
+            writeln!(out, "{pad}.environment(\\.layoutDirection, {camel})").unwrap();
+        }
+    } else if let Some(keyword) = find_keyword_prop(node, "dir") {
+        match keyword {
+            "rtl" => {
+                writeln!(out, "{pad}.environment(\\.layoutDirection, .rightToLeft)").unwrap();
+            }
+            "ltr" => {
+                writeln!(out, "{pad}.environment(\\.layoutDirection, .leftToRight)").unwrap();
+            }
+            _ => {}
+        }
+    }
+}
+
+/// Emit the canonical dynamic Grid as a native SwiftUI table.
+///
+/// `TableColumnForEach` is the first SwiftUI API that can preserve Mosaic's
+/// runtime-sized column list without generating an arbitrary fixed maximum.
+/// It is available on macOS 14.4 / iOS 17.4. Generated packages still target
+/// macOS 13 / iOS 16, so the availability branch uses the UI31-required
+/// native `List` fallback on older systems. Both branches keep the authored
+/// cell subtree and semantic event dispatch; the table branch additionally
+/// provides the host platform's table/header/cell accessibility model,
+/// keyboard traversal, selection affordances, and column resizing.
+fn emit_native_host_table(
+    node: &LayoutNode,
+    shape: SwiftUITableShape<'_>,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let closure_pad = " ".repeat(indent + 4);
+    let return_pad = " ".repeat(indent + 8);
+    let branch_pad = " ".repeat(indent + 12);
+    let table_pad = " ".repeat(indent + 16);
+    let column_pad = " ".repeat(indent + 20);
+    let cell_pad = " ".repeat(indent + 24);
+    let binding_pad = " ".repeat(indent + 28);
+
+    let header_collection = swift_for_collection_expr(shape.header_cells)
+        .expect("native table predicate checked the header collection");
+    let row_collection = swift_for_collection_expr(shape.body_rows)
+        .expect("native table predicate checked the row collection");
+    let row_item = safe_for_binding(shape.body_rows, "as")
+        .expect("native table predicate checked the row binding");
+    let row_index = safe_for_binding(shape.body_rows, "index")
+        .expect("native table predicate checked the row index");
+    let cell_item = safe_for_binding(shape.body_cells, "as")
+        .expect("native table predicate checked the cell binding");
+    let cell_index = safe_for_binding(shape.body_cells, "index")
+        .expect("native table predicate checked the cell index");
+    let table_ctx = extract_table_context(node);
+
+    // Preserve styling authored on the logical Row by applying the same part
+    // and state props to each native table cell. SwiftUI owns the physical row
+    // container, so a per-cell Group is the closest native equivalent and
+    // keeps hover/selection colors visually continuous across columns.
+    let styled_cell = LayoutNode {
+        tag: "Box".to_string(),
+        part_name: shape.body_row.part_name.clone(),
+        props: shape.body_row.props.clone(),
+        children: shape.body_cells.children.clone(),
+    };
+    let cell_payload = Some(ForPayloadScope {
+        item: cell_item.as_str(),
+        index: Some(cell_index.as_str()),
+    });
+    let native_cell = emit_view_tree(
+        &styled_cell,
+        indent + 32,
+        part_styles,
+        emits,
+        None,
+        cell_payload,
+        None,
+    )?;
+
+    let mut out = String::new();
+    if let Some(part) = &node.part_name {
+        writeln!(out, "{pad}// part: {part}").unwrap();
+    }
+    writeln!(out, "{pad}({{ () -> AnyView in").unwrap();
+    writeln!(
+        out,
+        "{closure_pad}let _mosaicTableRows = {row_collection}.enumerated().map {{ _MosaicTableRow(id: $0.offset, values: $0.element) }}"
+    )
+    .unwrap();
+    writeln!(out, "{closure_pad}return AnyView(").unwrap();
+    writeln!(out, "{return_pad}Group {{").unwrap();
+    writeln!(out, "{branch_pad}if #available(macOS 14.4, iOS 17.4, *) {{").unwrap();
+    writeln!(out, "{table_pad}SwiftUI.Table(_mosaicTableRows) {{").unwrap();
+    writeln!(
+        out,
+        "{column_pad}TableColumnForEach(Array({header_collection}.enumerated()), id: \\.offset) {{ _mosaicColumn in"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{cell_pad}TableColumn(_mosaicColumn.element) {{ _mosaicRow in"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}if _mosaicColumn.offset < _mosaicRow.values.count {{"
+    )
+    .unwrap();
+    writeln!(out, "{binding_pad}    let {row_item} = _mosaicRow.values").unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let {row_index}: Double = Double(_mosaicRow.id)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let {cell_item} = _mosaicRow.values[_mosaicColumn.offset]"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let {cell_index}: Double = Double(_mosaicColumn.offset)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let _ = ({row_item}, {row_index}, {cell_item}, {cell_index})"
+    )
+    .unwrap();
+    out.push_str(&native_cell);
+    writeln!(out, "{binding_pad}}} else {{").unwrap();
+    writeln!(out, "{binding_pad}    EmptyView()").unwrap();
+    writeln!(out, "{binding_pad}}}").unwrap();
+    writeln!(out, "{cell_pad}}}").unwrap();
+    if let Some(widths) = table_ctx.column_widths_slot.as_deref() {
+        writeln!(
+            out,
+            "{cell_pad}.width(_mosaicColumn.offset < {widths}.count ? {widths}[_mosaicColumn.offset] : nil)"
+        )
+        .unwrap();
+    }
+    writeln!(out, "{column_pad}}}").unwrap();
+    writeln!(out, "{table_pad}}}").unwrap();
+    writeln!(out, "{branch_pad}}} else {{").unwrap();
+
+    // UI31's compatibility path is a List, never a grid of unrelated
+    // containers. Reuse the ordinary For emitter so pre-17.4 systems keep
+    // header/cell styling, explicit widths, row identity, and dispatch.
+    writeln!(out, "{table_pad}List {{").unwrap();
+    writeln!(out, "{column_pad}Section {{").unwrap();
+    out.push_str(&emit_for_swift(
+        shape.body_rows,
+        indent + 24,
+        part_styles,
+        emits,
+        Some(&table_ctx),
+        for_payload,
+        false,
+    )?);
+    writeln!(out, "{column_pad}}} header: {{").unwrap();
+    writeln!(out, "{cell_pad}HStack(spacing: 0) {{").unwrap();
+    out.push_str(&emit_for_swift(
+        shape.header_cells,
+        indent + 28,
+        part_styles,
+        emits,
+        Some(&table_ctx),
+        for_payload,
+        true,
+    )?);
+    writeln!(out, "{cell_pad}}}").unwrap();
+    writeln!(out, "{column_pad}}}").unwrap();
+    writeln!(out, "{table_pad}}}").unwrap();
+    writeln!(out, "{branch_pad}}}").unwrap();
+    writeln!(out, "{return_pad}}}").unwrap();
+    writeln!(out, "{closure_pad})").unwrap();
+    writeln!(out, "{pad}}})()").unwrap();
+    append_table_layout_direction(&mut out, node, indent);
+    Ok(out)
+}
+
+/// Lower UI29 `HostTable` through the native or structural path.
+///
+/// [`swiftui_table_shape`] recognizes the canonical data-driven Grid and
+/// delegates it to [`emit_native_host_table`]. Arbitrary static/mixed
+/// HostTable trees cannot be represented faithfully by SwiftUI's declarative
+/// column builder, so they retain the compatibility `VStack` of `HStack`
+/// rows, with a `Divider` separating head from body and bold headers. Package
+/// capability analysis uses the same native-shape predicate, so this fallback
+/// remains an explicit table-semantics degradation.
 ///
 /// ## Sub-tag handling
 ///
@@ -4090,6 +5293,10 @@ fn emit_host_table(
     emits: &[EmitDecl],
     for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
+    if let Some(shape) = swiftui_table_shape(node) {
+        return emit_native_host_table(node, shape, indent, part_styles, emits, for_payload);
+    }
+
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
@@ -4097,10 +5304,8 @@ fn emit_host_table(
     if let Some(part) = &node.part_name {
         writeln!(out, "{pad}// part: {part}").unwrap();
     }
-    // NOTE: This first cut lowers HostTable to a VStack of HStack rows
-    // rather than SwiftUI.Table. SwiftUI.Table is data-driven and needs a
-    // row-data shape the IR does not yet carry. See [`emit_host_table`]
-    // doc comment for the rationale.
+    // The canonical data-driven shape returned above. This branch is the
+    // compatibility renderer for static, mixed, or otherwise ambiguous trees.
     if node.children.is_empty() {
         writeln!(out, "{pad}VStack(alignment: .leading, spacing: 0) {{ }}").unwrap();
         return Ok(out);
@@ -4213,27 +5418,7 @@ fn emit_host_table(
     // expression position because it never reaches the format string.
     // Slot refs run through `is_safe_swift_identifier` so they can't
     // either.
-    if let Some(slot) = find_slot_ref_prop(node, "dir") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_swift_identifier(&camel) {
-            writeln!(out, "{pad}.environment(\\.layoutDirection, {camel})").unwrap();
-        }
-    } else if let Some(kw) = find_keyword_prop(node, "dir") {
-        match kw {
-            "rtl" => {
-                writeln!(out, "{pad}.environment(\\.layoutDirection, .rightToLeft)").unwrap();
-            }
-            "ltr" => {
-                writeln!(out, "{pad}.environment(\\.layoutDirection, .leftToRight)").unwrap();
-            }
-            // `auto` — let the ambient Environment value flow through.
-            // SwiftUI has no `.automatic` enum case for layoutDirection;
-            // the spec-mandated semantic for `auto` is "let the host
-            // decide", which is exactly what the SwiftUI default does.
-            "auto" => {}
-            _ => {}
-        }
-    }
+    append_table_layout_direction(&mut out, node, indent);
 
     Ok(out)
 }
@@ -5413,6 +6598,10 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains("enum BtnEvent {}"));
+        assert!(out.contains("extension BtnEvent {"));
+        assert!(out.contains("var mosaicName: String"));
+        assert!(out.contains("var mosaicEnvelope: [String: Any]"));
+        assert!(out.contains("switch self {"));
     }
 
     // ---------------------------------------------------------------------
@@ -5553,6 +6742,54 @@ mod tests {
         );
     }
 
+    #[test]
+    fn text_accessibility_metadata_lowers_to_native_modifiers() {
+        let layout = layout_with(
+            "Title",
+            leaf(
+                "Text",
+                vec![
+                    prop_string("content", "Visible title"),
+                    prop_slot_ref("a11y-label", "spoken-title"),
+                    prop_keyword("a11y-role", "heading"),
+                ],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Title",
+                vec![slot("spoken-title", SlotType::Text, true)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Title"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains(
+            "Text(\"Visible title\").accessibilityLabel(_mosaicText(spokenTitle)).accessibilityAddTraits(.isHeader)"
+        ));
+
+        let hidden = layout_with(
+            "Decorative",
+            leaf(
+                "Text",
+                vec![
+                    prop_string("content", "Decoration"),
+                    prop_keyword("a11y-hidden", "true"),
+                ],
+            ),
+        );
+        let hidden_out = from_pipeline(
+            &component("Decorative", vec![], vec![]),
+            &hidden,
+            &empty_style("Decorative"),
+        )
+        .unwrap()
+        .output;
+        assert!(hidden_out.contains("Text(\"Decoration\").accessibilityHidden(true)"));
+    }
+
     // ---------------------------------------------------------------------
     // Test 8 — Image lowers to `Image(systemName: "...")` placeholder,
     // pulling its symbol name from the `source` string prop if present, or
@@ -5588,6 +6825,143 @@ mod tests {
         .unwrap()
         .output;
         assert!(out2.contains(r#"Image(systemName: "photo")"#));
+    }
+
+    #[test]
+    fn spinner_icon_uses_native_progress_with_accessible_default() {
+        let layout = layout_with(
+            "Spinner",
+            container_node(
+                "Stack",
+                vec![leaf("Icon", vec![prop_string("glyph", "spinner")])],
+            ),
+        );
+        let out = from_pipeline(
+            &component("Spinner", vec![], vec![]),
+            &layout,
+            &empty_style("Spinner"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("ProgressView()"),
+            "native spinner missing:\n{out}"
+        );
+        assert!(
+            out.contains(".accessibilityLabel(Text(verbatim: \"Loading\"))"),
+            "accessible spinner label missing:\n{out}"
+        );
+    }
+
+    #[test]
+    fn icon_maps_semantic_names_to_sf_symbols() {
+        let layout = layout_with(
+            "Favorite",
+            container_node(
+                "Box",
+                vec![leaf("Icon", vec![prop_string("glyph", "favorite")])],
+            ),
+        );
+        let out = from_pipeline(
+            &component("Favorite", vec![], vec![]),
+            &layout,
+            &empty_style("Favorite"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("case \"star\", \"favorite\": return \"star.fill\""));
+        assert!(out.contains("Image(systemName: _mosaicIconSymbol(\"favorite\"))"));
+        assert!(out.contains(".accessibilityLabel(Text(verbatim: \"favorite\"))"));
+    }
+
+    #[test]
+    fn icon_accepts_runtime_glyph_and_accessibility_label_slots() {
+        let layout = layout_with(
+            "RuntimeIcon",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "Icon",
+                    vec![
+                        prop_slot_ref("glyph", "icon-name"),
+                        prop_slot_ref("aria-label", "icon-label"),
+                    ],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "RuntimeIcon",
+                vec![
+                    slot("icon-name", SlotType::Text, true),
+                    slot("icon-label", SlotType::Text, true),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("RuntimeIcon"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("if iconName.trimmingCharacters"));
+        assert!(out.contains("Image(systemName: _mosaicIconSymbol(iconName))"));
+        assert!(out.contains(
+            ".accessibilityLabel(Text(verbatim: (iconLabel.isEmpty ? iconName : iconLabel)))"
+        ));
+    }
+
+    #[test]
+    fn text_collection_access_uses_the_loops_int_index_shadow() {
+        let indexed = leaf(
+            "For",
+            vec![
+                prop_slot_ref("each", "headers"),
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword("header".to_string()),
+                },
+                LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword("i".to_string()),
+                },
+            ],
+        );
+        let mut indexed = indexed;
+        indexed.children.push(leaf(
+            "Text",
+            vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::Expr("( bodies [ i ] )".to_string()),
+            }],
+        ));
+        let layout = layout_with("Accordion", container_node("Column", vec![indexed]));
+        let out = from_pipeline(
+            &component(
+                "Accordion",
+                vec![
+                    slot(
+                        "headers",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        false,
+                    ),
+                    slot(
+                        "bodies",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        false,
+                    ),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Accordion"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("_mosaicText(( bodies [_swiftIdxi] ))"),
+            "collection access must use Swift's Int index shadow:\n{out}"
+        );
+        assert!(!out.contains("[ i ]"));
     }
 
     // ---------------------------------------------------------------------
@@ -6427,6 +7801,148 @@ mod tests {
             })
             .collect();
         container_node(tag, row_nodes)
+    }
+
+    fn canonical_dynamic_host_table() -> LayoutNode {
+        let header_cells = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "headers"),
+                prop_keyword("as", "header"),
+                prop_keyword("index", "column"),
+            ],
+            vec![container_node(
+                "Box",
+                vec![leaf("Text", vec![prop_slot_ref("content", "header")])],
+            )],
+        );
+        let body_cells = node_with_props(
+            "For",
+            vec![
+                prop_keyword("each", "row"),
+                prop_keyword("as", "value"),
+                prop_keyword("index", "column"),
+            ],
+            vec![container_node(
+                "Box",
+                vec![leaf("Text", vec![prop_slot_ref("content", "value")])],
+            )],
+        );
+        let mut body_row = container_node("Row", vec![body_cells]);
+        body_row.part_name = Some("data-row".to_string());
+        let body_rows = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", "row-index"),
+            ],
+            vec![body_row],
+        );
+        let column_widths = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "widths"),
+                prop_keyword("as", "width"),
+                prop_keyword("index", "column"),
+            ],
+            vec![leaf("Col", vec![])],
+        );
+        container_node(
+            "HostTable",
+            vec![
+                container_node("HostTableColGroup", vec![column_widths]),
+                container_node(
+                    "HostTableHead",
+                    vec![container_node("Row", vec![header_cells])],
+                ),
+                container_node("HostTableBody", vec![body_rows]),
+            ],
+        )
+    }
+
+    #[test]
+    fn canonical_dynamic_host_table_emits_native_table_and_list_fallback() {
+        let layout = layout_with(
+            "Grid",
+            container_node("Box", vec![canonical_dynamic_host_table()]),
+        );
+        let out = from_pipeline(
+            &component(
+                "Grid",
+                vec![
+                    slot(
+                        "headers",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        true,
+                    ),
+                    slot(
+                        "rows",
+                        SlotType::List(Box::new(ListInnerType::List(Box::new(
+                            ListInnerType::Text,
+                        )))),
+                        true,
+                    ),
+                    slot(
+                        "widths",
+                        SlotType::List(Box::new(ListInnerType::Number)),
+                        true,
+                    ),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Grid"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(host_table_has_native_semantics(&layout.root.children[0]));
+        assert!(out.contains("private struct _MosaicTableRow<Value>: Identifiable"));
+        assert!(out.contains("if #available(macOS 14.4, iOS 17.4, *)"));
+        assert!(out.contains("SwiftUI.Table(_mosaicTableRows)"));
+        assert!(out.contains("TableColumnForEach(Array(headers.enumerated()), id: \\.offset)"));
+        assert!(out.contains("TableColumn(_mosaicColumn.element)"));
+        assert!(out.contains("let rowIndex: Double = Double(_mosaicRow.id)"));
+        assert!(out.contains("let column: Double = Double(_mosaicColumn.offset)"));
+        assert!(out.contains(
+            ".width(_mosaicColumn.offset < widths.count ? widths[_mosaicColumn.offset] : nil)"
+        ));
+        assert!(out.contains("} else {"));
+        assert!(out.contains("List {"));
+    }
+
+    #[test]
+    fn unsupported_host_table_shape_keeps_structural_fallback_and_no_helper() {
+        let table = container_node(
+            "HostTable",
+            vec![table_section("HostTableBody", vec![vec!["value"]])],
+        );
+        assert!(!host_table_has_native_semantics(&table));
+        let layout = layout_with("Grid", container_node("Box", vec![table]));
+        let out = from_pipeline(
+            &component("Grid", vec![], vec![]),
+            &layout,
+            &empty_style("Grid"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("VStack(alignment: .leading, spacing: 0)"));
+        assert!(!out.contains("_MosaicTableRow"));
+        assert!(!out.contains("SwiftUI.Table"));
+
+        let mut colliding_bindings = canonical_dynamic_host_table();
+        let body_cells = &mut colliding_bindings.children[2].children[0].children[0].children[0];
+        body_cells
+            .props
+            .iter_mut()
+            .find(|prop| prop.name == "index")
+            .expect("cell index")
+            .value = LayoutPropValue::Keyword("row-index".to_string());
+        assert!(
+            !host_table_has_native_semantics(&colliding_bindings),
+            "flattening nested loop scopes must not generate duplicate Swift locals"
+        );
     }
 
     // ---------------------------------------------------------------------
@@ -7933,6 +9449,116 @@ mod tests {
             out.contains("dispatch(.pick(value: radioValue))"),
             "expected dispatch with `radioValue` bare identifier, got:\n{out}"
         );
+    }
+
+    // =====================================================================
+    // UI35 — HostDraggable / HostDropTarget (SwiftUI)
+    // =====================================================================
+
+    #[test]
+    fn drag_family_emits_native_pointer_keyboard_and_accessibility_runtime() {
+        let draggable = LayoutNode {
+            tag: "HostDraggable".into(),
+            part_name: None,
+            props: vec![
+                prop_slot_ref("drag-key", "drag-key"),
+                prop_string("drag-kind", "task"),
+                prop_slot_ref("drag-label", "drag-label"),
+                prop_emit_ref("onDragStart", "onDragStart"),
+                prop_emit_ref("onDragEnd", "onDragEnd"),
+            ],
+            children: vec![leaf("Text", vec![prop_string("content", "Card")])],
+        };
+        let target = LayoutNode {
+            tag: "HostDropTarget".into(),
+            part_name: None,
+            props: vec![
+                prop_string("drop-key", "lane-a"),
+                prop_slot_ref("accepts", "accepted-kinds"),
+                prop_emit_ref("onDrop", "onDrop"),
+            ],
+            children: vec![draggable],
+        };
+        let out = from_pipeline(
+            &component(
+                "Board",
+                vec![
+                    slot("drag-key", SlotType::Text, true),
+                    slot("drag-label", SlotType::Text, true),
+                    slot(
+                        "accepted-kinds",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        true,
+                    ),
+                ],
+                vec![
+                    emit(
+                        "onDragStart",
+                        vec![
+                            param("key", EmitPayloadType::Text),
+                            param("kind", EmitPayloadType::Text),
+                        ],
+                    ),
+                    emit(
+                        "onDragEnd",
+                        vec![
+                            param("key", EmitPayloadType::Text),
+                            param("kind", EmitPayloadType::Text),
+                            param("dropped", EmitPayloadType::Bool),
+                        ],
+                    ),
+                    emit(
+                        "onDrop",
+                        vec![
+                            param("key", EmitPayloadType::Text),
+                            param("kind", EmitPayloadType::Text),
+                            param("target-key", EmitPayloadType::Text),
+                            param("position", EmitPayloadType::Text),
+                        ],
+                    ),
+                ],
+            ),
+            &layout_with("Board", container_node("Column", vec![target])),
+            &empty_style("Board"),
+        )
+        .expect("emit SwiftUI drag family")
+        .output;
+
+        for expected in [
+            "import UniformTypeIdentifiers",
+            "private final class _MosaicDragScope: ObservableObject",
+            ".onDrag {",
+            ".onDrop(",
+            "private struct _MosaicDropDelegate: DropDelegate",
+            "data.scopeID == scope.id",
+            "Press Space or Enter to grab",
+            ".accessibilityAction(named: Text(\"Next drop target\"))",
+            ".onMoveCommand",
+            ".onExitCommand",
+            "layoutDirection == .leftToRight",
+            "NSAccessibility.post(",
+            "UIAccessibility.post(notification: .announcement",
+            "acceptsKinds: acceptedKinds",
+            "dispatch(.dragStart(key: String(describing: dragKey), kind: \"task\"))",
+            "dispatch(.dragEnd(key: String(describing: dragKey), kind: \"task\", dropped: dropped))",
+            "dispatch(.drop(key: data.key, kind: data.kind, targetKey: \"lane-a\", position: position))",
+        ] {
+            assert!(out.contains(expected), "missing `{expected}`:\n{out}");
+        }
+    }
+
+    #[test]
+    fn non_drag_component_omits_drag_runtime_and_platform_imports() {
+        let out = from_pipeline(
+            &component("Plain", vec![], vec![]),
+            &layout_with("Plain", container_node("Column", vec![])),
+            &empty_style("Plain"),
+        )
+        .unwrap()
+        .output;
+        assert!(!out.contains("_MosaicDragScope"));
+        assert!(!out.contains("UniformTypeIdentifiers"));
+        assert!(!out.contains("import AppKit"));
     }
 
     // =====================================================================

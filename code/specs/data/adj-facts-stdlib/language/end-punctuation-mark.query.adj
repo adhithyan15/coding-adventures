@@ -1,0 +1,15 @@
+% ============================================================================
+% end-punctuation-mark.query.adj — worked recall over the
+% end-punctuation-mark library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% punctuation mark do?" (direct) or "which mark matches this description?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "end-punctuation-mark.adj"
+
+? end_punctuation_mark(period, $D)                                                    % expect ends_a_declarative_sentence (direct)
+? end_punctuation_mark($M, makes_sentences_exciting)                                  % expect exclamation_point (reverse)
+? end_punctuation_mark(comma, $D)                                                      % expect abstain -- a real mark the source covers, but one that belongs to a different category (mid-sentence pause, not end-of-sentence), not one of the three tabled here

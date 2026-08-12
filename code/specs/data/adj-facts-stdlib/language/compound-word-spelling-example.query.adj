@@ -1,0 +1,15 @@
+% ============================================================================
+% compound-word-spelling-example.query.adj — worked recall over the
+% compound-word-spelling-example library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "why start multisyllable
+% spelling with this word?" (direct) or "which words are good starting
+% examples?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "compound-word-spelling-example.adj"
+
+? compound_word_spelling_example(catfish, $Use)                        % expect beginner_multisyllable_spelling (direct)
+? compound_word_spelling_example($W, beginner_multisyllable_spelling)  % expect catfish, hotdog, playground, yellowtail (reverse)
+? compound_word_spelling_example(cupcake, $Use)                        % expect abstain -- a real compound word, but not one this source names

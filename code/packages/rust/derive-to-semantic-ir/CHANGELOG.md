@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.6] - 2026-08-11
+
+### Changed (test-only — `src/lower.rs` unchanged)
+
+SIR28 §7 removed `semantic-ir-to-javascript`'s dead bare `print`/`puts`
+handling now that every frontend emits `__sys_write__` instead — this
+crate's own lowering never emitted either, but `tests/oracle.rs`'s
+`wrap_top_level_in_print` harness helper (used purely to make an
+otherwise-discarded computed value observable on stdout for the oracle
+diff, per this file's own "A harness-only 'make it observable' step"
+section) hand-built a bare `print(...)` `BuiltinCall`, which would no
+longer reach `semantic-ir-to-javascript`'s SIR23 evaluator special-case
+once that backend's dead-code cleanup landed. Renamed to
+`wrap_top_level_in_sys_write`; now builds the `__sys_write__(stdout,
+once, false, expr)` envelope instead and declares
+`Feature::ConsoleIO`/`Feature::Strings` on the module (both are
+validator-enforced for `__sys_write__`, unlike the old unguarded bare
+`"print"`). `src/lower.rs` and `tests/test_lower.rs`'s ~40 shape
+assertions are completely unchanged.
+
 ## [0.1.5] - 2026-07-23
 
 ### Fixed (upstream — `semantic-ir-to-javascript` 0.51.3, not this crate's own lowering)

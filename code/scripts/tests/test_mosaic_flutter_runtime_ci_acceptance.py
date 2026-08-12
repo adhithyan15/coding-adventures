@@ -45,6 +45,7 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-capi",
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
+            "rust/task-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -113,21 +114,51 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("Round-trip Rust engine through standard Flutter binding", workflow)
         self.assertIn("needs_mosaic_flutter_runtime == 'true'", workflow)
-        self.assertIn("timeout-minutes: 10", workflow)
+        self.assertIn("timeout-minutes: 25", workflow)
         self.assertIn("uses: subosito/flutter-action@v2", workflow)
-        self.assertIn("flutter-version: '3.24.0'", workflow)
-        self.assertIn("--backend flutter --output \"$output\" --emit-project", workflow)
+        self.assertIn("flutter-version: '3.44.0'", workflow)
+        self.assertIn("sudo apt-get install -y libgtk-3-dev", workflow)
+        self.assertIn(
+            "--backend flutter --output \"$taskapp_output\" --emit-project",
+            workflow,
+        )
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance",
             workflow,
         )
-        self.assertIn("flutter/lib/mosaic_host.dart", workflow)
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app",
+            workflow,
+        )
+        self.assertIn('libtask_mosaic_app.so', workflow)
+        self.assertIn('cmp "$task_runtime_library" "$bundled_taskapp_runtime"', workflow)
+        self.assertIn('find "$taskapp_output/flutter/build/linux"', workflow)
+        self.assertIn('xvfb-run -a timeout 8s "$installed_taskapp"', workflow)
+        self.assertIn('test "$taskapp_status" -eq 124', workflow)
+        self.assertIn('Mosaic Rust runtime unavailable', workflow)
+        self.assertIn("--runtime-library \"$runtime_library\"", workflow)
+        self.assertIn("flutter analyze", workflow)
+        self.assertIn("find \"$bundled_output/flutter/build/linux\"", workflow)
+        self.assertIn("cmp \"$runtime_library\" \"$bundled_runtime\"", workflow)
+        self.assertIn("unset MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn("dart run bin/mosaic_runtime_conformance.dart", workflow)
         self.assertIn("dart analyze", workflow)
-        self.assertIn("dart run bin/conformance.dart", workflow)
         self.assertIn("mosaic-flutter-native-complete-rating-controls", workflow)
         self.assertIn("--profile native-complete", workflow)
         self.assertIn(".nativeComplete == true", workflow)
-        self.assertIn("dart analyze lib", workflow)
+        self.assertNotIn("dart analyze lib", workflow)
+        self.assertIn("mosaic_taskapp_acceptance", workflow)
+        self.assertIn("mosaic-flutter-data-grid", workflow)
+        self.assertIn("mosaic_data_grid_acceptance", workflow)
+        self.assertIn("mosaic-flutter-toolkit", workflow)
+        self.assertIn("code/packages/mosaic/mosaic-pkg-toolkit", workflow)
+        self.assertIn(
+            "flutter create --platforms=linux "
+            "--project-name mosaic_toolkit_acceptance .",
+            workflow,
+        )
+        self.assertIn("flutter test", workflow)
+        self.assertIn("flutter build linux --debug", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:

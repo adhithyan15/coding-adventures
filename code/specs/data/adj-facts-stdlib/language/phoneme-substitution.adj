@@ -1,0 +1,60 @@
+% ============================================================================
+% phoneme-substitution — changing one sound in a word to form a new word, a
+% FIFTH literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all four prior literacy libraries:
+% `word-families.adj` derives RHYMING (RF.K.2.a), `syllable-count.adj`
+% recalls a SYLLABLE COUNT (RF.K.2.b), `initial-sound.adj` recalls a
+% BEGINNING sound (RF.K.2.d), and `onset-rime.adj` recalls an ONSET/RIME
+% split (RF.K.2.c). This library recalls what happens when you SUBSTITUTE
+% one sound in a word for another, grounding RF.K.2.e ("Add or substitute
+% individual sounds in simple, one-syllable words to make new words") as a
+% pure lookup: `phoneme_substitution(original_word, original_sound,
+% new_sound, new_word)`. Recall is a binding query:
+%
+%     ? phoneme_substitution(make, m, b, $New)   % bake
+%
+% A native `table` (ADJ-TABLES RS-5, a FOUR-column table): each `row` lowers
+% to a ground relation `phoneme_substitution(original_word, original_sound,
+% new_sound, new_word)` carrying the Reading Rockets citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the new word
+% WITH its source, on the CPU, with zero model calls, and abstains on any
+% substitution not the one the cited page walks through. The query also
+% runs BACKWARD — bind the new sound and new word and recall the original:
+%
+%     ? phoneme_substitution($Orig, $OrigSound, b, bake)   % make, m
+%
+% The one substitution this table carries, as a little truth table:
+%
+%     original_word   original_sound   new_sound   new_word
+%     -------------   --------------   ---------   --------
+%     make            m                b           bake
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module (the SAME page
+% `syllable-count.adj` already cites, a different section of it),
+% WebFetch-verified TWICE for consistency before writing. The exact spans:
+%
+%   "I can change one sound in a word to form a new word. Watch me. I will
+%    change 'make' to 'bake'."
+%   "The first sound in make is /m/. The first sound in bake is /b/."
+%
+% `trust consensus` — the same tier `syllable-count.adj`'s sibling section
+% of this page already earned. Deliberately scoped to ONLY this ONE
+% substitution the cited page walks through step by step — honestly narrow
+% (mirroring `onset-rime.adj`'s and `initial-sound.adj`'s precedent) rather
+% than inventing a substitution the source does not demonstrate. A future
+% slice can add a second substitution once a comparably clean citation is
+% found. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table phoneme_substitution {
+    columns original_word, original_sound, new_sound, new_word
+
+    row (make, m, b, bake)
+
+    source "I can change one sound in a word to form a new word. Watch me. I will change 'make' to 'bake'."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}

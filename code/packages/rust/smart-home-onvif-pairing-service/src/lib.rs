@@ -12,6 +12,7 @@ use chief_of_staff_daemon_secret_file::{read_owner_only_secret, SecretFileError}
 use coding_adventures_csprng::random_array;
 use coding_adventures_vault_sealed_store::SealedStore;
 use coding_adventures_zeroize::Zeroizing;
+use smart_home_controller_runtime::{ControllerPersistenceError, SmartHomeControllerRuntime};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, IntegrationId, Metadata, ProtocolFamily, VaultRef,
 };
@@ -28,9 +29,6 @@ use smart_home_pairing_transaction::{
 use smart_home_runtime::{
     PairingSessionStatus, RuntimeCompletePairingToolRequest, RuntimeError, RuntimePairingSessionId,
     SmartHomeRuntime,
-};
-use smart_home_runtime_store::{
-    DurableAutomationDefinition, RestoredSmartHomeRuntime, RuntimeStoreError, SmartHomeRuntimeStore,
 };
 use storage_core::{Revision, StorageBackend};
 
@@ -54,7 +52,7 @@ pub enum OnvifPairingServiceError {
     Onvif(OnvifError),
     CredentialEncoding(OnvifSnapshotHostError),
     Runtime(RuntimeError),
-    RuntimeStore(RuntimeStoreError),
+    Controller(ControllerPersistenceError),
     Transaction(PairingTransactionError),
     Entropy(String),
     MissingDurableRuntime,
@@ -93,7 +91,7 @@ impl fmt::Display for OnvifPairingServiceError {
                 formatter.write_str("ONVIF credential envelope encoding failed")
             }
             Self::Runtime(error) => write!(formatter, "ONVIF runtime completion failed: {error}"),
-            Self::RuntimeStore(error) => write!(formatter, "ONVIF runtime store failed: {error}"),
+            Self::Controller(error) => write!(formatter, "ONVIF controller failed: {error}"),
             Self::Transaction(error) => write!(formatter, "ONVIF pairing transaction failed: {error}"),
             Self::Entropy(message) => write!(
                 formatter,
@@ -134,9 +132,9 @@ impl From<RuntimeError> for OnvifPairingServiceError {
     }
 }
 
-impl From<RuntimeStoreError> for OnvifPairingServiceError {
-    fn from(error: RuntimeStoreError) -> Self {
-        Self::RuntimeStore(error)
+impl From<ControllerPersistenceError> for OnvifPairingServiceError {
+    fn from(error: ControllerPersistenceError) -> Self {
+        Self::Controller(error)
     }
 }
 
@@ -403,12 +401,8 @@ pub struct OnvifPairingReport {
 }
 
 pub struct OnvifPairingServiceActorState<I, V, J, R> {
-    runtime: SmartHomeRuntime,
-    automation_definitions: Vec<DurableAutomationDefinition>,
-    automation_state: Option<serde_json::Value>,
-    runtime_revision: Revision,
+    controller: SmartHomeControllerRuntime<R>,
     journal_backend: J,
-    runtime_store: SmartHomeRuntimeStore<R>,
     vault: Arc<SealedStore>,
     credential_input: I,
     verifier: V,
@@ -426,30 +420,20 @@ where
     pub fn restore(
         journal_backend: J,
         vault: Arc<SealedStore>,
-        runtime_store: SmartHomeRuntimeStore<R>,
+        controller: SmartHomeControllerRuntime<R>,
         credential_input: I,
         verifier: V,
     ) -> Result<Self, OnvifPairingServiceError> {
-        let mut restored = runtime_store
-            .load()?
+        controller
+            .durable_snapshot()?
             .ok_or(OnvifPairingServiceError::MissingDurableRuntime)?;
         let recovered_transaction_count = {
             let coordinator =
-                PairingTransactionCoordinator::new(&journal_backend, &vault, &runtime_store);
+                PairingTransactionCoordinator::new(&journal_backend, &vault, &controller);
             let pending = coordinator.pending_transaction_ids()?;
             let recovered_count = pending.len() as u64;
             for transaction_id in pending {
-                match coordinator.recover(&transaction_id)? {
-                    PairingTransactionOutcome::Committed {
-                        restored: committed,
-                        ..
-                    } => restored = *committed,
-                    PairingTransactionOutcome::RolledBack { .. } => {
-                        restored = runtime_store
-                            .load()?
-                            .ok_or(OnvifPairingServiceError::MissingDurableRuntime)?;
-                    }
-                }
+                let _ = coordinator.recover(&transaction_id)?;
             }
             if !coordinator.pending_transaction_ids()?.is_empty() {
                 return Err(OnvifPairingServiceError::InvalidRequest(
@@ -459,12 +443,8 @@ where
             recovered_count
         };
         Ok(Self {
-            runtime: restored.runtime,
-            automation_definitions: restored.automation_definitions,
-            automation_state: restored.automation_state,
-            runtime_revision: restored.revision,
+            controller,
             journal_backend,
-            runtime_store,
             vault,
             credential_input,
             verifier,
@@ -476,12 +456,18 @@ where
         })
     }
 
-    pub fn runtime(&self) -> &SmartHomeRuntime {
-        &self.runtime
+    pub fn runtime(&self) -> Result<SmartHomeRuntime, OnvifPairingServiceError> {
+        Ok(self
+            .controller
+            .durable_snapshot()?
+            .ok_or(OnvifPairingServiceError::MissingDurableRuntime)?
+            .runtime)
     }
 
-    pub fn runtime_revision(&self) -> &Revision {
-        &self.runtime_revision
+    pub fn runtime_revision(&self) -> Result<Revision, OnvifPairingServiceError> {
+        self.controller
+            .revision()?
+            .ok_or(OnvifPairingServiceError::MissingDurableRuntime)
     }
 
     pub fn snapshot(&self) -> &OnvifPairingServiceSnapshot {
@@ -521,7 +507,11 @@ where
         &mut self,
         request: OnvifPairingRequest,
     ) -> Result<OnvifPairingReport, OnvifPairingServiceError> {
-        let session = self
+        let restored = self
+            .controller
+            .durable_snapshot()?
+            .ok_or(OnvifPairingServiceError::MissingDurableRuntime)?;
+        let session = restored
             .runtime
             .pairing_session(&request.session_id)
             .cloned()
@@ -532,7 +522,7 @@ where
                 status: session.status,
             });
         }
-        let bridge = self
+        let bridge = restored
             .runtime
             .registry()
             .bridge(&session.bridge_id)
@@ -549,7 +539,7 @@ where
                 bridge.bridge_id,
             ));
         }
-        if request.expected_runtime_revision != self.runtime_revision {
+        if request.expected_runtime_revision != restored.revision {
             return Err(OnvifPairingServiceError::InvalidRequest(
                 "expected runtime revision is stale".to_string(),
             ));
@@ -560,7 +550,7 @@ where
             VaultRef::trusted("vault://smart-home/onvif/authorization-preflight"),
             request.completed_at_ms,
         );
-        self.runtime.clone().execute_complete_pairing_tool(
+        restored.runtime.clone().execute_complete_pairing_tool(
             request.principal_id.clone(),
             authorization_probe,
             request.completed_at_ms,
@@ -603,15 +593,14 @@ where
         let outcome = PairingTransactionCoordinator::new(
             &self.journal_backend,
             &self.vault,
-            &self.runtime_store,
+            &self.controller,
         )
         .execute(transaction, payload.as_bytes())?;
-        let PairingTransactionOutcome::Committed { restored, .. } = outcome else {
+        let PairingTransactionOutcome::Committed { .. } = outcome else {
             return Err(OnvifPairingServiceError::TransactionRolledBack(
                 transaction_id,
             ));
         };
-        self.install_restored_runtime(*restored);
         Ok(OnvifPairingReport {
             session_id: request.session_id,
             bridge_id: bridge.bridge_id,
@@ -619,13 +608,6 @@ where
             completed_at_ms: request.completed_at_ms,
             profile_count: verified.profile_count,
         })
-    }
-
-    fn install_restored_runtime(&mut self, restored: RestoredSmartHomeRuntime) {
-        self.runtime = restored.runtime;
-        self.automation_definitions = restored.automation_definitions;
-        self.automation_state = restored.automation_state;
-        self.runtime_revision = restored.revision;
     }
 }
 
@@ -735,6 +717,7 @@ mod tests {
         ProtocolIdentifier,
     };
     use smart_home_runtime::RuntimePairingSession;
+    use smart_home_runtime_store::SmartHomeRuntimeStore;
     use storage_core::{
         StorageError, StorageLease, StorageListOptions, StoragePage, StoragePutInput,
         StorageRecord, StorageStat,
@@ -884,17 +867,21 @@ mod tests {
         LocalFolderStorageBackend,
         LocalFolderStorageBackend,
     >;
+    type LocalController = SmartHomeControllerRuntime<LocalFolderStorageBackend>;
 
-    fn restore_service(
+    fn restore_service_with_controller(
         root: &Path,
         vault: Arc<SealedStore>,
         input_calls: Arc<AtomicUsize>,
         verifier_calls: Arc<AtomicUsize>,
-    ) -> Result<LocalService, OnvifPairingServiceError> {
-        OnvifPairingServiceActorState::restore(
+    ) -> Result<(LocalService, LocalController), OnvifPairingServiceError> {
+        let controller =
+            SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(runtime_root(root)))
+                .expect("test controller must restore");
+        let service = OnvifPairingServiceActorState::restore(
             LocalFolderStorageBackend::new(journal_root(root)),
             vault,
-            SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(runtime_root(root))),
+            controller.clone(),
             FixedInput {
                 calls: input_calls,
                 username: "camera-user",
@@ -903,14 +890,25 @@ mod tests {
             ExactVerifier {
                 calls: verifier_calls,
             },
-        )
+        )?;
+        Ok((service, controller))
+    }
+
+    fn restore_service(
+        root: &Path,
+        vault: Arc<SealedStore>,
+        input_calls: Arc<AtomicUsize>,
+        verifier_calls: Arc<AtomicUsize>,
+    ) -> Result<LocalService, OnvifPairingServiceError> {
+        restore_service_with_controller(root, vault, input_calls, verifier_calls)
+            .map(|(service, _)| service)
     }
 
     fn request(service: &LocalService) -> OnvifPairingRequest {
         OnvifPairingRequest::new(
             RuntimePairingSessionId::trusted("onvif-pairing-1"),
             AgentId::trusted("operator"),
-            service.runtime_revision().clone(),
+            service.runtime_revision().unwrap(),
             2_000,
         )
     }
@@ -922,7 +920,7 @@ mod tests {
         let initial_revision = persist_runtime(&root, &runtime_for_bridge(true, None));
         let input_calls = Arc::new(AtomicUsize::new(0));
         let verifier_calls = Arc::new(AtomicUsize::new(0));
-        let mut service = restore_service(
+        let (mut service, controller) = restore_service_with_controller(
             &root,
             vault.clone(),
             input_calls.clone(),
@@ -936,10 +934,21 @@ mod tests {
         assert_eq!(input_calls.load(Ordering::SeqCst), 1);
         assert_eq!(verifier_calls.load(Ordering::SeqCst), 1);
         assert_eq!(report.profile_count, 2);
-        assert_ne!(service.runtime_revision(), &initial_revision);
+        assert_ne!(service.runtime_revision().unwrap(), initial_revision);
+        let committed_runtime = service.runtime().unwrap();
         assert_eq!(
-            service
-                .runtime()
+            committed_runtime
+                .registry()
+                .bridge(&BridgeId::trusted("onvif-camera-front"))
+                .unwrap()
+                .auth_ref,
+            Some(report.vault_ref.clone())
+        );
+        let central = controller.durable_snapshot().unwrap().unwrap();
+        assert_eq!(central.revision, service.runtime_revision().unwrap());
+        assert_eq!(
+            central
+                .runtime
                 .registry()
                 .bridge(&BridgeId::trusted("onvif-camera-front"))
                 .unwrap()
@@ -959,6 +968,7 @@ mod tests {
         assert_eq!(envelope["password"], "camera-password");
         let durable_text = service
             .runtime()
+            .unwrap()
             .registry()
             .events()
             .flat_map(|event| event.metadata.iter())
@@ -978,7 +988,7 @@ mod tests {
         persist_runtime(&root, &runtime_for_bridge(false, None));
         let input_calls = Arc::new(AtomicUsize::new(0));
         let verifier_calls = Arc::new(AtomicUsize::new(0));
-        let mut service = restore_service(
+        let (mut service, controller) = restore_service_with_controller(
             &root,
             vault.clone(),
             input_calls.clone(),
@@ -996,6 +1006,7 @@ mod tests {
 
         let mut ambiguous = service
             .runtime()
+            .unwrap()
             .registry()
             .bridge(&BridgeId::trusted("onvif-camera-front"))
             .unwrap()
@@ -1008,7 +1019,9 @@ mod tests {
             )
             .unwrap(),
         );
-        service.runtime.upsert_bridge(ambiguous).unwrap();
+        controller
+            .transaction(1_900, |runtime, _| runtime.upsert_bridge(ambiguous))
+            .unwrap();
         let current = request(&service);
         assert!(matches!(
             service.pair(current).unwrap_err(),
@@ -1030,26 +1043,39 @@ mod tests {
     }
 
     #[test]
-    fn stale_revision_and_ambiguous_identity_fail_before_secret_input() {
-        let root = test_directory("preflight");
+    fn intervening_central_commit_rejects_stale_request_before_external_io() {
+        let root = test_directory("central-revision-drift");
         let vault = open_vault(&root.join("vault"));
         persist_runtime(&root, &runtime_for_bridge(true, None));
         let input_calls = Arc::new(AtomicUsize::new(0));
         let verifier_calls = Arc::new(AtomicUsize::new(0));
-        let mut service =
-            restore_service(&root, vault, input_calls.clone(), verifier_calls.clone()).unwrap();
-        let stale = OnvifPairingRequest::new(
-            RuntimePairingSessionId::trusted("onvif-pairing-1"),
-            AgentId::trusted("operator"),
-            Revision::new("stale-runtime").unwrap(),
-            2_000,
-        );
+        let (mut service, controller) = restore_service_with_controller(
+            &root,
+            vault.clone(),
+            input_calls.clone(),
+            verifier_calls.clone(),
+        )
+        .unwrap();
+        let stale = request(&service);
+
+        controller.save_snapshot(1_900).unwrap();
+
         assert!(matches!(
             service.pair(stale).unwrap_err(),
-            OnvifPairingServiceError::InvalidRequest(_)
+            OnvifPairingServiceError::InvalidRequest(message)
+                if message == "expected runtime revision is stale"
         ));
         assert_eq!(input_calls.load(Ordering::SeqCst), 0);
         assert_eq!(verifier_calls.load(Ordering::SeqCst), 0);
+        assert!(vault
+            .list(ONVIF_VAULT_NAMESPACE, Default::default())
+            .unwrap()
+            .is_empty());
+        assert!(LocalFolderStorageBackend::new(journal_root(&root))
+            .list("smart-home-pairing-transactions", Default::default())
+            .unwrap()
+            .records
+            .is_empty());
 
         fs::remove_dir_all(root).unwrap();
     }
@@ -1237,6 +1263,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .pairing_session(&RuntimePairingSessionId::trusted("onvif-pairing-1"))
                 .unwrap()
                 .status,
@@ -1289,6 +1316,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .registry()
                 .bridge(&BridgeId::trusted("onvif-camera-front"))
                 .unwrap()

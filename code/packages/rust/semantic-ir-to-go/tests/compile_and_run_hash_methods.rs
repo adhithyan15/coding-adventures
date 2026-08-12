@@ -43,6 +43,21 @@ fn builtin(name: &str, args: Vec<Expr>) -> Expr {
     Expr::BuiltinCall { name: name.into(), args, effects: EffectSet::PURE, span: s() }
 }
 
+/// SIR28 §2: a single-value `print`-shaped `__sys_write__` call
+/// (`terminator: "once"`, matching the old Go backend's `fmt.Println`-based
+/// bare `print` — one value, one trailing newline).
+fn sys_write_once(v: Expr) -> Expr {
+    builtin(
+        "__sys_write__",
+        vec![
+            Expr::StrLit { value: "stdout".into(), span: s() },
+            Expr::StrLit { value: "once".into(), span: s() },
+            Expr::BoolLit { value: false, span: s() },
+            v,
+        ],
+    )
+}
+
 /// `recv.meth(extra…)` → `BuiltinCall("__method__", [recv, "meth", …extra])`.
 fn method(recv: Expr, name: &str, extra: Vec<Expr>) -> Expr {
     let mut args = vec![recv, Expr::StrLit { value: name.into(), span: s() }];
@@ -64,8 +79,13 @@ fn map_of(pairs: Vec<(&str, i64)>) -> Expr {
 fn print_stmt(expr: Expr) -> Stmt {
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "print".into(),
-            args: vec![expr],
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -98,7 +118,7 @@ fn lambda_fn(fn_name: &str, param: &str, body: Expr) -> Function {
 }
 
 fn manifest() -> FeatureManifest {
-    FeatureManifest::from_features(&[
+    FeatureManifest::from_features(&[Feature::ConsoleIO, 
         Feature::Closures,
         Feature::Sequences,
         Feature::Maps,
@@ -132,7 +152,7 @@ fn catalog_module() -> Module {
     let print_x = lambda_fn(
         "__lam_print_x",
         "x",
-        builtin("print", vec![var_p("x")]),
+        sys_write_once(var_p("x")),
     );
     // `transform_values` replaces every value with the block result; a constant
     // body makes the expected hash trivially predictable ({a: 99, b: 99}).
@@ -552,14 +572,14 @@ fn to_h_module() -> Module {
         "__lam_pi",
         "pair",
         "i",
-        builtin("print", vec![Expr::SeqLit { items: vec![var_p("pair"), var_p("i")], span: s() }]),
+        sys_write_once(Expr::SeqLit { items: vec![var_p("pair"), var_p("i")], span: s() }),
     );
     // { |pair, memo| print [pair, memo] } — observe the (pair, memo) yield.
     let print_pm = lambda_fn2(
         "__lam_pm",
         "pair",
         "memo",
-        builtin("print", vec![Expr::SeqLit { items: vec![var_p("pair"), var_p("memo")], span: s() }]),
+        sys_write_once(Expr::SeqLit { items: vec![var_p("pair"), var_p("memo")], span: s() }),
     );
 
     let stmts = vec![

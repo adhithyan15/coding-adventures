@@ -1011,9 +1011,40 @@ fn declare_omitted_when_print_i64_unused() {
         "no print_i64 use → no extern; got:\n{ll}");
 }
 
-/// AOT00-T8 follow-up: `gc_collect_minor_precise()` (no args) → the unconditional
-/// minor-collection test seam — see `SUPPORTED_BUILTINS`'s own doc for why this
-/// bypasses the `should_collect_minor`/`auto_minor` policy gate entirely.
+/// AOT00-T8 follow-up: `gc_set_auto_minor(on)` (no dest) — the attestation seam
+/// `gc_collect_minor_precise` requires before it will collect anything (see that
+/// builtin's own test and `SUPPORTED_BUILTINS`'s doc).
+#[test]
+fn call_builtin_gc_set_auto_minor_emits_extern_call_and_declare() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("gc_set_auto_minor".into()), Operand::Int(1)],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare void @__twig_gc_set_auto_minor(i64)"),
+        "expected extern declare for @__twig_gc_set_auto_minor; got:\n{ll}"
+    );
+    assert!(
+        ll.contains("call void @__twig_gc_set_auto_minor(i64 1)"),
+        "expected call site passing the attestation flag through; got:\n{ll}"
+    );
+}
+
+/// AOT00-T8 follow-up: `gc_collect_minor_precise()` (no args) → the *direct*
+/// minor-collection test seam — gated on `gc_set_auto_minor`'s attestation, same as
+/// the automatic `should_collect_minor`/`auto_minor` policy path (see
+/// `SUPPORTED_BUILTINS`'s own doc).
 #[test]
 fn call_builtin_gc_collect_minor_precise_emits_extern_call_and_declare() {
     let f = IIRFunction::new(
@@ -2111,6 +2142,120 @@ fn str_array_set_ptrtoints_the_literal_handle() {
         "must not store a ptr constant into an i64 slot; got:\n{ll}");
 }
 
+/// AOT00-T8 follow-up: `array_set` also calls the generational write barrier,
+/// unconditionally — mirrors `field_store_calls_the_generational_write_barrier`
+/// and `lower_array_set`'s own doc for why no reference/non-reference
+/// discrimination is attempted.
+///
+/// Unlike `field_store` (whose `ptr` operand already IS the GC object's true
+/// base), `array_set`'s `handle` (`%a`) is `raw_payload + 8` — see
+/// `lower_alloc_array` — so the barrier's `parent` argument must be recovered
+/// via `getelementptr i8, ptr %a, i64 -8` + `ptrtoint`, not `%a` itself
+/// (passing `%a` directly would make `write_barrier`'s `parent - HEADER_SIZE`
+/// read 24 bytes into the array's own payload instead of its real header —
+/// this test's `-8` assertion is the regression guard for exactly that bug).
+#[test]
+fn array_set_calls_the_generational_write_barrier() {
+    // `v` is a function PARAMETER, not a `const` — so it lowers as an SSA
+    // reference (`%v`) instead of folding to an immediate, letting the
+    // assertion below name it directly (mirrors `heap_ops_module`'s own
+    // parameter-not-const setup for the identical field_store proof).
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("i0".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("declare void @__twig_gc_write_barrier(i64, i64)"),
+        "the barrier must be declared whenever any array_set is lowered: {ll}"
+    );
+    assert!(
+        ll.contains("getelementptr i8, ptr %a, i64 -8"),
+        "the barrier's parent must be recovered as the array's true base \
+         (handle - 8), not the handle itself: {ll}"
+    );
+    let barrier_line = ll.lines().find(|l| l.contains("call void @__twig_gc_write_barrier"))
+        .unwrap_or_else(|| panic!("no write-barrier call emitted: {ll}"));
+    assert!(
+        !barrier_line.contains("i64 %a,"),
+        "the barrier's parent must NOT be the raw array handle %a (an interior \
+         pointer 8 bytes past the true base) — got: {barrier_line}"
+    );
+    assert!(
+        barrier_line.trim_end().ends_with("%v)"),
+        "the barrier's child argument must be the stored word %v: {barrier_line}"
+    );
+}
+
+/// Two `array_set`s in the same function must each get their own barrier call —
+/// proving the relocation isn't accidentally deduplicated (mirrors the same
+/// property proven for the aarch64/x86_64 backends' identical fix).
+#[test]
+fn array_set_write_barrier_is_emitted_per_store_not_deduplicated() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<i64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("i1".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i1".into()), Operand::Var("v".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("i0".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    let count = ll.matches("call void @__twig_gc_write_barrier").count();
+    assert_eq!(count, 2, "two array_sets must emit two write-barrier calls, got {count} in:\n{ll}");
+}
+
+/// A `double`-element `array_set` must still call the barrier — `child` can't be
+/// passed as a `double` (the barrier's C ABI is `(i64, i64)`), so the stored bits
+/// must be `bitcast` to `i64` first, not truncated or numerically converted.
+#[test]
+fn f64_array_set_bitcasts_child_to_i64_for_the_write_barrier() {
+    // `v` is a function PARAMETER (see `array_set_calls_the_generational_write_barrier`'s
+    // own comment for why) so the bitcast's operand names it directly.
+    let f = IIRFunction::new(
+        "main",
+        vec![("v".into(), "f64".into())],
+        "f64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("alloc_array", Some("a".into()), vec![Operand::Var("n".into())], "array<f64>"),
+            IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("array_set", None,
+                vec![Operand::Var("a".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("a".into()), Operand::Var("i0".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("bitcast double %v to i64"),
+        "the double element must be bitcast (not converted) to i64 before the barrier call: {ll}"
+    );
+    assert!(
+        ll.contains("call void @__twig_gc_write_barrier"),
+        "the barrier must still fire for a double-element array_set: {ll}"
+    );
+}
+
 /// `array<T>` validates (its element type is checked, not the wrapper).
 #[test]
 fn array_type_hint_validates() {
@@ -2709,17 +2854,44 @@ fn heap_ops_module() -> IIRModule {
     module_with(f)
 }
 
+/// AOT00-T1y: the default/no-operand `alloc` — every record/union/cons/
+/// closure constructor site — allocates under the MOVABLE `__twig_gc_alloc_pair`
+/// kind, matching `aarch64-backend`/`x86_64-backend`'s identical branch, not
+/// the conservative kind-0 `__twig_gc_alloc`.
 #[test]
-fn alloc_calls_gc_alloc_with_default_size_and_declares_extern() {
+fn alloc_default_size_calls_gc_alloc_pair_and_declares_extern() {
     let ll = lower(&heap_ops_module());
-    // Default payload is a 2-word LispyPair (16 bytes), matching the native backend.
-    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 16)"), "{ll}");
-    // The extern must be declared exactly once when `alloc` is used.
-    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
+    assert!(ll.contains("call i64 @__twig_gc_alloc_pair()"), "{ll}");
+    // The extern must be declared exactly once when a default-size `alloc` is used.
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc_pair()").count(), 1, "{ll}");
+    // The conservative allocator must NOT be declared when nothing needs it.
+    assert!(!ll.contains("@__twig_gc_alloc("), "{ll}");
+    assert!(!ll.contains("declare i64 @__twig_gc_alloc(i64)"), "{ll}");
 }
 
+/// AOT00-T1y: an explicit `16` operand is the same shape as the default and
+/// must take the identical movable-pair branch.
 #[test]
-fn alloc_honours_explicit_payload_size() {
+fn alloc_explicit_16_calls_gc_alloc_pair() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("c".into()), vec![Operand::Int(16)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_gc_alloc_pair()"), "{ll}");
+}
+
+/// AOT00-T1y: any OTHER explicit size still falls back to the conservative,
+/// kind-0 `__twig_gc_alloc` — its layout isn't the known `{0,8}` pair shape,
+/// so a precise ref-map would be unsound. Unchanged behavior from before
+/// this fix.
+#[test]
+fn alloc_non_pair_size_still_calls_conservative_gc_alloc() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -2731,6 +2903,31 @@ fn alloc_honours_explicit_payload_size() {
     );
     let ll = lower(&module_with(f));
     assert!(ll.contains("call i64 @__twig_gc_alloc(i64 24)"), "{ll}");
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
+    // The pair allocator must NOT be declared when nothing needs it.
+    assert!(!ll.contains("__twig_gc_alloc_pair"), "{ll}");
+}
+
+/// AOT00-T1y: a module using BOTH shapes (default pair + a non-pair explicit
+/// size) declares both externs exactly once each — no cross-contamination
+/// between the two `used_gc_alloc*` flags.
+#[test]
+fn alloc_mixed_sizes_declare_both_externs_once_each() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("alloc", Some("a".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("alloc", Some("b".into()), vec![Operand::Int(32)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("call i64 @__twig_gc_alloc_pair()"), "{ll}");
+    assert!(ll.contains("call i64 @__twig_gc_alloc(i64 32)"), "{ll}");
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc_pair()").count(), 1, "{ll}");
+    assert_eq!(ll.matches("declare i64 @__twig_gc_alloc(i64)").count(), 1, "{ll}");
 }
 
 #[test]

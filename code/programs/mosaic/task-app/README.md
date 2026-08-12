@@ -1,4 +1,4 @@
-# task-app (web)
+# task-app
 
 A to-do app with **automatic scheduling**, built entirely on the shared `task-core`
 engine. Add tasks (with optional due dates), complete or delete them — and the engine
@@ -6,14 +6,14 @@ auto-schedules them into a working-day timeline via the Critical Path Method.
 
 ## Architecture
 
-The UI is authored **once in Mosaic** and emitted to React; the React host (a real,
-committed npm package under `host/web/`) wires it to the pure Rust engine through
-WebAssembly, holding engine state in plain **React state** — no
-`dispatch`/`getProps`/`handleEvent` facade. React-isms (and host-owned persistence)
-live only here, in the web backend, where they belong (per
-`code/specs/task-app-architecture.md`).
+The UI is authored **once in Mosaic**. The web host wires emitted React to
+`task-core` through `task-wasm`, retaining idiomatic React state. Generated native
+hosts load `task-mosaic-app`, a standard-ABI adapter that owns portable presentation
+state and calls the same typed `task-core` operations and projections. The adapter is
+not a second task engine: domain validation, scheduling, and task/project invariants
+remain in `task-core`.
 
-```
+```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
         │  mosaic-compile --backend react   (emits ONE component into host/web/src)
         ▼
@@ -25,6 +25,36 @@ TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
         ▼
    @coding-adventures/storage    →  IndexedDB (in-memory fallback)
 ```
+
+The native path is:
+
+```text
+TaskApp.mil / .mll / .msl
+        │  mosaic-compile --backend <native> [--profile native-complete]
+        ▼
+generated native UI + standard host binding
+        │  bundled mosaic-app C ABI
+        ▼
+task-mosaic-app (MIL slots/events + presentation state) → task-core
+```
+
+Qt, Flutter, Compose Desktop, and SwiftUI on macOS are gated on this concrete
+engine. CI requires zero degradations, builds the generated native project,
+verifies the bundled library byte-for-byte, and launches the installed app without
+an injected runtime path. The ABI conformance fixture remains a separate gate, so
+a passing TaskApp launch cannot mask a regression in the standard host binding.
+The generated SwiftUI sources also compile for the iOS 16 deployment target; that
+gate is source portability rather than a claim that a macOS dylib can run on iOS.
+
+XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte beside
+`TaskApp.exe`. A task-specific console fixture drives startup props and a semantic
+event through the generated .NET binding without an injected path. Its strict
+`native-complete` build has zero degradations: the canonical Sheet exposes native
+UI Automation table semantics, while board and calendar interactions use native
+WinUI pointer/touch drag/drop plus an accessible keyboard path. GitHub-hosted Windows workers
+do not provide a reliable
+interactive desktop, so visible WinUI launch is deliberately reserved for a local
+or self-hosted interactive Windows gate.
 
 ## What it does
 
@@ -51,6 +81,7 @@ cd host/web && npm install && npm run dev       # http://localhost:5173
 - `src/TaskApp.{mil,mll,light.msl}` — the Mosaic UI (interface, layout, style).
 - `host/web/` — the committed web-host npm package (`src/main.tsx`, `src/persistence.ts`,
   its own `package.json`/tests); see `host/web/README.md`.
+- `../../../packages/rust/task-mosaic-app/` — native standard-ABI application adapter.
 - `mosaic-package.toml` — the package manifest.
 - `tests/package_compiles.rs` — `cargo test` verifies the Mosaic sources compile.
 - `scripts/build-web.{sh,ps1}` — build wasm + emit the component into `host/web`.

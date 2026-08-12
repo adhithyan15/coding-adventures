@@ -24,7 +24,10 @@ fn arithmetic_emits_variadic_helpers() {
         src.contains("_sir_times(2, _sir_int(3LL), _sir_int(4LL))"),
         "\n{src}"
     );
-    assert!(src.contains("_sir_print(1,"), "print is variadic");
+    // SIR28 §2: Twig's `print` lowers to `__sys_write__`, which this backend
+    // maps to `_sir_write(stream, terminator, unpack_arrays, argc, ...)` —
+    // `stream_code("stdout") == 0`, `terminator_code("none") == 0`.
+    assert!(src.contains("_sir_write(0, 0, 0, 1,"), "print is variadic:\n{src}");
 }
 
 #[test]

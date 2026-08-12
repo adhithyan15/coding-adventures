@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/canonical-cbor-v1.json",
+  "title": "Canonical CBOR v1 conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "limits", "error_ids", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "rfc8949-section-4.2.3-length-first" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_nesting_depth", "max_encoded_bytes"],
+      "properties": {
+        "max_nesting_depth": { "const": 128 },
+        "max_encoded_bytes": { "const": 1048576 }
+      }
+    },
+    "error_ids": {
+      "type": "array",
+      "minItems": 14,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 40,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^cbor-v1-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "operation": {
+          "enum": ["round-trip", "decode-error", "encode-map", "generated-round-trip", "encode-error"]
+        },
+        "input": { "type": "string" },
+        "expected": { "type": "string" }
+      }
+    }
+  }
+}

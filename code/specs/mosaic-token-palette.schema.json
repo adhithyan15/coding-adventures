@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/mosaic/token-palette.schema.json",
+  "title": "Mosaic token palette",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version"],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "tokens": {
+      "$ref": "#/$defs/tokenMap"
+    },
+    "backends": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "react": { "$ref": "#/$defs/tokenMap" },
+        "electron": { "$ref": "#/$defs/tokenMap" },
+        "swiftui": { "$ref": "#/$defs/tokenMap" },
+        "qt": { "$ref": "#/$defs/tokenMap" },
+        "webcomponent": { "$ref": "#/$defs/tokenMap" },
+        "html": { "$ref": "#/$defs/tokenMap" },
+        "xaml": { "$ref": "#/$defs/tokenMap" },
+        "flutter": { "$ref": "#/$defs/tokenMap" },
+        "compose": { "$ref": "#/$defs/tokenMap" }
+      }
+    }
+  },
+  "$defs": {
+    "tokenMap": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[^{};\\r\\n\\u0000]+$"
+      }
+    }
+  }
+}

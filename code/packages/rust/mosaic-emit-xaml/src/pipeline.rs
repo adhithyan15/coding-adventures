@@ -635,6 +635,20 @@ struct RowProjection {
     capture_args: Vec<String>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum NativeTableRole {
+    Header,
+    Body,
+}
+
+#[derive(Debug, Clone)]
+struct NativeTableEmission {
+    role: NativeTableRole,
+    header_helper: String,
+    cell_name_helper: String,
+    for_depth: usize,
+}
+
 /// Mutable state threaded through the recursive XAML emission.
 ///
 /// PR-1's emit_xaml didn't need any of this â€” all primitive emitters
@@ -715,6 +729,19 @@ struct EmitContext<'a> {
     /// Monotonic suffix used to keep generated VisualState names unique in
     /// the generated XAML.
     visual_state_counter: u32,
+    /// Canonical HostTable lowering currently being emitted. XAML needs a
+    /// little context across the nested header/row/cell `For` templates so it
+    /// can wrap the generated content in controls whose automation peers
+    /// implement Table/Grid and TableItem/GridItem.
+    native_table: Option<NativeTableEmission>,
+    /// Whether this component emitted at least one canonical native table and
+    /// therefore needs the component-scoped automation control classes in its
+    /// code-behind.
+    needs_native_table_support: bool,
+    native_table_counter: u32,
+    /// Whether this component emitted UI35 drag primitives and therefore needs
+    /// the component-scoped WinUI drag controls/runtime in its code-behind.
+    needs_native_drag_support: bool,
 }
 
 impl<'a> EmitContext<'a> {
@@ -753,6 +780,10 @@ impl<'a> EmitContext<'a> {
             visual_state_groups: Vec::new(),
             template_visual_state_groups: Vec::new(),
             visual_state_counter: 0,
+            native_table: None,
+            needs_native_table_support: false,
+            native_table_counter: 0,
+            needs_native_drag_support: false,
         }
     }
 
@@ -2123,16 +2154,11 @@ fn emit_xaml_node(
         // attached property on the wrapped child. HostNumberInput
         // uses `<NumberBox>` (WinUI 3 numeric input with built-in Â±
         // stepper).
-        // UI35 — the drag family. This backend does not implement dragging yet, so
-        // both lower to a vertical StackPanel: the card and the column still render,
-        // they just aren't draggable here.
-        //
-        // Erroring instead would mean a layout using drag cannot be emitted to this
-        // backend at all, which took down the task-app cross-backend tests the moment
-        // the app grew a board. Degrading to the content is what UI35 asks for.
-        "HostDraggable" | "HostDropTarget" => {
-            emit_stack_panel(node, indent, part_styles, "Vertical", ctx)
-        }
+        // UI35 — native WinUI pointer/touch drag-and-drop plus an accessible
+        // keyboard path. Both paths converge on the target control's Accept
+        // method so proposal payloads and accepted outcomes cannot drift.
+        "HostDraggable" => emit_host_draggable(node, indent, part_styles, ctx),
+        "HostDropTarget" => emit_host_drop_target(node, indent, part_styles, ctx),
 
         "HostLink" => emit_host_link(node, indent, part_styles, ctx),
         "HostTooltip" => emit_host_tooltip(node, indent, part_styles, ctx),
@@ -2279,6 +2305,60 @@ fn content_control_style_attr(node: &LayoutNode, part_styles: &PartStyleMap) -> 
             format!(" {setter}=\"{value}\"")
         })
         .collect()
+}
+
+/// Drag wrappers are ContentControls, so container-only `Spacing` must live on
+/// the neutral StackPanel used when the primitive has multiple direct children.
+/// Emitting it on ContentControl is rejected by the WinUI markup compiler.
+fn drag_control_style_attr(
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> (String, Option<String>) {
+    let Some(fragment) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(|entry| entry.base_fragment.as_str())
+    else {
+        return (String::new(), None);
+    };
+    let mut attrs = String::new();
+    let mut spacing = None;
+    for (setter, value) in parse_style_fragment(fragment) {
+        if setter == "Spacing" {
+            spacing = Some(value);
+            continue;
+        }
+        let setter = if setter == "TextAlignment" {
+            "HorizontalContentAlignment"
+        } else {
+            setter.as_str()
+        };
+        write!(attrs, " {setter}=\"{value}\"").unwrap();
+    }
+    (attrs, spacing)
+}
+
+fn emit_drag_content_children(
+    children: &[LayoutNode],
+    indent: usize,
+    spacing: Option<&str>,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    if emitted_content_child_count(children) <= 1 {
+        return emit_xaml_children(children, indent, part_styles, ctx);
+    }
+
+    let pad = " ".repeat(indent);
+    let spacing = spacing
+        .map(|value| format!(" Spacing=\"{value}\""))
+        .unwrap_or_default();
+    let mut out = String::new();
+    writeln!(out, "{pad}<StackPanel Orientation=\"Vertical\"{spacing}>").unwrap();
+    out.push_str(&emit_xaml_children(children, indent + 4, part_styles, ctx)?);
+    writeln!(out, "{pad}</StackPanel>").unwrap();
+    Ok(out)
 }
 
 /// Parse a joined style fragment (the value side of `PartStyleMap`)
@@ -2617,6 +2697,43 @@ fn emit_text(
         .map(|(setter, value)| format!(" {setter}=\"{value}\""))
         .collect::<String>();
 
+    let mut accessibility_attrs = String::new();
+    match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            write!(
+                accessibility_attrs,
+                " AutomationProperties.Name=\"{}\"",
+                escape_xaml_attr(label)
+            )
+            .unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let property = ctx.slot_property_name(slot);
+            if !is_safe_identifier(&property) {
+                return Err(PipelineEmitError::UnsafeSlotName(property));
+            }
+            write!(
+                accessibility_attrs,
+                " AutomationProperties.Name=\"{{x:Bind {}}}\"",
+                ctx.slot_xbind_path(slot)
+            )
+            .unwrap();
+        }
+        _ => {}
+    }
+    match find_prop_keyword(node, "a11y-role") {
+        Some("heading") => accessibility_attrs
+            .push_str(" AutomationProperties.HeadingLevel=\"Level2\""),
+        Some("none") => accessibility_attrs
+            .push_str(" AutomationProperties.AccessibilityView=\"Raw\""),
+        _ => {}
+    }
+    if matches!(find_prop_keyword(node, "a11y-hidden"), Some("true"))
+        && !matches!(find_prop_keyword(node, "a11y-role"), Some("none"))
+    {
+        accessibility_attrs.push_str(" AutomationProperties.AccessibilityView=\"Raw\"");
+    }
+
     let text_attr = match find_prop_value(node, "content") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let property = ctx.slot_property_name(slot);
@@ -2657,10 +2774,12 @@ fn emit_text(
     };
 
     if container_style.is_empty() {
-        Ok(format!("{pad}<TextBlock{text_attr}{text_style}/>\n"))
+        Ok(format!(
+            "{pad}<TextBlock{text_attr}{accessibility_attrs}{text_style}/>\n"
+        ))
     } else {
         Ok(format!(
-            "{pad}<Border{container_style}>\n{inner_pad}<TextBlock{text_attr}{text_style}/>\n{pad}</Border>\n"
+            "{pad}<Border{container_style}>\n{inner_pad}<TextBlock{text_attr}{accessibility_attrs}{text_style}/>\n{pad}</Border>\n"
         ))
     }
 }
@@ -2813,6 +2932,20 @@ fn emit_code_behind(
     writeln!(out, "// Auto-generated by mosaic-emit-xaml. Do not edit.").unwrap();
     writeln!(out, "using Microsoft.UI.Xaml;").unwrap();
     writeln!(out, "using Microsoft.UI.Xaml.Controls;").unwrap();
+    if ctx.needs_native_table_support || ctx.needs_native_drag_support {
+        writeln!(out, "using Microsoft.UI.Xaml.Automation;").unwrap();
+        writeln!(out, "using Microsoft.UI.Xaml.Automation.Peers;").unwrap();
+        writeln!(out, "using Microsoft.UI.Xaml.Input;").unwrap();
+        writeln!(out, "using Microsoft.UI.Xaml.Media;").unwrap();
+        writeln!(out, "using Windows.System;").unwrap();
+    }
+    if ctx.needs_native_table_support {
+        writeln!(out, "using Microsoft.UI.Xaml.Automation.Provider;").unwrap();
+    }
+    if ctx.needs_native_drag_support {
+        writeln!(out, "using System.Runtime.CompilerServices;").unwrap();
+        writeln!(out, "using Windows.ApplicationModel.DataTransfer;").unwrap();
+    }
     writeln!(out, "using System;").unwrap();
     writeln!(out, "using System.Collections.Generic;").unwrap();
     if !ctx.row_projections.is_empty() {
@@ -2931,7 +3064,759 @@ fn emit_code_behind(
     }
 
     writeln!(out, "}}").unwrap();
+    if ctx.needs_native_table_support {
+        out.push_str(&emit_native_table_support_source(name));
+    }
+    if ctx.needs_native_drag_support {
+        out.push_str(&emit_native_drag_support_source(name));
+    }
     Ok(out)
+}
+
+fn emit_native_table_support_source(component: &str) -> String {
+    r#"
+
+/// <summary>
+/// Visual HostTable container whose peer exposes native UIA Table and Grid
+/// patterns without replacing the authored Mosaic cell subtree.
+/// </summary>
+public sealed class __COMPONENT__MosaicTable : Grid
+{
+    public int RowCount
+    {
+        get => (int)GetValue(RowCountProperty);
+        set => SetValue(RowCountProperty, value);
+    }
+    public static readonly DependencyProperty RowCountProperty =
+        DependencyProperty.Register(nameof(RowCount), typeof(int), typeof(__COMPONENT__MosaicTable), new PropertyMetadata(0));
+
+    public int ColumnCount
+    {
+        get => (int)GetValue(ColumnCountProperty);
+        set => SetValue(ColumnCountProperty, value);
+    }
+    public static readonly DependencyProperty ColumnCountProperty =
+        DependencyProperty.Register(nameof(ColumnCount), typeof(int), typeof(__COMPONENT__MosaicTable), new PropertyMetadata(0));
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicTableAutomationPeer(this);
+
+    internal __COMPONENT__MosaicTableCell? FindCell(int row, int column)
+    {
+        var cells = new List<__COMPONENT__MosaicTableCell>();
+        CollectDescendants(this, cells);
+        foreach (var cell in cells)
+        {
+            if (cell.Row == row && cell.Column == column) return cell;
+        }
+        return null;
+    }
+
+    internal IReadOnlyList<__COMPONENT__MosaicTableHeaderCell> ColumnHeaders()
+    {
+        var headers = new List<__COMPONENT__MosaicTableHeaderCell>();
+        CollectDescendants(this, headers);
+        headers.Sort((left, right) => left.Column.CompareTo(right.Column));
+        return headers;
+    }
+
+    private static void CollectDescendants<T>(DependencyObject root, List<T> matches)
+        where T : DependencyObject
+    {
+        var count = VisualTreeHelper.GetChildrenCount(root);
+        for (var index = 0; index < count; index++)
+        {
+            var child = VisualTreeHelper.GetChild(root, index);
+            if (child is T match) matches.Add(match);
+            CollectDescendants(child, matches);
+        }
+    }
+}
+
+public sealed class __COMPONENT__MosaicTableHeaderCell : ContentControl
+{
+    public __COMPONENT__MosaicTableHeaderCell() => IsTabStop = false;
+
+    public int Column
+    {
+        get => (int)GetValue(ColumnProperty);
+        set => SetValue(ColumnProperty, value);
+    }
+    public static readonly DependencyProperty ColumnProperty =
+        DependencyProperty.Register(nameof(Column), typeof(int), typeof(__COMPONENT__MosaicTableHeaderCell), new PropertyMetadata(0));
+
+    public string Header
+    {
+        get => (string)GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+    public static readonly DependencyProperty HeaderProperty =
+        DependencyProperty.Register(nameof(Header), typeof(string), typeof(__COMPONENT__MosaicTableHeaderCell), new PropertyMetadata(string.Empty));
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicTableHeaderCellAutomationPeer(this);
+}
+
+public sealed class __COMPONENT__MosaicTableCell : ContentControl
+{
+    public __COMPONENT__MosaicTableCell() => IsTabStop = true;
+
+    public int Row
+    {
+        get => (int)GetValue(RowProperty);
+        set => SetValue(RowProperty, value);
+    }
+    public static readonly DependencyProperty RowProperty =
+        DependencyProperty.Register(nameof(Row), typeof(int), typeof(__COMPONENT__MosaicTableCell), new PropertyMetadata(0));
+
+    public int Column
+    {
+        get => (int)GetValue(ColumnProperty);
+        set => SetValue(ColumnProperty, value);
+    }
+    public static readonly DependencyProperty ColumnProperty =
+        DependencyProperty.Register(nameof(Column), typeof(int), typeof(__COMPONENT__MosaicTableCell), new PropertyMetadata(0));
+
+    public string Header
+    {
+        get => (string)GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+    public static readonly DependencyProperty HeaderProperty =
+        DependencyProperty.Register(nameof(Header), typeof(string), typeof(__COMPONENT__MosaicTableCell), new PropertyMetadata(string.Empty));
+
+    public object? Value
+    {
+        get => GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+    public static readonly DependencyProperty ValueProperty =
+        DependencyProperty.Register(nameof(Value), typeof(object), typeof(__COMPONENT__MosaicTableCell), new PropertyMetadata(null));
+
+    internal __COMPONENT__MosaicTable? FindTable()
+    {
+        DependencyObject? current = this;
+        while ((current = VisualTreeHelper.GetParent(current)) is not null)
+        {
+            if (current is __COMPONENT__MosaicTable table) return table;
+        }
+        return null;
+    }
+
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (e.Handled || FocusManager.GetFocusedElement(XamlRoot) != this) return;
+
+        var nextRow = Row;
+        var nextColumn = Column;
+        switch (e.Key)
+        {
+            case VirtualKey.Left: nextColumn--; break;
+            case VirtualKey.Right: nextColumn++; break;
+            case VirtualKey.Up: nextRow--; break;
+            case VirtualKey.Down: nextRow++; break;
+            default: return;
+        }
+
+        var table = FindTable();
+        var target = table?.FindCell(nextRow, nextColumn);
+        if (target is not null && target.Focus(FocusState.Keyboard)) e.Handled = true;
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicTableCellAutomationPeer(this);
+}
+
+internal sealed class __COMPONENT__MosaicTableAutomationPeer : FrameworkElementAutomationPeer, IGridProvider, ITableProvider
+{
+    internal __COMPONENT__MosaicTableAutomationPeer(__COMPONENT__MosaicTable owner) : base(owner) { }
+    private __COMPONENT__MosaicTable Table => (__COMPONENT__MosaicTable)Owner;
+
+    protected override object GetPatternCore(PatternInterface patternInterface) =>
+        patternInterface is PatternInterface.Grid or PatternInterface.Table
+            ? this
+            : base.GetPatternCore(patternInterface);
+    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Table;
+    protected override string GetClassNameCore() => nameof(__COMPONENT__MosaicTable);
+
+    public int RowCount => Math.Max(0, Table.RowCount);
+    public int ColumnCount => Math.Max(0, Table.ColumnCount);
+    public RowOrColumnMajor RowOrColumnMajor => RowOrColumnMajor.RowMajor;
+
+    public IRawElementProviderSimple GetItem(int row, int column)
+    {
+        var cell = Table.FindCell(row, column);
+        return cell is null ? null! : ProviderFor(cell);
+    }
+
+    public IRawElementProviderSimple[] GetColumnHeaders()
+    {
+        var headers = Table.ColumnHeaders();
+        var providers = new IRawElementProviderSimple[headers.Count];
+        for (var index = 0; index < headers.Count; index++) providers[index] = ProviderFor(headers[index]);
+        return providers;
+    }
+
+    public IRawElementProviderSimple[] GetRowHeaders() => Array.Empty<IRawElementProviderSimple>();
+
+    private IRawElementProviderSimple ProviderFor(UIElement element)
+    {
+        var peer = FrameworkElementAutomationPeer.CreatePeerForElement(element);
+        return peer is null ? null! : ProviderFromPeer(peer);
+    }
+}
+
+internal sealed class __COMPONENT__MosaicTableHeaderCellAutomationPeer : FrameworkElementAutomationPeer
+{
+    internal __COMPONENT__MosaicTableHeaderCellAutomationPeer(__COMPONENT__MosaicTableHeaderCell owner) : base(owner) { }
+    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.HeaderItem;
+    protected override string GetClassNameCore() => nameof(__COMPONENT__MosaicTableHeaderCell);
+    protected override string GetNameCore()
+    {
+        var name = base.GetNameCore();
+        return string.IsNullOrEmpty(name) ? ((__COMPONENT__MosaicTableHeaderCell)Owner).Header : name;
+    }
+}
+
+internal sealed class __COMPONENT__MosaicTableCellAutomationPeer : FrameworkElementAutomationPeer, IGridItemProvider, ITableItemProvider
+{
+    internal __COMPONENT__MosaicTableCellAutomationPeer(__COMPONENT__MosaicTableCell owner) : base(owner) { }
+    private __COMPONENT__MosaicTableCell Cell => (__COMPONENT__MosaicTableCell)Owner;
+
+    protected override object GetPatternCore(PatternInterface patternInterface) =>
+        patternInterface is PatternInterface.GridItem or PatternInterface.TableItem
+            ? this
+            : base.GetPatternCore(patternInterface);
+    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.DataItem;
+    protected override string GetClassNameCore() => nameof(__COMPONENT__MosaicTableCell);
+    protected override string GetNameCore()
+    {
+        var name = base.GetNameCore();
+        return string.IsNullOrEmpty(name)
+            ? $"{Cell.Header}, row {Cell.Row + 1}: {Convert.ToString(Cell.Value) ?? string.Empty}"
+            : name;
+    }
+
+    public int Row => Math.Max(0, Cell.Row);
+    public int Column => Math.Max(0, Cell.Column);
+    public int RowSpan => 1;
+    public int ColumnSpan => 1;
+    public IRawElementProviderSimple ContainingGrid
+    {
+        get
+        {
+            var table = Cell.FindTable();
+            if (table is null) return null!;
+            var peer = FrameworkElementAutomationPeer.CreatePeerForElement(table);
+            return peer is null ? null! : ProviderFromPeer(peer);
+        }
+    }
+
+    public IRawElementProviderSimple[] GetColumnHeaderItems()
+    {
+        var table = Cell.FindTable();
+        if (table is null) return Array.Empty<IRawElementProviderSimple>();
+        foreach (var header in table.ColumnHeaders())
+        {
+            if (header.Column != Cell.Column) continue;
+            var peer = FrameworkElementAutomationPeer.CreatePeerForElement(header);
+            return peer is null
+                ? Array.Empty<IRawElementProviderSimple>()
+                : new[] { ProviderFromPeer(peer) };
+        }
+        return Array.Empty<IRawElementProviderSimple>();
+    }
+
+    public IRawElementProviderSimple[] GetRowHeaderItems() => Array.Empty<IRawElementProviderSimple>();
+}
+"#
+    .replace("__COMPONENT__", component)
+}
+
+fn emit_native_drag_support_source(component: &str) -> String {
+    r#"
+
+public sealed class __COMPONENT__MosaicDragSourceEventArgs : EventArgs
+{
+    internal __COMPONENT__MosaicDragSourceEventArgs(string key, string kind)
+    {
+        Key = key;
+        Kind = kind;
+    }
+    public string Key { get; }
+    public string Kind { get; }
+}
+
+public sealed class __COMPONENT__MosaicDragEndEventArgs : EventArgs
+{
+    internal __COMPONENT__MosaicDragEndEventArgs(string key, string kind, bool dropped)
+    {
+        Key = key;
+        Kind = kind;
+        Dropped = dropped;
+    }
+    public string Key { get; }
+    public string Kind { get; }
+    public bool Dropped { get; }
+}
+
+public sealed class __COMPONENT__MosaicDropEventArgs : EventArgs
+{
+    internal __COMPONENT__MosaicDropEventArgs(string key, string kind, string targetKey, string position)
+    {
+        Key = key;
+        Kind = kind;
+        TargetKey = targetKey;
+        Position = position;
+    }
+    public string Key { get; }
+    public string Kind { get; }
+    public string TargetKey { get; }
+    public string Position { get; }
+}
+
+public sealed class __COMPONENT__MosaicDragSource : ContentControl
+{
+    public __COMPONENT__MosaicDragSource()
+    {
+        CanDrag = true;
+        IsTabStop = true;
+        DragStarting += OnDragStarting;
+        DropCompleted += OnDropCompleted;
+        KeyDown += OnKeyDown;
+    }
+
+    public string DragKey
+    {
+        get => (string)GetValue(DragKeyProperty);
+        set => SetValue(DragKeyProperty, value);
+    }
+    public static readonly DependencyProperty DragKeyProperty =
+        DependencyProperty.Register(nameof(DragKey), typeof(string), typeof(__COMPONENT__MosaicDragSource), new PropertyMetadata(string.Empty));
+
+    public string DragKind
+    {
+        get => (string)GetValue(DragKindProperty);
+        set => SetValue(DragKindProperty, value);
+    }
+    public static readonly DependencyProperty DragKindProperty =
+        DependencyProperty.Register(nameof(DragKind), typeof(string), typeof(__COMPONENT__MosaicDragSource), new PropertyMetadata(string.Empty));
+
+    public string DragLabel
+    {
+        get => (string)GetValue(DragLabelProperty);
+        set => SetValue(DragLabelProperty, value);
+    }
+    public static readonly DependencyProperty DragLabelProperty =
+        DependencyProperty.Register(nameof(DragLabel), typeof(string), typeof(__COMPONENT__MosaicDragSource), new PropertyMetadata(string.Empty));
+
+    public bool DragDisabled
+    {
+        get => (bool)GetValue(DragDisabledProperty);
+        set => SetValue(DragDisabledProperty, value);
+    }
+    public static readonly DependencyProperty DragDisabledProperty =
+        DependencyProperty.Register(
+            nameof(DragDisabled),
+            typeof(bool),
+            typeof(__COMPONENT__MosaicDragSource),
+            new PropertyMetadata(false, OnDragDisabledChanged));
+
+    public event EventHandler<__COMPONENT__MosaicDragSourceEventArgs>? MosaicDragStarted;
+    public event EventHandler<__COMPONENT__MosaicDragEndEventArgs>? MosaicDragEnded;
+
+    internal __COMPONENT__MosaicDragScope Scope => __COMPONENT__MosaicDragRuntime.ScopeFor(this);
+
+    internal void RaiseStarted() =>
+        MosaicDragStarted?.Invoke(this, new __COMPONENT__MosaicDragSourceEventArgs(DragKey, DragKind));
+
+    internal void RaiseEnded(bool dropped) =>
+        MosaicDragEnded?.Invoke(this, new __COMPONENT__MosaicDragEndEventArgs(DragKey, DragKind, dropped));
+
+    private static void OnDragDisabledChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var source = (__COMPONENT__MosaicDragSource)sender;
+        var disabled = args.NewValue is true;
+        source.CanDrag = !disabled;
+        source.IsTabStop = !disabled;
+    }
+
+    private void OnDragStarting(UIElement sender, DragStartingEventArgs args)
+    {
+        if (DragDisabled)
+        {
+            args.Cancel = true;
+            return;
+        }
+        Scope.BeginPointer(this);
+        args.Data.RequestedOperation = DataPackageOperation.Move;
+        args.Data.SetData(__COMPONENT__MosaicDragRuntime.Format, DragKey);
+    }
+
+    private void OnDropCompleted(UIElement sender, DropCompletedEventArgs args) =>
+        Scope.FinishPointer(this);
+
+    private void OnKeyDown(object sender, KeyRoutedEventArgs args)
+    {
+        bool handled;
+        switch (args.Key)
+        {
+            case VirtualKey.Escape:
+                handled = Scope.Cancel();
+                break;
+            case VirtualKey.Space:
+            case VirtualKey.Enter:
+                handled = !DragDisabled && Scope.ToggleKeyboard(this);
+                break;
+            case VirtualKey.Down:
+                handled = Scope.StepKeyboard(1);
+                break;
+            case VirtualKey.Up:
+                handled = Scope.StepKeyboard(-1);
+                break;
+            case VirtualKey.Right:
+                handled = Scope.StepKeyboard(FlowDirection == FlowDirection.RightToLeft ? -1 : 1);
+                break;
+            case VirtualKey.Left:
+                handled = Scope.StepKeyboard(FlowDirection == FlowDirection.RightToLeft ? 1 : -1);
+                break;
+            default:
+                handled = false;
+                break;
+        }
+        if (handled) args.Handled = true;
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicDragSourceAutomationPeer(this);
+}
+
+public sealed class __COMPONENT__MosaicDropTarget : ContentControl
+{
+    private __COMPONENT__MosaicDragScope? _scope;
+    private string _pointerPosition = "into";
+
+    public __COMPONENT__MosaicDropTarget()
+    {
+        AllowDrop = true;
+        IsTabStop = false;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+        DragEnter += OnDragEnter;
+        DragLeave += OnDragLeave;
+        DragOver += OnDragOver;
+        Drop += OnDrop;
+    }
+
+    public string DropKey
+    {
+        get => (string)GetValue(DropKeyProperty);
+        set => SetValue(DropKeyProperty, value);
+    }
+    public static readonly DependencyProperty DropKeyProperty =
+        DependencyProperty.Register(nameof(DropKey), typeof(string), typeof(__COMPONENT__MosaicDropTarget), new PropertyMetadata(string.Empty));
+
+    public object? Accepts
+    {
+        get => GetValue(AcceptsProperty);
+        set => SetValue(AcceptsProperty, value);
+    }
+    public static readonly DependencyProperty AcceptsProperty =
+        DependencyProperty.Register(nameof(Accepts), typeof(object), typeof(__COMPONENT__MosaicDropTarget), new PropertyMetadata(null));
+
+    public bool DropDisabled
+    {
+        get => (bool)GetValue(DropDisabledProperty);
+        set => SetValue(DropDisabledProperty, value);
+    }
+    public static readonly DependencyProperty DropDisabledProperty =
+        DependencyProperty.Register(nameof(DropDisabled), typeof(bool), typeof(__COMPONENT__MosaicDropTarget), new PropertyMetadata(false));
+
+    public event EventHandler<__COMPONENT__MosaicDragSourceEventArgs>? MosaicDragEntered;
+    public event EventHandler<__COMPONENT__MosaicDragSourceEventArgs>? MosaicDragLeft;
+    public event EventHandler<__COMPONENT__MosaicDropEventArgs>? MosaicDropHovered;
+    public event EventHandler<__COMPONENT__MosaicDropEventArgs>? MosaicDropped;
+
+    internal __COMPONENT__MosaicDragScope Scope =>
+        _scope ??= __COMPONENT__MosaicDragRuntime.ScopeFor(this);
+
+    internal bool AcceptsSource(__COMPONENT__MosaicDragSource source)
+    {
+        if (DropDisabled || !ReferenceEquals(source.Scope, Scope)) return false;
+        if (Accepts is null) return true;
+        if (Accepts is IEnumerable<string> kinds)
+        {
+            foreach (var kind in kinds)
+            {
+                if (string.Equals(kind, source.DragKind, StringComparison.Ordinal)) return true;
+            }
+        }
+        return false;
+    }
+
+    internal void Enter(__COMPONENT__MosaicDragSource source)
+    {
+        if (AcceptsSource(source))
+            MosaicDragEntered?.Invoke(this, new __COMPONENT__MosaicDragSourceEventArgs(source.DragKey, source.DragKind));
+    }
+
+    internal void Leave(__COMPONENT__MosaicDragSource source)
+    {
+        if (ReferenceEquals(source.Scope, Scope))
+            MosaicDragLeft?.Invoke(this, new __COMPONENT__MosaicDragSourceEventArgs(source.DragKey, source.DragKind));
+    }
+
+    internal void Hover(__COMPONENT__MosaicDragSource source, string position)
+    {
+        if (!AcceptsSource(source)) return;
+        _pointerPosition = position;
+        MosaicDropHovered?.Invoke(
+            this,
+            new __COMPONENT__MosaicDropEventArgs(source.DragKey, source.DragKind, DropKey, position));
+    }
+
+    internal bool Accept(__COMPONENT__MosaicDragSource source, string position, bool keyboard)
+    {
+        if (!AcceptsSource(source)) return false;
+        var acceptedPosition = keyboard ? "into" : position;
+        Scope.MarkAccepted(source);
+        MosaicDropped?.Invoke(
+            this,
+            new __COMPONENT__MosaicDropEventArgs(source.DragKey, source.DragKind, DropKey, acceptedPosition));
+        Scope.Announce(this, $"Dropped {source.DragLabel} on {DropKey}.");
+        return true;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs args) => Scope.Register(this);
+
+    private void OnUnloaded(object sender, RoutedEventArgs args)
+    {
+        _scope?.Unregister(this);
+        _scope = null;
+    }
+
+    private bool TryGetPointerSource(DragEventArgs args, out __COMPONENT__MosaicDragSource source)
+    {
+        source = null!;
+        if (!args.DataView.Contains(__COMPONENT__MosaicDragRuntime.Format)) return false;
+        var active = Scope.ActivePointerSource;
+        if (active is null || !AcceptsSource(active)) return false;
+        source = active;
+        return true;
+    }
+
+    private string PositionFor(DragEventArgs args)
+    {
+        if (ActualHeight <= 0) return "into";
+        var ratio = args.GetPosition(this).Y / ActualHeight;
+        return ratio < (1.0 / 3.0) ? "before" : ratio > (2.0 / 3.0) ? "after" : "into";
+    }
+
+    private void OnDragEnter(object sender, DragEventArgs args)
+    {
+        if (!TryGetPointerSource(args, out var source)) return;
+        args.AcceptedOperation = DataPackageOperation.Move;
+        args.Handled = true;
+        Enter(source);
+    }
+
+    private void OnDragLeave(object sender, DragEventArgs args)
+    {
+        var source = Scope.ActivePointerSource;
+        if (source is not null) Leave(source);
+    }
+
+    private void OnDragOver(object sender, DragEventArgs args)
+    {
+        if (!TryGetPointerSource(args, out var source)) return;
+        args.AcceptedOperation = DataPackageOperation.Move;
+        args.Handled = true;
+        Hover(source, PositionFor(args));
+    }
+
+    private void OnDrop(object sender, DragEventArgs args)
+    {
+        if (!TryGetPointerSource(args, out var source)) return;
+        var position = PositionFor(args);
+        if (!Accept(source, position, keyboard: false)) return;
+        args.AcceptedOperation = DataPackageOperation.Move;
+        args.Handled = true;
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicDropTargetAutomationPeer(this);
+}
+
+internal sealed class __COMPONENT__MosaicDragScope
+{
+    private readonly List<__COMPONENT__MosaicDropTarget> _targets = new();
+    private __COMPONENT__MosaicDragSource? _activeSource;
+    private __COMPONENT__MosaicDropTarget? _keyboardTarget;
+    private bool _keyboard;
+    private bool _acceptedPointer;
+
+    internal __COMPONENT__MosaicDragSource? ActivePointerSource =>
+        _keyboard ? null : _activeSource;
+
+    internal void Register(__COMPONENT__MosaicDropTarget target)
+    {
+        if (!_targets.Contains(target)) _targets.Add(target);
+    }
+
+    internal void Unregister(__COMPONENT__MosaicDropTarget target)
+    {
+        _targets.Remove(target);
+        if (ReferenceEquals(_keyboardTarget, target)) _keyboardTarget = null;
+    }
+
+    internal void BeginPointer(__COMPONENT__MosaicDragSource source)
+    {
+        if (_activeSource is not null) Cancel();
+        _activeSource = source;
+        _keyboard = false;
+        _acceptedPointer = false;
+        source.RaiseStarted();
+        Announce(source, $"Grabbed {source.DragLabel}.");
+    }
+
+    internal void FinishPointer(__COMPONENT__MosaicDragSource source)
+    {
+        if (!ReferenceEquals(_activeSource, source) || _keyboard) return;
+        var dropped = _acceptedPointer;
+        Clear();
+        if (!dropped) Announce(source, "Cancelled drag.");
+        source.RaiseEnded(dropped);
+    }
+
+    internal bool ToggleKeyboard(__COMPONENT__MosaicDragSource source)
+    {
+        if (_activeSource is null)
+        {
+            _activeSource = source;
+            _keyboard = true;
+            _acceptedPointer = false;
+            _keyboardTarget = null;
+            source.RaiseStarted();
+            Announce(source, $"Grabbed {source.DragLabel}. Use arrow keys to choose a target, then press Space or Enter to drop.");
+            return true;
+        }
+        if (!ReferenceEquals(_activeSource, source) || !_keyboard) return false;
+        if (_keyboardTarget is null || !_keyboardTarget.Accept(source, "into", keyboard: true))
+            return Cancel();
+        Clear();
+        source.RaiseEnded(true);
+        return true;
+    }
+
+    internal bool StepKeyboard(int delta)
+    {
+        var source = _activeSource;
+        if (source is null || !_keyboard) return false;
+        var eligible = new List<__COMPONENT__MosaicDropTarget>();
+        foreach (var target in _targets)
+        {
+            if (target.AcceptsSource(source)) eligible.Add(target);
+        }
+        if (eligible.Count == 0)
+        {
+            Announce(source, "No available drop targets.");
+            return true;
+        }
+        var current = _keyboardTarget is null ? -1 : eligible.IndexOf(_keyboardTarget);
+        var nextIndex = (current + delta) % eligible.Count;
+        if (nextIndex < 0) nextIndex += eligible.Count;
+        var next = eligible[nextIndex];
+        if (!ReferenceEquals(_keyboardTarget, next))
+        {
+            _keyboardTarget?.Leave(source);
+            next.Enter(source);
+        }
+        next.Hover(source, "into");
+        _keyboardTarget = next;
+        Announce(next, $"Move to {next.DropKey}, position {nextIndex + 1} of {eligible.Count}.");
+        return true;
+    }
+
+    internal bool Cancel()
+    {
+        var source = _activeSource;
+        if (source is null) return false;
+        if (_keyboard) _keyboardTarget?.Leave(source);
+        Clear();
+        Announce(source, "Cancelled drag.");
+        source.RaiseEnded(false);
+        return true;
+    }
+
+    internal void MarkAccepted(__COMPONENT__MosaicDragSource source)
+    {
+        if (ReferenceEquals(_activeSource, source) && !_keyboard) _acceptedPointer = true;
+    }
+
+    internal void Announce(FrameworkElement anchor, string message)
+    {
+        AutomationProperties.SetHelpText(anchor, message);
+        var peer = FrameworkElementAutomationPeer.CreatePeerForElement(anchor);
+        peer?.RaiseNotificationEvent(
+            AutomationNotificationKind.ActionCompleted,
+            AutomationNotificationProcessing.MostRecent,
+            message,
+            "MosaicDrag");
+    }
+
+    private void Clear()
+    {
+        _activeSource = null;
+        _keyboardTarget = null;
+        _keyboard = false;
+        _acceptedPointer = false;
+    }
+}
+
+internal static class __COMPONENT__MosaicDragRuntime
+{
+    internal const string Format = "application/x-mosaic-drag-v1";
+    private static readonly ConditionalWeakTable<__COMPONENT__, __COMPONENT__MosaicDragScope> Scopes = new();
+
+    internal static __COMPONENT__MosaicDragScope ScopeFor(DependencyObject element)
+    {
+        DependencyObject? current = element;
+        while (current is not null)
+        {
+            if (current is __COMPONENT__ owner)
+                return Scopes.GetValue(owner, _ => new __COMPONENT__MosaicDragScope());
+            current = VisualTreeHelper.GetParent(current);
+        }
+        throw new InvalidOperationException("Mosaic drag primitives require a component drag scope.");
+    }
+}
+
+internal sealed class __COMPONENT__MosaicDragSourceAutomationPeer : FrameworkElementAutomationPeer
+{
+    internal __COMPONENT__MosaicDragSourceAutomationPeer(__COMPONENT__MosaicDragSource owner) : base(owner) { }
+    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Button;
+    protected override string GetClassNameCore() => nameof(__COMPONENT__MosaicDragSource);
+    protected override string GetNameCore()
+    {
+        var name = base.GetNameCore();
+        return string.IsNullOrEmpty(name) ? ((__COMPONENT__MosaicDragSource)Owner).DragLabel : name;
+    }
+}
+
+internal sealed class __COMPONENT__MosaicDropTargetAutomationPeer : FrameworkElementAutomationPeer
+{
+    internal __COMPONENT__MosaicDropTargetAutomationPeer(__COMPONENT__MosaicDropTarget owner) : base(owner) { }
+    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Group;
+    protected override string GetClassNameCore() => nameof(__COMPONENT__MosaicDropTarget);
+    protected override string GetNameCore()
+    {
+        var name = base.GetNameCore();
+        return string.IsNullOrEmpty(name) ? ((__COMPONENT__MosaicDropTarget)Owner).DropKey : name;
+    }
+}
+"#
+    .replace("__COMPONENT__", component)
 }
 
 fn emit_dependency_property(
@@ -3521,6 +4406,45 @@ fn emit_for(
             projection_property.clone()
         },
     });
+    let native_table_entry = ctx.native_table.as_ref().map(|table| {
+        (
+            table.role,
+            table.header_helper.clone(),
+            table.cell_name_helper.clone(),
+            table.for_depth,
+        )
+    });
+    if let Some(table) = ctx.native_table.as_mut() {
+        table.for_depth += 1;
+    }
+    if let Some((NativeTableRole::Body, header_helper, cell_name_helper, _)) =
+        native_table_entry.as_ref()
+    {
+        if is_cell_loop {
+            let row_index_property = ctx
+                .for_scope
+                .iter()
+                .rev()
+                .nth(1)
+                .and_then(|binding| binding.index_name.as_deref())
+                .map(kebab_to_pascal_case)
+                .unwrap_or_else(|| "Index".to_string());
+            if let Some(vm) = ctx.row_vms.iter_mut().find(|vm| vm.class_name == vm_class) {
+                vm.helper_bindings.push(RowVmHelperBinding {
+                    property_name: "MosaicTableHeader".to_string(),
+                    return_type: "string".to_string(),
+                    owner_call: format!("Owner.{header_helper}(Index)"),
+                });
+                vm.helper_bindings.push(RowVmHelperBinding {
+                    property_name: "MosaicTableName".to_string(),
+                    return_type: "string".to_string(),
+                    owner_call: format!(
+                        "Owner.{cell_name_helper}(MosaicTableHeader, {element_property}, {row_index_property})"
+                    ),
+                });
+            }
+        }
+    }
     ctx.template_visual_state_groups.push(Vec::new());
     let body_result =
         emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
@@ -3528,6 +4452,9 @@ fn emit_for(
         .template_visual_state_groups
         .pop()
         .expect("For template visual-state collector");
+    if let Some(table) = ctx.native_table.as_mut() {
+        table.for_depth = table.for_depth.saturating_sub(1);
+    }
     ctx.for_scope.pop();
     let mut body = body_result?;
 
@@ -3553,6 +4480,41 @@ fn emit_for(
         wrapped.push_str(&indent_xaml_fragment(&body, 4));
         writeln!(wrapped, "{pad}</Grid>").unwrap();
         body = wrapped;
+    }
+
+    if let Some((role, _, _, entry_depth)) = native_table_entry {
+        let wrapper = match role {
+            NativeTableRole::Header if entry_depth == 0 => Some(format!(
+                "local:{}MosaicTableHeaderCell Column=\"{{x:Bind Index}}\" Header=\"{{x:Bind {element_property}}}\" AutomationProperties.Name=\"{{x:Bind {element_property}}}\"",
+                ctx.component_name
+            )),
+            NativeTableRole::Body if is_cell_loop => {
+                let row_index_property = ctx
+                    .for_scope
+                    .last()
+                    .and_then(|binding| binding.index_name.as_deref())
+                    .map(kebab_to_pascal_case)
+                    .unwrap_or_else(|| "Index".to_string());
+                Some(format!(
+                    "local:{}MosaicTableCell Row=\"{{x:Bind {row_index_property}}}\" Column=\"{{x:Bind Index}}\" Header=\"{{x:Bind MosaicTableHeader}}\" Value=\"{{x:Bind {element_property}}}\" AutomationProperties.Name=\"{{x:Bind MosaicTableName}}\"",
+                    ctx.component_name
+                ))
+            }
+            _ => None,
+        };
+        if let Some(wrapper) = wrapper {
+            let wrapper_pad = " ".repeat(indent + 12);
+            let mut wrapped = String::new();
+            writeln!(wrapped, "{wrapper_pad}<{wrapper}>").unwrap();
+            wrapped.push_str(&indent_xaml_fragment(&body, 4));
+            writeln!(
+                wrapped,
+                "{wrapper_pad}</{}>",
+                wrapper.split_whitespace().next().unwrap()
+            )
+            .unwrap();
+            body = wrapped;
+        }
     }
 
     // -- 5. Assemble the XAML --
@@ -5945,6 +6907,294 @@ fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Opt
     }
 }
 
+// =====================================================================
+// UI35: HostDraggable / HostDropTarget
+// =====================================================================
+
+/// Both UI35 primitives lower to native WinUI drag/drop controls with the
+/// shared pointer, keyboard, filtering, lifecycle, and accessibility runtime.
+/// Native-completeness analysis calls this predicate so reporting stays in
+/// lockstep with the emitter.
+pub fn host_drag_drop_has_native_semantics(node: &LayoutNode) -> bool {
+    matches!(node.tag.as_str(), "HostDraggable" | "HostDropTarget")
+}
+
+/// Lower a UI35 text prop to an attribute value. Expressions inside a `For`
+/// reuse the normal row-VM projection path, so a value such as `card[2]`
+/// becomes a typed row property rather than an invalid page-scoped binding.
+fn drag_text_attr_value(
+    node: &LayoutNode,
+    prop: &str,
+    default: &str,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, prop) {
+        Some(LayoutPropValue::String(value)) => Ok(escape_xaml_attr(value)),
+        Some(LayoutPropValue::SlotRef(slot)) => Ok(format!(
+            "{{x:Bind {}, Mode=OneWay}}",
+            ctx.slot_xbind_path(slot)
+        )),
+        Some(LayoutPropValue::Keyword(value)) if ctx.lookup_for_binding(value).is_some() => Ok(
+            format!("{{x:Bind {}, Mode=OneWay}}", kebab_to_pascal_case(value)),
+        ),
+        Some(LayoutPropValue::Keyword(value)) if ctx.lookup_for_index(value).is_some() => {
+            Ok("{x:Bind Index, Mode=OneWay}".to_string())
+        }
+        Some(LayoutPropValue::Keyword(value)) => Ok(escape_xaml_attr(value)),
+        Some(LayoutPropValue::Expr(source)) => match lower_expr_for_xbind(source, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                Ok(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            ExprLowering::Unsupported(reason) => Err(PipelineEmitError::UnsupportedExpression(
+                format!("{prop}: {reason}"),
+            )),
+        },
+        _ => Ok(escape_xaml_attr(default)),
+    }
+}
+
+fn drag_bool_attr_value(
+    node: &LayoutNode,
+    prop: &str,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    match find_prop_value(node, prop) {
+        Some(LayoutPropValue::SlotRef(slot)) => Ok(format!(
+            "{{x:Bind {}, Mode=OneWay}}",
+            ctx.slot_xbind_path(slot)
+        )),
+        Some(LayoutPropValue::Keyword(value)) if value == "true" => Ok("True".to_string()),
+        Some(LayoutPropValue::Keyword(value)) if value == "false" => Ok("False".to_string()),
+        Some(LayoutPropValue::Expr(source)) => match lower_expr_for_xbind(source, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                Ok(format!("{{x:Bind {path}, Mode=OneWay}}"))
+            }
+            ExprLowering::Unsupported(reason) => Err(PipelineEmitError::UnsupportedExpression(
+                format!("{prop}: {reason}"),
+            )),
+        },
+        _ => Ok("False".to_string()),
+    }
+}
+
+fn drag_accepts_attr_value(
+    node: &LayoutNode,
+    ctx: &mut EmitContext<'_>,
+) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "accepts") {
+        None => Ok(None),
+        Some(LayoutPropValue::SlotRef(slot)) => Ok(Some(format!(
+            "{{x:Bind {}, Mode=OneWay}}",
+            ctx.slot_xbind_path(slot)
+        ))),
+        Some(LayoutPropValue::Keyword(value)) if ctx.lookup_for_binding(value).is_some() => {
+            Ok(Some(format!(
+                "{{x:Bind {}, Mode=OneWay}}",
+                kebab_to_pascal_case(value)
+            )))
+        }
+        Some(LayoutPropValue::Expr(source)) => match lower_expr_for_xbind(source, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                Ok(Some(format!("{{x:Bind {path}, Mode=OneWay}}")))
+            }
+            ExprLowering::Unsupported(reason) => Err(PipelineEmitError::UnsupportedExpression(
+                format!("accepts: {reason}"),
+            )),
+        },
+        _ => Err(PipelineEmitError::UnsupportedExpression(
+            "HostDropTarget.accepts must bind to a list<text> value".to_string(),
+        )),
+    }
+}
+
+fn register_drag_event_handler(
+    node: &LayoutNode,
+    prop: &str,
+    handler: String,
+    args_type: &str,
+    values: &[(&str, &str)],
+    ctx: &mut EmitContext<'_>,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, prop) else {
+        return Ok(None);
+    };
+    let component = ctx.component_name;
+    let case = kebab_to_pascal_case(&strip_on_prefix(emit_name));
+    let args = ctx
+        .emit_payloads
+        .get(emit_name)
+        .map(|payloads| {
+            payloads
+                .iter()
+                .map(|(name, ty)| {
+                    values
+                        .iter()
+                        .find_map(|(field, expression)| (*field == name).then_some(*expression))
+                        .map(str::to_string)
+                        .unwrap_or_else(|| match ty.as_str() {
+                            "string" => "string.Empty".to_string(),
+                            "double" => "0.0".to_string(),
+                            "bool" => "false".to_string(),
+                            _ => "null!".to_string(),
+                        })
+                })
+                .collect::<Vec<_>>()
+                .join(", ")
+        })
+        .unwrap_or_default();
+    let ctor = if args.is_empty() {
+        format!("new {component}Event.{case}()")
+    } else {
+        format!("new {component}Event.{case}({args})")
+    };
+    ctx.add_host_handler(HostHandler {
+        name: handler.clone(),
+        source: format!(
+            "    private void {handler}(object? sender, {args_type} args)\n    {{\n        Dispatch?.Invoke(this, {ctor});\n    }}"
+        ),
+    });
+    Ok(Some(handler))
+}
+
+fn emit_host_draggable(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let component = ctx.component_name;
+    let x_name = host_x_name(node, "HostDraggable", ctx);
+    let key = drag_text_attr_value(node, "drag-key", "", ctx)?;
+    let kind = drag_text_attr_value(node, "drag-kind", "", ctx)?;
+    let label = if find_prop_value(node, "drag-label").is_some() {
+        drag_text_attr_value(node, "drag-label", "", ctx)?
+    } else {
+        key.clone()
+    };
+    let disabled = drag_bool_attr_value(node, "drag-disabled", ctx)?;
+    let mut attrs = format!(
+        " x:Name=\"{x_name}\" DragKey=\"{key}\" DragKind=\"{kind}\" DragLabel=\"{label}\" DragDisabled=\"{disabled}\" AutomationProperties.AutomationId=\"{}\" AutomationProperties.Name=\"{label}\" AutomationProperties.HelpText=\"Press Space or Enter to grab, use arrow keys to choose a target, then press Space or Enter to drop.\"",
+        escape_xaml_attr(node.part_name.as_deref().unwrap_or("draggable"))
+    );
+    if let Some(handler) = register_drag_event_handler(
+        node,
+        "onDragStart",
+        format!("{x_name}_MosaicDragStarted"),
+        &format!("{component}MosaicDragSourceEventArgs"),
+        &[("key", "args.Key"), ("kind", "args.Kind")],
+        ctx,
+    )? {
+        attrs.push_str(&format!(" MosaicDragStarted=\"{handler}\""));
+    }
+    if let Some(handler) = register_drag_event_handler(
+        node,
+        "onDragEnd",
+        format!("{x_name}_MosaicDragEnded"),
+        &format!("{component}MosaicDragEndEventArgs"),
+        &[
+            ("key", "args.Key"),
+            ("kind", "args.Kind"),
+            ("dropped", "args.Dropped"),
+        ],
+        ctx,
+    )? {
+        attrs.push_str(&format!(" MosaicDragEnded=\"{handler}\""));
+    }
+    let (style, spacing) = drag_control_style_attr(node, part_styles);
+    let children = emit_drag_content_children(
+        &node.children,
+        indent + 4,
+        spacing.as_deref(),
+        part_styles,
+        ctx,
+    )?;
+    ctx.needs_native_drag_support = true;
+    Ok(format!(
+        "{pad}<local:{component}MosaicDragSource{attrs}{style}>\n{children}{pad}</local:{component}MosaicDragSource>\n"
+    ))
+}
+
+fn emit_host_drop_target(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let component = ctx.component_name;
+    let x_name = host_x_name(node, "HostDropTarget", ctx);
+    let key = drag_text_attr_value(node, "drop-key", "", ctx)?;
+    let disabled = drag_bool_attr_value(node, "drop-disabled", ctx)?;
+    let mut attrs = format!(
+        " x:Name=\"{x_name}\" DropKey=\"{key}\" DropDisabled=\"{disabled}\" AutomationProperties.AutomationId=\"{}\" AutomationProperties.Name=\"{key}\"",
+        escape_xaml_attr(node.part_name.as_deref().unwrap_or("drop-target"))
+    );
+    if let Some(accepts) = drag_accepts_attr_value(node, ctx)? {
+        attrs.push_str(&format!(" Accepts=\"{accepts}\""));
+    }
+    let source_values = [("key", "args.Key"), ("kind", "args.Kind")];
+    let drop_values = [
+        ("key", "args.Key"),
+        ("kind", "args.Kind"),
+        ("targetKey", "args.TargetKey"),
+        ("position", "args.Position"),
+    ];
+    for (prop, event, suffix, args_type, values) in [
+        (
+            "onDragEnter",
+            "MosaicDragEntered",
+            "MosaicDragEntered",
+            format!("{component}MosaicDragSourceEventArgs"),
+            source_values.as_slice(),
+        ),
+        (
+            "onDragLeave",
+            "MosaicDragLeft",
+            "MosaicDragLeft",
+            format!("{component}MosaicDragSourceEventArgs"),
+            source_values.as_slice(),
+        ),
+        (
+            "onDropHover",
+            "MosaicDropHovered",
+            "MosaicDropHovered",
+            format!("{component}MosaicDropEventArgs"),
+            drop_values.as_slice(),
+        ),
+        (
+            "onDrop",
+            "MosaicDropped",
+            "MosaicDropped",
+            format!("{component}MosaicDropEventArgs"),
+            drop_values.as_slice(),
+        ),
+    ] {
+        if let Some(handler) = register_drag_event_handler(
+            node,
+            prop,
+            format!("{x_name}_{suffix}"),
+            &args_type,
+            values,
+            ctx,
+        )? {
+            attrs.push_str(&format!(" {event}=\"{handler}\""));
+        }
+    }
+    let (style, spacing) = drag_control_style_attr(node, part_styles);
+    let children = emit_drag_content_children(
+        &node.children,
+        indent + 4,
+        spacing.as_deref(),
+        part_styles,
+        ctx,
+    )?;
+    ctx.needs_native_drag_support = true;
+    Ok(format!(
+        "{pad}<local:{component}MosaicDropTarget{attrs}{style}>\n{children}{pad}</local:{component}MosaicDropTarget>\n"
+    ))
+}
+
 /// `HostCheckbox` â†’ WinUI / WPF `<CheckBox>` per UI29-2.
 ///
 /// ## Property handling
@@ -6817,11 +8067,10 @@ fn emit_host_dialog_as_root(
 // PR-4: HostTable + section sub-tags
 // =====================================================================
 //
-// `HostTable` is the only kernel primitive WinUI 3 has no idiomatic
-// native control for. Per spec Â§5, the lowering is a hand-rolled
-// `<Grid>` (XAML's primitive!) with `Grid.RowDefinitions` driven by
-// the present section sub-tags and each section's `Row` children
-// becoming a `<StackPanel Orientation="Horizontal">`.
+// WinUI 3 has no core DataGrid. Canonical indexed dynamic tables keep
+// the hand-rolled Grid/ItemsRepeater visual tree but gain component-scoped
+// controls whose automation peers expose native Table/Grid semantics.
+// Other HostTable shapes retain the structural Grid fallback.
 //
 // Four section sub-tags are recognised:
 //   - HostTableColGroup â€” UI29 Â§2.1 (deferred to a later PR â€” see Â§5.2
@@ -6836,6 +8085,238 @@ fn emit_host_dialog_as_root(
 // to a fatal error here â€” XAML doesn't have a defensible fallback for
 // an extra `<Grid.RowDefinitions>` row).
 
+/// Canonical dynamic UI31/Grid structure that the XAML backend can expose as
+/// a real UI Automation table while retaining the authored cell subtree.
+///
+/// WinUI does not ship a core DataGrid, and the old Community Toolkit DataGrid
+/// is no longer a current dependency. The canonical path therefore keeps the
+/// existing Grid/ItemsRepeater visuals but wraps the table and its realized
+/// cells in component-scoped controls whose automation peers implement the
+/// Table/Grid and TableItem/GridItem provider contracts.
+#[derive(Clone, Copy)]
+struct XamlNativeTableShape<'a> {
+    head: &'a LayoutNode,
+    body: &'a LayoutNode,
+    header_slot: &'a str,
+    rows_slot: &'a str,
+}
+
+fn xaml_native_table_shape(host_table: &LayoutNode) -> Option<XamlNativeTableShape<'_>> {
+    if host_table.children.iter().any(|child| {
+        !matches!(
+            child.tag.as_str(),
+            "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+        )
+    }) {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    if header_row.tag != "Row" {
+        return None;
+    }
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    if header_cells.tag != "For" || header_cells.children.len() != 1 {
+        return None;
+    }
+
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    if body_rows.tag != "For" {
+        return None;
+    }
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    if body_row.tag != "Row" {
+        return None;
+    }
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    if body_cells.tag != "For" || body_cells.children.len() != 1 {
+        return None;
+    }
+
+    let header_slot = match find_prop_value(header_cells, "each")? {
+        LayoutPropValue::SlotRef(slot) => slot.as_str(),
+        _ => return None,
+    };
+    let rows_slot = match find_prop_value(body_rows, "each")? {
+        LayoutPropValue::SlotRef(slot) => slot.as_str(),
+        _ => return None,
+    };
+    let row_alias = find_prop_keyword(body_rows, "as")?;
+    let inner_collection = match find_prop_value(body_cells, "each")? {
+        LayoutPropValue::Keyword(binding) => binding.as_str(),
+        _ => return None,
+    };
+    if inner_collection != row_alias {
+        return None;
+    }
+
+    // Stable zero-based indices are required by IGridProvider/IGridItemProvider.
+    for loop_node in [header_cells, body_rows, body_cells] {
+        let alias = find_prop_keyword(loop_node, "as")?;
+        let index = find_prop_keyword(loop_node, "index")?;
+        if !is_safe_identifier(&kebab_to_pascal_case(alias))
+            || !is_safe_identifier(&kebab_to_pascal_case(index))
+        {
+            return None;
+        }
+    }
+
+    Some(XamlNativeTableShape {
+        head,
+        body,
+        header_slot,
+        rows_slot,
+    })
+}
+
+/// Returns whether a HostTable has the canonical dynamic structure lowered to
+/// component-scoped WinUI controls with native Table/Grid automation patterns.
+/// Capability analysis calls this same predicate so reporting cannot drift
+/// from the emitter's actual accessible path.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    xaml_native_table_shape(host_table).is_some()
+}
+
+fn emit_native_host_table(
+    node: &LayoutNode,
+    shape: XamlNativeTableShape<'_>,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let pad2 = " ".repeat(indent + 4);
+    let style = part_style_attr(node, part_styles);
+    let component = ctx.component_name;
+    let table_type = format!("{component}MosaicTable");
+    let header_path = ctx.slot_property_name(shape.header_slot);
+    let rows_path = ctx.slot_property_name(shape.rows_slot);
+    let flow_direction_attr = match find_prop_value(node, "dir") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let property = ctx.slot_property_name(slot);
+            if is_safe_identifier(&property) {
+                format!(
+                    " FlowDirection=\"{{x:Bind {}}}\"",
+                    ctx.slot_xbind_path(slot)
+                )
+            } else {
+                String::new()
+            }
+        }
+        Some(LayoutPropValue::Keyword(keyword)) => match keyword.as_str() {
+            "rtl" => " FlowDirection=\"RightToLeft\"".to_string(),
+            "ltr" => " FlowDirection=\"LeftToRight\"".to_string(),
+            _ => String::new(),
+        },
+        _ => String::new(),
+    };
+    let table_name = node
+        .part_name
+        .as_deref()
+        .map(|part| format!("{} table", part.replace('-', " ")))
+        .unwrap_or_else(|| "Data table".to_string());
+
+    ctx.native_table_counter += 1;
+    let table_id = ctx.native_table_counter;
+    let header_helper = format!("MosaicTableHeader{table_id}");
+    let cell_name_helper = format!("MosaicTableCellName{table_id}");
+    ctx.add_helper(HelperMethod {
+        name: header_helper.clone(),
+        parameters: vec![("column".to_string(), "int".to_string())],
+        return_type: "string".to_string(),
+        body: format!(
+            "{header_path} is {{ }} headers && column >= 0 && column < headers.Count \
+             ? Convert.ToString(headers[column]) ?? $\"Column {{column + 1}}\" \
+             : $\"Column {{column + 1}}\""
+        ),
+    });
+    ctx.add_helper(HelperMethod {
+        name: cell_name_helper.clone(),
+        parameters: vec![
+            ("header".to_string(), "string".to_string()),
+            ("value".to_string(), "object?".to_string()),
+            ("row".to_string(), "int".to_string()),
+        ],
+        return_type: "string".to_string(),
+        body: "$\"{header}, row {row + 1}: {Convert.ToString(value) ?? string.Empty}\"".to_string(),
+    });
+    ctx.needs_native_table_support = true;
+
+    let previous_table = ctx.native_table.take();
+    let mut out = String::new();
+    writeln!(
+        out,
+        "{pad}<local:{table_type} RowCount=\"{{x:Bind {rows_path}.Count}}\" ColumnCount=\"{{x:Bind {header_path}.Count}}\" AutomationProperties.Name=\"{}\"{flow_direction_attr}{style}>",
+        escape_xaml_attr(&table_name)
+    )
+    .unwrap();
+    writeln!(out, "{pad2}<Grid.RowDefinitions>").unwrap();
+    writeln!(out, "{pad2}    <RowDefinition Height=\"Auto\"/>").unwrap();
+    writeln!(out, "{pad2}    <RowDefinition Height=\"*\"/>").unwrap();
+    writeln!(out, "{pad2}</Grid.RowDefinitions>").unwrap();
+
+    ctx.native_table = Some(NativeTableEmission {
+        role: NativeTableRole::Header,
+        header_helper: header_helper.clone(),
+        cell_name_helper: cell_name_helper.clone(),
+        for_depth: 0,
+    });
+    out.push_str(&emit_host_table_section(
+        shape.head,
+        0,
+        indent + 4,
+        part_styles,
+        ctx,
+        false,
+    )?);
+
+    ctx.native_table = Some(NativeTableEmission {
+        role: NativeTableRole::Body,
+        header_helper,
+        cell_name_helper,
+        for_depth: 0,
+    });
+    out.push_str(&emit_host_table_section(
+        shape.body,
+        1,
+        indent + 4,
+        part_styles,
+        ctx,
+        true,
+    )?);
+    ctx.native_table = previous_table;
+
+    writeln!(out, "{pad}</local:{table_type}>").unwrap();
+    Ok(out)
+}
+
 /// `HostTable [name] { section sub-tags... }` per spec Â§5.
 fn emit_host_table(
     node: &LayoutNode,
@@ -6843,6 +8324,10 @@ fn emit_host_table(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    if let Some(shape) = xaml_native_table_shape(node) {
+        return emit_native_host_table(node, shape, indent, part_styles, ctx);
+    }
+
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
     let style = part_style_attr(node, part_styles);
@@ -7682,6 +9167,60 @@ mod tests {
     }
 
     #[test]
+    fn text_accessibility_metadata_lowers_to_automation_properties() {
+        let c = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Title",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Visible title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::SlotRef("spoken-title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-role".to_string(),
+                        value: LayoutPropValue::Keyword("heading".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let out = compile(&c, &l, &empty_style("Title")).xaml;
+        assert!(out.contains("AutomationProperties.Name=\"{x:Bind SpokenTitle}\""));
+        assert!(out.contains("AutomationProperties.HeadingLevel=\"Level2\""));
+
+        let hidden = layout_with_root(
+            "Hidden",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "a11y-role".to_string(),
+                    value: LayoutPropValue::Keyword("none".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let hidden_out = compile(
+            &component("Hidden", vec![], vec![]),
+            &hidden,
+            &empty_style("Hidden"),
+        )
+        .xaml;
+        assert!(hidden_out.contains("AutomationProperties.AccessibilityView=\"Raw\""));
+    }
+
+    #[test]
     fn styled_text_moves_box_paint_to_border() {
         let c = component("Foo", vec![], vec![]);
         let l = layout_with_root(
@@ -8028,6 +9567,183 @@ mod tests {
         );
     }
 
+    #[test]
+    fn drag_family_emits_native_pointer_keyboard_and_accessibility_runtime() {
+        let text_param = |name: &str| param(name, EmitPayloadType::Text);
+        let c = component(
+            "Board",
+            vec![
+                slot("drag-key", SlotType::Text, true),
+                slot("drag-kind", SlotType::Text, true),
+                slot("drag-label", SlotType::Text, true),
+                slot("drag-disabled", SlotType::Bool, true),
+                slot(
+                    "accepted-kinds",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+            ],
+            vec![
+                emit("onDragStart", vec![text_param("key"), text_param("kind")]),
+                emit(
+                    "onDragEnd",
+                    vec![
+                        text_param("key"),
+                        text_param("kind"),
+                        param("dropped", EmitPayloadType::Bool),
+                    ],
+                ),
+                emit("onDragEnter", vec![text_param("key"), text_param("kind")]),
+                emit("onDragLeave", vec![text_param("key"), text_param("kind")]),
+                emit(
+                    "onDropHover",
+                    vec![
+                        text_param("key"),
+                        text_param("kind"),
+                        text_param("targetKey"),
+                        text_param("position"),
+                    ],
+                ),
+                emit(
+                    "onDrop",
+                    vec![
+                        text_param("key"),
+                        text_param("kind"),
+                        text_param("targetKey"),
+                        text_param("position"),
+                    ],
+                ),
+            ],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.to_string(),
+            value,
+        };
+        let draggable = LayoutNode {
+            tag: "HostDraggable".to_string(),
+            part_name: Some("card".to_string()),
+            props: vec![
+                prop("drag-key", LayoutPropValue::SlotRef("drag-key".to_string())),
+                prop(
+                    "drag-kind",
+                    LayoutPropValue::SlotRef("drag-kind".to_string()),
+                ),
+                prop(
+                    "drag-label",
+                    LayoutPropValue::SlotRef("drag-label".to_string()),
+                ),
+                prop(
+                    "drag-disabled",
+                    LayoutPropValue::SlotRef("drag-disabled".to_string()),
+                ),
+                prop(
+                    "onDragStart",
+                    LayoutPropValue::EmitRef("onDragStart".to_string()),
+                ),
+                prop(
+                    "onDragEnd",
+                    LayoutPropValue::EmitRef("onDragEnd".to_string()),
+                ),
+            ],
+            children: vec![
+                row_with_text_cells(&["Card"]),
+                row_with_text_cells(&["Details"]),
+            ],
+        };
+        let target = LayoutNode {
+            tag: "HostDropTarget".to_string(),
+            part_name: Some("lane".to_string()),
+            props: vec![
+                prop("drop-key", LayoutPropValue::String("lane-a".to_string())),
+                prop(
+                    "accepts",
+                    LayoutPropValue::SlotRef("accepted-kinds".to_string()),
+                ),
+                prop(
+                    "onDragEnter",
+                    LayoutPropValue::EmitRef("onDragEnter".to_string()),
+                ),
+                prop(
+                    "onDragLeave",
+                    LayoutPropValue::EmitRef("onDragLeave".to_string()),
+                ),
+                prop(
+                    "onDropHover",
+                    LayoutPropValue::EmitRef("onDropHover".to_string()),
+                ),
+                prop("onDrop", LayoutPropValue::EmitRef("onDrop".to_string())),
+            ],
+            children: vec![draggable],
+        };
+
+        let style = StyleDef {
+            component_name: "Board".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![StyleProp {
+                    name: "gap".to_string(),
+                    value: "6".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: Vec::new(),
+            }],
+        };
+        let result = compile(&c, &layout_with_root("Board", target), &style);
+        for expected in [
+            "<local:BoardMosaicDropTarget",
+            "AllowDrop = true",
+            "DragEnter += OnDragEnter",
+            "DragOver += OnDragOver",
+            "Drop += OnDrop",
+            "<local:BoardMosaicDragSource",
+            "CanDrag = true",
+            "DragStarting += OnDragStarting",
+            "DropCompleted += OnDropCompleted",
+            "case VirtualKey.Space",
+            "case VirtualKey.Escape",
+            "AutomationNotificationKind.ActionCompleted",
+            "ConditionalWeakTable<Board, BoardMosaicDragScope>",
+            "_keyboardTarget.Accept(source, \"into\", keyboard: true)",
+            "Accept(source, position, keyboard: false)",
+            "args.Data.SetData(BoardMosaicDragRuntime.Format, DragKey)",
+            "new BoardEvent.Drop(args.Key, args.Kind, args.TargetKey, args.Position)",
+            "new BoardEvent.DragEnd(args.Key, args.Kind, args.Dropped)",
+        ] {
+            assert!(
+                result.xaml.contains(expected) || result.code_behind.contains(expected),
+                "missing {expected:?}\nXAML:\n{}\nC#:\n{}",
+                result.xaml,
+                result.code_behind
+            );
+        }
+        assert!(result
+            .xaml
+            .contains("Accepts=\"{x:Bind AcceptedKinds, Mode=OneWay}\""));
+        assert!(result
+            .xaml
+            .contains("DragDisabled=\"{x:Bind DragDisabled, Mode=OneWay}\""));
+        assert!(result
+            .xaml
+            .contains("<StackPanel Orientation=\"Vertical\" Spacing=\"6\">"));
+        let source_open = result
+            .xaml
+            .lines()
+            .find(|line| line.contains("<local:BoardMosaicDragSource"))
+            .expect("drag source opening tag");
+        assert!(!source_open.contains("Spacing="));
+    }
+
+    #[test]
+    fn non_drag_component_omits_drag_runtime() {
+        let result = compile(
+            &component("Plain", vec![], vec![]),
+            &layout_with_root("Plain", box_root()),
+            &empty_style("Plain"),
+        );
+        assert!(!result.code_behind.contains("MosaicDragRuntime"));
+        assert!(!result.code_behind.contains("DataTransfer"));
+    }
+
     /// PR-4 lowers HostTable. An empty HostTable (no section sub-tags)
     /// emits an empty `<Grid/>`. The PR-1 version of this test expected
     /// an `UnsupportedPrimitive` error; we now verify the empty-Grid
@@ -8088,6 +9804,104 @@ mod tests {
                 })
                 .collect(),
         }
+    }
+
+    fn canonical_native_table_node() -> LayoutNode {
+        host_table_node(
+            Some("sheet"),
+            vec![
+                section_node(
+                    "HostTableHead",
+                    vec![LayoutNode {
+                        tag: "Row".to_string(),
+                        part_name: None,
+                        props: Vec::new(),
+                        children: vec![for_node(
+                            LayoutPropValue::SlotRef("headers".to_string()),
+                            "header",
+                            Some("header-index"),
+                            vec![row_with_text_cells(&["heading"])],
+                        )],
+                    }],
+                ),
+                section_node(
+                    "HostTableBody",
+                    vec![for_node(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        Some("row-index"),
+                        vec![LayoutNode {
+                            tag: "Row".to_string(),
+                            part_name: None,
+                            props: Vec::new(),
+                            children: vec![for_node(
+                                LayoutPropValue::Keyword("row".to_string()),
+                                "cell",
+                                Some("column-index"),
+                                vec![row_with_text_cells(&["value"])],
+                            )],
+                        }],
+                    )],
+                ),
+            ],
+        )
+    }
+
+    #[test]
+    fn native_table_shape_and_emission_are_conservative() {
+        let canonical = canonical_native_table_node();
+        assert!(host_table_has_native_semantics(&canonical));
+
+        let c = component(
+            "Sheet",
+            vec![
+                slot(
+                    "headers",
+                    SlotType::List(Box::new(ListInnerType::Text)),
+                    true,
+                ),
+                slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+            ],
+            vec![],
+        );
+        let r = compile(
+            &c,
+            &layout_with_root("Sheet", canonical.clone()),
+            &empty_style("Sheet"),
+        );
+        assert!(r.xaml.contains("<local:SheetMosaicTable "));
+        assert!(r.xaml.contains("<local:SheetMosaicTableHeaderCell "));
+        assert!(r.xaml.contains("<local:SheetMosaicTableCell "));
+        assert!(r.code_behind.contains("IGridProvider, ITableProvider"));
+        assert!(r
+            .code_behind
+            .contains("IGridItemProvider, ITableItemProvider"));
+
+        let mut with_foot = canonical.clone();
+        with_foot
+            .children
+            .push(section_node("HostTableFoot", Vec::new()));
+        assert!(!host_table_has_native_semantics(&with_foot));
+
+        let mut missing_index = canonical.clone();
+        missing_index.children[0].children[0].children[0]
+            .props
+            .retain(|prop| prop.name != "index");
+        assert!(!host_table_has_native_semantics(&missing_index));
+
+        let mut wrong_inner_collection = canonical;
+        let inner = &mut wrong_inner_collection.children[1].children[0].children[0].children[0];
+        inner
+            .props
+            .iter_mut()
+            .find(|prop| prop.name == "each")
+            .expect("inner each prop")
+            .value = LayoutPropValue::Keyword("other-row".to_string());
+        assert!(!host_table_has_native_semantics(&wrong_inner_collection));
     }
 
     #[test]

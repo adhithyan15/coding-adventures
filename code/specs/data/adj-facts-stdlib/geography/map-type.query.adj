@@ -1,0 +1,14 @@
+% ============================================================================
+% map-type.query.adj — worked recall over the map-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this map
+% type show?" (direct) or "which type matches this description?"
+% (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "map-type.adj"
+
+? map_type(physical, $D)                                                              % expect shows_the_natural_landscape_features_of_earth (direct)
+? map_type($T, shows_the_shape_of_earths_surface)                                     % expect topographic (reverse)
+? map_type(weather, $D)                                                                % expect abstain -- a real map category the source covers, but its own section never states a single complete defining sentence the way the three tabled here do

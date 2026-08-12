@@ -18,7 +18,8 @@ use chief_of_staff_skill_package::{load_verified_skill, SkillPackageError};
 use chief_of_staff_skill_parser::ParsedSkill;
 use llm_gateway::{
     CompletionRequest, CompletionResponse, FinishReason, LlmClient, LlmError, Message,
-    ProviderIdentity, TokenUsage,
+    ModelToolCall, ModelToolChoice, ModelToolDefinition, ModelToolResult, ProviderIdentity,
+    TokenUsage, ToolCompletionOutput, ToolCompletionRequest,
 };
 
 /// MIME type used for Level 1 text responses.
@@ -95,6 +96,15 @@ pub struct LevelOneResponse {
     pub finish_reason: FinishReason,
     /// Provider-reported request latency in milliseconds.
     pub latency_ms: u64,
+}
+
+/// One provider-neutral outcome from a Level 1 tool-aware model turn.
+#[derive(Clone, Debug)]
+pub enum LevelOneToolTurn {
+    /// The model finished with text that may be published.
+    Final(LevelOneResponse),
+    /// The model requested one exact offered tool call.
+    ToolCall(ModelToolCall),
 }
 
 /// Result of polling one input message.
@@ -319,6 +329,41 @@ impl<'a> LevelOneSkillRuntime<'a> {
         message: &str,
         input_content_type: &str,
     ) -> Result<LevelOneResponse, LevelOneRuntimeError> {
+        let completion = self
+            .client
+            .complete(self.completion_request(message, input_content_type))?;
+        response_from_completion(completion)
+    }
+
+    /// Complete one tool-aware turn with an exact catalog and prior results.
+    pub fn respond_with_tools(
+        &self,
+        message: &str,
+        input_content_type: &str,
+        tools: Vec<ModelToolDefinition>,
+        results: Vec<ModelToolResult>,
+    ) -> Result<LevelOneToolTurn, LevelOneRuntimeError> {
+        let response = self.client.complete_with_tools(ToolCompletionRequest {
+            completion: self.completion_request(message, input_content_type),
+            tools,
+            choice: ModelToolChoice::Auto,
+            results,
+        })?;
+        match response.output {
+            ToolCompletionOutput::FinalText(text) => response_from_completion(CompletionResponse {
+                text,
+                model: response.model,
+                usage: response.usage,
+                finish_reason: response.finish_reason,
+                provider_id: response.provider_id,
+                latency_ms: response.latency_ms,
+            })
+            .map(LevelOneToolTurn::Final),
+            ToolCompletionOutput::ToolCall(call) => Ok(LevelOneToolTurn::ToolCall(call)),
+        }
+    }
+
+    fn completion_request(&self, message: &str, input_content_type: &str) -> CompletionRequest {
         let mut metadata = HashMap::new();
         metadata.insert("agent".to_string(), self.skill.manifest.agent.clone());
         metadata.insert("skill_title".to_string(), self.skill.title.clone());
@@ -326,7 +371,7 @@ impl<'a> LevelOneSkillRuntime<'a> {
             "input_content_type".to_string(),
             input_content_type.to_string(),
         );
-        let completion = self.client.complete(CompletionRequest {
+        CompletionRequest {
             model: self.config.model.clone(),
             system: Some(self.skill.instructions.clone()),
             messages: vec![Message::user(message)],
@@ -335,8 +380,7 @@ impl<'a> LevelOneSkillRuntime<'a> {
             stop_sequences: Vec::new(),
             seed: Some(0),
             metadata,
-        })?;
-        response_from_completion(completion)
+        }
     }
 
     /// Poll and process at most one channel message.
@@ -581,6 +625,70 @@ mod tests {
         assert_eq!(response.text, "Rain is likely; bring an umbrella.");
         assert_eq!(response.model, MODEL);
         assert_eq!(runtime.skill().manifest.agent, "weather-reporter");
+    }
+
+    #[test]
+    fn respond_with_tools_sends_exact_catalog_and_prior_results() {
+        let skill = parse_skill(SKILL).unwrap();
+        let tools = vec![ModelToolDefinition {
+            name: "smart_home.list_entities".to_string(),
+            description: "List normalized entities".to_string(),
+            input_schema: serde_json::json!({
+                "type": "object",
+                "additionalProperties": false
+            }),
+        }];
+        let results = vec![ModelToolResult {
+            call: ModelToolCall {
+                call_id: "call-0".to_string(),
+                name: "smart_home.list_entities".to_string(),
+                arguments: serde_json::json!({}),
+            },
+            output: serde_json::json!({"entities": []}),
+            is_error: false,
+        }];
+        let request = ToolCompletionRequest {
+            completion: CompletionRequest {
+                model: MODEL.to_string(),
+                system: Some(skill.instructions.clone()),
+                messages: vec![Message::user("Seattle")],
+                temperature: 0.0,
+                max_tokens: Some(1_024),
+                stop_sequences: Vec::new(),
+                seed: Some(0),
+                metadata: HashMap::from([
+                    ("agent".to_string(), "weather-reporter".to_string()),
+                    ("skill_title".to_string(), "Weather Reporter".to_string()),
+                    ("input_content_type".to_string(), "text/plain".to_string()),
+                ]),
+            },
+            tools: tools.clone(),
+            choice: ModelToolChoice::Auto,
+            results: results.clone(),
+        };
+        let expected_call = ModelToolCall {
+            call_id: "call-1".to_string(),
+            name: "smart_home.list_entities".to_string(),
+            arguments: serde_json::json!({}),
+        };
+        let client = MockLlmClient::new()
+            .with_response(
+                RequestFingerprint::for_tool_completion(&request),
+                MockResponse::ToolCall(expected_call.clone()),
+            )
+            .with_strict_default();
+        let runtime =
+            LevelOneSkillRuntime::new(skill, &client, LevelOneRuntimeConfig::deterministic(MODEL))
+                .unwrap();
+
+        match runtime
+            .respond_with_tools("Seattle", "text/plain", tools, results)
+            .unwrap()
+        {
+            LevelOneToolTurn::ToolCall(call) => assert_eq!(call, expected_call),
+            LevelOneToolTurn::Final(_) => panic!("expected the scripted tool call"),
+        }
+        assert_eq!(client.call_count(), 1);
     }
 
     #[test]

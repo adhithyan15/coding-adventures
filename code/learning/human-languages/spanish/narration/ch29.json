@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 29,
-  "title": "Telling Time",
+  "title": "Cl-, Pl-, Fl- to Ll-",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2a23e6b112a7d818",
+  "sourceHash": "fnv1a64:1996b2a69f451bd4",
   "lessons": [
     {
-      "id": "ES-C29-la-hora",
-      "sequence": 1490,
-      "title": "la hora — Spanish's barely-changed Latin hour",
-      "headword": "la hora",
-      "romanization": "la hora",
-      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
+      "id": "ES-C57-ll",
+      "sequence": 545,
+      "title": "cl-, pl-, fl- becomes ll-",
+      "headword": "cl-, pl-, fl- → ll-",
+      "romanization": "cl-, pl-, fl- → ll-",
+      "gloss": "three Latin clusters that all collapsed into one Spanish sound — and you have been saying one of them since you learned your name",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:829c80cb6c072acc",
+      "sourceHash": "fnv1a64:9309a50a02b51830",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,83 @@
             },
             {
               "kind": "speech",
-              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
+              "text": "Say \"my name is.\" (Me llamo.) That ll- is the second sound law of this book, and you have been using it since your third chapter without being told."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: hora",
+          "type": "grammar",
+          "title": "Grammar Lens: three clusters, one destination",
           "segments": [
             {
               "kind": "speech",
-              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
+              "text": "Latin cl-, pl- and fl- all became Spanish ll-."
+            },
+            {
+              "kind": "speech",
+              "text": "Llamar is Latin clāmāre, \"to cry out.\" English took the same root untouched: claim, clamour, proclaim, exclaim."
+            },
+            {
+              "kind": "speech",
+              "text": "llamar from clāmāre becomes claim, clamour."
+            },
+            {
+              "kind": "speech",
+              "text": "And it happened to all three clusters, which is what makes it a law rather than a one-off:"
             },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "word",
-                "what happened"
+                "Spanish",
+                "from",
+                "English cousin"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 6,
               "utterances": [
-                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
-                "language: French. word: heure. what happened: inherited, but worn down further.",
-                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
-                "language: English. word: hour. what happened: inherited via French, silent h."
+                "Spanish: llamar. from: clāmāre. English cousin: claim, clamour.",
+                "Spanish: llave. from: clāvem. English cousin: clavicle, clef, conclave.",
+                "Spanish: llover. from: plovere. English cousin: pluvial.",
+                "Spanish: lleno. from: plēnum. English cousin: plenty, plenary.",
+                "Spanish: llano. from: plānum. English cousin: plain, plane.",
+                "Spanish: llama. from: flamma. English cousin: flame, inflammable."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three different starting points arriving at one sound is unusual, and it is useful precisely because it is untidy: an unfamiliar Spanish word in ll- has three English shapes to try, and one of them is very often right."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Son las and telling time",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
+              "text": "You now hold three sound laws, and they are not three facts. They are three instances of the same thing."
             },
             {
               "kind": "speech",
-              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
+              "text": "-ct- becomes -ch- — noctem becomes noche, and English kept nocturnal."
             },
             {
               "kind": "speech",
-              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
+              "text": "f- becomes h- — fabulārī becomes hablar, and English kept fable."
+            },
+            {
+              "kind": "speech",
+              "text": "cl-, pl-, fl- becomes ll- — clāmāre becomes llamar, and English kept clamour."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one has the same shape: Spanish inherited the word and wore it down; English borrowed it later and left it closer to the Latin. That is why the English cousin so often looks more Latin than the Spanish does, which feels backwards until you see why."
+            },
+            {
+              "kind": "speech",
+              "text": "So the laws are not trivia about the past. They are a conversion table between the Spanish in front of you and the English already in your head, and they will keep working on words no course will ever teach you."
             }
           ]
         },
@@ -99,29 +129,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
+              "instruction": "\"llamar\" then \"clamour\"; \"llave\" then \"clavicle\"; \"llama\" then \"flame\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
+              "source": "[YOU SAY: \"llamar\" then \"clamour\"; \"llave\" then \"clavicle\"; \"llama\" then \"flame\"]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-ll-claim",
+              "prompt": "Which English words are llamar's cousins?",
+              "assesses": [
+                "ES-SOUND-CLUSTER-TO-LL",
+                "ES-LEX-LLAMO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "claim and clamour",
+                "claim",
+                "clamour, exclaim, proclaim"
+              ],
+              "feedback": {
+                "correct": "Llamar and claim are the same root.",
+                "incorrect": "Claim, clamour, exclaim — all from clamare."
+              }
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-ll-three",
+              "prompt": "Which three Latin clusters all became ll-?",
+              "assesses": [
+                "ES-SOUND-CLUSTER-TO-LL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "cl-, pl-, fl-",
+                "cl pl fl"
+              ],
+              "feedback": {
+                "correct": "Three shapes to try on any unfamiliar ll- word.",
+                "incorrect": "cl-, pl- and fl-."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-ll-decode",
+              "prompt": "You meet llave and have never seen it. Try the three clusters and decode it.",
+              "assesses": [
+                "ES-SOUND-CLUSTER-TO-LL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "clavem, key, as in clavicle",
+                "key",
+                "clavicle, clef"
+              ],
+              "feedback": {
+                "correct": "Clavicle is literally a little key.",
+                "incorrect": "Try cl-: clavem. Key — the same root as clavicle and clef."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-ll-shape",
+              "prompt": "What do all three sound laws have in common?",
+              "assesses": [
+                "ES-SOUND-F-TO-H",
+                "ES-SOUND-LATIN-CLUSTER-TO-CH"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "spanish wore the word down and english borrowed it closer to latin",
+                "spanish inherited and eroded it; english borrowed it later"
+              ],
+              "feedback": {
+                "correct": "Which is why the English cousin often looks more Latin than the Spanish.",
+                "incorrect": "Spanish inherited and eroded the word; English borrowed it later and kept it nearer the Latin."
+              }
             }
           ]
         },
@@ -138,7 +226,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
+              "text": "Which three clusters became ll-? (cl-, pl-, fl-.) What is llamar's English cousin? (Claim.) And why does the English usually look more Latin? (Spanish inherited and wore it down; English borrowed it later.)"
             }
           ]
         }

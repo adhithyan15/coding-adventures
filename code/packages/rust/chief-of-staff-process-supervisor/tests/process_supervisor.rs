@@ -1,6 +1,8 @@
 use chief_of_staff_host_control_protocol::{
-    ChannelBinding, ChannelBindingAccess, DataPlaneFailure, DataPlaneRequest, DataPlaneResponse,
-    LaunchBindings, LevelOneModelBinding, RequestId,
+    ChannelBinding, ChannelBindingAccess, CompletionFinishReason, CompletionProvider,
+    CompletionUsage, DataPlaneFailure, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
+    LevelOneModelBinding, ModelToolCall, ModelToolDefinition, ModelToolResult, RequestId,
+    ToolCompletionOutput, ToolCompletionResult,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -161,6 +163,39 @@ fn uuid_v7(last: u8) -> [u8; 16] {
     bytes[8] = 0x80;
     bytes[15] = last;
     bytes
+}
+
+fn tool_completion_result() -> ToolCompletionResult {
+    ToolCompletionResult {
+        output: ToolCompletionOutput::ToolCall(ModelToolCall {
+            call_id: "call-1".to_string(),
+            name: "smart_home.list_entities".to_string(),
+            arguments: serde_json::json!({}),
+        }),
+        model: "test-model".to_string(),
+        provider: CompletionProvider {
+            vendor: "fixture".to_string(),
+            model_family: "weather".to_string(),
+            model_version: "v1".to_string(),
+            endpoint: None,
+        },
+        usage: CompletionUsage {
+            input_tokens: 1,
+            output_tokens: 1,
+            cached_tokens: 0,
+        },
+        finish_reason: CompletionFinishReason::Stop,
+        latency_ms: 1,
+        polyfill_used: false,
+    }
+}
+
+fn model_tools() -> Vec<ModelToolDefinition> {
+    vec![ModelToolDefinition {
+        name: "smart_home.list_entities".to_string(),
+        description: "List normalized entities".to_string(),
+        input_schema: serde_json::json!({"type": "object"}),
+    }]
 }
 
 fn keyring() -> PackageKeyring {
@@ -352,7 +387,7 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
 
     let deadline = Instant::now() + Duration::from_secs(5);
     let mut operations = Vec::new();
-    while operations.len() < 4 {
+    while operations.len() < 7 {
         if let Some(request) = supervisor.pending_data_plane_request(&host_name).unwrap() {
             let response = match request {
                 DataPlaneRequest::Receive { id, .. } => {
@@ -382,6 +417,31 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
                         failure: DataPlaneFailure::Unavailable,
                     }
                 }
+                DataPlaneRequest::ListModelTools { id } => {
+                    operations.push("list_model_tools");
+                    DataPlaneResponse::ModelToolsListed {
+                        id,
+                        tools: model_tools(),
+                    }
+                }
+                DataPlaneRequest::CompleteWithTools { id, .. } => {
+                    operations.push("complete_with_tools");
+                    DataPlaneResponse::ToolCompleted {
+                        id,
+                        result: Box::new(tool_completion_result()),
+                    }
+                }
+                DataPlaneRequest::ExecuteTool { id, call } => {
+                    operations.push("execute_tool");
+                    DataPlaneResponse::ToolExecuted {
+                        id,
+                        result: Box::new(ModelToolResult {
+                            call: *call,
+                            output: serde_json::json!({"entities": []}),
+                            is_error: false,
+                        }),
+                    }
+                }
             };
             supervisor.respond_data_plane(&host_name, response).unwrap();
         } else {
@@ -391,7 +451,15 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
     }
     assert_eq!(
         operations,
-        ["receive", "publish", "acknowledge", "complete"]
+        [
+            "receive",
+            "publish",
+            "acknowledge",
+            "complete",
+            "list_model_tools",
+            "complete_with_tools",
+            "execute_tool"
+        ]
     );
     supervisor.stop(&host_name).unwrap();
     assert_eq!(supervisor.pending_data_plane_request(&host_name), Ok(None));
@@ -439,6 +507,31 @@ impl HostDataPlaneDispatcher for TestDataPlaneDispatcher {
                     failure: DataPlaneFailure::Unavailable,
                 }
             }
+            DataPlaneRequest::ListModelTools { id } => {
+                self.operations.lock().unwrap().push("list_model_tools");
+                DataPlaneResponse::ModelToolsListed {
+                    id: *id,
+                    tools: model_tools(),
+                }
+            }
+            DataPlaneRequest::CompleteWithTools { id, .. } => {
+                self.operations.lock().unwrap().push("complete_with_tools");
+                DataPlaneResponse::ToolCompleted {
+                    id: *id,
+                    result: Box::new(tool_completion_result()),
+                }
+            }
+            DataPlaneRequest::ExecuteTool { id, call } => {
+                self.operations.lock().unwrap().push("execute_tool");
+                DataPlaneResponse::ToolExecuted {
+                    id: *id,
+                    result: Box::new(ModelToolResult {
+                        call: (**call).clone(),
+                        output: serde_json::json!({"entities": []}),
+                        is_error: false,
+                    }),
+                }
+            }
         }
     }
 }
@@ -460,7 +553,7 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     let deadline = Instant::now() + Duration::from_secs(5);
     loop {
         supervisor.inspect(&registration).unwrap();
-        if dispatcher.operations.lock().unwrap().len() == 4 {
+        if dispatcher.operations.lock().unwrap().len() == 7 {
             break;
         }
         assert!(Instant::now() < deadline, "timed out waiting for dispatch");
@@ -468,7 +561,15 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     }
     assert_eq!(
         *dispatcher.operations.lock().unwrap(),
-        ["receive", "publish", "acknowledge", "complete"]
+        [
+            "receive",
+            "publish",
+            "acknowledge",
+            "complete",
+            "list_model_tools",
+            "complete_with_tools",
+            "execute_tool"
+        ]
     );
     assert_eq!(
         supervisor

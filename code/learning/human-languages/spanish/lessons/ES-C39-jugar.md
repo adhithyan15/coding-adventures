@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C39-jugar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1830
-chapter: 39
+sequence: 2110
+chapter: 165
 type: word
 headword: jugar
 gloss: to play — from Latin's word for joking, and the only verb in the language that breaks u to ue

@@ -1,0 +1,18 @@
+% ============================================================================
+% synonyms.query.adj — a worked recall over the word-synonyms library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a synonym of
+% happy?": it states no fact of its own — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the `synonym`
+% rows and returns the synonym + the table's source/locator/trust. A word the
+% table does not carry abstains honestly — the engine never invents a synonym.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli synonyms.query.adj
+% ============================================================================
+
+import "synonyms.adj"
+
+? synonym(happy, $Word)        % expect cheerful
+? synonym(quick, $Word)        % expect fast
+? synonym(purple, $Word)       % expect abstain — no synonym is shipped for purple

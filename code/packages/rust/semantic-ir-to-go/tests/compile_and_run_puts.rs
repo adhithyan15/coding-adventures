@@ -1,5 +1,5 @@
-//! End-to-end proof for the `puts` builtin (Ruby semantics) in the Go
-//! backend.
+//! End-to-end proof for `puts`-shaped `__sys_write__` calls (Ruby semantics)
+//! in the Go backend.
 //!
 //! Ruby's `puts` is the most common output method, and its semantics are
 //! subtle enough that a *shape* assertion in a unit test is not enough — we
@@ -10,9 +10,11 @@
 //!     puts
 //!     puts [1, 2, 3]
 //!
-//! emits Go, runs it with `go run`, and asserts stdout is **exactly**
+//! — which, since SIR28 §2, lowers to `__sys_write__(stdout, "per_value",
+//! true, ...)` rather than a bare `BuiltinCall("puts", ...)` — emits Go,
+//! runs it with `go run`, and asserts stdout is **exactly**
 //! `hello\n\n1\n2\n3\n` — the Ruby reference output (a line for `hello`, a
-//! blank line for the no-arg `puts`, then each array element on its own
+//! blank line for the no-arg call, then each array element on its own
 //! line).
 //!
 //! Gates on `go` being available; logs a skip rather than failing when the
@@ -42,12 +44,21 @@ fn var(name: &str) -> Expr {
     Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
 }
 
-/// `puts(args…)` as an effectful statement (MayPrint, matching the frontend).
+/// `puts(args…)` as an effectful statement (MayPrint, matching the
+/// frontend), lowered to SIR28 §2's `__sys_write__` shape:
+/// `__sys_write__(stdout, "per_value", true, args…)` — one newline per
+/// value, arrays flattened, matching Ruby's `puts`.
 fn puts_stmt(args: Vec<Expr>) -> Stmt {
+    let mut sys_args = vec![
+        Expr::StrLit { value: "stdout".into(), span: s() },
+        Expr::StrLit { value: "per_value".into(), span: s() },
+        Expr::BoolLit { value: true, span: s() },
+    ];
+    sys_args.extend(args);
     Stmt::ExprStmt {
         expr: Expr::BuiltinCall {
-            name: "puts".into(),
-            args,
+            name: "__sys_write__".into(),
+            args: sys_args,
             effects: EffectSet::PURE.with(Effect::MayPrint),
             span: s(),
         },
@@ -65,7 +76,7 @@ fn demo_module() -> Module {
 
     Module {
         name: "puts_demo".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings, Feature::ConsoleIO]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {
@@ -114,7 +125,7 @@ fn cyclic_module() -> Module {
 
     Module {
         name: "puts_cyclic".into(),
-        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings]),
+        manifest: FeatureManifest::from_features(&[Feature::Sequences, Feature::Strings, Feature::ConsoleIO]),
         imports: vec![],
         exports: vec![],
         functions: vec![Function {

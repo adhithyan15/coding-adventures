@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-como-esta
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 310
-chapter: 4
+chapter: 8
 type: phrase
 headword: ¿cómo está usted?
 gloss: how are you? — assemble the formal question from cómo, estar, and usted
@@ -35,7 +35,7 @@ reviews_of: [ES-C04-estar-estado, ES-C03-como, ES-C03-tu-usted]
 
 [PAUSE 2s] Everything you've built this chapter now snaps together into one
 question. You already met **cómo** ("how") and the **tú / usted** choice back in
-Chapter 3; you just learned **estar**. Assemble them.
+when you first met them; you just learned **estar**. Assemble them.
 
 ## The word, taken apart — assembling the phrase
 <!-- hl-knowledge: introduces=[ES-LEX-COMO-ESTA-USTED]; assesses=[] -->

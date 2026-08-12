@@ -1,34 +1,49 @@
-Spanish, chapter 28: Noon and Midnight.
+Spanish, chapter 28: F to H --- Why the H Says Nothing.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-mediodía, medianoche — noon and midnight, spelled out in full.
+f becomes h — why the h says nothing.
 
 Warm-up.
 [pause 2 seconds]
-Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does.
+Since your first chapter you have known that the Spanish h is silent. You were told it as a fact. Here is the reason, and it turns the fact into a tool.
 
-The two words, taken apart.
-[a table of 2 rows, read aloud]
-Spanish: mediodía. from Latin: medius diēs. literally: "mid-day" (medio "middle" + día "day").
-Spanish: medianoche. from Latin: media nox. literally: "mid-night" (media "middle" + noche "night").
-Both halves are fully alive, ordinary Spanish words on their own: medio/media ("middle" — cousin of English medium, mid, middle) and día/noche ("day/night," words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for "night" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for "day" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept "night" transparent and lost "day," while Spanish kept both.
-They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:
-Es mediodía. — "It is noon." Es medianoche. — "It is midnight."
-(Fun aside: English noon comes from Latin nōna hōra, "the ninth hour" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent "mid-day" instead.)
+Grammar Lens: a letter standing on a grave.
+Where Spanish has a silent h-, Latin very often had an f-.
+You already hold the proof. Hablar comes from Latin fabulārī — and English took the same root and kept the f: fable, fabulous.
+hablar from fabulārī becomes fable.
+The sound did not vanish overnight. Latin f- weakened to a breathy h, the breath faded, and eventually nothing was left — but the spelling had already settled, so Spanish went on writing a letter it had stopped saying. The silent h is a gravestone. It marks where a sound used to be.
+Which makes it a decoder. Meet an unfamiliar Spanish word beginning with h-, put an f back, and look for the English:
+[a table of 5 rows, read aloud]
+Spanish: hijo. put the f back: fijo from fīlium. English friend: filial, affiliate.
+Spanish: hierro. put the f back: fierro from ferrum. English friend: ferrous, ferric.
+Spanish: harina. put the f back: farina. English friend: farinaceous.
+Spanish: higo. put the f back: figo from fīcus. English friend: fig.
+Spanish: hoja. put the f back: foja from folia. English friend: foliage, portfolio.
+Not one of those five words has been taught in this book, and you can read all five.
+
+Why it's said this way.
+Two honest limits, because a decoder you trust too far will mislead you.
+Not every h is a dead f. Hola is not, and hasta came from Arabic.
+And not every Latin f became h. Fácil, fuerte and forma kept theirs; the change left f alone before ue and r.
+So this is a lead, not a guarantee. Put the f back and believe it when an English word appears.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "mediodía" (noon), "medianoche" (midnight)]
+[your turn — say: "hablar" then "fable" — the same word, one letter apart]
 [pause 8 seconds for the answer]
-[your turn — say: break them — "medio + día", "media + noche" — both halves still ordinary words]
+[your turn — say: "hijo, hierro, hoja" and put the f back on each]
 [pause 8 seconds for the answer]
-[your turn — say: "Es mediodía. Es medianoche." — they stand in for the hour]
-[pause 8 seconds for the answer]
-[your turn — say: the contrast — French kept "night" (nuit) but wore "day" down to a fossil (-di)]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 12 seconds]
+Why is the Spanish h silent?
+[question — say your answer, then pause 10 seconds]
+Which English word is hablar's friend, once you put the f back?
+[question — say your answer, then pause 12 seconds]
+You meet hierro and have never seen it. Decode it.
+[question — say your answer, then pause 10 seconds]
+Is every Spanish h a dead f?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do mediodía and medianoche literally mean, and from what Latin? ("Mid-day" from medius diēs; "mid-night" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media "middle," día/noche "day/night.") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for "day" is actually jour.) How do you say "it is noon"? (Es mediodía.)
+Why is the h silent? (It stands where an f used to be.) What do you do with an unfamiliar h- word? (Put the f back and look for the English.) Is it always right? (No — a lead, not a guarantee.)

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 30,
-  "title": "The Weather",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6148ab69b50fe394",
+  "title": "Es- --- the Vowel Spanish Put in Front",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c5a9557f3e0522ab",
   "lessons": [
     {
-      "id": "ES-C30-el-tiempo",
-      "sequence": 1500,
-      "title": "el tiempo — one word doing two jobs",
-      "headword": "el tiempo",
-      "romanization": "el tiempo",
-      "gloss": "the one noun that covers both \"time\" and \"weather\" — because Latin tempus already did",
+      "id": "ES-C57-es-inicial",
+      "sequence": 546,
+      "title": "es- + consonant",
+      "headword": "es- + consonant",
+      "romanization": "es- + consonant",
+      "gloss": "the little e- Spanish put in front of words that started with two consonants — and why English kept them bare",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:287d2a03bb8678d5",
+      "sourceHash": "fnv1a64:7f42925c71818167",
       "notice": null,
       "blocks": [
         {
@@ -35,34 +35,8 @@
             },
             {
               "kind": "speech",
-              "text": "Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking \"what time does it make?\" — because tiempo does not split \"time\" from \"weather\" the way English does."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: el tiempo",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el tiempo = both \"time\" and \"weather\" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed."
+              "text": "Say \"to be\" — the one about how and where. (Estar.) Now say \"to study.\" (Estudiar.)"
             },
-            {
-              "kind": "speech",
-              "text": "English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed."
-            },
-            {
-              "kind": "speech",
-              "text": "How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is \"I have no time,\" ¿qué tiempo hace? is \"what's the weather like?\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
             {
               "kind": "pause",
               "seconds": 1,
@@ -70,259 +44,61 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el tiempo\" — time, or weather, depending on context",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el tiempo\" — time, or weather, depending on context]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿qué tiempo hace?\" — what's the weather like?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿qué tiempo hace?\" — what's the weather like?]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tiempo\" then English \"tempo, temporal\" — the tempus family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tiempo\" then English \"tempo, temporal\" — the *tempus* family]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
               "kind": "speech",
-              "text": "What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only \"time.\") Next: how to actually answer ¿qué tiempo hace?"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C30-hace-calor",
-      "sequence": 1510,
-      "title": "hace calor, hace frío, hace sol — the weather Spanish makes",
-      "headword": "hace calor, hace frío, hace sol",
-      "romanization": "hace calor, hace frío, hace sol",
-      "gloss": "the three weather words Spanish reports with hacer — \"it makes heat,\" \"it makes cold,\" \"it makes sun\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:465eaf6ee7b3b25d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, \"to make.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: calor, frío, sol",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "calor from Latin calor, \"heat, warmth\" becomes English calorie, caloric, cauldron."
-            },
-            {
-              "kind": "speech",
-              "text": "frío from Latin frigidus, \"cold\" (the middle syllable syncopated away) becomes English frigid, refrigerate."
-            },
-            {
-              "kind": "speech",
-              "text": "sol from Latin sol, \"sun,\" unchanged becomes English solar, solstice, parasol."
-            },
-            {
-              "kind": "speech",
-              "text": "Here is the part worth noticing: all three are nouns, not adjectives. Calor is \"heat,\" not \"hot.\" That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one."
-            },
-            {
-              "kind": "speech",
-              "text": "hace calor — \"it's hot,\" literally \"it makes heat\" hace frío — \"it's cold,\" literally \"it makes cold\" hace sol — \"it's sunny,\" literally \"it makes sun\"."
-            },
-            {
-              "kind": "speech",
-              "text": "French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into \"it is hot\" with an adjective."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hace calor. hace frío. hace sol.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hace calor. hace frío. hace sol.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the literal reading — \"it makes heat, it makes cold, it makes sun\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the literal reading — \"it makes heat, it makes cold, it makes sun\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"calor\" then English \"calorie\"; \"frío\" then \"refrigerate\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"calor\" then English \"calorie\"; \"frío\" then \"refrigerate\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"it's hot,\" \"it's cold,\" \"it's sunny.\" (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a \"to be\" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C30-llueve",
-      "sequence": 1520,
-      "title": "llueve — the one weather word that will not join hacer",
-      "headword": "llueve",
-      "romanization": "llueve",
-      "gloss": "rain refuses the hacer pattern and brings its own verb — and its ll- is the sound change you already met in llamar",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:51189e6ba928a1c4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own."
+              "text": "You have known both since your first chapters. Today they explain each other."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: rain brings its own verb",
+          "title": "Grammar Lens: a word cannot start like that",
           "segments": [
             {
               "kind": "speech",
-              "text": "llueve = \"it's raining.\" Not hace lluvia, not \"it makes rain\" — just llueve, a single word that is a complete sentence."
+              "text": "Latin words beginning s + a consonant grew an e- in front."
             },
             {
               "kind": "speech",
-              "text": "It comes from llover, \"to rain,\" and llover is impersonal: it has no subject at all, not even a \"it\" you could point to. Compare the two shapes side by side:"
+              "text": "Latin was happy to start a word with st-, sp- or sc-. Spanish was not — the mouth wants a vowel there — so it put one in."
+            },
+            {
+              "kind": "speech",
+              "text": "stāre becomes estar, studēre becomes estudiar."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing was added to the meaning. A vowel was added to the front, because the alternative was a beginning Spanish could not say."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the very same Latin words and never needed the vowel:"
             },
             {
               "kind": "table",
               "headers": [
-                "pattern",
-                "example",
-                "what carries the weather"
+                "Spanish",
+                "from",
+                "English kept it bare"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 5,
               "utterances": [
-                "pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).",
-                "pattern: dedicated verb. example: llueve. what carries the weather: the verb itself."
+                "Spanish: estar. from: stāre. English kept it bare: state, stay, status.",
+                "Spanish: estudiar. from: studēre. English kept it bare: study, student, studio.",
+                "Spanish: escuela. from: schola. English kept it bare: school, scholar.",
+                "Spanish: especial. from: speciālis. English kept it bare: special, species.",
+                "Spanish: espíritu. from: spīritus. English kept it bare: spirit."
               ]
             },
             {
               "kind": "speech",
-              "text": "English does exactly the same split, which makes it easy to feel: you say \"it is hot\" with an adjective, but \"it rains\" with a verb built for the job. Spanish just draws the line in the same place."
+              "text": "So the rule runs in both directions, and the backwards one is the useful one: take the e- off the front, and an English word is often standing there."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: llover",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "llover from Latin pluere, \"to rain.\" Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, \"key\") and llama ( from flamma, \"flame\"). Latin's cl-, fl- and pl- clusters all became Spanish ll-."
-            },
-            {
-              "kind": "speech",
-              "text": "So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -333,31 +109,64 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿qué tiempo hace?\" then \"hace calor. hace frío. hace sol.\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿qué tiempo hace?\" then \"hace calor. hace frío. hace sol.\"]"
+              "kind": "speech",
+              "text": "Take the e- off and say what you see."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"llueve\" — one word, a whole sentence, no hacer",
+              "instruction": "estación becomes stación becomes station",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"llueve\" — one word, a whole sentence, no *hacer*]"
+              "source": "[YOU SAY: *estación* → **st**ación → **station**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the family — \"llamar, llave, llama, llover\" — four Latin clusters, one Spanish ll-",
+              "instruction": "estudiante becomes studiante becomes student",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"llamar, llave, llama, llover\" — four Latin clusters, one Spanish *ll-*]"
+              "source": "[YOU SAY: *estudiante* → **st**udiante → **student**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "espacio becomes spacio becomes space",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *espacio* → **sp**acio → **space**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Estación took two rules at once: the e- came off the front, and the -ción you learned seven chapters ago became -tion at the back. That is what these rules are for — they stack."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A word you would expect to fit, and it does not."
+            },
+            {
+              "kind": "speech",
+              "text": "Español looks like a perfect example. It is not. Its Es- is not an added vowel — it is what is left of Latin Hispānia, whose H was already silent. España is Hispania with the h gone, not spaña with an e glued on."
+            },
+            {
+              "kind": "speech",
+              "text": "So check before you claim one. The rule is about words that began with two consonants in Latin. When the e was there all along, there is nothing to take off."
             }
           ]
         },
@@ -368,13 +177,23 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)"
+              "text": "Say the rule in your own words."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then take the e- off estilo and say the English word you find. (Style.)"
             }
           ]
         }

@@ -1,0 +1,14 @@
+% ============================================================================
+% noun-type.query.adj — worked recall over the noun-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this noun
+% type?" (direct) or "which noun type matches this definition?" (reverse)
+% — it states no fact of its own — it only `import`s the grounded table
+% and asks binding queries.
+% ============================================================================
+
+import "noun-type.adj"
+
+? noun_type(common_noun, $D)                                        % expect generic_name_of_an_item_in_a_class_or_group (direct)
+? noun_type($T, cannot_be_perceived_by_the_senses)                  % expect abstract_noun (reverse)
+? noun_type(possessive_noun, $D)                                     % expect abstain -- a real noun type the source mentions, but not one of the three tabled here

@@ -366,6 +366,9 @@ pub enum BuildError {
     /// A `pkg::P::C` reference in a component layout could not be resolved or
     /// inlined before backend emission.
     PackageReferenceError { component: String, error: String },
+    /// A manifest-declared token palette could not be read, parsed, or safely
+    /// layered with higher-precedence package/application values.
+    TokenPalette { path: PathBuf, error: String },
     /// The strict profile found known degradations. The diagnostic JSON is
     /// written, but no application/backend artifacts are emitted.
     NativeIncomplete {
@@ -373,6 +376,9 @@ pub enum BuildError {
         degradation_count: usize,
         report_path: PathBuf,
     },
+    /// A requested Rust application library cannot be bundled into the
+    /// selected project shell.
+    InvalidRuntimeLibrary { path: PathBuf, reason: String },
     /// A read/write/mkdir call failed. The string is `io::Error::to_string()`
     /// because we don't want to leak `std::io::Error`'s `Send`-only quirks
     /// into our public API.
@@ -408,6 +414,9 @@ impl std::fmt::Display for BuildError {
                     "package reference error for component '{component}': {error}"
                 )
             }
+            BuildError::TokenPalette { path, error } => {
+                write!(f, "token palette '{}': {error}", path.display())
+            }
             BuildError::NativeIncomplete {
                 backend,
                 degradation_count,
@@ -416,6 +425,11 @@ impl std::fmt::Display for BuildError {
                 f,
                 "backend {backend:?} is not native-complete: {degradation_count} degradation(s); report: {}",
                 report_path.display()
+            ),
+            BuildError::InvalidRuntimeLibrary { path, reason } => write!(
+                f,
+                "invalid Rust application runtime library '{}': {reason}",
+                path.display()
             ),
             BuildError::UnsafeName { kind, name, reason } => write!(
                 f,
@@ -450,6 +464,12 @@ pub struct ComposedComponent {
     pub style: mosstyle_compiler::StyleDef,
 }
 
+struct StyleCompositionOptions<'a> {
+    theme: Option<&'a str>,
+    tokens: &'a mosstyle_compiler::TokenOverrides,
+    backend: Option<Backend>,
+}
+
 /// Compile MIL, MLL, and MSL sources into one package-composed component.
 ///
 /// Qualified `pkg::P::C` layout nodes are resolved recursively before
@@ -464,15 +484,58 @@ pub fn compose_component(
     package_search_paths: &[PathBuf],
     theme: Option<&str>,
 ) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_tokens(
+        component,
+        mil_src,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        theme,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+/// Compile and compose a component with application-wide token overrides.
+pub fn compose_component_with_tokens(
+    component: &str,
+    mil_src: &str,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_backend_tokens(
+        component,
+        mil_src,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        &StyleCompositionOptions {
+            theme,
+            tokens,
+            backend: None,
+        },
+    )
+}
+
+fn compose_component_with_backend_tokens(
+    component: &str,
+    mil_src: &str,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    style_options: &StyleCompositionOptions<'_>,
+) -> Result<ComposedComponent, BuildError> {
     let model =
         mosmodel_compiler::compile(mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
-    compose_component_with_model(
+    compose_component_with_model_and_style_options(
         component,
         model,
         mll_src,
         msl_src,
         package_search_paths,
-        theme,
+        style_options,
     )
 }
 
@@ -488,13 +551,56 @@ pub fn compose_component_with_model(
     package_search_paths: &[PathBuf],
     theme: Option<&str>,
 ) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_model_and_tokens(
+        component,
+        model,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        theme,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+/// Complete package composition with application-wide token overrides.
+pub fn compose_component_with_model_and_tokens(
+    component: &str,
+    model: mosmodel_compiler::CompileOutput,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_model_and_style_options(
+        component,
+        model,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        &StyleCompositionOptions {
+            theme,
+            tokens,
+            backend: None,
+        },
+    )
+}
+
+fn compose_component_with_model_and_style_options(
+    component: &str,
+    model: mosmodel_compiler::CompileOutput,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    style_options: &StyleCompositionOptions<'_>,
+) -> Result<ComposedComponent, BuildError> {
     let mut layout = moslayout_compiler::compile(mll_src, Some(&model.descriptor_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let dependency_style_parts = collect_dependency_style_parts(
         component,
         &layout.def,
         package_search_paths,
-        theme,
+        style_options,
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
@@ -504,8 +610,12 @@ pub fn compose_component_with_model(
         &model.descriptor_json,
         package_search_paths,
     )?;
-    let own_style = mosstyle_compiler::compile(msl_src, Some(&layout.part_map_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let own_style = mosstyle_compiler::compile_with_tokens(
+        msl_src,
+        Some(&layout.part_map_json),
+        style_options.tokens,
+    )
+    .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let style = merge_dependency_styles(own_style.def, dependency_style_parts);
 
     Ok(ComposedComponent {
@@ -519,6 +629,205 @@ pub fn compose_component_with_model(
 // Public entry point
 // ===========================================================================
 
+fn runtime_file_name(path: &Path) -> Result<&'static str, BuildError> {
+    let extension = path
+        .extension()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    match extension.as_str() {
+        "dylib" => Ok("libmosaic_app.dylib"),
+        "so" => Ok("libmosaic_app.so"),
+        "dll" => Ok("mosaic_app.dll"),
+        _ => Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "expected a target cdylib ending in .dylib, .so, or .dll".to_string(),
+        }),
+    }
+}
+
+fn compose_runtime_destination(path: &Path) -> Result<(&'static str, &'static str), BuildError> {
+    let file_name = runtime_file_name(path)?;
+    let platform = match file_name {
+        "libmosaic_app.dylib" => "macos",
+        "libmosaic_app.so" => "linux",
+        "mosaic_app.dll" => "windows",
+        _ => unreachable!("runtime_file_name returned an unknown conventional name"),
+    };
+    Ok((platform, file_name))
+}
+
+fn validate_runtime_library_selection(
+    opts: &BuildOptions,
+    runtime_library: Option<&Path>,
+) -> Result<(), BuildError> {
+    let Some(path) = runtime_library else {
+        return Ok(());
+    };
+    if !matches!(
+        opts.backend,
+        Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
+    ) {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason:
+                "runtime bundling is currently implemented only for the Compose, Flutter, Qt, SwiftUI, and XAML backends"
+                    .to_string(),
+        });
+    }
+    if !opts.emit_project {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "--runtime-library requires --emit-project".to_string(),
+        });
+    }
+    let file_name = runtime_file_name(path)?;
+    if opts.backend == Backend::Xaml && file_name != "mosaic_app.dll" {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "the XAML backend requires a target cdylib ending in .dll".to_string(),
+        });
+    }
+    if opts.backend == Backend::SwiftUI && file_name != "libmosaic_app.dylib" {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "the SwiftUI backend requires a target cdylib ending in .dylib".to_string(),
+        });
+    }
+    if !path.is_file() {
+        return Err(BuildError::InvalidRuntimeLibrary {
+            path: path.to_path_buf(),
+            reason: "selected path is not a readable regular file".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn project_shell_requires_runtime(
+    profile: Option<BuildProfile>,
+    runtime_library: Option<&Path>,
+) -> bool {
+    profile == Some(BuildProfile::NativeComplete) || runtime_library.is_some()
+}
+
+fn install_compose_runtime_library(
+    source: &Path,
+    backend_dir: &Path,
+) -> Result<PathBuf, BuildError> {
+    let (platform, file_name) = compose_runtime_destination(source)?;
+    let target = backend_dir
+        .join("app-resources")
+        .join(platform)
+        .join(file_name);
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
+fn install_qt_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    let target = backend_dir.join("runtime").join(runtime_file_name(source)?);
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
+fn install_flutter_runtime_library(
+    source: &Path,
+    backend_dir: &Path,
+) -> Result<PathBuf, BuildError> {
+    let target = backend_dir.join("runtime").join(runtime_file_name(source)?);
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
+fn build_flutter_runtime_hook(source: &Path) -> Result<String, BuildError> {
+    let file_name = runtime_file_name(source)?;
+    let target_guard = match file_name {
+        "libmosaic_app.dylib" => "targetOS != OS.macOS && targetOS != OS.iOS",
+        "libmosaic_app.so" => "targetOS != OS.linux && targetOS != OS.android",
+        "mosaic_app.dll" => "targetOS != OS.windows",
+        _ => unreachable!("runtime_file_name returned an unknown conventional name"),
+    };
+    let target_family = match file_name {
+        "libmosaic_app.dylib" => "Apple",
+        "libmosaic_app.so" => "Linux or Android",
+        "mosaic_app.dll" => "Windows",
+        _ => unreachable!("runtime_file_name returned an unknown conventional name"),
+    };
+    Ok(format!(
+        concat!(
+            "// AUTO-GENERATED by Mosaic. Edits will be overwritten on next emit.\n",
+            "import 'package:code_assets/code_assets.dart';\n",
+            "import 'package:hooks/hooks.dart';\n\n",
+            "void main(List<String> args) async {{\n",
+            "  await build(args, (input, output) async {{\n",
+            "    if (!input.config.buildCodeAssets) return;\n",
+            "    final targetOS = input.config.code.targetOS;\n",
+            "    if ({target_guard}) {{\n",
+            "      throw UnsupportedError(\n",
+            "        'The selected Mosaic runtime targets {target_family}, not ${{targetOS.name}}.',\n",
+            "      );\n",
+            "    }}\n",
+            "    final runtime = input.packageRoot.resolve('runtime/{file_name}');\n",
+            "    output.dependencies.add(runtime);\n",
+            "    output.assets.code.add(\n",
+            "      CodeAsset(\n",
+            "        package: input.packageName,\n",
+            "        name: 'mosaic_host.dart',\n",
+            "        linkMode: DynamicLoadingBundled(),\n",
+            "        file: runtime,\n",
+            "      ),\n",
+            "    );\n",
+            "  }});\n",
+            "}}\n",
+        ),
+        target_guard = target_guard,
+        target_family = target_family,
+        file_name = file_name,
+    ))
+}
+
+fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    if runtime_file_name(source)? != "mosaic_app.dll" {
+        unreachable!("XAML runtime suffix was validated before emission");
+    }
+    let target = backend_dir.join("mosaic_app.dll");
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
+fn install_swiftui_runtime_library(
+    source: &Path,
+    backend_dir: &Path,
+) -> Result<PathBuf, BuildError> {
+    if runtime_file_name(source)? != "libmosaic_app.dylib" {
+        unreachable!("SwiftUI runtime suffix was validated before emission");
+    }
+    let target = backend_dir
+        .join("Sources/App/Runtime")
+        .join("libmosaic_app.dylib");
+    let bytes = fs::read(source).map_err(|error| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason: format!("cannot read selected file: {error}"),
+    })?;
+    write_file(&target, &bytes)?;
+    Ok(target)
+}
+
 /// Analyze and build a package under an explicit completion profile.
 ///
 /// Unlike the legacy [`build_package`] entry point, this always writes a
@@ -529,7 +838,44 @@ pub fn build_package_with_profile(
     opts: &BuildOptions,
     profile: BuildProfile,
 ) -> Result<BuildResult, BuildError> {
-    let report = analyze_package_degradations(opts, profile)?;
+    build_package_with_profile_and_runtime(opts, profile, None)
+}
+
+/// Analyze and build a package while bundling one target-specific Rust
+/// application engine into the generated native project.
+///
+/// Compose, Flutter, Qt, SwiftUI, and XAML are the supported packaging
+/// backends. Compose, Flutter, and Qt accept a target `.dylib`, `.so`, or
+/// `.dll`; SwiftUI requires a `.dylib`, and XAML requires a `.dll`. The emitted
+/// copy receives Mosaic's conventional runtime name.
+pub fn build_package_with_profile_and_runtime(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+) -> Result<BuildResult, BuildError> {
+    build_package_with_profile_runtime_and_tokens(
+        opts,
+        profile,
+        runtime_library,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+/// Analyze and build a package with one token palette shared by root and
+/// dependency component styles.
+pub fn build_package_with_profile_runtime_and_tokens(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<BuildResult, BuildError> {
+    validate_runtime_library_selection(opts, runtime_library)?;
+    let report = analyze_package_degradations_with_runtime_and_tokens(
+        opts,
+        profile,
+        runtime_library,
+        tokens,
+    )?;
     let backend_dir = opts.output_root.join(opts.backend.dir_name());
     let report_path = backend_dir.join("mosaic-degradations.json");
 
@@ -543,7 +889,7 @@ pub fn build_package_with_profile(
         });
     }
 
-    let mut result = build_package_inner(opts, Some(profile))?;
+    let mut result = build_package_inner(opts, Some(profile), runtime_library, tokens)?;
     write_degradation_report(&report_path, &report)?;
     result.artifacts.push(report_path);
     Ok(result)
@@ -554,8 +900,35 @@ pub fn analyze_package_degradations(
     opts: &BuildOptions,
     profile: BuildProfile,
 ) -> Result<DegradationReport, BuildError> {
+    analyze_package_degradations_with_runtime(opts, profile, None)
+}
+
+/// Return the deterministic capability report for a build with an explicitly
+/// selected target Rust application library.
+pub fn analyze_package_degradations_with_runtime(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+) -> Result<DegradationReport, BuildError> {
+    analyze_package_degradations_with_runtime_and_tokens(
+        opts,
+        profile,
+        runtime_library,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+fn analyze_package_degradations_with_runtime_and_tokens(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<DegradationReport, BuildError> {
+    validate_runtime_library_selection(opts, runtime_library)?;
     let manifest_path = opts.package_root.join("mosaic-package.toml");
     let manifest = parse_manifest(&manifest_path)?;
+    let package_tokens =
+        load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
     validate_package_name(&manifest.package.name)?;
     for component in &manifest.components.exports {
         validate_component_name(component)?;
@@ -563,7 +936,6 @@ pub fn analyze_package_degradations(
     if let Some(theme) = &opts.theme {
         validate_theme_name(theme)?;
     }
-
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut degradations = Vec::new();
@@ -581,7 +953,7 @@ pub fn analyze_package_degradations(
         });
     }
 
-    let runtime_required_shell = profile == BuildProfile::NativeComplete
+    let runtime_required_shell = project_shell_requires_runtime(Some(profile), runtime_library)
         && matches!(
             opts.backend,
             Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
@@ -601,6 +973,40 @@ pub fn analyze_package_degradations(
             primitive: None,
             reason: "generated project shells still allow deterministic sample props when the Rust runtime is unavailable"
                 .to_string(),
+        });
+    }
+
+    if profile == BuildProfile::NativeComplete
+        && opts.emit_project
+        && matches!(
+            opts.backend,
+            Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
+        )
+        && runtime_library.is_none()
+    {
+        degradations.push(Degradation {
+            code: "runtime.library-not-bundled".to_string(),
+            backend: opts.backend.dir_name().to_string(),
+            component: manifest
+                .components
+                .exports
+                .first()
+                .cloned()
+                .unwrap_or_else(|| "*".to_string()),
+            variant: None,
+            layout_path: "$project".to_string(),
+            primitive: None,
+            reason: format!(
+                "native-complete {} artifacts must bundle the selected Rust application engine; pass --runtime-library <target cdylib>",
+                match opts.backend {
+                    Backend::Compose => "Compose",
+                    Backend::Flutter => "Flutter",
+                    Backend::Qt => "Qt",
+                    Backend::SwiftUI => "SwiftUI",
+                    Backend::Xaml => "XAML",
+                    _ => unreachable!("runtime bundling degradation is native-backend scoped"),
+                }
+            ),
         });
     }
 
@@ -625,13 +1031,18 @@ pub fn analyze_package_degradations(
                 Some(path) => read_to_string(&path)?,
                 None => format!("style {component} {{ }}"),
             };
-            let composed = compose_component(
+            let style_options = StyleCompositionOptions {
+                theme: opts.theme.as_deref(),
+                tokens: &package_tokens,
+                backend: Some(opts.backend),
+            };
+            let composed = compose_component_with_backend_tokens(
                 component,
                 &mil_src,
                 &mll_src,
                 &msl_src,
                 &package_search_paths,
-                opts.theme.as_deref(),
+                &style_options,
             )?;
             collect_native_degradations(
                 opts.backend,
@@ -671,11 +1082,35 @@ fn collect_native_degradations(
 ) {
     let backend_name = backend.dir_name();
     let reason = match node.tag.as_str() {
-        "HostDraggable" | "HostDropTarget" if backend.is_native() => Some((
+        moslayout_compiler::CHILD_SLOT_MOUNT_TAG if backend.is_native() => Some((
+            "composition.child-slot-parameter-unimplemented",
+            "authored children expand through package references, but standalone exported component parameters for child slots are not implemented on this backend",
+        )),
+        "HostDraggable" | "HostDropTarget"
+            if backend.is_native()
+                && !(matches!(
+                    backend,
+                    Backend::Flutter | Backend::Compose | Backend::SwiftUI
+                )
+                    || (backend == Backend::Qt
+                        && mosaic_emit_qt::pipeline::host_drag_drop_has_native_semantics(node))
+                    || (backend == Backend::Xaml
+                        && mosaic_emit_xaml::pipeline::host_drag_drop_has_native_semantics(node))) => Some((
             "interaction.drag-drop-inert",
             "the backend lowers this interactive primitive to a non-interactive container",
         )),
-        "HostTable" if backend.is_native() => Some((
+        "HostTable"
+            if backend.is_native()
+                && !((backend == Backend::Flutter
+                    && mosaic_emit_flutter::pipeline::host_table_has_native_semantics(node))
+                    || (backend == Backend::Compose
+                        && mosaic_emit_compose::pipeline::host_table_has_native_semantics(node))
+                    || (backend == Backend::Qt
+                        && mosaic_emit_qt::pipeline::host_table_has_native_semantics(node))
+                    || (backend == Backend::SwiftUI
+                        && mosaic_emit_swiftui::pipeline::host_table_has_native_semantics(node))
+                    || (backend == Backend::Xaml
+                        && mosaic_emit_xaml::pipeline::host_table_has_native_semantics(node))) => Some((
             "accessibility.table-semantics-missing",
             "the backend preserves the visual rows and cells but does not expose native table semantics",
         )),
@@ -734,6 +1169,74 @@ fn ignored_native_property(
     property: &LayoutProp,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        ("Text", "a11y-label")
+            if backend.is_native()
+                && !matches!(
+                    &property.value,
+                    LayoutPropValue::String(_) | LayoutPropValue::SlotRef(_)
+                ) =>
+        {
+            Some((
+                "accessibility.text-label-unsupported",
+                "native Text accessible names must be a string literal or slot reference",
+            ))
+        }
+        ("Text", "a11y-role")
+            if backend.is_native()
+                && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "heading" || value == "none") =>
+        {
+            Some((
+                "accessibility.text-role-unsupported",
+                "native Text supports the portable heading and none accessibility roles",
+            ))
+        }
+        ("Text", "a11y-hidden")
+            if backend.is_native()
+                && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "true" || value == "false") =>
+        {
+            Some((
+                "accessibility.text-hidden-unsupported",
+                "native Text accessibility hiding must be a static true or false value",
+            ))
+        }
+        ("HostDialog", "open") if backend == Backend::Xaml => Some((
+            "property.dialog-open-host-required",
+            "the XAML emitter documents the authored open state but requires application code-behind to show and hide the native dialog",
+        )),
+        ("HostDialog", "dismiss-on-backdrop")
+            if backend == Backend::Xaml
+                && matches!(&property.value, LayoutPropValue::Keyword(value) if value == "false") =>
+        {
+            Some((
+                "property.dialog-dismiss-policy-ignored",
+                "the XAML emitter cannot enforce dismiss-on-backdrop false and leaves native dismissal behavior to application code-behind",
+            ))
+        }
+        ("HostDialog", "onOpen")
+            if matches!(backend, Backend::SwiftUI | Backend::Xaml) =>
+        {
+            Some((
+                "event.dialog-open-ignored",
+                "the backend does not dispatch the authored HostDialog onOpen event",
+            ))
+        }
+        ("HostDialog", "onClose")
+            if backend == Backend::SwiftUI && node_has_keyword(node, "modal", "false") =>
+        {
+            Some((
+                "event.dialog-close-ignored",
+                "the SwiftUI popover lowering does not dispatch the authored HostDialog onClose event",
+            ))
+        }
+        ("HostLink", "onActivate")
+            if matches!(backend, Backend::SwiftUI | Backend::Xaml)
+                && !node_has_keyword(node, "external", "false") =>
+        {
+            Some((
+                "event.link-activate-ignored",
+                "the backend opens the external URL but does not dispatch the authored HostLink onActivate event",
+            ))
+        }
         ("HostCheckbox", "indeterminate")
             if matches!(
                 backend,
@@ -760,11 +1263,15 @@ fn ignored_native_property(
     }
 }
 
-fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
-    !node.props.iter().any(|prop| {
-        prop.name == "external"
-            && matches!(&prop.value, LayoutPropValue::Keyword(value) if value == "false")
+fn node_has_keyword(node: &LayoutNode, property_name: &str, expected: &str) -> bool {
+    node.props.iter().any(|prop| {
+        prop.name == property_name
+            && matches!(&prop.value, LayoutPropValue::Keyword(value) if value == expected)
     })
+}
+
+fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
+    !node_has_keyword(node, "external", "false")
 }
 
 /// Build a package's artifact for a single backend.
@@ -781,12 +1288,22 @@ fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
 ///   build into a stable dist directory and treat a half-written tree as
 ///   the same outcome as a successful rebuild that subsequently failed.
 pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
-    build_package_inner(opts, None)
+    build_package_with_tokens(opts, &mosstyle_compiler::TokenOverrides::default())
+}
+
+/// Build a package with application-wide token overrides.
+pub fn build_package_with_tokens(
+    opts: &BuildOptions,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<BuildResult, BuildError> {
+    build_package_inner(opts, None, None, tokens)
 }
 
 fn build_package_inner(
     opts: &BuildOptions,
     profile: Option<BuildProfile>,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
@@ -827,6 +1344,8 @@ fn build_package_inner(
     if let Some(theme) = &opts.theme {
         validate_theme_name(theme)?;
     }
+    let package_tokens =
+        load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
 
     // ----- 3. Prepare the output directory ---------------------------------
     //
@@ -852,6 +1371,11 @@ fn build_package_inner(
     // listed separately in `BuildResult.artifacts`.
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
+    let style_options = StyleCompositionOptions {
+        theme: opts.theme.as_deref(),
+        tokens: &package_tokens,
+        backend: Some(opts.backend),
+    };
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
@@ -861,7 +1385,7 @@ fn build_package_inner(
             let component_artifacts = compile_one_component(
                 component,
                 variant.as_deref(),
-                opts.theme.as_deref(),
+                &style_options,
                 &src_dir,
                 &backend_dir,
                 opts.backend,
@@ -914,13 +1438,16 @@ fn build_package_inner(
         if let Some(first_component) = components_built.first() {
             let shell_artifacts = emit_project_shell(ProjectShellOptions {
                 component: first_component,
+                components: &components_built,
                 src_dir: &src_dir,
                 backend_dir: &backend_dir,
                 backend: opts.backend,
                 package_name: &manifest.package.name,
                 package_search_paths: &package_search_paths,
                 theme: opts.theme.as_deref(),
+                tokens: &package_tokens,
                 profile,
+                runtime_library,
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -932,6 +1459,21 @@ fn build_package_inner(
     let host_asset_artifacts =
         install_host_assets(&manifest, opts.backend, &opts.package_root, &backend_dir)?;
     artifacts.extend(host_asset_artifacts);
+
+    // The explicitly selected engine is the final write to its conventional
+    // destination. A package-owned generic host asset cannot silently replace
+    // the runtime the caller chose at the packaging boundary.
+    if let Some(source) = runtime_library {
+        let target = match opts.backend {
+            Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
+            Backend::Flutter => install_flutter_runtime_library(source, &backend_dir)?,
+            Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
+            Backend::SwiftUI => install_swiftui_runtime_library(source, &backend_dir)?,
+            Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
+            _ => unreachable!("runtime library selection was validated before emission"),
+        };
+        artifacts.push(target);
+    }
 
     Ok(BuildResult {
         artifacts,
@@ -1119,6 +1661,52 @@ fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
     }
 }
 
+/// Load one package's declared token defaults and place `higher` over them.
+///
+/// Palettes are scoped while walking the package graph: a dependency's
+/// defaults style that dependency and its descendants, while the consuming
+/// package and explicit application palette remain higher precedence. The
+/// manifest parser has already rejected absolute and traversal paths.
+fn load_package_tokens(
+    package_root: &Path,
+    manifest: &MosaicPackage,
+    backend: Option<Backend>,
+    higher: &mosstyle_compiler::TokenOverrides,
+) -> Result<mosstyle_compiler::TokenOverrides, BuildError> {
+    let Some(relative_path) = manifest.styles.token_palette.as_deref() else {
+        return Ok(higher.clone());
+    };
+    let relative = safe_manifest_relative_path("token palette", relative_path)?;
+    let path = package_root.join(relative);
+    let canonical_root =
+        fs::canonicalize(package_root).map_err(|error| BuildError::TokenPalette {
+            path: package_root.to_path_buf(),
+            error: format!("cannot resolve package root: {error}"),
+        })?;
+    let canonical_path = fs::canonicalize(&path).map_err(|error| BuildError::TokenPalette {
+        path: path.clone(),
+        error: format!("cannot resolve file: {error}"),
+    })?;
+    if !canonical_path.starts_with(&canonical_root) {
+        return Err(unsafe_path_err("token palette", relative_path));
+    }
+    let source = fs::read_to_string(&canonical_path).map_err(|error| BuildError::TokenPalette {
+        path: path.clone(),
+        error: format!("cannot read file: {error}"),
+    })?;
+    let defaults = mosstyle_compiler::parse_token_palette(&source, backend.map(Backend::dir_name))
+        .map_err(|error| BuildError::TokenPalette {
+            path: path.clone(),
+            error: error.to_string(),
+        })?;
+    defaults
+        .overlay(higher)
+        .map_err(|error| BuildError::TokenPalette {
+            path,
+            error: format!("cannot layer palette: {error}"),
+        })
+}
+
 /// UI32-M: emit the per-backend project shell for the package's first
 /// component. Returns the list of side-file paths written into
 /// `backend_dir`.
@@ -1135,25 +1723,31 @@ fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
 /// Unifying the two paths is queued as UI32-M.1.
 struct ProjectShellOptions<'a> {
     component: &'a str,
+    components: &'a [String],
     src_dir: &'a Path,
     backend_dir: &'a Path,
     backend: Backend,
     package_name: &'a str,
     package_search_paths: &'a [PathBuf],
     theme: Option<&'a str>,
+    tokens: &'a mosstyle_compiler::TokenOverrides,
     profile: Option<BuildProfile>,
+    runtime_library: Option<&'a Path>,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
     let ProjectShellOptions {
         component,
+        components,
         src_dir,
         backend_dir,
         backend,
         package_name,
         package_search_paths,
         theme,
+        tokens,
         profile,
+        runtime_library,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -1182,13 +1776,18 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         format!("style {component} {{ }}")
     };
 
-    let composed = compose_component(
+    let shell_style_options = StyleCompositionOptions {
+        theme,
+        tokens,
+        backend: Some(backend),
+    };
+    let composed = compose_component_with_backend_tokens(
         component,
         &mil_src,
         &mll_src,
         &msl_src,
         package_search_paths,
-        theme,
+        &shell_style_options,
     )?;
     let mosmodel_out = composed.model;
     let layout_out = composed.layout;
@@ -1332,9 +1931,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::Flutter => {
+            let bundle_runtime = runtime_library.is_some();
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project: true,
-                require_runtime: profile == Some(BuildProfile::NativeComplete),
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 ..Default::default()
             };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -1345,17 +1945,28 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let pubspec =
-                    mosaic_app_bindings::flutter_pubspec_with_runtime_binding(&proj.pubspec_yaml);
+                let pubspec = if bundle_runtime {
+                    mosaic_app_bindings::flutter_pubspec_with_bundled_runtime(&proj.pubspec_yaml)
+                } else {
+                    mosaic_app_bindings::flutter_pubspec_with_runtime_binding(&proj.pubspec_yaml)
+                };
+                let runtime_distribution = if let Some(source) = runtime_library {
+                    let file_name = runtime_file_name(source)?;
+                    format!(
+                        "The selected target Rust engine is copied to `runtime/{file_name}` and registered by `hook/build.dart` as a bundled Dart code asset. Flutter packages and resolves it for the target platform; no environment variable, hard-coded executable path, or global library install is required. Bundled-runtime projects require Flutter 3.38+ and Dart 3.10+."
+                    )
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or rely on the platform's conventional `mosaic_app` library name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
+                };
                 let readme = format!(
-                    "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard Dart FFI binding. Set \
-                     `MOSAIC_APP_LIBRARY` to the Rust application library path, or package \
-                     the conventional `mosaic_app` library for the target platform. The \
-                     generated host owns the application handle, event sequence, snapshots, \
-                     returned buffers, and teardown.\n",
-                    proj.readme
+                    "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard Dart FFI binding. {} The generated host owns the application handle, event sequence, snapshots, returned buffers, and teardown.\n",
+                    proj.readme, runtime_distribution
                 );
-                let flat: [(&str, &str); 2] = [("pubspec.yaml", &pubspec), ("README.md", &readme)];
+                let flat: [(&str, &str); 3] = [
+                    ("pubspec.yaml", &pubspec),
+                    ("analysis_options.yaml", &proj.analysis_options_yaml),
+                    ("README.md", &readme),
+                ];
                 for (rel, body) in flat {
                     let p = backend_dir.join(rel);
                     write_file(&p, body.as_bytes())?;
@@ -1367,33 +1978,45 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 }
                 write_file(&nested, proj.main_dart.as_bytes())?;
                 written.push(nested);
+                let widget_test = backend_dir.join("test/widget_test.dart");
+                if let Some(parent) = widget_test.parent() {
+                    create_dir_all(parent)?;
+                }
+                write_file(&widget_test, proj.widget_test_dart.as_bytes())?;
+                written.push(widget_test);
                 // Dart package imports may not escape `lib/`. Keep the
-                // top-level component artifact for Mosaic package consumers,
-                // and mirror it into the runnable Flutter shell so
-                // `lib/main.dart` can import it as a package-local library.
-                let component_source =
-                    read_to_string(&backend_dir.join(format!("{component}.dart")))?;
-                let component_copy = backend_dir.join(format!("lib/{component}.dart"));
-                write_file(&component_copy, component_source.as_bytes())?;
-                written.push(component_copy);
+                // top-level artifacts for Mosaic package consumers, and
+                // mirror every export into the runnable Flutter package so
+                // `dart analyze lib` type-checks the complete package rather
+                // than only the first component mounted by `main.dart`.
+                for exported_component in components {
+                    let component_source =
+                        read_to_string(&backend_dir.join(format!("{exported_component}.dart")))?;
+                    let component_copy = backend_dir.join(format!("lib/{exported_component}.dart"));
+                    write_file(&component_copy, component_source.as_bytes())?;
+                    written.push(component_copy);
+                }
                 let host = backend_dir.join("lib/mosaic_host.dart");
                 if let Some(parent) = host.parent() {
                     create_dir_all(parent)?;
                 }
-                let runtime_binding = mosaic_app_bindings::flutter_runtime_binding();
+                let runtime_binding = if bundle_runtime {
+                    mosaic_app_bindings::flutter_runtime_binding_with_bundled_asset()
+                } else {
+                    mosaic_app_bindings::flutter_runtime_binding()
+                };
                 write_file(&host, runtime_binding.as_bytes())?;
                 written.push(host);
+                if let Some(source) = runtime_library {
+                    let hook = backend_dir.join("hook/build.dart");
+                    write_file(&hook, build_flutter_runtime_hook(source)?.as_bytes())?;
+                    written.push(hook);
+                }
             }
         }
         Backend::Compose => {
-            let require_runtime = profile == Some(BuildProfile::NativeComplete);
-            let r = mosaic_emit_compose::pipeline::from_pipeline(
-                &mosmodel_out.component,
-                &layout_out.def,
-                &style_def,
-            )
-            .map_err(|e| pipeline_emit_err(component, e))?;
-            let component_source = r.output;
+            let require_runtime = project_shell_requires_runtime(profile, runtime_library);
+            let bundle_runtime = runtime_library.is_some();
             let flat: [(&str, String); 3] = [
                 (
                     "settings.gradle.kts",
@@ -1401,11 +2024,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 ),
                 (
                     "build.gradle.kts",
-                    build_compose_build_gradle_kts(package_name),
+                    build_compose_build_gradle_kts(package_name, bundle_runtime),
                 ),
                 (
                     "README.md",
-                    build_compose_readme(package_name, component, require_runtime),
+                    build_compose_readme(package_name, component, require_runtime, bundle_runtime),
                 ),
             ];
             for (rel, body) in flat {
@@ -1422,9 +2045,18 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )?;
             written.push(main_nested);
 
-            let component_nested = backend_dir.join(format!("src/main/kotlin/{component}.kt"));
-            write_file(&component_nested, component_source.as_bytes())?;
-            written.push(component_nested);
+            // A package shell is also the package's native compile boundary.
+            // Keep every exported component in Gradle's source set, even
+            // though Main.kt mounts only the first export. Otherwise a broken
+            // sibling artifact can ship because Gradle never sees it.
+            for exported_component in components {
+                let component_source =
+                    read_to_string(&backend_dir.join(format!("{exported_component}.kt")))?;
+                let component_nested =
+                    backend_dir.join(format!("src/main/kotlin/{exported_component}.kt"));
+                write_file(&component_nested, component_source.as_bytes())?;
+                written.push(component_nested);
+            }
 
             let host_nested = backend_dir.join("src/main/kotlin/MosaicRuntimeHost.kt");
             write_file(
@@ -1434,7 +2066,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             written.push(host_nested);
         }
         Backend::Qt => {
-            let require_runtime = profile == Some(BuildProfile::NativeComplete);
+            let require_runtime = project_shell_requires_runtime(profile, runtime_library);
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime,
@@ -1454,27 +2086,40 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 )?;
             }
             if let Some(proj) = r.project {
+                let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
+                let cmake_lists = qt_cmake_with_package_exports(
+                    &proj.cmake_lists,
+                    component,
+                    components,
+                    bundled_runtime,
+                );
                 let runtime_binding = mosaic_app_bindings::qt_runtime_binding();
                 let contract = if require_runtime {
                     " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before constructing QML and exits explicitly if the contract is unavailable."
                 } else {
                     ""
                 };
+                let runtime_distribution = if let Some(file_name) = bundled_runtime {
+                    format!(
+                        "The selected target Rust engine is copied to `runtime/{file_name}`. CMake copies it next to the native executable, includes it in the install tree, and the standard binding resolves that app-relative file before global lookup; no environment variable or global library install is required."
+                    )
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or place it beside the executable under Mosaic's conventional `mosaic_app` name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
+                };
                 let readme = format!(
                     "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard \
-                     Qt binding. Set `MOSAIC_APP_LIBRARY` to the Rust application library \
-                     path, or package it under the conventional `mosaic_app` name. The \
-                     generated host owns the application handle, event sequence, snapshots, \
-                     returned buffers, and teardown. Explicit package host assets may replace \
-                     `MosaicHost.h/.cpp` when specialized platform integration is required.{}\n",
-                    proj.readme, contract
+                     Qt binding. {} The generated host owns the application handle, event \
+                     sequence, snapshots, returned buffers, and teardown. Explicit package \
+                     host assets may replace `MosaicHost.h/.cpp` when specialized platform \
+                     integration is required.{}\n",
+                    proj.readme, runtime_distribution, contract
                 );
                 // Qt's qmldir shell file would conflict with the
                 // step-5 qmldir (the module descriptor). The shell's
                 // qmldir is the same shape as the index path — UI32
                 // §3.4 says --emit-project's shell IS the qmldir.
                 let flat: [(&str, &str); 6] = [
-                    ("CMakeLists.txt", &proj.cmake_lists),
+                    ("CMakeLists.txt", &cmake_lists),
                     ("main.cpp", &proj.main_cpp),
                     ("qmldir", &proj.qmldir),
                     ("README.md", &readme),
@@ -1491,7 +2136,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         Backend::SwiftUI => {
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 emit_project: true,
-                require_runtime: profile == Some(BuildProfile::NativeComplete),
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 ..Default::default()
             };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
@@ -1501,19 +2146,25 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 &sw_opts,
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
-            let component_source = r.output.clone();
             if let Some(proj) = r.project {
-                let package_swift =
-                    mosaic_app_bindings::swift_package_with_runtime_binding(&proj.package_swift);
-                let app_swift =
-                    mosaic_app_bindings::swift_app_with_runtime_binding(&proj.app_swift);
+                let bundle_runtime = runtime_library.is_some();
+                let package_swift = mosaic_app_bindings::swift_package_with_runtime_binding(
+                    &proj.package_swift,
+                    bundle_runtime,
+                );
+                let app_swift = mosaic_app_bindings::swift_app_with_runtime_binding(
+                    &proj.app_swift,
+                    bundle_runtime,
+                );
                 let runtime_binding = mosaic_app_bindings::swift_runtime_binding();
+                let runtime_distribution = if bundle_runtime {
+                    "The selected target Rust engine is copied into SwiftPM's `Runtime` resource bundle and resolved through `Bundle.module`; no environment variable or global library install is required."
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the target dylib path. Strict SwiftUI builds should be regenerated with `--runtime-library <target cdylib>`."
+                };
                 let readme = format!(
-                    "{}\n## Rust application runtime\n\nThis package includes Mosaic's standard SwiftUI binding. Set \
-                     `MOSAIC_APP_LIBRARY` to the Rust application dylib path, or package it as \
-                     `libmosaic_app.dylib`. The generated Foundation host owns the application \
-                     handle, event sequence, snapshots, returned buffers, and teardown.\n",
-                    proj.readme
+                    "{}\n## Rust application runtime\n\nThis package includes Mosaic's standard SwiftUI binding. {} The generated Foundation host owns the application handle, event sequence, snapshots, returned buffers, and teardown.\n",
+                    proj.readme, runtime_distribution
                 );
                 let flat: [(&str, &str); 2] =
                     [("Package.swift", &package_swift), ("README.md", &readme)];
@@ -1542,15 +2193,24 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 write_file(&runtime_loader, runtime_binding.loader_c.as_bytes())?;
                 written.push(runtime_loader);
 
-                let component_nested = backend_dir.join(format!("Sources/App/{component}.swift"));
-                write_file(&component_nested, component_source.as_bytes())?;
-                written.push(component_nested);
+                // SwiftPM must type-check the complete package, not only the
+                // first export mounted by App.swift. Mirror every exported
+                // view into the application target while retaining the flat
+                // distribution artifacts for Mosaic package consumers.
+                for exported_component in components {
+                    let component_source =
+                        read_to_string(&backend_dir.join(format!("{exported_component}.swift")))?;
+                    let component_nested =
+                        backend_dir.join(format!("Sources/App/{exported_component}.swift"));
+                    write_file(&component_nested, component_source.as_bytes())?;
+                    written.push(component_nested);
+                }
             }
         }
         Backend::Xaml => {
             let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
                 emit_project: true,
-                require_runtime: profile == Some(BuildProfile::NativeComplete),
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 ..Default::default()
             };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
@@ -1564,10 +2224,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             if let Some(proj) = r.project {
                 let runtime_binding =
                     mosaic_app_bindings::xaml_runtime_binding(&xaml_opts.namespace);
+                let runtime_distribution = if runtime_library.is_some() {
+                    "The selected target Rust engine is copied into the project as `mosaic_app.dll`. The generated MSBuild target copies it beside the WinUI executable, and the standard binding resolves it through `AppContext.BaseDirectory` before global lookup; no environment variable or global library install is required."
+                } else {
+                    "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the target DLL path, or place `mosaic_app.dll` beside the generated project. Strict WinUI builds should be regenerated with `--runtime-library <target cdylib>`."
+                };
                 let readme = format!(
                     "{}\nThe included standard .NET binding owns the Rust application handle, \
-                     event sequence, snapshots, returned buffers, and teardown.\n",
-                    proj.readme
+                     event sequence, snapshots, returned buffers, and teardown. {}\n",
+                    proj.readme, runtime_distribution
                 );
                 let flat: Vec<(String, &str)> = vec![
                     ("global.json".to_string(), &proj.global_json),
@@ -1595,6 +2260,44 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
     }
     Ok(written)
+}
+
+fn qt_cmake_with_package_exports(
+    generated: &str,
+    mounted_component: &str,
+    components: &[String],
+    bundled_runtime: Option<&str>,
+) -> String {
+    let marker = format!("  QML_FILES {mounted_component}.qml\n");
+    let mut source_set = String::from("  QML_FILES\n");
+    for component in components {
+        writeln!(source_set, "    {component}.qml").unwrap();
+    }
+    let mut cmake = generated.replacen(&marker, &source_set, 1);
+    if let Some(file_name) = bundled_runtime {
+        write!(
+            cmake,
+            concat!(
+                "\n# Mosaic's selected Rust application engine is part of the native artifact.\n",
+                "set(MOSAIC_APP_RUNTIME_SOURCE \"${{CMAKE_CURRENT_SOURCE_DIR}}/runtime/{file_name}\")\n",
+                "add_custom_command(TARGET {mounted_component} POST_BUILD\n",
+                "  COMMAND ${{CMAKE_COMMAND}} -E copy_if_different\n",
+                "    \"${{MOSAIC_APP_RUNTIME_SOURCE}}\"\n",
+                "    \"$<TARGET_FILE_DIR:{mounted_component}>/{file_name}\"\n",
+                ")\n",
+                "include(GNUInstallDirs)\n",
+                "install(TARGETS {mounted_component}\n",
+                "  BUNDLE DESTINATION .\n",
+                "  RUNTIME DESTINATION \"${{CMAKE_INSTALL_BINDIR}}\"\n",
+                ")\n",
+                "install(FILES \"${{MOSAIC_APP_RUNTIME_SOURCE}}\" DESTINATION \"${{CMAKE_INSTALL_BINDIR}}\")\n",
+            ),
+            file_name = file_name,
+            mounted_component = mounted_component,
+        )
+        .expect("write Qt runtime packaging CMake");
+    }
+    cmake
 }
 
 fn build_electron_package_json(
@@ -1650,8 +2353,13 @@ fn build_compose_settings_gradle_kts(package_name: &str) -> String {
     )
 }
 
-fn build_compose_build_gradle_kts(package_name: &str) -> String {
+fn build_compose_build_gradle_kts(package_name: &str, bundle_runtime: bool) -> String {
     let app_id = compose_gradle_application_id(package_name);
+    let app_resources = if bundle_runtime {
+        "            appResourcesRootDir.set(project.layout.projectDirectory.dir(\"app-resources\"))\n"
+    } else {
+        ""
+    };
     format!(
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
@@ -1678,6 +2386,7 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
             "            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)\n",
             "            packageName = \"{app_id}\"\n",
             "            packageVersion = \"{package_version}\"\n",
+            "{app_resources}",
             "        }}\n",
             "    }}\n",
             "}}\n",
@@ -1688,6 +2397,7 @@ fn build_compose_build_gradle_kts(package_name: &str) -> String {
         serialization_json_version = COMPOSE_SERIALIZATION_JSON_VERSION,
         app_id = escape_kotlin_string(&app_id),
         package_version = COMPOSE_DESKTOP_PACKAGE_VERSION,
+        app_resources = app_resources,
     )
 }
 
@@ -2116,7 +2826,12 @@ fn escape_kotlin_string(s: &str) -> String {
     out
 }
 
-fn build_compose_readme(package_name: &str, component: &str, require_runtime: bool) -> String {
+fn build_compose_readme(
+    package_name: &str,
+    component: &str,
+    require_runtime: bool,
+    bundle_runtime: bool,
+) -> String {
     let app_id = compose_gradle_application_id(package_name);
     let runtime_policy = if require_runtime {
         "This `native-complete` shell requires the standard Rust runtime at startup. It does not load a package-owned reflection host or mount the component with sample props. The component is mounted only after the runtime returns its first props envelope."
@@ -2128,11 +2843,17 @@ fn build_compose_readme(package_name: &str, component: &str, require_runtime: bo
     } else {
         "Desktop app entrypoint that mounts the component with Rust runtime props or permissive sample values."
     };
+    let runtime_distribution = if bundle_runtime {
+        "The selected target Rust engine is copied under `app-resources/<platform>/` and Compose installs it beside the application resources. The standard binding resolves that installed file through `compose.application.resources.dir`; no environment variable or global library install is required."
+    } else {
+        "No Rust engine was bundled. For development, set the `mosaic.app.library` JVM property or `MOSAIC_APP_LIBRARY`; strict distributable builds should be regenerated with `--runtime-library <target cdylib>`."
+    };
     format!(
         "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n\
 # {component} - Compose Desktop shell\n\n\
 Auto-generated by `mosaic-compile pkg --backend compose --emit-project`.\n\n\
 The top-level `{component}.kt` remains the reusable Mosaic library artifact. The nested `src/main/kotlin/` copy plus Gradle files form a runnable Compose Desktop app. The generated `MosaicRuntimeHost.kt` standard binding loads the Rust application library through JNA and round-trips props and semantic events without application-owned host code. {runtime_policy}\n\n\
+{runtime_distribution}\n\n\
 ## Prerequisites\n\n\
 - JDK 21 or newer.\n\
 - Gradle 8.7 or newer.\n\n\
@@ -2154,6 +2875,7 @@ gradle packageDistributionForCurrentOS\n\
 | `src/main/kotlin/Main.kt` | {main_purpose} |\n\
 | `src/main/kotlin/{component}.kt` | Source-set copy of the generated component so Gradle can compile it without file moves. |\n\n\
 | `src/main/kotlin/MosaicRuntimeHost.kt` | Standard JNA binding that owns the Rust runtime handle, buffers, startup context, and event sequence. |\n\n\
+| `app-resources/<platform>/` | Target Rust engine copied into the native distribution when `--runtime-library` is supplied. |\n\n\
 Gradle native package name: `{app_id}`.\n"
     )
 }
@@ -2192,7 +2914,7 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 fn compile_one_component(
     component: &str,
     variant: Option<&str>,
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     src_dir: &Path,
     out_dir: &Path,
     backend: Backend,
@@ -2218,7 +2940,7 @@ fn compile_one_component(
         Some(v) => src_dir.join(format!("{component}.{v}.mll")),
         None => src_dir.join(format!("{component}.mll")),
     };
-    let msl_path = resolve_style_path(src_dir, component, theme)?;
+    let msl_path = resolve_style_path(src_dir, component, style_options.theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(BuildError::SourceNotFound {
@@ -2245,13 +2967,13 @@ fn compile_one_component(
     // Each compile call may return a `Vec<CompileError>`. We render the
     // first one and wrap it as `PipelineError` so the caller gets one
     // line per component rather than a flood.
-    let composed = compose_component(
+    let composed = compose_component_with_backend_tokens(
         component,
         &mil_src,
         &mll_src,
         &msl_src,
         package_search_paths,
-        theme,
+        style_options,
     )?;
     let mosmodel_out = composed.model;
     let layout_out = composed.layout;
@@ -2475,7 +3197,7 @@ fn collect_dependency_style_parts(
     owner_component: &str,
     layout: &moslayout_compiler::LayoutDef,
     package_search_paths: &[PathBuf],
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -2483,7 +3205,7 @@ fn collect_dependency_style_parts(
         owner_component,
         &layout.root,
         package_search_paths,
-        theme,
+        style_options,
         visiting,
         collected,
     )
@@ -2493,7 +3215,7 @@ fn collect_dependency_style_parts_from_node(
     owner_component: &str,
     node: &moslayout_compiler::LayoutNode,
     package_search_paths: &[PathBuf],
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -2505,7 +3227,7 @@ fn collect_dependency_style_parts_from_node(
             package,
             component,
             package_search_paths,
-            theme,
+            style_options,
             visiting,
             collected,
         )?);
@@ -2516,7 +3238,7 @@ fn collect_dependency_style_parts_from_node(
             owner_component,
             child,
             package_search_paths,
-            theme,
+            style_options,
             visiting,
             collected,
         )?);
@@ -2530,7 +3252,7 @@ fn collect_dependency_component_style_parts(
     package: &str,
     component: &str,
     package_search_paths: &[PathBuf],
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -2566,10 +3288,22 @@ fn collect_dependency_component_style_parts(
         ));
     }
 
+    let dependency_tokens = load_package_tokens(
+        &package_root,
+        &manifest,
+        style_options.backend,
+        style_options.tokens,
+    )?;
+    let dependency_style_options = StyleCompositionOptions {
+        theme: style_options.theme,
+        tokens: &dependency_tokens,
+        backend: style_options.backend,
+    };
+
     let src_dir = package_root.join("src");
     let mil_path = src_dir.join(format!("{component}.mil"));
     let mll_path = src_dir.join(format!("{component}.mll"));
-    let msl_path = resolve_style_path(&src_dir, component, theme)?;
+    let msl_path = resolve_style_path(&src_dir, component, style_options.theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(package_reference_err(
@@ -2599,7 +3333,7 @@ fn collect_dependency_component_style_parts(
         owner_component,
         &layout_out.def,
         package_search_paths,
-        theme,
+        &dependency_style_options,
         visiting,
         collected,
     )?;
@@ -2610,8 +3344,12 @@ fn collect_dependency_component_style_parts(
         package_search_paths,
     )?;
 
-    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_out = mosstyle_compiler::compile_with_tokens(
+        &msl_src,
+        Some(&layout_out.part_map_json),
+        dependency_style_options.tokens,
+    )
+    .map_err(|errs| pipeline_err(component, &errs[0]))?;
     dependency_parts.extend(style_out.def.parts);
 
     visiting.pop();
@@ -3466,6 +4204,20 @@ version = "1"
         fs::write(manifest_path, manifest).unwrap();
     }
 
+    fn declare_token_palette(root: &Path, relative_path: &str, source: &str) {
+        let manifest_path = root.join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        let styles = format!("[styles]\ntoken_palette = {relative_path:?}\n");
+        fs::write(
+            &manifest_path,
+            manifest.replace("[kernel]", &format!("{styles}[kernel]")),
+        )
+        .unwrap();
+        let palette_path = root.join(relative_path);
+        fs::create_dir_all(palette_path.parent().unwrap()).unwrap();
+        fs::write(palette_path, source).unwrap();
+    }
+
     // -----------------------------------------------------------------------
     // 1. Empty package
     // -----------------------------------------------------------------------
@@ -3490,6 +4242,368 @@ version = "1"
             "exactly one artifact (the index)"
         );
         assert!(result.artifacts[0].ends_with("index.ts"));
+    }
+
+    #[test]
+    fn flutter_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children,
+        };
+        let header_for = node("For", vec![node("Text", vec![])]);
+        let body_cell_for = node("For", vec![node("Text", vec![])]);
+        let canonical = node(
+            "HostTable",
+            vec![
+                node("HostTableHead", vec![node("Row", vec![header_for])]),
+                node(
+                    "HostTableBody",
+                    vec![node("For", vec![node("Row", vec![body_cell_for])])],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_flutter::pipeline::host_table_has_native_semantics(&canonical));
+
+        let mut unsupported = canonical;
+        unsupported.children.push(node("HostTableFoot", Vec::new()));
+        assert!(!mosaic_emit_flutter::pipeline::host_table_has_native_semantics(&unsupported));
+        assert!(
+            !mosaic_emit_flutter::pipeline::host_table_has_native_semantics(&node(
+                "HostTable",
+                Vec::new()
+            ))
+        );
+    }
+
+    #[test]
+    fn compose_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
+        };
+        let indexed_for = |each: &str, index: &str, children: Vec<LayoutNode>| {
+            node(
+                "For",
+                vec![
+                    LayoutProp {
+                        name: "each".to_string(),
+                        value: LayoutPropValue::SlotRef(each.to_string()),
+                    },
+                    LayoutProp {
+                        name: "index".to_string(),
+                        value: LayoutPropValue::Keyword(index.to_string()),
+                    },
+                ],
+                children,
+            )
+        };
+        let canonical = node(
+            "HostTable",
+            Vec::new(),
+            vec![
+                node(
+                    "HostTableHead",
+                    Vec::new(),
+                    vec![node(
+                        "Row",
+                        Vec::new(),
+                        vec![indexed_for(
+                            "headers",
+                            "column",
+                            vec![node("Box", Vec::new(), Vec::new())],
+                        )],
+                    )],
+                ),
+                node(
+                    "HostTableBody",
+                    Vec::new(),
+                    vec![indexed_for(
+                        "rows",
+                        "row",
+                        vec![node(
+                            "Row",
+                            Vec::new(),
+                            vec![indexed_for(
+                                "cells",
+                                "column",
+                                vec![node("Box", Vec::new(), Vec::new())],
+                            )],
+                        )],
+                    )],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_compose::pipeline::host_table_has_native_semantics(&canonical));
+
+        let mut unsupported = canonical;
+        unsupported
+            .children
+            .push(node("HostTableFoot", Vec::new(), Vec::new()));
+        assert!(!mosaic_emit_compose::pipeline::host_table_has_native_semantics(&unsupported));
+        assert!(
+            !mosaic_emit_compose::pipeline::host_table_has_native_semantics(&node(
+                "HostTable",
+                Vec::new(),
+                Vec::new(),
+            ))
+        );
+    }
+
+    #[test]
+    fn qt_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
+        };
+        let indexed_for =
+            |each: LayoutPropValue, as_name: &str, index: &str, children: Vec<LayoutNode>| {
+                node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: each,
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword(as_name.to_string()),
+                        },
+                        LayoutProp {
+                            name: "index".to_string(),
+                            value: LayoutPropValue::Keyword(index.to_string()),
+                        },
+                    ],
+                    children,
+                )
+            };
+        let canonical = node(
+            "HostTable",
+            Vec::new(),
+            vec![
+                node(
+                    "HostTableHead",
+                    Vec::new(),
+                    vec![node(
+                        "Row",
+                        Vec::new(),
+                        vec![indexed_for(
+                            LayoutPropValue::SlotRef("headers".to_string()),
+                            "header",
+                            "headerIndex",
+                            vec![node("Box", Vec::new(), Vec::new())],
+                        )],
+                    )],
+                ),
+                node(
+                    "HostTableBody",
+                    Vec::new(),
+                    vec![indexed_for(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        "rowIndex",
+                        vec![node(
+                            "Row",
+                            Vec::new(),
+                            vec![indexed_for(
+                                LayoutPropValue::Keyword("row".to_string()),
+                                "cell",
+                                "columnIndex",
+                                vec![node("Box", Vec::new(), Vec::new())],
+                            )],
+                        )],
+                    )],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_qt::pipeline::host_table_has_native_semantics(
+            &canonical
+        ));
+
+        let mut unsupported = canonical;
+        unsupported
+            .children
+            .push(node("HostTableFoot", Vec::new(), Vec::new()));
+        assert!(!mosaic_emit_qt::pipeline::host_table_has_native_semantics(
+            &unsupported
+        ));
+        assert!(!mosaic_emit_qt::pipeline::host_table_has_native_semantics(
+            &node("HostTable", Vec::new(), Vec::new(),)
+        ));
+    }
+
+    #[test]
+    fn swiftui_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
+        };
+        let indexed_for =
+            |each: LayoutPropValue, as_name: &str, index: &str, children: Vec<LayoutNode>| {
+                node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: each,
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword(as_name.to_string()),
+                        },
+                        LayoutProp {
+                            name: "index".to_string(),
+                            value: LayoutPropValue::Keyword(index.to_string()),
+                        },
+                    ],
+                    children,
+                )
+            };
+        let canonical = node(
+            "HostTable",
+            Vec::new(),
+            vec![
+                node(
+                    "HostTableHead",
+                    Vec::new(),
+                    vec![node(
+                        "Row",
+                        Vec::new(),
+                        vec![indexed_for(
+                            LayoutPropValue::SlotRef("headers".to_string()),
+                            "header",
+                            "headerIndex",
+                            vec![node("Box", Vec::new(), Vec::new())],
+                        )],
+                    )],
+                ),
+                node(
+                    "HostTableBody",
+                    Vec::new(),
+                    vec![indexed_for(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        "rowIndex",
+                        vec![node(
+                            "Row",
+                            Vec::new(),
+                            vec![indexed_for(
+                                LayoutPropValue::Keyword("row".to_string()),
+                                "cell",
+                                "columnIndex",
+                                vec![node("Box", Vec::new(), Vec::new())],
+                            )],
+                        )],
+                    )],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_swiftui::pipeline::host_table_has_native_semantics(&canonical));
+
+        let mut unsupported = canonical;
+        unsupported
+            .children
+            .push(node("HostTableFoot", Vec::new(), Vec::new()));
+        assert!(!mosaic_emit_swiftui::pipeline::host_table_has_native_semantics(&unsupported));
+        assert!(
+            !mosaic_emit_swiftui::pipeline::host_table_has_native_semantics(&node(
+                "HostTable",
+                Vec::new(),
+                Vec::new()
+            ))
+        );
+    }
+
+    #[test]
+    fn xaml_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
+        };
+        let indexed_for =
+            |each: LayoutPropValue, as_name: &str, index: &str, children: Vec<LayoutNode>| {
+                node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: each,
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword(as_name.to_string()),
+                        },
+                        LayoutProp {
+                            name: "index".to_string(),
+                            value: LayoutPropValue::Keyword(index.to_string()),
+                        },
+                    ],
+                    children,
+                )
+            };
+        let canonical = node(
+            "HostTable",
+            Vec::new(),
+            vec![
+                node(
+                    "HostTableHead",
+                    Vec::new(),
+                    vec![node(
+                        "Row",
+                        Vec::new(),
+                        vec![indexed_for(
+                            LayoutPropValue::SlotRef("headers".to_string()),
+                            "header",
+                            "headerIndex",
+                            vec![node("Box", Vec::new(), Vec::new())],
+                        )],
+                    )],
+                ),
+                node(
+                    "HostTableBody",
+                    Vec::new(),
+                    vec![indexed_for(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        "rowIndex",
+                        vec![node(
+                            "Row",
+                            Vec::new(),
+                            vec![indexed_for(
+                                LayoutPropValue::Keyword("row".to_string()),
+                                "cell",
+                                "columnIndex",
+                                vec![node("Box", Vec::new(), Vec::new())],
+                            )],
+                        )],
+                    )],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_xaml::pipeline::host_table_has_native_semantics(
+            &canonical
+        ));
+
+        let mut with_foot = canonical.clone();
+        with_foot
+            .children
+            .push(node("HostTableFoot", Vec::new(), Vec::new()));
+        assert!(!mosaic_emit_xaml::pipeline::host_table_has_native_semantics(&with_foot));
+
+        let mut missing_index = canonical;
+        missing_index.children[0].children[0].children[0]
+            .props
+            .retain(|prop| prop.name != "index");
+        assert!(!mosaic_emit_xaml::pipeline::host_table_has_native_semantics(&missing_index));
     }
 
     #[test]
@@ -3528,17 +4642,10 @@ layout Board {
                 .iter()
                 .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
                 .collect::<Vec<_>>(),
-            vec![
-                ("interaction.drag-drop-inert", "root.children[0]"),
-                (
-                    "interaction.drag-drop-inert",
-                    "root.children[0].children[0]"
-                ),
-                (
-                    "accessibility.table-semantics-missing",
-                    "root.children[0].children[0].children[0]"
-                ),
-            ]
+            vec![(
+                "accessibility.table-semantics-missing",
+                "root.children[0].children[0].children[0]"
+            )]
         );
         assert_eq!(
             report,
@@ -3546,6 +4653,63 @@ layout Board {
                 .expect("repeat analysis"),
             "the report must not depend on directory iteration order"
         );
+    }
+
+    #[test]
+    fn native_drag_drop_backends_are_not_reported_as_inert() {
+        let pkg = make_package("mosaic-pkg-board", &["Board"]);
+        fs::write(
+            pkg.path().join("src/Board.mll"),
+            r#"
+layout Board {
+  Column [ root ] {
+    HostDropTarget [ lane ] ( drop-key: "lane-a", accepts: "task" ) {
+      HostDraggable [ card ] ( drag-key: "task-a", drag-kind: "task" ) {
+        Text ( content: "Card" )
+      }
+    }
+  }
+}
+"#,
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let options = |backend| BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: false,
+            theme: None,
+        };
+
+        let flutter =
+            analyze_package_degradations(&options(Backend::Flutter), BuildProfile::NativeComplete)
+                .expect("Flutter analysis");
+        assert!(flutter.native_complete);
+        assert!(flutter.degradations.is_empty());
+
+        let compose =
+            analyze_package_degradations(&options(Backend::Compose), BuildProfile::NativeComplete)
+                .expect("Compose analysis");
+        assert!(compose.native_complete);
+        assert!(compose.degradations.is_empty());
+
+        let qt = analyze_package_degradations(&options(Backend::Qt), BuildProfile::NativeComplete)
+            .expect("Qt analysis");
+        assert!(qt.native_complete);
+        assert!(qt.degradations.is_empty());
+
+        let swiftui =
+            analyze_package_degradations(&options(Backend::SwiftUI), BuildProfile::NativeComplete)
+                .expect("SwiftUI analysis");
+        assert!(swiftui.native_complete);
+        assert!(swiftui.degradations.is_empty());
+
+        let xaml =
+            analyze_package_degradations(&options(Backend::Xaml), BuildProfile::NativeComplete)
+                .expect("XAML analysis");
+        assert!(xaml.native_complete);
+        assert!(xaml.degradations.is_empty());
     }
 
     #[test]
@@ -3686,6 +4850,254 @@ layout Controls {
     }
 
     #[test]
+    fn portable_text_accessibility_is_native_complete_on_all_backends() {
+        let pkg = make_package("mosaic-pkg-accessible-text", &["AccessibleText"]);
+        fs::write(
+            pkg.path().join("src/AccessibleText.mil"),
+            "component AccessibleText { slot spoken-title : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/AccessibleText.mll"),
+            r#"
+layout AccessibleText {
+  Column [ root ] {
+    Text [ title ] (
+      content: "Visible title",
+      a11y-label: slot: spoken-title,
+      a11y-role: heading
+    )
+    Text [ decoration ] ( content: "*", a11y-hidden: true )
+    Text [ duplicate ] ( content: "Repeated", a11y-role: none )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("portable Text accessibility analysis");
+            assert!(
+                report.native_complete && report.degradations.is_empty(),
+                "unexpected {backend:?} degradation inventory: {:?}",
+                report.degradations
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_text_accessibility_forms_are_explicit_degradations() {
+        let pkg = make_package("mosaic-pkg-accessible-text", &["AccessibleText"]);
+        fs::write(
+            pkg.path().join("src/AccessibleText.mil"),
+            "component AccessibleText { slot hidden : bool ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/AccessibleText.mll"),
+            r#"
+layout AccessibleText {
+  Column [ root ] {
+    Text (
+      content: "Visible title",
+      a11y-label: 42,
+      a11y-role: button,
+      a11y-hidden: slot: hidden
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("unsupported Text accessibility analysis");
+            assert_eq!(
+                report
+                    .degradations
+                    .iter()
+                    .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                    .collect::<Vec<_>>(),
+                vec![
+                    (
+                        "accessibility.text-label-unsupported",
+                        "root.children[0].props[1]"
+                    ),
+                    (
+                        "accessibility.text-role-unsupported",
+                        "root.children[0].props[2]"
+                    ),
+                    (
+                        "accessibility.text-hidden-unsupported",
+                        "root.children[0].props[3]"
+                    ),
+                ],
+                "unexpected {backend:?} degradation inventory"
+            );
+        }
+    }
+
+    #[test]
+    fn native_degradation_analysis_reports_ignored_dialog_and_link_contracts() {
+        let pkg = make_package("mosaic-pkg-dialog-links", &["DialogLinks"]);
+        fs::write(
+            pkg.path().join("src/DialogLinks.mil"),
+            "component DialogLinks { slot dialog-open : bool ; emit onDialogOpen ; emit onDialogClose ; emit onLinkActivate ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/DialogLinks.mll"),
+            r#"
+layout DialogLinks {
+  Column [ root ] {
+    HostDialog [ dialog ] (
+      open : slot: dialog-open,
+      modal : false,
+      dismiss-on-backdrop : false,
+      onOpen : emit: onDialogOpen,
+      onClose : emit: onDialogClose
+    )
+    HostLink [ docs ] (
+      href : "https://example.com/docs",
+      external : true,
+      onActivate : emit: onLinkActivate
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for (backend, expected) in [
+            (Backend::Compose, vec![]),
+            (Backend::Qt, vec![]),
+            (
+                Backend::SwiftUI,
+                vec![
+                    ("event.dialog-open-ignored", "root.children[0].props[3]"),
+                    ("event.dialog-close-ignored", "root.children[0].props[4]"),
+                    ("event.link-activate-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+            (
+                Backend::Xaml,
+                vec![
+                    (
+                        "property.dialog-open-host-required",
+                        "root.children[0].props[0]",
+                    ),
+                    (
+                        "property.dialog-dismiss-policy-ignored",
+                        "root.children[0].props[2]",
+                    ),
+                    ("event.dialog-open-ignored", "root.children[0].props[3]"),
+                    ("event.link-activate-ignored", "root.children[1].props[2]"),
+                ],
+            ),
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("dialog/link property analysis");
+            let actual = report
+                .degradations
+                .iter()
+                .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                .collect::<Vec<_>>();
+            assert_eq!(actual, expected, "unexpected {backend:?} inventory");
+        }
+    }
+
+    #[test]
+    fn supported_dialog_and_link_event_shapes_remain_native_complete() {
+        let pkg = make_package("mosaic-pkg-native-events", &["NativeEvents"]);
+        fs::write(
+            pkg.path().join("src/NativeEvents.mil"),
+            "component NativeEvents { slot dialog-open : bool ; emit onDialogClose ; emit onLinkActivate ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/NativeEvents.mll"),
+            r#"
+layout NativeEvents {
+  Column [ root ] {
+    HostDialog [ dialog ] (
+      open : slot: dialog-open,
+      modal : true,
+      dismiss-on-backdrop : true,
+      onClose : emit: onDialogClose
+    )
+    HostLink [ route ] (
+      href : "/settings",
+      external : false,
+      onActivate : emit: onLinkActivate
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("supported event analysis");
+
+        assert!(report.degradations.is_empty());
+        assert!(report.native_complete);
+    }
+
+    #[test]
     fn degradation_analysis_walks_package_expanded_layouts() {
         let workspace = TempDir::new().unwrap();
         let child = workspace.path().join("mosaic-pkg-drag-card");
@@ -3718,7 +5130,7 @@ layout Controls {
             &BuildOptions {
                 package_root: parent,
                 output_root: out.path().to_path_buf(),
-                backend: Backend::SwiftUI,
+                backend: Backend::Xaml,
                 emit_project: false,
                 theme: None,
             },
@@ -3726,11 +5138,8 @@ layout Controls {
         )
         .expect("package-expanded analysis");
 
-        assert!(report.degradations.iter().any(|entry| {
-            entry.component == "Board"
-                && entry.primitive.as_deref() == Some("HostDraggable")
-                && entry.code == "interaction.drag-drop-inert"
-        }));
+        assert!(report.native_complete);
+        assert!(report.degradations.is_empty());
     }
 
     #[test]
@@ -3762,6 +5171,52 @@ layout Controls {
     }
 
     #[test]
+    fn permissive_xaml_with_selected_runtime_omits_sample_fallback() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let runtime = pkg.path().join("selected_task_app.dll");
+        fs::write(&runtime, b"selected-task-runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+            Some(&runtime),
+        )
+        .expect("permissive XAML shell with selected runtime");
+
+        let report_path = out.path().join("xaml/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"profile\": \"permissive\""));
+        assert!(report.contains("\"nativeComplete\": true"));
+        assert!(!report.contains("runtime.sample-fallback"));
+
+        let window = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        assert!(window.contains("MosaicRuntimeHost.LoadRequired()"));
+        assert!(window.contains("MosaicRuntimeHost.ApplyRequiredProps"));
+        assert!(!window.contains("sample props loaded"));
+        assert_eq!(
+            fs::read(out.path().join("xaml/mosaic_app.dll")).unwrap(),
+            b"selected-task-runtime"
+        );
+    }
+
+    #[test]
     fn native_complete_compose_shell_requires_the_standard_rust_runtime() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
@@ -3774,8 +5229,10 @@ layout Controls {
             "layout Card { Text [ root ] ( content : slot: label ) }\n",
         )
         .unwrap();
+        let runtime = pkg.path().join("libmosaic_app_conformance.dylib");
+        fs::write(&runtime, b"mosaic-test-runtime").unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let result = build_package_with_profile_and_runtime(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -3784,6 +5241,7 @@ layout Controls {
                 theme: None,
             },
             BuildProfile::NativeComplete,
+            Some(&runtime),
         )
         .expect("native-complete Compose shell");
 
@@ -3811,11 +5269,113 @@ layout Controls {
 
         let readme = fs::read_to_string(out.path().join("compose/README.md")).unwrap();
         assert!(readme.contains("This `native-complete` shell requires the standard Rust runtime"));
+        assert!(readme.contains("no environment variable or global library install is required"));
         assert!(!readme.contains("future `native-complete` profile"));
+
+        let gradle = fs::read_to_string(out.path().join("compose/build.gradle.kts")).unwrap();
+        assert!(gradle.contains(
+            "appResourcesRootDir.set(project.layout.projectDirectory.dir(\"app-resources\"))"
+        ));
+        let bundled = out
+            .path()
+            .join("compose/app-resources/macos/libmosaic_app.dylib");
+        assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-test-runtime");
+        assert!(result.artifacts.contains(&bundled));
     }
 
     #[test]
-    fn native_complete_flutter_shell_requires_the_standard_rust_runtime() {
+    fn native_complete_compose_project_reports_an_unbundled_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict Compose distributions must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Compose,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let report = fs::read_to_string(out.path().join("compose/mosaic-degradations.json"))
+            .expect("strict degradation report");
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("--runtime-library <target cdylib>"));
+        assert!(!out.path().join("compose/build.gradle.kts").exists());
+    }
+
+    #[test]
+    fn runtime_library_selection_rejects_wrong_backend_or_suffix() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let runtime = pkg.path().join("mosaic-runtime.a");
+        fs::write(&runtime, b"not-a-cdylib").unwrap();
+        let options = |backend| BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: true,
+            theme: None,
+        };
+
+        let suffix_error = build_package_with_profile_and_runtime(
+            &options(Backend::Compose),
+            BuildProfile::Permissive,
+            Some(&runtime),
+        )
+        .expect_err("static archives cannot be bundled as the runtime");
+        assert!(matches!(
+            suffix_error,
+            BuildError::InvalidRuntimeLibrary { .. }
+        ));
+
+        let dylib = pkg.path().join("libmosaic_app.dylib");
+        fs::write(&dylib, b"runtime").unwrap();
+        let backend_error = build_package_with_profile_and_runtime(
+            &options(Backend::Html),
+            BuildProfile::Permissive,
+            Some(&dylib),
+        )
+        .expect_err("web backends cannot bundle a native runtime");
+        assert!(backend_error.to_string().contains(
+            "currently implemented only for the Compose, Flutter, Qt, SwiftUI, and XAML backends"
+        ));
+
+        let so = pkg.path().join("libmosaic_app.so");
+        fs::write(&so, b"runtime").unwrap();
+        let swift_suffix_error = build_package_with_profile_and_runtime(
+            &options(Backend::SwiftUI),
+            BuildProfile::Permissive,
+            Some(&so),
+        )
+        .expect_err("SwiftUI cannot bundle a non-Apple target library");
+        assert!(swift_suffix_error
+            .to_string()
+            .contains("SwiftUI backend requires a target cdylib ending in .dylib"));
+
+        let xaml_suffix_error = build_package_with_profile_and_runtime(
+            &options(Backend::Xaml),
+            BuildProfile::Permissive,
+            Some(&dylib),
+        )
+        .expect_err("XAML cannot bundle a non-Windows target library");
+        assert!(xaml_suffix_error
+            .to_string()
+            .contains("XAML backend requires a target cdylib ending in .dll"));
+    }
+
+    #[test]
+    fn native_complete_flutter_project_reports_an_unbundled_runtime() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.mil"),
@@ -3828,7 +5388,7 @@ layout Controls {
         )
         .unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let error = build_package_with_profile(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -3838,12 +5398,58 @@ layout Controls {
             },
             BuildProfile::NativeComplete,
         )
-        .expect("native-complete Flutter shell");
+        .expect_err("strict Flutter distributions must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Flutter,
+                degradation_count: 1,
+                ..
+            }
+        ));
+
+        let report_path = out.path().join("flutter/mosaic-degradations.json");
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("native-complete Flutter artifacts"));
+        assert!(!out.path().join("flutter/pubspec.yaml").exists());
+    }
+
+    #[test]
+    fn native_complete_flutter_shell_bundles_the_selected_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let runtime = pkg.path().join("libcustom_app.so");
+        fs::write(&runtime, b"selected-flutter-runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete Flutter shell with a selected runtime");
 
         let report_path = out.path().join("flutter/mosaic-degradations.json");
         assert!(result.artifacts.contains(&report_path));
         let report = fs::read_to_string(report_path).unwrap();
         assert!(report.contains("\"nativeComplete\": true"));
+        assert!(report.contains("\"degradations\": []"));
 
         let main = fs::read_to_string(out.path().join("flutter/lib/main.dart")).unwrap();
         assert!(main.contains("MosaicHost.loadRequired()"));
@@ -3859,10 +5465,30 @@ layout Controls {
         let host = fs::read_to_string(out.path().join("flutter/lib/mosaic_host.dart")).unwrap();
         assert!(host.contains("static MosaicHost loadRequired()"));
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(host.contains("static const bool _hasBundledRuntime = true;"));
+        assert!(host.contains("@Native<_CreateNative>(symbol: 'mosaic_app_create')"));
+
+        let pubspec = fs::read_to_string(out.path().join("flutter/pubspec.yaml")).unwrap();
+        assert!(pubspec.contains("sdk: '>=3.10.0 <4.0.0'"));
+        assert!(pubspec.contains("flutter: '>=3.38.0 <4.0.0'"));
+        assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
+        assert!(pubspec.contains("hooks: '>=1.0.0 <3.0.0'"));
+
+        let hook = fs::read_to_string(out.path().join("flutter/hook/build.dart")).unwrap();
+        assert!(hook.contains("DynamicLoadingBundled()"));
+        assert!(hook.contains("name: 'mosaic_host.dart'"));
+        assert!(hook.contains("runtime/libmosaic_app.so"));
+        assert!(hook.contains("targetOS != OS.linux && targetOS != OS.android"));
+
+        let bundled = out.path().join("flutter/runtime/libmosaic_app.so");
+        assert_eq!(fs::read(&bundled).unwrap(), b"selected-flutter-runtime");
+        assert!(result.artifacts.contains(&bundled));
 
         let readme = fs::read_to_string(out.path().join("flutter/README.md")).unwrap();
         assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
         assert!(readme.contains("never substitutes preview/sample values"));
+        assert!(readme.contains("registered by `hook/build.dart` as a bundled Dart code asset"));
+        assert!(readme.contains("no environment variable"));
     }
 
     #[test]
@@ -3879,7 +5505,7 @@ layout Controls {
         )
         .unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let error = build_package_with_profile(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -3889,15 +5515,72 @@ layout Controls {
             },
             BuildProfile::NativeComplete,
         )
-        .expect("native-complete SwiftUI shell");
+        .expect_err("native-complete SwiftUI distributions must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::SwiftUI,
+                degradation_count: 1,
+                ..
+            }
+        ));
+
+        let report_path = out.path().join("swiftui/mosaic-degradations.json");
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("--runtime-library <target cdylib>"));
+        assert!(!out.path().join("swiftui/Package.swift").exists());
+    }
+
+    #[test]
+    fn native_complete_swiftui_shell_bundles_the_selected_rust_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let runtime = pkg.path().join("libcustom_app.dylib");
+        fs::write(&runtime, b"selected-swift-runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("native-complete SwiftUI shell with a selected runtime");
 
         let report_path = out.path().join("swiftui/mosaic-degradations.json");
         assert!(result.artifacts.contains(&report_path));
         let report = fs::read_to_string(report_path).unwrap();
         assert!(report.contains("\"nativeComplete\": true"));
+        assert!(report.contains("\"degradations\": []"));
+
+        let installed_runtime = out
+            .path()
+            .join("swiftui/Sources/App/Runtime/libmosaic_app.dylib");
+        assert!(result.artifacts.contains(&installed_runtime));
+        assert_eq!(
+            fs::read(installed_runtime).unwrap(),
+            b"selected-swift-runtime"
+        );
 
         let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
-        assert!(app.contains("MosaicRuntimeHost.loadRequired()"));
+        assert!(app.contains(
+            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+        ));
         assert!(app.contains("private let bridge: MosaicHostBridgeObject"));
         assert!(app.contains("MosaicHostValue.requiredString(host.props, \"label\")"));
         assert!(app.contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
@@ -3912,12 +5595,16 @@ layout Controls {
                 .join("swiftui/Sources/App/MosaicRuntimeHost.swift"),
         )
         .unwrap();
-        assert!(host.contains("static func loadRequired() -> MosaicRuntimeHost"));
+        assert!(host
+            .contains("static func loadRequired(libraryPath: String? = nil) -> MosaicRuntimeHost"));
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
 
+        let package = fs::read_to_string(out.path().join("swiftui/Package.swift")).unwrap();
+        assert!(package.contains("resources: [.copy(\"Runtime\")]"));
+
         let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
-        assert!(readme.contains("requires Mosaic's standard Rust application runtime"));
-        assert!(readme.contains("never substitutes preview/sample values"));
+        assert!(readme.contains("copied into SwiftPM's `Runtime` resource bundle"));
+        assert!(readme.contains("no environment variable or global library install is required"));
     }
 
     #[test]
@@ -3933,8 +5620,10 @@ layout Controls {
             "layout Card { Text [ root ] ( content : slot: label ) }\n",
         )
         .unwrap();
+        let runtime = pkg.path().join("mosaic_app_conformance.dll");
+        fs::write(&runtime, b"mosaic-xaml-test-runtime").unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let result = build_package_with_profile_and_runtime(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -3943,6 +5632,7 @@ layout Controls {
                 theme: None,
             },
             BuildProfile::NativeComplete,
+            Some(&runtime),
         )
         .expect("native-complete XAML shell");
 
@@ -3968,11 +5658,53 @@ layout Controls {
         assert!(host.contains("public static string ApplyRequiredProps("));
         assert!(host.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
         assert!(host.contains("native-complete requires the Mosaic Rust application runtime"));
+        assert!(host.contains("Path.Combine(AppContext.BaseDirectory, \"mosaic_app.dll\")"));
+
+        let project = fs::read_to_string(out.path().join("xaml/Card.csproj")).unwrap();
+        assert!(project.contains("CopyMosaicNativeHostLibraries"));
+        assert!(project.contains("$(MSBuildProjectDirectory)\\*.dll"));
+
+        let bundled = out.path().join("xaml/mosaic_app.dll");
+        assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-xaml-test-runtime");
+        assert!(result.artifacts.contains(&bundled));
 
         let readme = fs::read_to_string(out.path().join("xaml/README.md")).unwrap();
         assert!(readme
             .contains("This `native-complete` shell requires Mosaic's standard Rust application"));
         assert!(readme.contains("There is no reflection host or"));
+        assert!(readme.contains("copied into the project as `mosaic_app.dll`"));
+        assert!(readme.contains("no environment variable or global library install is required"));
+    }
+
+    #[test]
+    fn native_complete_xaml_project_reports_an_unbundled_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict XAML artifacts must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Xaml,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let report = fs::read_to_string(out.path().join("xaml/mosaic-degradations.json"))
+            .expect("strict degradation report");
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("native-complete XAML artifacts"));
+        assert!(!out.path().join("xaml/Card.csproj").exists());
     }
 
     #[test]
@@ -3988,8 +5720,10 @@ layout Controls {
             "layout Card { Text [ root ] ( content : slot: app-title ) }\n",
         )
         .unwrap();
+        let runtime = pkg.path().join("libmosaic_app_conformance.so");
+        fs::write(&runtime, b"mosaic-qt-test-runtime").unwrap();
         let out = TempDir::new().unwrap();
-        let result = build_package_with_profile(
+        let result = build_package_with_profile_and_runtime(
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
@@ -3998,6 +5732,7 @@ layout Controls {
                 theme: None,
             },
             BuildProfile::NativeComplete,
+            Some(&runtime),
         )
         .expect("native-complete Qt shell");
 
@@ -4022,6 +5757,17 @@ layout Controls {
         let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
         assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h)"));
         assert!(!cmake.contains("if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")"));
+        assert!(cmake.contains(
+            "set(MOSAIC_APP_RUNTIME_SOURCE \"${CMAKE_CURRENT_SOURCE_DIR}/runtime/libmosaic_app.so\")"
+        ));
+        assert!(cmake.contains("$<TARGET_FILE_DIR:Card>/libmosaic_app.so"));
+        assert!(cmake.contains("install(TARGETS Card"));
+        assert!(cmake.contains("BUNDLE DESTINATION ."));
+        assert!(cmake.contains("DESTINATION \"${CMAKE_INSTALL_BINDIR}\""));
+
+        let bundled = out.path().join("qt/runtime/libmosaic_app.so");
+        assert_eq!(fs::read(&bundled).unwrap(), b"mosaic-qt-test-runtime");
+        assert!(result.artifacts.contains(&bundled));
 
         let host = fs::read_to_string(out.path().join("qt/MosaicHost.cpp")).unwrap();
         assert!(host.contains("void MosaicHost::requireRuntime() const"));
@@ -4030,6 +5776,40 @@ layout Controls {
         let readme = fs::read_to_string(out.path().join("qt/README.md")).unwrap();
         assert!(readme.contains("Native-complete runtime contract"));
         assert!(readme.contains("runtime are mandatory"));
+        assert!(readme.contains("copied to `runtime/libmosaic_app.so`"));
+        assert!(readme.contains("includes it in the install tree"));
+        assert!(readme.contains("no environment variable or global library install is required"));
+    }
+
+    #[test]
+    fn native_complete_qt_project_reports_an_unbundled_runtime() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect_err("strict Qt install artifacts must select their Rust engine");
+
+        assert!(matches!(
+            error,
+            BuildError::NativeIncomplete {
+                backend: Backend::Qt,
+                degradation_count: 1,
+                ..
+            }
+        ));
+        let report = fs::read_to_string(out.path().join("qt/mosaic-degradations.json"))
+            .expect("strict degradation report");
+        assert!(report.contains("runtime.library-not-bundled"));
+        assert!(report.contains("native-complete Qt artifacts"));
+        assert!(!out.path().join("qt/CMakeLists.txt").exists());
     }
 
     #[test]
@@ -4037,7 +5817,7 @@ layout Controls {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.mll"),
-            "layout Card { HostDraggable [ root ] { Text ( content: \"Card\" ) } }\n",
+            "layout Card { HostTable [ root ] { Text ( content: \"Card\" ) } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();
@@ -4063,7 +5843,7 @@ layout Controls {
         assert_eq!(json["nativeComplete"], false);
         assert_eq!(
             json["degradations"][0]["code"],
-            "interaction.drag-drop-inert"
+            "accessibility.table-semantics-missing"
         );
     }
 
@@ -4072,7 +5852,7 @@ layout Controls {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.mll"),
-            "layout Card { HostDraggable [ root ] { Text ( content: \"Card\" ) } }\n",
+            "layout Card { HostTable [ root ] { Text ( content: \"Card\" ) } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();
@@ -4086,7 +5866,7 @@ layout Controls {
             },
             BuildProfile::NativeComplete,
         )
-        .expect_err("strict build must reject an inert drag primitive");
+        .expect_err("strict build must reject missing table semantics");
 
         assert!(matches!(
             error,
@@ -4715,6 +6495,284 @@ style FocusField {
             html.contains("#abcdef"),
             "dependency text style should be present in emitted HTML:\n{html}"
         );
+    }
+
+    #[test]
+    fn token_overrides_apply_to_parent_and_dependency_styles() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent { Text [ accent-label ] ( content : slot: label ) }"#,
+            r#"style Accent { part accent-label { color : $brand-accent ; } }"#,
+        );
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Shell",
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+            r#"style Shell { part shell-root { background : $app-surface ; } }"#,
+        );
+
+        let tokens = mosstyle_compiler::parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#13579b",
+                "app-surface": "#2468ac"
+              }
+            }"##,
+            Some("html"),
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_tokens(
+            &BuildOptions {
+                package_root: parent,
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+                theme: None,
+            },
+            &tokens,
+        )
+        .expect("parent package should build with shared token overrides");
+
+        let html = fs::read_to_string(out.path().join("html").join("Shell.html")).unwrap();
+        assert!(
+            html.contains("#13579b"),
+            "dependency token missing:\n{html}"
+        );
+        assert!(html.contains("#2468ac"), "parent token missing:\n{html}");
+    }
+
+    #[test]
+    fn package_token_palettes_follow_dependency_parent_and_app_precedence() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent { Text [ accent-label ] ( content : slot: label ) }"#,
+            r#"style Accent { part accent-label { color : $brand-accent ; } }"#,
+        );
+        declare_token_palette(
+            &child,
+            "tokens/foundation.json",
+            r##"{
+              "schema_version": 1,
+              "tokens": { "brand-accent": "#111111" },
+              "backends": { "html": { "brand-accent": "#121212" } }
+            }"##,
+        );
+
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Shell",
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+            r#"style Shell { part shell-root { background : $color-surface ; } }"#,
+        );
+
+        let build_html = |output: &Path, tokens: &mosstyle_compiler::TokenOverrides| {
+            build_package_with_tokens(
+                &BuildOptions {
+                    package_root: parent.clone(),
+                    output_root: output.to_path_buf(),
+                    backend: Backend::Html,
+                    emit_project: true,
+                    theme: None,
+                },
+                tokens,
+            )
+            .expect("package palette build");
+            fs::read_to_string(output.join("html/Shell.html")).unwrap()
+        };
+
+        let dependency_output = TempDir::new().unwrap();
+        let html = build_html(
+            dependency_output.path(),
+            &mosstyle_compiler::TokenOverrides::default(),
+        );
+        assert!(
+            html.contains("#121212"),
+            "dependency backend default should style its component:\n{html}"
+        );
+
+        declare_token_palette(
+            &parent,
+            "tokens/app.json",
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#222222",
+                "color-surface": "#aaaaaa"
+              }
+            }"##,
+        );
+        let parent_output = TempDir::new().unwrap();
+        let html = build_html(
+            parent_output.path(),
+            &mosstyle_compiler::TokenOverrides::default(),
+        );
+        assert!(
+            html.contains("#222222"),
+            "parent should override dependency"
+        );
+        assert!(html.contains("#aaaaaa"), "parent should style its own root");
+        assert!(
+            !html.contains("#121212"),
+            "dependency default must be replaced"
+        );
+
+        let app_tokens = mosstyle_compiler::parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#333333",
+                "color-surface": "#bbbbbb"
+              }
+            }"##,
+            Some("html"),
+        )
+        .unwrap();
+        let app_output = TempDir::new().unwrap();
+        let html = build_html(app_output.path(), &app_tokens);
+        assert!(html.contains("#333333"), "app should override parent");
+        assert!(html.contains("#bbbbbb"), "app should override root default");
+        assert!(!html.contains("#222222"));
+    }
+
+    #[test]
+    fn package_token_palette_errors_are_fail_closed_and_path_specific() {
+        let pkg = make_package("mosaic-pkg-themed", &["Theme"]);
+        declare_token_palette(pkg.path(), "tokens/theme.json", r#"{"schema_version":2}"#);
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_err();
+        assert!(matches!(
+            error,
+            BuildError::TokenPalette { ref path, ref error }
+                if path.ends_with("tokens/theme.json") && error.contains("expected 1")
+        ));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn package_token_palette_rejects_symlink_escape() {
+        use std::os::unix::fs::symlink;
+
+        let pkg = make_package("mosaic-pkg-themed", &["Theme"]);
+        let outside = TempDir::new().unwrap();
+        let outside_palette = outside.path().join("outside.json");
+        fs::write(&outside_palette, r#"{"schema_version":1}"#).unwrap();
+
+        let manifest_path = pkg.path().join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        fs::write(
+            &manifest_path,
+            manifest.replace(
+                "[kernel]",
+                "[styles]\ntoken_palette = \"tokens/theme.json\"\n[kernel]",
+            ),
+        )
+        .unwrap();
+        fs::create_dir_all(pkg.path().join("tokens")).unwrap();
+        symlink(&outside_palette, pkg.path().join("tokens/theme.json")).unwrap();
+
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_err();
+        assert!(matches!(
+            error,
+            BuildError::UnsafePath {
+                kind: "token palette",
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn package_backend_token_defaults_build_on_every_emitter() {
+        let pkg = make_package("mosaic-pkg-themed", &["Theme"]);
+        write_component_sources(
+            pkg.path(),
+            "Theme",
+            "component Theme { }",
+            "layout Theme { Box [ root ] { } }",
+            "style Theme { part root { background : $backend-surface ; } }",
+        );
+        declare_token_palette(
+            pkg.path(),
+            "tokens/theme.json",
+            r##"{
+              "schema_version": 1,
+              "backends": {
+                "react": { "backend-surface": "#010101" },
+                "electron": { "backend-surface": "#020202" },
+                "swiftui": { "backend-surface": "#030303" },
+                "qt": { "backend-surface": "#040404" },
+                "webcomponent": { "backend-surface": "#050505" },
+                "html": { "backend-surface": "#060606" },
+                "xaml": { "backend-surface": "#070707" },
+                "flutter": { "backend-surface": "#080808" },
+                "compose": { "backend-surface": "#090909" }
+              }
+            }"##,
+        );
+
+        for backend in Backend::ALL {
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} package palette build failed: {error}"));
+        }
     }
 
     #[test]
@@ -5907,9 +7965,49 @@ version = "1"
         assert!(host.contains("FutureOr<Map<String, Object?>?> handleEvent"));
         let pubspec = fs::read_to_string(dir.join("pubspec.yaml")).expect("pubspec.yaml");
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+        assert!(pubspec.contains("flutter_lints: '>=6.0.0 <7.0.0'"));
+        let analysis_options =
+            fs::read_to_string(dir.join("analysis_options.yaml")).expect("analysis_options.yaml");
+        assert!(analysis_options.contains("package:flutter_lints/flutter.yaml"));
+        let widget_test =
+            fs::read_to_string(dir.join("test/widget_test.dart")).expect("widget_test.dart");
+        assert!(widget_test.contains("package:mosaic_grid/main.dart"));
+        assert!(widget_test.contains("const MosaicApp()"));
+        assert!(!widget_test.contains("MyApp"));
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("MOSAIC_APP_LIBRARY"));
         assert!(readme.contains("owns the application handle"));
+        assert!(readme.contains("flutter analyze"));
+        assert!(readme.contains("flutter test"));
+    }
+
+    #[test]
+    fn flutter_project_shell_includes_every_exported_component_in_source_set() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Flutter,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component Flutter package build");
+
+        let dir = out.path().join("flutter");
+        for component in ["Grid", "Cell", "Column"] {
+            let artifact = dir.join(format!("{component}.dart"));
+            let source_set_copy = dir.join(format!("lib/{component}.dart"));
+            assert_eq!(
+                fs::read_to_string(&artifact).expect("top-level Flutter artifact"),
+                fs::read_to_string(&source_set_copy).expect("Flutter source-set copy"),
+                "{component} must participate in the generated Flutter project"
+            );
+            assert!(
+                result.artifacts.iter().any(|path| path == &source_set_copy),
+                "{component} source-set copy must be reported as an artifact"
+            );
+        }
     }
 
     #[test]
@@ -5940,6 +8038,30 @@ version = "1"
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("MOSAIC_APP_LIBRARY"));
         assert!(readme.contains("owns the application handle"));
+    }
+
+    #[test]
+    fn qt_project_shell_compiles_every_exported_component_in_qml_module() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Qt,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component Qt package build");
+
+        let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt"))
+            .expect("generated CMakeLists.txt");
+        assert!(cmake.contains("  QML_FILES\n"));
+        for component in ["Grid", "Cell", "Column"] {
+            assert!(
+                cmake.contains(&format!("    {component}.qml")),
+                "{component} must participate in qt_add_qml_module:\n{cmake}"
+            );
+        }
     }
 
     #[test]
@@ -5983,6 +8105,35 @@ version = "1"
             .expect("CMosaicRuntime.c");
         assert!(loader.contains("dlsym(runtime->library, symbol)"));
         assert!(loader.contains("mosaic_app_restore"));
+    }
+
+    #[test]
+    fn swiftui_project_shell_includes_every_exported_component_in_source_set() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component SwiftUI package build");
+
+        let dir = out.path().join("swiftui");
+        for component in ["Grid", "Cell", "Column"] {
+            let artifact = dir.join(format!("{component}.swift"));
+            let source_set_copy = dir.join(format!("Sources/App/{component}.swift"));
+            assert_eq!(
+                fs::read_to_string(&artifact).expect("top-level SwiftUI artifact"),
+                fs::read_to_string(&source_set_copy).expect("SwiftPM source-set copy"),
+                "{component} must participate in the generated SwiftPM build"
+            );
+            assert!(
+                result.artifacts.iter().any(|path| path == &source_set_copy),
+                "{component} source-set copy must be reported as an artifact"
+            );
+        }
     }
 
     #[test]
@@ -6058,6 +8209,35 @@ version = "1"
         let readme = fs::read_to_string(dir.join("README.md")).expect("README.md");
         assert!(readme.contains("Compose Desktop shell"));
         assert!(readme.contains("standard binding loads the Rust application library"));
+    }
+
+    #[test]
+    fn compose_project_shell_includes_every_exported_component_in_source_set() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid", "Cell", "Column"]);
+        let out = TempDir::new().unwrap();
+        let result = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Compose,
+            emit_project: true,
+            theme: None,
+        })
+        .expect("multi-component Compose package build");
+
+        let dir = out.path().join("compose");
+        for component in ["Grid", "Cell", "Column"] {
+            let artifact = dir.join(format!("{component}.kt"));
+            let source_set_copy = dir.join(format!("src/main/kotlin/{component}.kt"));
+            assert_eq!(
+                fs::read_to_string(&artifact).expect("top-level Compose artifact"),
+                fs::read_to_string(&source_set_copy).expect("Gradle source-set copy"),
+                "{component} must participate in the generated Gradle build"
+            );
+            assert!(
+                result.artifacts.iter().any(|path| path == &source_set_copy),
+                "{component} source-set copy must be reported as an artifact"
+            );
+        }
     }
 
     #[test]
@@ -6179,6 +8359,111 @@ version = "1"
             let a = fs::read_to_string(out_a.path().join("react").join(shell_file)).unwrap();
             let b = fs::read_to_string(out_b.path().join("react").join(shell_file)).unwrap();
             assert_eq!(a, b, "`{shell_file}` is not deterministic between runs");
+        }
+    }
+
+    #[test]
+    fn default_authored_children_expand_before_all_five_native_emitters() {
+        let workspace = TempDir::new().unwrap();
+        let foundation = workspace.path().join("mosaic-std-foundation");
+        let app = workspace.path().join("mosaic-authored-children-app");
+
+        write_package_manifest(&foundation, "mosaic-std-foundation", &["Surface"], &[]);
+        write_component_sources(
+            &foundation,
+            "Surface",
+            "component Surface { slot children : list<node> ; }",
+            r#"layout Surface {
+  Column [ foundation-surface-root ] {
+    slot: children
+  }
+}"#,
+            "style Surface { part foundation-surface-root { padding : 16 ; } }",
+        );
+
+        write_package_manifest(
+            &app,
+            "mosaic-authored-children-app",
+            &["App"],
+            &[("mosaic-std-foundation", "0.1.0")],
+        );
+        write_component_sources(
+            &app,
+            "App",
+            "component App { }",
+            r#"layout App {
+  Column [ app-root ] {
+    pkg::mosaic-std-foundation::Surface {
+      Text [ welcome-title ] (
+        content: "Welcome",
+        a11y-role: heading
+      )
+      Row [ app-actions ] {
+        HostButton ( label: "Continue" )
+      }
+    }
+  }
+}"#,
+            "style App { part app-root { padding : 24 ; } }",
+        );
+
+        for backend in [
+            Backend::SwiftUI,
+            Backend::Qt,
+            Backend::Xaml,
+            Backend::Flutter,
+            Backend::Compose,
+        ] {
+            let direct_output = TempDir::new().unwrap();
+            let direct_report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: foundation.clone(),
+                    output_root: direct_output.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("standalone child-slot analysis");
+            assert_eq!(
+                direct_report
+                    .degradations
+                    .iter()
+                    .map(|entry| entry.code.as_str())
+                    .collect::<Vec<_>>(),
+                vec!["composition.child-slot-parameter-unimplemented"],
+                "standalone {backend:?} must remain explicitly incomplete"
+            );
+
+            let output = TempDir::new().unwrap();
+            let result = build_package_with_profile(
+                &BuildOptions {
+                    package_root: app.clone(),
+                    output_root: output.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .unwrap_or_else(|error| panic!("authored children {backend:?} build: {error}"));
+
+            let emitted = result
+                .artifacts
+                .iter()
+                .filter_map(|path| fs::read_to_string(path).ok())
+                .collect::<Vec<_>>()
+                .join("\n");
+            assert!(emitted.contains("Welcome"), "{backend:?} lost title child");
+            assert!(
+                emitted.contains("Continue"),
+                "{backend:?} lost action child"
+            );
+            assert!(
+                !emitted.contains(moslayout_compiler::CHILD_SLOT_MOUNT_TAG),
+                "{backend:?} leaked the internal child mount"
+            );
         }
     }
 }

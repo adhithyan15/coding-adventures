@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C03-como-acento
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 200
-chapter: 3
+chapter: 6
 type: writing
 headword: ¿cómo?
 gloss: the two marks Spanish puts on a question — the opening ¿ and the accent that turns como into cómo

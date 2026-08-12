@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 107,
+  "title": "Cuando --- Both Pasts in One Sentence",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0a6fb379da299dd1",
+  "lessons": [
+    {
+      "id": "ES-C48-cuando",
+      "sequence": 1381,
+      "title": "cuando — putting both pasts in one sentence",
+      "headword": "cuando",
+      "romanization": "cuando",
+      "gloss": "\"when\" — the word that puts a scene and an event in one sentence, so the two pasts can be seen doing different jobs",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9755ccf9de912c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One tense is the scenery and one is the event. So far you have only been able to use one at a time. This chapter's word lets them share a sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-ua — cua is one syllable, not two: KWAN-doh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cuando — when."
+            },
+            {
+              "kind": "speech",
+              "text": "From Latin quandō, and the qu- at the front is not decoration. It is the same question-marker sitting inside qué, quién and cómo — a family you have been collecting since your very first questions."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin built its question words from one root and Spanish kept the whole set, so cuándo with an accent asks a question and cuando without one simply joins two things. Same word, and the accent is doing the same job it always does: marking the stressed, questioning one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the scene and the thing that interrupts it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the two tenses can do their jobs side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudiaba cuando habló Ana. — I was studying when Ana spoke."
+            },
+            {
+              "kind": "speech",
+              "text": "Read what each tense is doing:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudiaba — imperfect. The scene. Already going, no edges, and it does not stop being true when something else happens."
+            },
+            {
+              "kind": "speech",
+              "text": "Habló — preterite. The event. One thing, with edges, dropped into that scene."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the shape most Spanish stories are built from, and it is worth hearing the pattern rather than memorising a rule: the imperfect sets the room, the preterite is what walks into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Turn it around and the sentence changes meaning, not just style:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudié cuando hablaba Ana. — I studied while Ana was talking."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the talking is the room and the studying is the event. Neither version is more correct. They are about different things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Estudiaba cuando habló Ana\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Estudiaba cuando habló Ana\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reversed version, and notice the story changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reversed version, and notice the story changed]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-cuando-say",
+              "prompt": "Say I was studying when Ana spoke.",
+              "assesses": [
+                "ES-LEX-CUANDO",
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-ESTUDIAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "estudiaba cuando hablo ana",
+                "estudiaba cuando habló ana"
+              ],
+              "feedback": {
+                "correct": "Scene in the imperfect, event in the preterite.",
+                "incorrect": "Estudiaba cuando hablo Ana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-cuando-which",
+              "prompt": "Which tense sets the room, and which one walks into it?",
+              "assesses": [
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the imperfect sets the room, the preterite walks in",
+                "imperfect is the scene, preterite is the event"
+              ],
+              "feedback": {
+                "correct": "That is the shape most Spanish stories are built from.",
+                "incorrect": "The imperfect is the scene; the preterite is the event."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-cuando-family",
+              "prompt": "Which other Spanish question words share the front of cuando?",
+              "assesses": [
+                "ES-ETYMON-QUANDO",
+                "ES-LEX-QUE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "que, quien, como",
+                "qué, quién, cómo",
+                "que and quien"
+              ],
+              "feedback": {
+                "correct": "One Latin root, a whole family kept.",
+                "incorrect": "Qué, quién and cómo — the same qu- question-marker."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which tense is the room? (The imperfect.) Which one walks into it? (The preterite.) Next: two verbs where the choice does not change the picture — it changes the meaning."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

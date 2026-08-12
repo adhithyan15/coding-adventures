@@ -35,9 +35,9 @@
 //! # Design tokens
 //!
 //! Token references (`$color-surface`, `$font-size-body`, …) are Lattice-
-//! style variables.  This first implementation resolves them against a built-in
-//! **default dark palette** that matches the values from `UI15-mosstyle.md §1`.
-//! Full Lattice compilation and custom token override files are v2.
+//! style variables. They resolve against a built-in **default dark palette**
+//! that matches `UI15-mosstyle.md §1`, optionally overlaid by a versioned
+//! application token palette.
 //!
 //! # Quick start
 //!
@@ -113,6 +113,36 @@ pub struct StyleTransition {
     pub easing: String,
 }
 
+/// Validated application token values overlaid on Mosaic's built-in palette.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TokenOverrides {
+    values: HashMap<String, String>,
+}
+
+/// A token-palette document could not be parsed or validated.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TokenPaletteError {
+    pub message: String,
+}
+
+impl std::fmt::Display for TokenPaletteError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.message)
+    }
+}
+
+impl std::error::Error for TokenPaletteError {}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct TokenPaletteDocument {
+    schema_version: u32,
+    #[serde(default)]
+    tokens: HashMap<String, String>,
+    #[serde(default)]
+    backends: HashMap<String, HashMap<String, String>>,
+}
+
 /// Style overrides for one interaction state.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StateStyle {
@@ -185,7 +215,6 @@ impl std::error::Error for CompileError {}
 // ===========================================================================
 //
 // These values implement the dark-mode base palette from the spec.
-// Custom token files and the full Lattice override system are v2.
 
 fn default_token_map() -> HashMap<String, String> {
     let mut m = HashMap::new();
@@ -235,11 +264,151 @@ fn default_token_map() -> HashMap<String, String> {
 /// Resolve a `$token-ref` to its concrete value.
 ///
 /// `token_name` is the name without the `$` prefix, e.g. `color-surface`.
-fn resolve_token(token_name: &str, extra: &HashMap<String, String>) -> Option<String> {
-    if let Some(v) = extra.get(token_name) {
-        return Some(v.clone());
+fn resolve_token(token_name: &str, extra: &TokenOverrides) -> Option<String> {
+    resolve_token_inner(token_name, extra, &mut HashSet::new())
+}
+
+fn resolve_token_inner(
+    token_name: &str,
+    extra: &TokenOverrides,
+    visiting: &mut HashSet<String>,
+) -> Option<String> {
+    if !visiting.insert(token_name.to_string()) {
+        return None;
     }
-    default_token_map().get(token_name).cloned()
+    let value = extra
+        .values
+        .get(token_name)
+        .cloned()
+        .or_else(|| default_token_map().get(token_name).cloned())?;
+    let resolved = match value.strip_prefix('$') {
+        Some(reference) if is_valid_token_name(reference) => {
+            resolve_token_inner(reference, extra, visiting)
+        }
+        _ => Some(value),
+    };
+    visiting.remove(token_name);
+    resolved
+}
+
+fn is_valid_token_name(name: &str) -> bool {
+    let mut chars = name.chars();
+    matches!(chars.next(), Some(c) if c.is_ascii_lowercase())
+        && chars.all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
+}
+
+fn validate_token_map(
+    tokens: &HashMap<String, String>,
+    location: &str,
+) -> Result<(), TokenPaletteError> {
+    for (name, value) in tokens {
+        if !is_valid_token_name(name) {
+            return Err(TokenPaletteError {
+                message: format!(
+                    "invalid token name `{name}` in {location}; expected lowercase kebab-case"
+                ),
+            });
+        }
+        if value.is_empty()
+            || value
+                .chars()
+                .any(|c| matches!(c, '{' | '}' | ';' | '\n' | '\r' | '\0'))
+        {
+            return Err(TokenPaletteError {
+                message: format!(
+                    "invalid value for token `{name}` in {location}; values must be non-empty single declarations"
+                ),
+            });
+        }
+        if let Some(reference) = value.strip_prefix('$') {
+            if !is_valid_token_name(reference) {
+                return Err(TokenPaletteError {
+                    message: format!("invalid token reference `{value}` in {location}"),
+                });
+            }
+        }
+    }
+    Ok(())
+}
+
+impl TokenOverrides {
+    /// Validate a programmatically constructed global token map.
+    pub fn try_from_values(values: HashMap<String, String>) -> Result<Self, TokenPaletteError> {
+        validate_token_map(&values, "tokens")?;
+        let overrides = Self { values };
+        for name in overrides.values.keys() {
+            if resolve_token(name, &overrides).is_none() {
+                return Err(TokenPaletteError {
+                    message: format!("token `{name}` contains a missing or circular reference"),
+                });
+            }
+        }
+        Ok(overrides)
+    }
+
+    /// Layer a higher-precedence palette over this palette.
+    ///
+    /// The merged map is validated again because replacing one side of an
+    /// alias can introduce a cycle even when both input palettes were valid
+    /// independently. This is the primitive used by package composition:
+    /// dependency defaults are lower precedence than consuming-package
+    /// defaults, which are lower precedence than explicit application input.
+    pub fn overlay(&self, higher: &Self) -> Result<Self, TokenPaletteError> {
+        let mut values = self.values.clone();
+        values.extend(higher.values.clone());
+        Self::try_from_values(values)
+    }
+}
+
+/// Parse a versioned JSON token palette and select overrides for `backend`.
+///
+/// Global `tokens` are applied first, then the matching `backends` entry. A
+/// value may alias another token with a single `$token-name` reference.
+pub fn parse_token_palette(
+    source: &str,
+    backend: Option<&str>,
+) -> Result<TokenOverrides, TokenPaletteError> {
+    const BACKENDS: &[&str] = &[
+        "react",
+        "electron",
+        "swiftui",
+        "qt",
+        "webcomponent",
+        "html",
+        "xaml",
+        "flutter",
+        "compose",
+    ];
+    let document: TokenPaletteDocument =
+        serde_json::from_str(source).map_err(|error| TokenPaletteError {
+            message: format!("invalid token palette JSON: {error}"),
+        })?;
+    if document.schema_version != 1 {
+        return Err(TokenPaletteError {
+            message: format!(
+                "unsupported token palette schema_version {}; expected 1",
+                document.schema_version
+            ),
+        });
+    }
+    validate_token_map(&document.tokens, "tokens")?;
+    for (name, tokens) in &document.backends {
+        if !BACKENDS.contains(&name.as_str()) {
+            return Err(TokenPaletteError {
+                message: format!(
+                    "unknown token palette backend `{name}`; expected one of {}",
+                    BACKENDS.join(", ")
+                ),
+            });
+        }
+        validate_token_map(tokens, &format!("backends.{name}"))?;
+    }
+
+    let mut selected = document.tokens;
+    if let Some(tokens) = backend.and_then(|name| document.backends.get(name)) {
+        selected.extend(tokens.clone());
+    }
+    TokenOverrides::try_from_values(selected)
 }
 
 // ===========================================================================
@@ -318,13 +487,21 @@ pub fn parse_style(source: &str) -> Result<GrammarASTNode, String> {
 
 /// Walk the raw grammar AST and produce a typed `StyleDef`.
 pub fn analyze(ast: &GrammarASTNode) -> Result<StyleDef, CompileError> {
+    analyze_with_tokens(ast, &TokenOverrides::default())
+}
+
+/// Analyze a style AST while resolving `$token` references through overrides.
+pub fn analyze_with_tokens(
+    ast: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<StyleDef, CompileError> {
     let style_node = find_rule(ast, "style_def").ok_or_else(|| CompileError {
         kind: ErrorKind::InternalError,
         message: "style_def rule not found in AST".to_string(),
     })?;
 
     let component_name = extract_style_name(style_node)?;
-    let parts = extract_parts(style_node)?;
+    let parts = extract_parts(style_node, tokens)?;
 
     Ok(StyleDef {
         component_name,
@@ -349,19 +526,25 @@ fn extract_style_name(style_def: &GrammarASTNode) -> Result<String, CompileError
     })
 }
 
-fn extract_parts(style_def: &GrammarASTNode) -> Result<Vec<PartStyle>, CompileError> {
+fn extract_parts(
+    style_def: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<Vec<PartStyle>, CompileError> {
     let mut parts = Vec::new();
     for child in &style_def.children {
         if let ASTNodeOrToken::Node(n) = child {
             if n.rule_name == "part_def" {
-                parts.push(analyze_part(n)?);
+                parts.push(analyze_part(n, tokens)?);
             }
         }
     }
     Ok(parts)
 }
 
-fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
+fn analyze_part(
+    part_def: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<PartStyle, CompileError> {
     // part_def = KEYWORD("part") part_path LBRACE { part_item } RBRACE
     //
     // part_path = NAME { SLASH NAME }
@@ -391,13 +574,13 @@ fn analyze_part(part_def: &GrammarASTNode) -> Result<PartStyle, CompileError> {
                         if let ASTNodeOrToken::Node(inner) = item_child {
                             match inner.rule_name.as_str() {
                                 "property_decl" => {
-                                    base.push(analyze_property(inner)?);
+                                    base.push(analyze_property(inner, tokens)?);
                                 }
                                 "transition_decl" => {
-                                    transitions.push(analyze_transition(inner)?);
+                                    transitions.push(analyze_transition(inner, tokens)?);
                                 }
                                 "state_block" => {
-                                    states.push(analyze_state(inner)?);
+                                    states.push(analyze_state(inner, tokens)?);
                                 }
                                 _ => {}
                             }
@@ -435,7 +618,10 @@ fn analyze_part_path(part_path: &GrammarASTNode) -> String {
     segments.join("/")
 }
 
-fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileError> {
+fn analyze_state(
+    state_block: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<StateStyle, CompileError> {
     // state_block = KEYWORD("state") NAME LBRACE { state_item } RBRACE
     let mut saw_keyword = false;
     let mut state_name: Option<String> = None;
@@ -455,9 +641,9 @@ fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileErro
                 for item_child in &n.children {
                     if let ASTNodeOrToken::Node(inner) = item_child {
                         match inner.rule_name.as_str() {
-                            "property_decl" => props.push(analyze_property(inner)?),
+                            "property_decl" => props.push(analyze_property(inner, tokens)?),
                             "transition_decl" => {
-                                transitions.push(analyze_transition(inner)?);
+                                transitions.push(analyze_transition(inner, tokens)?);
                             }
                             _ => {}
                         }
@@ -478,7 +664,10 @@ fn analyze_state(state_block: &GrammarASTNode) -> Result<StateStyle, CompileErro
     })
 }
 
-fn analyze_transition(transition_decl: &GrammarASTNode) -> Result<StyleTransition, CompileError> {
+fn analyze_transition(
+    transition_decl: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<StyleTransition, CompileError> {
     // transition_decl = KEYWORD("transition") NAME style_value [ style_value ] SEMICOLON
     let mut saw_keyword = false;
     let mut property: Option<String> = None;
@@ -494,7 +683,7 @@ fn analyze_transition(transition_decl: &GrammarASTNode) -> Result<StyleTransitio
                 }
             }
             ASTNodeOrToken::Node(n) if n.rule_name == "style_value" => {
-                values.push(extract_style_value(n)?);
+                values.push(extract_style_value(n, tokens)?);
             }
             _ => {}
         }
@@ -505,7 +694,7 @@ fn analyze_transition(transition_decl: &GrammarASTNode) -> Result<StyleTransitio
         message: "transition_decl missing duration".to_string(),
     })?;
     let easing = values.get(1).cloned().unwrap_or_else(|| {
-        resolve_token("easing-out", &HashMap::new()).unwrap_or_else(|| "ease-out".to_string())
+        resolve_token("easing-out", tokens).unwrap_or_else(|| "ease-out".to_string())
     });
 
     Ok(StyleTransition {
@@ -518,7 +707,10 @@ fn analyze_transition(transition_decl: &GrammarASTNode) -> Result<StyleTransitio
     })
 }
 
-fn analyze_property(prop_decl: &GrammarASTNode) -> Result<StyleProp, CompileError> {
+fn analyze_property(
+    prop_decl: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<StyleProp, CompileError> {
     // property_decl = NAME COLON style_value { style_value } SEMICOLON
     //
     // Multi-value shorthand (CSS-style):
@@ -537,7 +729,7 @@ fn analyze_property(prop_decl: &GrammarASTNode) -> Result<StyleProp, CompileErro
                 prop_name = Some(t.value.clone());
             }
             ASTNodeOrToken::Node(n) if n.rule_name == "style_value" => {
-                values.push(extract_style_value(n)?);
+                values.push(extract_style_value(n, tokens)?);
             }
             _ => {}
         }
@@ -559,7 +751,10 @@ fn analyze_property(prop_decl: &GrammarASTNode) -> Result<StyleProp, CompileErro
     })
 }
 
-fn extract_style_value(sv_ast: &GrammarASTNode) -> Result<String, CompileError> {
+fn extract_style_value(
+    sv_ast: &GrammarASTNode,
+    tokens: &TokenOverrides,
+) -> Result<String, CompileError> {
     // style_value = TOKEN_REF | HASH_COLOR | DIMENSION | NUMBER | STRING | NAME
     // The AST node has one child: the matched token.
     //
@@ -572,7 +767,7 @@ fn extract_style_value(sv_ast: &GrammarASTNode) -> Result<String, CompileError> 
                 Some("TOKEN_REF") => {
                     // Resolve $token-name → concrete value.
                     let name = t.value.trim_start_matches('$');
-                    resolve_token(name, &HashMap::new()).ok_or_else(|| CompileError {
+                    resolve_token(name, tokens).ok_or_else(|| CompileError {
                         kind: ErrorKind::UnresolvedToken,
                         message: format!("Token '{}' not found in token map", t.value),
                     })
@@ -770,6 +965,15 @@ pub fn compile(
     source: &str,
     part_map_json: Option<&str>,
 ) -> Result<CompileOutput, Vec<CompileError>> {
+    compile_with_tokens(source, part_map_json, &TokenOverrides::default())
+}
+
+/// Compile a `.msl` source file with application token overrides.
+pub fn compile_with_tokens(
+    source: &str,
+    part_map_json: Option<&str>,
+    tokens: &TokenOverrides,
+) -> Result<CompileOutput, Vec<CompileError>> {
     let ast = parse_style(source).map_err(|e| {
         vec![CompileError {
             kind: ErrorKind::InternalError,
@@ -777,7 +981,7 @@ pub fn compile(
         }]
     })?;
 
-    let def = analyze(&ast).map_err(|e| vec![e])?;
+    let def = analyze_with_tokens(&ast, tokens).map_err(|e| vec![e])?;
     validate(&def, part_map_json)?;
 
     let lattice = emit_lattice(&def);
@@ -1618,6 +1822,111 @@ mod tests {
         assert!(result.style_map_json.contains("\"component\": \"Grid\""));
         assert!(result.style_map_json.contains("\"root\""));
         assert!(result.style_map_json.contains("\"background\""));
+    }
+
+    #[test]
+    fn token_palette_applies_global_then_backend_overrides() {
+        let palette = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#123456",
+                "button-accent": "$brand-accent"
+              },
+              "backends": {
+                "swiftui": { "brand-accent": "#abcdef" }
+              }
+            }"##,
+            Some("swiftui"),
+        )
+        .expect("valid palette");
+        let src = r#"
+          style Button {
+            part root { background: $button-accent ; }
+          }
+        "#;
+        let result = compile_with_tokens(src, None, &palette).expect("style compiles");
+        assert_eq!(result.def.parts[0].base[0].value, "#abcdef");
+    }
+
+    #[test]
+    fn token_palette_overlay_uses_higher_precedence_and_reresolves_aliases() {
+        let defaults = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#123456",
+                "button-accent": "$brand-accent"
+              }
+            }"##,
+            None,
+        )
+        .unwrap();
+        let app = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": { "brand-accent": "#abcdef" }
+            }"##,
+            None,
+        )
+        .unwrap();
+        let layered = defaults.overlay(&app).expect("palettes layer");
+        let output = compile_with_tokens(
+            "style Button { part root { background: $button-accent ; } }",
+            None,
+            &layered,
+        )
+        .unwrap();
+        assert_eq!(output.def.parts[0].base[0].value, "#abcdef");
+
+        let higher_cycle = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": { "brand-accent": "$button-accent" }
+            }"##,
+            None,
+        )
+        .unwrap_err();
+        assert!(higher_cycle.message.contains("missing or circular"));
+    }
+
+    #[test]
+    fn token_palette_rejects_unknown_versions_backends_and_cycles() {
+        let wrong_version = r#"{"schema_version":2,"tokens":{}}"#;
+        assert!(parse_token_palette(wrong_version, None)
+            .unwrap_err()
+            .message
+            .contains("expected 1"));
+
+        let unknown_backend = r##"{
+          "schema_version":1,
+          "backends":{"swifuti":{"color-accent":"#ffffff"}}
+        }"##;
+        assert!(parse_token_palette(unknown_backend, Some("swiftui"))
+            .unwrap_err()
+            .message
+            .contains("unknown token palette backend"));
+
+        let cycle = r#"{
+          "schema_version":1,
+          "tokens":{"brand-a":"$brand-b","brand-b":"$brand-a"}
+        }"#;
+        assert!(parse_token_palette(cycle, None)
+            .unwrap_err()
+            .message
+            .contains("circular"));
+    }
+
+    #[test]
+    fn token_palette_rejects_declaration_injection() {
+        let source = r#"{
+          "schema_version":1,
+          "tokens":{"color-accent":"red; display: none"}
+        }"#;
+        assert!(parse_token_palette(source, None)
+            .unwrap_err()
+            .message
+            .contains("single declarations"));
     }
 
     /// `MAX_RULE_DEPTH` (the shared [`super::MAX_RULE_DEPTH`], set to the

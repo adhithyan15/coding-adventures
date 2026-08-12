@@ -1,6 +1,6 @@
 [package]
 name = "coding-adventures-axiom-to-semantic-ir"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Axiom CST -> narrow-waist Semantic IR (SIR23 symbolic/pattern domain, Stream B). MA-13e, the last item in Axiom's native pipeline per MA13 §6; front3 of HML01."
 license = "MIT"

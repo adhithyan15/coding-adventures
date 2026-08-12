@@ -801,7 +801,7 @@ fn call_before_textual_definition_resolves_via_two_pass_collection() {
     let main = main_fn(&m);
     assert!(matches!(
         &main.body.stmts[0],
-        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "print"
+        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "__sys_write__"
     ));
 }
 
@@ -811,7 +811,7 @@ fn disp_maps_onto_the_shared_print_builtin() {
     let main = main_fn(&m);
     assert!(matches!(
         &main.body.stmts[0],
-        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "print"
+        Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. } if name == "__sys_write__"
     ));
 }
 

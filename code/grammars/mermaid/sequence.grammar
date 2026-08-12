@@ -1,4 +1,4 @@
-# @version 1
+# @version 4
 # Mermaid 11.16.1 sequence diagram parser grammar: initial native subset.
 
 document = { terminator } HEADER body EOF ;
@@ -6,13 +6,14 @@ body = { terminator | statement } ;
 statement = participant_stmt | participant_box | destroy_stmt | message_stmt | activation_stmt | note_stmt | link_stmt | links_stmt | properties_stmt | details_stmt | accessibility_stmt | title_stmt | autonumber_stmt | control_block ;
 
 participant_stmt = [ "create" ] participant_decl ;
-participant_decl = ( "participant" | "actor" ) actor_ref [ CONFIG ] [ "as" text ] ;
-participant_box = "box" [ text ] terminator { terminator | participant_decl } "end" ;
+participant_decl = ( "participant" | "actor" ) actor_ref [ CONFIG ] [ "as" WRAP_DIRECTIVE [ text ] | "as" text | WRAP_DIRECTIVE [ text ] ] ;
+participant_box = "box" [ COLOR ] [ WRAP_DIRECTIVE ] [ text ] terminator { terminator | participant_decl } "end" ;
 destroy_stmt = "destroy" actor_ref ;
-message_stmt = actor_ref [ CENTRAL ] message_arrow [ CENTRAL ] [ PLUS | MINUS ] actor_ref COLON wrapped_text ;
+message_stmt = actor_ref message_tail COLON wrapped_text ;
+message_tail = message_arrow [ PLUS | MINUS ] actor_ref | message_arrow CENTRAL actor_ref | CENTRAL message_arrow actor_ref | CENTRAL message_arrow CENTRAL actor_ref ;
 activation_stmt = ( "activate" | "deactivate" ) actor_ref ;
 note_stmt = "note" ( ( "left" | "right" ) "of" actor_ref | "over" actor_pair ) COLON wrapped_text ;
-link_stmt = "link" actor_ref COLON text AT URL ;
+link_stmt = "link" actor_ref COLON link_label AT URL ;
 links_stmt = "links" actor_ref COLON JSON_OBJECT ;
 properties_stmt = "properties" actor_ref COLON JSON_OBJECT ;
 details_stmt = "details" actor_ref COLON details_reference ;
@@ -23,7 +24,7 @@ autonumber_stmt = "autonumber" [ "off" | NUMBER [ NUMBER ] ] ;
 
 control_block = simple_block | rect_block | alt_block | par_block | critical_block ;
 simple_block = ( "loop" | "opt" | "break" ) wrapped_text terminator body "end" ;
-rect_block = "rect" COLOR terminator body "end" ;
+rect_block = "rect" [ text ] terminator body "end" ;
 alt_block = "alt" wrapped_text terminator body { "else" wrapped_text terminator body } "end" ;
 par_block = ( "par" | "par_over" ) wrapped_text terminator body { "and" wrapped_text terminator body } "end" ;
 critical_block = "critical" wrapped_text terminator body { "option" wrapped_text terminator body } "end" ;
@@ -32,7 +33,10 @@ actor_pair = actor_ref [ COMMA actor_ref ] ;
 message_arrow = SOLID_OPEN_ARROW | DOTTED_OPEN_ARROW | SOLID_FILLED_ARROW | DOTTED_FILLED_ARROW | BIDIRECTIONAL_SOLID | BIDIRECTIONAL_DOTTED | SOLID_CROSS_ARROW | DOTTED_CROSS_ARROW | SOLID_POINT_ARROW | DOTTED_POINT_ARROW | SOLID_FILLED_TOP | SOLID_FILLED_BOTTOM | SOLID_STICK_TOP | SOLID_STICK_BOTTOM | DOTTED_FILLED_TOP | DOTTED_FILLED_BOTTOM | DOTTED_STICK_TOP | DOTTED_STICK_BOTTOM | SOLID_REVERSE_FILLED_TOP | SOLID_REVERSE_FILLED_BOTTOM | SOLID_REVERSE_STICK_TOP | SOLID_REVERSE_STICK_BOTTOM | DOTTED_REVERSE_FILLED_TOP | DOTTED_REVERSE_FILLED_BOTTOM | DOTTED_REVERSE_STICK_TOP | DOTTED_REVERSE_STICK_BOTTOM ;
 actor_ref = actor_atom { [ MINUS ] actor_atom } ;
 actor_atom = IDENTIFIER | WORD | NUMBER ;
-identifier = IDENTIFIER | WORD | COLOR | NUMBER | ENTITY | LINE_BREAK ;
-text = identifier { identifier } ;
+identifier = IDENTIFIER | WORD | ANGLE_TEXT | COLOR | NUMBER | ENTITY | LINE_BREAK ;
+link_label = identifier { identifier | COLON | COMMA | MINUS | PLUS | sequence_keyword } ;
+text = text_atom { text_atom } ;
+text_atom = identifier | COLON | COMMA | MINUS | PLUS | AT | CENTRAL | CONFIG | JSON_OBJECT | URL | WRAP_DIRECTIVE | message_arrow | sequence_keyword ;
+sequence_keyword = "participant" | "actor" | "create" | "destroy" | "link" | "links" | "properties" | "details" | "accTitle" | "accDescr" | "box" | "as" | "activate" | "deactivate" | "note" | "left" | "right" | "of" | "over" | "title" | "autonumber" | "off" | "loop" | "rect" | "opt" | "alt" | "else" | "par" | "par_over" | "and" | "critical" | "option" | "break" | "end" ;
 wrapped_text = [ WRAP_DIRECTIVE ] [ text ] ;
 terminator = NEWLINE | SEMICOLON ;

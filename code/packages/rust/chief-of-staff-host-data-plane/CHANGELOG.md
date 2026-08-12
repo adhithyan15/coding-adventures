@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Expose the exact binding-aware installed D18D catalog through a separately
+  authorized data-plane operation while preserving exact-catalog enforcement
+  on every later tool completion.
+- Add an injected manifest-blind model-tool dispatcher, require the entire
+  offered catalog to equal its installed catalog, and carry exact structured
+  D18D execution results back to the authenticated child.
+- Carry bounded tool-aware completion turns through exact-model authorization,
+  adapt declarations and prior results to `llm-gateway`, and retain structured
+  calls, provider identity, usage, finish reason, latency, and polyfill evidence.
 - Expose exact model-registry cardinality without exposing provider clients.
 - Document production daemon injection for non-empty typed authority declarations.
 - Add an exact zeroizing pipeline/agent/channel key registry for safe production

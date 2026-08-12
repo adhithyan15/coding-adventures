@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.12.0 — SIR28 §7: remove dead bare `print`/`puts` handling
+
+Every frontend now emits `__sys_write__` instead of bare `print`/`puts`
+(SIR28 Slices 4-6, all merged), so this backend's `print`/`puts` emit-name
+entries are dead code. Removed:
+
+- The `"print"`/`"puts"` arms from the emit helper-name match.
+- The `sir_print as _sir_print`/`sir_puts as _sir_puts` aliases from the
+  runtime import header.
+
+Requires `coding-adventures-sir-runtime-core` >= 0.5.0 (which removes
+`sir_print`/`sir_puts` entirely — see that package's own changelog).
+
+This is a breaking change for any SIR module that still emits bare
+`print`/`puts` — none do, in this monorepo, as of SIR28 Slice 6.
+
+Test suite: four hand-built unit tests that used bare `print` purely to
+observe hand-constructed IR's output (unrelated to testing print
+semantics itself) now build the equivalent `__sys_write__` envelope
+(`terminator: "once"`, matching this backend's old bare `print`'s
+always-newline behavior via native Python `print()`), plus
+`Feature::ConsoleIO`/`Feature::Strings` added to each affected manifest.
+Every frontend-driven (real Twig/Ruby source) test was already correct
+and untouched — those exercise the already-migrated frontends.
+
+## 0.11.0 — implement `__sys_write__`, the SIR28 console-output primitive
+
+Adds a `"__sys_write__" => "_sir_write"` emit arm (plain `emit_args`, no
+special literal extraction — Python branches on the stream/terminator
+strings at runtime, exactly like `print`/`puts`) and imports `sir_write as
+_sir_write` from `coding-adventures-sir-runtime-core` (bumped to 0.4.0,
+which adds `sir_write(stream, terminator, unpack_arrays, *values)`,
+generalizing the existing `sir_print`/`sir_puts` into one function
+parameterized by the policy axes SIR28 §2.1 defines). Declares
+`Feature::ConsoleIO`.
+
+Purely additive: nothing emits `__sys_write__` yet, so `_sir_print`/
+`_sir_puts` and every existing `print`/`puts`-sourced program are
+unchanged.
+
+New hand-built-`Module` + real-interpreter execution tests (mirroring
+`run_emitted_python`'s existing pattern) cover all three `terminator`
+modes, `unpack_arrays` true/false, the `stderr` stream, and the
+empty-args `per_value` edge case.
+
 ## 0.10.2 — `<<` (Ruby's shift operator) as a top-level builtin
 
 Part of "Python/JS backends: implement shift-operator runtime dispatch".

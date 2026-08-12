@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C04-de-nada
 spine_node: SPINE-COURTESY-THANK
 sequence: 280
-chapter: 4
+chapter: 7
 type: phrase
 headword: de nada
 gloss: you're welcome (literally "of nothing")

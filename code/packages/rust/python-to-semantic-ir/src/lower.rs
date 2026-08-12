@@ -206,8 +206,8 @@ use std::collections::HashSet;
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use semantic_ir::{
-    Block, Capture, CaptureValue, EffectSet, Expr, Feature, FeatureManifest, Function, IndexArg,
-    MapEntry, Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
+    Block, Capture, CaptureValue, Effect, EffectSet, Expr, Feature, FeatureManifest, Function,
+    IndexArg, MapEntry, Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
 };
 
 /// Maximum expression-nesting depth the lowerer will descend before
@@ -230,10 +230,14 @@ const MAX_EXPR_DEPTH: usize = 256;
 /// It is generous: real source nests a handful of levels, far below this.
 const MAX_BLOCK_DEPTH: usize = 256;
 
-/// The builtin function names M4 recognises in call position.  `range`
-/// is also recognised structurally inside `for` headers (M3); here it is
-/// a general expression-position builtin (`range(n)` outside a `for`).
-const BUILTIN_CALLS: &[&str] = &["print", "len", "range"];
+/// The builtin function names M4 recognises in call position that lower
+/// to a plain `BuiltinCall`. `range` is also recognised structurally
+/// inside `for` headers (M3); here it is a general expression-position
+/// builtin (`range(n)` outside a `for`). `len` gets its own dedicated
+/// check above (lowers to `SeqLen`, not `BuiltinCall`) and `print` its
+/// own below (lowers to SIR28's `__sys_write__`, not a bare
+/// `BuiltinCall("print", ...)`) — neither belongs in this list anymore.
+const BUILTIN_CALLS: &[&str] = &["range"];
 
 /// One extracted `def`-parameter spec: its name, its [`ParamKind`]
 /// (`Required` for a positional param, `Keyword` for a keyword-only one
@@ -3076,7 +3080,43 @@ impl Lowerer {
             });
         }
 
-        // Other builtins (`print` / `range`).
+        // `print(a, b)` → SIR28 §2's `__sys_write__` primitive, not a bare
+        // `BuiltinCall("print", ...)`: real `print()` space-joins every
+        // value with ONE trailing newline (`terminator: "once"`,
+        // `unpack_arrays: false` — SIR28 §2.1's table), distinct from
+        // Ruby's `print`/`puts`. Carrying this as explicit IR data (rather
+        // than an implicit per-backend assumption) is what SIR28 exists to
+        // fix — see SIR28-syscall-primitives.md §"Motivation".
+        if name == "print" && !ctx.is_enclosing_value(&name) {
+            self.observed.add(Feature::ConsoleIO);
+            self.observed.add(Feature::Strings);
+            let mut sys_args = vec![
+                Expr::StrLit {
+                    value: "stdout".to_string(),
+                    span: span.clone(),
+                },
+                Expr::StrLit {
+                    value: "once".to_string(),
+                    span: span.clone(),
+                },
+                Expr::BoolLit {
+                    value: false,
+                    span: span.clone(),
+                },
+            ];
+            sys_args.extend(args);
+            return Ok(Expr::BuiltinCall {
+                name: "__sys_write__".to_string(),
+                args: sys_args,
+                // `__sys_write__` may print; mark the effect so backends
+                // that consult it (e.g. pure-call elimination) don't drop
+                // the call. Matches `javascript-to-semantic-ir`'s
+                // `console.log` -> `__sys_write__` lowering.
+                effects: EffectSet::PURE.with(Effect::MayPrint),
+                span: span.clone(),
+            });
+        }
+        // Other builtins (`range`).
         if BUILTIN_CALLS.contains(&name.as_str()) && !ctx.is_enclosing_value(&name) {
             return Ok(Expr::BuiltinCall {
                 name,

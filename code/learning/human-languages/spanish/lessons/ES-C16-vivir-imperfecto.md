@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C16-vivir-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1118
-chapter: 16
+sequence: 1358
+chapter: 102
 type: grammar
 headword: vivía
 gloss: the singular -ir imperfect — vivía, vivías, vivía
@@ -33,7 +33,7 @@ reviews_of: [ES-C16-comer-imperfecto, ES-C15-comer-vivir-preterite]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-VIVIR, ES-GRAMMAR-IR-PRETERITE-SINGULAR, ES-GRAMMAR-ER-IMPERFECT-SINGULAR] -->
 
-[PAUSE 2s] Chapter 15 let **comer** and **vivir** share one completed-past row.
+[PAUSE 2s] An earlier chapter let **comer** and **vivir** share one completed-past row.
 They converge again here. Replace **com-** in **comía, comías, comía** with
 **viv-**.
 

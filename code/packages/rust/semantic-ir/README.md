@@ -124,6 +124,14 @@ What's covered:
   (`sir_type` lives on declaration sites, not on every `Expr`), so a backend emitter has a way to
   get the `Option<&SirType>` operands `op_select` needs. Not yet consulted by any backend — inert
   until a frontend supplies real `sir_type`s and a per-backend wiring PR calls it.
+- SIR28 syscall primitive family, first instance (`Feature::ConsoleIO`): a reserved
+  `BuiltinCall("__sys_write__", [StrLit(stream), StrLit(terminator), BoolLit(unpack_arrays),
+  ...values])` node — the console-output primitive `"print"`/`"puts"`/JS `console.log` will
+  migrate to, replacing the bare, ad-hoc names that today carry no structured parameters and
+  disagree across backends on newline behavior. `validator.rs` structurally checks
+  `stream`/`terminator` are `StrLit`s from a closed set and `unpack_arrays` is a `BoolLit`. Not
+  yet emitted by any frontend or implemented by any backend — see
+  [SIR28](../../../specs/SIR28-syscall-primitives.md).
 - EffectSet bitset
 - FeatureManifest
 - Textual form (printer; parser deferred)

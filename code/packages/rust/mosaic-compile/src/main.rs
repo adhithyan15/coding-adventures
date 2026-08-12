@@ -36,7 +36,8 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package_with_profile, compose_component_with_model, Backend, BuildOptions, BuildProfile,
+    build_package_with_profile_runtime_and_tokens, compose_component_with_model, Backend,
+    BuildOptions, BuildProfile,
 };
 use mosaic_vm::MosaicVM;
 
@@ -1149,8 +1150,12 @@ fn run_pipeline(
                         _ => relative.to_string(),
                     }
                 };
-                let flat: [(String, &str); 2] = [
+                let flat: [(String, &str); 3] = [
                     (side_file_path("pubspec.yaml"), &proj.pubspec_yaml),
+                    (
+                        side_file_path("analysis_options.yaml"),
+                        &proj.analysis_options_yaml,
+                    ),
                     (side_file_path("README.md"), &proj.readme),
                 ];
                 for (path, src) in &flat {
@@ -1168,6 +1173,17 @@ fn run_pipeline(
                 }
                 write_file_or_die(&main_dart_path, &proj.main_dart);
                 eprintln!("Written: {main_dart_path}");
+                let widget_test_path = side_file_path("test/widget_test.dart");
+                if let Some(parent) = std::path::Path::new(&widget_test_path).parent() {
+                    if !parent.as_os_str().is_empty() {
+                        if let Err(e) = std::fs::create_dir_all(parent) {
+                            eprintln!("mosaic-compile: failed to create {}: {e}", parent.display());
+                            process::exit(1);
+                        }
+                    }
+                }
+                write_file_or_die(&widget_test_path, &proj.widget_test_dart);
+                eprintln!("Written: {widget_test_path}");
             }
         }
         "compose" => {
@@ -1313,6 +1329,28 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         process::exit(1);
     });
 
+    let runtime_library = flags
+        .get("runtime-library")
+        .and_then(|value| value.as_str())
+        .map(PathBuf::from);
+
+    let token_palette = flags
+        .get("token-palette")
+        .and_then(|value| value.as_str())
+        .map(|path| {
+            let source = fs::read_to_string(path).unwrap_or_else(|error| {
+                eprintln!("mosaic-compile pkg: cannot read token palette {path}: {error}");
+                process::exit(1);
+            });
+            mosstyle_compiler::parse_token_palette(&source, Some(backend_str)).unwrap_or_else(
+                |error| {
+                    eprintln!("mosaic-compile pkg: invalid token palette {path}: {error}");
+                    process::exit(1);
+                },
+            )
+        })
+        .unwrap_or_default();
+
     // Theme selector for style (`.msl`) resolution — the style analogue of
     // the layout `--variant` flag. `--theme light` makes the builder read
     // each component's `<Component>.light.msl` (with fallback to the bare
@@ -1360,7 +1398,12 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         theme: theme.map(|s| s.to_string()),
     };
 
-    match build_package_with_profile(&opts, profile) {
+    match build_package_with_profile_runtime_and_tokens(
+        &opts,
+        profile,
+        runtime_library.as_deref(),
+        &token_palette,
+    ) {
         Ok(result) => {
             for path in &result.artifacts {
                 eprintln!("Written: {}", path.display());

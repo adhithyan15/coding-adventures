@@ -21,10 +21,10 @@ platform-specific build commands (e.g., different compiler flags).
 Language inference
 -----------------
 
-We infer the language from the directory path. If the path contains
-``packages/python/X`` or ``programs/python/X``, the language is "python".
-Similarly for "ruby", "go", and "rust". The package name is
-``{language}/{dir-name}``.
+We infer the language only from an exact ``packages/<language>`` or
+``programs/<language>`` bucket. Package identities are
+``{language}/{dir-name}``; program identities retain the namespace as
+``{language}/programs/{dir-name}``.
 """
 
 from __future__ import annotations
@@ -50,6 +50,7 @@ SKIP_DIRS: frozenset[str] = frozenset({
     "node_modules",
     "vendor",
     "dist",
+    "dist-newstyle",
     "build",
     "target",
     ".claude",
@@ -57,6 +58,26 @@ SKIP_DIRS: frozenset[str] = frozenset({
     ".gradle",
     "gradle-build",
 })
+
+# Package languages whose dependency metadata the Python engine can resolve
+# safely. Other exact buckets remain ``unknown`` until their resolver and
+# filter contracts land together.
+DISCOVERABLE_LANGUAGES: tuple[str, ...] = (
+    "python",
+    "ruby",
+    "go",
+    "typescript",
+    "rust",
+    "elixir",
+    "lua",
+    "perl",
+    "swift",
+    "haskell",
+    "java",
+    "kotlin",
+    "csharp",
+    "fsharp",
+)
 
 
 @dataclass
@@ -67,7 +88,7 @@ class Package:
         name: A qualified name like "python/logic-gates" or "ruby/arithmetic".
         path: Absolute path to the package directory.
         build_commands: Lines from the BUILD file (commands to execute).
-        language: Inferred language -- "python", "ruby", "go", "rust", or "unknown".
+        language: Inferred supported package language, or "unknown".
         build_content: Raw BUILD file content (used for Starlark detection).
         is_starlark: Whether the BUILD file uses Starlark syntax.
         declared_srcs: Glob patterns from the Starlark srcs field.
@@ -105,22 +126,31 @@ def _read_lines(filepath: Path) -> list[str]:
 def _infer_language(path: Path) -> str:
     """Infer the programming language from the directory path.
 
-    We look for known language directory names in the path components.
-    The pattern we look for is a parent directory named "python", "ruby",
-    "go", or "rust" that sits under "packages" or "programs".
+    The component immediately below an exact ``packages`` or ``programs``
+    component is authoritative. A language word later in a custom bucket must
+    not change the package's identity.
     """
     parts = path.parts
-    for lang in ("python", "ruby", "go", "rust", "typescript", "elixir", "lua", "perl", "swift", "java", "kotlin"):
-        if lang in parts:
-            return lang
+    for index in range(len(parts) - 2, -1, -1):
+        if parts[index] not in {"packages", "programs"}:
+            continue
+        bucket = parts[index + 1]
+        if bucket in DISCOVERABLE_LANGUAGES:
+            return bucket
+        return "unknown"
     return "unknown"
 
 
 def _infer_package_name(path: Path, language: str) -> str:
     """Build a qualified package name like 'python/logic-gates'.
 
-    Uses the language and the directory's basename.
+    Uses the language and the directory's basename. Direct children of a
+    canonical ``programs/<language>`` bucket retain the ``programs`` identity
+    segment so a package and program may share one basename safely.
     """
+    parts = path.parts
+    if len(parts) >= 3 and parts[-3] == "programs" and parts[-2] == language:
+        return f"{language}/programs/{path.name}"
     return f"{language}/{path.name}"
 
 

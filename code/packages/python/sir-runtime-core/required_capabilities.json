@@ -3,5 +3,5 @@
   "version": 1,
   "package": "python/sir-runtime-core",
   "capabilities": [],
-  "justification": "Pure in-process runtime helpers (truthiness, symbols, pairs, arithmetic, closures, an in-memory global store, and stdout printing). No filesystem, network, process, or environment access."
+  "justification": "Pure in-process runtime helpers (truthiness, symbols, pairs, arithmetic, closures, an in-memory global store, and stdout/stderr printing). No filesystem, network, process, or environment access."
 }

@@ -1,0 +1,14 @@
+% ============================================================================
+% onset-rime.query.adj — worked recall over the onset-rime library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how does this word
+% split into onset and rime?" (segmenting, direct) or "what word do these
+% parts blend into?" (blending, reverse) — it states no fact of its own —
+% it only `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "onset-rime.adj"
+
+? onset_rime(sleep, $Onset, $Rime)   % expect sl, eep (direct: segment "sleep" into onset/rime)
+? onset_rime($Word, bl, ast)         % expect blast (reverse: blend bl + ast into a word)
+? onset_rime(cat, $Onset, $Rime)     % expect abstain -- "cat" is not one of the two words tabled

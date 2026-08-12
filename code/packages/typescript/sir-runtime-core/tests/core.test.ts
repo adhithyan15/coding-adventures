@@ -88,20 +88,18 @@ describe("predicates and display", () => {
     expect(sir.toDisplay(true)).toBe("#t");
   });
 
-  it("print returns null and writes display form", () => {
-    const lines: string[] = [];
-    const spy = vi.spyOn(console, "log").mockImplementation((s: string) => {
-      lines.push(s);
-    });
-    expect(sir.print(null)).toBe(null);
-    spy.mockRestore();
-    expect(lines).toEqual(["nil"]);
-  });
 });
 
-describe("puts (Ruby semantics)", () => {
-  // `puts` writes via process.stdout.write (not console.log) so the
-  // trailing-newline-suppression rule can be honoured; capture that stream.
+// SIR28 §7: the old `print`/`puts` functions (and their dedicated tests)
+// are gone — every frontend now emits `__sys_write__`, implemented below as
+// `write`. The `"none"` cases cover `print`'s old shape; the `"per_value"`
+// cases cover `puts`'s old shape, including its array-flattening and
+// cycle-safety behavior (CWE-674).
+describe("write (SIR28 §2.1: __sys_write__, the console-output primitive)", () => {
+  // `write(stream, terminator, unpackArrays, ...values)` carries what used
+  // to be several backend-hardcoded newline policies as explicit DATA
+  // instead — see the CHANGELOG entry and SIR28-syscall-primitives.md §2.1's
+  // table.
   function capture(fn: () => void): string {
     let out = "";
     const spy = vi
@@ -118,73 +116,72 @@ describe("puts (Ruby semantics)", () => {
     return out;
   }
 
-  it("no args prints a single newline", () => {
-    expect(capture(() => expect(sir.puts()).toBe(null))).toBe("\n");
-  });
+  function captureStderr(fn: () => void): string {
+    let out = "";
+    const spy = vi
+      .spyOn(process.stderr, "write")
+      .mockImplementation((chunk: string | Uint8Array): boolean => {
+        out += String(chunk);
+        return true;
+      });
+    try {
+      fn();
+    } finally {
+      spy.mockRestore();
+    }
+    return out;
+  }
 
-  it("a string is followed by a newline", () => {
-    expect(capture(() => sir.puts("hello"))).toBe("hello\n");
-  });
-
-  it("does not double a trailing newline", () => {
-    expect(capture(() => sir.puts("x\n"))).toBe("x\n");
-  });
-
-  it("multiple args go one per line", () => {
-    expect(capture(() => sir.puts("a", "b"))).toBe("a\nb\n");
-  });
-
-  it("an array is flattened, one element per line", () => {
-    expect(capture(() => sir.puts([1, 2, 3]))).toBe("1\n2\n3\n");
-    expect(capture(() => sir.puts([1, [2, 3]]))).toBe("1\n2\n3\n");
-  });
-
-  it("an empty array prints a single newline", () => {
-    expect(capture(() => sir.puts([]))).toBe("\n");
-  });
-
-  it("nil prints a blank line (not the display form)", () => {
-    expect(capture(() => sir.puts(null))).toBe("\n");
-  });
-
-  it("matches the reference program output", () => {
-    // `puts "hello"; puts; puts [1,2,3]`
-    expect(
-      capture(() => {
-        sir.puts("hello");
-        sir.puts();
-        sir.puts([1, 2, 3]);
-      }),
-    ).toBe("hello\n\n1\n2\n3\n");
-  });
-
-  it("routes through callBuiltin by name", () => {
-    expect(capture(() => expect(sir.callBuiltin("puts", ["hi"])).toBe(null))).toBe(
-      "hi\n",
+  it('"none" writes every value back-to-back with no newline (old `print`)', () => {
+    expect(capture(() => expect(sir.write("stdout", "none", false, "a", "b")).toBe(null))).toBe(
+      "ab",
     );
   });
 
-  it("terminates on a self-referential array (cycle-guarded, CWE-674)", () => {
-    // `a = []; a << a; puts a` in Ruby prints `[...]` and terminates.  Without
-    // the cycle guard the element-per-line flatten recurses forever and throws
-    // `RangeError: Maximum call stack size exceeded` (a DoS).  The guard must
-    // both terminate AND render the cycle as `[...]`, matching Ruby.
-    const a: unknown[] = [];
-    a.push(a);
-    expect(capture(() => sir.puts(a))).toBe("[...]\n");
+  it('"per_value" writes one newline per value (old `puts`)', () => {
+    expect(capture(() => sir.write("stdout", "per_value", false, 1, 2))).toBe("1\n2\n");
   });
 
-  it("terminates on a mutually-recursive array pair", () => {
-    // Two arrays referencing each other (a -> b -> a) still forms a cycle on
-    // the flatten path; both must render `[...]` at the back-reference rather
-    // than diverging.  `puts a` flattens a's element (b), then b's element (a),
-    // which is already on the path → `[...]`.
+  it('"per_value" with zero values writes a single blank line', () => {
+    expect(capture(() => sir.write("stdout", "per_value", false))).toBe("\n");
+  });
+
+  it('"per_value" with unpackArrays flattens a nested array, one leaf per line', () => {
+    expect(capture(() => sir.write("stdout", "per_value", true, [1, [2, 3], 4]))).toBe(
+      "1\n2\n3\n4\n",
+    );
+  });
+
+  it('"per_value" without unpackArrays displays the array as one value (toDisplay\'s array fallback: `String(v)`, no brackets)', () => {
+    expect(capture(() => sir.write("stdout", "per_value", false, [1, 2]))).toBe("1,2\n");
+  });
+
+  it('"once" space-joins every value with a single trailing newline (Python/JS console.log)', () => {
+    expect(capture(() => sir.write("stdout", "once", false, 1, 2))).toBe("1 2\n");
+  });
+
+  it('stream "stderr" writes to stderr, not stdout', () => {
+    let stdout = "";
+    expect(
+      captureStderr(() => {
+        stdout = capture(() => sir.write("stderr", "once", false, "oops"));
+      }),
+    ).toBe("oops\n");
+    expect(stdout).toBe("");
+  });
+
+  it('"per_value" with unpackArrays terminates on a self-referential array (CWE-674)', () => {
     const a: unknown[] = [];
-    const b: unknown[] = [a];
-    a.push(b);
-    // a = [b], b = [a].  puts a: flatten a → element b (array, not seen) →
-    // flatten b → element a (already on path) → `[...]`.
-    expect(capture(() => sir.puts(a))).toBe("[...]\n");
+    a.push(a);
+    expect(capture(() => sir.write("stdout", "per_value", true, a))).toBe("[...]\n");
+  });
+
+  it("routes through callBuiltin by name", () => {
+    expect(
+      capture(() =>
+        expect(sir.callBuiltin("__sys_write__", ["stdout", "once", false, "hi"])).toBe(null),
+      ),
+    ).toBe("hi\n");
   });
 });
 

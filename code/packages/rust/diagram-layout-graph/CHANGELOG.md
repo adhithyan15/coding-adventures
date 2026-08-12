@@ -1,5 +1,49 @@
 # Changelog — diagram-layout-graph
 
+## 0.12.0
+
+- Scale graph geometry and resolved styles to an explicit requested canvas width.
+
+## 0.11.0
+
+- Apply composite state direction overrides to direct region members.
+
+## 0.10.0
+
+- Reserve line-aware node geometry for repeated state descriptions.
+
+## 0.9.0
+
+- Route graph edges to composite-group boundary geometry.
+
+## 0.8.0
+
+- Stack concurrent state regions and resolve horizontal group dividers.
+
+## 0.7.0
+
+- Resolve composite graph-group styles into deterministic layout geometry.
+
+## 0.6.0
+
+- Compute padded nested group bounds around composite-state members.
+
+## 0.5.0
+
+- Forward graph node links and tooltips for backend hit-test metadata.
+
+## 0.4.0
+
+- Forward graph accessibility metadata into layout IR for backend export.
+
+## 0.3.0
+
+- Reserve line-aware geometry for backend-neutral note nodes.
+
+## 0.2.0
+
+- Give backend-neutral bar nodes compact fork/join geometry.
+
 ## 0.1.1 — TextMeasurer injection for real node sizing
 
 ### Changed

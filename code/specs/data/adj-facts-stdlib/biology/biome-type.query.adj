@@ -1,0 +1,5 @@
+import "biome-type.adj"
+
+? biome_type(desert, $D)                                                                    % expect dry_areas_where_rainfall_is_less_than_50_centimeters_20_inches_per_year (direct)
+? biome_type($B, open_regions_dominated_by_grass_with_a_warm_dry_climate)                    % expect grassland (reverse)
+? biome_type(aquatic, $D)                                                                    % expect abstain -- the source's fifth major biome, but one whose own section defers to freshwater/marine sub-categories rather than stating a single clean defining sentence

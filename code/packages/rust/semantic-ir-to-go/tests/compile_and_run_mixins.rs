@@ -49,7 +49,18 @@ fn builtin(name: &str, args: Vec<Expr>) -> Expr {
 }
 
 fn print_stmt(v: Expr) -> Stmt {
-    Stmt::ExprStmt { expr: builtin("print", vec![v]), span: s() }
+    Stmt::ExprStmt {
+        expr: builtin(
+            "__sys_write__",
+            vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                v,
+            ],
+        ),
+        span: s(),
+    }
 }
 
 /// A hoisted method as a top-level function (no captures; methods use the
@@ -113,6 +124,7 @@ fn module_from(name: &str, mut functions: Vec<Function>, main_stmts: Vec<Stmt>) 
         Feature::MutableBindings,
         Feature::Closures,
         Feature::DynamicTyping,
+        Feature::ConsoleIO,
     ];
     Module {
         name: name.into(),

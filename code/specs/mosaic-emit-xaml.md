@@ -110,7 +110,7 @@ of them; this column is the WinUI 3 contract.
 | `For`       | `<ItemsRepeater ItemsSource="{x:Bind each}">` + `<DataTemplate>` for the body. The `as:` / `index:` bindings surface as `DataContext` properties via a generated `RowVm` POCO. See §6.1. | |
 | `HostInput` | `<TextBox>` | §4. |
 | `HostButton`| `<Button>` | §4. |
-| `HostTable` | `<Grid>` (the XAML primitive — confusingly same name as Mosaic's userland Grid!) with `Grid.RowDefinitions` / `Grid.ColumnDefinitions` populated from the section sub-tags. See §5. |
+| `HostTable` | Component-scoped `<local:*MosaicTable>` (`Grid` subclass) with native UIA Table/Grid peers for the canonical indexed dynamic shape; structural `<Grid>` fallback otherwise. See §5. |
 | `HostScroll`| `<ScrollViewer>` | Vertical scroll by default; `direction: horizontal` prop swaps. |
 
 Every emitted control gets an `x:Name` derived from its kebab-case
@@ -183,12 +183,19 @@ element, treating it as a XAML UserControl reference. See §11.
 
 ## 5. `HostTable` and its section sub-tags
 
-`HostTable` is the only kernel primitive WinUI 3 has no idiomatic native
-control for. The Microsoft Community Toolkit's `DataGrid` is the canonical
-"native" data grid, but it is a third-party dependency and overshoot for
-simple cases. This emitter therefore takes the same shape that the React,
-HTML, and WebComponent backends use — explicit row/column layout — but
-generated as a `<Grid>` with computed `RowDefinitions` / `ColumnDefinitions`.
+WinUI 3 has no core DataGrid. The emitter therefore preserves Mosaic's explicit
+row/column composition as a `Grid`/`ItemsRepeater` visual tree. For the canonical
+indexed dynamic UI31 shape, the root, headers, and cells are component-scoped
+controls whose automation peers implement native UIA Table/Grid and
+TableItem/GridItem provider patterns. This avoids a deprecated third-party
+control while retaining arbitrary interactive content inside each cell.
+
+The native semantic path requires exactly one header row containing an indexed
+`For` over a slot, and one indexed body `For` over a rows slot whose `Row`
+contains an indexed cell `For` over that row alias. Ambiguous structures,
+footers, or missing stable indices keep the structural visual fallback and are
+reported as `accessibility.table-semantics-missing` by native-completeness
+analysis.
 
 ### 5.1 Section sub-tags
 
@@ -208,57 +215,46 @@ with no sections lowers to an empty `<Grid/>`.
 
 ### 5.2 Layout shape
 
-For a Table with one head row and an `N`-row body, the emitter produces:
+For the canonical indexed dynamic shape, the emitter produces this abridged
+structure:
 
 ```xml
-<Grid x:Name="Sheet" AutomationProperties.LandmarkType="Main">
-  <Grid.Resources>
-    <local:RowVmTemplateSelector x:Key="RowVmSelector" .../>
-  </Grid.Resources>
-
-  <Grid.ColumnDefinitions>
-    <!-- one ColumnDefinition per Col in HostTableColGroup, or one Auto per cell otherwise -->
-    <ColumnDefinition Width="80"/>
-    <ColumnDefinition Width="80"/>
-    <ColumnDefinition Width="*"/>
-  </Grid.ColumnDefinitions>
-
+<local:SheetMosaicTable RowCount="{x:Bind BodyRows.Count}"
+                        ColumnCount="{x:Bind HeadCells.Count}"
+                        AutomationProperties.Name="sheet table">
   <Grid.RowDefinitions>
-    <!-- Auto for head, * (filling) for body bound to viewport size, Auto for foot -->
     <RowDefinition Height="Auto"/>
     <RowDefinition Height="*"/>
-    <RowDefinition Height="Auto"/>
   </Grid.RowDefinitions>
 
-  <!-- Head -->
   <ItemsRepeater Grid.Row="0" ItemsSource="{x:Bind HeadCells}">
-    <ItemsRepeater.Layout>
-      <UniformGridLayout Orientation="Horizontal" MaximumRowsOrColumns="3"/>
-    </ItemsRepeater.Layout>
     <ItemsRepeater.ItemTemplate>
       <DataTemplate x:DataType="local:HeadCellVm">
-        <Border Style="{StaticResource SheetHeaderCellStyle}">
-          <TextBlock Text="{x:Bind Value}"/>
-        </Border>
+        <local:SheetMosaicTableHeaderCell
+            Column="{x:Bind Index}"
+            Header="{x:Bind Value}"
+            AutomationProperties.Name="{x:Bind Value}">
+          <!-- authored header-cell subtree -->
+        </local:SheetMosaicTableHeaderCell>
       </DataTemplate>
     </ItemsRepeater.ItemTemplate>
   </ItemsRepeater>
 
-  <!-- Body -->
   <ScrollViewer Grid.Row="1">
     <ItemsRepeater ItemsSource="{x:Bind BodyRows}">
       <ItemsRepeater.ItemTemplate>
         <DataTemplate x:DataType="local:BodyRowVm">
           <ItemsRepeater ItemsSource="{x:Bind Cells}">
-            <ItemsRepeater.Layout>
-              <UniformGridLayout Orientation="Horizontal"/>
-            </ItemsRepeater.Layout>
             <ItemsRepeater.ItemTemplate>
               <DataTemplate x:DataType="local:CellVm">
-                <Border Style="{StaticResource SheetCellStyle}"
-                        Tapped="Cell_Tapped">
-                  <TextBlock Text="{x:Bind Value}"/>
-                </Border>
+                <local:SheetMosaicTableCell
+                    Row="{x:Bind RowIndex}"
+                    Column="{x:Bind Index}"
+                    Header="{x:Bind MosaicTableHeader}"
+                    Value="{x:Bind Value}"
+                    AutomationProperties.Name="{x:Bind MosaicTableName}">
+                  <!-- authored interactive cell subtree -->
+                </local:SheetMosaicTableCell>
               </DataTemplate>
             </ItemsRepeater.ItemTemplate>
           </ItemsRepeater>
@@ -266,32 +262,27 @@ For a Table with one head row and an `N`-row body, the emitter produces:
       </ItemsRepeater.ItemTemplate>
     </ItemsRepeater>
   </ScrollViewer>
-
-  <!-- Foot -->
-  <ItemsRepeater Grid.Row="2" ItemsSource="{x:Bind FootCells}">
-    ...
-  </ItemsRepeater>
-</Grid>
+</local:SheetMosaicTable>
 ```
 
-The emitter generates the matching `HeadCellVm`, `BodyRowVm`, and `CellVm`
-POCOs in the code-behind. They're plain C# records that the
-DependencyProperty getter for each section materialises from the bound
-slot value.
+The emitter generates matching row view-model projections in the code-behind.
+They carry stable indices plus computed header and accessible-name properties;
+the existing projection machinery materialises them from bound slot values.
 
-### 5.3 Accessibility caveat
+### 5.3 Accessibility contract
 
-XAML's `<Grid>` does *not* expose `AutomationControlType.Table` to UIA. If
-the consumer needs a screen-reader-detectable table (the inclusion criterion
-in UI29 §2.2 #3), the emitter offers `--use-community-datagrid` (off by
-default) which switches the lowering to `<controls:DataGrid>` from
-`CommunityToolkit.WinUI.UI.Controls.DataGrid`. With that flag, the project
-gains a `PackageReference` to the toolkit and the section sub-tags lower to
-`DataGridColumn` / `DataGridRow` definitions instead.
+The generated table peer publishes `AutomationControlType.Table`, row and
+column counts, `IGridProvider.GetItem`, and column-header providers. Realized
+cell peers publish `AutomationControlType.DataItem`, their row/column/span,
+containing-grid provider, column-header association, and an accessible name
+derived from header, row, and value. Header peers publish
+`AutomationControlType.HeaderItem`. Cell controls are keyboard focusable and
+arrow keys move to adjacent realized cells.
 
-This is the only platform-asymmetry in the spec: every other backend has a
-native or near-native `<table>` semantically. WinUI 3 forces a choice between
-extra dependency and reduced UIA fidelity.
+The fallback `<Grid>` does not claim these patterns. Capability analysis calls
+the emitter's same conservative shape predicate, so a permissive artifact gets
+an explicit degradation and a strict artifact fails rather than overstating UIA
+fidelity.
 
 ## 6. New grammar — `If`, `For`, and `Expr`
 
@@ -490,7 +481,6 @@ package's `Themes/Generic.xaml` *first* and the host's overrides second.
 | `--emit-project`            | `false` | Also write `.csproj`, `App.xaml(.cs)`, `MainWindow.xaml(.cs)`, `Package.appxmanifest`. |
 | `--namespace <ns>`          | `Mosaic.Generated` | Top-level C# namespace. |
 | `--windows-app-sdk <v>`     | `1.5`   | Pins the `<PackageReference>` version. |
-| `--use-community-datagrid`  | `false` | Lower `HostTable` to `controls:DataGrid` (see §5.3). |
 | `--package-mode` *(new)*    | `false` | Treat the input as a UI29 userland package (`mosaic-package.toml` next to the source). Emits one XAML triple per exported component plus a library `.csproj`. |
 
 Inside `code/packages/rust/mosaic-compile/src/main.rs`, the `--backend`

@@ -1,0 +1,4 @@
+// Secondary metadata and compact explanatory copy.
+component CaptionText {
+  slot content : text ;
+}

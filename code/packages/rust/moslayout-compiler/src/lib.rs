@@ -69,7 +69,7 @@ use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 mod _grammar;
 
@@ -107,9 +107,17 @@ mod _grammar;
 /// component reference (matching the userland v0.2.0 package).
 #[allow(dead_code)] // retained as API surface / scaffolding
 const PRIMITIVES: &[&str] = &[
-    "Box", "Row", "Column", "Text", "Image", "Spacer",
+    "Box",
+    "Row",
+    "Column",
+    "Text",
+    "Image",
+    "Spacer",
     // Extended set from earlier specs (kept for completeness):
-    "Scroll", "Divider", "Stack", "Icon",
+    "Scroll",
+    "Divider",
+    "Stack",
+    "Icon",
     // U29-G1 — control-flow meta-primitive. See `validate_for_node` for the
     // prop contract (`each:`, `as:`, optional `index:`).
     "For",
@@ -142,18 +150,28 @@ const PRIMITIVES: &[&str] = &[
     // keyboard, ± stepper buttons (Qt SpinBox / WinUI NumberBox), and
     // min/max validation. See code/specs/UI29-4-form-and-nav-
     // candidates-survey.md for the full inclusion-criteria audit.
-    "HostInput", "HostButton", "HostTable", "HostScroll", "HostDialog",
+    "HostInput",
+    "HostButton",
+    "HostTable",
+    "HostScroll",
+    "HostDialog",
     // Typed native composition boundary for host-supplied `node` slots.
     "HostSurface",
-    "HostCheckbox", "HostRadio",
-    "HostLink", "HostTooltip", "HostNumberInput",
+    "HostCheckbox",
+    "HostRadio",
+    "HostLink",
+    "HostTooltip",
+    "HostNumberInput",
     // UI31 — `HostTable` sibling primitives. Recognised by the React
     // emitter's HostTable dispatcher pre-UI31; promoting to PRIMITIVES
     // here so the parser stops routing them through the unknown-
     // component-reference fallback path and so future backends'
     // emitters can match on them directly. See
     // `code/specs/UI31-host-table.md` §2 for the structural shape.
-    "HostTableColGroup", "HostTableHead", "HostTableBody", "HostTableFoot",
+    "HostTableColGroup",
+    "HostTableHead",
+    "HostTableBody",
+    "HostTableFoot",
     "Col",
     // UI35 — the drag-and-drop family. Before this the kernel had **no**
     // drag primitive of any kind, so "drag a card to another column" —
@@ -167,7 +185,8 @@ const PRIMITIVES: &[&str] = &[
     // author cannot re-derive. Two primitives because a drag has two
     // ends — a card is typically both. See
     // `code/specs/UI35-host-drag-drop.md`.
-    "HostDraggable", "HostDropTarget",
+    "HostDraggable",
+    "HostDropTarget",
 ];
 
 #[allow(dead_code)] // retained as API surface / scaffolding
@@ -266,7 +285,33 @@ pub struct LayoutNode {
     pub children: Vec<LayoutNode>,
 }
 
+/// Internal IR tag for `slot: <name>` in layout child position.
+///
+/// The package resolver consumes these mounts before backend emission and
+/// replaces them with caller-authored component children. Keeping the mount in
+/// the existing `LayoutNode` shape avoids a breaking IR enum migration while
+/// still making accidental emitter leakage easy to detect.
+pub const CHILD_SLOT_MOUNT_TAG: &str = "$mosaic-child-slot";
+
 impl LayoutNode {
+    /// Whether this node is a UI29-2 authored-children mount.
+    pub fn is_child_slot_mount(&self) -> bool {
+        self.tag == CHILD_SLOT_MOUNT_TAG
+    }
+
+    /// The mounted interface slot name for a UI29-2 child mount.
+    pub fn child_slot_name(&self) -> Option<&str> {
+        if !self.is_child_slot_mount() {
+            return None;
+        }
+        self.props
+            .iter()
+            .find_map(|prop| match (&*prop.name, &prop.value) {
+                ("slot", LayoutPropValue::SlotRef(name)) => Some(name.as_str()),
+                _ => None,
+            })
+    }
+
     /// UI34 — return `Some((package_name, component_name))` when
     /// `tag` is a qualified `pkg::P::C` reference; `None`
     /// otherwise.
@@ -549,10 +594,10 @@ pub fn validate(
     let mut errors = Vec::new();
 
     // Build known slot/emit name sets from interface descriptor.
-    let (known_slots, known_emits) = if let Some(json) = interface_json {
+    let (known_slots, known_emits, slot_kinds) = if let Some(json) = interface_json {
         parse_interface_sets(json)
     } else {
-        (HashSet::new(), HashSet::new())
+        (HashSet::new(), HashSet::new(), HashMap::new())
     };
     let has_interface = interface_json.is_some();
 
@@ -566,13 +611,24 @@ pub fn validate(
     // children walk. The stack is per-call rather than per-tree-level
     // — siblings never see each other's bindings, only ancestors'.
     let loop_bindings: HashSet<String> = HashSet::new();
+    let mut child_mount_count = 0;
+
+    if def.root.is_child_slot_mount() {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: "`slot: <name>` child mounts must be nested inside a layout container"
+                .to_string(),
+        });
+    }
 
     validate_node(
         &def.root,
         &known_slots,
         &known_emits,
+        &slot_kinds,
         has_interface,
         &loop_bindings,
+        &mut child_mount_count,
         &mut parts,
         &mut part_names,
         &mut errors,
@@ -590,12 +646,48 @@ fn validate_node(
     node: &LayoutNode,
     known_slots: &HashSet<String>,
     known_emits: &HashSet<String>,
+    slot_kinds: &HashMap<String, InterfaceSlotKind>,
     has_interface: bool,
     loop_bindings: &HashSet<String>,
+    child_mount_count: &mut usize,
     parts: &mut Vec<PartEntry>,
     part_names: &mut HashSet<String>,
     errors: &mut Vec<CompileError>,
 ) {
+    if let Some(slot_name) = node.child_slot_name() {
+        *child_mount_count += 1;
+        if *child_mount_count > 1 {
+            errors.push(CompileError {
+                kind: ErrorKind::InvalidPrimitiveUsage,
+                message: "a layout may declare at most one default `slot: <name>` child mount"
+                    .to_string(),
+            });
+        }
+        if has_interface && !known_slots.contains(slot_name) {
+            errors.push(CompileError {
+                kind: ErrorKind::UnknownSlot,
+                message: format!(
+                    "Unknown child slot '{}' referenced in layout — not declared in .mil",
+                    slot_name
+                ),
+            });
+        } else if has_interface
+            && !matches!(
+                slot_kinds.get(slot_name),
+                Some(InterfaceSlotKind::Node | InterfaceSlotKind::NodeList)
+            )
+        {
+            errors.push(CompileError {
+                kind: ErrorKind::InvalidPrimitiveUsage,
+                message: format!(
+                    "child slot '{}' must have interface type `node` or `list<node>`",
+                    slot_name
+                ),
+            });
+        }
+        return;
+    }
+
     // U29-G1 / U29-G2 — kernel meta-primitive structural validation.
     //
     // `For`, `If`, `Else` carry control-flow semantics, not visual ones;
@@ -654,15 +746,16 @@ fn validate_node(
                 }
             }
             LayoutPropValue::EmitRef(emit_name)
-                if has_interface && !known_emits.contains(emit_name) => {
-                    errors.push(CompileError {
-                        kind: ErrorKind::UnknownEmit,
-                        message: format!(
-                            "Unknown emit '{}' referenced in layout — not declared in .mil",
-                            emit_name
-                        ),
-                    });
-                }
+                if has_interface && !known_emits.contains(emit_name) =>
+            {
+                errors.push(CompileError {
+                    kind: ErrorKind::UnknownEmit,
+                    message: format!(
+                        "Unknown emit '{}' referenced in layout — not declared in .mil",
+                        emit_name
+                    ),
+                });
+            }
             _ => {}
         }
     }
@@ -698,14 +791,14 @@ fn validate_node(
     // emitter's name-resolution.
     let child_loop_bindings: HashSet<String> = if node.tag == "For" {
         let mut extended = loop_bindings.clone();
-        if let Some(as_name) = node
-            .props
-            .iter()
-            .find(|p| p.name == "as")
-            .and_then(|p| match &p.value {
-                LayoutPropValue::Keyword(s) => Some(s.clone()),
-                _ => None,
-            })
+        if let Some(as_name) =
+            node.props
+                .iter()
+                .find(|p| p.name == "as")
+                .and_then(|p| match &p.value {
+                    LayoutPropValue::Keyword(s) => Some(s.clone()),
+                    _ => None,
+                })
         {
             extended.insert(as_name);
         }
@@ -731,8 +824,10 @@ fn validate_node(
             child,
             known_slots,
             known_emits,
+            slot_kinds,
             has_interface,
             &child_loop_bindings,
+            child_mount_count,
             parts,
             part_names,
             errors,
@@ -940,10 +1035,9 @@ fn validate_if_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
                 ) {
                     errors.push(CompileError {
                         kind: ErrorKind::InvalidPrimitiveUsage,
-                        message:
-                            "`If` prop `when:` must be a slot reference or expression \
+                        message: "`If` prop `when:` must be a slot reference or expression \
                              (e.g. `when: slot: editing` or `when: r == editRow`)"
-                                .to_string(),
+                            .to_string(),
                     });
                 }
             }
@@ -962,9 +1056,8 @@ fn validate_if_node(node: &LayoutNode, errors: &mut Vec<CompileError>) {
     if !saw_when {
         errors.push(CompileError {
             kind: ErrorKind::InvalidPrimitiveUsage,
-            message:
-                "`If` is missing required prop `when:` (the boolean slot to branch on)"
-                    .to_string(),
+            message: "`If` is missing required prop `when:` (the boolean slot to branch on)"
+                .to_string(),
         });
     }
 }
@@ -1156,6 +1249,12 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
     let children = &node_ast.children;
     let mut idx = 0;
 
+    if let Some(ASTNodeOrToken::Node(mount)) = children.first() {
+        if mount.rule_name == "child_slot_mount" {
+            return analyze_child_slot_mount(mount);
+        }
+    }
+
     // ── TAG ──────────────────────────────────────────────────────────────────
     // First child must be the `qualified_name` AST node (UI34).  It either
     // wraps a single NAME token (legacy form) or a five-token sequence
@@ -1226,7 +1325,8 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
 
     // ── CHILDREN (optional) ─────────────────────────────────────────────────
     // Signals: Token(LBRACE) at current position.
-    let child_nodes = if matches!(children.get(idx), Some(ASTNodeOrToken::Token(t)) if t.value == "{") {
+    let child_nodes = if matches!(children.get(idx), Some(ASTNodeOrToken::Token(t)) if t.value == "{")
+    {
         idx += 1; // skip LBRACE
         let mut nodes = Vec::new();
         while let Some(child) = children.get(idx) {
@@ -1255,6 +1355,38 @@ fn analyze_node(node_ast: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
         part_name,
         props,
         children: child_nodes,
+    })
+}
+
+fn analyze_child_slot_mount(mount: &GrammarASTNode) -> Result<LayoutNode, CompileError> {
+    let tokens = mount
+        .children
+        .iter()
+        .filter_map(|child| match child {
+            ASTNodeOrToken::Token(token) => Some(token),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
+    let keyword = tokens.first().map(|token| token.value.as_str());
+    let name = tokens
+        .iter()
+        .find(|token| token.type_ == TokenType::Name)
+        .map(|token| token.value.clone());
+    if keyword != Some("slot") || name.is_none() {
+        return Err(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: "child position accepts only `slot: <node-slot-name>`".to_string(),
+        });
+    }
+
+    Ok(LayoutNode {
+        tag: CHILD_SLOT_MOUNT_TAG.to_string(),
+        part_name: None,
+        props: vec![LayoutProp {
+            name: "slot".to_string(),
+            value: LayoutPropValue::SlotRef(name.unwrap()),
+        }],
+        children: Vec::new(),
     })
 }
 
@@ -1389,7 +1521,11 @@ fn extract_prop(prop_ast: &GrammarASTNode) -> Result<LayoutProp, CompileError> {
                 .iter()
                 .filter_map(|c| {
                     if let ASTNodeOrToken::Token(t) = c {
-                        if t.type_ == TokenType::Name { Some(t.value.clone()) } else { None }
+                        if t.type_ == TokenType::Name {
+                            Some(t.value.clone())
+                        } else {
+                            None
+                        }
                     } else {
                         None
                     }
@@ -1397,10 +1533,7 @@ fn extract_prop(prop_ast: &GrammarASTNode) -> Result<LayoutProp, CompileError> {
                 .next()
                 .ok_or_else(|| CompileError {
                     kind: ErrorKind::InternalError,
-                    message: format!(
-                        "Shorthand prop '{}:' missing target name",
-                        prop_name
-                    ),
+                    message: format!("Shorthand prop '{}:' missing target name", prop_name),
                 })?;
 
             let value = if prop_name == "slot" {
@@ -1417,7 +1550,10 @@ fn extract_prop(prop_ast: &GrammarASTNode) -> Result<LayoutProp, CompileError> {
                 });
             };
 
-            return Ok(LayoutProp { name: prop_name, value });
+            return Ok(LayoutProp {
+                name: prop_name,
+                value,
+            });
         }
     }
 
@@ -1505,11 +1641,9 @@ fn extract_prop_value(pv_ast: &GrammarASTNode) -> Result<LayoutPropValue, Compil
     if cur.rule_name == "primary" {
         match cur.children.as_slice() {
             // KEYWORD COLON NAME — slot: column-headers OR emit: onNavigate
-            [
-                ASTNodeOrToken::Token(kw),
-                ASTNodeOrToken::Token(_colon),
-                ASTNodeOrToken::Token(name_tok),
-            ] if kw.type_ == TokenType::Keyword => {
+            [ASTNodeOrToken::Token(kw), ASTNodeOrToken::Token(_colon), ASTNodeOrToken::Token(name_tok)]
+                if kw.type_ == TokenType::Keyword =>
+            {
                 let ref_name = name_tok.value.clone();
                 if kw.value == "slot" {
                     return Ok(LayoutPropValue::SlotRef(ref_name));
@@ -1632,12 +1766,12 @@ fn unescape_string_literal(raw: &str) -> Result<String, CompileError> {
     while let Some(c) = chars.next() {
         if c == '\\' {
             match chars.next() {
-                Some('n')  => out.push('\n'),
-                Some('t')  => out.push('\t'),
-                Some('r')  => out.push('\r'),
-                Some('0')  => out.push('\0'),
+                Some('n') => out.push('\n'),
+                Some('t') => out.push('\t'),
+                Some('r') => out.push('\r'),
+                Some('0') => out.push('\0'),
                 Some('\\') => out.push('\\'),
-                Some('"')  => out.push('"'),
+                Some('"') => out.push('"'),
                 Some(other) => {
                     // Preserve unknown escapes verbatim (e.g. `\u` follow-up
                     // could land later as a separate feature).
@@ -1666,21 +1800,45 @@ fn unescape_string_literal(raw: &str) -> Result<String, CompileError> {
 ///
 /// The descriptor JSON is produced by `mosmodel_compiler::compile()`.
 /// This is a minimal parser — we only need name sets, not full types.
-fn parse_interface_sets(json: &str) -> (HashSet<String>, HashSet<String>) {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum InterfaceSlotKind {
+    Node,
+    NodeList,
+    Other,
+}
+
+fn parse_interface_sets(
+    json: &str,
+) -> (
+    HashSet<String>,
+    HashSet<String>,
+    HashMap<String, InterfaceSlotKind>,
+) {
     let mut slots = HashSet::new();
     let mut emits = HashSet::new();
+    let mut slot_kinds = HashMap::new();
 
     // Simple string scanning: look for "name": "..." inside slot/emit arrays.
     // Works for the JSON format produced by mosmodel-compiler.
     let v: serde_json::Value = match serde_json::from_str(json) {
         Ok(v) => v,
-        Err(_) => return (slots, emits),
+        Err(_) => return (slots, emits, slot_kinds),
     };
 
     if let Some(slot_arr) = v["slots"].as_array() {
         for s in slot_arr {
             if let Some(name) = s["name"].as_str() {
                 slots.insert(name.to_string());
+                let kind = match &s["type"] {
+                    serde_json::Value::String(value) if value == "node" => InterfaceSlotKind::Node,
+                    serde_json::Value::Object(value)
+                        if value.get("list") == Some(&serde_json::Value::String("node".into())) =>
+                    {
+                        InterfaceSlotKind::NodeList
+                    }
+                    _ => InterfaceSlotKind::Other,
+                };
+                slot_kinds.insert(name.to_string(), kind);
             }
         }
     }
@@ -1692,7 +1850,7 @@ fn parse_interface_sets(json: &str) -> (HashSet<String>, HashSet<String>) {
         }
     }
 
-    (slots, emits)
+    (slots, emits, slot_kinds)
 }
 
 // ===========================================================================
@@ -1846,7 +2004,10 @@ mod tests {
         assert_eq!(root.tag, "Box");
         assert_eq!(root.props.len(), 1);
         assert_eq!(root.props[0].name, "direction");
-        assert_eq!(root.props[0].value, LayoutPropValue::Keyword("row".to_string()));
+        assert_eq!(
+            root.props[0].value,
+            LayoutPropValue::Keyword("row".to_string())
+        );
     }
 
     #[test]
@@ -1928,9 +2089,15 @@ mod tests {
         let root = &def.root;
         assert_eq!(root.props.len(), 2);
         assert_eq!(root.props[0].name, "focusable");
-        assert_eq!(root.props[0].value, LayoutPropValue::Keyword("true".to_string()));
+        assert_eq!(
+            root.props[0].value,
+            LayoutPropValue::Keyword("true".to_string())
+        );
         assert_eq!(root.props[1].name, "connects");
-        assert_eq!(root.props[1].value, LayoutPropValue::Keyword("onClick".to_string()));
+        assert_eq!(
+            root.props[1].value,
+            LayoutPropValue::Keyword("onClick".to_string())
+        );
     }
 
     // ── Validation ───────────────────────────────────────────────────────────
@@ -2082,11 +2249,7 @@ mod tests {
     // `each:`) is a follow-up once G3 / R2 land — see UI29 §6.
 
     /// Helper: assert at least one error of the given kind matches `needle`.
-    fn assert_error(
-        errors: &[CompileError],
-        kind: ErrorKind,
-        needle: &str,
-    ) {
+    fn assert_error(errors: &[CompileError], kind: ErrorKind, needle: &str) {
         let matched = errors
             .iter()
             .any(|e| e.kind == kind && e.message.contains(needle));
@@ -2145,7 +2308,11 @@ mod tests {
           }
         "#;
         let errors = compile(src, None).expect_err("missing each: should reject");
-        assert_error(&errors, ErrorKind::InvalidPrimitiveUsage, "missing required prop `each:`");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "missing required prop `each:`",
+        );
     }
 
     #[test]
@@ -2160,7 +2327,11 @@ mod tests {
           }
         "#;
         let errors = compile(src, None).expect_err("missing as: should reject");
-        assert_error(&errors, ErrorKind::InvalidPrimitiveUsage, "missing required prop `as:`");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "missing required prop `as:`",
+        );
     }
 
     #[test]
@@ -2195,8 +2366,7 @@ mod tests {
             }
           }
         "#;
-        let errors =
-            compile(src, None).expect_err("part_name on a For should reject");
+        let errors = compile(src, None).expect_err("part_name on a For should reject");
         assert_error(
             &errors,
             ErrorKind::InvalidPrimitiveUsage,
@@ -2284,8 +2454,7 @@ mod tests {
             }
           }
         "#;
-        let result =
-            compile(src, None).expect("If followed by Else should compile clean");
+        let result = compile(src, None).expect("If followed by Else should compile clean");
         let children = &result.def.root.children;
         assert_eq!(children.len(), 2);
         assert_eq!(children[0].tag, "If");
@@ -2466,6 +2635,113 @@ mod tests {
         assert!(PRIMITIVES.contains(&"Else"));
     }
 
+    #[test]
+    fn child_slot_mount_compiles_for_node_and_list_node_slots() {
+        for mil in [
+            "component Surface { slot children : node ; }",
+            "component Surface { slot children : list<node> ; }",
+        ] {
+            let interface = mosmodel_compiler::compile(mil).expect("compile child-slot MIL");
+            let output = compile(
+                "layout Surface { Column [ root ] { slot: children } }",
+                Some(&interface.descriptor_json),
+            )
+            .expect("typed child slot mount must compile");
+            let mount = &output.def.root.children[0];
+            assert!(mount.is_child_slot_mount());
+            assert_eq!(mount.child_slot_name(), Some("children"));
+            assert!(mount.children.is_empty());
+        }
+    }
+
+    #[test]
+    fn child_slot_mount_rejects_unknown_and_non_node_slots() {
+        let interface = mosmodel_compiler::compile(
+            "component Surface { slot title : text ; slot children : node ; }",
+        )
+        .expect("compile fixture MIL");
+
+        let errors = compile(
+            "layout Surface { Column { slot: missing } }",
+            Some(&interface.descriptor_json),
+        )
+        .expect_err("unknown child slot must fail");
+        assert_error(
+            &errors,
+            ErrorKind::UnknownSlot,
+            "Unknown child slot 'missing'",
+        );
+
+        let errors = compile(
+            "layout Surface { Column { slot: title } }",
+            Some(&interface.descriptor_json),
+        )
+        .expect_err("text slot cannot mount authored nodes");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "must have interface type `node` or `list<node>`",
+        );
+    }
+
+    #[test]
+    fn child_slot_mount_is_nested_unique_and_slot_only() {
+        let interface = mosmodel_compiler::compile(
+            "component Surface { slot children : list<node> ; emit onMount ; }",
+        )
+        .expect("compile fixture MIL");
+
+        let errors = compile(
+            "layout Surface { slot: children }",
+            Some(&interface.descriptor_json),
+        )
+        .expect_err("mount cannot be the layout root");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "must be nested inside a layout container",
+        );
+
+        let errors = compile(
+            "layout Surface { Column { slot: children slot: children } }",
+            Some(&interface.descriptor_json),
+        )
+        .expect_err("default child mount must be unique");
+        assert_error(
+            &errors,
+            ErrorKind::InvalidPrimitiveUsage,
+            "at most one default",
+        );
+
+        let error = compile(
+            "layout Surface { Column { emit: onMount } }",
+            Some(&interface.descriptor_json),
+        )
+        .expect_err("emit refs are invalid in child position");
+        assert_error(
+            &error,
+            ErrorKind::InvalidPrimitiveUsage,
+            "child position accepts only `slot:",
+        );
+    }
+
+    #[test]
+    fn component_reference_retains_authored_inline_children() {
+        let output = compile(
+            r#"layout App {
+  pkg::mosaic-std-foundation::Surface {
+    Text ( content: "Hello" )
+    Row { Text ( content: "World" ) }
+  }
+}"#,
+            None,
+        )
+        .expect("generic component reference child block must compile");
+        assert_eq!(output.def.root.children.len(), 2);
+        assert_eq!(output.def.root.children[0].tag, "Text");
+        assert_eq!(output.def.root.children[1].tag, "Row");
+    }
+
     /// UI29-1 — HostDialog joined the kernel as the 16th primitive after
     /// `mosaic-pkg-dialog` v0.1.0 demonstrated that composed dialogs lose
     /// modal/focus/top-layer/accessibility semantics. PRIMITIVES is the
@@ -2579,10 +2855,9 @@ mod tests {
 
     #[test]
     fn host_surface_with_node_slot_compiles() {
-        let interface = mosmodel_compiler::compile(
-            "component Browser { slot content-surface : node ; }",
-        )
-        .expect("compile node-slot interface");
+        let interface =
+            mosmodel_compiler::compile("component Browser { slot content-surface : node ; }")
+                .expect("compile node-slot interface");
         let source = r#"
           layout Browser {
             Column [ shell ] {
@@ -2736,13 +3011,14 @@ mod tests {
         "#;
         match first_prop_value(src) {
             LayoutPropValue::Expr(text) => {
-                assert!(text.contains("\\\""), "inner quote not re-escaped: {text:?}");
+                assert!(
+                    text.contains("\\\""),
+                    "inner quote not re-escaped: {text:?}"
+                );
                 // Exactly two unescaped quotes: the ones that delimit the literal.
                 let bare = text
                     .char_indices()
-                    .filter(|(i, c)| {
-                        *c == '"' && (*i == 0 || text.as_bytes()[i - 1] != b'\\')
-                    })
+                    .filter(|(i, c)| *c == '"' && (*i == 0 || text.as_bytes()[i - 1] != b'\\'))
                     .count();
                 assert_eq!(bare, 2, "unbalanced delimiters in {text:?}");
             }
@@ -3070,8 +3346,8 @@ mod tests {
             }
           }
         "#;
-        let err = compile(src, None)
-            .expect_err("sibling For cannot reference earlier sibling's binding");
+        let err =
+            compile(src, None).expect_err("sibling For cannot reference earlier sibling's binding");
         let msg = format!("{:?}", err);
         assert!(
             msg.contains("row"),
@@ -3285,10 +3561,7 @@ mod tests {
         let def = parse_and_analyze(src);
         assert_eq!(def.root.tag, "pkg::mosaic-pkg-grid::Grid");
         assert_eq!(def.root.children.len(), 1);
-        assert_eq!(
-            def.root.children[0].tag,
-            "pkg::mosaic-pkg-grid::Cell"
-        );
+        assert_eq!(def.root.children[0].tag, "pkg::mosaic-pkg-grid::Cell");
     }
 }
 

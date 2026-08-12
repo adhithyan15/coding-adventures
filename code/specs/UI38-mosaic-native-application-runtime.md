@@ -300,6 +300,38 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Flutter through the standard Dart FFI binding.
   - [x] Qt/QML through the standard Qt Core binding.
 - [ ] Generate standard effect hosts, beginning with storage and lifecycle.
+- [ ] Bundle the selected Rust application engine library into every generated
+  installable native artifact and resolve it from an app-relative location.
+  - [x] Compose accepts an explicit target `cdylib`, copies it into the native
+    distribution resources, resolves it through Compose's app-resources JVM
+    property, and rejects strict distributable builds that omit it. The shared
+    Rust engine plus Mosaic conformance package compile, package, and launch as
+    a macOS `.app` without an injected library path; Linux CI verifies the same
+    installed-resource bytes and runtime round trip.
+  - [x] Qt accepts an explicit target `cdylib`, copies it beside the CMake-built
+    executable and into the install tree, resolves it from the application
+    directory, and rejects strict installable builds that omit it. Linux CI
+    verifies the installed bytes, launches the generated QML application, and
+    runs the complete standard-binding conformance without an injected path.
+  - [x] XAML accepts an explicit target Rust DLL, installs it as
+    `mosaic_app.dll`, copies it beside the WinUI executable through the standard
+    MSBuild project, resolves it from `AppContext.BaseDirectory`, and rejects
+    strict builds that omit it. Windows CI verifies the output bytes and runs
+    the complete standard-binding conformance without an injected path. Visible
+    WinUI launch remains tracked separately on an interactive Windows worker.
+  - [x] SwiftUI accepts an explicit target Rust dylib, copies it into SwiftPM's
+    `Runtime` resource bundle, resolves it through `Bundle.module`, and rejects
+    strict installable builds that omit it. macOS CI verifies the bundled bytes
+    and complete standard-binding conformance without an injected library path.
+  - [x] Flutter accepts an explicit target `cdylib`, registers the conventional
+    runtime through a generated stable Dart build hook, and lets Flutter package
+    it as a platform-native code asset. Strict installable builds reject a
+    missing selection; CI builds the native app, verifies the installed engine,
+    and runs the complete standard-binding conformance without an injected path.
+- [x] Make SwiftUI project shells compile components with an empty event enum by
+  emitting unreachable but type-correct wire helpers with exhaustive empty
+  switches; macOS CI builds the canonical no-event conformance app through
+  SwiftPM.
 - [ ] Add `native-complete` capability/degradation analysis to the compiler.
   - [x] Add a package-builder API and CLI profile with deterministic,
     package-expanded degradation reports and pre-emission strict rejection.
@@ -315,12 +347,77 @@ unblocks multiple downstream targets; never count source generation as completio
     metadata across every native emitter, and add the equivalent package setting.
     - [x] Report property-level degradations for ignored tri-state checkbox
       state and radio-group behavior, including package-expanded paths.
-    - [ ] Inventory the remaining ignored dialog/link events, layout properties,
-      MSL styles, effects, and accessibility metadata.
+    - [x] Report known XAML/SwiftUI dialog lifecycle and external-link event
+      losses, including XAML dialog state that still requires app code-behind.
+    - [x] Lower portable `Text` accessible names, heading roles, and hidden
+      semantics across SwiftUI, Compose, Flutter, Qt/QML, and XAML; report
+      unsupported text roles and dynamic hidden/name forms as stable
+      property-level degradations.
+    - [ ] Inventory the remaining ignored layout properties, MSL styles,
+      effects, accessibility metadata, and dialog/link target semantics.
     - [ ] Define a serializable native-view reference contract for `node` and
       component slots; Flutter's JSON runtime cannot currently materialize a
       Dart `Widget` value for those otherwise typed composition seams.
+    - [ ] Define display coercion for non-text values used as `Text.content`.
+      Compose currently emits a numeric MIL slot as `Double` directly into
+      `Text`, which fails the generated project's Kotlin compile boundary.
+    - [ ] Apply UI35 `accepts` kind filtering to the existing React and HTML
+      interaction lowerings; both predate that enforcement and currently accept
+      every drag kind even when a target authors a filter.
   - [ ] Remove every reported TaskApp degradation on all five native backends.
+    - [x] Remove Flutter's four inert drag/drop reports by lowering UI35 to
+      native `Draggable`/`DragTarget` widgets with equivalent keyboard and
+      screen-reader operation.
+    - [x] Remove Flutter's final table-semantics degradation by lowering the
+      canonical dynamic UI31/Grid shape to native `DataTable` primitives.
+      The full package-expanded TaskApp now passes Flutter's strict profile,
+      whole-project Dart analysis, and a native desktop build in CI.
+    - [x] Remove Compose's four inert drag/drop reports by lowering UI35 to
+      Compose Desktop's native `dragAndDropSource`/`dragAndDropTarget`
+      modifiers with an instance-scoped keyboard target registry, RTL-aware
+      navigation, live-region state, accepted-only outcomes, and one shared
+      drop payload path.
+    - [x] Remove Compose's final table-semantics degradation by annotating the
+      canonical dynamic UI31/Grid shape with native collection dimensions,
+      heading metadata, and row/column coordinates. The complete
+      package-expanded TaskApp now passes Compose's strict profile, Kotlin
+      compilation, and native desktop distribution packaging in CI.
+    - [x] Remove Qt's four inert drag/drop reports by lowering UI35 to native
+      Qt Quick `DragHandler`/`Drag` and `DropArea` primitives with
+      component-scoped keyboard traversal, RTL behavior, kind filtering,
+      accepted-only lifecycle outcomes, one drop-payload path, and Qt 6.8
+      accessibility announcements. Complete TaskApp Qt CI now compiles and
+      launches the generated app with only table semantics left to close.
+    - [x] Remove Qt's final table-semantics degradation by adapting the
+      canonical dynamic UI31/Grid shape to `QAbstractTableModel`, `TableView`,
+      and `HorizontalHeaderView`, with accessible cell activation carrying the
+      existing row/column navigation payload. Permissive TaskApp Qt acceptance
+      now retains only the sample-runtime fallback.
+    - [x] Remove SwiftUI's final table-semantics degradation by adapting the
+      canonical dynamic UI31/Grid shape to native `Table` and
+      `TableColumnForEach`, retaining the interactive Cell subtree and using a
+      native `List` compatibility path before macOS 14.4 / iOS 17.4. The full
+      TaskApp compiles for macOS and its iOS 16 deployment target; permissive
+      output now retains only the sample-runtime fallback.
+    - [x] Promote the strict SwiftUI macOS TaskApp with the concrete
+      `task-mosaic-app` runtime, byte-for-byte SwiftPM resource verification,
+      and direct launch without `MOSAIC_APP_LIBRARY`. Keep iOS 16 compilation
+      as a separate source-portability gate rather than packaging a macOS dylib.
+    - [x] Promote the concrete `task-mosaic-app` runtime into the complete XAML
+      WinUI artifact, verify the DLL beside `TaskApp.exe` byte-for-byte, and drive
+      TaskApp startup props plus a semantic event through the generated .NET
+      binding without `MOSAIC_APP_LIBRARY`. Visible launch remains an interactive
+      Windows-worker gate.
+    - [x] Remove XAML's table-semantics degradation by wrapping the canonical
+      indexed UI31/Grid shape in component-scoped WinUI controls whose automation
+      peers implement UIA Table/Grid and TableItem/GridItem provider patterns,
+      while retaining the authored editable cell subtree and conservative visual
+      fallback for unsupported shapes.
+    - [x] Remove XAML's final four drag/drop degradations by lowering UI35 to
+      component-scoped WinUI drag events with shared pointer/touch and keyboard
+      acceptance, lifecycle dispatch, RTL traversal, and UI Automation
+      announcements. Complete TaskApp Windows CI now uses `native-complete` and
+      requires an empty degradation report.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.
@@ -347,9 +444,12 @@ unblocks multiple downstream targets; never count source generation as completio
   TaskApp and round-trip the real Rust engine through the generated .NET binding,
   but can terminate WinUI before `OnLaunched` with stowed-exception status
   `0xc000027b`; they therefore cannot honestly prove a visible native surface.
-- [ ] Make the generated Flutter project analyzer-clean after its documented
+- [x] Make the generated Flutter project analyzer-clean after its documented
   `flutter create` bootstrap: replace the stock `MyApp` widget test, provision
-  its lint configuration, and omit unused authored `For` bindings.
+  its lint configuration, and omit unused authored `For` bindings. Generated
+  shells now own a package-name-correct Mosaic smoke test and lint dependency;
+  Linux CI runs whole-project `flutter analyze`, preserves the generated test
+  across `flutter create`, and executes the permissive toolkit test suite.
 - [x] Complete Compose TaskApp Kotlin typing: normalize Mosaic value truthiness
   in boolean positions and supply required native input commit payloads.
 - [x] Restore complete Compose TaskApp generation after package expansion added
@@ -389,16 +489,76 @@ unblocks multiple downstream targets; never count source generation as completio
 ### P1 — reusable application vocabulary
 
 - [ ] Add named records, enums, optional fields, and keyed collections to mosmodel.
-- [ ] Add versioned theme tokens and platform/style override inputs to mosstyle.
-- [ ] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
+- [x] Add schema-versioned theme-token inputs to mosstyle and package builds,
+  with global values, per-backend overrides, recursive package inheritance,
+  aliases, and fail-closed validation.
+  - [x] Let packages declare a safe, package-relative token palette so reusable
+    libraries carry scoped defaults automatically; dependency defaults are
+    overridden by the consuming package and then explicit application input.
+- [x] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
+  - [x] Ship v0.1 package-owned light/dark tokens plus accessible display,
+    heading, body, caption, and semantic icon components, with dependency
+    inclusion and `native-complete` acceptance across all five native backends.
+  - [ ] Add arbitrary Mosaic child pass-through, then ship reusable surface
+    components that can wrap authored component subtrees without an app-owned
+    native `node` adapter. Flutter's JSON runtime makes a native widget slot an
+    intentionally non-portable substitute, so v0.1 reserves surface tokens but
+    does not claim a text-only surface abstraction.
+    - [x] Preserve one default inline child region through typed MLL mounts and
+      package expansion, with all-five-native acceptance and fail-closed
+      rejection when a referenced component has no mount.
+    - [x] Ship a themed `Surface` through the portable package-expansion path,
+      with all-five-native consuming-package acceptance.
+    - [ ] Add named child regions and standalone exported-component child
+      parameters so `Surface` can also pass `native-complete` when compiled as
+      an isolated host-facing component.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
+  - [x] Ship the v0.1 core `Button` and single-line `Input` facade over proven
+    toolkit primitives, with Foundation defaults and all-five-native package
+    plus consuming-app acceptance.
+  - [ ] Add checkbox, radio, and number-input controls.
+  - [ ] Add native select/picker, switch, and slider contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.
 - [ ] Ship `mosaic-std-services` and umbrella `mosaic-std` manifests.
-- [ ] Make the existing `mosaic-pkg-toolkit` compile across all five native
-  backends as a migration baseline; Compose currently rejects `HostLink` in
-  shared navigation components such as Breadcrumb.
+- [ ] Make the standalone legacy `mosaic-pkg-grid` package compile on every
+  native backend; SwiftUI currently rejects its exported `Cell` component when
+  built directly even though package-expanded TaskApp table composition passes.
+- [x] Make the existing `mosaic-pkg-toolkit` compile across all five native
+  backends as a migration baseline.
+  - [x] Lower `HostLink` to native Compose annotated links, including internal
+    routing dispatch and indexed toolkit navigation payloads.
+  - [x] Lower `HostDialog` to native modal `Dialog` and non-modal `Popup`
+    overlays, including dismissal policy, lifecycle dispatch, semantic title,
+    and nested toolkit content.
+  - [x] Lower `Icon` through the native font-glyph stack, with semantic
+    `spinner` mapped to an accessible `CircularProgressIndicator`; all 23
+    toolkit components now emit for Compose.
+  - [x] Make the Compose package project type-check every emitted component,
+    not only the first mounted entry component. Every export is now copied into
+    Gradle's source set, Accordion projects `bodies[i]` through Compose's native
+    integer loop-index shadow, and Linux CI compiles the complete 23-component
+    toolkit project.
+  - [x] Lower `Icon` to SF Symbols on SwiftUI, with semantic `spinner` mapped
+    to an accessible native `ProgressView` and runtime glyph/label support.
+  - [x] Make the SwiftUI package project type-check every exported view.
+    Accordion collection access uses the native `ForEach` integer shadow and
+    macOS CI builds the complete 23-component toolkit through SwiftPM.
+  - [x] Lower `Icon` to accessible Qt semantic glyphs and map `spinner` to the
+    native indeterminate `BusyIndicator`, with live glyph/label bindings.
+  - [x] Make the Qt package project compile every exported QML component in
+    one `qt_add_qml_module`; Linux CI builds all 23 toolkit exports.
+  - [x] Make Flutter control lowerings compile inside toolkit components whose
+    names shadow Material controls, derive native callback payload fields from
+    MIL emits, preserve decimal numbers, and route indexed links correctly.
+  - [x] Make the Flutter package project type-check every exported widget.
+    Every export is copied into `lib/`; Linux CI analyzes all 23 components and
+    builds a native Flutter desktop application from the documented runner
+    bootstrap while continuing to mount the first export.
+  - [x] Make the XAML package project compile every exported control. Windows
+    CI builds all 23 component XAML/code-behind triples together in the
+    generated WinUI project while continuing to mount the first export.
 - [ ] Enforce accessible names, focus, keyboard actions, scaling, contrast, and
   reduced-motion behavior in the strict profile.
 

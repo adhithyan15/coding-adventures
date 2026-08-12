@@ -734,3 +734,80 @@ body {
 }
 .ductus__source a { color: var(--accent); }
 .ductus__variation { font-style: italic; }
+
+/* Atom-driven review (HL10 §10.1). Set apart from the frontier below it,
+   because it answers a different question: not "what is next" but "what have
+   you started to lose". */
+.due-review {
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.1rem 0.4rem;
+  border: 1px solid rgba(120, 120, 120, 0.28);
+  border-left: 3px solid rgba(200, 140, 40, 0.85);
+  border-radius: 6px;
+}
+
+.due-review__card {
+  margin: 0.9rem 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(120, 120, 120, 0.16);
+}
+
+.due-review__card:last-child {
+  border-bottom: none;
+}
+
+.due-review__head {
+  margin: 0 0 0.15rem;
+  font-weight: 600;
+}
+
+.due-review__covers {
+  margin: 0 0 0.5rem;
+  font-size: 0.86rem;
+}
+
+/* Synthesis drills (HL10 §10.3). Visually distinct from review: review is a
+   debt, this is a stretch, and they should not read as the same kind of work. */
+.drill {
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(120, 120, 120, 0.28);
+  border-left: 3px solid rgba(70, 150, 190, 0.85);
+  border-radius: 6px;
+}
+
+.drill__prompt { margin: 0 0 0.7rem; }
+
+.drill__pieces {
+  margin: 0 0 0.8rem;
+  padding-left: 1.1rem;
+}
+
+.drill__piece { margin: 0.2rem 0; }
+
+.drill__form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0.6rem;
+}
+
+.drill__input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+}
+
+.drill__verdict {
+  margin: 0 0 0.7rem;
+  font-size: 0.92rem;
+}
+
+.drill__verdict.yes { font-weight: 600; }
+
+/* Voice mode (HL10 §10.2). */
+.voice { margin: 0.6rem 0 0; }
+.voice__now {
+  margin: 0.4rem 0 0;
+  font-size: 0.86rem;
+  font-style: italic;
+}

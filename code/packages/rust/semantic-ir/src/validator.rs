@@ -861,9 +861,13 @@ impl<'m> ValidatorState<'m> {
                 self.check_expr(target, env, depth + 1);
                 self.check_args(args, env, depth);
             }
-            Expr::BuiltinCall { name, args, .. } => {
+            Expr::BuiltinCall { name, args, span, .. } => {
                 match name.as_str() {
                     "cons" | "car" | "cdr" | "pair?" => self.observed.add(Feature::Pairs),
+                    "__sys_write__" => {
+                        self.observed.add(Feature::ConsoleIO);
+                        self.check_sys_write_args(args, span);
+                    }
                     _ => {}
                 }
                 for a in args {
@@ -1154,6 +1158,58 @@ impl<'m> ValidatorState<'m> {
                 IndexArg::Whole => {}
                 IndexArg::Range(e) => self.check_expr(e, env, depth + 1),
             }
+        }
+    }
+
+    /// SIR28 §2/§3.1: `BuiltinCall("__sys_write__", [StrLit(stream),
+    /// StrLit(terminator), BoolLit(unpack_arrays), ...values])` — validated
+    /// structurally here, unlike the OOP envelope's reserved names, which
+    /// have no arg-shape check today and rely on each backend's `emit.rs`
+    /// match arm to discover a malformed call late. `stream`/`terminator`
+    /// must be `StrLit`s (never a computed expression — the anti-injection
+    /// invariant SIR28 §2.2 states) whose value is one of the closed set
+    /// SIR28 §2.1 defines; `unpack_arrays` must be a `BoolLit`.
+    fn check_sys_write_args(&mut self, args: &[Expr], call_span: &Span) {
+        const STREAMS: &[&str] = &["stdout", "stderr"];
+        const TERMINATORS: &[&str] = &["none", "per_value", "once"];
+
+        if args.len() < 3 {
+            self.error(
+                "`__sys_write__` requires at least 3 args (stream, terminator, unpack_arrays)"
+                    .to_string(),
+                call_span,
+            );
+            return;
+        }
+        match &args[0] {
+            Expr::StrLit { value, .. } if STREAMS.contains(&value.as_str()) => {}
+            Expr::StrLit { value, span } => self.error(
+                format!("`__sys_write__`'s stream arg must be one of {STREAMS:?}, got `{value}`"),
+                span,
+            ),
+            other => self.error(
+                "`__sys_write__`'s stream arg must be a string literal".to_string(),
+                other.span(),
+            ),
+        }
+        match &args[1] {
+            Expr::StrLit { value, .. } if TERMINATORS.contains(&value.as_str()) => {}
+            Expr::StrLit { value, span } => self.error(
+                format!(
+                    "`__sys_write__`'s terminator arg must be one of {TERMINATORS:?}, got `{value}`"
+                ),
+                span,
+            ),
+            other => self.error(
+                "`__sys_write__`'s terminator arg must be a string literal".to_string(),
+                other.span(),
+            ),
+        }
+        if !matches!(&args[2], Expr::BoolLit { .. }) {
+            self.error(
+                "`__sys_write__`'s unpack_arrays arg must be a boolean literal".to_string(),
+                args[2].span(),
+            );
         }
     }
 
@@ -5222,6 +5278,160 @@ mod tests {
                 repeated: false,
                 span: s(),
             },
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    // SIR28: `__sys_write__` / `Feature::ConsoleIO`
+    // ══════════════════════════════════════════════════════════════════
+
+    fn sys_write(stream: &str, terminator: &str, unpack_arrays: bool, values: Vec<Expr>) -> Expr {
+        let mut args = vec![
+            Expr::StrLit {
+                value: stream.into(),
+                span: s(),
+            },
+            Expr::StrLit {
+                value: terminator.into(),
+                span: s(),
+            },
+            Expr::BoolLit {
+                value: unpack_arrays,
+                span: s(),
+            },
+        ];
+        args.extend(values);
+        Expr::BuiltinCall {
+            name: "__sys_write__".into(),
+            args,
+            effects: EffectSet::PURE,
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn well_formed_sys_write_with_console_io_declared_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
+            sys_write(
+                "stdout",
+                "once",
+                false,
+                vec![Expr::StrLit {
+                    value: "hi".into(),
+                    span: s(),
+                }],
+            ),
+        );
+        let r = validate(&m);
+        assert!(r.is_ok(), "expected ok, got {:?}", r.issues);
+    }
+
+    #[test]
+    fn sys_write_without_console_io_declared_is_error() {
+        let m = module_with_fn_body_value(FeatureManifest::new(), sys_write("stdout", "none", false, vec![]));
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected an undeclared-feature error");
+    }
+
+    #[test]
+    fn sys_write_rejects_unknown_stream() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::ConsoleIO]),
+            sys_write("stdlog", "none", false, vec![]),
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected a rejected-stream error");
+        assert!(
+            r.issues.iter().any(|i| i.message.contains("stream")),
+            "expected a stream-related error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn sys_write_rejects_unknown_terminator() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::ConsoleIO]),
+            sys_write("stdout", "always", false, vec![]),
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected a rejected-terminator error");
+        assert!(
+            r.issues.iter().any(|i| i.message.contains("terminator")),
+            "expected a terminator-related error, got {:?}",
+            r.issues
+        );
+    }
+
+    #[test]
+    fn sys_write_rejects_non_literal_stream() {
+        // Anti-injection invariant (SIR28 §2.2): stream must be a literal,
+        // never a computed expression, even a well-typed one.
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::ConsoleIO]),
+            Expr::BuiltinCall {
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::VarRef {
+                        name: "computed_stream".into(),
+                        scope: Scope::Local,
+                        span: s(),
+                    },
+                    Expr::StrLit {
+                        value: "none".into(),
+                        span: s(),
+                    },
+                    Expr::BoolLit {
+                        value: false,
+                        span: s(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected a non-literal-stream error");
+    }
+
+    #[test]
+    fn sys_write_rejects_too_few_args() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[Feature::ConsoleIO]),
+            Expr::BuiltinCall {
+                name: "__sys_write__".into(),
+                args: vec![Expr::StrLit {
+                    value: "stdout".into(),
+                    span: s(),
+                }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+        );
+        let r = validate(&m);
+        assert!(!r.is_ok(), "expected a too-few-args error");
+    }
+
+    #[test]
+    fn sys_write_puts_style_unpack_arrays_true_is_valid() {
+        let m = module_with_fn_body_value(
+            FeatureManifest::from_features(&[
+                Feature::ConsoleIO,
+                Feature::Sequences,
+                Feature::Strings,
+            ]),
+            sys_write(
+                "stdout",
+                "per_value",
+                true,
+                vec![Expr::SeqLit {
+                    items: vec![],
+                    span: s(),
+                }],
+            ),
         );
         let r = validate(&m);
         assert!(r.is_ok(), "expected ok, got {:?}", r.issues);

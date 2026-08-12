@@ -18,7 +18,7 @@ requires:
 introduces:
   knowledge: [ES-LEX-BUENAS-NOCHES]
 practises:
-  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
+  knowledge: [ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,7 +65,7 @@ tell you the direction. The blessing doesn't care which way you're going —
 you're wishing good hours either way.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 1s]
 - [YOU SAY: "buenas noches" arriving somewhere]
@@ -74,7 +74,7 @@ you're wishing good hours either way.
   noches" — and notice which take *buenos* vs *buenas* and why]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-BUENAS-TARDES, ES-LEX-NOCHE, ES-LEX-BUENAS-NOCHES, ES-GRAMMAR-NOUN-GENDER] -->
 
 [PAUSE 3s] What's unusual about when you can use *buenas noches*? (Both hello
 and goodbye.) And why *buenas*, not *buenos*? (*noche* is feminine.)

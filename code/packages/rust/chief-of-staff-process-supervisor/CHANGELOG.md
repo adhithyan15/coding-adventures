@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Carry binding-authorized model-tool catalog discovery through the child stream
+  helper and prove the seventh authenticated data-plane operation over the real
+  signed-package child pipe.
+- Carry a model-returned call through a separate authenticated D18D execution
+  exchange and prove the sixth data-plane operation over the real child pipe.
+- Carry tool-aware completion turns through the child stream helper and prove the
+  fifth authenticated data-plane operation over a real signed-package child pipe.
 - Surface an authenticated `Terminate` received during a child data-plane
   exchange as a distinct graceful-termination condition.
 - Accept an optional authenticated data-plane dispatcher, retain the exact host

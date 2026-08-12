@@ -2,6 +2,83 @@
 
 ## Unreleased
 
+### Added - versioned package token palettes
+
+Package mode accepts `--token-palette <JSON>`. Schema-v1 palettes provide
+global token values plus optional per-backend overrides, and are applied to the
+app package and all referenced Mosaic packages before native emission.
+
+### Fixed - Flutter bootstrap analyzes as a complete project
+
+Flutter project emission now writes Mosaic-owned analyzer configuration and a
+package-name-correct widget smoke test. The documented `flutter create`
+bootstrap preserves both files, and Linux acceptance runs whole-project
+`flutter analyze` plus the generated permissive test rather than checking only
+`lib/`.
+
+### Added - all five native artifacts bundle their Rust engine
+
+Package mode accepts `--runtime-library <target cdylib>`. Compose copies the
+selected `.dylib`, `.so`, or `.dll` into platform resources; Flutter registers
+it as a bundled Dart code asset; Qt copies it beside the native executable and
+into the CMake install tree; SwiftUI copies its dylib into the SwiftPM resource
+bundle; XAML copies the selected DLL beside the WinUI executable. Their standard
+bindings resolve the packaged engine, and `--profile native-complete
+--emit-project` rejects a Compose, Flutter, Qt, SwiftUI, or XAML build that omits
+it.
+
+### Fixed - Flutter project shells compile complete packages
+
+Flutter package projects now place every exported widget in the generated
+application's `lib/` source set instead of only the first mounted export. Linux
+CI analyzes all 23 reusable toolkit components and builds a native Flutter
+desktop application, so broken sibling Dart cannot hide behind Accordion.
+
+### Fixed - Qt project shells compile complete packages
+
+Qt package projects now place all 23 reusable toolkit exports in the generated
+QML module. Linux CI compiles that complete module, including the accessible
+native `BusyIndicator` Spinner, so broken sibling QML cannot hide behind the
+first mounted component.
+
+### Fixed - SwiftUI project shells compile complete packages
+
+SwiftUI package projects now place every exported view in the SwiftPM
+application target instead of only the first mounted export. macOS CI builds
+the complete 23-component toolkit, including native SF Symbol icons,
+`ProgressView` spinner semantics, and Accordion's indexed body projection.
+
+### Fixed - Compose project shells compile complete packages
+
+Compose package projects now place every exported component in Gradle's Kotlin
+source set instead of only the first mounted export. CI compiles the complete
+23-component toolkit project, including Accordion's indexed body projection,
+so a type error in a sibling artifact cannot hide behind a successful entry
+component build.
+
+### Changed - Compose emits native icons and progress
+
+The Compose backend now lowers dependency-free icon glyphs with native font
+rendering, authored accessibility labels, and MSL styling. The toolkit's
+semantic `spinner` glyph becomes an indeterminate `CircularProgressIndicator`,
+so the complete 23-component toolkit package emits instead of stopping at
+Spinner.
+
+### Changed - Compose emits native dialogs
+
+The Compose backend now lowers `HostDialog` to native `Dialog` or non-modal
+`Popup` overlays, including controlled visibility, open/close dispatch,
+interactive-dismiss policy, semantic titles, nested package content, and
+default Material surface chrome. Toolkit `Modal` therefore compiles without
+application-owned dialog wiring.
+
+### Changed - Compose emits native links
+
+The Compose backend now lowers `HostLink` to `LinkAnnotation.Url` for external
+navigation and `LinkAnnotation.Clickable` for in-app routing. Package-authored
+navigation can dispatch typed loop item/index payloads while retaining native
+link semantics and platform URI opening without app-owned glue.
+
 ### Changed - strict native control properties are capability-checked
 
 `mosaic-compile pkg --profile native-complete` now rejects authored tri-state
@@ -11,14 +88,14 @@ package-expanded property path instead of allowing the emitter to ignore it.
 
 ### Changed - strict Qt shells require Rust
 
-`mosaic-compile pkg --backend qt --emit-project --profile native-complete`
+`mosaic-compile pkg --backend qt --emit-project --profile native-complete --runtime-library <target cdylib>`
 now emits a runtime-required Qt application shell. It validates the standard
 QObject binding and required MIL props before QML construction, maps runtime
 props to generated QML names, and contains no optional-host event path.
 
 ### Changed - strict XAML shells require Rust
 
-`mosaic-compile pkg --backend xaml --emit-project --profile native-complete`
+`mosaic-compile pkg --backend xaml --emit-project --profile native-complete --runtime-library <target dll>`
 now emits a runtime-required WinUI application shell. It loads the standard
 .NET binding before activation, validates required MIL props, routes events
 through Rust, and contains no reflection-host or generated sample-value path.
