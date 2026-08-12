@@ -1,0 +1,5 @@
+import "seismic-wave-arrival-order.adj"
+
+? seismic_wave_arrival_order(p_wave, $D)                                                % expect are_the_first_waves_to_arrive_after_an_earthquake (direct)
+? seismic_wave_arrival_order($W, are_the_next_waves_to_arrive_after_p_waves)             % expect s_wave (reverse)
+? seismic_wave_arrival_order(surface_wave, $D)                                           % expect abstain -- a real third seismic wave commonly grouped with these two, but no clean single-fact parallel definition found
