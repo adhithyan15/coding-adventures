@@ -1,0 +1,5 @@
+import "seed-dispersal-mechanism.adj"
+
+? seed_dispersal_mechanism(barochory, $D)                                                  % expect uses_gravity_as_a_simple_means_of_seed_dispersal (direct)
+? seed_dispersal_mechanism($M, seed_is_forcefully_ejected_by_explosive_dehiscence_of_the_fruit)  % expect ballochory (reverse)
+? seed_dispersal_mechanism(hydrochory, $D)                                                 % expect abstain -- a real dispersal mechanism the source names, but no clean standalone defining sentence
