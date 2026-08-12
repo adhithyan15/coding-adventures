@@ -29,6 +29,7 @@ const MAX_GRANT_ID_BYTES: usize = 4 * 1024;
 const MAX_GRANTED_BY_BYTES: usize = 4 * 1024;
 const MAX_TOOL_ID_BYTES: usize = 512;
 const MAX_SMART_HOME_INSTANCE_NAME_BYTES: usize = 200;
+const MAX_NETWORK_INTERFACE_BYTES: usize = 255;
 const MAX_MODEL_BYTES: usize = 200;
 const MAX_ENDPOINT_BYTES: usize = 512;
 const MAX_PROCESS_TIMEOUT_MILLIS: u64 = 5 * 60 * 1000;
@@ -181,6 +182,7 @@ pub struct SmartHomeListenerConfig {
     bind: IpAddr,
     port: u16,
     instance_name: String,
+    hue_mdns_interface: Option<String>,
 }
 
 impl SmartHomeListenerConfig {
@@ -197,6 +199,11 @@ impl SmartHomeListenerConfig {
     /// Return the bounded Home Assistant instance name.
     pub fn instance_name(&self) -> &str {
         &self.instance_name
+    }
+
+    /// Return the network interface on which Chief supervises Hue mDNS discovery.
+    pub fn hue_mdns_interface(&self) -> Option<&str> {
+        self.hue_mdns_interface.as_deref()
     }
 }
 
@@ -606,10 +613,17 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             expect_string(document.take(SMART_HOME, "instance_name")?)?,
             MAX_SMART_HOME_INSTANCE_NAME_BYTES,
         )?;
+        let hue_mdns_interface = document
+            .take_optional(SMART_HOME, "hue_mdns_interface")
+            .map(expect_string)
+            .transpose()?
+            .map(|value| bounded_identity(value, MAX_NETWORK_INTERFACE_BYTES))
+            .transpose()?;
         Some(SmartHomeListenerConfig {
             bind,
             port,
             instance_name,
+            hue_mdns_interface,
         })
     } else {
         None
@@ -1297,13 +1311,14 @@ hardware_key_timeout = 60
     #[test]
     fn parses_an_optional_distinct_loopback_smart_home_listener() {
         let source = format!(
-            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\n"
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\nhue_mdns_interface = \"en0\"\n"
         );
         let config = parse_config(&source).unwrap();
         let listener = config.smart_home().unwrap();
         assert_eq!(listener.bind(), "127.0.0.1".parse::<IpAddr>().unwrap());
         assert_eq!(listener.port(), 8123);
         assert_eq!(listener.instance_name(), "Codex Home");
+        assert_eq!(listener.hue_mdns_interface(), Some("en0"));
 
         assert_eq!(
             parse_config(&source.replace("port = 8123", "port = 7463")),
@@ -1323,6 +1338,19 @@ hardware_key_timeout = 60
                 "instance_name = \"Codex Home\"\nsurprise = true"
             )),
             Err(ConfigError::Unknown)
+        );
+        assert_eq!(
+            parse_config(
+                &source.replace("hue_mdns_interface = \"en0\"", "hue_mdns_interface = \"\"")
+            ),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "hue_mdns_interface = \"en0\"",
+                "hue_mdns_interface = \" en0\""
+            )),
+            Err(ConfigError::InvalidValue)
         );
     }
 

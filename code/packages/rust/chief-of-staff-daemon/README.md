@@ -67,6 +67,14 @@ joins it before control-plane teardown. The standalone
 into Chief composition, but it must not point at the same state directory while
 this table is enabled.
 
+Setting `hue_mdns_interface` in that table also makes Chief the supervised Hue
+discovery owner. Chief durably installs the canonical Hue mDNS schedule into
+the same controller used by HTTP and model tools, starts the actor worker only
+after both listeners bind, and stops and joins it during every normal or failure
+shutdown. A worker clock or actor failure stops both listeners instead of
+leaving a partially live daemon. Reapplying an identical interface is
+idempotent; changing it durably replaces the worker configuration.
+
 The shared HTTP adapter receives the same fallible Unix-millisecond clock as the
 model-tool dispatcher. It samples that source once for every matched request
 and reuses the result for grant activation/expiry, authorization audit,

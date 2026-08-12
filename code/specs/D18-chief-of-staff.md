@@ -2185,6 +2185,7 @@ credential_path = "~/.chief-of-staff/run/operator.credential"
 bind = "127.0.0.1"            # optional Home Assistant-compatible API
 port = 8123                    # distinct from the Chief WebSocket endpoint
 instance_name = "Chief Smart Home"
+hue_mdns_interface = "en0"    # optional supervised Hue discovery interface
 
 [keyring]
 trusted_keys = [
@@ -2252,6 +2253,13 @@ through the same serialized durable transaction boundary. Both listeners bind
 before serving and stop as one process; a bind or serving failure cannot leave the
 peer listener running. A standalone local controller must not concurrently own
 the same D23 state directory.
+
+Its optional bounded `hue_mdns_interface` installs the canonical Hue mDNS
+schedule into that same durable controller. Chief starts the discovery actor
+only after both listeners bind and owns its cooperative stop and join. Clock or
+actor failure stops both listeners, identical startup is idempotent, and an
+interface change durably replaces the schedule without creating another runtime
+owner.
 
 That HTTP adapter MUST preserve wall-clock failure rather than converting it to
 a sentinel timestamp. Chief samples its injected Unix-millisecond clock exactly

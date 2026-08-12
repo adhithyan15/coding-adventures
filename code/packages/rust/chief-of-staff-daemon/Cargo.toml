@@ -14,6 +14,7 @@ name = "chief-of-staff-daemon"
 path = "src/main.rs"
 
 [dependencies]
+actor = { path = "../actor" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-daemon-authority-provisioning = { path = "../chief-of-staff-daemon-authority-provisioning" }
@@ -33,6 +34,7 @@ chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconcil
 coding_adventures_x3dh = { path = "../x3dh" }
 coding_adventures_uuid = { path = "../uuid" }
 embeddable-http-server = { path = "../embeddable-http-server" }
+hue-core = { path = "../hue-core" }
 process-shutdown = { path = "../process-shutdown" }
 serde_json = "1"
 storage-core = { path = "../storage-core" }
@@ -41,7 +43,10 @@ coding-adventures-json-serializer = { path = "../json-serializer" }
 coding-adventures-json-value = { path = "../json-value" }
 smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
 smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }
+smart-home-discovery-service = { path = "../smart-home-discovery-service" }
 smart-home-platform-http = { path = "../smart-home-platform-http" }
+smart-home-runtime = { path = "../smart-home-runtime" }
 transport-platform = { path = "../transport-platform" }
 web-core = { path = "../web-core" }
 websocket-runtime = { path = "../websocket-runtime" }

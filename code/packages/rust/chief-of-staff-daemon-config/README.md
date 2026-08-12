@@ -19,7 +19,9 @@ An optional closed `[smart_home]` table enables a second, Home
 Assistant-compatible loopback listener owned by the Chief process. It requires a
 non-zero port, a bounded non-empty instance name, and an exact endpoint distinct
 from `[orchestrator]`; non-loopback addresses, control characters, duplicate
-fields, and unknown fields fail validation.
+fields, and unknown fields fail validation. Its optional bounded
+`hue_mdns_interface` enables Chief-owned supervised Hue discovery on one exact
+network interface.
 
 An optional `[data_plane]` table declares exact production authorities without
 putting secret bytes in TOML. Directional channel-key entries bind canonical

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add optional Chief-owned Hue mDNS discovery on the shared durable smart-home
+  controller. Worker setup is idempotent, its lifecycle is explicitly
+  start/stop/join managed with both listeners, and clock or actor failure stops
+  the composed daemon.
 - Preserve Home Assistant request-clock failure through the shared HTTP
   runtime instead of substituting timestamp zero. Each request now samples one
   Unix-millisecond value and returns 503 before authorization or mutation when

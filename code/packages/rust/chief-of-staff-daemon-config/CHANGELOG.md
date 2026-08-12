@@ -16,3 +16,5 @@
   pending, active, or revoked lifecycle state.
 - Add an optional closed Home Assistant-compatible loopback listener with a
   distinct endpoint and bounded instance name.
+- Accept an optional bounded Hue mDNS interface in the smart-home table for
+  Chief-owned supervised discovery.
