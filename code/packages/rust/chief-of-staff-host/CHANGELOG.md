@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Extend the production subprocess gate through a real Ollama-selected
+  `smart_home.list_devices` call, signed-host authorization, central durable D23
+  audit commit, result replay, and Home Assistant-compatible entity/audit
+  readback after reopening the controller state.
 - Run a bounded Level 1 model/tool loop: discover the binding-authorized catalog,
   execute each exact model call only through parent-owned D18D authority, require
   correlated results, replay them to the model, and publish only final text. Cap
