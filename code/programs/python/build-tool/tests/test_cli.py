@@ -97,9 +97,11 @@ class TestMainCli:
         ])
         assert exit_code == 0
 
-    @pytest.mark.parametrize("language", ["haskell", "java", "kotlin"])
-    def test_haskell_and_jvm_language_filters(self, tmp_path, capsys, language):
-        """Every safely resolved Haskell/JVM lane has a real dry-run filter."""
+    @pytest.mark.parametrize(
+        "language", ["csharp", "fsharp", "haskell", "java", "kotlin"]
+    )
+    def test_safely_resolved_language_filters(self, tmp_path, capsys, language):
+        """Every safely resolved manifest lane has a real dry-run filter."""
         target = tmp_path / "code" / "packages" / language / "demo"
         decoy = tmp_path / "code" / "packages" / "python" / "decoy"
         target.mkdir(parents=True)
