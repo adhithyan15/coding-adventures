@@ -1,0 +1,5 @@
+import "comma-rule.adj"
+
+? comma_rule(comma_in_a_series, $D)                                                                    % expect use_commas_to_separate_elements_in_a_list_of_more_than_two_elements (direct)
+? comma_rule($R, set_off_the_name_with_commas_when_addressing_another_person_by_name)                   % expect comma_with_direct_address (reverse)
+? comma_rule(oxford_comma, $D)                                                                          % expect abstain -- a real, well-known term the same page discusses, but its own rule sentence bundles the placement rule with an optionality caveat, not one clean single-fact sentence
