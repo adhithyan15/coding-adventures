@@ -4,12 +4,21 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - hidden friends via the sound laws (HL-C88, HL10 §6.7)
+
+- Add Spanish chapters 28-30: the general `f- -> h-` decoder, `cl-`/`pl-`/`fl- -> ll-`,
+  and a synthesis over all six decoding rules the book now holds.
+- Introduce `ES-SOUND-F-TO-H-DECODER` and pay the promise `ES-C06-hablar` made in its
+  own prose 22 chapters earlier, practising the `ES-SOUND-F-TO-H` atom it planted.
+- Review `-CT- -> -ch-` rather than introduce it: `ES-C02-noche` already teaches it.
+- Shift 241 lessons at sequence >=548 by +20 sequence and +3 chapter, and rebuild the
+  capability ledger, book targets, curriculum path segments and extension nodes with them.
+
 ### Added - source-verified Chinese 请 (HL-C09CQ)
 
 - Verify 请 as ten ordered strokes with nine lifts against the pinned PRC source.
 - Preserve 讠-before-青 order and all four joined turns in a Noto Sans SC fit.
 - Reduce HL-C09 debt to 137 entries; Chinese has 6 outstanding.
-
 ### Added - source-verified Chinese 谢 (HL-C09CP)
 
 - Verify 谢 as twelve ordered strokes with eleven lifts against the pinned PRC source.
@@ -33,7 +42,6 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Verify 不 as four separately placed strokes with three lifts against the pinned PRC source.
 - Record that planned 叫 is outside the measured inventory and needs a separate font-resubsetting change.
 - Reduce HL-C09 debt to 141 entries; Chinese has 10 outstanding.
-
 ### Added - source-verified Chinese 是 (HL-C09CL)
 
 - Verify 是 as nine ordered strokes with eight lifts against the pinned PRC source.

@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 69,
-  "title": "Review --- Four Pronouns, One Slot",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe236d9ab7c8d3bc",
+  "title": "Lo --- Saying It Without Naming It",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:980bc822838c9a43",
   "lessons": [
     {
-      "id": "ES-C42-repaso-objeto",
-      "sequence": 1133,
-      "title": "Review — four pronouns, one slot",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four pronouns, one slot, and the single question that chooses between them",
+      "id": "ES-C42-lo",
+      "sequence": 1145,
+      "title": "lo — \"it\"",
+      "headword": "lo",
+      "romanization": "lo",
+      "gloss": "\"it\" — a word you have been saying since your fourth chapter, in a job you have not met yet",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c96ff591817ac5f",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:4ac25b462f4943a6",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,69 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Before the table: where does an object pronoun go?"
+              "text": "Say \"my name is\" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: a slot you have been using all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "the one it happens to",
-                "pronoun",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "the one it happens to: me. pronoun: me. example: me quieres — you love me.",
-                "the one it happens to: you. pronoun: te. example: te quiero — I love you.",
-                "the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.",
-                "the one it happens to: it (feminine). pronoun: la. example: la hago — I make it."
-              ]
+              "text": "Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name."
             },
             {
               "kind": "speech",
-              "text": "Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time."
+              "text": "Here is a second word for that same slot."
+            },
+            {
+              "kind": "speech",
+              "text": "lo — it, standing in for something masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "Watch what it does:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo el libro. — I have the book. Lo tengo. — I have it."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the single question",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Choosing between these looks like four decisions. It is one:"
+              "text": "Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause."
             },
             {
               "kind": "speech",
-              "text": "Who or what is the verb landing on?"
+              "text": "Latin ille, \"that one,\" changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:"
             },
             {
               "kind": "speech",
-              "text": "If it is you speaking becomes me."
+              "text": "Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el."
             },
             {
               "kind": "speech",
-              "text": "If it is the person you are speaking to becomes te."
+              "text": "Standing alone in the verb's slot, it kept the vowel: illum becomes lo."
             },
             {
               "kind": "speech",
-              "text": "If it is a thing or somebody else becomes lo or la, and the noun decides which, not you."
-            },
-            {
-              "kind": "speech",
-              "text": "That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against."
+              "text": "So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job."
             }
           ]
         },
@@ -122,89 +115,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four in order, then the four examples",
+              "instruction": "\"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four in order, then the four examples]"
+              "source": "[YOU SAY: \"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking",
+              "instruction": "\"me llamo\" then \"lo tengo\" — the same slot, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the choice arrives before the sentence does."
+              "source": "[YOU SAY: \"me llamo\" then \"lo tengo\" — the same slot, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-repaso-objeto-four",
-              "prompt": "Name the four object pronouns you now hold.",
+              "id": "ES-C42-lo-replace",
+              "prompt": "Say I have it, replacing el libro.",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
                 "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-LEX-LO-OBJECT"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "me, te, lo, la",
-                "me te lo la",
-                "me / te / lo / la"
+                "lo tengo",
+                "yo lo tengo"
               ],
               "feedback": {
-                "correct": "Four, each earned separately.",
-                "incorrect": "me, te, lo, la."
+                "correct": "Yes — and note the order: the little word comes first.",
+                "incorrect": "Lo tengo. The pronoun goes in front of the verb, exactly where me goes."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-repaso-objeto-question",
-              "prompt": "What single question chooses between all four?",
+              "id": "ES-C42-lo-place",
+              "prompt": "Does the pronoun go before or after the conjugated verb?",
               "assesses": [
                 "ES-GRAMMAR-OBJECT-PRONOUN"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "who or what the verb lands on",
-                "who is receiving the action",
-                "what the object is"
+                "before",
+                "in front of it",
+                "before the verb"
               ],
               "feedback": {
-                "correct": "One question, four answers.",
-                "incorrect": "Who or what the verb lands on — that is the only decision."
+                "correct": "Before — the same slot me has always taken.",
+                "incorrect": "Before the verb, just like the me in me llamo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-repaso-objeto-hard",
-              "prompt": "Which two of the four depend on knowing a noun's gender?",
+              "id": "ES-C42-lo-origin",
+              "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-COMIDA"
+                "ES-ETYMON-ILLE-ILLA",
+                "ES-GRAMMAR-DEFINITE-ARTICLES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo and la",
-                "lo, la",
-                "la and lo"
+                "el",
+                "the article el",
+                "el, the article"
               ],
               "feedback": {
-                "correct": "Yes — and that is where the work is.",
-                "incorrect": "Lo and la. Me and te are decided by the conversation instead."
+                "correct": "Right — one Latin word, worn down two different ways.",
+                "incorrect": "El. Both descend from illum; the article lost the vowel and the pronoun kept it."
               }
             }
           ]
@@ -222,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for."
+              "text": "What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all."
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C08-cuantos-anos
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 830
-chapter: 43
+sequence: 850
+chapter: 46
 type: phrase
 headword: ¿Cuántos años tienes?
 gloss: how old are you? — literally, how many years do you have?

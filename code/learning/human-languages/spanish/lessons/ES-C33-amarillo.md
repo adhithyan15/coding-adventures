@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C33-amarillo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1790
-chapter: 134
+sequence: 1810
+chapter: 137
 type: word
 headword: amarillo
 gloss: yellow — from "a little bitter," not from any Latin word for yellow at all

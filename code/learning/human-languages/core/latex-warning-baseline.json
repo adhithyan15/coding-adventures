@@ -45,7 +45,7 @@
     },
     "german": {
       "overfull": 0,
-      "underfull": 1,
+      "underfull": 0,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -53,7 +53,7 @@
     },
     "gujarati": {
       "overfull": 0,
-      "underfull": 1,
+      "underfull": 0,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -61,7 +61,7 @@
     },
     "hindi": {
       "overfull": 0,
-      "underfull": 3,
+      "underfull": 2,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -85,7 +85,7 @@
     },
     "kannada": {
       "overfull": 0,
-      "underfull": 3,
+      "underfull": 1,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -93,7 +93,7 @@
     },
     "latin": {
       "overfull": 0,
-      "underfull": 4,
+      "underfull": 1,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -101,7 +101,7 @@
     },
     "malayalam": {
       "overfull": 0,
-      "underfull": 3,
+      "underfull": 0,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -133,7 +133,7 @@
     },
     "punjabi": {
       "overfull": 0,
-      "underfull": 2,
+      "underfull": 0,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -157,7 +157,7 @@
     },
     "spanish": {
       "overfull": 0,
-      "underfull": 3,
+      "underfull": 0,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -165,7 +165,7 @@
     },
     "tamil": {
       "overfull": 0,
-      "underfull": 2,
+      "underfull": 1,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -173,7 +173,7 @@
     },
     "telugu": {
       "overfull": 0,
-      "underfull": 2,
+      "underfull": 1,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
@@ -181,12 +181,12 @@
     },
     "urdu": {
       "overfull": 0,
-      "underfull": 1,
+      "underfull": 0,
       "missing_character": 0,
       "hyperref_warning": 0,
       "duplicate_destination": 0,
       "font_substitution": 0
     }
   },
-  "provenance": "Seeded 2026-08-11 (HL-C109) from a real XeLaTeX run over all 22 books on macOS (TeX Live 2026, XeTeX via latexmk), driven by code/scripts/build-books-locally.sh, then corrected against CI's own run. Numbers are measured, never guessed. CI is the authority when the two disagree: its Ubuntu TeX Live found one more underfull box than macOS did in russian (0 -> 1) and tamil (1 -> 2), which is a hyphenation-pattern difference between the two distributions and not new damage -- overfull is 0 in every track on both. Take any future disagreement from the job summary the same way. The overfull counts should stay at zero: every one of them was a real page defect and every one was fixed, not silenced."
+  "provenance": "Seeded 2026-08-11 (HL-C109) from a real XeLaTeX run over all 22 books on macOS (TeX Live 2026, XeTeX via latexmk), driven by code/scripts/build-books-locally.sh, then corrected against CI's own run. Numbers are measured, never guessed. CI is the authority when the two disagree: its Ubuntu TeX Live found one more underfull box than macOS did in russian (0 -> 1) and tamil (1 -> 2), which is a hyphenation-pattern difference between the two distributions and not new damage -- overfull is 0 in every track on both. Take any future disagreement from the job summary the same way. The overfull counts should stay at zero: every one of them was a real page defect and every one was fixed, not silenced. Re-measured 2026-08-11 (HL-C88) after the callout boxes were set ragged right: underfull fell from 24 to 5 across all 22 books (hindi 2, kannada 1, latin 1, telugu 1), and every other track measured 0 locally. russian and tamil are recorded as 1 rather than the 0 measured here, because CI's Ubuntu TeX Live has consistently found one more box than macOS in exactly those two; the baseline is a ceiling, so carrying the known delta avoids failing on a distribution difference. Lower them once a CI run confirms 0."
 }

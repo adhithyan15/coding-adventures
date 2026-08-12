@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 28,
-  "title": "Synthesis --- The Same Conversation, Twice",
+  "title": "F to H --- Why the H Says Nothing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e2b2078e981c15cc",
+  "sourceHash": "fnv1a64:87e81f38f48e247b",
   "lessons": [
     {
-      "id": "ES-C06-repaso-hablar",
-      "sequence": 554,
-      "title": "Synthesis — the same conversation, twice",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — one conversation, held twice, where the only thing that changes is who you are talking to",
+      "id": "ES-C57-f-a-h",
+      "sequence": 543,
+      "title": "f becomes h — why the h says nothing",
+      "headword": "f → h",
+      "romanization": "f → h",
+      "gloss": "the law that explains why the Spanish h is silent — it is standing where an f used to be",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:909ab3324a7d85c9",
+      "sourceHash": "fnv1a64:27eb07863068aa43",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,83 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter either. This one is for using what you have — because knowing three endings is not the same as choosing the right one while a real person waits for you to finish."
+              "text": "Since your first chapter you have known that the Spanish h is silent. You were told it as a fact. Here is the reason, and it turns the fact into a tool."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: what the ending is really saying",
+          "title": "Grammar Lens: a letter standing on a grave",
           "segments": [
             {
               "kind": "speech",
-              "text": "You are going to hold one short conversation twice — once with someone your own age, once with someone you want to show respect to. The words barely change. What changes is one letter on the end of one verb."
+              "text": "Where Spanish has a silent h-, Latin very often had an f-."
             },
             {
               "kind": "speech",
-              "text": "That letter is the whole message. Hablas says I am at ease with you. Habla says I am being careful with you. English would need a change of tone, or a \"sir.\" Spanish does it with an -s."
+              "text": "You already hold the proof. Hablar comes from Latin fabulārī — and English took the same root and kept the f: fable, fabulous."
+            },
+            {
+              "kind": "speech",
+              "text": "hablar from fabulārī becomes fable."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound did not vanish overnight. Latin f- weakened to a breathy h, the breath faded, and eventually nothing was left — but the spelling had already settled, so Spanish went on writing a letter it had stopped saying. The silent h is a gravestone. It marks where a sound used to be."
+            },
+            {
+              "kind": "speech",
+              "text": "Which makes it a decoder. Meet an unfamiliar Spanish word beginning with h-, put an f back, and look for the English:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "put the f back",
+                "English friend"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Spanish: hijo. put the f back: fijo from fīlium. English friend: filial, affiliate.",
+                "Spanish: hierro. put the f back: fierro from ferrum. English friend: ferrous, ferric.",
+                "Spanish: harina. put the f back: farina. English friend: farinaceous.",
+                "Spanish: higo. put the f back: figo from fīcus. English friend: fig.",
+                "Spanish: hoja. put the f back: foja from folia. English friend: foliage, portfolio."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Not one of those five words has been taught in this book, and you can read all five."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange — with a friend",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¡Hola! Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Hablas español? — Sí, hablo español. ¡Gracias!"
+              "text": "Two honest limits, because a decoder you trust too far will mislead you."
+            },
+            {
+              "kind": "speech",
+              "text": "Not every h is a dead f. Hola is not, and hasta came from Arabic."
+            },
+            {
+              "kind": "speech",
+              "text": "And not every Latin f became h. Fácil, fuerte and forma kept theirs; the change left f alone before ue and r."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is a lead, not a guarantee. Put the f back and believe it when an English word appears."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange, again — being polite",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— Buenos días. Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Habla usted español? — Sí, hablo español. Gracias."
-            },
-            {
-              "kind": "speech",
-              "text": "One letter. Hablas became habla, and the whole exchange changed its temperature. Your own line — hablo — never moved, because you are still you in both conversations."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -94,90 +124,102 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "version one, both parts, start to finish",
+              "instruction": "\"hablar\" then \"fable\" — the same word, one letter apart",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: version one, both parts, start to finish]"
+              "source": "[YOU SAY: \"hablar\" then \"fable\" — the same word, one letter apart]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "version two — and catch the single letter that moved",
+              "instruction": "\"hijo, hierro, hoja\" and put the f back on each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: version two — and catch the single letter that moved]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Run whichever version is harder."
+              "source": "[YOU SAY: \"hijo, hierro, hoja\" and put the *f* back on each]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-repaso-hablar-friend",
-              "prompt": "You are talking to someone your own age. Which form: hablas or habla?",
+              "id": "ES-C57-f-a-h-why",
+              "prompt": "Why is the Spanish h silent?",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2SG"
+                "ES-SOUND-F-TO-H-DECODER",
+                "ES-SOUND-H-SILENT"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "hablas",
-                "tu hablas"
+                "it marks where an f used to be",
+                "the f weakened to h and then to nothing",
+                "it is a leftover spelling"
               ],
               "feedback": {
-                "correct": "Yes — hablas is the warm one.",
-                "incorrect": "With a friend or a peer, hablas."
+                "correct": "A gravestone for a sound.",
+                "incorrect": "Latin f- weakened to a breath and then to nothing; the spelling stayed."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-repaso-hablar-polite",
-              "prompt": "You are speaking to someone you want to show respect to. Which form?",
+              "id": "ES-C57-f-a-h-hablar",
+              "prompt": "Which English word is hablar's friend, once you put the f back?",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-3SG",
-                "ES-REGISTER-TU-USTED"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "habla",
-                "habla usted"
-              ],
-              "feedback": {
-                "correct": "Yes — habla, the usted form.",
-                "incorrect": "Usted takes the he/she form: habla."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C06-repaso-hablar-self",
-              "prompt": "In BOTH conversations, how do you say I speak?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1SG"
+                "ES-LEX-HABLAR",
+                "ES-ETYMON-FABULARI"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hablo",
-                "the same, hablo",
-                "hablo both times"
+                "fable",
+                "fable, fabulous"
               ],
               "feedback": {
-                "correct": "Right — your own form never changes. Only the one aimed at them does.",
-                "incorrect": "hablo, both times. You are still you."
+                "correct": "Hablar and fable are the same root.",
+                "incorrect": "Fable — from fabulari, to tell tales."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-f-a-h-decode",
+              "prompt": "You meet hierro and have never seen it. Decode it.",
+              "assesses": [
+                "ES-SOUND-F-TO-H-DECODER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ferrum, iron, as in ferrous",
+                "iron",
+                "ferrous"
+              ],
+              "feedback": {
+                "correct": "Read, not memorised.",
+                "incorrect": "Put the f back: fierro, ferrum. Iron, as in ferrous."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-f-a-h-limit",
+              "prompt": "Is every Spanish h a dead f?",
+              "assesses": [
+                "ES-SOUND-F-TO-H-DECODER"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no",
+                "no, some were always silent",
+                "no — hola and hasta are not"
+              ],
+              "feedback": {
+                "correct": "A lead, not a guarantee.",
+                "incorrect": "No. Hola is not, and hasta came from Arabic."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -189,7 +231,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the only thing that changed between the two conversations? (One letter — hablas becomes habla.) Why did hablo stay the same? (Because it is about you, and you did not change.) What does choosing habla over hablas actually tell the other person? (That you are being respectful — the grammar is carrying the manners.)"
+              "text": "Why is the h silent? (It stands where an f used to be.) What do you do with an unfamiliar h- word? (Put the f back and look for the English.) Is it always right? (No — a lead, not a guarantee.)"
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 41,
-  "title": "Comen and Viven --- Agreeing Again",
+  "title": "Synthesis --- the Same Sentence, Two Continents",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b71923e300454008",
+  "sourceHash": "fnv1a64:6c605fabd0617bf5",
   "lessons": [
     {
-      "id": "ES-C07-comen-viven",
+      "id": "ES-C07-sintesis-dos-continentes",
       "sequence": 790,
-      "title": "comen and viven — agreeing again",
-      "headword": "comen · viven",
-      "romanization": "comen · viven",
-      "gloss": "\"they eat,\" \"they live\" — and the families agree again",
+      "title": "Synthesis — the same sentence, two continents",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the same sentence in Madrid and in Mexico City, and neither is the correction",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dcae642d10a4406",
+      "sourceHash": "fnv1a64:73e9898a40f1b327",
       "notice": null,
       "blocks": [
         {
@@ -35,43 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"they speak\"? (Hablan.) And who else does that form address? (Ustedes.)"
+              "text": "Nothing new here. Say hablan, then habláis."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: one ending for both",
+          "title": "Grammar Lens: a choice that is not about grammar",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both families take -en:"
+              "text": "Every other choice this book has asked you to make has been about meaning. Tú or usted — how close are you to this person? El or un — does your listener already know which one you mean?"
             },
             {
               "kind": "speech",
-              "text": "comen — they eat, ustedes eat. viven — they live, ustedes live."
+              "text": "This one is different. It is about where you are."
             },
             {
               "kind": "speech",
-              "text": "No split here. After two chapters of divergence the families fall back into step, and they stay there."
+              "text": "— ¿Habláis español? — asked in Madrid, to friends. — ¿Hablan ustedes español? — asked in Bogotá, to the same friends."
             },
             {
               "kind": "speech",
-              "text": "That is the shape of the whole system, and it is worth holding as one sentence:"
-            },
-            {
-              "kind": "speech",
-              "text": "-er and -ir are identical in four of the six slots. They differ only in nosotros and vosotros."
-            },
-            {
-              "kind": "speech",
-              "text": "Two exceptions in a system of twelve forms. You have now met both, and everything else you already knew."
+              "text": "Identical meaning. Identical register. The speaker chose by geography, and nothing else."
             }
           ]
         },
         {
           "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This matters more than a regional footnote, because it settles what \"correct Spanish\" means in this book."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither of those sentences is the correction of the other. Roughly 40 million people use vosotros daily; several hundred million have never used it in their lives and never will. A course that taught only ustedes would leave you unable to follow a Spanish film. One that taught only vosotros would leave you sounding strange in nineteen countries."
+            },
+            {
+              "kind": "speech",
+              "text": "So you learn both, and you learn which is which — which is exactly what you have just done across four chapters."
+            },
+            {
+              "kind": "speech",
+              "text": "If you must pick one to produce: ustedes. It is understood everywhere, Spain included, and in the Americas it is the only option."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -84,83 +99,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comen, viven\" — one ending, both families",
+              "instruction": "the Madrid version, then the Bogotá version",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comen, viven\" — one ending, both families]"
+              "source": "[YOU SAY: the Madrid version, then the Bogotá version]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ustedes comen\", addressing a group",
+              "instruction": "the one you would actually use, and say why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ustedes comen\", addressing a group]"
+              "source": "[YOU SAY: the one you would actually use, and say why]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-eat",
-              "prompt": "They eat.",
+              "id": "ES-C07-sintesis-dos-continentes-madrid",
+              "prompt": "In Madrid, to a group of friends: which verb form?",
               "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3PL"
+                "ES-GRAMMAR-AR-PRESENT-2PL",
+                "ES-LEX-VOSOTROS"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "comen",
-                "ellos comen",
-                "ustedes comen"
+                "hablais",
+                "habláis",
+                "vosotros hablais"
               ],
               "feedback": {
-                "correct": "Yes.",
-                "incorrect": "comen."
+                "correct": "Yes — vosotros hablais.",
+                "incorrect": "Hablais, the vosotros form."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-live",
-              "prompt": "They live.",
+              "id": "ES-C07-sintesis-dos-continentes-bogota",
+              "prompt": "The same friends, in Bogota: which form?",
               "assesses": [
-                "ES-GRAMMAR-IR-PRESENT-3PL"
+                "ES-GRAMMAR-AR-PRESENT-3PL"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "viven",
-                "ellos viven",
-                "ustedes viven"
+                "hablan",
+                "ustedes hablan"
               ],
               "feedback": {
-                "correct": "Yes — the same ending as comen.",
-                "incorrect": "viven."
+                "correct": "Yes — ustedes hablan.",
+                "incorrect": "Hablan, because ustedes covers every group there."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-where",
-              "prompt": "In which two slots do -er and -ir differ?",
+              "id": "ES-C07-sintesis-dos-continentes-which",
+              "prompt": "Which of the two is the correct one?",
               "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3PL",
-                "ES-GRAMMAR-IR-PRESENT-3PL"
+                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nosotros and vosotros",
-                "nosotros, vosotros",
-                "we and you all"
+                "neither, they are regional",
+                "neither",
+                "both are correct",
+                "it depends where you are"
               ],
               "feedback": {
-                "correct": "Those two, and no others.",
-                "incorrect": "Nosotros and vosotros only."
+                "correct": "Right. The choice is geography, not correctness.",
+                "incorrect": "Neither. Both are ordinary Spanish, in different places."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -172,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give they eat and they live. (Comen, viven.) In how many of the six slots do the two families agree? (Four.) Next chapter: all three families, whole."
+              "text": "What decides between habláis and hablan? (Where you are — not what you mean.) Which is correct? (Both.) And which one will carry you everywhere? (Ustedes hablan.)"
             }
           ]
         }

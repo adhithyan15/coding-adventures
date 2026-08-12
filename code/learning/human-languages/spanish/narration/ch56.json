@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 56,
-  "title": "Synthesis --- You, and Somebody Else",
+  "title": "Salir --- Leaving",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c3a01b41fc566271",
+  "sourceHash": "fnv1a64:6bf32d0a2843fb84",
   "lessons": [
     {
-      "id": "ES-C13-sintesis-yo-go",
-      "sequence": 1095,
-      "title": "Synthesis — you, and somebody else",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — the same sentence about you and about someone else, and only one of them is odd",
+      "id": "ES-C13-salir",
+      "sequence": 1090,
+      "title": "salir — leaving with three singular forms",
+      "headword": "salir",
+      "romanization": "salir",
+      "gloss": "to leave or go out — with the singular present forms salgo, sales, and sale",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:861ab5af42c84f68",
+      "sourceHash": "fnv1a64:39df12eb033ad1aa",
       "notice": null,
       "blocks": [
         {
@@ -35,64 +35,74 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Say three of the six -go forms, whichever come first."
+              "text": "You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the odd slot is the one about you",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the practical shape of what you have, and it is worth noticing before you use it."
-            },
-            {
-              "kind": "speech",
-              "text": "These six verbs are irregular only when you talk about yourself. Every one of them behaves normally the moment the sentence is about anybody else:"
-            },
-            {
-              "kind": "speech",
-              "text": "salgo — but sales, sale. pongo — but pones, pone. vengo — but vienes, viene."
-            },
-            {
-              "kind": "speech",
-              "text": "So the cost of the whole set is one form each, and it is the form you will use most, because most of what a beginner says is about themselves."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a good trade, and it is not an accident of teaching order: the verbs that wore down oddly are the ones people said constantly."
+              "text": "The g in salgo is hard. Keep the l clear in every form: salgo, sales, sale."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The same two sentences, once about you and once about a friend. Watch which word changes shape and which does not:"
-            },
-            {
-              "kind": "speech",
-              "text": "Salgo. — I'm leaving. Sales. — You're leaving. Vengo. — I'm coming. Viene. — He's coming."
-            },
-            {
-              "kind": "speech",
-              "text": "One word each time, no pronoun, and the only surprise is in the first line of each pair."
+              "text": "salir descends from Latin salīre, “to leap” or “to jump.” The older image of leaping outward developed into the everyday meaning “to go out.” English salient first carried the sense “leaping” or “springing,” and a sally is a sudden movement outward. Those cousins preserve the same motion without requiring a long list of uncertain relatives."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: one more singular set",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present of salir"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present of salir: salgo.",
+                "person: tú. present of salir: sales.",
+                "person: él / ella / usted. present of salir: sale."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "Six of the most common verbs in the language, in the person you speak in most. You can now say that you have, do, say, put, leave and come — about yourself, in one word, with no pronoun."
+              "text": "Say salgo, sales, sale. Only the learned yo form contains g. Compare it with pongo because both forms are now known, not because one form could have predicted the other."
+            },
+            {
+              "kind": "speech",
+              "text": "Reuse the known word de and the familiar place name Madrid:"
+            },
+            {
+              "kind": "speech",
+              "text": "Salgo de Madrid. — “I leave Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Sales de Madrid. — “You leave Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Sale de Madrid. — “He, she, or formal you leaves Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons, dating expressions, house vocabulary, and the noun for “exit” wait until their own lessons."
             }
           ]
         },
@@ -110,84 +120,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each pair above — first about yourself, then about someone else",
+              "instruction": "“salir — salgo, sales, sale”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each pair above — first about yourself, then about someone else]"
+              "source": "[YOU SAY: “salir — salgo, sales, sale”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all six yo forms, then all six tú forms, and hear the difference vanish",
+              "instruction": "“Salgo de Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all six *yo* forms, then all six *tú* forms, and hear the difference vanish]"
+              "source": "[YOU SAY: “Salgo de Madrid.”]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C13-sintesis-yo-go-me",
-              "prompt": "Say I am leaving, in one word.",
-              "assesses": [
-                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“salīre — salient — salir”",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "salgo",
-                "yo salgo"
-              ],
-              "feedback": {
-                "correct": "Yes — and no pronoun needed.",
-                "incorrect": "salgo."
-              }
+              "source": "[YOU SAY: “salīre — salient — salir”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-sintesis-yo-go-them",
-              "prompt": "Now say she is leaving. Is it irregular?",
+              "id": "ES-C13-salir-singular-forms",
+              "prompt": "Give the learned singular present forms of salir: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED"
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "sale, and no",
-                "sale",
-                "sale - regular",
-                "no, sale"
+                "salgo, sales, sale",
+                "salgo sales sale",
+                "salgo / sales / sale"
               ],
               "feedback": {
-                "correct": "Right — the oddity is only ever in the yo form.",
-                "incorrect": "Sale, and it is perfectly regular."
+                "correct": "Right: salgo, sales, sale.",
+                "incorrect": "Keep the g in the yo form: salgo, sales, sale."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-sintesis-yo-go-which",
-              "prompt": "In these six verbs, which slot is the only irregular one?",
+              "id": "ES-C13-salir-leave-madrid",
+              "prompt": "Say 'I leave Madrid' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "the yo slot",
-                "yo",
-                "the i form",
-                "first person"
+                "salgo de madrid.",
+                "salgo de madrid"
               ],
               "feedback": {
-                "correct": "Only yo. Everything else is regular.",
-                "incorrect": "The yo slot, and only that one."
+                "correct": "Right: Salgo de Madrid.",
+                "incorrect": "Use salgo, then the known de plus Madrid."
               }
             }
           ]
@@ -205,7 +199,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which slot in these six verbs is irregular? (Only the yo form.) How many words does \"I'm leaving\" take? (One — salgo.) Why is that one form worth the trouble? (Because it is the one you will say most.)"
+              "text": "What does salir mean? (“To leave” or “to go out.”) Give the three learned forms. (Salgo, sales, sale.) What did Latin salīre mean? (“To leap” or “to jump.”) Name one English cousin. (Salient or sally.) Next: add venir and compare it only with already-learned tener."
             }
           ]
         }

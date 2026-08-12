@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C52-se-venden
 spine_node: SPINE-GIVE-REASONS
-sequence: 2107
-chapter: 165
+sequence: 2127
+chapter: 168
 type: grammar
 headword: se compran libros
 gloss: the verb agrees with the thing — which is the clue to where this whole construction came from

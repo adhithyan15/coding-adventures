@@ -1,36 +1,48 @@
-Spanish, chapter 82: Se Lo --- The Pair That Does Not Exist.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 82: Review --- Two Systems, Two New Words.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-se lo — the pair that does not exist.
+Review — two systems, two new words.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Person first, then thing. So "I tell it to him" should be le plus lo plus digo. Say that out loud: le lo digo.
+Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?
 
-Grammar Lens: nobody says that.
-Your mouth probably objected before your grammar did. Le lo is two nearly identical syllables in a row, and Spanish will not say it.
-In front of lo, la, los or las, the pronouns le and les become se.
-Le lo digo. becomes Se lo digo. — I tell it to him. Les la hago. becomes Se la hago. — I make it for them.
-Everything else about the sentence is unchanged. The order is still person then thing. The slot is still in front of the verb. Only the first word's shape changes, and it changes for one reason: what follows it.
-Note what se does not tell you. Le already refused to mark gender, and se goes further — it does not mark number either:
-Se lo digo — to him. To her. To you. To them. To you all.
-Five readings, one word. Context does all the work, and if you need to be precise you add it in words rather than in the pronoun.
+What you've built.
+[a table of 6 rows, read aloud]
+me. direct — what: me. indirect — to whom: me.
+you. direct — what: te. indirect — to whom: te.
+him / her / usted. direct — what: lo, la. indirect — to whom: le.
+us. direct — what: nos. indirect — to whom: nos.
+you all (Spain). direct — what: os. indirect — to whom: os.
+them / ustedes. direct — what: los, las. indirect — to whom: les.
+Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s.
+Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys.
+
+Grammar Lens: the one asymmetry.
+Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:
+direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked.
+Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole.
+It is good news. The row that carries all the difficulty in one column carries none in the other.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le lo digo" once, badly, and then "se lo digo" — feel why]
+[your turn — say: the direct six, then the indirect six, and hear how much is the same]
 [pause 8 seconds for the answer]
-[your turn — say: "Se lo digo" and "Se la hago"]
+[your turn — say: "lo tengo, le hablo, los tengo, les hablo"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say I tell it to him.
+[repeat that twice]
+Until the shared four stop feeling like two separate lists.
 [question — say your answer, then pause 10 seconds]
-In front of which four words do le and les become se?
+Give the six indirect object pronouns.
 [question — say your answer, then pause 12 seconds]
-How many different people can se lo digo be about?
+Which row is the only one where the two sets differ in shape, and how?
+[question — say your answer, then pause 12 seconds]
+Across both tables, how many distinct word shapes are there in total?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I tell it to him"? (Se lo digo.) What happened to le? (It became se in front of lo.) Next: why it became se — and it is not the reason almost everyone assumes.
+How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast.

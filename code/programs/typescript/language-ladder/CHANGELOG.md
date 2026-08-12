@@ -2,11 +2,17 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Fixed — the bundle staleness guard no longer trips on book builds
+
+- Count only files the bundler can import when deciding whether `dist/` is stale.
+  A local LaTeX run rewrites `.log`, `.aux` and `.pdf` under the corpus tree, which
+  left the guard permanently tripped — teaching the exact habit it exists to prevent.
+- Re-pin the Spanish chapter table from the generated manifest: 181 chapters.
+
 ### Added — cited Chinese 请 ductus (HL-C09CQ)
 
 - Render **请** in fourteen source-aligned movements across ten strokes.
 - Preserve 讠-before-青 order, all four joined turns, and nine lifts in Noto Sans SC.
-
 ### Added — cited Chinese 谢 ductus (HL-C09CP)
 
 - Render **谢** in seventeen source-aligned movements across twelve strokes.
@@ -26,7 +32,6 @@
 
 - Render **不** in four separately placed source-aligned strokes.
 - Preserve the top-horizontal-first order and three lifts in Noto Sans SC.
-
 ### Added — cited Chinese 是 ductus (HL-C09CL)
 
 - Render **是** in ten source-aligned movements across nine strokes.

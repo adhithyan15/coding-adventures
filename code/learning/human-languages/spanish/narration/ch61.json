@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 61,
-  "title": "Las --- The Plural Article That Behaves",
+  "title": "La Casa --- Your First Everyday Noun",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1c723432d97876f1",
+  "sourceHash": "fnv1a64:746fe102f1715f0d",
   "lessons": [
     {
-      "id": "ES-C44-las",
-      "sequence": 1105,
-      "title": "las casas — \"the houses\"",
-      "headword": "las casas",
-      "romanization": "las casas",
-      "gloss": "\"the houses\" — the plural article, which does exactly what the noun does",
+      "id": "ES-C43-casa",
+      "sequence": 1119,
+      "title": "la casa — \"house,\" and \"home\"",
+      "headword": "la casa",
+      "romanization": "la casa",
+      "gloss": "house, home — and a word French wore down so far it stopped looking like a noun",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77019b3b6f03879a",
+      "sourceHash": "fnv1a64:c453e37a1373affe",
       "notice": null,
       "blocks": [
         {
@@ -35,35 +35,65 @@
             },
             {
               "kind": "speech",
-              "text": "You learned this in your first chapter: a noun ending in a vowel adds -s. So what is \"houses\"? (Casas.) Now — what is \"the houses\"?"
+              "text": "You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the article does what the noun does",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "las — the, for more than one feminine thing."
-            },
-            {
-              "kind": "speech",
-              "text": "la casa becomes las casas — the houses. la comida becomes las comidas — the meals."
-            },
-            {
-              "kind": "speech",
-              "text": "The -s lands on both words. That is not two rules; it is one rule applied where it belongs. You have already seen Spanish do this — buenas noches is buena copying noche's number — and it is the same instinct throughout the language: the words around a noun agree with it, so when the noun goes plural, they follow."
-            },
-            {
-              "kind": "speech",
-              "text": "So las is not a word to memorise. It is la obeying the rule you already hold."
+              "text": "s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la casa — the house, and just as often home."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa."
+            },
+            {
+              "kind": "speech",
+              "text": "French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, \"at the house of me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Italian kept a small one too: casino is casa plus a diminutive ending — literally \"little house.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a feminine noun, behaving exactly as promised",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones."
+            },
+            {
+              "kind": "speech",
+              "text": "la casa — the house. Tengo una casa. — I have a house."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -76,83 +106,81 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"la casa\" then \"las casas\" — hear the -s twice",
+              "instruction": "\"la casa\" — KAH-sah, a clean s",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"la casa\" then \"las casas\" — hear the *-s* twice]"
+              "source": "[YOU SAY: \"la casa\" — *KAH-sah*, a clean *s*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"las comidas\"",
+              "instruction": "\"Tengo una casa\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"las comidas\"]"
+              "source": "[YOU SAY: \"Tengo una casa\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-las-houses",
-              "prompt": "Say the houses.",
+              "id": "ES-C43-casa-article",
+              "prompt": "Say the house in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+                "ES-LEX-CASA",
+                "ES-GRAMMAR-NOUN-GENDER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "la casa",
+                "casa"
+              ],
+              "feedback": {
+                "correct": "Feminine, so la.",
+                "incorrect": "La casa — it ends in -a and is feminine."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C43-casa-have",
+              "prompt": "Say I have a house.",
+              "assesses": [
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
                 "ES-LEX-CASA"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "las casas",
-                "las casa s"
+                "tengo una casa",
+                "yo tengo una casa"
               ],
               "feedback": {
-                "correct": "Both words take the -s.",
-                "incorrect": "Las casas — the article follows the noun."
+                "correct": "Yes — and note you needed no new grammar for it.",
+                "incorrect": "Tengo una casa."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-las-meals",
-              "prompt": "Say the meals.",
+              "id": "ES-C43-casa-french",
+              "prompt": "Which French word is casa worn all the way down?",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
-                "ES-LEX-COMIDA"
+                "ES-ETYMON-CASA"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "las comidas",
-                "comidas"
+                "chez",
+                "chez, as in chez moi"
               ],
               "feedback": {
-                "correct": "Las comidas.",
-                "incorrect": "Las comidas."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-las-rule",
-              "prompt": "How many new rules did this lesson add?",
-              "assesses": [
-                "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL",
-                "ES-GRAMMAR-NOUN-NUMBER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "None — the noun rule simply also applies to the article.",
-                "incorrect": "None. The -s rule you learned in chapter one covers this."
+                "correct": "Chez moi is literally at the house of me.",
+                "incorrect": "Chez. The noun wore down until it became a preposition."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -164,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"The houses\"? (Las casas.) Where did the -s go? (Both words.) Next: the masculine one, which does not do the obvious thing — and the reason will be familiar."
+              "text": "What is \"the house\"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree."
             }
           ]
         }

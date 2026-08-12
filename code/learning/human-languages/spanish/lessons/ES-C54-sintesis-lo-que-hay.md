@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C54-sintesis-lo-que-hay
 spine_node: SPINE-ASK-LOCATION
-sequence: 2120
-chapter: 178
+sequence: 2140
+chapter: 181
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — describing a place you are standing in, which needs almost everything this book has given you

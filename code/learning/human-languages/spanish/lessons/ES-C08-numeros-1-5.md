@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C08-numeros-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 800
-chapter: 43
+sequence: 820
+chapter: 46
 type: word
 headword: uno, dos, tres, cuatro, cinco
 gloss: the numbers 1–5

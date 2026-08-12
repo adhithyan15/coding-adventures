@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C45-los-las
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1137
-chapter: 72
+sequence: 1157
+chapter: 75
 type: grammar
 headword: los, las
 gloss: "them" — the two forms you can produce before being told, and the one place the pronoun is tidier than the article

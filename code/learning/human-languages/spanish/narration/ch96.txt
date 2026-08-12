@@ -1,38 +1,94 @@
-Spanish, chapter 96: Tenia and Tuve --- When the Tense Changes the Meaning.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 96: Synthesis --- Three Exceptions, and No Others.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-tenía and tuve — when the tense changes the meaning.
+Lesson 1 of 2.
+Practice — keep the past open or close it.
 
 Warm-up.
 [pause 2 seconds]
-So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events.
+This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit.
 
-Grammar Lens: having, and getting.
-Tenía una casa. — I had a house. Tuve una casa. — I got a house.
-Read those twice. The second one is not "I had a house, viewed as finished." It is a different verb in English altogether.
-The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something.
-Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting.
-Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English.
+Grammar Lens: the complete frame for this chapter.
+Regular rows:
+yo: hablaba, comía, vivía.
+tú: hablabas, comías, vivías.
+él / ella / usted: hablaba, comía, vivía.
+The three special rows:
+yo: era, iba, veía.
+tú: eras, ibas, veías.
+él / ella / usted: era, iba, veía.
+The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint.
 
-Why it's said this way.
-This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started.
-It also explains a frustration you may already have had. English "I had" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began.
+Grammar Lens: one scene, two frames.
+Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking.
+Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch.
+Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual.
+The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint.
+
+The histories, taken apart.
+-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tenía una casa" then "Tuve una casa" — hear the English change]
+[your turn — say: “hablaba, comía, vivía”]
 [pause 8 seconds for the answer]
-[your turn — say: the rule aloud — a state in the preterite gives you its beginning]
+[your turn — say: “era, iba, veía”]
 [pause 8 seconds for the answer]
+[your turn — say: “Hablé / hablaba, viví / vivía, fui / iba”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the imperfect yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the imperfect yo forms of ser, ir, and ver, in that order.
+[question — say your answer, then pause 7 seconds]
+Say 'I was speaking Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was living in Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was going to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Choose the open past: comí or comía.
 [question — say your answer, then pause 10 seconds]
-Say I had a house, meaning it was simply so.
-[question — say your answer, then pause 12 seconds]
-What does tuve una casa actually mean?
-[question — say your answer, then pause 12 seconds]
-You meet a new verb that names a state. What will its preterite mean?
+Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place.
+Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here.
+
+
+Lesson 2 of 2.
+Synthesis — three exceptions, and no others.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new in this chapter. Say hablaba, then comía.
+
+What you've built.
+Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them.
+The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not "the common ones", not "to start with". Three.
+Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it.
+So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying.
+
+The word, taken apart.
+And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up.
+That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive.
+The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: era, iba, veía — the whole irregular inventory, in one breath]
+[pause 8 seconds for the answer]
+[your turn — say: hablaba, comía, vivía — and notice nothing surprises you]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 8 seconds]
+How many irregular verbs does the imperfect have in the whole language?
+[question — say your answer, then pause 10 seconds]
+Name them.
+[question — say your answer, then pause 10 seconds]
+Why are those three the irregular ones?
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)

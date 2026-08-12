@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C36-oir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1880
-chapter: 148
+sequence: 1900
+chapter: 151
 type: word
 headword: oír
 gloss: to hear — the half of listening you do not choose, and a verb that sprouts a y

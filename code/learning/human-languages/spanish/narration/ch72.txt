@@ -1,44 +1,48 @@
-Spanish, chapter 72: Los and Las --- Them, Derived.
+Spanish, chapter 72: Review --- Four Pronouns, One Slot.
 1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-los and las — "them".
+Review — four pronouns, one slot.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Tengo el libro becomes lo tengo. Now: Tengo los libros. Say the short version out loud before reading on.
+Nothing new in this chapter. Before the table: where does an object pronoun go?
 
-Grammar Lens: you were right.
-los — them, masculine. las — them, feminine.
-Tengo los libros. becomes Los tengo. — I have them. Hago las comidas. becomes Las hago. — I make them.
-Add -s. That is the whole lesson, and you did it yourself in the warm-up.
-Two chapters have now asked you for a plural and this is the first one that behaved exactly as you would guess. That is worth noticing rather than passing over: most of what is ahead of you in Spanish is like this, and the memorable exceptions are memorable because they are rare.
+What you've built.
+Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here.
+[a table of 4 rows, read aloud]
+the one it happens to: me. pronoun: me. example: me quieres — you love me.
+the one it happens to: you. pronoun: te. example: te quiero — I love you.
+the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.
+the one it happens to: it (feminine). pronoun: la. example: la hago — I make it.
+Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time.
 
-The word, taken apart.
-There is one genuinely satisfying thing here.
-The article could not do this. El did not become els; it became los, because el is a worn-down elo that had lost its vowel and the plural had kept it.
-The pronoun never lost that vowel. Lo is illum with the vowel intact — which is exactly why it was not el in the first place. So when the plural came, lo had nothing to repair:
-[a table of 2 rows, read aloud]
-article. singular: el (worn down). plural: los.
-pronoun. singular: lo (vowel kept). plural: los.
-The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in one column and none in the other, from one Latin word, decided entirely by which one got leaned on.
+Grammar Lens: the single question.
+Choosing between these looks like four decisions. It is one:
+Who or what is the verb landing on?
+If it is you speaking becomes me.
+If it is the person you are speaking to becomes te.
+If it is a thing or somebody else becomes lo or la, and the noun decides which, not you.
+That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "lo tengo" then "los tengo"; "la hago" then "las hago"]
+[your turn — say: the four in order, then the four examples]
 [pause 8 seconds for the answer]
-[your turn — say: "el / los" then "lo / los" — one pair changed shape, one did not]
+[your turn — say: "Te quiero" and "Me quieres" back to back, as if two people were speaking]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say I have them, about los libros.
-[question — say your answer, then pause 8 seconds]
-Say I make them, about las comidas.
-[question — say your answer, then pause 12 seconds]
-The article el had to change shape for its plural. Why did the pronoun lo not?
+[repeat that twice]
+Until the choice arrives before the sentence does.
+[question — say your answer, then pause 10 seconds]
+Name the four object pronouns you now hold.
+[question — say your answer, then pause 10 seconds]
+What single question chooses between all four?
+[question — say your answer, then pause 10 seconds]
+Which two of the four depend on knowing a noun's gender?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have them," about books? (Los tengo.) About meals? (Las hago.) How do you make an object pronoun plural? (Add -s.) Next: one more form, and it belongs to one part of the world.
+Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for.

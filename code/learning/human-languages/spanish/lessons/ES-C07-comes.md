@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-comes
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 606
-chapter: 30
+sequence: 626
+chapter: 33
 type: grammar
 headword: comes
 gloss: "you eat" — the first slot where -er parts company with -ar

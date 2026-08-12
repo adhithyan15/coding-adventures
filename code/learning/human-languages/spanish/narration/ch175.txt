@@ -1,39 +1,45 @@
-Spanish, chapter 175: Ha + Y --- The Fossil in a Three-Letter Word.
+Spanish, chapter 175: Review --- Three Jobs, No New Words.
 1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-ha + y — the fossil in a three-letter word.
+Review — three jobs, no new words.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Hay looks like nothing. Say the haber form for he/she. (Ha.) Now look at hay again with that in mind.
+Nothing new. One question first: how many new words did this rung teach you?
 
-The word, taken apart.
-Hay is two words fused:
-ha + y.
-The ha you already hold: it is haber, third person. The y is the interesting half. It is Latin ibi, meaning "there" — and Spanish otherwise lost that word completely.
-There is no y meaning "there" anywhere else in modern Spanish. It survives in exactly one place, welded to the front of a verb, because words that get glued to something else stop being available to be replaced. Hay is a museum case with one object in it.
-So the literal reading is: "it has there." Which is a strange way to say something exists, until you notice that the neighbours do the same:
-French: il y a — "it there has." Same haber verb, same ibi, same order, three words instead of one. French kept its y separate, so its fossil is still visible on the surface.
-English: there is — which also starts with a place-word doing a job that has nothing to do with place. Nobody is pointing anywhere when they say there is a problem.
-Three languages, three different verbs, and all of them reached for a word meaning "there" to announce that something exists. That is not borrowing; it is the same instinct arriving three times.
+What you've built.
+None. Here is the whole rung:
+[a table of 3 rows, read aloud]
+joining to a noun. Spanish: el libro que compro. English: the book that I buy.
+the same, with English's that dropped. Spanish: la casa que tengo. English: the house I have.
+no noun to join to. Spanish: lo que digo. English: what I say.
+Que you have held since quiero que hables. Lo you have held since the object pronouns. This rung put them to work and added nothing.
+That is worth pausing on, because it is the last big structural piece a beginner's course owes you, and it turned out to cost no vocabulary at all. Almost everything in a language is like this eventually: the pieces stop being new and start being rearranged.
+
+Grammar Lens: what to actually watch for.
+One error will outlive the others, so it gets the last word here.
+English deletes its joint. Spanish never does.
+You will think the book I bought, translate what you thought, and produce el libro compré. It will feel complete because your English was complete.
+The check is mechanical and takes a second: a noun, then a new subject and verb, with nothing in between — that gap needs a que.
+And when there is no noun to begin with, lo supplies one so that que has something to hang from. Which means both chapters were about the same thing: Spanish will not let the joint go missing.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ha" then "hay" — hear the extra piece]
+[your turn — say: all three rows of the table]
 [pause 8 seconds for the answer]
-[your turn — say: "hay", "il y a", "there is" — three languages, one instinct]
-[pause 8 seconds for the answer]
+[repeat that twice]
+Until the missing English that is loud.
+[question — say your answer, then pause 8 seconds]
+How many new words did this rung introduce?
+[question — say your answer, then pause 12 seconds]
+Say the house I have, and name the trap.
 [question — say your answer, then pause 10 seconds]
-What two pieces make up hay?
-[question — say your answer, then pause 10 seconds]
-Where else in modern Spanish does that y meaning there appear?
-[question — say your answer, then pause 10 seconds]
-Which French phrase is the same three pieces, kept separate?
+When there is no noun to join to, what supplies one?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is hay made of? (Ha + y.) What does the y mean, and where else is it? ("There" — and nowhere else in Spanish.) What did French do with the same pieces? (Kept them apart: il y a.) Next: hay with a verb after it.
+New words this rung? (None.) The error that outlives the others? (Dropping que, because English drops that.) Next: sentences long enough to be worth saying.

@@ -1,50 +1,42 @@
-Spanish, chapter 146: Gustar — the Verb Built the Other Way Round.
+Spanish, chapter 146: Preguntar — Asking, and Sounding a Depth.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-gustar — the verb that runs backwards.
+preguntar — "to ask", by sounding the water with a pole.
 
 Warm-up.
 [pause 2 seconds]
-Back in the introductions you learned mucho gusto — "much pleasure". Here is the verb that noun belongs to, assembled the opposite way round from English. It is the single thing in Spanish that trips English speakers up hardest.
+English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half.
 
 Sounds you'll need.
-g-hard — a hard g before u: goos-TAR.
-s-clear — a clean hissing s, never a z buzz.
+pr-cluster — pre- is one crisp beat, preh, with a tapped r.
+g-hard — the g before u is hard, as in English gun: pre-goon-TAR.
 
-The word, taken apart: gustar.
-gustar from Latin gustāre, "to taste". English kept the root and stayed close to the tongue:
-gusto — doing something with relish, that is, with a taste for it.
-gustatory — of the sense of taste.
-disgust — dis- "away" + taste: what you spit back out.
-degustation, a tasting menu; and through French, ragout.
-Spanish's own el gusto — the gusto of mucho gusto — still holds both senses: taste on the tongue, and pleasure taken in a thing. The verb followed the second: gustar means "to please".
+The word, taken apart: preguntar.
+preguntar ("to ask a question") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, "to inquire". And percontārī was built on contus, "a punting pole": to percontor was to push a pole down through water and find out how deep it was.
+Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe.
+The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta.
 
-Grammar Lens: the thing you like is the subject.
-English says I like the book: the liker is the subject. Spanish has no such sentence. It says Me gusta el libro — "the book is pleasing to me".
-Everything follows from that:
-el libro is the subject, which is why the verb is gusta, third person.
-me is the person it happens to, not the one doing anything.
-So the verb agrees with the thing, never with you:
-[a table of 3 rows, read aloud]
-what you mean: I like the book. Spanish: Me gusta el libro. why: one book, so gusta.
-what you mean: I like books. Spanish: Me gustan los libros. why: many books, so gustan.
-what you mean: I like reading. Spanish: Me gusta leer. why: one action, so gusta.
-To change who is pleased, change the little word in front, not the verb: me (to me), te (to you), le (to him, her, usted), nos (to us), les (to them).
-Careful. There is no yo gusto el libro. Yo gusto is a real sentence — it means "I am pleasing" — just not the one you were reaching for.
+Grammar Lens: one English "ask", two Spanish verbs.
+Spanish sorts asking by what you are after:
+[a table of 2 rows, read aloud]
+what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.
+what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee.
+Ask for a coffee with preguntar and you have said "I question a coffee". The line is simple: a question takes preguntar, a request takes pedir.
+pedir from Latin petere, "to make for, to aim at" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Me gusta el café" then "Me gustan los libros" — the verb follows the thing]
+[your turn — say: "pregunto, preguntas, pregunta, preguntamos, preguntan"]
 [pause 8 seconds for the answer]
-[your turn — say: "Te gusta tomar café" — you like drinking coffee]
+[your turn — say: "Te pregunto la hora" — I'm asking you the time]
 [pause 8 seconds for the answer]
-[your turn — say: "Me gusta ayudar" — I like helping]
+[your turn — say: "Pido un café" then "Tomo un café" — I ask for one, I have one]
 [pause 8 seconds for the answer]
-[your turn — say: "gustar" then English "gusto, disgust, gustatory" — the tasting family]
+[your turn — say: "pedir" then English "petition, appetite, compete" — the aiming family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-In me gusta el libro, what is the subject? (El libro.) Why is it me gustan los libros? (The verb agrees with los libros, which is plural.) What did gustāre mean, and name an English cousin. (To taste; gusto, disgust.) And what would yo gusto actually mean? (I am pleasing.)
+What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, "to aim at" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid.

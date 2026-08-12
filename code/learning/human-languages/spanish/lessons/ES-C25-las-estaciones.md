@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C25-las-estaciones
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1620
-chapter: 125
+sequence: 1640
+chapter: 128
 type: word
 headword: la primavera, el verano, el otoño, el invierno
 gloss: the four seasons — three straightforward, and one whose MEANING quietly shifted from "spring" to "summer"

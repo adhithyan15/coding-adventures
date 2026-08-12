@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C39-repaso-cambios
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2033
-chapter: 155
+sequence: 2053
+chapter: 158
 type: practice-mix
 headword: (review)
 gloss: review — the stem-change system, now complete, and the one pattern with a single member

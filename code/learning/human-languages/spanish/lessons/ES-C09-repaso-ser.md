@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-repaso-ser
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 938
-chapter: 46
+sequence: 958
+chapter: 49
 type: practice-mix
 headword: (review)
 gloss: review — the whole of ser, and why no two of its forms look alike

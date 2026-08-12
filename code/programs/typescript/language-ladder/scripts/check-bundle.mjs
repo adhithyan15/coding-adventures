@@ -32,10 +32,22 @@ const watched = [
   path.resolve("src"),
   path.resolve("../../../learning/human-languages"),
 ];
+// Only files the bundler could actually pull in count as sources. The corpus
+// tree also holds the LaTeX books, and every local book build rewrites a .log,
+// a .aux and a .pdf under it — none of which the app imports. Counting those
+// left the guard permanently tripped after a `build-books-locally.sh` run,
+// which teaches the exact habit it exists to prevent: ignoring it.
+const BUNDLED_EXTENSIONS = new Set([
+  ".md", ".json", ".svg", ".ttf", ".woff2",
+  ".ts", ".tsx", ".js", ".mjs", ".css", ".html",
+]);
+
 async function newestMtime(target) {
   const info = await stat(target).catch(() => null);
   if (!info) return 0;
-  if (!info.isDirectory()) return info.mtimeMs;
+  if (!info.isDirectory()) {
+    return BUNDLED_EXTENSIONS.has(path.extname(target)) ? info.mtimeMs : 0;
+  }
   const entries = await readdir(target, { withFileTypes: true });
   const times = await Promise.all(
     entries

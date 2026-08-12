@@ -1,54 +1,90 @@
-Spanish, chapter 134: Green and Yellow.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 134: The Weather.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-verde — the colour named after being alive.
+Lesson 1 of 3.
+el tiempo — one word doing two jobs.
 
 Warm-up.
 [pause 2 seconds]
-After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing.
+Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking "what time does it make?" — because tiempo does not split "time" from "weather" the way English does.
 
-The word, taken apart: verde.
-verde ("green") from Latin viridis (worn down through virdis), which comes from the verb virēre, "to be green, to flourish, to be vigorous."
-So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris ("green of Greece").
-One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing.
+The word, taken apart: el tiempo.
+el tiempo = both "time" and "weather" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed.
+English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed.
+How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is "I have no time," ¿qué tiempo hace? is "what's the weather like?"
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "verde" — green]
+[your turn — say: "el tiempo" — time, or weather, depending on context]
 [pause 8 seconds for the answer]
-[your turn — say: the root — "virēre, to flourish" becomes "verde"]
+[your turn — say: "¿qué tiempo hace?" — what's the weather like?]
 [pause 8 seconds for the answer]
-[your turn — say: "verde" then English "verdant" — and not "green"]
+[your turn — say: "tiempo" then English "tempo, temporal" — the tempus family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin verb gives verde, and what does it mean? (Virēre, "to be green, to flourish.") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all.
+What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only "time.") Next: how to actually answer ¿qué tiempo hace?
 
 
-Lesson 2 of 2.
-amarillo — the colour that started as a taste.
+Lesson 2 of 3.
+hace calor, hace frío, hace sol — the weather Spanish makes.
 
 Warm-up.
 [pause 2 seconds]
-Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them.
+You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, "to make."
 
-The word, taken apart: amarillo.
-amarillo ("yellow") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, "a little bitter," a diminutive of amarus, "bitter."
-A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning "somewhat bitter" came to mean "the yellowish look of a bitter thing," then simply "yellowish," and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour.
-You can still check the family in a living word: amargo ("bitter") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there.
+The words, taken apart: calor, frío, sol.
+calor from Latin calor, "heat, warmth" becomes English calorie, caloric, cauldron.
+frío from Latin frigidus, "cold" (the middle syllable syncopated away) becomes English frigid, refrigerate.
+sol from Latin sol, "sun," unchanged becomes English solar, solstice, parasol.
+Here is the part worth noticing: all three are nouns, not adjectives. Calor is "heat," not "hot." That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one.
+hace calor — "it's hot," literally "it makes heat" hace frío — "it's cold," literally "it makes cold" hace sol — "it's sunny," literally "it makes sun".
+French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into "it is hot" with an adjective.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "verde, amarillo" — green and yellow]
+[your turn — say: "hace calor. hace frío. hace sol."]
 [pause 8 seconds for the answer]
-[your turn — say: "amarillo, amargo" — hear the shared amar-]
+[your turn — say: the literal reading — "it makes heat, it makes cold, it makes sun"]
 [pause 8 seconds for the answer]
-[your turn — say: the path — "a little bitter" becomes "yellowish" becomes "yellow"]
+[your turn — say: "calor" then English "calorie"; "frío" then "refrigerate"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does amarillo come from a Latin word for yellow? (No — from amarellus, "a little bitter," a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, "bitter.") And verde? (From virēre, "to flourish" — a colour named after being alive, as this one is named after a taste.)
+Say "it's hot," "it's cold," "it's sunny." (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a "to be" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)
+
+
+Lesson 3 of 3.
+llueve — the one weather word that will not join hacer.
+
+Warm-up.
+[pause 2 seconds]
+Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own.
+
+Grammar Lens: rain brings its own verb.
+llueve = "it's raining." Not hace lluvia, not "it makes rain" — just llueve, a single word that is a complete sentence.
+It comes from llover, "to rain," and llover is impersonal: it has no subject at all, not even a "it" you could point to. Compare the two shapes side by side:
+[a table of 2 rows, read aloud]
+pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).
+pattern: dedicated verb. example: llueve. what carries the weather: the verb itself.
+English does exactly the same split, which makes it easy to feel: you say "it is hot" with an adjective, but "it rains" with a verb built for the job. Spanish just draws the line in the same place.
+
+The word, taken apart: llover.
+llover from Latin pluere, "to rain." Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, "key") and llama ( from flamma, "flame"). Latin's cl-, fl- and pl- clusters all became Spanish ll-.
+So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "¿qué tiempo hace?" then "hace calor. hace frío. hace sol."]
+[pause 8 seconds for the answer]
+[your turn — say: "llueve" — one word, a whole sentence, no hacer]
+[pause 8 seconds for the answer]
+[your turn — say: the family — "llamar, llave, llama, llover" — four Latin clusters, one Spanish ll-]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)

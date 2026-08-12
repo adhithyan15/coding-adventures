@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-hablais
 spine_node: SPINE-ASK-LOCATION
-sequence: 730
-chapter: 36
+sequence: 750
+chapter: 39
 type: grammar
 headword: habláis
 gloss: "you all speak" in Spain — a whole form that half the Spanish world does not use

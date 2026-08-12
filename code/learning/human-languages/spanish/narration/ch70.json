@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 70,
-  "title": "Synthesis --- Saying It Once",
+  "title": "La --- The Pronoun Carries What Left",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:25a7710b472235d7",
+  "sourceHash": "fnv1a64:61fbc33c4db9dc8e",
   "lessons": [
     {
-      "id": "ES-C42-sintesis-decirlo-una-vez",
-      "sequence": 1135,
-      "title": "Synthesis — saying it once",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — what these four words are for, which is not accuracy but not sounding like a stranger",
+      "id": "ES-C42-la",
+      "sequence": 1147,
+      "title": "la — \"it,\" for a feminine noun",
+      "headword": "la",
+      "romanization": "la",
+      "gloss": "\"it\" for something feminine — the one word in this pair that never had to change",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0390980fd4e4465c",
+      "sourceHash": "fnv1a64:a569d0e78ea00035",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro."
+              "text": "Say \"I have it,\" about the book. (Lo tengo.) Now guess the feminine version before you read on."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: the form you probably guessed",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here are the same two exchanges, twice. Read both versions aloud."
+              "text": "la — it, standing in for something feminine."
             },
             {
               "kind": "speech",
-              "text": "Version one:"
+              "text": "Hago la comida. — I make the meal. La hago. — I make it."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida."
+              "text": "If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way."
             },
             {
               "kind": "speech",
-              "text": "Version two:"
+              "text": "The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago."
-            },
-            {
-              "kind": "speech",
-              "text": "Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them."
+              "text": "That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what the pronoun is actually for",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise."
+              "text": "Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears."
             },
             {
               "kind": "speech",
-              "text": "A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book."
+              "text": "The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side."
             },
             {
               "kind": "speech",
-              "text": "So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that."
+              "text": "So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other."
             }
           ]
         },
@@ -103,101 +99,79 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the book exchange, and hear the difference",
+              "instruction": "\"Hago la comida\" then \"La hago\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the book exchange, and hear the difference]"
+              "source": "[YOU SAY: \"Hago la comida\" then \"La hago\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed",
+              "instruction": "\"lo tengo\" then \"la hago\" — one syllable carries the whole difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed]"
+              "source": "[YOU SAY: \"lo tengo\" then \"la hago\" — one syllable carries the whole difference]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-book",
-              "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "si, lo tengo",
-                "lo tengo",
-                "si lo tengo"
-              ],
-              "feedback": {
-                "correct": "That is what a speaker would actually say.",
-                "incorrect": "Si, lo tengo. The noun was already named once; that was enough."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-meal",
-              "prompt": "Answer yes to Haces la comida, without repeating the noun.",
+              "id": "ES-C42-la-form",
+              "prompt": "Say I make it, about la comida.",
               "assesses": [
                 "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-COMIDA",
+                "ES-LEX-LA-OBJECT",
                 "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "si, la hago",
                 "la hago",
-                "si la hago"
+                "yo la hago"
               ],
               "feedback": {
-                "correct": "La, because comida is feminine.",
-                "incorrect": "Si, la hago. The pronoun carries the gender of the noun that left."
+                "correct": "Yes — feminine noun, feminine pronoun.",
+                "incorrect": "La hago. The pronoun takes the gender of the noun it replaces."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-people",
-              "prompt": "Somebody says Te quiero. Say the answering half.",
+              "id": "ES-C42-la-agree",
+              "prompt": "What decides whether you say lo or la?",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-NOUN-GENDER",
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "me quieres",
-                "y yo te quiero",
-                "te quiero"
+                "the gender of the noun it replaces",
+                "the noun's gender",
+                "whether the noun is masculine or feminine"
               ],
               "feedback": {
-                "correct": "Two people, four words, a complete exchange.",
-                "incorrect": "Me quieres — or turn it back with te quiero."
+                "correct": "Right — the noun decides, not the speaker and not the verb.",
+                "incorrect": "The gender of the noun being replaced."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-point",
-              "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
+              "id": "ES-C42-la-why",
+              "prompt": "Why does the feminine article match its pronoun exactly, when the masculine pair does not?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO"
+                "ES-ETYMON-ILLE-ILLA"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "it named the same thing twice",
-                "it repeated the noun",
-                "nobody talks like that"
+                "the masculine lost a vowel and the feminine had none to lose",
+                "only the masculine wore down",
+                "the sound change only hit the masculine"
               ],
               "feedback": {
-                "correct": "Right — correct is not the same as what a speaker would say.",
-                "incorrect": "Nothing was ungrammatical. It just repeated a thing both people already had in mind."
+                "correct": "Exactly — one sound change, one victim.",
+                "incorrect": "Both come from illam unchanged; the masculine elo lost its vowel and became el."
               }
             }
           ]
@@ -215,7 +189,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there."
+              "text": "Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking."
             }
           ]
         }

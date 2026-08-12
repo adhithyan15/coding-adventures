@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-poner
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1060
-chapter: 52
+sequence: 1080
+chapter: 55
 type: word
 headword: poner
 gloss: to put or place — with the singular present forms pongo, pones, and pone

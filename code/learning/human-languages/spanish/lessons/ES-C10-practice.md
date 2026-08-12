@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C10-practice
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 930
-chapter: 45
+sequence: 950
+chapter: 48
 type: practice-mix
 headword: (practice)
 gloss: singular ir, the near future, and mi, tu, or su before café
