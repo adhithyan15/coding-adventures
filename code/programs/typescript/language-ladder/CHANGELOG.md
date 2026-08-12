@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 宀 ductus (HL-C09CH)
+
+- Render **宀** in four source-aligned frames: draw its top dot, restart for the
+  left-side drop, then restart for a roof that hooks down-left without breaking.
+- Fit all three source runs to Noto Sans SC while preserving the joined final
+  hook, two pen lifts, and the source order.
+- Reduce Chinese's remaining verified-ductus inventory to 15 entries.
+
 ### Added — cited Chinese 氵 ductus (HL-C09CG)
 
 - Render **氵** in four source-aligned frames: draw its two falling dots, then
