@@ -46,6 +46,21 @@ Text [ label ] ( slot: display-name )
 Text [ label ] ( content: slot: display-name )
 ```
 
+**Default authored children** — A reusable component with a `node` or
+`list<node>` slot mounts caller-authored child subtrees in child position:
+
+```mll
+layout Surface {
+  Column [ surface-root ] {
+    slot: children
+  }
+}
+```
+
+The package resolver replaces this typed mount when a consumer writes
+`Surface { ... }`. One default child mount is supported per layout; named child
+regions are tracked separately by UI29-2.
+
 ## API
 
 ```rust
@@ -67,4 +82,10 @@ println!("{}", out.part_map_json);
 
 ```sh
 cargo test -p moslayout-compiler -- --nocapture
+```
+
+After editing the canonical grammar, regenerate its embedded Rust form with:
+
+```sh
+cargo run -p moslayout-compiler --bin regen_grammar
 ```

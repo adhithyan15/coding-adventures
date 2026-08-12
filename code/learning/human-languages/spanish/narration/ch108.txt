@@ -1,42 +1,38 @@
-Spanish, chapter 108: He Hablado --- A Verb With No Meaning Left.
+Spanish, chapter 108: Tenia and Tuve --- When the Tense Changes the Meaning.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-he hablado — "I have spoken".
+tenía and tuve — when the tense changes the meaning.
 
 Warm-up.
 [pause 2 seconds]
-You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word.
+So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events.
 
-Sounds you'll need.
-silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh.
+Grammar Lens: having, and getting.
+Tenía una casa. — I had a house. Tuve una casa. — I got a house.
+Read those twice. The second one is not "I had a house, viewed as finished." It is a different verb in English altogether.
+The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something.
+Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting.
+Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English.
 
-Grammar Lens: the emptied verb.
-he + participle — I have done something.
-He hablado español. — I have spoken Spanish.
-Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody.
-He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not "I hold spoken." You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place.
-
-The word, taken apart.
-Haber comes from Latin habēre, "to hold, to have" — a completely ordinary verb with a completely ordinary meaning.
-Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower "hold, grip"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed.
-English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for "hold" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually.
-So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word.
+Why it's said this way.
+This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started.
+It also explains a frustration you may already have had. English "I had" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "He hablado español"]
+[your turn — say: "Tenía una casa" then "Tuve una casa" — hear the English change]
 [pause 8 seconds for the answer]
-[your turn — say: "I have eaten" in English, and notice that nothing is being held]
+[your turn — say: the rule aloud — a state in the preterite gives you its beginning]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
-Say I have spoken Spanish.
+Say I had a house, meaning it was simply so.
 [question — say your answer, then pause 12 seconds]
-What does haber mean in he hablado?
-[question — say your answer, then pause 10 seconds]
-Which English verb was hollowed out the same way?
+What does tuve una casa actually mean?
+[question — say your answer, then pause 12 seconds]
+You meet a new verb that names a state. What will its preterite mean?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have spoken"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it.
+Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place.

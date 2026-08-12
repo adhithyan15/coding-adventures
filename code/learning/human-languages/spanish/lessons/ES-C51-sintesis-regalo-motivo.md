@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C51-sintesis-regalo-motivo
 spine_node: SPINE-GIVE-REASONS
-sequence: 2155
-chapter: 171
+sequence: 2185
+chapter: 175
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a short exchange in which the two-letter difference changes what one person means to another

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 171,
-  "title": "Synthesis --- The Gift and the Motive",
+  "title": "Para --- For, Pointing Forward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d44ae9ba37f49b19",
+  "sourceHash": "fnv1a64:e387b26cb99c4dda",
   "lessons": [
     {
-      "id": "ES-C51-sintesis-regalo-motivo",
-      "sequence": 2155,
-      "title": "Synthesis — the gift and the motive",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a short exchange in which the two-letter difference changes what one person means to another",
+      "id": "ES-C51-para",
+      "sequence": 2181,
+      "title": "para — \"for,\" pointing forward",
+      "headword": "para",
+      "romanization": "para",
+      "gloss": "\"for\" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57f75181ea36e7aa",
+      "sourceHash": "fnv1a64:1573fc1504d16d63",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti or por ti — one of them is a present and one of them is a reason. Which is which?"
+              "text": "English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: the arrow points away from you",
           "segments": [
             {
               "kind": "speech",
-              "text": "Read this twice, changing only one word."
+              "text": "para — for, when something is aimed at something else."
             },
             {
               "kind": "speech",
-              "text": "— Hago la comida para ti. — Gracias."
+              "text": "Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose)."
             },
             {
               "kind": "speech",
-              "text": "— Hago la comida por ti. — …gracias."
+              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para."
             },
             {
               "kind": "speech",
-              "text": "The first is somebody cooking you dinner. The second is somebody telling you they are cooking because of you — which, depending on the day, is an act of love or a small complaint."
-            },
-            {
-              "kind": "speech",
-              "text": "Two letters. Nothing else in the sentence moved."
+              "text": "That is the whole of this chapter. Not four uses — one direction."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: a preposition carrying the feeling",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the first place in the book where the smallest word in the sentence carries its emotional content."
+              "text": "The direction is not a mnemonic somebody invented. It is inside the word."
             },
             {
               "kind": "speech",
-              "text": "Nouns and verbs have been doing the meaning until now. Here the noun is the same, the verb is the same, the person is the same — and the sentence changes completely on a preposition. That is worth meeting deliberately, because English speakers arrive expecting the little words to be plumbing."
+              "text": "Para was Latin per + ad, squeezed into one word. And ad means \"toward\" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something."
             },
             {
               "kind": "speech",
-              "text": "They are not plumbing here. Por and para are the difference between I made this for you and I made this because of you, and no amount of context repairs the wrong one: your listener will simply hear the thing you did not mean."
+              "text": "So para is, at the bottom, \"through-toward.\" A word that is literally made of an arrow."
             },
             {
               "kind": "speech",
-              "text": "Which is also the reassuring part. If you pick the wrong one, you have not produced nonsense or bad grammar — you have said something true about a different situation. Somebody will look faintly puzzled, and you will notice, and that is how this stops being difficult."
+              "text": "Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?"
             }
           ]
         },
@@ -103,94 +99,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the dinner sentence, and hear the second one land differently",
+              "instruction": "\"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the dinner sentence, and hear the second one land differently]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-gift",
-              "prompt": "Tell somebody you are making the meal as a gift to them.",
+              "id": "ES-C51-para-you",
+              "prompt": "Say it is for you.",
               "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
                 "ES-LEX-PARA",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida para ti",
-                "la hago para ti"
-              ],
-              "feedback": {
-                "correct": "They receive it.",
-                "incorrect": "Hago la comida para ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-cause",
-              "prompt": "Now say it meaning they are the reason you are doing it at all.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-POR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida por ti",
-                "la hago por ti"
-              ],
-              "feedback": {
-                "correct": "Love or complaint, depending on the day.",
-                "incorrect": "Hago la comida por ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-thanks",
-              "prompt": "Thank somebody for the meal.",
-              "assesses": [
-                "ES-LEX-GRACIAS",
-                "ES-LEX-POR",
-                "ES-LEX-COMIDA"
+                "ES-GRAMMAR-PARA-FORWARD",
+                "ES-LEX-TU"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "gracias por la comida",
-                "gracias por la comida."
+                "es para ti",
+                "para ti"
               ],
               "feedback": {
-                "correct": "Por — the cause of your thanks.",
-                "incorrect": "Gracias por la comida."
+                "correct": "Aimed at a person.",
+                "incorrect": "Es para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-wrong",
-              "prompt": "You pick the wrong one of the two. What have you produced?",
+              "id": "ES-C51-para-when",
+              "prompt": "Say by tomorrow.",
               "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST"
+                "ES-GRAMMAR-PARA-FORWARD",
+                "ES-LEX-MANANA"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "a true sentence about a different situation",
-                "something correct that means something else",
-                "not nonsense, just the wrong meaning"
+                "para manana",
+                "para mañana"
               ],
               "feedback": {
-                "correct": "Which is why this stops being difficult once you are talking to people.",
-                "incorrect": "Not bad grammar — a perfectly good sentence about something you did not mean."
+                "correct": "Aimed at a moment.",
+                "incorrect": "Para manana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-para-arrow",
+              "prompt": "Which Latin piece inside para means toward, and which English words carry it?",
+              "assesses": [
+                "ES-ETYMON-PER-AD",
+                "ES-GRAMMAR-PARA-FORWARD"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ad, as in advance and admit",
+                "ad",
+                "ad — advance, admit, adhere"
+              ],
+              "feedback": {
+                "correct": "A word literally made of an arrow.",
+                "incorrect": "Ad — the same ad in advance, admit, adhere."
               }
             }
           ]
@@ -208,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti — a gift or a reason? (A gift.) Por ti? (A reason.) And what happens if you choose wrong? (You say something true about a different situation — and somebody will look puzzled, which is how you learn it.)"
+              "text": "What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — \"toward.\") Next: the other half — and you have been saying it since your first chapter."
             }
           ]
         }

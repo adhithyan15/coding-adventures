@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 105,
-  "title": "Review --- One Question, Three Answers",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8d9ef4c125841f85",
+  "title": "Synthesis --- Three Exceptions, and No Others",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:5441c01f648fa383",
   "lessons": [
     {
-      "id": "ES-C48-repaso-dos-pasados",
-      "sequence": 1343,
-      "title": "Review — one question, three answers",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — one question, asked of every past sentence, and the three answers it can have",
+      "id": "ES-C16-practice",
+      "sequence": 1368,
+      "title": "Practice — keep the past open or close it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for the open past and the completed-past contrast",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a482e92ecf8d2de",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3d18fbf311dfb6e7",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,318 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Before the table: do the two past tenses differ in when?"
+              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the complete frame for this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Regular rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: hablabas, comías, vivías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: hablaba, comía, vivía."
+            },
+            {
+              "kind": "speech",
+              "text": "The three special rows:"
+            },
+            {
+              "kind": "speech",
+              "text": "yo: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "tú: eras, ibas, veías."
+            },
+            {
+              "kind": "speech",
+              "text": "él / ella / usted: era, iba, veía."
+            },
+            {
+              "kind": "speech",
+              "text": "The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one scene, two frames",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking."
+            },
+            {
+              "kind": "speech",
+              "text": "Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual."
+            },
+            {
+              "kind": "speech",
+              "text": "The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The histories, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaba, comía, vivía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaba, comía, vivía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“era, iba, veía”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “era, iba, veía”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablé / hablaba, viví / vivía, fui / iba”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablé / hablaba · viví / vivía · fui / iba”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-regular-yo-forms",
+              "prompt": "Give the imperfect yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaba, comía, vivía",
+                "hablaba comía vivía",
+                "hablaba / comía / vivía"
+              ],
+              "feedback": {
+                "correct": "Right: hablaba, comía, vivía.",
+                "incorrect": "Retrieve hablaba, then the shared -ía forms comía and vivía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-short-yo-forms",
+              "prompt": "Give the imperfect yo forms of ser, ir, and ver, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "era, iba, veía",
+                "era iba veía",
+                "era / iba / veía"
+              ],
+              "feedback": {
+                "correct": "Right: era, iba, veía.",
+                "incorrect": "Retrieve the three learned rows: era, iba, veía."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-hablaba-espanol",
+              "prompt": "Say 'I was speaking Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaba español.",
+                "hablaba español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaba español.",
+                "incorrect": "Use imperfect hablaba, then known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-vivia-madrid",
+              "prompt": "Say 'I was living in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "vivía en madrid.",
+                "vivía en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Vivía en Madrid.",
+                "incorrect": "Use imperfect vivía, then known en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-iba-madrid",
+              "prompt": "Say 'I was going to Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-LEX-IR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "iba a madrid.",
+                "iba a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Iba a Madrid.",
+                "incorrect": "Use imperfect iba, then known a Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-comi-comia",
+              "prompt": "Choose the open past: comí or comía.",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "comía"
+              ],
+              "feedback": {
+                "correct": "Right: comía leaves the eating open or habitual.",
+                "incorrect": "Comí closes the event; comía leaves it open."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C16-practice-history-match",
+              "prompt": "Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.",
+              "assesses": [
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-IBA",
+                "ES-ETYMON-VER-VIDERE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "era—eram; iba—ībam; veía—veer",
+                "era eram iba ībam veía veer",
+                "era-eram, iba-ībam, veía-veer"
+              ],
+              "feedback": {
+                "correct": "Right: era—eram, iba—ībam, veía—veer.",
+                "incorrect": "Pair the visible shapes: era—eram, iba—ībam, veía—veer."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C16-sintesis-imperfecto",
+      "sequence": 1369,
+      "title": "Synthesis — three exceptions, and no others",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the kindest tense in Spanish, and the three verbs that break it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:347aa3c3fb177497",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new in this chapter. Say hablaba, then comía."
             }
           ]
         },
@@ -53,58 +357,38 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three chapters, one question, three ways it gets answered."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what you are doing",
-                "tense",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.",
-                "what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.",
-                "what you are doing: naming a state. tense: imperfect. example: tenía — I had.",
-                "what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got."
-              ]
+              "text": "Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them."
             },
             {
               "kind": "speech",
-              "text": "Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened."
+              "text": "The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not \"the common ones\", not \"to start with\". Three."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the question to actually ask",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Not \"which tense is this?\" — that has no answer without you."
+              "text": "And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up."
             },
             {
               "kind": "speech",
-              "text": "Am I telling you what happened, or what things were like?"
+              "text": "That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive."
             },
             {
               "kind": "speech",
-              "text": "What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estudiaba cuando habló Ana."
-            },
-            {
-              "kind": "speech",
-              "text": "And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one."
-            },
-            {
-              "kind": "speech",
-              "text": "There is no list to memorise here, and that is deliberate. Lists of \"preterite trigger words\" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking."
+              "text": "The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions."
             }
           ]
         },
@@ -122,20 +406,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair",
+              "instruction": "era, iba, veía — the whole irregular inventory, in one breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair]"
+              "source": "[YOU SAY: *era*, *iba*, *veía* — the whole irregular inventory, in one breath]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the question aloud before each one",
+              "instruction": "hablaba, comía, vivía — and notice nothing surprises you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the question aloud before each one]"
+              "source": "[YOU SAY: *hablaba*, *comía*, *vivía* — and notice nothing surprises you]"
             },
             {
               "kind": "repeat",
@@ -143,65 +427,65 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "speech",
-              "text": "Until the question arrives before the verb does."
-            },
-            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-repaso-dos-pasados-question",
-              "prompt": "State the one question that chooses the tense.",
+              "id": "ES-C16-sintesis-imperfecto-count",
+              "prompt": "How many irregular verbs does the imperfect have in the whole language?",
               "assesses": [
-                "ES-GRAMMAR-ASPECT-NOT-TIME"
+                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "am i saying what happened or what things were like",
-                "what happened versus what things were like",
-                "does it have edges"
+                "three",
+                "3",
+                "tres",
+                "only three"
               ],
               "feedback": {
-                "correct": "Edges, or no edges.",
-                "incorrect": "Am I telling what happened, or what things were like?"
+                "correct": "Three, and that is the complete list.",
+                "incorrect": "Three: ser, ir, ver."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-repaso-dos-pasados-scene",
-              "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
+              "id": "ES-C16-sintesis-imperfecto-which",
+              "prompt": "Name them.",
               "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT",
-                "ES-LEX-CUANDO"
+                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "estudiaba",
-                "the imperfect one",
-                "estudiaba, the imperfect"
+                "ser, ir, ver",
+                "era, iba, veia",
+                "ser ir ver",
+                "to be, to go, to see"
               ],
               "feedback": {
-                "correct": "And hablo is what walked into it.",
-                "incorrect": "Estudiaba — the imperfect sets the room."
+                "correct": "Yes — era, iba, veia.",
+                "incorrect": "ser, ir and ver: era, iba, veia."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-repaso-dos-pasados-state",
-              "prompt": "Which two rows of the table are NOT the same event seen twice?",
+              "id": "ES-C16-sintesis-imperfecto-why",
+              "prompt": "Why are those three the irregular ones?",
               "assesses": [
-                "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
+                "ES-ETYMON-ERA",
+                "ES-ETYMON-IBA"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "the state rows, tenia and tuve",
-                "rows three and four",
-                "tenia and tuve"
+                "they are the most used verbs, so they were never regularised",
+                "because they are used constantly",
+                "most common verbs",
+                "they were never tidied up"
               ],
               "feedback": {
-                "correct": "There the tense changes what happened, not just the view.",
-                "incorrect": "The state rows: tenia is having, tuve is getting."
+                "correct": "Right — heavy use preserves an odd shape; rare verbs get regularised.",
+                "incorrect": "Because they are used constantly. Heavy use keeps an old form alive."
               }
             }
           ]
@@ -219,7 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for."
+              "text": "How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)"
             }
           ]
         }

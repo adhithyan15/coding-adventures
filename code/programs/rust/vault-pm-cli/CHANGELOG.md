@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Exposed audited TOTP creation with hidden canonical Base32 input,
+  restart-backed metadata-only rendering, separate audited Base32 reveal,
+  closed audit rows, and encoded/raw plaintext-tree exclusion in a real PTY
+  drill.
 - Exposed audited static database-credential creation with restart-backed
   redaction, separate password reveal, closed audit rows, and plaintext-tree
   exclusion in a real PTY drill.

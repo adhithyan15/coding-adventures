@@ -1,42 +1,33 @@
-Spanish, chapter 73: Synthesis --- More Than One.
+Spanish, chapter 73: Las --- The Plural Article That Behaves.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — more than one.
+las casas — "the houses".
 
 Warm-up.
 [pause 2 seconds]
-Say "I have a book." (Tengo un libro.) Now say "I have books," and notice where you hesitate.
+You learned this in your first chapter: a noun ending in a vowel adds -s. So what is "houses"? (Casas.) Now — what is "the houses"?
 
-Grammar Lens: the article that leaves.
-The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because "a" and "more than one" disagree by definition.
-English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:
-Tengo un libro. — I have a book. Tengo libros. — I have books.
-The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase.
-This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less.
-
-The exchange.
-Read this aloud and watch the two plurals doing different jobs.
-— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no.
-Bare libros means "books, some books, books in general." Los libros means "the books" — particular ones, already known to both of you.
-That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before.
+Grammar Lens: the article does what the noun does.
+las — the, for more than one feminine thing.
+la casa becomes las casas — the houses. la comida becomes las comidas — the meals.
+The -s lands on both words. That is not two rules; it is one rule applied where it belongs. You have already seen Spanish do this — buenas noches is buena copying noche's number — and it is the same instinct throughout the language: the words around a noun agree with it, so when the noun goes plural, they follow.
+So las is not a word to memorise. It is la obeying the rule you already hold.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tengo un libro" then "Tengo libros" — hear the article vanish]
+[your turn — say: "la casa" then "las casas" — hear the -s twice]
 [pause 8 seconds for the answer]
-[your turn — say: "libros" then "los libros", twice, until the two feel like different questions]
+[your turn — say: "las comidas"]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I have books.
+Say the houses.
 [question — say your answer, then pause 8 seconds]
-Now say I have the books.
-[question — say your answer, then pause 10 seconds]
-Say I make meals, meaning meals in general.
-[question — say your answer, then pause 12 seconds]
-What is the difference in meaning between casas and las casas?
+Say the meals.
+[question — say your answer, then pause 8 seconds]
+How many new rules did this lesson add?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have books"? (Tengo libros — no article.) "I have the books"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named.
+"The houses"? (Las casas.) Where did the -s go? (Both words.) Next: the masculine one, which does not do the obvious thing — and the reason will be familiar.

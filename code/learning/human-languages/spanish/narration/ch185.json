@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 185,
-  "title": "Review --- Three Letters",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6563aa6a7687094e",
+  "title": "Synthesis --- Sentences Worth Saying",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c68ea1a4ecd23691",
   "lessons": [
     {
-      "id": "ES-C54-repaso-hay",
-      "sequence": 2169,
-      "title": "Review — three letters",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — three letters, three uses, and the last piece the audit was missing",
+      "id": "ES-C53-sintesis-frases-largas",
+      "sequence": 2195,
+      "title": "Synthesis — sentences worth saying",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the first sentences in this book long enough to be worth saying, and why length is not the same as difficulty",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13f56088ead92696",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:2b7d0c9fc5d27c75",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,61 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. What does hay agree with?"
+              "text": "Until this rung, every sentence you could build had one verb in it. Count the verbs in the next one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "one thing, Hay una casa., There is a house.",
-                "many things, Hay libros., There are books.",
-                "an obligation, Hay que comer., One must eat.",
-                "what it is made of, ha + y, \"it has there\"."
-              ]
+              "kind": "speech",
+              "text": "— ¿Tienes el libro que compré? — Sí. Lo que no tengo es la comida que haces."
             },
             {
               "kind": "speech",
-              "text": "Three letters, and everything above came out of them."
+              "text": "Read the second line again. It has three verbs in it, and you can build every piece of it:"
             },
             {
               "kind": "speech",
-              "text": "Notice the shape of this arc, because it is the shape of a lot of language learning: the smallest words need the most explaining. Hay is shorter than any noun you have learned and it took four chapters, while comida took one. Short words are short because they are used constantly, and constant use is what wears them into fossils that no longer explain themselves."
+              "text": "lo que no tengo — the thing I do not have (a noun-shaped hole)."
+            },
+            {
+              "kind": "speech",
+              "text": "es — is."
+            },
+            {
+              "kind": "speech",
+              "text": "la comida que haces — the meal you make (a noun with a sentence hung off it)."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in that sentence is new. What is new is that the pieces are allowed to sit inside each other."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what it does not do",
+          "title": "Grammar Lens: length is not difficulty",
           "segments": [
             {
               "kind": "speech",
-              "text": "Two things hay never does, and both save you work:"
+              "text": "Long sentences look like an increase in difficulty and are not."
             },
             {
               "kind": "speech",
-              "text": "It never agrees. Not with number, not with anything. One form."
+              "text": "A relative clause does not add grammar. It adds a slot where a whole sentence can go, and you fill it with the same Spanish you were already making. Two short sentences become one long one, and the only new thing is the joint."
             },
             {
               "kind": "speech",
-              "text": "It never names anybody. Neither does hay que."
-            },
-            {
-              "kind": "speech",
-              "text": "So of everything you have learned about making Spanish verbs match their surroundings — six endings a tense, gender on the pronouns, number on the articles — none of it applies here. After a hundred and seventy chapters of agreement, the last word is the one that opted out."
+              "text": "That is why this is the last structural rung a beginner's course owes you. Not because nothing is left, but because from here the growth is more of what you have, arranged more deeply. What remains genuinely hard is vocabulary and hearing speed, and both are time."
             }
           ]
         },
@@ -114,11 +103,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four rows of the table",
+              "instruction": "the full two-line exchange",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four rows of the table]"
+              "source": "[YOU SAY: the full two-line exchange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the long sentence broken into its three pieces, then whole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the long sentence broken into its three pieces, then whole]"
             },
             {
               "kind": "repeat",
@@ -128,58 +126,79 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-three",
-              "prompt": "Say there is a house, there are books, and one must eat.",
+              "id": "ES-C53-sintesis-frases-largas-ask",
+              "prompt": "Ask whether somebody has the book you bought.",
               "assesses": [
-                "ES-LEX-HAY",
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
-                "ES-GRAMMAR-HAY-QUE"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "hay una casa, hay libros, hay que comer",
-                "hay una casa; hay libros; hay que comer"
-              ],
-              "feedback": {
-                "correct": "One word, three jobs.",
-                "incorrect": "Hay una casa. Hay libros. Hay que comer."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-repaso-hay-never",
-              "prompt": "Name the two things hay never does.",
-              "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+                "ES-LEX-LIBRO",
+                "ES-LEX-COMPRAR-07"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "agree, and name anybody",
-                "it never agrees and never names a person"
+                "tienes el libro que compre",
+                "¿tienes el libro que compré?"
               ],
               "feedback": {
-                "correct": "After all that agreement, the last word opts out of it entirely.",
-                "incorrect": "It never agrees, and it never names anybody."
+                "correct": "The que English would have dropped.",
+                "incorrect": "¿Tienes el libro que compre?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-small",
-              "prompt": "Why did a three-letter word need four chapters when comida needed one?",
+              "id": "ES-C53-sintesis-frases-largas-hole",
+              "prompt": "Say the thing I do not have.",
               "assesses": [
-                "ES-ETYMON-HAY-IBI"
+                "ES-GRAMMAR-LO-QUE",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo que no tengo",
+                "lo que no tengo."
+              ],
+              "feedback": {
+                "correct": "A noun-shaped hole.",
+                "incorrect": "Lo que no tengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-sintesis-frases-largas-full",
+              "prompt": "Say what I do not have is the meal you make.",
+              "assesses": [
+                "ES-GRAMMAR-LO-QUE",
+                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "lo que no tengo es la comida que haces",
+                "lo que no tengo es la comida que haces."
+              ],
+              "feedback": {
+                "correct": "Three verbs, and every piece was already yours.",
+                "incorrect": "Lo que no tengo es la comida que haces."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-sintesis-frases-largas-why",
+              "prompt": "Why is a long sentence not harder than the short ones it is made of?",
+              "assesses": [
+                "ES-GRAMMAR-RELATIVE-QUE"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "short words are worn down by constant use",
-                "the smallest words need the most explaining",
-                "heavy use turns them into fossils"
+                "the clause only adds a slot, not new grammar",
+                "it is the same spanish arranged inside itself"
               ],
               "feedback": {
-                "correct": "They stop explaining themselves.",
-                "incorrect": "Short words are short because they are used constantly, and that wears them into fossils."
+                "correct": "The only new thing is the joint.",
+                "incorrect": "A relative clause adds a slot where a sentence can go — not new grammar."
               }
             }
           ]
@@ -197,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+              "text": "How many verbs can one sentence hold now? (As many as you can join.) What does a relative clause actually add? (A slot, not new grammar.) And what is genuinely hard from here? (Vocabulary and hearing speed — both of which are time.)"
             }
           ]
         }

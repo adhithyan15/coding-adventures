@@ -1,48 +1,42 @@
-Spanish, chapter 77: Review --- Four Pronouns, One Slot.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 77: Synthesis --- More Than One.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — four pronouns, one slot.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Synthesis — more than one.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Before the table: where does an object pronoun go?
+Say "I have a book." (Tengo un libro.) Now say "I have books," and notice where you hesitate.
 
-What you've built.
-Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here.
-[a table of 4 rows, read aloud]
-the one it happens to: me. pronoun: me. example: me quieres — you love me.
-the one it happens to: you. pronoun: te. example: te quiero — I love you.
-the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.
-the one it happens to: it (feminine). pronoun: la. example: la hago — I make it.
-Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time.
+Grammar Lens: the article that leaves.
+The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because "a" and "more than one" disagree by definition.
+English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:
+Tengo un libro. — I have a book. Tengo libros. — I have books.
+The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase.
+This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less.
 
-Grammar Lens: the single question.
-Choosing between these looks like four decisions. It is one:
-Who or what is the verb landing on?
-If it is you speaking becomes me.
-If it is the person you are speaking to becomes te.
-If it is a thing or somebody else becomes lo or la, and the noun decides which, not you.
-That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against.
+The exchange.
+Read this aloud and watch the two plurals doing different jobs.
+— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no.
+Bare libros means "books, some books, books in general." Los libros means "the books" — particular ones, already known to both of you.
+That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four in order, then the four examples]
+[your turn — say: "Tengo un libro" then "Tengo libros" — hear the article vanish]
 [pause 8 seconds for the answer]
-[your turn — say: "Te quiero" and "Me quieres" back to back, as if two people were speaking]
+[your turn — say: "libros" then "los libros", twice, until the two feel like different questions]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the choice arrives before the sentence does.
+[question — say your answer, then pause 8 seconds]
+Say I have books.
+[question — say your answer, then pause 8 seconds]
+Now say I have the books.
 [question — say your answer, then pause 10 seconds]
-Name the four object pronouns you now hold.
-[question — say your answer, then pause 10 seconds]
-What single question chooses between all four?
-[question — say your answer, then pause 10 seconds]
-Which two of the four depend on knowing a noun's gender?
+Say I make meals, meaning meals in general.
+[question — say your answer, then pause 12 seconds]
+What is the difference in meaning between casas and las casas?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for.
+"I have books"? (Tengo libros — no article.) "I have the books"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named.

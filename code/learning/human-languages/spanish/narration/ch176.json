@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 176,
-  "title": "Synthesis --- Reading the Window",
+  "title": "Se Habla Espanol --- Nobody in Particular",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:714dfe214a09cac5",
+  "sourceHash": "fnv1a64:c8c0fc06db196fd3",
   "lessons": [
     {
-      "id": "ES-C52-sintesis-el-letrero",
-      "sequence": 2160,
-      "title": "Synthesis — reading the window",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have",
+      "id": "ES-C52-se-habla",
+      "sequence": 2186,
+      "title": "se habla español — nobody in particular",
+      "headword": "se habla español",
+      "romanization": "se habla español",
+      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7c16bad2b44bbd0",
+      "sourceHash": "fnv1a64:783ea7ae2043257e",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it."
+              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: a sentence with nobody in it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four things on four windows, in one street:"
+              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
             },
             {
               "kind": "speech",
-              "text": "SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR."
+              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
             },
             {
               "kind": "speech",
-              "text": "Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular."
+              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
             },
             {
               "kind": "speech",
-              "text": "That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose."
+              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
             },
             {
               "kind": "speech",
-              "text": "And for the two unknown words, you already have the tool:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Cómo se dice \"fumar\", por favor?"
-            },
-            {
-              "kind": "speech",
-              "text": "Which is itself the same construction, asked out loud."
+              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what it means that nobody is named",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made."
-            },
-            {
-              "kind": "speech",
-              "text": "So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,109 +80,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four signs aloud as if walking past them",
+              "instruction": "\"Se habla español\" as if reading it off a window",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four signs aloud as if walking past them]"
+              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Cómo se dice, por favor?\" — the way out of any of them",
+              "instruction": "\"Se come bien\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice, por favor?\" — the way out of any of them]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Se come bien\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-read",
-              "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
+              "id": "ES-C52-se-habla-sign",
+              "prompt": "Write the sign that says Spanish is spoken here.",
               "assesses": [
-                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
-                "ES-LEX-COMPRAR-07",
-                "ES-LEX-LIBRO"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "books are bought here",
-                "they buy books",
-                "we buy books"
+                "se habla espanol",
+                "se habla español"
               ],
               "feedback": {
-                "correct": "And the verb is plural because libros is.",
-                "incorrect": "Books are bought here."
+                "correct": "No person named anywhere in it.",
+                "incorrect": "Se habla espanol."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-unknown",
-              "prompt": "A sign has a word you do not know. Ask somebody, politely.",
+              "id": "ES-C52-se-habla-who",
+              "prompt": "Who speaks Spanish, according to that sentence?",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-SE-IMPERSONAL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice, por favor",
-                "¿cómo se dice, por favor?"
+                "nobody in particular",
+                "it does not say",
+                "no one is named"
               ],
               "feedback": {
-                "correct": "The same construction, asked out loud.",
-                "incorrect": "¿Como se dice, por favor?"
+                "correct": "That absence is the whole point of the form.",
+                "incorrect": "It does not say, and it is not meant to."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-eat",
-              "prompt": "Say the food is good here, the way a sign would.",
+              "id": "ES-C52-se-habla-eat",
+              "prompt": "Say one eats well here.",
               "assesses": [
                 "ES-GRAMMAR-SE-IMPERSONAL",
                 "ES-LEX-COMER",
                 "ES-LEX-BIEN"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "aqui se come bien",
-                "se come bien"
+                "se come bien",
+                "aqui se come bien"
               ],
               "feedback": {
-                "correct": "Nobody named, and none needed.",
-                "incorrect": "Aqui se come bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-authority",
-              "prompt": "Why does leaving the person out give a sign its authority?",
-              "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "nobody is claiming it, so there is nobody to argue with",
-                "there is no person to disagree with",
-                "it sounds like a fact rather than an opinion"
-              ],
-              "feedback": {
-                "correct": "Worth noticing every time you meet it.",
-                "incorrect": "No person is claiming anything, so there is nobody to argue with."
+                "correct": "Se come bien.",
+                "incorrect": "Se come bien."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -217,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)"
+              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
             }
           ]
         }

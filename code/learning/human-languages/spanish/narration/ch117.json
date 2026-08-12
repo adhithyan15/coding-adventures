@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 117,
-  "title": "Wanting, Not Asserting",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eab2c1e2e5eef5fb",
+  "title": "The Future --- Saying What Will Happen",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:58127e077e016ac4",
   "lessons": [
     {
-      "id": "ES-C18-quiero-que",
-      "sequence": 1420,
-      "title": "Hablas español, Quiero que hables español — fact or wanted event?",
-      "headword": "Hablas español · Quiero que hables español",
-      "romanization": "Hablas español · Quiero que hables español",
-      "gloss": "an asserted event beside a wanted, not-yet-real event",
+      "id": "ES-C17-futuro",
+      "sequence": 1410,
+      "title": "hablaré — keep the infinitive, add the future",
+      "headword": "hablaré",
+      "romanization": "hablaré",
+      "gloss": "the singular simple future of hablar — hablaré, hablarás, hablará",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb997aed313402fe",
+      "sourceHash": "fnv1a64:ef5ca5087e57b275",
       "notice": null,
       "blocks": [
         {
@@ -35,37 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive."
+              "text": "Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: count the doers",
+          "title": "Grammar Lens: three familiar persons",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the whole infinitive hablar, then add one ending:"
+            },
             {
               "kind": "table",
               "headers": [
-                "meaning",
-                "Spanish",
-                "doers"
+                "person",
+                "simple future"
               ],
-              "columns": 3,
-              "rowCount": 2,
+              "columns": 2,
+              "rowCount": 3,
               "utterances": [
-                "meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.",
-                "meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak."
+                "person: yo. simple future: hablaré.",
+                "person: tú. simple future: hablarás.",
+                "person: él / ella / usted. simple future: hablará."
               ]
             },
             {
               "kind": "speech",
-              "text": "With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish."
+              "text": "Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The weld, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré."
+            },
+            {
+              "kind": "speech",
+              "text": "That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -78,94 +97,94 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablas español.”",
+              "instruction": "“hablaré, hablarás, hablará”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablas español.”]"
+              "source": "[YOU SAY: “hablaré, hablarás, hablará”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Quiero hablar español.”",
+              "instruction": "“Voy a hablar español. Hablaré español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero hablar español.”]"
+              "source": "[YOU SAY: “Voy a hablar español. Hablaré español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Quiero que hables español.”",
+              "instruction": "“infinitive plus historical habēre material”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero que hables español.”]"
+              "source": "[YOU SAY: “infinitive plus historical habēre material”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-meaning",
-              "prompt": "Which form asserts that one friend speaks: hablas or hables?",
+              "id": "ES-C17-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hablas"
-              ],
-              "feedback": {
-                "correct": "Right: hablas can assert the event.",
-                "incorrect": "Use indicative hablas for the asserted event; hables is the wanted form here."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-quiero-que-one-doer",
-              "prompt": "Say 'I want to speak Spanish' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-QUERER",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "quiero hablar español.",
-                "quiero hablar español"
-              ],
-              "feedback": {
-                "correct": "Right: one doer keeps the infinitive hablar.",
-                "incorrect": "Use known quiero plus the infinitive: Quiero hablar español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-quiero-que-two-doers",
-              "prompt": "Say 'I want you to speak Spanish' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-QUE",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "quiero que hables español.",
-                "quiero que hables español"
+                "hablaré, hablarás, hablará",
+                "hablaré hablarás hablará",
+                "hablaré / hablarás / hablará"
               ],
               "feedback": {
-                "correct": "Right: two doers give quiero que hables.",
-                "incorrect": "Join the wanted event with que and use hables: Quiero que hables español."
+                "correct": "Right: hablaré, hablarás, hablará.",
+                "incorrect": "Keep hablar whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-futuro-hablare-espanol",
+              "prompt": "Say 'I will speak Spanish' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablaré español.",
+                "hablaré español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablaré español.",
+                "incorrect": "Use the yo future hablaré before known español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-futuro-history",
+              "prompt": "Which Latin verb meaning 'to have' contributed material to the Romance future endings?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "habēre",
+                "habere",
+                "haber"
+              ],
+              "feedback": {
+                "correct": "Right: forms of habēre contributed to the future construction.",
+                "incorrect": "The historical partner was habēre, the source of haber."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +196,388 @@
             },
             {
               "kind": "speech",
-              "text": "Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time."
+              "text": "Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-comer-futuro",
+      "sequence": 1414,
+      "title": "comeré — the same endings keep -er",
+      "headword": "comeré",
+      "romanization": "comeré",
+      "gloss": "the singular simple future of comer — comeré, comerás, comerá",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f734ffd5ff1545c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -er row",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "simple future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. simple future: comeré.",
+                "person: tú. simple future: comerás.",
+                "person: él / ella / usted. simple future: comerá."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The ending, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comeré, comerás, comerá”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comeré, comerás, comerá”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablaré. Comeré.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablaré. Comeré.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Beberé café.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Beberé café.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of comer: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "comeré, comerás, comerá",
+                "comeré comerás comerá",
+                "comeré / comerás / comerá"
+              ],
+              "feedback": {
+                "correct": "Right: comeré, comerás, comerá.",
+                "incorrect": "Keep comer whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-cafe",
+              "prompt": "Use the learned -er future pattern to say 'I will drink coffee' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-LEX-BEBER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "beberé café.",
+                "beberé café",
+                "bebere cafe",
+                "bebere cafe."
+              ],
+              "feedback": {
+                "correct": "Right: Beberé café.",
+                "incorrect": "Keep known beber whole, add -é, then known café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-comer-futuro-shared-endings",
+              "prompt": "Which endings do hablaré and comeré share across the learned singular row?",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "-é, -ás, -á",
+                "é ás á",
+                "-é -ás -á"
+              ],
+              "feedback": {
+                "correct": "Right: -é, -ás, -á serve both infinitives.",
+                "incorrect": "Read the final pieces: hablaré/comeré, hablarás/comerás, hablará/comerá."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C17-vivir-futuro",
+      "sequence": 1418,
+      "title": "viviré — one future row for three verb families",
+      "headword": "viviré",
+      "romanization": "viviré",
+      "gloss": "the singular simple future of vivir — viviré, vivirás, vivirá",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42617147eeb12add",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the singular -ir row",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "simple future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. simple future: viviré.",
+                "person: tú. simple future: vivirás.",
+                "person: él / ella / usted. simple future: vivirá."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: meaning with known words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“viviré, vivirás, vivirá”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “viviré, vivirás, vivirá”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablaré, comeré, viviré”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablaré, comeré, viviré”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Viviré en Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Viviré en Madrid.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-singular-forms",
+              "prompt": "Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "viviré, vivirás, vivirá",
+                "viviré vivirás vivirá",
+                "viviré / vivirás / vivirá"
+              ],
+              "feedback": {
+                "correct": "Right: viviré, vivirás, vivirá.",
+                "incorrect": "Keep vivir whole and add -é, -ás, -á."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-madrid",
+              "prompt": "Say 'I will live in Madrid' in Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-FUTURE-PREDICTION-INTENTION",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "viviré en madrid.",
+                "viviré en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Viviré en Madrid.",
+                "incorrect": "Use viviré, then the known frame en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-vivir-futuro-three-yo",
+              "prompt": "Give the future yo forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR",
+                "ES-PATTERN-ER-FUTURE-SINGULAR",
+                "ES-GRAMMAR-IR-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablaré, comeré, viviré",
+                "hablaré comeré viviré",
+                "hablaré / comeré / viviré"
+              ],
+              "feedback": {
+                "correct": "Right: hablaré, comeré, viviré.",
+                "incorrect": "Keep each infinitive whole and add -é."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”"
             }
           ]
         }

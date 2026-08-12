@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add fixed bounded TOTP label, issuer, algorithm, digits, and period prompts
+  plus hidden wipe-on-drop Base32 seed input.
 - Add fixed bounded database label, engine, host, port, database, and username
   prompts plus hidden wipe-on-drop password input.
 - Add fixed bounded API-key label, service, scope, and expiry prompts plus a

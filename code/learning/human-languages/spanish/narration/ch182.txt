@@ -1,35 +1,43 @@
-Spanish, chapter 182: Hay --- There Is, There Are, Same Word.
+Spanish, chapter 182: El Libro Que Compre --- The Word You Cannot Leave Out.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-hay — "there is," "there are," same word.
+el libro que compré — the word you cannot leave out.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have eaten." (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it.
+Say this English sentence out loud: "the book I bought." Notice that you did not say that. Now try to translate it.
 
-Sounds you'll need.
-diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always.
+Grammar Lens: English drops it, Spanish never does.
+el libro que compré — the book I bought. la casa que tengo — the house I have.
+English lets you delete the joint. The book that I bought and the book I bought are both fine, and in speech you almost always drop it.
+Spanish cannot. There is no version of these without que. Leaving it out does not sound casual or fast — it sounds like a sentence that broke.
+This is worth a chapter of its own because of what it does to a learner. You will build the sentence in English first, silently, with the that already missing — and then translate the version you thought of. The gap is invisible precisely because your own language put it there.
+So the habit to build is: whenever an English noun is followed straight by a new subject and verb, a que belongs in the Spanish.
+the book I bought becomes el libro que compré.
+the house we have becomes la casa que tenemos.
+the meal she makes becomes la comida que hace.
 
-Grammar Lens: one form, and it does not count.
-hay — there is, and there are.
-Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here.
-Read those twice. One book or a hundred, hay does not move.
-That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros.
-Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever.
+Why it's said this way.
+English can afford to drop it because its word order is rigid: the book I bought can only be read one way.
+Spanish word order is looser — subjects vanish under pro-drop, objects move in front of verbs. Where the pieces can sit in several places, a deletable joint would make sentences ambiguous. So it is never deleted. Not arbitrary strictness: the price of the freedom Spanish gives you elsewhere.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Hay una casa" then "Hay libros" — the same word, twice]
+[your turn — say: "the book I bought" then "el libro que compré" — hear the extra word]
 [pause 8 seconds for the answer]
+[repeat that twice]
+Until the missing English that stops being invisible.
+[question — say your answer, then pause 10 seconds]
+Say the book I bought.
 [question — say your answer, then pause 8 seconds]
-Say there is a house.
-[question — say your answer, then pause 8 seconds]
-Say there are books.
-[question — say your answer, then pause 8 seconds]
-What does hay agree with?
+Say the house I have.
+[question — say your answer, then pause 14 seconds]
+What English pattern always means a que is needed in Spanish?
+[question — say your answer, then pause 14 seconds]
+Why can English afford to drop it when Spanish cannot?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"There is a house"? (Hay una casa.) "There are books"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it.
+"The house I have"? (La casa que tengo.) Can que ever be left out? (No — never.) And why not? (Because Spanish moves its pieces around, so the joint has to stay.)

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 109,
-  "title": "Has, Ha, Hemos, Habeis, Han",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:95c0eab6326a1f5e",
+  "title": "Review --- One Question, Three Answers",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ae2194a7866752c7",
   "lessons": [
     {
-      "id": "ES-C49-haber-completo",
-      "sequence": 1347,
-      "title": "has, ha, hemos, habéis, han",
-      "headword": "has · ha · hemos · habéis · han",
-      "romanization": "has · ha · hemos · habéis · han",
-      "gloss": "the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short",
+      "id": "ES-C48-repaso-dos-pasados",
+      "sequence": 1373,
+      "title": "Review — one question, three answers",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — one question, asked of every past sentence, and the three answers it can have",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b0aba4d80e71bd4d",
-      "notice": null,
+      "sourceHash": "fnv1a64:59f115181ca4eb9b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,49 +42,74 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have eaten.\" (He comido.) Now the other five people need their word."
+              "text": "Nothing new. Before the table: do the two past tenses differ in when?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the whole of it",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Three chapters, one question, three ways it gets answered."
+            },
             {
               "kind": "table",
               "headers": [
-                "",
-                "haber",
-                "with a participle"
+                "what you are doing",
+                "tense",
+                "example"
               ],
               "columns": 3,
-              "rowCount": 6,
+              "rowCount": 4,
               "utterances": [
-                "I. haber: he. with a participle: he comido.",
-                "you. haber: has. with a participle: has comido.",
-                "he / she / usted. haber: ha. with a participle: ha comido.",
-                "we. haber: hemos. with a participle: hemos comido.",
-                "you all (Spain). haber: habéis. with a participle: habéis comido.",
-                "they / ustedes. haber: han. with a participle: han comido."
+                "what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.",
+                "what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.",
+                "what you are doing: naming a state. tense: imperfect. example: tenía — I had.",
+                "what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got."
               ]
             },
             {
               "kind": "speech",
-              "text": "Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know."
+              "text": "Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the question to actually ask",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Not \"which tense is this?\" — that has no answer without you."
+            },
+            {
+              "kind": "speech",
+              "text": "Am I telling you what happened, or what things were like?"
+            },
+            {
+              "kind": "speech",
+              "text": "What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudiaba cuando habló Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no list to memorise here, and that is deliberate. Lists of \"preterite trigger words\" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,20 +122,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he, has, ha, hemos, habéis, han\" until the list is one breath",
+              "instruction": "\"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he, has, ha, hemos, habéis, han\" until the list is one breath]"
+              "source": "[YOU SAY: \"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he comido, has comido, ha comido…\" through all six",
+              "instruction": "the question aloud before each one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he comido, has comido, ha comido…\" through all six]"
+              "source": "[YOU SAY: the question aloud before each one]"
             },
             {
               "kind": "repeat",
@@ -111,89 +143,71 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "Until the question arrives before the verb does."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-all",
-              "prompt": "Give all six forms of haber, in order.",
+              "id": "ES-C48-repaso-dos-pasados-question",
+              "prompt": "State the one question that chooses the tense.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-HABER"
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "he, has, ha, hemos, habeis, han",
-                "he has ha hemos habéis han"
+                "am i saying what happened or what things were like",
+                "what happened versus what things were like",
+                "does it have edges"
               ],
               "feedback": {
-                "correct": "Five of six are one syllable.",
-                "incorrect": "he, has, ha, hemos, habeis, han."
+                "correct": "Edges, or no edges.",
+                "incorrect": "Am I telling what happened, or what things were like?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-they",
-              "prompt": "Say they have eaten.",
+              "id": "ES-C48-repaso-dos-pasados-scene",
+              "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-COMER",
-                "ES-LEX-USTEDES"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "han comido",
-                "ellos han comido",
-                "ustedes han comido"
+                "estudiaba",
+                "the imperfect one",
+                "estudiaba, the imperfect"
               ],
               "feedback": {
-                "correct": "Han comido.",
-                "incorrect": "Han comido."
+                "correct": "And hablo is what walked into it.",
+                "incorrect": "Estudiaba — the imperfect sets the room."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-why",
-              "prompt": "Why is haber shorter than an ordinary verb?",
+              "id": "ES-C48-repaso-dos-pasados-state",
+              "prompt": "Which two rows of the table are NOT the same event seen twice?",
               "assesses": [
-                "ES-ETYMON-HABERE",
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "because it is said more often",
-                "frequency wears words down",
-                "it is used in every perfect sentence"
+                "the state rows, tenia and tuve",
+                "rows three and four",
+                "tenia and tuve"
               ],
               "feedback": {
-                "correct": "The same reason ser and ir are worn strange.",
-                "incorrect": "Frequency. The most-used words wear down the most."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-haber-completo-participle",
-              "prompt": "How many forms does comido take across all six rows?",
-              "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-GRAMMAR-PERFECT-COMPLETE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "one",
-                "1",
-                "it never changes"
-              ],
-              "feedback": {
-                "correct": "All the person-work is in the little word.",
-                "incorrect": "One. The participle never moves."
+                "correct": "There the tense changes what happened, not just the view.",
+                "incorrect": "The state rows: tenia is having, tuve is getting."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -205,7 +219,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"They have eaten\"? (Han comido.) \"We have eaten\"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule."
+              "text": "The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for."
             }
           ]
         }

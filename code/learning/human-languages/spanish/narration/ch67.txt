@@ -1,44 +1,96 @@
-Spanish, chapter 67: El Libro --- And a Word Made of Tree Bark.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 67: Review --- Six Verbs, One Ending.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-el libro — "book".
+Lesson 1 of 2.
+Review — six verbs, one ending.
 
 Warm-up.
 [pause 2 seconds]
-Say "the house." (La casa.) Why la and not el? (Casa is feminine.) Here is one that goes the other way.
+Nothing new in this chapter. Say the yo forms of the three verbs you have just met: poner, salir, venir.
 
-Sounds you'll need.
-r-tap — a single flick of the tongue: LEE-broh. One tap, not a roll.
+What you've built.
+The set is closed. Six of the commonest verbs in Spanish put an unexpected -go on the yo form and nowhere else:
+[a table of 6 rows, read aloud]
+verb: tener. yo: tengo. and the rest behaves: normally.
+verb: hacer. yo: hago. and the rest behaves: normally.
+verb: decir. yo: digo. and the rest behaves: normally.
+verb: poner. yo: pongo. and the rest behaves: normally.
+verb: salir. yo: salgo. and the rest behaves: normally.
+verb: venir. yo: vengo. and the rest behaves: normally.
+Six verbs, one oddity, and it lives in exactly one slot. That is a much smaller thing to carry than "six irregular verbs."
 
 The word, taken apart.
-el libro — the book.
-Latin liber did not mean "book." It meant the inner bark of a tree — the thin, pale layer just under the rough outside, which is what Romans wrote on before they had anything better.
-So the word travelled the way these words usually do: from the material, to the thing made of it, to the thing itself long after the material is gone. Nobody has written on bark for two thousand years, and the word has not noticed.
-English took the same root and kept it in the places books live:
-library — and French livre, Italian libro.
-libretto — Italian for "little book," the words of an opera.
-English's own word went the same route from a different tree: book is related to beech, whose bark the Germanic peoples wrote on. Two languages, two trees, the same idea.
-
-Grammar Lens: a masculine noun to sit beside the feminine one.
-Libro ends in -o and is masculine, so it takes el.
-el libro — the book. Tengo un libro. — I have a book. la casa — the house. Tengo una casa. — I have a house.
-Two nouns, one of each gender, side by side. That pairing is worth more than either noun alone: from here on, when something in Spanish depends on gender, you have a plain example of both to test it against.
+Here is what the six chapters could not show you separately.
+They are not a family. Nobody decided these six belonged together. They came from different Latin verbs, by different routes, and arrived at the same ending by accident — a g that was already in some of the stems, and a sound change that pulled the others into line behind them.
+The club is a result, not a rule. Spanish learners are taught "the -go verbs" as though someone had drawn up a membership list; what actually happened is that six unrelated words drifted into the same shape and then reinforced each other.
+That is worth knowing for a practical reason: it tells you the list is closed. A pattern with a cause keeps recruiting. A pattern that is an accident stops.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el libro" — one tap on the r]
+[your turn — say: all six yo forms in one breath — tengo, hago, digo, pongo, salgo, vengo]
 [pause 8 seconds for the answer]
-[your turn — say: "Tengo un libro" then "Tengo una casa" — hear the article follow the noun]
+[your turn — say: for each, the plain infinitive it came from]
 [pause 8 seconds for the answer]
+[repeat that twice]
+Until the six run together as one list.
 [question — say your answer, then pause 8 seconds]
-Say the book in Spanish.
+How many verbs are in the -go set?
+[question — say your answer, then pause 8 seconds]
+Which slot does the -go appear in?
 [question — say your answer, then pause 10 seconds]
-Say I have a book.
-[question — say your answer, then pause 10 seconds]
-What did Latin liber originally mean?
+Are these six related to each other?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"The book"? (El libro.) "The house"? (La casa.) What was liber before it was a book? (Tree bark.) Next: a noun you can build yourself, out of a verb you already have.
+How many verbs take -go? (Six.) In how many slots? (One — the yo form.) And why does the list not grow? (Because it was never a rule — six unrelated verbs happened to converge.)
+
+
+Lesson 2 of 2.
+Practice — putting, leaving, and coming in the singular.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six.
+
+Grammar Lens: the complete frame for this chapter.
+putting or placing: pongo, pones, pone.
+leaving or going out: salgo, sales, sale.
+coming: vengo, vienes, viene.
+known-word contrast: Salgo de Madrid. Vengo de Madrid.
+known singular comparison: vengo / tengo, vienes / tienes, viene / tiene.
+Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb.
+Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint.
+
+The words, taken apart — retrieve the history.
+poner continues Latin pōnere, the placing family of position.
+salir continues Latin salīre, the leaping family of salient.
+venir continues Latin venīre, the coming family of convene.
+different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “pongo, pones, pone”]
+[pause 8 seconds for the answer]
+[your turn — say: “salgo, sales, sale”]
+[pause 8 seconds for the answer]
+[your turn — say: “vengo, vienes, viene”]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, hago, digo, pongo, salgo, vengo”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of poner: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of salir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of venir: yo, tú, then usted.
+[question — say your answer, then pause 11 seconds]
+Say 'I leave Madrid; I come from Madrid' in Spanish.
+[question — say your answer, then pause 12 seconds]
+Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.
+[question — say your answer, then pause 10 seconds]
+Match each Spanish verb to one English cousin: poner, salir, venir.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter.

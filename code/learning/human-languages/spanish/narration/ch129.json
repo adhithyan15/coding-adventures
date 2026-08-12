@@ -2,34 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 129,
-  "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9a58326cfd261005",
+  "title": "Hable Usted --- The Polite Command",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f6a6e708c1b55d3d",
   "lessons": [
     {
-      "id": "ES-C21-lunes-viernes",
-      "sequence": 1560,
-      "title": "lunes to viernes — the planets of the week, worn down",
-      "headword": "lunes, martes, miércoles, jueves, viernes",
-      "romanization": "lunes, martes, miércoles, jueves, viernes",
-      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
+      "id": "ES-C50-hable-usted",
+      "sequence": 1490,
+      "title": "hable usted — the polite command",
+      "headword": "hable usted",
+      "romanization": "hable usted",
+      "gloss": "the formal command — the subjunctive again, and the reason it is the polite one is worth knowing",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a20ba4a526cc6398",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:eff8e61bce6ae288",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,189 +35,72 @@
             },
             {
               "kind": "speech",
-              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
+              "text": "Usted takes the he/she form of every verb. You have known that since you learned it. Watch what that does to a command."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: the planet weekdays",
+          "type": "grammar",
+          "title": "Grammar Lens: the subjunctive, a third time",
           "segments": [
             {
               "kind": "speech",
-              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
+              "text": "A command to usted — positive or negative — uses the subjunctive."
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
+              "kind": "speech",
+              "text": "Hable, por favor. — Speak, please. Coma, por favor. — Eat, please. No hable. — Don't speak."
+            },
+            {
+              "kind": "speech",
+              "text": "So the subjunctive now covers three of the four boxes:"
+            },
+            {
+              "kind": "table",
               "headers": [
-                "Spanish",
-                "from Latin",
-                "planet-god",
-                "English echo"
+                "",
+                "tú",
+                "usted"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the weekday family:"
-            },
-            {
-              "kind": "speech",
-              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
-            },
-            {
-              "kind": "speech",
-              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C21-sabado-domingo",
-      "sequence": 1570,
-      "title": "sábado and domingo — the week's religious edge",
-      "headword": "sábado, domingo",
-      "romanization": "sábado, domingo",
-      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:331beb3f182159c5",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two days, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The two days, taken apart",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
+              "columns": 3,
               "rowCount": 2,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "meaning",
-                "note"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
+              "utterances": [
+                "do it. tú: habla — ordinary present. usted: hable — subjunctive.",
+                "don't. tú: no hables — subjunctive. usted: no hable — subjunctive."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Two different rewrites:"
-            },
-            {
-              "kind": "speech",
-              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
-            },
-            {
-              "kind": "speech",
-              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
+              "text": "One box out of four uses an ordinary form, and it is the informal, positive one. Everything else reaches for the subjunctive."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here is why the formal command is the polite one, and it is not because the subjunctive is a fancy form."
+            },
+            {
+              "kind": "speech",
+              "text": "Remember what usted is: a worn-down vuestra merced, \"your grace\" — a title, and titles are third person. That is why usted takes he/she endings. So a command to usted is not grammatically aimed at the person in front of you at all. It is aimed at your grace, spoken about rather than to."
+            },
+            {
+              "kind": "speech",
+              "text": "That indirectness is the politeness. Every polite language does some version of it: you soften an order by not pointing it straight at somebody. English does it with extra words — could you possibly, would you mind — where Spanish does it with a verb form and a fossil of a title."
+            },
+            {
+              "kind": "speech",
+              "text": "Which means that if the usted command ever feels stiff to you, you are hearing it correctly. It is supposed to hold somebody at a small distance."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -239,34 +113,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
+              "instruction": "\"Habla\" then \"Hable, por favor\" — hear the distance open up",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
+              "source": "[YOU SAY: \"Habla\" then \"Hable, por favor\" — hear the distance open up]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
+              "instruction": "all four boxes: \"habla, no hables, hable, no hable\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
+              "source": "[YOU SAY: all four boxes: \"habla, no hables, hable, no hable\"]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-hable-usted-say",
+              "prompt": "Politely ask somebody you address as usted to speak.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-USTED",
+                "ES-LEX-HABLAR",
+                "ES-LEX-POR-FAVOR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hable, por favor",
+                "hable por favor",
+                "hable usted por favor"
+              ],
+              "feedback": {
+                "correct": "The subjunctive, plus please.",
+                "incorrect": "Hable, por favor."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-hable-usted-grid",
+              "prompt": "Of the four command boxes, how many use the subjunctive?",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-USTED",
+                "ES-GRAMMAR-COMMAND-NEGATIVE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "three",
+                "3",
+                "all but the informal positive"
+              ],
+              "feedback": {
+                "correct": "Only the informal positive escapes it.",
+                "incorrect": "Three. Only the tu positive uses an ordinary present form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-hable-usted-why",
+              "prompt": "Why is the usted command the polite one?",
+              "assesses": [
+                "ES-GRAMMAR-USTED-THIRD-PERSON",
+                "ES-LEX-USTED"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "it is aimed at a title, not at the person",
+                "usted is third person, so the order is indirect",
+                "because it is not pointed straight at them"
+              ],
+              "feedback": {
+                "correct": "Indirectness is what politeness is made of.",
+                "incorrect": "Usted is vuestra merced, a title. The command is spoken about your grace rather than to you."
+              }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -278,7 +204,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
+              "text": "\"Speak, please,\" to usted? (Hable, por favor.) Which form? (The subjunctive again.) Why is it polite? (Because usted is a title — the order is aimed past the person, not at them.) Next: all four in one place."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 186,
-  "title": "Synthesis --- Describing Where You Are",
+  "title": "Hay --- There Is, There Are, Same Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dad2d84addceaa10",
+  "sourceHash": "fnv1a64:e701b760ec8df017",
   "lessons": [
     {
-      "id": "ES-C54-sintesis-lo-que-hay",
-      "sequence": 2170,
-      "title": "Synthesis — describing where you are",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — describing a place you are standing in, which needs almost everything this book has given you",
+      "id": "ES-C54-hay",
+      "sequence": 2196,
+      "title": "hay — \"there is,\" \"there are,\" same word",
+      "headword": "hay",
+      "romanization": "hay",
+      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f69821c5a267cb08",
+      "sourceHash": "fnv1a64:a053ea39723d5db9",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Hay is the word you reach for to describe a place. Look around the room you are in and say what is there."
+              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Qué hay aquí? — Hay una casa. Hay libros — los que compré. — ¿Y la comida que haces? — Lo que hay, hay que comerlo."
-            },
-            {
-              "kind": "speech",
-              "text": "The last line is four words of grammar stacked on each other, and every piece came from a different chapter:"
-            },
-            {
-              "kind": "speech",
-              "text": "lo que hay — the noun-shaped hole, filled by hay."
-            },
-            {
-              "kind": "speech",
-              "text": "hay que — obligation with nobody obliged."
-            },
-            {
-              "kind": "speech",
-              "text": "comerlo — the object pronoun, riding on the end of an infinitive."
-            },
-            {
-              "kind": "speech",
-              "text": "You have not been taught that last one, and you can still read it: comer plus lo. That is what it feels like when a language starts assembling itself."
+              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what you can do now",
+          "title": "Grammar Lens: one form, and it does not count",
           "segments": [
             {
               "kind": "speech",
-              "text": "Describing a place is a small thing that needs a surprising amount: an existence word, articles that count, nouns, relative clauses to pick things out, and a way to say what has to happen. This chapter needed all of them, and you supplied them without any of it being new."
+              "text": "hay — there is, and there are."
             },
             {
               "kind": "speech",
-              "text": "That is the honest end of a beginner's course. Not \"you are finished\" — nobody is — but the machinery is assembled. Every remaining thing in Spanish is either a word you have not met yet or a familiar structure standing somewhere you have not seen it stand."
+              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
             },
             {
               "kind": "speech",
-              "text": "The eleven gaps found in the original audit are now closed. What is left is not a gap. It is the ordinary, unbounded work of using the thing."
+              "text": "Read those twice. One book or a hundred, hay does not move."
+            },
+            {
+              "kind": "speech",
+              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
             }
           ]
         },
@@ -103,103 +91,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole four-line exchange",
+              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole four-line exchange]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Lo que hay, hay que comerlo\" — and hear four chapters at once",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo que hay, hay que comerlo\" — and hear four chapters at once]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-ask",
-              "prompt": "Ask what there is here.",
+              "id": "ES-C54-hay-one",
+              "prompt": "Say there is a house.",
               "assesses": [
                 "ES-LEX-HAY",
-                "ES-LEX-AQUI"
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "que hay aqui",
-                "¿qué hay aquí?"
+                "hay una casa",
+                "hay una casa."
               ],
               "feedback": {
-                "correct": "The question you will ask in every new room.",
-                "incorrect": "¿Que hay aqui?"
+                "correct": "Hay una casa.",
+                "incorrect": "Hay una casa."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-pick",
-              "prompt": "Say there are books, the ones I bought.",
+              "id": "ES-C54-hay-many",
+              "prompt": "Say there are books.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-GRAMMAR-HAY-NO-AGREEMENT",
                 "ES-LEX-LIBRO",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE"
+                "ES-GRAMMAR-BARE-PLURAL-NOUN"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hay libros, los que compre",
-                "hay libros — los que compré"
+                "hay libros",
+                "hay libros."
               ],
               "feedback": {
-                "correct": "Hay, then a relative clause picking them out.",
-                "incorrect": "Hay libros, los que compre."
+                "correct": "The same hay — it never goes plural.",
+                "incorrect": "Hay libros. Hay does not change."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-must",
-              "prompt": "Say what there is, one must eat.",
+              "id": "ES-C54-hay-unique",
+              "prompt": "What does hay agree with?",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-HAY"
+                "ES-GRAMMAR-HAY-NO-AGREEMENT"
               ],
-              "responseSeconds": 16,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "lo que hay, hay que comerlo",
-                "lo que hay hay que comer"
+                "nothing",
+                "nothing at all",
+                "it never changes"
               ],
               "feedback": {
-                "correct": "Four pieces, four different chapters.",
-                "incorrect": "Lo que hay, hay que comerlo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-done",
-              "prompt": "What is left to learn now that the machinery is assembled?",
-              "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-GRAMMAR-SE-IMPERSONAL"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "words, and familiar structures in new places",
-                "vocabulary and practice",
-                "nothing structural"
-              ],
-              "feedback": {
-                "correct": "Not a gap — the ordinary unbounded work of using it.",
-                "incorrect": "Words you have not met, and familiar structures standing somewhere new."
+                "correct": "The one common verb form in Spanish that counts nothing.",
+                "incorrect": "Nothing. Not the number, not the person."
               }
             }
           ]
@@ -217,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask what there is here. (¿Qué hay aquí?) Say what there is, one must eat. (Lo que hay, hay que comerlo.) And what is left after this? (Words, and practice — the machinery is assembled.)"
+              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
             }
           ]
         }

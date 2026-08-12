@@ -1,38 +1,47 @@
-Spanish, chapter 150: Tomar — Taking, and a Word With No Past.
+Spanish, chapter 150: Leer — Reading Is Gathering.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-tomar — "to take", and nobody knows where it came from.
+leer — "to read", and before that, "to gather".
 
 Warm-up.
 [pause 2 seconds]
-Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part.
+Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two.
 
 Sounds you'll need.
-r-tap — one soft tap of the tongue: to-MAR.
-vowel-o — a short, pure o, with no English glide toward ow.
+hiatus-ee — leer is two syllables, le-ER, never one long English ee.
+leo is likewise two beats, LE-o.
 
-The word, taken apart: tomar.
-tomar ("to take") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled.
-The leading proposal derives it from Latin autumāre, "to take as, to assert", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. "We don't know" is a real answer in etymology.
-It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like.
+The word, taken apart: leer.
+leer ("to read") from Latin legere, "to gather, to pick out, to choose" — and only afterwards "to read". A reader picks letters out of a row the way a farmhand picks olives off a branch.
+That gathering root runs through an enormous amount of English:
+legible, legend ("things to be read"), lecture, lectern, and worn right down, lesson.
+built with prefixes: collect (col- "together"), select (se- "apart"), elect (e- "out"), intellect (inter- "between" — choosing between things).
+diligent and elegant, both of which meant "picking carefully".
+One honest limit: Greek légein ("to speak, to gather") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys.
 
-Why it's said this way: the verb Latin did leave, and how to handle it.
-Latin's own "gather up" verb survived perfectly well: coger from colligere, which is com- ("together") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French.
-In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won.
+Grammar Lens: a plain -er verb, with a mouthful.
+Nothing irregular happens. Drop -er, add the ordinary endings:
+[a table of 5 rows, read aloud]
+person: yo. form: leo. said: LE-o.
+person: tú. form: lees. said: LE-es.
+person: él/ella/usted. form: lee. said: LE-e.
+person: nosotros. form: leemos. said: le-E-mos.
+person: ellos/ustedes. form: leen. said: LE-en.
+Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tomo, tomas, toma, tomamos, toman"]
+[your turn — say: "leer" — le-ER, two beats]
 [pause 8 seconds for the answer]
-[your turn — say: "Tomo un café" — I'll have a coffee]
+[your turn — say: "Leo un libro" — I read a book]
 [pause 8 seconds for the answer]
-[your turn — say: "Tomo el autobús" — the safe way to say it anywhere]
+[your turn — say: "No entiendo" then "Leo, pero no entiendo" — I read, but I don't understand]
 [pause 8 seconds for the answer]
-[your turn — say: "coger" then English "collect, coil" — one root, and one place to be careful]
+[your turn — say: "leer" then English "legible, collect, select, elect"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, "to gather", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks.
+What did legere mean before it meant "to read"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy.

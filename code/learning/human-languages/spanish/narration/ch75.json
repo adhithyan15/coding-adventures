@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 75,
-  "title": "La --- The Pronoun Carries What Left",
+  "title": "-es --- The Plural Chapter One Promised",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:90ae3cb36003d910",
+  "sourceHash": "fnv1a64:5c841bb357fa5585",
   "lessons": [
     {
-      "id": "ES-C42-la",
-      "sequence": 1177,
-      "title": "la — \"it,\" for a feminine noun",
-      "headword": "la",
-      "romanization": "la",
-      "gloss": "\"it\" for something feminine — the one word in this pair that never had to change",
+      "id": "ES-C44-plural-es",
+      "sequence": 1189,
+      "title": "-es — the plural your first chapter owed you",
+      "headword": "-es",
+      "romanization": "-es",
+      "gloss": "the plural ending for words that end in a consonant — a rule you have been using since you learned ustedes",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:192fbbc0711def3b",
+      "sourceHash": "fnv1a64:4e5e6451e8c3552b",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have it,\" about the book. (Lo tengo.) Now guess the feminine version before you read on."
+              "text": "Say \"you,\" formally. (Usted.) Now say it to a group. (Ustedes.) Hold both of those in your mouth for a moment."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the form you probably guessed",
+          "title": "Grammar Lens: you have been doing this for fifty chapters",
           "segments": [
             {
               "kind": "speech",
-              "text": "la — it, standing in for something feminine."
+              "text": "Your first chapter gave you half a rule and said the rest was for later. This is later."
             },
             {
               "kind": "speech",
-              "text": "Hago la comida. — I make the meal. La hago. — I make it."
+              "text": "A word ending in a vowel adds -s. A word ending in a consonant adds -es."
             },
             {
               "kind": "speech",
-              "text": "If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way."
+              "text": "And you already know the second half, because you have been saying it since the day you learned to address a group:"
             },
             {
               "kind": "speech",
-              "text": "The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la."
+              "text": "usted becomes ustedes."
             },
             {
               "kind": "speech",
-              "text": "That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said."
+              "text": "That is not a special word. That is the consonant rule, and nobody told you. Here it is again on something you also hold:"
+            },
+            {
+              "kind": "speech",
+              "text": "español becomes españoles — Spanish people, Spanish speakers. los españoles — with the plural article from last chapter."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears."
+              "text": "The extra e is not decoration and not an exception. Try saying usteds out loud. Then españols."
             },
             {
               "kind": "speech",
-              "text": "The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side."
+              "text": "Spanish does not let a word end in that pile of consonants. So when the plural -s would land somewhere unsayable, the language puts in the vowel it needs to get the -s out — and that vowel is e."
             },
             {
               "kind": "speech",
-              "text": "So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other."
+              "text": "Which means the rule is really one rule with a repair attached: add -s; if you cannot say it, make room. That is a better thing to hold than two rules, because it will keep explaining things long after this chapter."
             }
           ]
         },
@@ -99,79 +103,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hago la comida\" then \"La hago\"",
+              "instruction": "\"usted\" then \"ustedes\" — the rule you already had",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hago la comida\" then \"La hago\"]"
+              "source": "[YOU SAY: \"usted\" then \"ustedes\" — the rule you already had]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"la hago\" — one syllable carries the whole difference",
+              "instruction": "\"los españoles\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"la hago\" — one syllable carries the whole difference]"
+              "source": "[YOU SAY: \"los españoles\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "try \"usteds\" and hear why the e exists",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: try \"usteds\" and hear why the *e* exists]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-form",
-              "prompt": "Say I make it, about la comida.",
+              "id": "ES-C44-plural-es-espanol",
+              "prompt": "Make espanol plural.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-LA-OBJECT",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-NOUN-PLURAL-ES",
+                "ES-LEX-ESPANOL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "la hago",
-                "yo la hago"
+                "espanoles",
+                "los espanoles"
               ],
               "feedback": {
-                "correct": "Yes — feminine noun, feminine pronoun.",
-                "incorrect": "La hago. The pronoun takes the gender of the noun it replaces."
+                "correct": "Consonant ending, so -es.",
+                "incorrect": "Espanoles — the consonant takes -es."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-agree",
-              "prompt": "What decides whether you say lo or la?",
+              "id": "ES-C44-plural-es-already",
+              "prompt": "Which word have you been using this rule on since long before this chapter?",
               "assesses": [
-                "ES-GRAMMAR-NOUN-GENDER",
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-CASA"
+                "ES-LEX-USTEDES",
+                "ES-LEX-USTED",
+                "ES-GRAMMAR-NOUN-PLURAL-ES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the gender of the noun it replaces",
-                "the noun's gender",
-                "whether the noun is masculine or feminine"
+                "ustedes",
+                "usted becomes ustedes",
+                "usted"
               ],
               "feedback": {
-                "correct": "Right — the noun decides, not the speaker and not the verb.",
-                "incorrect": "The gender of the noun being replaced."
+                "correct": "You had the rule before you had the rule.",
+                "incorrect": "Ustedes — that is usted plus the consonant plural."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-why",
-              "prompt": "Why does the feminine article match its pronoun exactly, when the masculine pair does not?",
+              "id": "ES-C44-plural-es-why",
+              "prompt": "Why -es rather than plain -s after a consonant?",
               "assesses": [
-                "ES-ETYMON-ILLE-ILLA"
+                "ES-GRAMMAR-NOUN-PLURAL-ES"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "the masculine lost a vowel and the feminine had none to lose",
-                "only the masculine wore down",
-                "the sound change only hit the masculine"
+                "the bare s would be unsayable",
+                "you cannot pronounce it",
+                "spanish needs a vowel to get the s out"
               ],
               "feedback": {
-                "correct": "Exactly — one sound change, one victim.",
-                "incorrect": "Both come from illam unchanged; the masculine elo lost its vowel and became el."
+                "correct": "One rule and a repair, not two rules.",
+                "incorrect": "Try saying ustedes without the e. The vowel is there to make the -s pronounceable."
               }
             }
           ]
@@ -189,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking."
+              "text": "Vowel ending — which plural? (-s.) Consonant ending? (-es.) And why? (A bare -s there would be unsayable.) Next: the four articles in one place, now that every one of them has been earned."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 152,
-  "title": "Ayudar — the Same Word as Aid",
+  "title": "Review --- Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b0c255afa617512a",
+  "sourceHash": "fnv1a64:4ab831385af0f502",
   "lessons": [
     {
-      "id": "ES-C35-ayudar",
-      "sequence": 1910,
-      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
-      "headword": "ayudar",
-      "romanization": "ayudar",
-      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
+      "id": "ES-C34-repaso-mente",
+      "sequence": 1913,
+      "title": "Review — four verbs of the mind",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3488acbd75c4d53",
+      "sourceHash": "fnv1a64:116f2563652fe9a6",
       "notice": null,
       "blocks": [
         {
@@ -35,93 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
+              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-a — a clean, open a: a-yoo-DAR."
+              "text": "Here is the thing none of the four chapters could show you on its own."
             },
             {
               "kind": "speech",
-              "text": "r-tap — one tap at the end, not an English r."
+              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
+            },
+            {
+              "kind": "speech",
+              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
+            },
+            {
+              "kind": "speech",
+              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
+            },
+            {
+              "kind": "speech",
+              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
+            },
+            {
+              "kind": "speech",
+              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
+            },
+            {
+              "kind": "speech",
+              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
+            },
+            {
+              "kind": "speech",
+              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: ayudar",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
-            },
-            {
-              "kind": "speech",
-              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
-            },
-            {
-              "kind": "speech",
-              "text": "aide, and aide-de-camp, an officer who helps."
-            },
-            {
-              "kind": "speech",
-              "text": "adjutant — the officer whose whole job is assisting."
-            },
-            {
-              "kind": "speech",
-              "text": "adjuvant — a substance that helps another drug work."
-            },
-            {
-              "kind": "speech",
-              "text": "coadjutor — one who helps alongside."
-            },
-            {
-              "kind": "speech",
-              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
+              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nothing breaks; the endings are the ones you started with:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "meaning"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "person: yo. form: ayudo. meaning: I help.",
-                "person: tú. form: ayudas. meaning: you help.",
-                "person: nosotros. form: ayudamos. meaning: we help.",
-                "person: ellos/ustedes. form: ayudan. meaning: they help."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -134,43 +103,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
+              "instruction": "the four verbs in order — to read, to think, to understand, to write",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
+              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Me ayudas?\" — will you help me?",
+              "instruction": "for each one, the body word underneath it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
+              "source": "[YOU SAY: for each one, the body word underneath it]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-weigh",
+              "prompt": "Which of the four verbs originally meant to weigh?",
+              "assesses": [
+                "ES-ETYMON-PENSAR-02"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
+              "acceptedResponses": [
+                "pensar",
+                "pensar (to think)",
+                "think"
+              ],
+              "feedback": {
+                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
+                "incorrect": "pensar, from pensare, to weigh."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-gather",
+              "prompt": "Which one meant to gather or pick out?",
+              "assesses": [
+                "ES-ETYMON-LEER-06"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "leer",
+                "leer (to read)",
+                "read"
+              ],
+              "feedback": {
+                "correct": "Yes — legere, the root inside collect, select and intellect.",
+                "incorrect": "leer, from legere, to gather."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-scratch",
+              "prompt": "And which one meant to scratch?",
+              "assesses": [
+                "ES-ETYMON-ESCRIBIR-08"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "escribir",
+                "escribir (to write)",
+                "write"
+              ],
+              "feedback": {
+                "correct": "Yes — scribere. Writing was scratching a surface.",
+                "incorrect": "escribir, from scribere, to scratch."
+              }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
+              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
             }
           ]
         }

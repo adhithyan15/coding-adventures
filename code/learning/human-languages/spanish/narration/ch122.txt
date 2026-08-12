@@ -1,44 +1,98 @@
-Spanish, chapter 122: Habla --- Telling Somebody To Do Something.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 122: The Subjunctive, Regular.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-habla — telling somebody to do something.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 3.
+hable, hables, hable — the singular -ar row.
 
 Warm-up.
 [pause 2 seconds]
-Say "he speaks." (Habla.) Hold that word. You are about to be told it does a second job you have never been shown.
-
-Grammar Lens: you already have it.
-To tell somebody you address as tú to do something, use the he/she form of the present.
-Habla. — Speak. Come. — Eat. Vive. — Live.
-That is the whole rule, and it costs you nothing. Habla was already in your mouth as "he speaks"; the same two syllables, said to somebody, are an order.
+You already used hables for one friend. Today add only the other two singular slots:
 [a table of 3 rows, read aloud]
-verb: hablar. he/she does: habla. you, do it: habla.
-verb: comer. he/she does: come. you, do it: come.
-verb: vivir. he/she does: vive. you, do it: vive.
-The column repeats. That is not an oversight in the table.
-Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two.
+person: yo. present subjunctive: hable.
+person: tú. present subjunctive: hables.
+person: él / ella / usted. present subjunctive: hable.
+Plural forms wait. Say the small row: hable, hables, hable.
 
-The word, taken apart.
-The name for this form is the imperative, from Latin imperāre, "to command."
-That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed.
+Grammar Lens: the yo stem, then a vowel swap.
+Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
+
+The name, taken apart.
+Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "habla" as a statement, then "¡Habla!" as an order — same word, different job]
-[pause 8 seconds for the answer]
-[your turn — say: "come", "vive"]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Tell somebody you call tu to eat.
-[question — say your answer, then pause 10 seconds]
-Which form do you use to give a tu command?
-[question — say your answer, then pause 10 seconds]
-Which two English words share a root with imperative?
+Build each answer only from the learned singular row.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which present form gives the stem for regular hable: hablo or habla?
+[question — say your answer, then pause 7 seconds]
+What joining idea sits inside the Latin source of subjuntivo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable.
+Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
+
+
+Lesson 2 of 3.
+coma, comas, coma — let -er cross to a.
+
+Warm-up.
+[pause 2 seconds]
+Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: coma.
+person: tú. present subjunctive: comas.
+person: él / ella / usted. present subjunctive: coma.
+Say only the singular row: coma, comas, coma.
+
+Grammar Lens: meaning before machinery.
+Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
+
+Guided Practice.
+[pause 1 second]
+Keep comer inside the learned singular frame.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which form belongs after quiero que for one friend: comes or comas?
+[question — say your answer, then pause 8 seconds]
+Say 'I want you to eat' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
+
+
+Lesson 3 of 3.
+viva, vivas, viva — -ir joins -er.
+
+Warm-up.
+[pause 2 seconds]
+Start from vivo, remove -o, then add the same a endings you just used with comer:
+[a table of 3 rows, read aloud]
+person: yo. present subjunctive: viva.
+person: tú. present subjunctive: vivas.
+person: él / ella / usted. present subjunctive: viva.
+Regular -er and -ir match in this singular row:
+comer: coma, comas, coma.
+vivir: viva, vivas, viva.
+Plural differences wait.
+
+Grammar Lens: meaning in a known frame.
+Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
+
+Guided Practice.
+[pause 1 second]
+Keep vivir inside the learned singular frame.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which two regular verb families share -a, -as, -a here?
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to live in Madrid' to one friend.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 111,
-  "title": "Review --- A Tense You Build",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d62b6e445fa574e8",
+  "title": "Hablado, Comido, Vivido --- The Participle",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5b12ac5f28a52915",
   "lessons": [
     {
-      "id": "ES-C49-repaso-perfecto",
-      "sequence": 1349,
-      "title": "Review — a tense you build",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — a whole tense assembled from two pieces, neither of which changes with the other",
+      "id": "ES-C49-participio",
+      "sequence": 1375,
+      "title": "hablado, comido, vivido — the participle",
+      "headword": "hablado / comido / vivido",
+      "romanization": "hablado / comido / vivido",
+      "gloss": "the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:77a6e08e93fc8ec2",
-      "notice": null,
+      "sourceHash": "fnv1a64:68d511f37a65c98d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,73 +42,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Two questions: how many words is this tense, and which of them carries the person?"
+              "text": "Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: two endings, not three",
           "segments": [
             {
               "kind": "speech",
-              "text": "Piece one — the person: he, has, ha, hemos, habéis, han."
+              "text": "hablar becomes hablado, comer becomes comido, vivir becomes vivido."
             },
             {
               "kind": "speech",
-              "text": "Piece two — the meaning: the participle, which never changes."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "regular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "-ar. regular: -ado, hablado.",
-                "-er / -ir. regular: -ido, comido, vivido."
-              ]
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "irregular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "hacer. irregular: hecho, decir becomes dicho.",
-                "ver. irregular: visto, poner becomes puesto."
-              ]
+              "text": "-ar verbs take -ado."
             },
             {
               "kind": "speech",
-              "text": "Six little words times any participle you can form. That is the whole tense."
+              "text": "-er and -ir verbs both take -ido."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is one new ending and one you can predict."
+            },
+            {
+              "kind": "speech",
+              "text": "The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: why this one was cheap",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another."
+              "text": "Grammarians call this a participle, from Latin participium — \"the form that takes part.\" It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective."
             },
             {
               "kind": "speech",
-              "text": "This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount."
+              "text": "You can see the adjective half immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
             },
             {
               "kind": "speech",
-              "text": "That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did."
+              "text": "Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all."
             }
           ]
         },
@@ -119,93 +110,76 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"",
+              "instruction": "\"hablado, comido, vivido\" — one ending, then the shared one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"]"
+              "source": "[YOU SAY: \"hablado, comido, vivido\" — one ending, then the shared one]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the little word arrives without thought."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-repaso-perfecto-pieces",
-              "prompt": "What are the two pieces of this tense, and which carries the person?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "haber and the participle; haber carries the person",
-                "a form of haber plus a participle"
-              ],
-              "feedback": {
-                "correct": "And the participle never moves.",
-                "incorrect": "A form of haber, which carries the person, plus a participle, which carries the meaning."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"comí, viví\" then \"comido, vivido\" — the same merger, twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"comí, viví\" then \"comido, vivido\" — the same merger, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-build",
-              "prompt": "Say we have lived.",
+              "id": "ES-C49-participio-ar",
+              "prompt": "Give the participle of hablar.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VIVIR"
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-LEX-HABLAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "hemos vivido",
-                "nosotros hemos vivido"
+                "hablado",
+                "habl-ado"
               ],
               "feedback": {
-                "correct": "Hemos vivido.",
-                "incorrect": "Hemos vivido."
+                "correct": "-ar takes -ado.",
+                "incorrect": "Hablado."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-irreg",
-              "prompt": "Say you have said it, using the participle of decir.",
+              "id": "ES-C49-participio-erir",
+              "prompt": "Give the participles of comer and vivir.",
               "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-LEX-COMER",
+                "ES-LEX-VIVIR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo has dicho",
-                "has dicho"
+                "comido, vivido",
+                "comido vivido"
               ],
               "feedback": {
-                "correct": "Has dicho.",
-                "incorrect": "Lo has dicho — dicho, not decido."
+                "correct": "Both -ido — the two families merge again.",
+                "incorrect": "Comido and vivido."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-cost",
-              "prompt": "Why did this tense cost less than the present or the preterite?",
+              "id": "ES-C49-participio-person",
+              "prompt": "Does the participle change for who is speaking?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-GRAMMAR-PAST-PARTICIPLE"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "it is built from two pieces rather than conjugated per verb",
-                "six words once, not endings on every verb"
+                "no",
+                "no, it stays the same"
               ],
               "feedback": {
-                "correct": "A fixed cost instead of a per-verb one.",
-                "incorrect": "Six words learned once, plus one participle per verb — not a new ending set for every family."
+                "correct": "The first verb form you hold that carries no person.",
+                "incorrect": "No — hablado is hablado for everybody."
               }
             }
           ]
@@ -223,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
+              "text": "Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense."
             }
           ]
         }

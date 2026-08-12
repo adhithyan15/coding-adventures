@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 177,
-  "title": "El Libro Que Compro --- One Sentence Out of Two",
+  "title": "Se Compran Libros --- The Verb Tells On Itself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fc710f7e050fff64",
+  "sourceHash": "fnv1a64:877655f44fa6502c",
   "lessons": [
     {
-      "id": "ES-C53-que-relativo",
-      "sequence": 2161,
-      "title": "el libro que compro — one sentence out of two",
-      "headword": "el libro que compro",
-      "romanization": "el libro que compro",
-      "gloss": "joining two sentences into one — with a word you have had since you learned to want things",
+      "id": "ES-C52-se-venden",
+      "sequence": 2187,
+      "title": "se compran libros — the verb tells on itself",
+      "headword": "se compran libros",
+      "romanization": "se compran libros",
+      "gloss": "the verb agrees with the thing — which is the clue to where this whole construction came from",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:148b46c6babae1a2",
+      "sourceHash": "fnv1a64:a5a00cbd1905b316",
       "notice": null,
       "blocks": [
         {
@@ -35,38 +35,30 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I want you to speak.\" (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short."
+              "text": "Se habla español — one thing, singular verb. Now guess what happens with more than one thing."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: stapling two sentences together",
+          "title": "Grammar Lens: it agrees, and that is strange",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have two sentences about one book:"
+              "text": "Se compra el libro. — The book is bought. Se compran libros. — Books are bought."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro. — I have the book. Compro el libro. — I buy the book."
+              "text": "The verb changed. Compra for one book, compran for several — the verb is agreeing with the thing being bought."
             },
             {
               "kind": "speech",
-              "text": "Que joins them, and the repeated noun disappears:"
+              "text": "Stop and notice how odd that is. In se habla español there is nobody doing the speaking, so what is the verb agreeing with? If this were simply \"one buys books,\" the verb would stay singular, because one is one person. It does not stay singular."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro que compro. — I have the book that I buy."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length."
+              "text": "The thing is behaving like the subject. And that is the clue to where this construction came from."
             }
           ]
         },
@@ -77,15 +69,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions."
+              "text": "Read se compran libros with the se meaning what it meant in se llama:"
             },
             {
               "kind": "speech",
-              "text": "That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement."
+              "text": "Books buy themselves."
             },
             {
               "kind": "speech",
-              "text": "So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints."
+              "text": "That is nonsense as a description of the world, and it is exactly the sentence Spanish is using. The reflexive was stretched: first the door closes itself (true enough of doors), then the books sell themselves, and finally any verb at all with the doer quietly dropped."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you see that, the agreement stops being strange. Libros is the subject of se compran in the same way él is the subject of se llama. The verb has been agreeing with its subject all along; it is just that the subject is a thing, and the thing is not really doing anything."
+            },
+            {
+              "kind": "speech",
+              "text": "So this se is the reflexive se — grown, not borrowed. Unlike the se of se lo digo, which only looks like it."
             }
           ]
         },
@@ -103,78 +103,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two short sentences, then the joined one",
+              "instruction": "\"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two short sentences, then the joined one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el libro que compro\", \"la casa que tengo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el libro que compro\", \"la casa que tengo\"]"
+              "source": "[YOU SAY: \"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-relativo-join",
-              "prompt": "Join Tengo el libro and Compro el libro into one sentence.",
+              "id": "ES-C52-se-venden-plural",
+              "prompt": "Say books are bought.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-LEX-LIBRO",
-                "ES-LEX-COMPRAR-07"
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+                "ES-LEX-COMPRAR-07",
+                "ES-LEX-LIBRO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "se compran libros",
+                "se compran los libros"
+              ],
+              "feedback": {
+                "correct": "Plural thing, plural verb.",
+                "incorrect": "Se compran libros."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-se-venden-agree",
+              "prompt": "What is the verb agreeing with in se compran libros?",
+              "assesses": [
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the books",
+                "the thing being bought",
+                "libros"
+              ],
+              "feedback": {
+                "correct": "The thing is behaving like the subject.",
+                "incorrect": "With libros — the thing, not any doer."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-se-venden-origin",
+              "prompt": "Read se compran libros as if se still meant themselves. What does it say?",
+              "assesses": [
+                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "tengo el libro que compro",
-                "el libro que compro"
+                "books buy themselves",
+                "the books buy themselves"
               ],
               "feedback": {
-                "correct": "Name the thing once, hang the rest off que.",
-                "incorrect": "Tengo el libro que compro."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-que-relativo-what",
-              "prompt": "What happens to the repeated noun when que joins two sentences?",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "it disappears",
-                "you only say it once",
-                "it is not repeated"
-              ],
-              "feedback": {
-                "correct": "Once is enough — que carries it into the second half.",
-                "incorrect": "It disappears. You name it once."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-que-relativo-family",
-              "prompt": "Which question words share que's root?",
-              "assesses": [
-                "ES-ETYMON-QUI-RELATIVE",
-                "ES-LEX-QUE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "que, quien, como, cuando",
-                "qué, quién, cómo, cuándo",
-                "the qu- family"
-              ],
-              "feedback": {
-                "correct": "A question fills a gap; so does a relative clause.",
-                "incorrect": "Qué, quién, cómo, cuándo — the same qu- root."
+                "correct": "Nonsense about the world, and exactly the sentence Spanish is using.",
+                "incorrect": "Books buy themselves — which is where the construction came from."
               }
             }
           ]
@@ -192,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Join \"I have the book\" and \"I buy the book.\" (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner."
+              "text": "Why does the verb go plural? (Because it agrees with the thing.) And why does it agree with the thing? (Because underneath, the thing is doing it to itself.) Next: the one you will use every day."
             }
           ]
         }

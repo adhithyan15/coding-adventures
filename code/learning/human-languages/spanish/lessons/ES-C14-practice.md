@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C14-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1270
-chapter: 94
+sequence: 1300
+chapter: 98
 type: practice-mix
 headword: (practice)
 gloss: a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló

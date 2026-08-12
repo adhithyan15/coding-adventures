@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 98,
-  "title": "The Imperfect --- What Used to Happen",
+  "title": "The Preterite --- Your First Past Tense",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6141864439a13f82",
+  "sourceHash": "fnv1a64:328f21fd70814934",
   "lessons": [
     {
-      "id": "ES-C16-imperfecto",
-      "sequence": 1310,
-      "title": "hablaba — let a past action stay open",
-      "headword": "hablaba",
-      "romanization": "hablaba",
-      "gloss": "the singular -ar imperfect — hablaba, hablabas, hablaba",
+      "id": "ES-C14-ser-ir-preterite",
+      "sequence": 1280,
+      "title": "fui — one past set shared by ser and ir",
+      "headword": "fui",
+      "romanization": "fui",
+      "gloss": "the shared singular preterite of ser and ir — fui, fuiste, fue",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5acd9b0609bf831b",
+      "sourceHash": "fnv1a64:08075d68d0b3b283",
       "notice": null,
       "blocks": [
         {
@@ -35,43 +35,55 @@
             },
             {
               "kind": "speech",
-              "text": "Hablé español presents speaking as a completed past event. A different past, the imperfect, can leave the action open: Hablaba español — “I was speaking Spanish” or “I used to speak Spanish.” The sentence does not say where the action ended."
+              "text": "You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: three familiar persons",
+          "title": "Grammar Lens: three singular forms, two verbs",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "open or habitual past"
+                "completed past of ser or ir"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. open or habitual past: hablaba.",
-                "person: tú. open or habitual past: hablabas.",
-                "person: él / ella / usted. open or habitual past: hablaba."
+                "person: yo. completed past of ser or ir: fui.",
+                "person: tú. completed past of ser or ir: fuiste.",
+                "person: él / ella / usted. completed past of ser or ir: fue."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say hablaba, hablabas, hablaba. The first and third forms are identical; the surrounding conversation or an explicit person tells you who is speaking. Plural persons wait."
+              "text": "Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:"
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir."
+            },
+            {
+              "kind": "speech",
+              "text": "Fue Roberto. — “It was Roberto.” Identification points to ser."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The ending, taken apart",
+          "title": "The form, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish -aba continues the Latin imperfect family in -ābam. Historical sound change reshaped the complete Latin forms, but the b remains a useful audible bridge between -ābam and Spanish -aba."
+              "text": "The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words."
             }
           ]
         },
@@ -89,86 +101,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablaba, hablabas, hablaba”",
+              "instruction": "“fui, fuiste, fue”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaba, hablabas, hablaba”]"
+              "source": "[YOU SAY: “fui, fuiste, fue”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablé español. Hablaba español.”",
+              "instruction": "“Fui a Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablé español. Hablaba español.”]"
+              "source": "[YOU SAY: “Fui a Madrid.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“-ābam and -aba share b”",
+              "instruction": "“Fue Roberto — identification, so ser.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “-ābam and -aba share b”]"
+              "source": "[YOU SAY: “Fue Roberto — identification, so ser.”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-imperfecto-singular-forms",
-              "prompt": "Give the learned singular imperfect forms of hablar: yo, tú, then él/ella/usted.",
+              "id": "ES-C14-ser-ir-preterite-singular-forms",
+              "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
-                "ES-LEX-HABLAR"
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "hablaba, hablabas, hablaba",
-                "hablaba hablabas hablaba",
-                "hablaba / hablabas / hablaba"
+                "fui, fuiste, fue",
+                "fui fuiste fue",
+                "fui / fuiste / fue"
               ],
               "feedback": {
-                "correct": "Right: hablaba, hablabas, hablaba.",
-                "incorrect": "Keep habl- and retrieve -aba, -abas, -aba."
+                "correct": "Right: fui, fuiste, fue.",
+                "incorrect": "Retrieve only the three learned singular forms: fui, fuiste, fue."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-imperfecto-hable-hablaba",
-              "prompt": "Which form leaves 'I spoke' open or habitual: hablé or hablaba?",
+              "id": "ES-C14-ser-ir-preterite-fui-madrid",
+              "prompt": "Say 'I went to Madrid' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
-                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-LEX-A"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hablaba"
+                "fui a madrid.",
+                "fui a madrid"
               ],
               "feedback": {
-                "correct": "Right: hablaba leaves the past action open or habitual.",
-                "incorrect": "Hablé presents a completed event; hablaba leaves it open or habitual."
+                "correct": "Right: Fui a Madrid.",
+                "incorrect": "Use the shared yo form fui, then known a plus Madrid."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-imperfecto-history",
-              "prompt": "Which consonant links Latin -ābam with Spanish -aba?",
+              "id": "ES-C14-ser-ir-preterite-context",
+              "prompt": "In 'Fue Roberto', which verb does fue express?",
               "assesses": [
-                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 6,
               "acceptedResponses": [
-                "b",
-                "the b",
-                "b sound"
+                "ser"
               ],
               "feedback": {
-                "correct": "Right: the b remains audible in Spanish -aba.",
-                "incorrect": "Listen inside both endings: -ābam and -aba contain b."
+                "correct": "Right: identifying Roberto points to ser.",
+                "incorrect": "This sentence identifies who it was, so fue expresses ser."
               }
             }
           ]
@@ -186,26 +198,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned forms. (Hablaba, hablabas, hablaba.) What can the imperfect do? (Leave a past action ongoing or habitual.) Which Latin family stands behind -aba? (-ābam.) Next: build the same gentle frame with comer."
+              "text": "Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C16-comer-imperfecto",
-      "sequence": 1314,
-      "title": "comía — hear both vowels",
-      "headword": "comía",
-      "romanization": "comía",
-      "gloss": "the singular -er imperfect — comía, comías, comía",
+      "id": "ES-C14-hablar-preterite",
+      "sequence": 1290,
+      "title": "hablé — a regular singular past from a known verb",
+      "headword": "hablé",
+      "romanization": "hablé",
+      "gloss": "the regular singular -ar preterite — hablé, hablaste, habló",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b76a6a94b8e0a17",
+      "sourceHash": "fnv1a64:6a1ecc0901788371",
       "notice": null,
       "blocks": [
         {
@@ -221,259 +233,83 @@
             },
             {
               "kind": "speech",
-              "text": "Comí presents eating as completed. Comía leaves it open or habitual: “I was eating” or “I used to eat.” One accent separates the two forms in writing and in sound."
+              "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the singular -er row",
+          "title": "Grammar Lens: present beside completed past",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "open or habitual past"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. open or habitual past: comía.",
-                "person: tú. open or habitual past: comías.",
-                "person: él / ella / usted. open or habitual past: comía."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say comía, comías, comía. As with hablaba, the first and third forms match. Plural persons wait."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: co-mí-a",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The accent in -ía keeps i and a in separate syllables: co-mí-a, three beats. It appears in every form learned here. Compare final stress in comí with the middle stress and extra syllable in comía."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The ending, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The -er imperfect continues a Romance reshaping of Latin -ēbam material. Among the changes, an intervocalic b was lost; later Spanish spelling marks the stressed í that keeps i-a apart. This is a layered history, not a single instruction to delete one letter."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comía, comías, comía”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comía, comías, comía”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Comí. Comía.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Comí. Comía.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“co-mí-a”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “co-mí-a”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C16-comer-imperfecto-singular-forms",
-              "prompt": "Give the learned singular imperfect forms of comer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "comía, comías, comía",
-                "comía comías comía",
-                "comía / comías / comía"
-              ],
-              "feedback": {
-                "correct": "Right: comía, comías, comía.",
-                "incorrect": "Keep com- and retrieve -ía, -ías, -ía."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C16-comer-imperfecto-comi-comia",
-              "prompt": "Which form means 'I was eating': comí or comía?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "comía"
-              ],
-              "feedback": {
-                "correct": "Right: comía leaves the eating in progress.",
-                "incorrect": "Comí is completed; comía is ongoing or habitual."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C16-comer-imperfecto-syllables",
-              "prompt": "Write comía with syllable breaks.",
-              "assesses": [
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-                "ES-SOUND-WRITTEN-ACCENT"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "co-mí-a"
-              ],
-              "feedback": {
-                "correct": "Right: co-mí-a has three syllables.",
-                "incorrect": "The accented í stays separate from a: co-mí-a."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned forms. (Comía, comías, comía.) What does the accent do? (Keeps i and a apart.) Which Latin family lies behind the ending? (-ēbam, reshaped through Romance.) Next: test whether vivir can reuse this row."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C16-vivir-imperfecto",
-      "sequence": 1318,
-      "title": "vivía — reuse the complete -er row",
-      "headword": "vivía",
-      "romanization": "vivía",
-      "gloss": "the singular -ir imperfect — vivía, vivías, vivía",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ffa5901695d9b325",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "An earlier chapter let comer and vivir share one completed-past row. They converge again here. Replace com- in comía, comías, comía with viv-."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one row reused",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "comer",
-                "vivir"
+                "present",
+                "completed past"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "person: yo. comer: comía. vivir: vivía.",
-                "person: tú. comer: comías. vivir: vivías.",
-                "person: él / ella / usted. comer: comía. vivir: vivía."
+                "person: yo. present: hablo. completed past: hablé.",
+                "person: tú. present: hablas. completed past: hablaste.",
+                "person: él / ella / usted. present: habla. completed past: habló."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say vivía, vivías, vivía. -er and -ir share -ía, -ías, -ía. The accent still keeps i-a apart. Plural persons wait."
+              "text": "Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablo becomes hablé changes the final vowel and moves stress to the end."
+            },
+            {
+              "kind": "speech",
+              "text": "hablas becomes hablaste adds the past ending -aste."
+            },
+            {
+              "kind": "speech",
+              "text": "habla becomes habló changes the final vowel and moves stress to the end."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: one known contrast",
+          "title": "Grammar Lens: two accents, one natural stress pattern",
           "segments": [
             {
               "kind": "speech",
-              "text": "Viví en Madrid. — presents living there as a completed stretch."
+              "text": "The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past."
             },
             {
               "kind": "speech",
-              "text": "Vivía en Madrid. — puts us inside that past stretch or treats it as background."
+              "text": "Now reuse known words:"
             },
             {
               "kind": "speech",
-              "text": "Both are past. The speaker chooses how to frame the event."
+              "text": "Hablé español. — “I spoke Spanish.”"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablaste español? — “Did you speak Spanish?”"
+            },
+            {
+              "kind": "speech",
+              "text": "Habló español. — “He, she, or you-formal spoke Spanish.”"
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The verb, taken apart",
+          "title": "The endings, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Vivir continues Latin vīvere. Its infinitive belongs to the Spanish -ir class, but the imperfect has converged with -er. That shared row is a reliable fact about these learned forms, not a claim that the two conjugations are identical everywhere."
+              "text": "The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending."
             }
           ]
         },
@@ -491,89 +327,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“vivía, vivías, vivía”",
+              "instruction": "“hablé, hablaste, habló”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “vivía, vivías, vivía”]"
+              "source": "[YOU SAY: “hablé, hablaste, habló”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“comía and vivía share -ía”",
+              "instruction": "“Hablo español. Hablé español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “comía and vivía share -ía”]"
+              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Viví en Madrid. Vivía en Madrid.”",
+              "instruction": "“hablé and habló carry written accents; hablaste does not”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Viví en Madrid. Vivía en Madrid.”]"
+              "source": "[YOU SAY: “hablé and habló carry written accents; hablaste does not”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-vivir-imperfecto-singular-forms",
-              "prompt": "Give the learned singular imperfect forms of vivir: yo, tú, then él/ella/usted.",
+              "id": "ES-C14-hablar-preterite-singular-forms",
+              "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
-                "ES-LEX-VIVIR"
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "vivía, vivías, vivía",
-                "vivía vivías vivía",
-                "vivía / vivías / vivía"
+                "hablé, hablaste, habló",
+                "hablé hablaste habló",
+                "hablé / hablaste / habló"
               ],
               "feedback": {
-                "correct": "Right: vivía, vivías, vivía.",
-                "incorrect": "Keep viv- and reuse -ía, -ías, -ía."
+                "correct": "Right: hablé, hablaste, habló.",
+                "incorrect": "Keep habl- and retrieve -é, -aste, -ó."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-vivir-imperfecto-shared-row",
-              "prompt": "Which two infinitive classes share the learned imperfect endings -ía, -ías, -ía?",
+              "id": "ES-C14-hablar-preterite-hable-espanol",
+              "prompt": "Say 'I spoke Spanish' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-ESPANOL",
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "-er and -ir",
-                "er and ir",
-                "-er / -ir",
-                "er ir"
+                "hablé español.",
+                "hablé español"
               ],
               "feedback": {
-                "correct": "Right: -er and -ir share this imperfect row.",
-                "incorrect": "Compare comer and vivir: -er and -ir share the row."
+                "correct": "Right: Hablé español.",
+                "incorrect": "Use hablé with its final written accent, then known español."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-vivir-imperfecto-vivia-madrid",
-              "prompt": "Say 'I was living in Madrid' in Spanish.",
+              "id": "ES-C14-hablar-preterite-present-past",
+              "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
               "assesses": [
-                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "vivía en madrid.",
-                "vivía en madrid"
+                "hablé"
               ],
               "feedback": {
-                "correct": "Right: Vivía en Madrid.",
-                "incorrect": "Use imperfect vivía, then known en Madrid."
+                "correct": "Right: hablé is the completed-past yo form.",
+                "incorrect": "Hablo is present; hablé is the completed-past form."
               }
             }
           ]
@@ -591,7 +426,255 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three vivir forms. (Vivía, vivías, vivía.) Which class shares them? (-er.) What contrast can viví / vivía make? (Completed stretch versus an open or background past.) Next: learn ver before asking it to enter this tense."
+              "text": "Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C14-practice",
+      "sequence": 1300,
+      "title": "Practice — two singular ways to talk about a completed past",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f90166b75848575",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the complete frame for this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shared past of ser and ir: fui, fuiste, fue."
+            },
+            {
+              "kind": "speech",
+              "text": "regular past of hablar: hablé, hablaste, habló."
+            },
+            {
+              "kind": "speech",
+              "text": "context: Fui a Madrid expresses ir; Fue Roberto expresses ser."
+            },
+            {
+              "kind": "speech",
+              "text": "time contrast: Hablo español is present; Hablé español is completed past."
+            },
+            {
+              "kind": "speech",
+              "text": "spelling: hablé and habló show final stress with a written accent; hablaste needs none."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The two histories, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“fui, fuiste, fue”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “fui, fuiste, fue”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“hablé, hablaste, habló”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “hablé, hablaste, habló”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Fui a Madrid. Fue Roberto.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Fui a Madrid. Fue Roberto.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablo español. Hablé español.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-ser-ir-forms",
+              "prompt": "Give the three learned forms shared by ser and ir.",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "fui, fuiste, fue",
+                "fui fuiste fue",
+                "fui / fuiste / fue"
+              ],
+              "feedback": {
+                "correct": "Right: fui, fuiste, fue.",
+                "incorrect": "Retrieve the singular set: fui, fuiste, fue."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-ar-forms",
+              "prompt": "Give the three learned completed-past forms of hablar.",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablé, hablaste, habló",
+                "hablé hablaste habló",
+                "hablé / hablaste / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé, hablaste, habló.",
+                "incorrect": "Retrieve the singular set: hablé, hablaste, habló."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-context-ser-ir",
+              "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "fui a madrid.",
+                "fui a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: a plus Madrid supplies a destination, so fui expresses ir.",
+                "incorrect": "The destination phrase a Madrid makes Fui a Madrid the ir sentence."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-present-past",
+              "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hablo español. hablé español.",
+                "hablo español; hablé español",
+                "hablo español. hablé español",
+                "hablo español hablé español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablo español; Hablé español.",
+                "incorrect": "Use present hablo first, then completed-past hablé."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-written-accents",
+              "prompt": "Which two of hablé, hablaste, habló carry written accents?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
+                "ES-SOUND-WRITTEN-ACCENT",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablé and habló",
+                "hablé habló",
+                "hablé y habló",
+                "hablé / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé and habló mark final stress.",
+                "incorrect": "The final-stressed forms are hablé and habló."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
             }
           ]
         }

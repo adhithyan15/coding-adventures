@@ -1,49 +1,42 @@
-Spanish, chapter 110: Hecho, Dicho, Visto, Puesto.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 110: Synthesis --- A Small Story.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-hecho, dicho, visto, puesto — four participles that refused the ending — and they are the four verbs you would have guessed.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Synthesis — a small story.
 
 Warm-up.
 [pause 2 seconds]
-By the rule, the participle of hacer should be hacido. Say it. Now be told that nobody has ever said it.
+Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time.
 
-Grammar Lens: four, and you could have guessed which.
-[a table of 4 rows, read aloud]
-verb: hacer. participle: hecho. in use: he hecho — I have done.
-verb: decir. participle: dicho. in use: he dicho — I have said.
-verb: ver. participle: visto. in use: he visto — I have seen.
-verb: poner. participle: puesto. in use: he puesto — I have put.
-Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular.
-You already know this in English. Go/went, see/saw, do/did, put/put — and nobody struggles with them, because you meet them a hundred times a day. The same will happen here.
+The exchange.
+Four sentences. Watch the tenses take turns.
+Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana.
+Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to.
+Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order.
+The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them.
 
-The word, taken apart.
-These four are not broken. They are older than the rule.
-hecho from Latin factum — the thing done. English fact is that same word: a fact is literally a thing that has been done.
-dicho from Latin dictum — the thing said. English keeps dictum whole, and dictation, verdict ("a true saying"), contradict.
-visto from Latin vīsum — the thing seen. English vision, visible.
-puesto from Latin positum — the thing placed. English position, deposit, compose.
-Latin already had participles for these verbs, and Spanish inherited them intact instead of rebuilding them from the stem. The regular -ado / -ido forms are the newer machinery; these four are what was there before it.
-So an irregular participle is not a form that went wrong. It is a form that was never replaced.
+Grammar Lens: what you can now do.
+Notice the third sentence. Tuve un libro is not "I had a book" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular.
+That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did.
+It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hecho, dicho, visto, puesto"]
+[your turn — say: the four sentences straight through]
 [pause 8 seconds for the answer]
-[your turn — say: each with English beside it — "hecho / fact", "dicho / dictum", "visto / vision", "puesto / position"]
+[your turn — say: only the imperfects, then only the preterites, and hear the two layers]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 12 seconds]
-Give the participles of hacer, decir, ver and poner.
+[repeat that twice]
 [question — say your answer, then pause 10 seconds]
-Which everyday English noun is the same word as hecho?
+In the story, which two verbs are the background?
 [question — say your answer, then pause 12 seconds]
-Why are these four irregular rather than some other four?
-[question — say your answer, then pause 10 seconds]
-Say we have seen it, using the participle of ver.
+Why is tuve un libro in the foreground when tenia un libro was not?
+[question — say your answer, then pause 12 seconds]
+Say I was studying when I spoke with Ana.
+[question — say your answer, then pause 14 seconds]
+Why did this take three chapters when neither tense was new?
 
 Wrap-up Recall.
 [pause 3 seconds]
-The four? (Hecho, dicho, visto, puesto.) Are they broken forms? (No — they are older than the rule, inherited whole from Latin.) Next: all of it together.
+Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)

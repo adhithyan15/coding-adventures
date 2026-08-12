@@ -1,80 +1,48 @@
-Spanish, chapter 57: Ir in the Plural --- a Verb That Is Not Ir.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 57: Cansado --- a State, Not a Quality.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-vamos — from a verb that is not ir.
+Lesson 1 of 1.
+cansado — tired — a state, not a quality, which is why it takes estar and never ser.
 
 Warm-up.
 [pause 2 seconds]
-Say "I go." (Voy.) And "we speak." (Hablamos.)
-
-Grammar Lens: -amos and -áis, on a stem you have not seen.
-vamos — we go., vais — you all go.
-The endings are ordinary. -amos and -áis are the plain -ar endings from hablamos and habláis.
-What is strange is the stem. The infinitive is ir, and there is no v in it anywhere — yet every one of these forms begins with one.
+Say "a big house." (Una casa grande.) That is what the house is.
+[pause 1 second]
+Now for something that is only true today.
 
 The word, taken apart.
-You met this shape two chapters ago and now you can use it as a tool.
-Ir is not one verb. Latin had īre, "to go", which gives the infinitive ir and little else. It also had vādere, "to advance, to make one's way", which gives voy, vas, va, vamos, vais and one more — the entire present tense.
-So the present of ir is not irregular. It is regular for a different verb, one whose infinitive Spanish stopped using. The endings behave perfectly; they are simply attached to a stem the dictionary form does not show you.
-That is the third time this pattern has explained something: ser from esse and sedēre, and now ir from īre and vādere. English does it too — go and went, where went is really the past of wend.
-The commonest verbs in a language are the likeliest to be made of more than one, because they are used so much that no single word's forms survive intact.
+cansado — tired.
+Cansado comes from cansar, to tire, and behind that is Latin campsāre: to turn aside off the road. The tiredness is what made you turn off.
+And your decoder cannot help you here. There is no English cousin to find — no cansate, no campsation. English took its word for this from an entirely different place.
+That is worth meeting on purpose. The rules you built are a lead, not a guarantee, and a word that gives nothing back is not a failure of the method. It is simply one of the words you learn the ordinary way.
+
+Grammar Lens: the state, not the quality.
+Estoy cansado. — not soy cansado.
+You learned two verbs for to be. Here is the first describing word that shows you why:
+[a table of 2 rows, read aloud]
+Estoy cansado., I am tired — today.
+Es grande., It is big — that is what it is.
+Ser is for what a thing is. Estar is for how it is right now. Being tired is a state you are passing through, so it takes estar, always.
+And unlike grande, this one does shift, because it ends in -o:
+Estoy cansado., Estoy cansada.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablamos, vamos" — the same ending, an unexpected stem]
+[your turn — say: Estoy cansado]
 [pause 8 seconds for the answer]
-[your turn — say: "voy, vas, va, vamos, vais" — all one verb, and it is not ir]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say we go.
-[question — say your answer, then pause 10 seconds]
-Why does the present of ir begin with v when the infinitive has none?
-[question — say your answer, then pause 10 seconds]
-Name the English pair that works the same way.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is "we go"? (Vamos.) Which Latin verb do these forms come from? (Vādere.) And what does that make ir? (Two verbs, like ser — and like English go and went.)
-
-
-Lesson 2 of 2.
-van — and the four are done.
-
-Warm-up.
-[pause 2 seconds]
-Say "we go." (Vamos.) And "they speak." (Hablan.)
-
-Grammar Lens: the last form.
-van — they go, and ustedes van, you all go.
-Latin's form was vadunt. Spanish wore it down to three letters, and the rule still holds visibly: a final -n, and the subject is plural and not you.
-
-What you've built.
-Four chapters ago you could conjugate any regular verb in the present, and none of the irregular ones. Now the four commonest verbs in Spanish are complete in every person:
-ser, estar, tener, ir — to be, to be, to have, to go.
-And each one taught something that outlives it:
-ser — two Latin verbs fused, so the seam shows at eres.
-estar — one verb, so it is regular; the accent only marks stress.
-tener — the stem breaks exactly where it is stressed, in every stem-changing verb, which is why nosotros and vosotros never break.
-ir — its present belongs to a different verb entirely.
-Three of those four are about the same underlying thing: a verb that looks chaotic is usually more than one word, and the places it looks regular are the places one word survived intact.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "somos, estamos, tenemos, vamos" — the four, in the we form]
-[pause 8 seconds for the answer]
-[your turn — say: "son, están, tienen, van" — the four, in the they form]
+[your turn — say: La casa es grande, pero estoy cansado]
 [pause 8 seconds for the answer]
 [repeat that twice]
-Until all four run without a gap.
-[question — say your answer, then pause 6 seconds]
-Say they go.
 [question — say your answer, then pause 10 seconds]
-They are (permanently), and they are (right now): which two forms?
-[question — say your answer, then pause 10 seconds]
-What usually explains a Spanish verb that looks chaotic?
+Say: I am tired.
+[question — say your answer, then pause 14 seconds]
+Why estoy and not soy?
+[question — say your answer, then pause 16 seconds]
+Your decoder finds no English cousin for cansado. What does that mean?
 
 Wrap-up Recall.
-[pause 3 seconds]
-What is "they go"? (Van.) Name the four verbs you have just completed. (Ser, estar, tener, ir.) And what do three of them have in common? (Each is more than one Latin verb, or its stem change follows the stress.)
+[pause 2 seconds]
+Which verb for tired? (Estar.) Why? (It is a state.)
+[pause 2 seconds]
+And does cansado shift for a woman? (Yes — cansada, because it ends in -o.)

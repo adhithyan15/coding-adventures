@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 167,
-  "title": "Para --- For, Pointing Forward",
+  "title": "Review --- All Four Stem Changes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0b4eead212181aee",
+  "sourceHash": "fnv1a64:d0c81aeb6ca10f59",
   "lessons": [
     {
-      "id": "ES-C51-para",
-      "sequence": 2151,
-      "title": "para — \"for,\" pointing forward",
-      "headword": "para",
-      "romanization": "para",
-      "gloss": "\"for\" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something",
+      "id": "ES-C39-repaso-cambios",
+      "sequence": 2113,
+      "title": "Review — the four stem changes, all of them",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the stem-change system, now complete, and the one pattern with a single member",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed348b4df72672c7",
+      "sourceHash": "fnv1a64:988e02acedc1e8d6",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it."
+              "text": "Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the arrow points away from you",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "para — for, when something is aimed at something else."
+              "text": "Something finished in the last two chapters and it is worth stopping for."
             },
             {
               "kind": "speech",
-              "text": "Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose)."
+              "text": "Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the change",
+                "the verb that taught it",
+                "what breaks"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.",
+                "the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.",
+                "the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.",
+                "the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole of this chapter. Not four uses — one direction."
+              "text": "This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the pattern with one member",
           "segments": [
             {
               "kind": "speech",
-              "text": "The direction is not a mnemonic somebody invented. It is inside the word."
+              "text": "The fourth row is strange, and worth knowing precisely."
             },
             {
               "kind": "speech",
-              "text": "Para was Latin per + ad, squeezed into one word. And ad means \"toward\" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something."
+              "text": "u becomes ue happens in exactly one verb in the entire language: jugar."
             },
             {
               "kind": "speech",
-              "text": "So para is, at the bottom, \"through-toward.\" A word that is literally made of an arrow."
-            },
-            {
-              "kind": "speech",
-              "text": "Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?"
+              "text": "Not \"mostly one.\" One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more."
             }
           ]
         },
@@ -99,69 +107,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time",
+              "instruction": "one verb from each of the four rows",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time]"
+              "source": "[YOU SAY: one verb from each of the four rows]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four changes themselves, as sounds — *e-ie, o-ue, e-i, u-ue*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until naming the pattern is faster than working it out."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-para-you",
-              "prompt": "Say it is for you.",
+              "id": "ES-C39-repaso-cambios-count",
+              "prompt": "How many stem-change patterns does Spanish have in total?",
               "assesses": [
-                "ES-LEX-PARA",
-                "ES-GRAMMAR-PARA-FORWARD",
-                "ES-LEX-TU"
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "es para ti",
-                "para ti"
+                "four",
+                "4",
+                "cuatro"
               ],
               "feedback": {
-                "correct": "Aimed at a person.",
-                "incorrect": "Es para ti."
+                "correct": "Four — and you now hold all of them.",
+                "incorrect": "Four: e-ie, o-ue, e-i, u-ue."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-para-when",
-              "prompt": "Say by tomorrow.",
+              "id": "ES-C39-repaso-cambios-only",
+              "prompt": "Which pattern belongs to exactly one verb, and which verb?",
               "assesses": [
-                "ES-GRAMMAR-PARA-FORWARD",
-                "ES-LEX-MANANA"
+                "ES-GRAMMAR-STEM-U-UE-09",
+                "ES-LEX-JUGAR-07"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "para manana",
-                "para mañana"
+                "u to ue, jugar",
+                "u-ue, jugar",
+                "jugar, u to ue",
+                "jugar"
               ],
               "feedback": {
-                "correct": "Aimed at a moment.",
-                "incorrect": "Para manana."
+                "correct": "Yes — jugar is the only u-ue verb in Spanish.",
+                "incorrect": "u to ue, and the verb is jugar. It is the only one."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-para-arrow",
-              "prompt": "Which Latin piece inside para means toward, and which English words carry it?",
+              "id": "ES-C39-repaso-cambios-ei",
+              "prompt": "Which change does conseguir make?",
               "assesses": [
-                "ES-ETYMON-PER-AD",
-                "ES-GRAMMAR-PARA-FORWARD"
+                "ES-GRAMMAR-STEM-E-I-06",
+                "ES-LEX-CONSEGUIR-04"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "ad, as in advance and admit",
-                "ad",
-                "ad — advance, admit, adhere"
+                "e to i",
+                "e-i",
+                "e becomes i",
+                "consigo"
               ],
               "feedback": {
-                "correct": "A word literally made of an arrow.",
-                "incorrect": "Ad — the same ad in advance, admit, adhere."
+                "correct": "Yes — conseguir becomes consigo.",
+                "incorrect": "e to i: conseguir, consigo."
               }
             }
           ]
@@ -179,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — \"toward.\") Next: the other half — and you have been saying it since your first chapter."
+              "text": "How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose."
             }
           ]
         }

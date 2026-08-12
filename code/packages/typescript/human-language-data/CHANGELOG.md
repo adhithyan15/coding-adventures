@@ -4,6 +4,26 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - the -oso friend ending (HL-C88, HL10 §6.7)
+
+- Add Spanish chapter 59: `-oso` is English `-ous`, from Latin `-osus`, "full of".
+- Build it on the adjective arc: position, agreement, and the `ser`/`estar` choice
+  all apply without being restated.
+- Name the limit: `hermoso` is beautiful, not "hermous" — the ending is reliable,
+  the root still has to be shared.
+- Correct the earlier verdict that `-oso` was blocked on vocabulary: a reading
+  rule does not need the corpus to teach words ending in it.
+
+### Added - the first describing words (HL-C88, HL10 §5.4b)
+
+- Add Spanish chapters 56-58: `grande`, `cansado`, and a synthesis on choosing
+  `ser` or `estar` with an adjective and making the ending agree.
+- Close a 129-chapter gap: the corpus's only adjectives were the colours, first
+  taught at chapter 130, so `ser` vs `estar` at chapter 48 had nothing to contrast.
+- Teach adjective-after-noun order, and that the last letter says whether a word
+  shifts: `-o` does, `-e` and `-ista`/`-ante` do not.
+- Teach `cansado` as a word the decoder cannot help with, on purpose.
+
 ### Added - professions, and the -ante and -ista endings (HL-C88, HL10 §6.7)
 
 - Add Spanish chapters 51-54: `profesor`, `estudiante`, the `-ista` family, and a

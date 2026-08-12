@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C50-repaso-mandatos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1461
-chapter: 126
+sequence: 1491
+chapter: 130
 type: practice-mix
 headword: (review)
 gloss: review — four boxes, one of which is free and three of which you already had

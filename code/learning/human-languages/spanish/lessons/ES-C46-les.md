@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C46-les
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1192
-chapter: 85
+sequence: 1222
+chapter: 89
 type: grammar
 headword: les
 gloss: "to them" — and the discovery that a whole second system costs exactly two new words

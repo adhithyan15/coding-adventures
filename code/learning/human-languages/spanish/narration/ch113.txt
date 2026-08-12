@@ -1,115 +1,42 @@
-Spanish, chapter 113: The Future --- Saying What Will Happen.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 113: Has, Ha, Hemos, Habeis, Han.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-hablaré — keep the infinitive, add the future.
-
-Warm-up.
-[pause 2 seconds]
-Voy a hablar español uses the near-future frame you already know. Spanish also has a one-word future: Hablaré español — “I will speak Spanish.” It can present a future prediction or intention without adding a new subject or object.
-
-Grammar Lens: three familiar persons.
-Keep the whole infinitive hablar, then add one ending:
-[a table of 3 rows, read aloud]
-person: yo. simple future: hablaré.
-person: tú. simple future: hablarás.
-person: él / ella / usted. simple future: hablará.
-Say hablaré, hablarás, hablará. Each form has final stress, marked by an accent. Plural persons wait.
-
-The weld, taken apart.
-Late Latin and early Romance used more than one way to speak about the future. One influential construction placed an infinitive beside present forms of Latin habēre, “to have.” Through repeated use and sound change, descendants of those pieces became the endings in forms such as hablaré.
-That history explains why the infinitive remains visible. It does not mean that a modern learner should attach the full modern verb haber, and it does not require the claim that every older future vanished at one moment.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “hablaré, hablarás, hablará”]
-[pause 8 seconds for the answer]
-[your turn — say: “Voy a hablar español. Hablaré español.”]
-[pause 8 seconds for the answer]
-[your turn — say: “infinitive plus historical habēre material”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I will speak Spanish' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which Latin verb meaning 'to have' contributed material to the Romance future endings?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned forms. (Hablaré, hablarás, hablará.) What stays visible? (The whole infinitive.) What older verb contributed to the endings? (Latin habēre.) Next: test the same endings on comer.
-
-
-Lesson 2 of 3.
-comeré — the same endings keep -er.
+Lesson 1 of 1.
+has, ha, hemos, habéis, han — the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short.
 
 Warm-up.
 [pause 2 seconds]
-You built hablaré without removing -ar. Keep comer just as intact: comeré — “I will eat.”
+Say "I have eaten." (He comido.) Now the other five people need their word.
 
-Grammar Lens: the singular -er row.
-[a table of 3 rows, read aloud]
-person: yo. simple future: comeré.
-person: tú. simple future: comerás.
-person: él / ella / usted. simple future: comerá.
-Say comeré, comerás, comerá. Compare hablaré / comeré: the infinitives differ, but the future endings do not. Plural persons wait.
-
-The ending, taken apart.
-The historical infinitive-plus-habēre construction helps explain the shared endings: the verb-family vowel remains inside hablar or comer, rather than selecting a different ending set.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “comeré, comerás, comerá”]
-[pause 8 seconds for the answer]
-[your turn — say: “Hablaré. Comeré.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Beberé café.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of comer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Use the learned -er future pattern to say 'I will drink coffee' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which endings do hablaré and comeré share across the learned singular row?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned forms. (Comeré, comerás, comerá.) Did the -er disappear? (No.) Which endings match hablar? (-é, -ás, -á.) Next: let vivir test the pattern once more.
-
-
-Lesson 3 of 3.
-viviré — one future row for three verb families.
-
-Warm-up.
-[pause 2 seconds]
-Hablaré kept -ar. Comeré kept -er. Predict the yo future of vivir before reading on. It is viviré.
-
-Grammar Lens: the singular -ir row.
-[a table of 3 rows, read aloud]
-person: yo. simple future: viviré.
-person: tú. simple future: vivirás.
-person: él / ella / usted. simple future: vivirá.
-Say viviré, vivirás, vivirá. Now the bounded pattern is complete: hablaré, comeré, viviré. The same three endings attach to all three whole infinitives. Plural persons wait.
-
-Grammar Lens: meaning with known words.
-Viviré en Madrid says “I will live in Madrid.” Every lexical piece was available before this lesson; only the future form is new.
+Grammar Lens: the whole of it.
+[a table of 6 rows, read aloud]
+I. haber: he. with a participle: he comido.
+you. haber: has. with a participle: has comido.
+he / she / usted. haber: ha. with a participle: ha comido.
+we. haber: hemos. with a participle: hemos comido.
+you all (Spain). haber: habéis. with a participle: habéis comido.
+they / ustedes. haber: han. with a participle: han comido.
+Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often.
+That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in.
+Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “viviré, vivirás, vivirá”]
+[your turn — say: "he, has, ha, hemos, habéis, han" until the list is one breath]
 [pause 8 seconds for the answer]
-[your turn — say: “hablaré, comeré, viviré”]
+[your turn — say: "he comido, has comido, ha comido…" through all six]
 [pause 8 seconds for the answer]
-[your turn — say: “Viviré en Madrid.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular future forms of vivir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I will live in Madrid' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Give the future yo forms of hablar, comer, and vivir, in that order.
+[repeat that twice]
+[question — say your answer, then pause 12 seconds]
+Give all six forms of haber, in order.
+[question — say your answer, then pause 8 seconds]
+Say they have eaten.
+[question — say your answer, then pause 12 seconds]
+Why is haber shorter than an ordinary verb?
+[question — say your answer, then pause 8 seconds]
+How many forms does comido take across all six rows?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three vivir forms. (Viviré, vivirás, vivirá.) Which verb families share the learned endings? (All three: -ar, -er, -ir.) Next: reuse the whole-infinitive frame for “would.”
+"They have eaten"? (Han comido.) "We have eaten"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule.

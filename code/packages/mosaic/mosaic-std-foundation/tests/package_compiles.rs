@@ -7,12 +7,21 @@ use mosaic_package_artifact_builder::{
 };
 use tempfile::{Builder, TempDir};
 
+const LEAF_COMPONENTS: &[&str] = &[
+    "DisplayText",
+    "HeadingText",
+    "BodyText",
+    "CaptionText",
+    "FoundationIcon",
+];
+
 const COMPONENTS: &[&str] = &[
     "DisplayText",
     "HeadingText",
     "BodyText",
     "CaptionText",
     "FoundationIcon",
+    "Surface",
 ];
 
 const NATIVE_BACKENDS: &[Backend] = &[
@@ -35,6 +44,50 @@ fn build_options(package_root: &Path, output_root: &Path, backend: Backend) -> B
         emit_project: false,
         theme: None,
     }
+}
+
+fn make_standalone_leaf_package() -> TempDir {
+    let package = TempDir::new().expect("temporary leaf package");
+    fs::create_dir(package.path().join("src")).expect("leaf src directory");
+    fs::create_dir(package.path().join("tokens")).expect("leaf token directory");
+    fs::copy(
+        package_root().join("tokens/foundation.json"),
+        package.path().join("tokens/foundation.json"),
+    )
+    .expect("copy foundation palette");
+    fs::write(
+        package.path().join("mosaic-package.toml"),
+        r#"[package]
+name = "mosaic-std-foundation-leaves"
+version = "0.1.0"
+description = "Standalone acceptance fixture for Foundation leaf components"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["DisplayText", "HeadingText", "BodyText", "CaptionText", "FoundationIcon"]
+
+[dependencies]
+
+[styles]
+token_palette = "tokens/foundation.json"
+
+[kernel]
+version = "1"
+"#,
+    )
+    .expect("leaf package manifest");
+
+    for component in LEAF_COMPONENTS {
+        for suffix in ["mil", "mll", "light.msl", "dark.msl"] {
+            let file = format!("{component}.{suffix}");
+            fs::copy(
+                package_root().join("src").join(&file),
+                package.path().join("src").join(file),
+            )
+            .expect("copy Foundation leaf source");
+        }
+    }
+    package
 }
 
 #[test]
@@ -104,7 +157,8 @@ fn manifest_exposes_the_foundation_contract_and_palette() {
 }
 
 #[test]
-fn every_export_is_native_complete_on_all_five_backends_and_both_themes() {
+fn standalone_leaf_exports_remain_native_complete_and_surface_is_explicit_on_all_backends() {
+    let leaf_package = make_standalone_leaf_package();
     for theme in ["light", "dark"] {
         for &backend in NATIVE_BACKENDS {
             let output = TempDir::new().expect("temporary output");
@@ -114,14 +168,23 @@ fn every_export_is_native_complete_on_all_five_backends_and_both_themes() {
             let report = analyze_package_degradations(&options, BuildProfile::NativeComplete)
                 .unwrap_or_else(|error| panic!("{backend:?}/{theme} analysis failed: {error}"));
             assert!(
-                report.native_complete && report.degradations.is_empty(),
-                "{backend:?}/{theme} degradations: {:?}",
-                report.degradations
+                !report.native_complete,
+                "standalone Surface is still explicit"
+            );
+            assert_eq!(report.degradations.len(), 1, "{backend:?}/{theme} report");
+            let degradation = &report.degradations[0];
+            assert_eq!(degradation.component, "Surface");
+            assert_eq!(
+                degradation.code,
+                "composition.child-slot-parameter-unimplemented"
             );
 
-            let result = build_package_with_profile(&options, BuildProfile::NativeComplete)
-                .unwrap_or_else(|error| panic!("{backend:?}/{theme} build failed: {error}"));
-            assert_eq!(result.components_built, COMPONENTS);
+            let leaf_output = TempDir::new().expect("temporary leaf output");
+            let mut leaf_options = build_options(leaf_package.path(), leaf_output.path(), backend);
+            leaf_options.theme = Some(theme.to_owned());
+            let result = build_package_with_profile(&leaf_options, BuildProfile::NativeComplete)
+                .unwrap_or_else(|error| panic!("{backend:?}/{theme} leaf build failed: {error}"));
+            assert_eq!(result.components_built, LEAF_COMPONENTS);
             assert!(
                 result.artifacts.iter().all(|path| path.exists()),
                 "{backend:?}/{theme} reported a missing artifact"
@@ -179,14 +242,16 @@ version = "1"
         consumer.path().join("src/Consumer.mll"),
         r#"layout Consumer {
   Column [ root ] {
-    pkg::mosaic-std-foundation::DisplayText ( content: "Welcome" )
-    pkg::mosaic-std-foundation::BodyText (
-      content: "Your native Mosaic app is ready."
-    )
-    pkg::mosaic-std-foundation::FoundationIcon (
-      glyph: "star",
-      accessible-label: "Featured"
-    )
+    pkg::mosaic-std-foundation::Surface {
+      pkg::mosaic-std-foundation::DisplayText ( content: "Welcome" )
+      pkg::mosaic-std-foundation::BodyText (
+        content: "Your native Mosaic app is ready."
+      )
+      pkg::mosaic-std-foundation::FoundationIcon (
+        glyph: "star",
+        accessible-label: "Featured"
+      )
+    }
   }
 }
 "#,
@@ -196,11 +261,7 @@ version = "1"
         consumer.path().join("src/Consumer.msl"),
         r#"style Consumer {
   part root {
-    background    : #ffffff ;
-    border-color : #d8dee8 ;
-    border-width : 1 ;
-    border-radius: 10 ;
-    padding      : 16 ;
+    padding : 24 ;
   }
 }
 "#,
@@ -242,6 +303,14 @@ fn consuming_package_inherits_components_and_token_defaults_on_every_native_back
             !emitted.contains("$foundation-"),
             "consumer {backend:?} leaked an unresolved foundation token"
         );
+        assert!(
+            !emitted.contains("$mosaic-child-slot"),
+            "consumer {backend:?} leaked the Surface child mount"
+        );
+        assert!(
+            emitted.contains("Welcome"),
+            "consumer {backend:?} lost Surface children"
+        );
     }
 
     let html_output = TempDir::new().expect("temporary HTML proof output");
@@ -266,5 +335,13 @@ fn consuming_package_inherits_components_and_token_defaults_on_every_native_back
     assert!(
         html.contains("32px"),
         "dependency type-scale token was not applied"
+    );
+    assert!(
+        html.contains("#d8dee8"),
+        "dependency Surface border token was not applied"
+    );
+    assert!(
+        html.contains("10px"),
+        "dependency Surface radius token was not applied"
     );
 }

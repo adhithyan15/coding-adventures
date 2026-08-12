@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C49-participio
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1345
-chapter: 107
+sequence: 1375
+chapter: 111
 type: grammar
 headword: hablado / comido / vivido
 gloss: the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite

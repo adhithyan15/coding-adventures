@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C31-veinte
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 1800
-chapter: 140
+sequence: 1830
+chapter: 144
 type: word
 headword: veinte
 gloss: twenty — the ceiling of the teens, and a word that was worn but never fused

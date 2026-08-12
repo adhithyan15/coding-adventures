@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Run a bounded Level 1 model/tool loop: discover the binding-authorized catalog,
+  execute each exact model call only through parent-owned D18D authority, require
+  correlated results, replay them to the model, and publish only final text. Cap
+  the loop at eight model turns and preserve text-only behavior only when catalog
+  discovery is explicitly unavailable.
 - Override `LlmClient::complete_with_tools` with the authenticated child-control
   transport and preserve structured calls/results plus provider audit metadata.
 - Exercise the real child with durable launch bindings and the daemon's production

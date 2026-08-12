@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C49-haber-completo
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1347
-chapter: 109
+sequence: 1377
+chapter: 113
 type: grammar
 headword: has · ha · hemos · habéis · han
 gloss: the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short

@@ -1,42 +1,43 @@
-Spanish, chapter 78: Synthesis --- Saying It Once.
+Spanish, chapter 78: Lo --- Saying It Without Naming It.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — saying it once.
+lo — "it".
 
 Warm-up.
 [pause 2 seconds]
-Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro.
+Say "my name is" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?
 
-The exchange.
-Here are the same two exchanges, twice. Read both versions aloud.
-Version one:
-— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida.
-Version two:
-— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago.
-Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them.
+Grammar Lens: a slot you have been using all along.
+Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name.
+Here is a second word for that same slot.
+lo — it, standing in for something masculine.
+Watch what it does:
+Tengo el libro. — I have the book. Lo tengo. — I have it.
+The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own.
+Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first.
 
-Grammar Lens: what the pronoun is actually for.
-These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise.
-A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book.
-So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that.
+The word, taken apart.
+Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause.
+Latin ille, "that one," changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:
+Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el.
+Standing alone in the verb's slot, it kept the vowel: illum becomes lo.
+So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: both versions of the book exchange, and hear the difference]
+[your turn — say: "Tengo el libro" then "Lo tengo" — hear the noun disappear]
 [pause 8 seconds for the answer]
-[your turn — say: "Sí, lo tengo" and "Sí, la hago" until no decision is needed]
+[your turn — say: "me llamo" then "lo tengo" — the same slot, twice]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say I have it, replacing el libro.
+[question — say your answer, then pause 8 seconds]
+Does the pronoun go before or after the conjugated verb?
 [question — say your answer, then pause 10 seconds]
-Answer yes to Tienes el libro, without repeating the noun.
-[question — say your answer, then pause 10 seconds]
-Answer yes to Haces la comida, without repeating the noun.
-[question — say your answer, then pause 10 seconds]
-Somebody says Te quiero. Say the answering half.
-[question — say your answer, then pause 12 seconds]
-Version one of the dialogue was grammatically correct. What was wrong with it?
+Which everyday Spanish word comes from the same Latin word as lo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there.
+What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all.

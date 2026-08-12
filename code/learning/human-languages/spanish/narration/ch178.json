@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 178,
-  "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
+  "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1a8608022a91f00e",
+  "sourceHash": "fnv1a64:e9f21dd7c8fffe89",
   "lessons": [
     {
-      "id": "ES-C53-que-no-se-cae",
-      "sequence": 2162,
-      "title": "el libro que compré — the word you cannot leave out",
-      "headword": "el libro que compré",
-      "romanization": "el libro que compré",
-      "gloss": "the que you can never leave out — English drops its \"that\" and Spanish never does, and this is the error that outlives every other",
+      "id": "ES-C52-como-se-dice",
+      "sequence": 2188,
+      "title": "¿cómo se dice? — the sentence that unlocks the rest",
+      "headword": "¿cómo se dice?",
+      "romanization": "¿cómo se dice?",
+      "gloss": "the single most useful sentence a learner owns — and it is this chapter's grammar, doing exactly what the chapter said",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19fe5858b4adc1b2",
+      "sourceHash": "fnv1a64:e39ffa97956f052d",
       "notice": null,
       "blocks": [
         {
@@ -35,66 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "Say this English sentence out loud: \"the book I bought.\" Notice that you did not say that. Now try to translate it."
+              "text": "You know cómo. You know the impersonal se. Put them in front of dice and you have the sentence that will teach you more Spanish than this book will."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: English drops it, Spanish never does",
+          "type": "input",
+          "title": "The two words",
           "segments": [
             {
               "kind": "speech",
-              "text": "el libro que compré — the book I bought. la casa que tengo — the house I have."
+              "text": "¿Cómo se dice? — How do you say it? / How is it said?"
             },
             {
               "kind": "speech",
-              "text": "English lets you delete the joint. The book that I bought and the book I bought are both fine, and in speech you almost always drop it."
+              "text": "Take it apart with what this chapter gave you. Se dice is the impersonal: it asks how a thing gets said, without asking who says it. Not how do you say it, though that is the natural English — Spanish is not pointing at the person you are talking to. It is asking about the language itself."
             },
             {
               "kind": "speech",
-              "text": "Spanish cannot. There is no version of these without que. Leaving it out does not sound casual or fast — it sounds like a sentence that broke."
+              "text": "Which is exactly right, because you are not asking for their personal opinion. You are asking what the word is."
             },
             {
               "kind": "speech",
-              "text": "This is worth a chapter of its own because of what it does to a learner. You will build the sentence in English first, silently, with the that already missing — and then translate the version you thought of. The gap is invisible precisely because your own language put it there."
+              "text": "¿Cómo se dice \"book\" en español? — How do you say \"book\" in Spanish? ¿Cómo se dice, por favor?"
             },
             {
               "kind": "speech",
-              "text": "So the habit to build is: whenever an English noun is followed straight by a new subject and verb, a que belongs in the Spanish."
-            },
-            {
-              "kind": "speech",
-              "text": "the book I bought becomes el libro que compré."
-            },
-            {
-              "kind": "speech",
-              "text": "the house we have becomes la casa que tenemos."
-            },
-            {
-              "kind": "speech",
-              "text": "the meal she makes becomes la comida que hace."
+              "text": "This is the most valuable sentence in the book, and it is worth saying why. Every other sentence you have learned lets you say something you already know. This one gets you the thing you do not know, from the person in front of you, mid-conversation. A learner with this sentence and some patience out-learns one with twice the vocabulary and no way to ask."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English can afford to drop it because its word order is rigid: the book I bought can only be read one way."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish word order is looser — subjects vanish under pro-drop, objects move in front of verbs. Where the pieces can sit in several places, a deletable joint would make sentences ambiguous. So it is never deleted. Not arbitrary strictness: the price of the freedom Spanish gives you elsewhere."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -107,11 +80,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"the book I bought\" then \"el libro que compré\" — hear the extra word",
+              "instruction": "\"¿Cómo se dice?\" until it is one word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"the book I bought\" then \"el libro que compré\" — hear the extra word]"
+              "source": "[YOU SAY: \"¿Cómo se dice?\" until it is one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cómo se dice en español, por favor?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cómo se dice en español, por favor?\"]"
             },
             {
               "kind": "repeat",
@@ -120,88 +102,72 @@
             },
             {
               "kind": "speech",
-              "text": "Until the missing English that stops being invisible."
+              "text": "This is the one to over-practise."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-no-se-cae-book",
-              "prompt": "Say the book I bought.",
+              "id": "ES-C52-como-se-dice-ask",
+              "prompt": "Ask how something is said.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "el libro que compre",
-                "el libro que compré"
-              ],
-              "feedback": {
-                "correct": "The que English left out.",
-                "incorrect": "El libro que compre — the que is not optional."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-que-no-se-cae-house",
-              "prompt": "Say the house I have.",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
-                "ES-LEX-CASA",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-LEX-COMO-SE-DICE",
+                "ES-LEX-COMO"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "la casa que tengo",
-                "la casa que yo tengo"
+                "como se dice",
+                "¿cómo se dice?",
+                "¿como se dice?"
               ],
               "feedback": {
-                "correct": "La casa que tengo.",
-                "incorrect": "La casa que tengo."
+                "correct": "The sentence that repairs every conversation.",
+                "incorrect": "¿Como se dice?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-no-se-cae-habit",
-              "prompt": "What English pattern always means a que is needed in Spanish?",
+              "id": "ES-C52-como-se-dice-full",
+              "prompt": "Ask how something is said in Spanish, politely.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+                "ES-LEX-COMO-SE-DICE",
+                "ES-LEX-ESPANOL",
+                "ES-LEX-POR-FAVOR"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "a noun followed straight by a new subject and verb",
-                "a noun then a subject and verb with no that"
+                "como se dice en espanol, por favor",
+                "¿cómo se dice en español, por favor?"
               ],
               "feedback": {
-                "correct": "That is the invisible gap, and now it is visible.",
-                "incorrect": "A noun followed directly by a new subject and verb: the book I bought."
+                "correct": "Ask this all day and the day will teach you.",
+                "incorrect": "¿Como se dice en espanol, por favor?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-no-se-cae-why",
-              "prompt": "Why can English afford to drop it when Spanish cannot?",
+              "id": "ES-C52-como-se-dice-why",
+              "prompt": "Why is it se dice rather than a form aimed at the person you are asking?",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "english word order is rigid, spanish is looser",
-                "spanish moves its pieces around, so it needs the joint"
+                "you are asking about the language, not about them",
+                "it is impersonal",
+                "nobody is being named"
               ],
               "feedback": {
-                "correct": "The price of the freedom Spanish gives you elsewhere.",
-                "incorrect": "English word order is rigid; Spanish moves subjects and objects around, so a deletable joint would be ambiguous."
+                "correct": "Not their opinion — what the word is.",
+                "incorrect": "Because you are asking how the thing gets said, not what they personally would say."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -213,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"The house I have\"? (La casa que tengo.) Can que ever be left out? (No — never.) And why not? (Because Spanish moves its pieces around, so the joint has to stay.)"
+              "text": "Ask how something is said. (¿Cómo se dice?) Which se is that? (The impersonal one — asking about the language, not the person.) Next: the three ses, side by side, for the first time."
             }
           ]
         }

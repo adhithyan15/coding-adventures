@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 147,
-  "title": "Escribir — Writing Is Scratching",
+  "title": "Synthesis --- Saying Something About Your Own Life",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:deee33935491bc7a",
+  "sourceHash": "fnv1a64:22b4005e116687be",
   "lessons": [
     {
-      "id": "ES-C34-escribir",
-      "sequence": 1880,
-      "title": "escribir — \"to write\", which once meant \"to scratch\"",
-      "headword": "escribir",
-      "romanization": "escribir",
-      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
+      "id": "ES-C40-sintesis-describir",
+      "sequence": 1875,
+      "title": "Synthesis — saying something about your own life",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — fourteen chapters of words, and the first time you are asked to say something with them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38cbca60d16fac61",
+      "sourceHash": "fnv1a64:69dfc3b6aece3cfe",
       "notice": null,
       "blocks": [
         {
@@ -35,93 +35,60 @@
             },
             {
               "kind": "speech",
-              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
+              "text": "Nothing new in this chapter. Say the words for dog and for black."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
+              "text": "Something has been accumulating quietly for fourteen chapters and has never once been put to work."
             },
             {
               "kind": "speech",
-              "text": "b-soft — between vowels the b is soft, lips barely touching."
+              "text": "You have six colours. Parents and brothers and sisters. A head and a hand. Water, wine and bread. The seasons, the months, the hours. Hot weather and cold. Numbers to twenty. A dog and a cat."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a vocabulary list any more. It is enough to describe the room you are sitting in, and this chapter is the first that asks you to."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: escribir",
+          "type": "grammar",
+          "title": "Grammar Lens: the word that made this possible",
           "segments": [
             {
               "kind": "speech",
-              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
+              "text": "Notice which article you need here, because it is not the one you have used most."
             },
             {
               "kind": "speech",
-              "text": "The English family is huge, and every member still works with a pen:"
+              "text": "el perro — the dog. A particular one. The one we were talking about. un perro — a dog. Any dog. One you are mentioning for the first time."
             },
             {
               "kind": "speech",
-              "text": "scribe, scribble, script, scripture."
-            },
-            {
-              "kind": "speech",
-              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
-            },
-            {
-              "kind": "speech",
-              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
-            },
-            {
-              "kind": "speech",
-              "text": "conscription — being written into an army."
-            },
-            {
-              "kind": "speech",
-              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
+              "text": "Describing your own life means introducing things your listener does not know about yet — and that is exactly the job un does. Almost every sentence below needs it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Escribir is a plain -ir verb, the family vivir opened:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "ending"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "person: yo. form: escribo. ending: -o.",
-                "person: tú. form: escribes. ending: -es.",
-                "person: él/ella/usted. form: escribe. ending: -e.",
-                "person: nosotros. form: escribimos. ending: -imos.",
-                "person: ellos/ustedes. form: escriben. ending: -en."
-              ]
+              "text": "— ¿Tienes un perro? — Sí, tengo un perro negro. ¿Y tú? — Tengo un gato blanco."
             },
             {
               "kind": "speech",
-              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
-            },
-            {
-              "kind": "speech",
-              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
+              "text": "Every word in those three lines is one you built yourself, across fourteen chapters that never asked you to combine them. Nothing here is new. What is new is that it is a conversation rather than a list."
             }
           ]
         },
@@ -139,38 +106,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
+              "source": "[YOU SAY: the exchange above, both parts]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
+              "instruction": "it again about a real animal you know, with a real colour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
+              "source": "[YOU SAY: it again about a real animal you know, with a real colour]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Pienso escribir\" — I mean to write",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Until you are describing rather than translating."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C40-sintesis-describir-have",
+              "prompt": "Say I have a black dog.",
+              "assesses": [
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tengo un perro negro",
+                "yo tengo un perro negro"
+              ],
+              "feedback": {
+                "correct": "Yes — and note it is un, not el.",
+                "incorrect": "Tengo un perro negro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C40-sintesis-describir-article",
+              "prompt": "You are mentioning your cat for the first time. Un gato or el gato?",
+              "assesses": [
+                "ES-GRAMMAR-DEFINITE-ARTICLES",
+                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "un gato",
+                "un",
+                "un gato blanco"
+              ],
+              "feedback": {
+                "correct": "Right — un introduces something new to the listener.",
+                "incorrect": "Un gato. El would mean your listener already knew about it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C40-sintesis-describir-weather",
+              "prompt": "Say it is cold.",
+              "assesses": [
+                "ES-LEX-WEATHER-03"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
+              "acceptedResponses": [
+                "hace frio",
+                "hace frío"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Hace frio."
+              }
             }
           ]
         },
@@ -187,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
+              "text": "Which article introduces something your listener does not yet know about? (Un.) And which points at something you have both already mentioned? (El.) Say one true sentence about an animal, with its colour."
             }
           ]
         }

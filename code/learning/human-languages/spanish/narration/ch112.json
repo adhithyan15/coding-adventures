@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 112,
-  "title": "Synthesis --- Two Shores, Two Answers",
+  "title": "He Hablado --- A Verb With No Meaning Left",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c01b1217b0b39e66",
+  "sourceHash": "fnv1a64:85a546b60a6f4e8a",
   "lessons": [
     {
-      "id": "ES-C49-sintesis-dos-orillas",
-      "sequence": 1350,
-      "title": "Synthesis — two shores, two answers",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — when to reach for this tense instead of the preterite, and why the honest answer is a map rather than a rule",
+      "id": "ES-C49-he-hablado",
+      "sequence": 1376,
+      "title": "he hablado — \"I have spoken\"",
+      "headword": "he hablado",
+      "romanization": "he hablado",
+      "gloss": "\"I have spoken\" — and haber, a verb that gave away its meaning and kept only a job",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bac675a04476bcfb",
+      "sourceHash": "fnv1a64:2842099426dcc76a",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "You can now say \"I spoke\" two ways: hablé and he hablado. The obvious question is which one to use, and it has an unusual answer."
+              "text": "You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: what the perfect is for",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Start with the part everybody agrees on. The perfect reaches into now:"
-            },
-            {
-              "kind": "speech",
-              "text": "He comido. — I have eaten. (so I am not hungry) Comí. — I ate. (a finished event, back there)."
-            },
-            {
-              "kind": "speech",
-              "text": "The preterite puts an event in the past and leaves it there. The perfect drags it forward and makes it matter now — the tense is telling your listener what to do with the information, not when it happened. English agrees: I have eaten and I ate are not interchangeable for you either."
+              "text": "silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: the emptied verb",
           "segments": [
             {
               "kind": "speech",
-              "text": "Now the part nobody agrees on, and it is worth having straight before you are corrected by two people who contradict each other."
+              "text": "he + participle — I have done something."
             },
             {
               "kind": "speech",
-              "text": "For something that happened today, Spain and most of Latin America choose differently:"
+              "text": "He hablado español. — I have spoken Spanish."
             },
             {
               "kind": "speech",
-              "text": "Hoy he hablado con Ana. — Spain. Hoy hablé con Ana. — most of Latin America."
+              "text": "Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody."
             },
             {
               "kind": "speech",
-              "text": "Same day, same conversation, both entirely correct. Spain uses the perfect for anything inside the current stretch of time; much of Latin America uses the preterite and saves the perfect for things whose relevance is still open."
-            },
-            {
-              "kind": "speech",
-              "text": "Third split in this book decided by geography rather than meaning, after vosotros and os. There is no version of Spanish that is the real one, and no choice here that will make you wrong."
-            },
-            {
-              "kind": "speech",
-              "text": "A default, if you want one: the Latin American pattern is understood everywhere and is what most learners meet first, so leaning on the preterite for finished events is a safe habit. In Spain you will hear the perfect constantly and pick it up in a week."
+              "text": "He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not \"I hold spoken.\" You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Haber comes from Latin habēre, \"to hold, to have\" — a completely ordinary verb with a completely ordinary meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower \"hold, grip\"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed."
+            },
+            {
+              "kind": "speech",
+              "text": "English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for \"hold\" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually."
+            },
+            {
+              "kind": "speech",
+              "text": "So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,108 +110,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He comido\" then \"Comí\" — one reaches into now, one does not",
+              "instruction": "\"He hablado español\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He comido\" then \"Comí\" — one reaches into now, one does not]"
+              "source": "[YOU SAY: \"He hablado español\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hoy he hablado con Ana\" then \"Hoy hablé con Ana\" — two shores",
+              "instruction": "\"I have eaten\" in English, and notice that nothing is being held",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hoy he hablado con Ana\" then \"Hoy hablé con Ana\" — two shores]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"I have eaten\" in English, and notice that nothing is being held]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-now",
-              "prompt": "Say I have eaten, meaning you are not hungry now.",
+              "id": "ES-C49-he-hablado-say",
+              "prompt": "Say I have spoken Spanish.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "he comido",
-                "yo he comido"
-              ],
-              "feedback": {
-                "correct": "The perfect drags it forward into now.",
-                "incorrect": "He comido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-split",
-              "prompt": "For something that happened today, which tense would a speaker in Madrid pick, and one in Mexico City?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "madrid the perfect, mexico the preterite",
-                "he hablado in spain, hable in latin america"
-              ],
-              "feedback": {
-                "correct": "Both correct; the difference is a map, not a rule.",
-                "incorrect": "Madrid: he hablado. Mexico City: hable."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-wrong",
-              "prompt": "Two speakers correct you in opposite directions. Which of them is right?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "both, for their own variety",
-                "both",
-                "neither is wrong"
-              ],
-              "feedback": {
-                "correct": "Third split in this book decided by geography, after vosotros and os.",
-                "incorrect": "Both. Neither variety is the real Spanish."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-build",
-              "prompt": "Say we have spoken Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-GRAMMAR-PERFECT-FIRST-PERSON",
                 "ES-LEX-HABLAR",
                 "ES-LEX-ESPANOL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hemos hablado espanol",
-                "hemos hablado español"
+                "he hablado espanol",
+                "he hablado español",
+                "yo he hablado espanol"
               ],
               "feedback": {
-                "correct": "Hemos hablado espanol.",
-                "incorrect": "Hemos hablado espanol."
+                "correct": "He carries the person; hablado carries the meaning.",
+                "incorrect": "He hablado espanol."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-he-hablado-mean",
+              "prompt": "What does haber mean in he hablado?",
+              "assesses": [
+                "ES-LEX-HABER",
+                "ES-ETYMON-HABERE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "nothing on its own",
+                "nothing",
+                "it has no meaning here, only a job"
+              ],
+              "feedback": {
+                "correct": "The meaning left; the machinery stayed.",
+                "incorrect": "Nothing. Its meaning went to tener and it kept only this job."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-he-hablado-english",
+              "prompt": "Which English verb was hollowed out the same way?",
+              "assesses": [
+                "ES-ETYMON-HABERE",
+                "ES-LEX-TENER"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "have",
+                "to have",
+                "have, as in i have eaten"
+              ],
+              "feedback": {
+                "correct": "Nobody holds anything in I have eaten.",
+                "incorrect": "Have — I have eaten holds nothing."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -216,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the perfect do that the preterite does not? (Reaches into now.) And for something that happened today? (Spain says he hablado; much of Latin America says hablé — and both are right.)"
+              "text": "\"I have spoken\"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it."
             }
           ]
         }

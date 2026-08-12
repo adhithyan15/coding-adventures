@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 175,
-  "title": "Review --- The Three Se's",
+  "title": "Synthesis --- The Gift and the Motive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:11d2e140f14a1e1a",
+  "sourceHash": "fnv1a64:78632b80002f0ccd",
   "lessons": [
     {
-      "id": "ES-C52-tres-ses",
-      "sequence": 2159,
-      "title": "Review — the three se's",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the three se's, two of which are one word and one of which is an impostor",
+      "id": "ES-C51-sintesis-regalo-motivo",
+      "sequence": 2185,
+      "title": "Synthesis — the gift and the motive",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a short exchange in which the two-letter difference changes what one person means to another",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:566383aa20779d14",
+      "sourceHash": "fnv1a64:200b86db5dce863d",
       "notice": null,
       "blocks": [
         {
@@ -35,76 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart."
+              "text": "Para ti or por ti — one of them is a present and one of them is a reason. Which is which?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "example",
-                "what the se is"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "reflexive. example: se llama. what the se is: himself.",
-                "impersonal. example: se habla español. what the se is: nobody named.",
-                "the impostor. example: se lo digo. what the se is: le, in disguise."
-              ]
+              "kind": "speech",
+              "text": "Read this twice, changing only one word."
             },
             {
               "kind": "speech",
-              "text": "And here is the fact that makes this a review rather than a fourth thing to learn:"
+              "text": "— Hago la comida para ti. — Gracias."
             },
             {
               "kind": "speech",
-              "text": "The first two are the same word. The third is not."
+              "text": "— Hago la comida por ti. — …gracias."
             },
             {
               "kind": "speech",
-              "text": "The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched."
+              "text": "The first is somebody cooking you dinner. The second is somebody telling you they are cooking because of you — which, depending on the day, is an act of love or a small complaint."
             },
             {
               "kind": "speech",
-              "text": "The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish does not have three ses. It has two, and a coincidence."
+              "text": "Two letters. Nothing else in the sentence moved."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: how to tell them apart in the wild",
+          "title": "Grammar Lens: a preposition carrying the feeling",
           "segments": [
             {
               "kind": "speech",
-              "text": "You will not have to work this out consciously for long, but while you do:"
+              "text": "This is the first place in the book where the smallest word in the sentence carries its emotional content."
             },
             {
               "kind": "speech",
-              "text": "Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them."
+              "text": "Nouns and verbs have been doing the meaning until now. Here the noun is the same, the verb is the same, the person is the same — and the sentence changes completely on a preposition. That is worth meeting deliberately, because English speakers arrive expecting the little words to be plumbing."
             },
             {
               "kind": "speech",
-              "text": "Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien."
+              "text": "They are not plumbing here. Por and para are the difference between I made this for you and I made this because of you, and no amount of context repairs the wrong one: your listener will simply hear the thing you did not mean."
             },
             {
               "kind": "speech",
-              "text": "Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta."
-            },
-            {
-              "kind": "speech",
-              "text": "The first test is nearly free, because that direct object pronoun is sitting right there in the open."
+              "text": "Which is also the reassuring part. If you pick the wrong one, you have not produced nonsense or bad grammar — you have said something true about a different situation. Somebody will look faintly puzzled, and you will notice, and that is how this stops being difficult."
             }
           ]
         },
@@ -122,11 +103,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives",
+              "instruction": "both versions of the dinner sentence, and hear the second one land differently",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives]"
+              "source": "[YOU SAY: both versions of the dinner sentence, and hear the second one land differently]"
             },
             {
               "kind": "repeat",
@@ -136,60 +117,80 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-two",
-              "prompt": "Of the three se's, which two are really one word?",
+              "id": "ES-C51-sintesis-regalo-motivo-gift",
+              "prompt": "Tell somebody you are making the meal as a gift to them.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "the reflexive and the impersonal",
-                "se llama and se habla",
-                "reflexive and impersonal"
+                "hago la comida para ti",
+                "la hago para ti"
               ],
               "feedback": {
-                "correct": "The impersonal grew out of the reflexive.",
-                "incorrect": "The reflexive and the impersonal. The se of se lo is a different word entirely."
+                "correct": "They receive it.",
+                "incorrect": "Hago la comida para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-test",
-              "prompt": "What single thing right after se tells you it is the impostor?",
+              "id": "ES-C51-sintesis-regalo-motivo-cause",
+              "prompt": "Now say it meaning they are the reason you are doing it at all.",
               "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-POR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo, la, los or las",
-                "a direct object pronoun",
-                "lo or la"
+                "hago la comida por ti",
+                "la hago por ti"
               ],
               "feedback": {
-                "correct": "Sitting right there in the open.",
-                "incorrect": "A lo, la, los or las immediately after it."
+                "correct": "Love or complaint, depending on the day.",
+                "incorrect": "Hago la comida por ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-which",
-              "prompt": "Which se is in como se dice?",
+              "id": "ES-C51-sintesis-regalo-motivo-thanks",
+              "prompt": "Thank somebody for the meal.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMO-SE-DICE"
+                "ES-LEX-GRACIAS",
+                "ES-LEX-POR",
+                "ES-LEX-COMIDA"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the impersonal",
-                "impersonal — nobody is named"
+                "gracias por la comida",
+                "gracias por la comida."
               ],
               "feedback": {
-                "correct": "Asking how it gets said, not who says it.",
-                "incorrect": "The impersonal. Nobody is named as the sayer."
+                "correct": "Por — the cause of your thanks.",
+                "incorrect": "Gracias por la comida."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-sintesis-regalo-motivo-wrong",
+              "prompt": "You pick the wrong one of the two. What have you produced?",
+              "assesses": [
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "a true sentence about a different situation",
+                "something correct that means something else",
+                "not nonsense, just the wrong meaning"
+              ],
+              "feedback": {
+                "correct": "Which is why this stops being difficult once you are talking to people.",
+                "incorrect": "Not bad grammar — a perfectly good sentence about something you did not mean."
               }
             }
           ]
@@ -207,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it."
+              "text": "Para ti — a gift or a reason? (A gift.) Por ti? (A reason.) And what happens if you choose wrong? (You say something true about a different situation — and somebody will look puzzled, which is how you learn it.)"
             }
           ]
         }

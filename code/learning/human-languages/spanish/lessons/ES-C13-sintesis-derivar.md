@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-sintesis-derivar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1148
-chapter: 65
+sequence: 1178
+chapter: 69
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — conjugate a verb this book has never shown you

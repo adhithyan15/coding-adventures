@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 138,
-  "title": "Telling Time",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:42bf17f5267831f2",
+  "title": "Water, Wine, and Bread",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:bc76d9871e69a01f",
   "lessons": [
     {
-      "id": "ES-C29-la-hora",
-      "sequence": 1730,
-      "title": "la hora — Spanish's barely-changed Latin hour",
-      "headword": "la hora",
-      "romanization": "la hora",
-      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
+      "id": "ES-C26-agua",
+      "sequence": 1710,
+      "title": "el agua — water, and an article that is not what it looks like",
+      "headword": "el agua",
+      "romanization": "el agua",
+      "gloss": "water — a word that barely changed from Latin, and takes el without ever stopping being feminine",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb9e67df762a7f2c",
+      "sourceHash": "fnv1a64:91e5f0ee08188812",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,56 @@
             },
             {
               "kind": "speech",
-              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
+              "text": "One of the least changed words in Spanish, carrying one of its most misunderstood rules. The \"masculine\" article on this feminine noun is not a mistake and not an exception to gender."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: hora",
+          "title": "The word, taken apart: agua",
           "segments": [
             {
               "kind": "speech",
-              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
+              "text": "agua (\"water\") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed."
             },
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word",
-                "what happened"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
-                "language: French. word: heure. what happened: inherited, but worn down further.",
-                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
-                "language: English. word: hour. what happened: inherited via French, silent h."
-              ]
+              "kind": "speech",
+              "text": "English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: Son las and telling time",
+          "title": "Grammar Lens: el agua's article and gender",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
+              "text": "Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, \"the cold water,\" keeps the feminine adjective ending, and the plural is las aguas, never los aguas."
             },
             {
               "kind": "speech",
-              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
+              "text": "The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick \"an apple\" over \"a apple.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "singular",
+                "plural"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "the water. singular: el agua. plural: las aguas.",
+                "the eagle. singular: el águila. plural: las águilas.",
+                "the axe. singular: el hacha. plural: las hachas."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
+              "text": "Only the article changes. The noun's gender never moves."
             }
           ]
         },
@@ -99,29 +102,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
+              "instruction": "\"el agua\" — water, feminine, but takes el",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
+              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes *el*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
+              "instruction": "the proof — \"el agua fría\" and \"las aguas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
+              "source": "[YOU SAY: the proof — \"el agua fría\" and \"las aguas\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
+              "instruction": "the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
+              "source": "[YOU SAY: the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down]"
             }
           ]
         },
@@ -138,7 +141,253 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
+              "text": "Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to \"eau.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-vino",
+      "sequence": 1720,
+      "title": "el vino — one word, three separate arrivals in English",
+      "headword": "el vino",
+      "romanization": "el vino",
+      "gloss": "wine — one Latin root that reached English by three separate roads, plus one English built at home",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f3bb708c7b51427",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: vino",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vino (\"wine\") from Latin vīnum — which held its shape well, as French's vin did too."
+            },
+            {
+              "kind": "speech",
+              "text": "English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English word",
+                "how it got there"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.",
+                "English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, \"sour wine\").",
+                "English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el agua, el vino\" — the two drinks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el agua, el vino\" — the two drinks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vino\" then English \"wine, vine, vinegar\" — one root, three roads",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vino\" then English \"wine, vine, vinegar\" — one root, three roads]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-pan",
+      "sequence": 1730,
+      "title": "el pan — bread, and the friend who shares it",
+      "headword": "el pan",
+      "romanization": "el pan",
+      "gloss": "bread — and the compañero who shares it with you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf2080155ffe8295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: pan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: bread and friendship",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
+            },
+            {
+              "kind": "speech",
+              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
+            },
+            {
+              "kind": "speech",
+              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
+            },
+            {
+              "kind": "speech",
+              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
+            },
+            {
+              "kind": "speech",
+              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el pan\" — bread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el pan\" — bread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"compañero\" — literally, one you share bread with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"panadería, panadero\" — bakery, baker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
             }
           ]
         }

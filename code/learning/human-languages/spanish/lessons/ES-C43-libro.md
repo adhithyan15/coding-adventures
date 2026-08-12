@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C43-libro
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1151
-chapter: 67
+sequence: 1181
+chapter: 71
 type: word
 headword: el libro
 gloss: book — named after the part of a tree people wrote on before paper
