@@ -2024,12 +2024,25 @@ serving and share coordinated failure and shutdown semantics. The shared HTTP
 surface also samples one fallible request clock and fails closed before handler
 execution instead of fabricating timestamp zero.
 
+## Current Chief Hue Discovery Worker Slice
+
+The optional Chief smart-home composition now owns the existing production Hue
+mDNS worker instead of requiring the standalone local-controller process:
+
+- `hue_mdns_interface` durably registers the canonical supervised schedule on
+  the same controller observed by Home Assistant and D18D model tools.
+- Identical restarts preserve the controller revision, while an interface
+  change replaces the exact schedule through the serialized controller boundary.
+- The actor thread starts only after both listeners bind, stops cooperatively,
+  and is joined before controller teardown. Clock or actor failure stops both
+  listeners instead of leaving partial service alive.
+
 The remaining central-composition backlog still takes priority over adding
 another isolated integration or Chief read model:
 
-1. Move supervised discovery/pairing workers that still require the standalone
-   local-controller composition into the Chief-owned controller process without
-   creating a second runtime owner.
+1. Move supervised pairing workers that still require standalone composition
+   into the Chief-owned controller process without creating a second runtime
+   owner.
 2. Move automation schedule workers into the same process and prove restart-safe
    tick recovery and HTTP/model-tool visibility under coordinated shutdown.
 

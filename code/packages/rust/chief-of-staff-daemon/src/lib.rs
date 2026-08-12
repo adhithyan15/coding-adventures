@@ -3,6 +3,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use actor::{ActorError, ActorSystem};
 use chief_of_staff_channel_endpoints::{
     MessageId, MessageMetadata, MessageMetadataError, MessageMetadataSource,
 };
@@ -44,15 +45,28 @@ use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_x3dh::generate_identity_keypair;
 use embeddable_http_server::HttpServerOptions;
+use hue_core::{
+    hue_discovery_worker_run_from_mdns_scan_report, HueError, HUE_INTEGRATION_ID,
+    HUE_MDNS_SERVICE_TYPE,
+};
 use process_shutdown::{ShutdownError, ShutdownListener};
 use smart_home_controller_runtime::{ControllerRestoreError, SmartHomeControllerRuntime};
 use smart_home_core::{
     AgentId as SmartHomeAgentId, CapabilityGrant, CapabilityGrantId, CapabilityGrantScope,
     CapabilityGrantStatus, PrivilegeTier, SmartHomeTool,
 };
+use smart_home_discovery::{
+    DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind, MdnsWorkerScanReport,
+    UdpMdnsWorkerScanExecutor, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+};
+use smart_home_discovery_service::{
+    install_discovery_service_actor, DiscoveryServiceActorState, DiscoveryServiceError,
+    DiscoveryServiceTick,
+};
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
+use smart_home_runtime::{MdnsDiscoveryRunAdapter, ScheduledDiscoveryWorker};
 use std::convert::Infallible;
 use std::env;
 use std::ffi::OsString;
@@ -61,9 +75,10 @@ use std::fs::{self, File, Metadata};
 use std::io::Read;
 use std::net::SocketAddr;
 use std::path::{Component, Path, PathBuf};
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::thread;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::thread::{self, JoinHandle};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use storage_core::{StorageBackend, StorageError};
 use transport_platform::{PlatformError, TransportPlatform};
 use web_core::{WebApp, WebServer};
@@ -74,6 +89,14 @@ const DEFAULT_CONFIG_SUFFIX: &str = ".chief-of-staff/config.toml";
 const HEARTBEAT_GRACE_INTERVALS: u64 = 3;
 const SMART_HOME_HTTP_PRINCIPAL_ID: &str = "agent:home-assistant-local-api";
 const SMART_HOME_HTTP_GRANT_ID: &str = "grant:agent:home-assistant-local-api:local-api-full-access";
+const HUE_MDNS_ACTOR_ID: &str = "chief-hue-mdns-discovery";
+const HUE_MDNS_TICK_SENDER_ID: &str = "chief-of-staff-daemon";
+const HUE_MDNS_WORKER_ID: &str = "hue-mdns";
+const HUE_MDNS_INTERVAL_MS: u64 = 30_000;
+const HUE_MDNS_RUN_TIMEOUT_MS: u64 = 2_000;
+const HUE_MDNS_RETRY_DELAY_MS: u64 = 5_000;
+const HUE_MDNS_TTL_MS: u64 = 120_000;
+const DISCOVERY_TICK_INTERVAL_MS: u64 = 500;
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -106,6 +129,18 @@ pub enum ChiefDaemonError {
     SmartHomeHttp(PlatformError),
     /// The Home Assistant-compatible listener thread panicked.
     SmartHomeHttpPanicked,
+    /// The configured Hue discovery service could not restore or persist state.
+    SmartHomeDiscovery(DiscoveryServiceError),
+    /// The Hue discovery actor could not be installed or driven.
+    SmartHomeDiscoveryActor(ActorError),
+    /// The production wall clock was unavailable to the Hue discovery worker.
+    SmartHomeDiscoveryClock,
+    /// The shared smart-home runtime lock was unavailable during discovery setup.
+    SmartHomeDiscoveryRuntimeUnavailable,
+    /// The operating system could not create the Hue discovery worker thread.
+    SmartHomeDiscoveryWorkerUnavailable,
+    /// The Hue discovery worker thread panicked.
+    SmartHomeDiscoveryWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -149,6 +184,18 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeHttp(_) => "chief daemon: smart-home HTTP listener failed",
             Self::SmartHomeHttpPanicked => "chief daemon: smart-home HTTP listener panicked",
+            Self::SmartHomeDiscovery(_) => "chief daemon: smart-home discovery failed",
+            Self::SmartHomeDiscoveryActor(_) => "chief daemon: smart-home discovery actor failed",
+            Self::SmartHomeDiscoveryClock => "chief daemon: smart-home discovery clock unavailable",
+            Self::SmartHomeDiscoveryRuntimeUnavailable => {
+                "chief daemon: smart-home discovery runtime unavailable"
+            }
+            Self::SmartHomeDiscoveryWorkerUnavailable => {
+                "chief daemon: smart-home discovery worker unavailable"
+            }
+            Self::SmartHomeDiscoveryWorkerPanicked => {
+                "chief daemon: smart-home discovery worker panicked"
+            }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
@@ -333,7 +380,12 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
             let controller = smart_home_controller
                 .clone()
                 .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
-            compose_smart_home_http_service(listener, controller, Arc::clone(&unix_clock))
+            compose_smart_home_http_service(
+                listener,
+                controller,
+                &state_dir,
+                Arc::clone(&unix_clock),
+            )
         })
         .transpose()?;
     let core = OrchestratorCore::with_process_supervisor(
@@ -523,18 +575,246 @@ const PRODUCTION_SMART_HOME_MODEL_TOOLS: &[&str] = &[
 struct SmartHomeHttpService {
     address: SocketAddr,
     app: Arc<WebApp>,
+    hue_discovery: Option<ChiefHueDiscoveryService>,
+}
+
+type ChiefHueDiscoveryState = DiscoveryServiceActorState<
+    FsStorageBackend,
+    FsStorageBackend,
+    UdpMdnsWorkerScanExecutor,
+    ChiefHueMdnsRunAdapter,
+>;
+
+struct ChiefHueDiscoveryService {
+    state: ChiefHueDiscoveryState,
+    clock: Arc<dyn UnixTimeClock>,
+}
+
+#[derive(Debug, Default)]
+struct ChiefHueMdnsRunAdapter;
+
+impl MdnsDiscoveryRunAdapter for ChiefHueMdnsRunAdapter {
+    type Error = HueError;
+
+    fn worker_run_from_mdns_scan_report(
+        &mut self,
+        report: &MdnsWorkerScanReport,
+    ) -> Result<smart_home_discovery::DiscoveryWorkerRun, Self::Error> {
+        hue_discovery_worker_run_from_mdns_scan_report(report)
+    }
 }
 
 fn compose_smart_home_http_service(
     config: &SmartHomeListenerConfig,
     controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<SmartHomeHttpService, ChiefDaemonError> {
-    let runtime = compose_smart_home_http_runtime(config, controller, clock)?;
+    let runtime = compose_smart_home_http_runtime(config, controller.clone(), Arc::clone(&clock))?;
+    let hue_discovery = config
+        .hue_mdns_interface()
+        .map(|interface| {
+            let now_ms = clock
+                .now_ms()
+                .ok_or(ChiefDaemonError::SmartHomeDiscoveryClock)?;
+            configure_hue_mdns_discovery(controller, state_dir, interface, now_ms).map(|state| {
+                ChiefHueDiscoveryService {
+                    state,
+                    clock: Arc::clone(&clock),
+                }
+            })
+        })
+        .transpose()?;
     Ok(SmartHomeHttpService {
         address: SocketAddr::new(config.bind(), config.port()),
         app: Arc::new(home_assistant_runtime_web_app(runtime)),
+        hue_discovery,
     })
+}
+
+fn configure_hue_mdns_discovery(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    interface: &str,
+    now_ms: u64,
+) -> Result<ChiefHueDiscoveryState, ChiefDaemonError> {
+    let mut service = DiscoveryServiceActorState::open(
+        controller,
+        FsStorageBackend::new(state_dir),
+        UdpMdnsWorkerScanExecutor,
+        ChiefHueMdnsRunAdapter,
+        HUE_MDNS_TTL_MS,
+        now_ms,
+    )
+    .map_err(ChiefDaemonError::SmartHomeDiscovery)?;
+    let worker_id = DiscoveryWorkerId::trusted(HUE_MDNS_WORKER_ID);
+    let desired = ScheduledDiscoveryWorker::new(
+        worker_id.clone(),
+        smart_home_core::IntegrationId::trusted(HUE_INTEGRATION_ID),
+        DiscoveryWorkerKind::MdnsScan,
+        HUE_MDNS_INTERVAL_MS,
+        HUE_MDNS_RUN_TIMEOUT_MS,
+        now_ms,
+    )
+    .with_source(DiscoverySource::Mdns)
+    .with_network_interface(interface)
+    .with_retry_backoff(HUE_MDNS_RETRY_DELAY_MS, HUE_MDNS_INTERVAL_MS, 2)
+    .with_metadata(
+        MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+        HUE_MDNS_SERVICE_TYPE,
+    );
+    let configuration_matches = {
+        let runtime = service.runtime_handle();
+        let runtime = runtime
+            .lock()
+            .map_err(|_| ChiefDaemonError::SmartHomeDiscoveryRuntimeUnavailable)?;
+        runtime
+            .discovery_worker_schedule(&worker_id)
+            .is_some_and(|existing| hue_worker_configuration_matches(existing, &desired))
+    };
+    if !configuration_matches {
+        service
+            .register_worker(desired, now_ms)
+            .map_err(ChiefDaemonError::SmartHomeDiscovery)?;
+    }
+    Ok(service)
+}
+
+fn hue_worker_configuration_matches(
+    existing: &ScheduledDiscoveryWorker,
+    desired: &ScheduledDiscoveryWorker,
+) -> bool {
+    existing.integration_id == desired.integration_id
+        && existing.kind == desired.kind
+        && existing.sources == desired.sources
+        && existing.network_interfaces == desired.network_interfaces
+        && existing.interval_ms == desired.interval_ms
+        && existing.run_timeout_ms == desired.run_timeout_ms
+        && existing.retry_delay_ms == desired.retry_delay_ms
+        && existing.max_retry_delay_ms == desired.max_retry_delay_ms
+        && existing.retry_backoff_multiplier == desired.retry_backoff_multiplier
+        && existing.metadata == desired.metadata
+}
+
+struct OwnedDiscoveryWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedDiscoveryWorker {
+    fn start<S, C, E, A>(
+        state: DiscoveryServiceActorState<S, C, E, A>,
+        clock: Arc<dyn UnixTimeClock>,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError>
+    where
+        S: StorageBackend + Send + 'static,
+        C: StorageBackend + Send + 'static,
+        E: smart_home_discovery::MdnsWorkerScanExecutor + Send + 'static,
+        A: MdnsDiscoveryRunAdapter + Send + 'static,
+    {
+        Self::start_with_interval(
+            state,
+            clock,
+            on_failure,
+            Duration::from_millis(DISCOVERY_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval<S, C, E, A>(
+        state: DiscoveryServiceActorState<S, C, E, A>,
+        clock: Arc<dyn UnixTimeClock>,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError>
+    where
+        S: StorageBackend + Send + 'static,
+        C: StorageBackend + Send + 'static,
+        E: smart_home_discovery::MdnsWorkerScanExecutor + Send + 'static,
+        A: MdnsDiscoveryRunAdapter + Send + 'static,
+    {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-hue-mdns-discovery".to_string())
+            .spawn(move || {
+                let mut system = ActorSystem::new();
+                if let Err(error) =
+                    install_discovery_service_actor(&mut system, HUE_MDNS_ACTOR_ID, state)
+                {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    let result = drive_discovery_tick(&mut system, clock.as_ref());
+                    if let Err(error) = result {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeDiscoveryWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeDiscoveryActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeDiscoveryWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeDiscoveryWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedDiscoveryWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_discovery_tick(
+    system: &mut ActorSystem,
+    clock: &dyn UnixTimeClock,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeDiscoveryClock)?;
+    let message = DiscoveryServiceTick::new(now_ms, now_ms)
+        .and_then(|tick| tick.into_message(HUE_MDNS_TICK_SENDER_ID))
+        .map_err(ChiefDaemonError::SmartHomeDiscovery)?;
+    system
+        .send(HUE_MDNS_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomeDiscoveryActor)?;
+    system
+        .process_next(HUE_MDNS_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomeDiscoveryActor)?;
+    Ok(())
 }
 
 fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
@@ -821,28 +1101,59 @@ where
         schedule,
     )
     .map_err(ChiefDaemonError::Runtime)?;
-    let mut smart_home_server = smart_home
-        .map(|(platform, service)| {
-            WebServer::bind(
+    let (mut smart_home_server, hue_discovery) = match smart_home {
+        Some((platform, service)) => {
+            let SmartHomeHttpService {
+                address,
+                app,
+                hue_discovery,
+            } = service;
+            let server = WebServer::bind(
                 platform,
-                BindAddress::Ip(service.address),
+                BindAddress::Ip(address),
                 HttpServerOptions::default(),
-                service.app,
+                app,
             )
-            .map_err(ChiefDaemonError::SmartHomeHttp)
-        })
-        .transpose()?;
+            .map_err(ChiefDaemonError::SmartHomeHttp)?;
+            (Some(server), hue_discovery)
+        }
+        None => (None, None),
+    };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
+    let mut discovery_worker = hue_discovery
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedDiscoveryWorker::start(service.state, service.clock, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
-    let listener = ShutdownListener::install(move |_| {
+    let listener = match ShutdownListener::install(move |_| {
         listener_daemon_stop.stop();
         if let Some(stop) = listener_smart_home_stop {
             stop.stop();
         }
-    })
-    .map_err(ChiefDaemonError::Shutdown)?;
+    }) {
+        Ok(listener) => listener,
+        Err(error) => {
+            daemon_stop.stop();
+            if let Some(stop) = smart_home_stop.as_ref() {
+                stop.stop();
+            }
+            if let Some(worker) = discovery_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            return Err(ChiefDaemonError::Shutdown(error));
+        }
+    };
     let smart_home_thread = smart_home_server.take().map(|mut server| {
         let address = server.local_addr();
         let daemon_stop = daemon_stop.clone();
@@ -860,6 +1171,10 @@ where
     if let Some(stop) = smart_home_stop {
         stop.stop();
     }
+    let discovery_result = discovery_worker
+        .as_mut()
+        .map(OwnedDiscoveryWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -877,6 +1192,7 @@ where
                 .map_err(ChiefDaemonError::ControlPlaneRecovery)
         });
     runtime_result.map_err(ChiefDaemonError::Runtime)?;
+    discovery_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -1463,6 +1779,106 @@ hardware_key_timeout = 60
     }
 
     #[test]
+    fn chief_hue_discovery_configuration_is_shared_durable_and_idempotent() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-discovery-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let config = smart_home_listener_config_with_hue("en0");
+        let clock: Arc<dyn UnixTimeClock> = Arc::new(TestUnixTimeClock::new(1_500));
+
+        let first = compose_smart_home_http_service(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            &state_dir,
+            Arc::clone(&clock),
+        )
+        .unwrap();
+        assert!(first.hue_discovery.is_some());
+        let first_revision = controller.revision().unwrap().unwrap();
+        {
+            let runtime = controller.runtime_handle();
+            let runtime = runtime.lock().unwrap();
+            let worker = runtime
+                .discovery_worker_schedule(&DiscoveryWorkerId::trusted(HUE_MDNS_WORKER_ID))
+                .unwrap();
+            assert_eq!(worker.network_interfaces, vec!["en0".to_string()]);
+            assert_eq!(worker.integration_id.as_str(), HUE_INTEGRATION_ID);
+        }
+
+        let second = compose_smart_home_http_service(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            &state_dir,
+            Arc::clone(&clock),
+        )
+        .unwrap();
+        assert_eq!(controller.revision().unwrap(), Some(first_revision.clone()));
+        drop(second);
+
+        let changed = smart_home_listener_config_with_hue("eth0");
+        let third = compose_smart_home_http_service(
+            changed.smart_home().unwrap(),
+            controller.clone(),
+            &state_dir,
+            clock,
+        )
+        .unwrap();
+        assert_ne!(controller.revision().unwrap(), Some(first_revision));
+        let runtime = controller.runtime_handle();
+        let runtime = runtime.lock().unwrap();
+        assert_eq!(
+            runtime
+                .discovery_worker_schedule(&DiscoveryWorkerId::trusted(HUE_MDNS_WORKER_ID))
+                .unwrap()
+                .network_interfaces,
+            vec!["eth0".to_string()]
+        );
+        drop(runtime);
+        drop(third);
+        drop(first);
+    }
+
+    #[test]
+    fn chief_hue_discovery_worker_stops_cooperatively_and_propagates_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let service =
+            configure_hue_mdns_discovery(controller.clone(), &state_dir, "en0", 1_500).unwrap();
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedDiscoveryWorker::start_with_interval(
+            service,
+            Arc::new(UnavailableUnixTimeClock),
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeDiscoveryClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+
+        let service = configure_hue_mdns_discovery(controller, &state_dir, "en0", 1_500).unwrap();
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(|| {});
+        let mut worker = OwnedDiscoveryWorker::start_with_interval(
+            service,
+            Arc::new(TestUnixTimeClock::new(1_500)),
+            on_failure,
+            Duration::from_secs(60),
+        )
+        .unwrap();
+        worker.stop_and_join().unwrap();
+    }
+
+    #[test]
     fn smart_home_http_grant_provisioning_fails_closed() {
         let controller =
             SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
@@ -1706,6 +2122,13 @@ hardware_key_timeout = 60
     fn smart_home_listener_config() -> ChiefConfig {
         parse_config(&format!(
             "{VALID_CONFIG}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Chief Smart Home\"\n"
+        ))
+        .unwrap()
+    }
+
+    fn smart_home_listener_config_with_hue(interface: &str) -> ChiefConfig {
+        parse_config(&format!(
+            "{VALID_CONFIG}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Chief Smart Home\"\nhue_mdns_interface = \"{interface}\"\n"
         ))
         .unwrap()
     }
