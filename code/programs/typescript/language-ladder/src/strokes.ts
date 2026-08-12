@@ -937,6 +937,74 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("氵"),
   },
+  // 宀 places its top dot first, then a separate down-left stroke on the left.
+  // After the second lift, the roof crosses left-to-right and hooks down-left
+  // without breaking. The Noto fit keeps that source order and joined hook.
+  [ductusKey("chinese", "宀")]: {
+    script: "chinese",
+    glyph: "宀",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the top dot down and right",
+            path: [
+              { x: 440, y: 805 },
+              { x: 455, y: 790 },
+              { x: 470, y: 770 },
+              { x: 485, y: 750 },
+              { x: 500, y: 730 },
+              { x: 515, y: 715 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the left-side stroke down and left",
+            path: [
+              { x: 150, y: 660 },
+              { x: 145, y: 625 },
+              { x: 138, y: 585 },
+              { x: 130, y: 545 },
+              { x: 122, y: 505 },
+              { x: 112, y: 475 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the horizontal roof from left to right",
+            path: [
+              { x: 150, y: 646 },
+              { x: 250, y: 646 },
+              { x: 360, y: 646 },
+              { x: 470, y: 646 },
+              { x: 580, y: 646 },
+              { x: 690, y: 646 },
+              { x: 790, y: 646 },
+              { x: 875, y: 646 },
+            ],
+          },
+          {
+            label: "hook down and left without lifting",
+            path: [
+              { x: 875, y: 646 },
+              { x: 880, y: 620 },
+              { x: 875, y: 585 },
+              { x: 865, y: 545 },
+              { x: 850, y: 505 },
+              { x: 833, y: 475 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("宀"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

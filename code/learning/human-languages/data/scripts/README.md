@@ -442,8 +442,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   separately falling down-right dots, then lifts again for a bottom stroke
   that turns slightly up-left before sweeping to the upper right. Its
   four-frame Noto Sans SC path preserves all three source runs and keeps the
-  bottom turn joined to its rise. The remaining **147** prose part orders
-  across six scripts (`arabic` 3, `chinese` 16,
+  bottom turn joined to its rise. Chinese **宀** then draws a down-right dot,
+  lifts for its left-side down-left stroke, and lifts again before crossing
+  the roof left-to-right and hooking down-left without breaking. Its four-frame
+  Noto Sans SC path keeps the source's joined horizontal hook visible. The
+  remaining **146** prose part orders across six scripts (`arabic` 3,
+  `chinese` 15,
   `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
