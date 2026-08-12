@@ -24,9 +24,11 @@ success or failure.
 
 The service encodes the same versioned username/password envelope consumed by
 `smart-home-reolink-snapshot-host`. The opaque reference is committed through
-`smart-home-pairing-transaction`. Startup resolves all pending journals before
-accepting work, and replacement cleanup remains bound to the captured Vault
-revision.
+`smart-home-pairing-transaction` against the shared
+`SmartHomeControllerRuntime` authority. Startup resolves all pending journals
+before accepting work, replacement cleanup remains bound to the captured Vault
+revision, and successful commits are immediately visible to every controller
+consumer without an actor-private runtime copy.
 
 Snapshot delivery remains read-only and never provisions credentials.
 
