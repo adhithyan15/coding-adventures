@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.60.0";
+pub const VERSION: &str = "0.61.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1373,7 +1373,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             let from_class = take_state_class_suffix(&mut cursor)?;
             if !from_is_edge_state && from_class.is_none() && cursor.consume_if("COLON").is_some() {
                 let label = take_state_text(&mut cursor);
-                upsert_state_node(&mut nodes, &mut node_indices, from, label);
+                append_state_description(&mut nodes, &mut node_indices, from, label);
                 cursor.skip_terminators();
                 continue;
             }
@@ -1536,6 +1536,26 @@ fn upsert_state_node(
         shape: Some(DiagramShape::RoundedRect),
         style: None,
     });
+}
+
+fn append_state_description(
+    nodes: &mut Vec<GraphNode>,
+    node_indices: &mut HashMap<String, usize>,
+    id: String,
+    description: String,
+) {
+    if let Some(&index) = node_indices.get(&id) {
+        let label = &mut nodes[index].label.text;
+        if label == &id {
+            label.clear();
+        }
+        if !label.is_empty() {
+            label.push('\n');
+        }
+        label.push_str(&description);
+    } else {
+        upsert_state_node(nodes, node_indices, id, description);
+    }
 }
 
 fn record_new_state_group_members(
@@ -4626,6 +4646,15 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_accumulates_repeated_description_lines() {
+        let diagram =
+            parse_state_diagram("stateDiagram-v2\nActive: First detail\nActive: Second detail\n")
+                .expect("repeated state descriptions");
+
+        assert_eq!(diagram.nodes[0].label.text, "First detail\nSecond detail");
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5396,7 +5425,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.60.0");
+        assert_eq!(crate::VERSION, "0.61.0");
     }
 
     #[test]
