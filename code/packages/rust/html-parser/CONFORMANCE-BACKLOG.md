@@ -318,6 +318,9 @@ Prioritized work items:
    elements now bypass an outer form pointer without replacing or clearing it,
    matching the current Standard while ordinary repeated forms remain ignored
    and foreign template-named elements do not activate the HTML-template path.
+   Form end tags now report when implied-end-tag generation leaves a non-form
+   node current before the form is removed from the stack, matching WPT
+   `tests6.dat` while preserving current-form and implied-descendant closures.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
