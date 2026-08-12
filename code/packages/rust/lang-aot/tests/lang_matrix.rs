@@ -2153,6 +2153,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a list containing only single-value elements is straight-line
+    // repetition with no zero-trip path or backedge. Its final static real
+    // assignment therefore remains available to the portable output path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; for i := 1, 2 do r := i + 4.25; print(r) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
     // comparisons over string literals and literal-backed scalar variables
     // through the shared E4 `str_eq` / `str_cmp` ops, then compares their
