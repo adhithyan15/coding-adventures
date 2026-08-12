@@ -37,8 +37,8 @@ use coding_adventures_vault_pm_domain::{
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
 use coding_adventures_vault_records::{
-    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, API_KEY_V1, CARD_V1,
-    DATABASE_CREDENTIAL_V1, LOGIN_V1, SECURE_NOTE_V1,
+    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed, API_KEY_V1, CARD_V1,
+    DATABASE_CREDENTIAL_V1, LOGIN_V1, SECURE_NOTE_V1, TOTP_SEED_V1,
 };
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
@@ -53,7 +53,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -202,6 +202,19 @@ pub trait CliHost {
     fn read_database_username(&self) -> Result<Zeroizing<String>, HostError>;
     /// Collect a database password with terminal echo disabled.
     fn read_database_password(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a TOTP display label.
+    fn read_totp_label(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect an optional TOTP issuer.
+    fn read_totp_issuer(&self) -> Result<Option<Zeroizing<String>>, HostError>;
+    /// Collect a TOTP seed as canonical unpadded Base32 with echo disabled.
+    fn read_totp_secret(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a TOTP HMAC algorithm.
+    fn read_totp_algorithm(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a TOTP output digit count.
+    fn read_totp_digits(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a TOTP period in seconds.
+    fn read_totp_period(&self) -> Result<Zeroizing<String>, HostError>;
 
     /// Require explicit interactive confirmation before revealing a secret.
     fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
@@ -408,6 +421,36 @@ impl CliHost for NativeCliHost {
         self.read_utf8_secret(SecretPrompt::DatabasePassword)
     }
 
+    fn read_totp_label(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::TotpLabel)
+            .map_err(map_native_cli_host)
+    }
+    fn read_totp_issuer(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+        let value = ControllingTerminal
+            .read_text(TextPrompt::TotpIssuer)
+            .map_err(map_native_cli_host)?;
+        Ok((!value.is_empty()).then_some(value))
+    }
+    fn read_totp_secret(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::TotpSecret)
+    }
+    fn read_totp_algorithm(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::TotpAlgorithm)
+            .map_err(map_native_cli_host)
+    }
+    fn read_totp_digits(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::TotpDigits)
+            .map_err(map_native_cli_host)
+    }
+    fn read_totp_period(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::TotpPeriod)
+            .map_err(map_native_cli_host)
+    }
+
     fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
         ControllingTerminal
             .confirm_secret_reveal()
@@ -539,6 +582,7 @@ enum Command {
     ItemAddCard,
     ItemAddApiKey,
     ItemAddDatabaseCredential,
+    ItemAddTotp,
     ItemEdit {
         item_id: ItemId,
     },
@@ -720,6 +764,7 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
         [action, kind] if action == "add" && kind == "database-credential" => {
             Ok(Command::ItemAddDatabaseCredential)
         }
+        [action, kind] if action == "add" && kind == "totp" => Ok(Command::ItemAddTotp),
         [action, item] if action == "edit" => Ok(Command::ItemEdit {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
@@ -746,6 +791,7 @@ fn parse_secret_field(value: &str) -> Result<SecretFieldV1, CliFailure> {
         "card-cvv" => Ok(SecretFieldV1::CardCvv),
         "api-key-token" => Ok(SecretFieldV1::ApiKeyToken),
         "database-password" => Ok(SecretFieldV1::DatabasePassword),
+        "totp-secret" => Ok(SecretFieldV1::TotpSecret),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -831,6 +877,7 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ItemAddDatabaseCredential => {
             item_add_database_credential(host, prepared.paths(), &writer, selected_vault)
         }
+        Command::ItemAddTotp => item_add_totp(host, prepared.paths(), &writer, selected_vault),
         Command::ItemEdit { item_id } => {
             item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
         }
@@ -1705,6 +1752,123 @@ fn parse_database_port(value: &str) -> Result<u16, CliFailure> {
         .ok_or(CliFailure::InvalidCommand)
 }
 
+fn item_add_totp(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let context = prepare_item_create(host, paths, writer, selected_vault)?;
+    let input = (|| {
+        Ok::<_, HostError>((
+            host.read_totp_label()?,
+            host.read_totp_issuer()?,
+            host.read_totp_secret()?,
+            host.read_totp_algorithm()?,
+            host.read_totp_digits()?,
+            host.read_totp_period()?,
+        ))
+    })();
+    let (label, issuer, secret, algorithm, digits, period) = match input {
+        Ok(input) => input,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    let secret = match decode_totp_base32(&secret) {
+        Ok(secret) => secret,
+        Err(error) => return context.fail(error),
+    };
+    if !matches!(algorithm.as_str(), "SHA1" | "SHA256" | "SHA512") {
+        return context.fail(CliFailure::InvalidCommand);
+    }
+    let digits = match digits.as_str() {
+        "6" => 6,
+        "8" => 8,
+        _ => return context.fail(CliFailure::InvalidCommand),
+    };
+    let period = match parse_totp_period(&period) {
+        Ok(period) => period,
+        Err(error) => return context.fail(error),
+    };
+    let document = context.document(
+        TOTP_SEED_V1,
+        AnyRecord::TotpSeed(TotpSeed {
+            label: label.into_inner(),
+            issuer: issuer.map(Zeroizing::into_inner),
+            secret: secret.into_inner(),
+            algorithm: algorithm.into_inner(),
+            digits,
+            period,
+        }),
+    );
+    let document = match document {
+        Ok(document) => document,
+        Err(error) => return context.fail(error),
+    };
+    context.complete(document)
+}
+
+fn decode_totp_base32(value: &str) -> Result<Zeroizing<Vec<u8>>, CliFailure> {
+    if value.is_empty() || value.len() > 256 {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let mut output = Zeroizing::new(Vec::with_capacity(value.len() * 5 / 8));
+    let mut buffer = 0_u16;
+    let mut bits = 0_u8;
+    for byte in value.bytes() {
+        let digit = match byte {
+            b'A'..=b'Z' => byte - b'A',
+            b'2'..=b'7' => byte - b'2' + 26,
+            _ => return Err(CliFailure::InvalidCommand),
+        };
+        buffer = (buffer << 5) | u16::from(digit);
+        bits += 5;
+        if bits >= 8 {
+            bits -= 8;
+            output.push((buffer >> bits) as u8);
+            buffer &= (1_u16 << bits) - 1;
+        }
+    }
+    if output.is_empty()
+        || (bits != 0 && buffer != 0)
+        || encode_totp_base32(&output).as_str() != value
+    {
+        return Err(CliFailure::InvalidCommand);
+    }
+    Ok(output)
+}
+
+fn encode_totp_base32(value: &[u8]) -> Zeroizing<String> {
+    const ALPHABET: &[u8; 32] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let mut output = Zeroizing::new(String::with_capacity((value.len() * 8).div_ceil(5)));
+    let mut buffer = 0_u16;
+    let mut bits = 0_u8;
+    for byte in value {
+        buffer = (buffer << 8) | u16::from(*byte);
+        bits += 8;
+        while bits >= 5 {
+            bits -= 5;
+            output.push(ALPHABET[((buffer >> bits) & 0x1f) as usize] as char);
+            buffer &= (1_u16 << bits) - 1;
+        }
+    }
+    if bits != 0 {
+        output.push(ALPHABET[((buffer << (5 - bits)) & 0x1f) as usize] as char);
+    }
+    output
+}
+
+fn parse_totp_period(value: &str) -> Result<u32, CliFailure> {
+    if value.starts_with('0') || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let period = value
+        .parse::<u32>()
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    (period != 0 && period <= 3_600 && period.to_string() == value)
+        .then_some(period)
+        .ok_or(CliFailure::InvalidCommand)
+}
+
 fn validate_ascii_digits(value: &str, min: usize, max: usize) -> Result<(), CliFailure> {
     if (min..=max).contains(&value.len()) && value.bytes().all(|byte| byte.is_ascii_digit()) {
         Ok(())
@@ -1932,11 +2096,18 @@ fn item_reveal(
         return Err(map_host(error));
     }
     let secret = disclosed.map_err(map_application)?;
-    if secret.encoding() != RevealedSecretEncodingV1::Utf8 {
-        return Err(CliFailure::Unsupported);
+    match (field, secret.encoding()) {
+        (_, RevealedSecretEncodingV1::Utf8) => {
+            let value =
+                core::str::from_utf8(secret.as_bytes()).map_err(|_| CliFailure::Integrity)?;
+            host.write_revealed_text(value).map_err(map_host)?;
+        }
+        (SecretFieldV1::TotpSecret, RevealedSecretEncodingV1::Bytes) => {
+            let value = encode_totp_base32(secret.as_bytes());
+            host.write_revealed_text(&value).map_err(map_host)?;
+        }
+        (_, RevealedSecretEncodingV1::Bytes) => return Err(CliFailure::Unsupported),
     }
-    let value = core::str::from_utf8(secret.as_bytes()).map_err(|_| CliFailure::Integrity)?;
-    host.write_revealed_text(value).map_err(map_host)?;
     drop(secret);
     Ok(CliOutput::success(""))
 }
@@ -2233,6 +2404,27 @@ fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
             } else {
                 "absent\n"
             });
+        }
+        RedactedRecordView::TotpSeed {
+            label,
+            issuer,
+            algorithm,
+            digits,
+            period,
+            ..
+        } => {
+            output.push_str("Label: ");
+            output.push_str(&quoted(label));
+            output.push_str("\nIssuer: ");
+            match issuer {
+                Some(issuer) => output.push_str(&quoted(issuer)),
+                None => output.push_str("none"),
+            }
+            output.push_str("\nAlgorithm: ");
+            output.push_str(algorithm);
+            output.push_str(&format!(
+                "\nDigits: {digits}\nPeriod: {period}\nSecret: <redacted>\n"
+            ));
         }
         RedactedRecordView::ApiKey {
             label,
@@ -3370,6 +3562,28 @@ mod tests {
             let value = self.secret()?;
             let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
             Ok(Zeroizing::new(text.to_owned()))
+        }
+
+        fn read_totp_label(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_totp_issuer(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+            self.text()
+                .map(|value| (!value.is_empty()).then_some(value))
+        }
+        fn read_totp_secret(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
+        }
+        fn read_totp_algorithm(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_totp_digits(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_totp_period(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
         }
 
         fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
@@ -5565,6 +5779,178 @@ mod tests {
             "analytics",
             "reporter",
             core::str::from_utf8(&password).unwrap(),
+        ] {
+            assert!(!audit.stdout().contains(value));
+        }
+    }
+
+    #[test]
+    fn totp_create_failures_and_success_are_audited_without_seed_rendering() {
+        assert_eq!(
+            parse(["item", "add", "totp"]),
+            default_invocation(Command::ItemAddTotp)
+        );
+        assert_eq!(
+            parse(["--vault", "work", "item", "add", "totp"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ItemAddTotp,
+            })
+        );
+        assert_eq!(
+            parse(["item", "add", "totp", "SECRET"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        for (encoded, decoded) in [
+            ("MY", &b"f"[..]),
+            ("MZXQ", &b"fo"[..]),
+            ("MZXW6", &b"foo"[..]),
+            ("MZXW6YQ", &b"foob"[..]),
+            ("MZXW6YTB", &b"fooba"[..]),
+            ("MZXW6YTBOI", &b"foobar"[..]),
+        ] {
+            let value = decode_totp_base32(encoded).unwrap();
+            assert_eq!(value.as_slice(), decoded);
+            assert_eq!(encode_totp_base32(&value).as_str(), encoded);
+        }
+        for invalid in ["", "A", "AAA", "AB", "my", "MY=", "M1"] {
+            assert!(matches!(
+                decode_totp_base32(invalid),
+                Err(CliFailure::InvalidCommand)
+            ));
+        }
+        assert!(matches!(
+            decode_totp_base32(&"A".repeat(257)),
+            Err(CliFailure::InvalidCommand)
+        ));
+        assert_eq!(parse_totp_period("30"), Ok(30));
+        for invalid in ["", "0", "030", "+30", "3601"] {
+            assert_eq!(parse_totp_period(invalid), Err(CliFailure::InvalidCommand));
+        }
+
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"totp create passphrase".to_vec();
+        let seed = b"GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let unavailable_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 11);
+        assert_eq!(
+            run(["item", "add", "totp"], &unavailable_host).exit_code(),
+            ExitCode::Provider
+        );
+
+        let texts = || {
+            [
+                "GitHub ada@example.com".to_owned(),
+                "GitHub".to_owned(),
+                "SHA1".to_owned(),
+                "6".to_owned(),
+                "30".to_owned(),
+            ]
+        };
+        let invalid_utf8_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), vec![0xff]],
+            texts(),
+            19,
+        );
+        assert_eq!(
+            run(["item", "add", "totp"], &invalid_utf8_host).exit_code(),
+            ExitCode::InvalidInput
+        );
+
+        let invalid_attempt =
+            |seed_value, secret_value: &[u8], algorithm: &str, digits: &str, period: &str| {
+                let mut values = texts();
+                values[2] = algorithm.to_owned();
+                values[3] = digits.to_owned();
+                values[4] = period.to_owned();
+                let host = TestHost::with_texts_and_entropy_seed(
+                    paths.clone(),
+                    [passphrase.clone(), secret_value.to_vec()],
+                    values,
+                    seed_value,
+                );
+                let output = run(["item", "add", "totp"], &host);
+                assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{output:?}");
+                assert!(output.stdout().is_empty());
+            };
+        invalid_attempt(23, b"my", "SHA1", "6", "30");
+        invalid_attempt(29, &seed, "sha1", "6", "30");
+        invalid_attempt(31, &seed, "SHA1", "7", "30");
+        invalid_attempt(37, &seed, "SHA1", "6", "030");
+
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), seed.clone()],
+            texts(),
+            43,
+        );
+        let added = run(["item", "add", "totp"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap();
+
+        let listed = run(
+            ["item", "list"],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(
+            listed.stdout(),
+            format!("{item}\t{TOTP_SEED_V1}\t\"GitHub ada@example.com\"\n")
+        );
+
+        let shown = run(
+            ["item", "show", item],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(
+            shown.stdout(),
+            format!(
+                "Item: {item}\nType: {TOTP_SEED_V1}\nLabel: \"GitHub ada@example.com\"\nIssuer: \"GitHub\"\nAlgorithm: SHA1\nDigits: 6\nPeriod: 30\nSecret: <redacted>\nFavorite: no\nUpdated: 1700000000000\n"
+            )
+        );
+        assert!(!shown
+            .stdout()
+            .contains(core::str::from_utf8(&seed).unwrap()));
+
+        let reveal_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            47,
+        );
+        let revealed = run(["item", "reveal", item, "totp-secret"], &reveal_host);
+        assert_eq!(revealed.exit_code(), ExitCode::Success, "{revealed:?}");
+        assert!(revealed.stdout().is_empty());
+        assert!(reveal_host.revealed_equals(&seed));
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 59),
+        );
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_create\toutcome=failed"))
+                .count(),
+            6,
+            "{audit:?}"
+        );
+        for value in [
+            "GitHub ada@example.com",
+            "GitHub",
+            "SHA1",
+            core::str::from_utf8(&seed).unwrap(),
+            "12345678901234567890",
         ] {
             assert!(!audit.stdout().contains(value));
         }

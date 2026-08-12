@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audited `item add totp` with canonical hidden Base32 seed input, closed
+  algorithm/digits/period validation, metadata-only rendering, durable failure
+  events, and separately authorized publish-before-Base32 reveal.
 - Added audited `item add database-credential` with canonical static engine and
   port validation, hidden password input, metadata-only rendering, durable
   failure events, and separate VLT-PM25 password reveal reuse.

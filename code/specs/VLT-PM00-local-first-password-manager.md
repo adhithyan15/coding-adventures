@@ -1545,8 +1545,11 @@ changelog, focused build, and downstream validation.
              engine/port validation, hidden password input, metadata-only
              rendering, separate reveal, and plaintext exclusion, using
              `VLT-PM28-cli-database-credential-create.md`.
-9b-3a-2b-4. remaining TOTP creation plus richer login notes and multiple-URL
-             editing.
+9b-3a-2b-4. completed audited TOTP creation with canonical hidden Base32 seed
+             input, closed algorithm/digit/period validation, metadata-only
+             rendering, separately authorized audited Base32 reveal, and
+             plaintext exclusion, using `VLT-PM29-cli-totp-create.md`.
+9b-3a-2b-5. remaining richer login notes and multiple-URL editing.
 9b-3b-1. reversible authenticated item deletion and exact historical restore
          using `VLT-PM14-cli-delete-restore.md`.
 9b-3b-2a. completed authenticated redacted current-conflict inspection and

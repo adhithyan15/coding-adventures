@@ -25,6 +25,7 @@ vault-pm [--vault NAME] item add secure-note
 vault-pm [--vault NAME] item add card
 vault-pm [--vault NAME] item add api-key
 vault-pm [--vault NAME] item add database-credential
+vault-pm [--vault NAME] item add totp
 vault-pm [--vault NAME] item edit ITEM
 vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
@@ -74,6 +75,12 @@ profile tree for the collision-resistant full token bytes.
 A database-credential drill repeats those gates for canonical static
 connection metadata and a hidden password, including restart-backed redaction,
 separate audited password reveal, and full-password plaintext-tree exclusion.
+
+A TOTP drill accepts the seed only through a hidden canonical Base32 prompt,
+restarts into algorithm/digits/period metadata with explicit secret redaction,
+reveals canonical Base32 only after a separate audited confirmation, verifies
+the closed audit-row grammar, and excludes both encoded and raw seed bytes from
+the profile tree.
 
 ## Verification
 
