@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 171,
-  "title": "Hay Que --- Somebody Has To, and Nobody in Particular",
+  "title": "Lo Que --- What, Out of Two Old Words",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4cceacf1a538bed9",
+  "sourceHash": "fnv1a64:4c9e824ec86fc78d",
   "lessons": [
     {
-      "id": "ES-C54-hay-que",
-      "sequence": 2098,
-      "title": "hay que — somebody has to, and nobody in particular",
-      "headword": "hay que",
-      "romanization": "hay que",
-      "gloss": "\"one must\" — obligation with nobody obliged, and the second of Spanish's two ways to leave a person out",
+      "id": "ES-C53-lo-que",
+      "sequence": 2113,
+      "title": "lo que — \"what,\" out of two old words",
+      "headword": "lo que",
+      "romanization": "lo que",
+      "gloss": "\"what\" — two words you already own, put together to name a thing you cannot name",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8c137b94471b09b",
+      "sourceHash": "fnv1a64:a7a0d764aa47863b",
       "notice": null,
       "blocks": [
         {
@@ -35,52 +35,42 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español left the person out. So did every sign you read. Here is the other way Spanish does that — and this one is about obligation."
+              "text": "You have lo. You have que. This chapter puts them next to each other and adds nothing."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: an obligation with nobody in it",
+          "title": "Grammar Lens: a noun-shaped hole",
           "segments": [
             {
               "kind": "speech",
-              "text": "hay que + a plain infinitive — one must, you have to, it is necessary to."
+              "text": "lo que — what, in the sense of the thing that."
             },
             {
               "kind": "speech",
-              "text": "Hay que hablar español. — You have to speak Spanish. Hay que comer. — One must eat."
+              "text": "Lo que digo — what I say. (= the thing that I say) Lo que compro — what I buy."
             },
             {
               "kind": "speech",
-              "text": "Three words you already own, and no new grammar: hay, que, and a verb in its dictionary form."
+              "text": "Every relative clause so far has hung off a noun: el libro que compro. But sometimes there is no noun, because you do not know or do not care what the thing is. Lo stands in for it — a placeholder with no gender and nothing behind it — and que does its usual job of joining."
             },
             {
               "kind": "speech",
-              "text": "What it produces is an obligation with nobody obliged. Hay que hablar español does not say who has to — not you, not me, not them. It says the requirement exists, the way a sign says a thing is forbidden without saying who forbids it."
+              "text": "So lo que is a noun-shaped hole with a sentence attached. That is why it translates as English what, which is doing exactly the same thing: what I say is the thing that I say with the word thing taken out."
             },
             {
               "kind": "speech",
-              "text": "That is the same move as the impersonal se, and now you have both:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "Spanish",
-                "leaves out"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "something happens. Spanish: se habla español. leaves out: who does it.",
-                "something must happen. Spanish: hay que hablar español. leaves out: who must."
-              ]
+              "text": "Now compare it to the lo you already know:"
             },
             {
               "kind": "speech",
-              "text": "Two constructions, one habit: Spanish is comfortable saying that something is the case without saying who is behind it. English needs a vague you or they or a passive to manage the same thing, and always sounds slightly like it is avoiding the question."
+              "text": "Lo digo. — I say it. (a specific thing, already named) Lo que digo — what I say. (no specific thing at all)."
+            },
+            {
+              "kind": "speech",
+              "text": "Same word. In the first it points at something known; in the second it points at a gap the following clause will fill."
             }
           ]
         },
@@ -98,70 +88,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hay que hablar español\" then \"Se habla español\" — both with nobody in them",
+              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hay que hablar español\" then \"Se habla español\" — both with nobody in them]"
+              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lo que compro\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lo que compro\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-que-say",
-              "prompt": "Say you have to speak Spanish, without naming anybody.",
+              "id": "ES-C53-lo-que-say",
+              "prompt": "Say what I say, meaning the thing that I say.",
               "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-LO-QUE",
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hay que hablar espanol",
-                "hay que hablar español"
+                "lo que digo",
+                "lo que yo digo"
               ],
               "feedback": {
-                "correct": "An obligation with nobody obliged.",
-                "incorrect": "Hay que hablar espanol."
+                "correct": "A noun-shaped hole with a sentence attached.",
+                "incorrect": "Lo que digo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-que-form",
-              "prompt": "What form of the verb follows hay que?",
+              "id": "ES-C53-lo-que-contrast",
+              "prompt": "What is the difference between lo digo and lo que digo?",
               "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-QUE"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 14,
               "acceptedResponses": [
-                "the infinitive",
-                "the dictionary form",
-                "the plain infinitive"
+                "lo digo points at a known thing, lo que digo points at no thing",
+                "one is i say it, the other is what i say"
               ],
               "feedback": {
-                "correct": "No conjugation at all — there is nobody to conjugate for.",
-                "incorrect": "The infinitive, the dictionary form."
+                "correct": "Same word, pointing at something known or at a gap.",
+                "incorrect": "Lo digo = I say it, about something already named. Lo que digo = what I say, with no specific thing."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-que-pair",
-              "prompt": "Name the other Spanish construction that leaves the person out.",
+              "id": "ES-C53-lo-que-new",
+              "prompt": "How many new words did this chapter introduce?",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-HAY-QUE"
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the impersonal se",
-                "se habla espanol",
-                "the se of se habla"
+                "none",
+                "zero",
+                "0"
               ],
               "feedback": {
-                "correct": "One says something happens; the other says something must.",
-                "incorrect": "The impersonal se — se habla espanol."
+                "correct": "Two old words, side by side.",
+                "incorrect": "None. Lo and que were both already yours."
               }
             }
           ]
@@ -179,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"One must eat\"? (Hay que comer.) Who must? (Nobody named.) And which other construction does the same? (The impersonal se.) Next: all of it in one place."
+              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 159,
-  "title": "Se Habla Espanol --- Nobody in Particular",
+  "title": "Para --- For, Pointing Forward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1d5bea520f0a3424",
+  "sourceHash": "fnv1a64:0d634b5bd7eb6b57",
   "lessons": [
     {
-      "id": "ES-C52-se-habla",
-      "sequence": 2086,
-      "title": "se habla español — nobody in particular",
-      "headword": "se habla español",
-      "romanization": "se habla español",
-      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
+      "id": "ES-C51-para",
+      "sequence": 2101,
+      "title": "para — \"for,\" pointing forward",
+      "headword": "para",
+      "romanization": "para",
+      "gloss": "\"for\" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:974b3b495bad80a0",
+      "sourceHash": "fnv1a64:b35e14d5e35a59d5",
       "notice": null,
       "blocks": [
         {
@@ -35,39 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
+              "text": "English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: a sentence with nobody in it",
+          "title": "Grammar Lens: the arrow points away from you",
           "segments": [
             {
               "kind": "speech",
-              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
+              "text": "para — for, when something is aimed at something else."
             },
             {
               "kind": "speech",
-              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
+              "text": "Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose)."
             },
             {
               "kind": "speech",
-              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
+              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para."
             },
             {
               "kind": "speech",
-              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
-            },
-            {
-              "kind": "speech",
-              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
+              "text": "That is the whole of this chapter. Not four uses — one direction."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The direction is not a mnemonic somebody invented. It is inside the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Para was Latin per + ad, squeezed into one word. And ad means \"toward\" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something."
+            },
+            {
+              "kind": "speech",
+              "text": "So para is, at the bottom, \"through-toward.\" A word that is literally made of an arrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -80,83 +99,75 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Se habla español\" as if reading it off a window",
+              "instruction": "\"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Se come bien\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se come bien\"]"
+              "source": "[YOU SAY: \"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-sign",
-              "prompt": "Write the sign that says Spanish is spoken here.",
+              "id": "ES-C51-para-you",
+              "prompt": "Say it is for you.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-ESPANOL"
+                "ES-LEX-PARA",
+                "ES-GRAMMAR-PARA-FORWARD",
+                "ES-LEX-TU"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "se habla espanol",
-                "se habla español"
+                "es para ti",
+                "para ti"
               ],
               "feedback": {
-                "correct": "No person named anywhere in it.",
-                "incorrect": "Se habla espanol."
+                "correct": "Aimed at a person.",
+                "incorrect": "Es para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-who",
-              "prompt": "Who speaks Spanish, according to that sentence?",
+              "id": "ES-C51-para-when",
+              "prompt": "Say by tomorrow.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-GRAMMAR-PARA-FORWARD",
+                "ES-LEX-MANANA"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "nobody in particular",
-                "it does not say",
-                "no one is named"
+                "para manana",
+                "para mañana"
               ],
               "feedback": {
-                "correct": "That absence is the whole point of the form.",
-                "incorrect": "It does not say, and it is not meant to."
+                "correct": "Aimed at a moment.",
+                "incorrect": "Para manana."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-eat",
-              "prompt": "Say one eats well here.",
+              "id": "ES-C51-para-arrow",
+              "prompt": "Which Latin piece inside para means toward, and which English words carry it?",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMER",
-                "ES-LEX-BIEN"
+                "ES-ETYMON-PER-AD",
+                "ES-GRAMMAR-PARA-FORWARD"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "se come bien",
-                "aqui se come bien"
+                "ad, as in advance and admit",
+                "ad",
+                "ad — advance, admit, adhere"
               ],
               "feedback": {
-                "correct": "Se come bien.",
-                "incorrect": "Se come bien."
+                "correct": "A word literally made of an arrow.",
+                "incorrect": "Ad — the same ad in advance, admit, adhere."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -168,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
+              "text": "What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — \"toward.\") Next: the other half — and you have been saying it since your first chapter."
             }
           ]
         }

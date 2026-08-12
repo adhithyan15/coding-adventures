@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C11-practice
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 990
-chapter: 45
+sequence: 1010
+chapter: 50
 type: practice-mix
 headword: (practice)
 gloss: singular wanting, ability, vowel-change comparison, and our day or night

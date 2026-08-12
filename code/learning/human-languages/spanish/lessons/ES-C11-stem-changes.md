@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C11-stem-changes
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 970
-chapter: 45
+sequence: 990
+chapter: 50
 type: phrase
 headword: e → ie and o → ue
 gloss: comparing the two vowel changes inside the learned singular forms

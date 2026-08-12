@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C08-tienen
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 934
-chapter: 43
+sequence: 954
+chapter: 48
 type: grammar
 headword: tienen
 gloss: "they have" — where the stress returns to the stem, and so does the break

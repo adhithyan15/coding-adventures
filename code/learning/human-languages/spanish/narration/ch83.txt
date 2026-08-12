@@ -1,129 +1,41 @@
-Spanish, chapter 83: The Strong Preterites.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 83: Why Se? --- Gelo, and a Collision.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-tuve — let the strong stem carry the stress.
+Lesson 1 of 1.
+Why se? — and why it is not the se you know.
 
 Warm-up.
 [pause 2 seconds]
-You know present tengo, tienes, tiene. Its completed past changes the stem to tuv- and uses tuve, tuviste, tuvo. Unlike comí and comió, none of these three forms carries a written accent.
+You have known a word se since almost the beginning: se llama, "he calls himself." Now you have met a second se, in se lo digo. The obvious conclusion is that they are the same word doing a second job.
+They are not. They are two different words that arrived at the same spelling, and knowing that removes a confusion most learners carry for years.
 
-Grammar Lens: one strong singular pattern.
-[a table of 3 rows, read aloud]
-person: yo. present: tengo. completed past: tuve.
-person: tú. present: tienes. completed past: tuviste.
-person: él / ella / usted. present: tiene. completed past: tuvo.
-The strong stem tuv- takes -e, -iste, -o. Say tuve, tuviste, tuvo. Stress remains in the stem, so normal spelling needs no accent mark. Reuse known café:
-Tuve café. — “I had coffee.”
-¿Tuviste café? — “Did you have coffee?”
-Tuvo café. — “He, she, or you-formal had coffee.”
-“Strong” describes the stem-stressed historical pattern. It does not mean that the meaning is forceful. Plural endings wait.
+The word, taken apart.
+Old Spanish did not say se lo. It said gelo.
+That came from the two Latin pronouns you already know, run together and worn down: illī (the dative, giving le) plus illum (the accusative, giving lo) becomes gelo. One squeezed word for "to-him it."
+So the medieval sentence was gelo digo, and it was regular. There was no substitution and no rule to learn.
+Then two things happened:
+The word split back into two — gelo was re-analysed as ge + lo, matching the two-pronoun pattern everywhere else in the language.
+The sound ge drifted until it was pronounced exactly like se — and once two words sound identical, spelling follows.
+By the sixteenth century ge lo had become se lo, and the trail was cold.
 
-The stem, taken apart.
-Tener continues Latin tenēre. Its past also belongs to an older strong history associated with Latin tenuī. Spanish sound change and analogy reshaped that material into the tuv- family. Tenuī becomes tuve is therefore a historical relationship, not a promise that every letter passed across intact.
+Why it's said this way.
+This matters for a practical reason, not a historical one.
+The reflexive se in se llama means himself. If the se in se lo digo were that word, the sentence would have to mean something reflexive — and learners who assume it do spend years trying to make "he tells it to himself" fit sentences where it plainly does not.
+It does not fit because it is not that word. One se is Latin sē, "himself"; the other is illī, "to him." Unrelated, and collided by accident of sound.
+Two words wearing one shape is something this language does often — ser is built from two Latin verbs, ir borrows its present from a third. Here it happens to two of the smallest words in Spanish, which is where it is hardest to notice.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “tuve, tuviste, tuvo”]
+[your turn — say: "se llama" then "se lo digo" — two different words, one sound]
 [pause 8 seconds for the answer]
-[your turn — say: “Tuve café.”]
-[pause 8 seconds for the answer]
-[your turn — say: “comí has final stress; tuve has stem stress”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the singular completed-past forms of tener: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I had coffee' in Spanish.
 [question — say your answer, then pause 8 seconds]
-Which phrase best describes tuve: a letter-for-letter copy of tenuī, or a historically reshaped strong form?
+What did Old Spanish say instead of se lo?
+[question — say your answer, then pause 12 seconds]
+Is the se of se lo digo the same word as the se of se llama?
+[question — say your answer, then pause 12 seconds]
+Which two Latin pronouns were squeezed together to make gelo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned tener forms. (Tuve, tuviste, tuvo.) Which endings attach to tuv-? (-e, -iste, -o.) Why are there no written accents? (The strong stem carries the stress.) What shaped tuve historically? (Older strong-perfect material, sound change, and analogy.) Next: reuse the strong endings with hacer.
-
-
-Lesson 2 of 3.
-hice — the strong pattern with one third-person swerve.
-
-Warm-up.
-[pause 2 seconds]
-You know present hago, haces, hace and strong past tuve, tuviste, tuvo. Hacer reuses the strong endings: hice, hiciste, hizo. Watch the third form: the stem is hiz- there, not hic-.
-
-Grammar Lens: hacer in the completed past.
-[a table of 3 rows, read aloud]
-person: yo. completed past: hice. stem plus ending: hic- + -e.
-person: tú. completed past: hiciste. stem plus ending: hic- + -iste.
-person: él / ella / usted. completed past: hizo. stem plus ending: hiz- + -o.
-Say hice, hiciste, hizo. These are strong, stem-stressed forms with no written accents. Hizo is an irregular stem alternation inside this family; it is not a general rule that c must become z before o. Reuse known café:
-Hice café. — “I made coffee.”
-¿Hiciste café? — “Did you make coffee?”
-Hizo café. — “He, she, or you-formal made coffee.”
-
-The form, taken apart.
-Hacer continues Latin facere, and hice continues the history of its strong perfect fēcī. Long sound changes help explain Spanish h- and the changed vowel and consonant; this is not a direct spelling recipe. The pattern links hice historically to strong tuve, while each verb keeps its own stem.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “hice, hiciste, hizo”]
-[pause 8 seconds for the answer]
-[your turn — say: “Hice café.”]
-[pause 8 seconds for the answer]
-[your turn — say: “hizo is a learned hiz- alternation, not a general c-before-o rule”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the singular completed-past forms of hacer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I made coffee' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Which Latin strong-perfect form lies behind the historical development of hice?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned hacer forms. (Hice, hiciste, hizo.) What changes in the third form? (Hic- becomes hiz-.) Is that a general c-before-o spelling rule? (No; learn it inside this irregular family.) What older form lies behind hice? (Latin fēcī, through substantial historical change.) Next: add strong estar without adding plural forms.
-
-
-Lesson 3 of 3.
-estuve — a third known verb joins the strong pattern.
-
-Warm-up.
-[pause 2 seconds]
-You know present estoy, estás, está and the strong past pairs tuve, tuviste, tuvo and hice, hiciste, hizo. Now use the same strong endings with estuv-: estuve, estuviste, estuvo.
-
-Grammar Lens: estar in the completed past.
-[a table of 3 rows, read aloud]
-person: yo. completed past: estuve.
-person: tú. completed past: estuviste.
-person: él / ella / usted. completed past: estuvo.
-Say estuve, estuviste, estuvo. The strong stem estuv- takes -e, -iste, -o. These forms carry no written accents. Reuse known bien:
-Estuve bien. — “I was well.”
-¿Estuviste bien? — “Were you well?”
-Estuvo bien. — “He, she, or you-formal was well.”
-
-Grammar Lens: three strong singular rows.
-yo: tuve, hice, estuve.
-tú: tuviste, hiciste, estuviste.
-él / ella / usted: tuvo, hizo, estuvo.
-All three rows use the learned strong endings. Only hacer changes its stem shape from hic- to hiz- before third-person -o. Plural forms and other irregular verbs still wait.
-
-The -uv- shape, taken apart.
-Estar grew from a Romance verb related to Latin stāre, “stand.” But modern estuve is not a direct, tidy wearing-down of Latin stetī. Historical analogy helped reshape its past beside other strong forms, including the -uv- pattern visible in tuve. This explains the family resemblance without pretending that each modern letter came straight from one Latin form.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “estuve, estuviste, estuvo”]
-[pause 8 seconds for the answer]
-[your turn — say: “Estuve bien.”]
-[pause 8 seconds for the answer]
-[your turn — say: “tuve and estuve share -uv- through historical analogy”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the singular completed-past forms of estar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Say 'I was well' as a completed past statement in Spanish.
-[question — say your answer, then pause 6 seconds]
-Which known strong form helped shape the family resemblance in estuve: tuve or hice?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned estar forms. (Estuve, estuviste, estuvo.) Which known strong verb shares their -uv- shape? (Tener: tuve.) Why should estuve not be shown as a direct wearing-down of stetī? (Analogy reshaped the Spanish family.) Next: retrieve all six bounded patterns.
+What was se lo before it was se lo? (Gelo.) Is it the reflexive se? (No — a different word that came to sound the same.) Next: all of it together.

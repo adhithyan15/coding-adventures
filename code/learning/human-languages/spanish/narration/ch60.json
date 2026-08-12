@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 60,
-  "title": "Synthesis --- More Than One",
+  "title": "La Comida --- A Noun You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:68e448ac49defe52",
+  "sourceHash": "fnv1a64:27e1140ebef748e2",
   "lessons": [
     {
-      "id": "ES-C44-sintesis-mas-de-uno",
-      "sequence": 1093,
-      "title": "Synthesis — more than one",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — talking about more than one, and the article that disappears instead of pluralising",
+      "id": "ES-C43-comida",
+      "sequence": 1103,
+      "title": "la comida — \"food,\" built from a verb you have",
+      "headword": "la comida",
+      "romanization": "la comida",
+      "gloss": "food, a meal — a noun you can build yourself out of a verb you already own",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:217d0afd94da1c80",
+      "sourceHash": "fnv1a64:22c3bcc6683294c7",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,88 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have a book.\" (Tengo un libro.) Now say \"I have books,\" and notice where you hesitate."
+              "text": "Say \"to eat.\" (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the article that leaves",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because \"a\" and \"more than one\" disagree by definition."
-            },
-            {
-              "kind": "speech",
-              "text": "English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:"
-            },
-            {
-              "kind": "speech",
-              "text": "Tengo un libro. — I have a book. Tengo libros. — I have books."
-            },
-            {
-              "kind": "speech",
-              "text": "The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less."
+              "text": "d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Read this aloud and watch the two plurals doing different jobs."
+              "text": "la comida — food, and also a meal."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no."
+              "text": "Take comer, drop the ending, add -ida:"
             },
             {
               "kind": "speech",
-              "text": "Bare libros means \"books, some books, books in general.\" Los libros means \"the books\" — particular ones, already known to both of you."
+              "text": "comer becomes comida — literally the eaten thing."
             },
             {
               "kind": "speech",
-              "text": "That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before."
+              "text": "That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Comer itself comes from Latin comedere — ed- is \"eat,\" the same ancient root as English eat, with com- (\"thoroughly\") in front. So comida is, at the bottom, \"the thoroughly-eaten thing.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -ida nouns are feminine",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender."
+            },
+            {
+              "kind": "speech",
+              "text": "la comida — the food. Hago la comida. — I make the meal."
+            },
+            {
+              "kind": "speech",
+              "text": "Set your three nouns side by side and the pattern is doing all the work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "gender",
+                "article"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "noun: libro. gender: masculine. article: el.",
+                "noun: casa. gender: feminine. article: la.",
+                "noun: comida. gender: feminine. article: la."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,105 +129,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo un libro\" then \"Tengo libros\" — hear the article vanish",
+              "instruction": "\"comer\" then \"comida\" — hear the verb inside the noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo libros\" — hear the article vanish]"
+              "source": "[YOU SAY: \"comer\" then \"comida\" — hear the verb inside the noun]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"libros\" then \"los libros\", twice, until the two feel like different questions",
+              "instruction": "\"Hago la comida\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"libros\" then \"los libros\", twice, until the two feel like different questions]"
+              "source": "[YOU SAY: \"Hago la comida\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-bare",
-              "prompt": "Say I have books.",
+              "id": "ES-C43-comida-build",
+              "prompt": "Build the noun for food from the verb comer.",
               "assesses": [
-                "ES-GRAMMAR-BARE-PLURAL-NOUN",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-LEX-COMER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "tengo libros",
-                "yo tengo libros"
+                "comida",
+                "la comida"
               ],
               "feedback": {
-                "correct": "No article at all — that is the whole trick.",
-                "incorrect": "Tengo libros. The indefinite article is dropped, not pluralised."
+                "correct": "Comer plus -ida: the eaten thing.",
+                "incorrect": "Comida — drop the -er, add -ida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-definite",
-              "prompt": "Now say I have the books.",
+              "id": "ES-C43-comida-make",
+              "prompt": "Say I make the meal.",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
-                "ES-LEX-LIBRO"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tengo los libros",
-                "yo tengo los libros"
-              ],
-              "feedback": {
-                "correct": "Los libros — particular ones.",
-                "incorrect": "Tengo los libros. The definite article does pluralise."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-meals",
-              "prompt": "Say I make meals, meaning meals in general.",
-              "assesses": [
-                "ES-GRAMMAR-BARE-PLURAL-NOUN",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-LEX-COMIDA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hago comidas",
-                "yo hago comidas"
+                "hago la comida",
+                "yo hago la comida"
               ],
               "feedback": {
-                "correct": "Bare plural, no article.",
-                "incorrect": "Hago comidas — nothing in front of it."
+                "correct": "Hago la comida.",
+                "incorrect": "Hago la comida — feminine, so la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-contrast",
-              "prompt": "What is the difference in meaning between casas and las casas?",
+              "id": "ES-C43-comida-gender",
+              "prompt": "What gender is any noun built with -ida?",
               "assesses": [
-                "ES-GRAMMAR-BARE-PLURAL-NOUN",
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
-                "ES-LEX-CASA"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-GRAMMAR-NOUN-GENDER"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "houses in general versus particular known ones",
-                "one is indefinite and one is definite",
-                "las casas means the houses"
+                "feminine",
+                "always feminine"
               ],
               "feedback": {
-                "correct": "The same choice English makes without noticing.",
-                "incorrect": "Casas is houses in general; las casas is the houses, ones you both already have in mind."
+                "correct": "Always — the ending settles it.",
+                "incorrect": "Feminine, every time."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -213,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have books\"? (Tengo libros — no article.) \"I have the books\"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named."
+              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something."
             }
           ]
         }

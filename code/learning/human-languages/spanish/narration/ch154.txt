@@ -1,37 +1,41 @@
-Spanish, chapter 154: Para --- For, Pointing Forward.
+Spanish, chapter 154: Conocer --- Coming to Know.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-para — "for," pointing forward.
+conocer — "to meet", because knowing has a first moment.
 
 Warm-up.
 [pause 2 seconds]
-English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it.
+Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means.
 
-Grammar Lens: the arrow points away from you.
-para — for, when something is aimed at something else.
-Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose).
-Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para.
-That is the whole of this chapter. Not four uses — one direction.
+Sounds you'll need.
+soft-c — conoces has a soft second c: a th in Spain, an s elsewhere.
+k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back.
 
-The word, taken apart.
-The direction is not a mnemonic somebody invented. It is inside the word.
-Para was Latin per + ad, squeezed into one word. And ad means "toward" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something.
-So para is, at the bottom, "through-toward." A word that is literally made of an arrow.
-Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?
+The word, taken apart: conocer.
+conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's "begin to" marker, so nōscere was never "to know" — it was "to come to know". Latin said nōvī, "I have come to know", for actually knowing a thing.
+Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María.
+The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, "the knowable one". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other.
+
+Grammar Lens: conocer and saber.
+[a table of 2 rows, read aloud]
+what you know: a person, a city, a book. verb: conocer.
+what you know: a fact, or how to do something. verb: saber.
+English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact.
+The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "para ti", "para mañana", "para la casa" — draw the arrow each time]
+[your turn — say: "conozco, conoces, conoce, conocemos, conocen"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say it is for you.
-[question — say your answer, then pause 8 seconds]
-Say by tomorrow.
-[question — say your answer, then pause 12 seconds]
-Which Latin piece inside para means toward, and which English words carry it?
+[your turn — say: "Conozco a María" then "Conozco Madrid"]
+[pause 8 seconds for the answer]
+[your turn — say: "traigo, consigo, juego, conozco" — the chapter's four yo-forms]
+[pause 8 seconds for the answer]
+[your turn — say: "padre, father" then "conocer, know" — siblings, not borrowings]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — "toward.") Next: the other half — and you have been saying it since your first chapter.
+Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)

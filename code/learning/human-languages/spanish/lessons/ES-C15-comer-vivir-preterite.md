@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C15-comer-vivir-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1215
-chapter: 82
+sequence: 1235
+chapter: 87
 type: word
 headword: viví
 gloss: the regular singular -ir preterite — viví, viviste, vivió

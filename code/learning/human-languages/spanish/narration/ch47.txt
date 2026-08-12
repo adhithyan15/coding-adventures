@@ -1,41 +1,133 @@
-Spanish, chapter 47: Poner --- Putting, and the Root Under Position.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 47: Estar in the Plural.
+4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
-poner — putting or placing with three singular forms.
+Lesson 1 of 4.
+estamos — the other "we are".
 
 Warm-up.
 [pause 2 seconds]
-You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”
+Say "we are" with ser. (Somos.) And how do you ask a friend how they are? (¿Cómo estás?)
 
-Sounds you'll need.
-The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound.
+Grammar Lens: this one behaves.
+estamos — we are.
+Drop the -ar, add -amos. That is the plain -ar ending you learned on hablamos, applied without alteration.
+And that is the point of this lesson. You have just spent a chapter on ser, whose six forms come from two different Latin verbs and refuse to resemble each other. Estar is not like that at all. In the plural it is an ordinary -ar verb.
+hablamos, estamos — the same ending, and no surprises.
 
 The word, taken apart.
-poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ.
-
-Grammar Lens: only the three singular forms.
-[a table of 3 rows, read aloud]
-person: yo. present of poner: pongo.
-person: tú. present of poner: pones.
-person: él / ella / usted. present of poner: pone.
-Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb.
-For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait.
+The reason is simple, and it is the reason for almost every irregularity you have met: estar is one verb. Latin stāre, "to stand" — and that is the whole ancestry. Nothing was fused into it, so nothing in it has a seam.
+Ser is irregular because two verbs were welded together. Estar is regular because it never was.
+That is worth carrying, because it predicts the rest. Where a Spanish verb looks chaotic, the usual explanation is not that it decayed strangely but that it is more than one word wearing a single name.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “poner — pongo, pones, pone”]
+[your turn — say: "hablamos, estamos" — the same ending]
 [pause 8 seconds for the answer]
-[your turn — say: “pōnere — position — poner”]
+[your turn — say: "somos, estamos" — two verbs for we are, and only one of them is strange]
 [pause 8 seconds for the answer]
-[your turn — say: “a learned comparison, not a prediction rule”]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say we are, using estar.
 [question — say your answer, then pause 10 seconds]
-Give the learned singular present forms of poner: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-What two English verbs does poner cover?
+Why is estar regular here when ser is not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame.
+What is "we are" with estar? (Estamos.) Which Latin verb is it from? (Stāre, "to stand".) And why is it regular where ser is not? (Because it is one verb, not two.)
+
+
+Lesson 2 of 4.
+están — "they are".
+
+Warm-up.
+[pause 2 seconds]
+Say "we are" with estar. (Estamos.) And "they speak." (Hablan.)
+
+Grammar Lens: the ending is regular, the accent is the clue.
+están — they are, and ustedes están, you all are.
+The ending is -an, exactly as in hablan. But there is a written accent, and it is not decoration.
+Estar is unusual in one specific way: it puts its stress on the ending rather than the stem, in every singular and plural form except estamos. You have already seen this without being told — estás, está, and now están. The accent is simply Spanish writing that stress down, by the rule for written accents you learned long ago.
+hablan — stress on the stem, no accent. están — stress on the ending, so an accent.
+Same ending, different stress, and the spelling records it faithfully.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "hablan" then "están" — same ending, and hear the stress move]
+[pause 8 seconds for the answer]
+[your turn — say: "ustedes están", addressing a group]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say they are, using estar.
+[question — say your answer, then pause 10 seconds]
+Why does estan carry an accent when hablan does not?
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "they are" with estar? (Están.) Why the accent? (The stress falls on the ending.) Which form of estar does not do that? (Estamos.)
+
+
+Lesson 3 of 4.
+estáis — and nothing surprises you.
+
+Warm-up.
+[pause 2 seconds]
+Say "they are" with estar. (Están.) And the vosotros form of hablar? (Habláis.)
+
+Grammar Lens: predictable, and that is the news.
+vosotros estáis — you all are, in Spain.
+If you guessed that before reading it, you have understood the chapter. The ending is -áis, the plain -ar one from habláis, and the accent is there for the reason it is always there with this verb: the stress sits on the ending.
+That is now three forms in a row where knowing estar meant knowing nothing new. In the Americas, ustedes están does this job.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "habláis" then "estáis" — the same ending, twice]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 6 seconds]
+Vosotros, from estar.
+[question — say your answer, then pause 8 seconds]
+The same thing in Chile: which form?
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the vosotros form of estar? (Estáis.) Why the accent? (Estar stresses its ending.) And in Argentina? (Ustedes están.)
+
+
+Lesson 4 of 4.
+Review — both verbs for "to be".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new. Say somos, then estamos.
+
+Grammar Lens: side by side, and the difference is history.
+[a table of 6 rows, read aloud]
+who: yo. ser: soy. estar: estoy.
+who: tú. ser: eres. estar: estás.
+who: él, ella, usted. ser: es. estar: está.
+who: nosotros. ser: somos. estar: estamos.
+who: vosotros. ser: sois. estar: estáis.
+who: ellos, ustedes. ser: son. estar: están.
+Read the two columns down and the difference is not a matter of difficulty. It is a matter of history.
+Ser is two Latin verbs fused — esse and sedēre — so its forms have no common shape. Five begin with s-; eres does not, and that is the seam.
+Estar is one Latin verb, stāre. Its plural is a plain -ar paradigm, and the only oddity in the whole column is where the stress falls, which the written accent records honestly.
+So the two hardest-looking verbs in Spanish are hard for opposite reasons: one because it is two words, and the other not really at all.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: one column down, then the other]
+[pause 8 seconds for the answer]
+[your turn — say: each row across — soy, estoy, somos, estamos — and hear which column surprises you]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[question — say your answer, then pause 6 seconds]
+We are, with estar.
+[question — say your answer, then pause 6 seconds]
+They are, with estar.
+[question — say your answer, then pause 10 seconds]
+Which of the two has a regular plural, and why?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the two verbs is regular in the plural? (Estar.) Why? (It is one Latin verb; ser is two.) And what is the only oddity in estar's column? (Where the stress falls — which the accent records.)

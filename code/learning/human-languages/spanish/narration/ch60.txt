@@ -1,42 +1,47 @@
-Spanish, chapter 60: Synthesis --- More Than One.
+Spanish, chapter 60: La Comida --- A Noun You Can Build.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — more than one.
+la comida — "food," built from a verb you have.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have a book." (Tengo un libro.) Now say "I have books," and notice where you hesitate.
+Say "to eat." (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you.
 
-Grammar Lens: the article that leaves.
-The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because "a" and "more than one" disagree by definition.
-English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:
-Tengo un libro. — I have a book. Tengo libros. — I have books.
-The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase.
-This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less.
+Sounds you'll need.
+d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d.
 
-The exchange.
-Read this aloud and watch the two plurals doing different jobs.
-— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no.
-Bare libros means "books, some books, books in general." Los libros means "the books" — particular ones, already known to both of you.
-That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before.
+The word, taken apart.
+la comida — food, and also a meal.
+Take comer, drop the ending, add -ida:
+comer becomes comida — literally the eaten thing.
+That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do.
+This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word.
+Comer itself comes from Latin comedere — ed- is "eat," the same ancient root as English eat, with com- ("thoroughly") in front. So comida is, at the bottom, "the thoroughly-eaten thing."
+
+Grammar Lens: -ida nouns are feminine.
+Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender.
+la comida — the food. Hago la comida. — I make the meal.
+Set your three nouns side by side and the pattern is doing all the work:
+[a table of 3 rows, read aloud]
+noun: libro. gender: masculine. article: el.
+noun: casa. gender: feminine. article: la.
+noun: comida. gender: feminine. article: la.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tengo un libro" then "Tengo libros" — hear the article vanish]
+[your turn — say: "comer" then "comida" — hear the verb inside the noun]
 [pause 8 seconds for the answer]
-[your turn — say: "libros" then "los libros", twice, until the two feel like different questions]
+[your turn — say: "Hago la comida"]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I have books.
-[question — say your answer, then pause 8 seconds]
-Now say I have the books.
+Build the noun for food from the verb comer.
 [question — say your answer, then pause 10 seconds]
-Say I make meals, meaning meals in general.
-[question — say your answer, then pause 12 seconds]
-What is the difference in meaning between casas and las casas?
+Say I make the meal.
+[question — say your answer, then pause 8 seconds]
+What gender is any noun built with -ida?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have books"? (Tengo libros — no article.) "I have the books"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named.
+What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something.

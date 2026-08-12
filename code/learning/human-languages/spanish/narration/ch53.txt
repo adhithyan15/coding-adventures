@@ -1,41 +1,45 @@
-Spanish, chapter 53: La Casa --- Your First Everyday Noun.
+Spanish, chapter 53: Salir --- Leaving.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-la casa — "house," and "home".
+salir — leaving with three singular forms.
 
 Warm-up.
 [pause 2 seconds]
-You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with.
+You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”
 
 Sounds you'll need.
-s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah.
+The g in salgo is hard. Keep the l clear in every form: salgo, sales, sale.
 
 The word, taken apart.
-la casa — the house, and just as often home.
-Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa.
-French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, "at the house of me."
-Italian kept a small one too: casino is casa plus a diminutive ending — literally "little house."
+salir descends from Latin salīre, “to leap” or “to jump.” The older image of leaping outward developed into the everyday meaning “to go out.” English salient first carried the sense “leaping” or “springing,” and a sally is a sudden movement outward. Those cousins preserve the same motion without requiring a long list of uncertain relatives.
 
-Grammar Lens: a feminine noun, behaving exactly as promised.
-Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones.
-la casa — the house. Tengo una casa. — I have a house.
-Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it.
+Grammar Lens: one more singular set.
+[a table of 3 rows, read aloud]
+person: yo. present of salir: salgo.
+person: tú. present of salir: sales.
+person: él / ella / usted. present of salir: sale.
+Say salgo, sales, sale. Only the learned yo form contains g. Compare it with pongo because both forms are now known, not because one form could have predicted the other.
+Reuse the known word de and the familiar place name Madrid:
+Salgo de Madrid. — “I leave Madrid.”
+Sales de Madrid. — “You leave Madrid.”
+Sale de Madrid. — “He, she, or formal you leaves Madrid.”
+Plural persons, dating expressions, house vocabulary, and the noun for “exit” wait until their own lessons.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la casa" — KAH-sah, a clean s]
+[your turn — say: “salir — salgo, sales, sale”]
 [pause 8 seconds for the answer]
-[your turn — say: "Tengo una casa"]
+[your turn — say: “Salgo de Madrid.”]
 [pause 8 seconds for the answer]
+[your turn — say: “salīre — salient — salir”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the learned singular present forms of salir: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Say the house in Spanish.
-[question — say your answer, then pause 10 seconds]
-Say I have a house.
-[question — say your answer, then pause 10 seconds]
-Which French word is casa worn all the way down?
+Say 'I leave Madrid' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "the house"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree.
+What does salir mean? (“To leave” or “to go out.”) Give the three learned forms. (Salgo, sales, sale.) What did Latin salīre mean? (“To leap” or “to jump.”) Name one English cousin. (Salient or sally.) Next: add venir and compare it only with already-learned tener.

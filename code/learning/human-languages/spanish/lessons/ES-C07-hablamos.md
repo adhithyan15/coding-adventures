@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-hablamos
 spine_node: SPINE-ASK-LOCATION
-sequence: 670
-chapter: 29
+sequence: 690
+chapter: 34
 type: grammar
 headword: hablamos
 gloss: "we speak" — the first form in this book that is not about one person

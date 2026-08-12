@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 138,
-  "title": "Preguntar — Asking, and Sounding a Depth",
+  "title": "Leer — Reading Is Gathering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4322eaa1283f9576",
+  "sourceHash": "fnv1a64:286ce102079d8c74",
   "lessons": [
     {
-      "id": "ES-C35-preguntar",
-      "sequence": 1830,
-      "title": "preguntar — \"to ask\", by sounding the water with a pole",
-      "headword": "preguntar",
-      "romanization": "preguntar",
-      "gloss": "to ask (a question) — and the reason English's one \"ask\" becomes two Spanish verbs",
+      "id": "ES-C34-leer",
+      "sequence": 1820,
+      "title": "leer — \"to read\", and before that, \"to gather\"",
+      "headword": "leer",
+      "romanization": "leer",
+      "gloss": "to read — from a Latin verb meaning \"to gather, to pick out\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27b2c0b0ad3a1100",
+      "sourceHash": "fnv1a64:903a57a818e32cfa",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half."
+              "text": "Two cracked verbs down. Here is a calm one — nothing breaks in the middle. The only difficulty is in your mouth: two e's in a row that must stay two."
             }
           ]
         },
@@ -46,63 +46,74 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pr-cluster — pre- is one crisp beat, preh, with a tapped r."
+              "text": "hiatus-ee — leer is two syllables, le-ER, never one long English ee."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g before u is hard, as in English gun: pre-goon-TAR."
+              "text": "leo is likewise two beats, LE-o."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: preguntar",
+          "title": "The word, taken apart: leer",
           "segments": [
             {
               "kind": "speech",
-              "text": "preguntar (\"to ask a question\") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, \"to inquire\". And percontārī was built on contus, \"a punting pole\": to percontor was to push a pole down through water and find out how deep it was."
+              "text": "leer (\"to read\") from Latin legere, \"to gather, to pick out, to choose\" — and only afterwards \"to read\". A reader picks letters out of a row the way a farmhand picks olives off a branch."
             },
             {
               "kind": "speech",
-              "text": "Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe."
+              "text": "That gathering root runs through an enormous amount of English:"
             },
             {
               "kind": "speech",
-              "text": "The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta."
+              "text": "legible, legend (\"things to be read\"), lecture, lectern, and worn right down, lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "built with prefixes: collect (col- \"together\"), select (se- \"apart\"), elect (e- \"out\"), intellect (inter- \"between\" — choosing between things)."
+            },
+            {
+              "kind": "speech",
+              "text": "diligent and elegant, both of which meant \"picking carefully\"."
+            },
+            {
+              "kind": "speech",
+              "text": "One honest limit: Greek légein (\"to speak, to gather\") — which gives English logic, dialogue, catalogue — is a cousin of legere from the same ancient root, not its parent. Same family, separate journeys."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one English \"ask\", two Spanish verbs",
+          "title": "Grammar Lens: a plain -er verb, with a mouthful",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish sorts asking by what you are after:"
+              "text": "Nothing irregular happens. Drop -er, add the ordinary endings:"
             },
             {
               "kind": "table",
               "headers": [
-                "what you want",
-                "verb",
-                "example"
+                "person",
+                "form",
+                "said"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 5,
               "utterances": [
-                "what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.",
-                "what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee."
+                "person: yo. form: leo. said: LE-o.",
+                "person: tú. form: lees. said: LE-es.",
+                "person: él/ella/usted. form: lee. said: LE-e.",
+                "person: nosotros. form: leemos. said: le-E-mos.",
+                "person: ellos/ustedes. form: leen. said: LE-en."
               ]
             },
             {
               "kind": "speech",
-              "text": "Ask for a coffee with preguntar and you have said \"I question a coffee\". The line is simple: a question takes preguntar, a request takes pedir."
-            },
-            {
-              "kind": "speech",
-              "text": "pedir from Latin petere, \"to make for, to aim at\" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later."
+              "text": "Every one of those is a syllable longer than an English speaker expects. Give each e its own beat and the word comes out right."
             }
           ]
         },
@@ -120,38 +131,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pregunto, preguntas, pregunta, preguntamos, preguntan\"",
+              "instruction": "\"leer\" — le-ER, two beats",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pregunto, preguntas, pregunta, preguntamos, preguntan\"]"
+              "source": "[YOU SAY: \"leer\" — *le-ER*, two beats]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto la hora\" — I'm asking you the time",
+              "instruction": "\"Leo un libro\" — I read a book",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto la hora\" — I'm asking you the time]"
+              "source": "[YOU SAY: \"Leo un libro\" — I read a book]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pido un café\" then \"Tomo un café\" — I ask for one, I have one",
+              "instruction": "\"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pido un café\" then \"Tomo un café\" — I ask for one, I have one]"
+              "source": "[YOU SAY: \"No entiendo\" then \"Leo, pero no entiendo\" — I read, but I don't understand]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pedir\" then English \"petition, appetite, compete\" — the aiming family",
+              "instruction": "\"leer\" then English \"legible, collect, select, elect\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pedir\" then English \"petition, appetite, compete\" — the aiming family]"
+              "source": "[YOU SAY: \"leer\" then English \"legible, collect, select, elect\"]"
             }
           ]
         },
@@ -168,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, \"to aim at\" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid."
+              "text": "What did legere mean before it meant \"to read\"? (To gather, to pick out.) Give two English words built on it with a prefix. (Collect, select, elect, intellect.) How many syllables in leo? (Two — LE-o.) Next: escribir, the other half of literacy."
             }
           ]
         }

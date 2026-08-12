@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 174,
+  "title": "Hay --- There Is, There Are, Same Word",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3b21720d09d7ae0a",
+  "lessons": [
+    {
+      "id": "ES-C54-hay",
+      "sequence": 2116,
+      "title": "hay — \"there is,\" \"there are,\" same word",
+      "headword": "hay",
+      "romanization": "hay",
+      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f88b14554e4f72ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one form, and it does not count",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hay — there is, and there are."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
+            },
+            {
+              "kind": "speech",
+              "text": "Read those twice. One book or a hundred, hay does not move."
+            },
+            {
+              "kind": "speech",
+              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-one",
+              "prompt": "Say there is a house.",
+              "assesses": [
+                "ES-LEX-HAY",
+                "ES-LEX-CASA"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hay una casa",
+                "hay una casa."
+              ],
+              "feedback": {
+                "correct": "Hay una casa.",
+                "incorrect": "Hay una casa."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-many",
+              "prompt": "Say there are books.",
+              "assesses": [
+                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-BARE-PLURAL-NOUN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hay libros",
+                "hay libros."
+              ],
+              "feedback": {
+                "correct": "The same hay — it never goes plural.",
+                "incorrect": "Hay libros. Hay does not change."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-unique",
+              "prompt": "What does hay agree with?",
+              "assesses": [
+                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "nothing",
+                "nothing at all",
+                "it never changes"
+              ],
+              "feedback": {
+                "correct": "The one common verb form in Spanish that counts nothing.",
+                "incorrect": "Nothing. Not the number, not the person."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

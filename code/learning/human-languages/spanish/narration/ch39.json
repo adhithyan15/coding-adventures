@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 39,
-  "title": "Ser and Estar --- Two Ways to Be",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7039b478a83ce8d9",
+  "title": "Where -er and -ir Part Company",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:07ec555651989da5",
   "lessons": [
     {
-      "id": "ES-C09-ser",
-      "sequence": 830,
-      "title": "ser — another way to say “to be”",
-      "headword": "ser",
-      "romanization": "ser",
-      "gloss": "to be — the verb used here to identify someone or say what someone is",
+      "id": "ES-C07-comemos",
+      "sequence": 775,
+      "title": "comemos — \"we eat\"",
+      "headword": "comemos",
+      "romanization": "comemos",
+      "gloss": "\"we eat\" — and the first place -er and -ir stop agreeing",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:391def9d469a81c5",
+      "sourceHash": "fnv1a64:ef8cb6d97ad0db0b",
       "notice": null,
       "blocks": [
         {
@@ -35,22 +35,177 @@
             },
             {
               "kind": "speech",
-              "text": "You already use estar for a current state or location. Spanish also has ser. This chapter adds one job at a time; today, learn the verb and the three singular forms that match the person frame you already know."
+              "text": "Say \"we speak.\" (Hablamos.) And \"I eat.\" (Como.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the same -mos, a different vowel",
           "segments": [
             {
               "kind": "speech",
-              "text": "vowel-e — ser begins with the clear vowel in mesa."
+              "text": "Drop the -er, add -emos:"
             },
             {
               "kind": "speech",
-              "text": "r-tap — the final r is one light tap: SER."
+              "text": "comemos — we eat."
+            },
+            {
+              "kind": "speech",
+              "text": "The -mos is the one you already have from hablamos. Only the vowel in front of it changed, from a to e — and it changed for the reason it always does: the ending takes the colour of its family."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the pattern for every plural ending you will meet. -mos and -n never change. The vowel before them does."
+            },
+            {
+              "kind": "speech",
+              "text": "Something is about to happen that has not happened before. In the singular, -er and -ir were identical — como/comes/come and vivo/vives/vive, the same three endings twice over. That was a genuine saving, and it is about to stop. The next lesson is where the two families finally part."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablamos\" then \"comemos\" — the same -mos, a different vowel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablamos\" then \"comemos\" — the same *-mos*, a different vowel]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-comemos-form",
+              "prompt": "Turn comer into we eat.",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRESENT-1PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "comemos",
+                "nosotros comemos"
+              ],
+              "feedback": {
+                "correct": "Right — drop -er, add -emos.",
+                "incorrect": "comemos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-comemos-part",
+              "prompt": "Which part of the ending is the same in hablamos and comemos?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-1PL",
+                "ES-GRAMMAR-ER-PRESENT-1PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "-mos",
+                "mos",
+                "the mos"
+              ],
+              "feedback": {
+                "correct": "Yes — only the vowel before it changes.",
+                "incorrect": "The -mos. Only the vowel in front of it moves."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"we eat\"? (Comemos.) Which part of a plural ending never changes? (The -mos.) And what has been true of -er and -ir until now? (They were identical — which the next lesson ends.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C07-vivimos",
+      "sequence": 778,
+      "title": "vivimos — where the two families part",
+      "headword": "vivimos",
+      "romanization": "vivimos",
+      "gloss": "\"we live\" — the first form in which -ir is not the same as -er",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c2543ade15ad2bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we eat.\" (Comemos.) And \"I live.\" (Vivo.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the saving ends here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop the -ir, add -imos:"
+            },
+            {
+              "kind": "speech",
+              "text": "vivimos — we live."
+            },
+            {
+              "kind": "speech",
+              "text": "Not vivemos. Vivimos."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first form in the whole book where -er and -ir do not match. For every singular form you learned, the two families shared endings exactly — and you were told that saving would end in the plural. This is where."
+            },
+            {
+              "kind": "speech",
+              "text": "comemos — we eat., vivimos — we live."
+            },
+            {
+              "kind": "speech",
+              "text": "One vowel apart, and it is each family's own vowel: the e of comer, the i of vivir. The families were never really the same; the singular endings simply happened to fall out identically."
             }
           ]
         },
@@ -61,42 +216,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Modern ser grew from a historical merger. Latin esse meant “to be,” while sedēre meant “to sit.” The infinitive and the present forms do not all come down the same path, so the modern verb cannot be predicted from one neat stem."
+              "text": "Why did the singular hide the difference and the plural expose it?"
             },
             {
               "kind": "speech",
-              "text": "The esse family is still visible in English essence, essential, entity, present, and absent. That makes essence a useful memory hook for one major use of ser: identifying what someone or something is."
+              "text": "Stress. In vivo, vives, vive, the stress is on the stem and the ending is unstressed — and unstressed vowels wear toward each other until they are indistinguishable. In vivimos, the stress lands on the ending itself, and a stressed vowel keeps its own quality."
+            },
+            {
+              "kind": "speech",
+              "text": "So the families did not diverge here. They were always distinct, and the plural is simply the place where the stress lets you hear it."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: only three forms today",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "form",
-                "a small identifying frame"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. form: soy. a small identifying frame: Soy Ana. — “I am Ana.”",
-                "person: tú. form: eres. a small identifying frame: Eres Ana. — “You are Ana.”",
-                "person: él / ella / usted. form: es. a small identifying frame: Usted es Ana. — “You are Ana.”"
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say the set as soy, eres, es. These forms are irregular: do not try to remove -er and attach the regular endings from comer. A later lesson will build the plural-person frame."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,257 +242,49 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“ser — soy, eres, es”",
+              "instruction": "\"comemos\" then \"vivimos\" — and hear the one vowel that separates them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “ser — soy, eres, es”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Soy Ana. Eres Ana. Usted es Ana.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Soy Ana. Eres Ana. Usted es Ana.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“esse — essence — ser”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “esse — essence — ser”]"
+              "source": "[YOU SAY: \"comemos\" then \"vivimos\" — and hear the one vowel that separates them]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C09-ser-singular-forms",
-              "prompt": "Give the three learned singular forms of ser: yo, tú, then él/ella/usted.",
+              "id": "ES-C07-vivimos-form",
+              "prompt": "Turn vivir into we live.",
               "assesses": [
-                "ES-LEX-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-IR-PRESENT-1PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "vivimos",
+                "nosotros vivimos"
+              ],
+              "feedback": {
+                "correct": "Right — -imos, not -emos.",
+                "incorrect": "vivimos, with an i."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-vivimos-contrast",
+              "prompt": "What is the only difference between comemos and vivimos?",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRESENT-1PL",
+                "ES-GRAMMAR-IR-PRESENT-1PL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "soy, eres, es",
-                "soy eres es",
-                "soy / eres / es"
+                "one vowel",
+                "the vowel",
+                "e versus i",
+                "one letter"
               ],
               "feedback": {
-                "correct": "Right: soy, eres, es.",
-                "incorrect": "Use the three irregular forms: soy, eres, es."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-identity",
-              "prompt": "Complete the identification for formal you: Usted ___ Ana.",
-              "assesses": [
-                "ES-LEX-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "es",
-                "usted es ana.",
-                "usted es ana"
-              ],
-              "feedback": {
-                "correct": "Right: Usted es Ana uses es.",
-                "incorrect": "Usted takes the él/ella form: es."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which two Latin verbs fed ser? (Esse and sedēre.) Give the three forms learned today. (Soy, eres, es.) Why not predict them from the infinitive? (The verb is historically mixed and irregular.) Next: set ser beside estar using only identity and state frames you already have."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-ser-vs-estar",
-      "sequence": 840,
-      "title": "ser vs estar — identity or current state?",
-      "headword": "ser vs estar",
-      "romanization": "ser vs estar",
-      "gloss": "identify with ser; describe a current state or location with estar",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:12fd41b5d584c1c7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You now have two small sets: soy, eres, es and estás, está. Do not memorize a long rule list. Make one contrast: ser identifies; estar places someone in a current state or location."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the first contrast, from known material",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "question",
-                "what it asks",
-                "verb"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "question: ¿Es usted Ana? — “Are you Ana?” what it asks: identity. verb: ser.",
-                "question: ¿Está usted bien? — “Are you well?” what it asks: current state. verb: estar."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Only the verb and the job change. The first question identifies the person; the second checks how that person is now. Both Ana, usted, and bien are already part of your course, so the contrast adds no hidden vocabulary."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: a memory hook, not a law",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ser recalls Latin esse and English essence: use it here to say who someone is."
-            },
-            {
-              "kind": "speech",
-              "text": "estar comes from Latin stāre, “to stand,” the family behind state: use it for the state or location in which someone stands."
-            },
-            {
-              "kind": "speech",
-              "text": "“Permanent versus temporary” is only a rough beginner shortcut, not the rule. A location may last for centuries and still use estar; an identification may last one minute and still use ser. Ask instead: am I identifying, or am I giving a state or location?"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“¿Es usted Ana?” — identity, ser",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Es usted Ana?” — identity, *ser*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“¿Está usted bien?” — state, estar",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Está usted bien?” — state, *estar*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“identify: ser; state or location: estar”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “identify: ser; state or location: estar”]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“¿Es usted Ana? ¿Está usted bien?”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-vs-estar-identify",
-              "prompt": "Choose es or está: ¿___ usted Ana?",
-              "assesses": [
-                "ES-GRAMMAR-SER-IDENTITY",
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "es",
-                "¿es usted ana?",
-                "es usted ana?"
-              ],
-              "feedback": {
-                "correct": "Right: identity takes ser — ¿Es usted Ana?",
-                "incorrect": "The question identifies the person, so use es."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-ser-vs-estar-state",
-              "prompt": "Choose es or está: ¿___ usted bien?",
-              "assesses": [
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "está",
-                "¿está usted bien?",
-                "esta usted bien?",
-                "esta"
-              ],
-              "feedback": {
-                "correct": "Right: a current state takes estar — ¿Está usted bien?",
-                "incorrect": "The question asks about a current state, so use está."
+                "correct": "Yes — each family's own vowel, finally audible.",
+                "incorrect": "One vowel: the e of comer, the i of vivir."
               }
             }
           ]
@@ -377,633 +302,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb identifies? (Ser.) Which gives a current state or location? (Estar.) Why is “permanent versus temporary” incomplete? (The choice follows the kind of claim, not its duration.) Next: use ser for one specific identity fact — origin."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-soy-de",
-      "sequence": 850,
-      "title": "soy de… — saying where you are from",
-      "headword": "soy de…",
-      "romanization": "soy de…",
-      "gloss": "I am from… — use ser with de to state origin",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:66092961bb21184d",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can identify yourself with Soy Ana. Add one short word and you can state another identity fact: Soy de…, “I am from…”."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — de",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "de means “from” or “of.” It comes from Latin dē, “down from, away from.” English keeps that direction in depart and descend."
-            },
-            {
-              "kind": "speech",
-              "text": "You already learned that dónde grew from Latin de unde, “from where.” Spanish can put the still-living word de before dónde to ask explicitly about origin."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: ser + de for origin",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "¿De dónde eres? — “Where are you from?” Soy de Madrid. — “I am from Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The place name Madrid already appeared with vivir. Here, the new piece is the frame around it. Use ser, because this sentence states origin; it does not say where someone is located now."
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the two known questions separate:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "question",
-                "asks about"
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "question: ¿De dónde eres? asks about: origin — where you are from.",
-                "question: ¿Dónde vives? asks about: residence — where you live."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“¿De dónde eres?”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “¿De dónde eres?”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Soy de Madrid.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Soy de Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“de — depart — descend”: the shared direction is from",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “de — depart — descend”: the shared direction is *from*]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-soy-de-ask-origin",
-              "prompt": "Ask one friend 'Where are you from?' in Spanish.",
-              "assesses": [
-                "ES-LEX-DE",
-                "ES-GRAMMAR-ORIGIN-WITH-SER",
-                "ES-LEX-DONDE",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿de dónde eres?",
-                "de dónde eres?",
-                "¿de dónde eres",
-                "de donde eres?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿De dónde eres?",
-                "incorrect": "Use de dónde plus the tú form eres: ¿De dónde eres?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-soy-de-madrid",
-              "prompt": "Answer 'I am from Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-DE",
-                "ES-GRAMMAR-ORIGIN-WITH-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "soy de madrid.",
-                "soy de madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Soy de Madrid.",
-                "incorrect": "Use the origin frame soy de: Soy de Madrid."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does de mean? (“From” or “of.”) Ask where one friend is from. (¿De dónde eres?) Answer with Madrid. (Soy de Madrid.) Next: reuse dónde and en to say where someone is located now."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-esta-en",
-      "sequence": 860,
-      "title": "está en… — saying where someone is",
-      "headword": "está en…",
-      "romanization": "está en…",
-      "gloss": "is in or at… — locate someone with estar and the already-known en",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c0500fce09c44846",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You have already asked ¿Dónde vives? — Vivo en Madrid about where someone lives. Now use the same dónde and en with estar to ask about a current location."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart — en",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "en already means “in,” “on,” or “at.” It descends from Latin in and is a cognate of English in. No new preposition is needed; only the surrounding verb changes."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: dónde + estar, then estar + en",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "¿Dónde está usted? — “Where are you?” (formal) Usted está en Madrid. — “You are in Madrid.” Ana está en Madrid. — “Ana is in Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The form está is already familiar from ¿Cómo está usted? The phrase está en… simply gives that form a place. Location uses estar even when a place seems stable; the choice marks the kind of claim, not how long it lasts."
-            },
-            {
-              "kind": "speech",
-              "text": "Compare origin and location without adding any new form:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "sentence",
-                "meaning",
-                "verb"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "sentence: Ana es de Madrid. meaning: origin. verb: ser.",
-                "sentence: Ana está en Madrid. meaning: location. verb: estar."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“¿Dónde está usted?”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Dónde está usted?”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Ana está en Madrid.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Ana está en Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“en / in” — two cognates",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “en / in” — two cognates]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-esta-en-ask-formal",
-              "prompt": "Ask formal you 'Where are you?' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-LEX-DONDE",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿dónde está usted?",
-                "dónde está usted?",
-                "¿dónde está usted",
-                "donde esta usted?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Dónde está usted?",
-                "incorrect": "Use dónde, the formal form está, and usted."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-esta-en-ana",
-              "prompt": "Say 'Ana is in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "ana está en madrid.",
-                "ana está en madrid",
-                "ana esta en madrid",
-                "ana esta en madrid."
-              ],
-              "feedback": {
-                "correct": "Right: Ana está en Madrid.",
-                "incorrect": "Use the location frame está en: Ana está en Madrid."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which verb locates someone? (Estar.) What already-known word introduces the place? (En.) Ask formal “Where are you?” (¿Dónde está usted?) Next: combine identity, origin, state, and location without adding another word or verb form."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C09-practice",
-      "sequence": 870,
-      "title": "Practice — identity, origin, state, and location",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "identify someone, state origin, check wellbeing, and give a location",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:bf603bbd50b5c518",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This checkpoint adds nothing. Use ser for identity and origin; use estar for a current state or location."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: retrieve the two small form sets",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ser: soy, eres, es."
-            },
-            {
-              "kind": "speech",
-              "text": "estar in the questions used here: estás, está."
-            },
-            {
-              "kind": "speech",
-              "text": "Plural forms remain deliberately deferred."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — four root hooks",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ser: esse + sedēre."
-            },
-            {
-              "kind": "speech",
-              "text": "estar: stāre, “stand.”"
-            },
-            {
-              "kind": "speech",
-              "text": "de: Latin dē, “from.”"
-            },
-            {
-              "kind": "speech",
-              "text": "en: Latin in, English in."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: sort by the kind of claim",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "prompt",
-                "answer",
-                "why"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "prompt: ¿Es usted Ana? answer: ser. why: identity.",
-                "prompt: ¿De dónde eres? answer: ser. why: origin.",
-                "prompt: ¿Está usted bien? answer: estar. why: current state.",
-                "prompt: ¿Dónde está Ana? answer: estar. why: location."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "input",
-          "title": "The exchange — only known pieces",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— Hola. ¿Es usted Ana? — Sí. Soy Ana. — ¿De dónde es usted? — Soy de Madrid. — ¿Dónde está Ana? — Está en Madrid. — ¿Está usted bien? — Bien, gracias."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“soy, eres, es”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “soy, eres, es”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the four questions, naming each job",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the four questions, naming each job]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the exchange once",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange once]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "“¿Es usted Ana? ¿Está usted bien?”"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-identity",
-              "prompt": "Complete with es or está: ¿___ usted Ana?",
-              "assesses": [
-                "ES-GRAMMAR-SER-IDENTITY",
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "es",
-                "¿es usted ana?",
-                "es usted ana?"
-              ],
-              "feedback": {
-                "correct": "Right: identifying someone uses es.",
-                "incorrect": "This is identity, so use the ser form es."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-origin",
-              "prompt": "Say 'I am from Madrid' in Spanish.",
-              "assesses": [
-                "ES-LEX-DE",
-                "ES-GRAMMAR-ORIGIN-WITH-SER",
-                "ES-GRAMMAR-SER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "soy de madrid.",
-                "soy de madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Soy de Madrid.",
-                "incorrect": "Use soy de for origin: Soy de Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-location",
-              "prompt": "Say 'Ana is in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "ana está en madrid.",
-                "ana está en madrid",
-                "ana esta en madrid",
-                "ana esta en madrid."
-              ],
-              "feedback": {
-                "correct": "Right: Ana está en Madrid.",
-                "incorrect": "Location uses the frame está en: Ana está en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-practice-state",
-              "prompt": "Complete with es or está: ¿___ usted bien?",
-              "assesses": [
-                "ES-GRAMMAR-SER-ESTAR-CONTRAST",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "está",
-                "¿está usted bien?",
-                "esta usted bien?",
-                "esta"
-              ],
-              "feedback": {
-                "correct": "Right: a current state uses está.",
-                "incorrect": "This asks about a current state, so use está."
-              }
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned forms of ser. (Soy, eres, es.) Which verb identifies and states origin? (Ser.) Which gives a state or location? (Estar.) Ask where one friend is from, then locate Ana in Madrid. Next: ir, “to go,” introduced in the same small-step frame."
+              "text": "What is \"we live\"? (Vivimos.) Why was the difference invisible in the singular? (The ending was unstressed, so the vowels wore together.) And what makes it audible here? (The stress falls on the ending.)"
             }
           ]
         }

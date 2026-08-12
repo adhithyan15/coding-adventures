@@ -1,48 +1,46 @@
-Spanish, chapter 64: Review --- Four Pronouns, One Slot.
+Spanish, chapter 64: Review --- All Four Words for The.
 1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Review — four pronouns, one slot.
+Review — all four words for "the".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Before the table: where does an object pronoun go?
+Nothing new here. Before the table: how many words does Spanish have for "the"?
 
 What you've built.
-Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here.
-[a table of 4 rows, read aloud]
-the one it happens to: me. pronoun: me. example: me quieres — you love me.
-the one it happens to: you. pronoun: te. example: te quiero — I love you.
-the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.
-the one it happens to: it (feminine). pronoun: la. example: la hago — I make it.
-Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time.
+Four. And you have now met every one of them separately, which is why they are allowed to appear together.
+[a table of 2 rows, read aloud]
+masculine. singular: el libro. plural: los libros.
+feminine. singular: la casa. plural: las casas.
+English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid.
+The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built.
 
-Grammar Lens: the single question.
-Choosing between these looks like four decisions. It is one:
-Who or what is the verb landing on?
-If it is you speaking becomes me.
-If it is the person you are speaking to becomes te.
-If it is a thing or somebody else becomes lo or la, and the noun decides which, not you.
-That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against.
+Grammar Lens: the two plural rules.
+And underneath the grid, one rule with a repair:
+Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead.
+casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s.
+usted becomes ustedes, español becomes españoles — consonants, -es.
+You held the first half from chapter one and the second half from ustedes without knowing it had a name.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four in order, then the four examples]
+[your turn — say: "el, la, los, las" until the order is automatic]
 [pause 8 seconds for the answer]
-[your turn — say: "Te quiero" and "Me quieres" back to back, as if two people were speaking]
+[your turn — say: "el libro, los libros, la casa, las casas"]
 [pause 8 seconds for the answer]
 [repeat that twice]
-Until the choice arrives before the sentence does.
+Until the grid is a reflex rather than a lookup.
 [question — say your answer, then pause 10 seconds]
-Name the four object pronouns you now hold.
+Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.
 [question — say your answer, then pause 10 seconds]
-What single question chooses between all four?
-[question — say your answer, then pause 10 seconds]
-Which two of the four depend on knowing a noun's gender?
+Say the books and then the houses.
+[question — say your answer, then pause 12 seconds]
+State the plural rule in one sentence, including what happens after a consonant.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for.
+Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect.

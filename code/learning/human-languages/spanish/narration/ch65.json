@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 65,
-  "title": "Synthesis --- Saying It Once",
+  "title": "Synthesis --- More Than One",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8978f958c6436fa8",
+  "sourceHash": "fnv1a64:d2d1193d275f4100",
   "lessons": [
     {
-      "id": "ES-C42-sintesis-decirlo-una-vez",
-      "sequence": 1115,
-      "title": "Synthesis — saying it once",
+      "id": "ES-C44-sintesis-mas-de-uno",
+      "sequence": 1113,
+      "title": "Synthesis — more than one",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — what these four words are for, which is not accuracy but not sounding like a stranger",
+      "gloss": "synthesis — talking about more than one, and the article that disappears instead of pluralising",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9e87c26e9cb5c40",
+      "sourceHash": "fnv1a64:1fc377958b902d3c",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro."
+              "text": "Say \"I have a book.\" (Tengo un libro.) Now say \"I have books,\" and notice where you hesitate."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: the article that leaves",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here are the same two exchanges, twice. Read both versions aloud."
+              "text": "The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because \"a\" and \"more than one\" disagree by definition."
             },
             {
               "kind": "speech",
-              "text": "Version one:"
+              "text": "English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:"
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida."
+              "text": "Tengo un libro. — I have a book. Tengo libros. — I have books."
             },
             {
               "kind": "speech",
-              "text": "Version two:"
+              "text": "The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago."
-            },
-            {
-              "kind": "speech",
-              "text": "Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them."
+              "text": "This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what the pronoun is actually for",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise."
+              "text": "Read this aloud and watch the two plurals doing different jobs."
             },
             {
               "kind": "speech",
-              "text": "A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book."
+              "text": "— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no."
             },
             {
               "kind": "speech",
-              "text": "So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that."
+              "text": "Bare libros means \"books, some books, books in general.\" Los libros means \"the books\" — particular ones, already known to both of you."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before."
             }
           ]
         },
@@ -103,101 +103,99 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the book exchange, and hear the difference",
+              "instruction": "\"Tengo un libro\" then \"Tengo libros\" — hear the article vanish",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the book exchange, and hear the difference]"
+              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo libros\" — hear the article vanish]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed",
+              "instruction": "\"libros\" then \"los libros\", twice, until the two feel like different questions",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed]"
+              "source": "[YOU SAY: \"libros\" then \"los libros\", twice, until the two feel like different questions]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-book",
-              "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
+              "id": "ES-C44-sintesis-mas-de-uno-bare",
+              "prompt": "Say I have books.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-BARE-PLURAL-NOUN",
                 "ES-LEX-LIBRO",
                 "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "si, lo tengo",
-                "lo tengo",
-                "si lo tengo"
+                "tengo libros",
+                "yo tengo libros"
               ],
               "feedback": {
-                "correct": "That is what a speaker would actually say.",
-                "incorrect": "Si, lo tengo. The noun was already named once; that was enough."
+                "correct": "No article at all — that is the whole trick.",
+                "incorrect": "Tengo libros. The indefinite article is dropped, not pluralised."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-meal",
-              "prompt": "Answer yes to Haces la comida, without repeating the noun.",
+              "id": "ES-C44-sintesis-mas-de-uno-definite",
+              "prompt": "Now say I have the books.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-LEX-LIBRO"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tengo los libros",
+                "yo tengo los libros"
+              ],
+              "feedback": {
+                "correct": "Los libros — particular ones.",
+                "incorrect": "Tengo los libros. The definite article does pluralise."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-sintesis-mas-de-uno-meals",
+              "prompt": "Say I make meals, meaning meals in general.",
+              "assesses": [
+                "ES-GRAMMAR-BARE-PLURAL-NOUN",
                 "ES-LEX-COMIDA",
                 "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "si, la hago",
-                "la hago",
-                "si la hago"
+                "hago comidas",
+                "yo hago comidas"
               ],
               "feedback": {
-                "correct": "La, because comida is feminine.",
-                "incorrect": "Si, la hago. The pronoun carries the gender of the noun that left."
+                "correct": "Bare plural, no article.",
+                "incorrect": "Hago comidas — nothing in front of it."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-people",
-              "prompt": "Somebody says Te quiero. Say the answering half.",
+              "id": "ES-C44-sintesis-mas-de-uno-contrast",
+              "prompt": "What is the difference in meaning between casas and las casas?",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "me quieres",
-                "y yo te quiero",
-                "te quiero"
-              ],
-              "feedback": {
-                "correct": "Two people, four words, a complete exchange.",
-                "incorrect": "Me quieres — or turn it back with te quiero."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-point",
-              "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO"
+                "ES-GRAMMAR-BARE-PLURAL-NOUN",
+                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "it named the same thing twice",
-                "it repeated the noun",
-                "nobody talks like that"
+                "houses in general versus particular known ones",
+                "one is indefinite and one is definite",
+                "las casas means the houses"
               ],
               "feedback": {
-                "correct": "Right — correct is not the same as what a speaker would say.",
-                "incorrect": "Nothing was ungrammatical. It just repeated a thing both people already had in mind."
+                "correct": "The same choice English makes without noticing.",
+                "incorrect": "Casas is houses in general; las casas is the houses, ones you both already have in mind."
               }
             }
           ]
@@ -215,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there."
+              "text": "\"I have books\"? (Tengo libros — no article.) \"I have the books\"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named."
             }
           ]
         }

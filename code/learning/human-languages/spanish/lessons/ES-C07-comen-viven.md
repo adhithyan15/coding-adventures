@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-comen-viven
 spine_node: SPINE-ASK-LOCATION
-sequence: 770
-chapter: 36
+sequence: 790
+chapter: 41
 type: grammar
 headword: comen · viven
 gloss: "they eat," "they live" — and the families agree again

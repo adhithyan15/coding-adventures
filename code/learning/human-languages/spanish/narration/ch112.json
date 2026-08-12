@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 112,
-  "title": "Hable Usted --- The Polite Command",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:61c60f44b0d68ba6",
+  "title": "Ojala --- a Prayer That Outlived Its Religion",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:ebf35b6a94a2dc30",
   "lessons": [
     {
-      "id": "ES-C50-hable-usted",
-      "sequence": 1390,
-      "title": "hable usted — the polite command",
-      "headword": "hable usted",
-      "romanization": "hable usted",
-      "gloss": "the formal command — the subjunctive again, and the reason it is the polite one is worth knowing",
+      "id": "ES-C18-ojala",
+      "sequence": 1398,
+      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
+      "headword": "ojalá + subjunctive",
+      "romanization": "ojalá + subjunctive",
+      "gloss": "a wish trigger borrowed through Hispanic Arabic",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c81ba8e90f67b4b",
+      "sourceHash": "fnv1a64:3751394a322ee9ef",
       "notice": null,
       "blocks": [
         {
@@ -35,67 +35,206 @@
             },
             {
               "kind": "speech",
-              "text": "Usted takes the he/she form of every verb. You have known that since you learned it. Watch what that does to a command."
+              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá + subjunctive."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The wish-word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only modern ojalá as the Spanish trigger."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-trigger",
+              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá hables español.",
+                "ojalá hables español",
+                "ojala hables espanol"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá hables español.",
+                "incorrect": "Use ojalá directly before the tú subjunctive hables."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-no-que",
+              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "no"
+              ],
+              "feedback": {
+                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
+                "incorrect": "No: say Ojalá hables, without que."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-ojala-source",
+              "prompt": "Through which historical language variety did Spanish receive ojalá?",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: the recorded route is through Hispanic Arabic.",
+                "incorrect": "The historical route named here is Hispanic Arabic."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-practice",
+      "sequence": 1402,
+      "title": "Practice — assert the event or want it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39513fab1eb545bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the subjunctive, a third time",
+          "title": "Grammar Lens: the bounded map",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "A command to usted — positive or negative — uses the subjunctive."
-            },
-            {
-              "kind": "speech",
-              "text": "Hable, por favor. — Speak, please. Coma, por favor. — Eat, please. No hable. — Don't speak."
-            },
-            {
-              "kind": "speech",
-              "text": "So the subjunctive now covers three of the four boxes:"
-            },
             {
               "kind": "table",
               "headers": [
-                "",
-                "tú",
-                "usted"
+                "verb",
+                "yo / él / ella / usted",
+                "tú"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 6,
               "utterances": [
-                "do it. tú: habla — ordinary present. usted: hable — subjunctive.",
-                "don't. tú: no hables — subjunctive. usted: no hable — subjunctive."
+                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
+                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
+                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
+                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
+                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
+                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
               ]
             },
             {
               "kind": "speech",
-              "text": "One box out of four uses an ordinary form, and it is the informal, positive one. Everything else reaches for the subjunctive."
+              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: two safe triggers",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is why the formal command is the polite one, and it is not because the subjunctive is a fancy form."
+              "text": "Same doer: Quiero hablar español."
             },
             {
               "kind": "speech",
-              "text": "Remember what usted is: a worn-down vuestra merced, \"your grace\" — a title, and titles are third person. That is why usted takes he/she endings. So a command to usted is not grammatically aimed at the person in front of you at all. It is aimed at your grace, spoken about rather than to."
+              "text": "Different doer: Quiero que hables español."
             },
             {
               "kind": "speech",
-              "text": "That indirectness is the politeness. Every polite language does some version of it: you soften an order by not pointing it straight at somebody. English does it with extra words — could you possibly, would you mind — where Spanish does it with a verb form and a fossil of a title."
+              "text": "Wish by itself: Ojalá hables español."
             },
             {
               "kind": "speech",
-              "text": "Which means that if the usted command ever feels stiff to you, you are hearing it correctly. It is supposed to hold somebody at a small distance."
+              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
             }
           ]
         },
@@ -111,82 +250,209 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Habla\" then \"Hable, por favor\" — hear the distance open up",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Habla\" then \"Hable, por favor\" — hear the distance open up]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four boxes: \"habla, no hables, hable, no hable\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four boxes: \"habla, no hables, hable, no hable\"]"
+              "kind": "speech",
+              "text": "Decide the meaning first; then retrieve only the learned form."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-say",
-              "prompt": "Politely ask somebody you address as usted to speak.",
+              "id": "ES-C18-practice-fact-wanted",
+              "prompt": "Choose the wanted-event form: hablas or hables.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "hables"
+              ],
+              "feedback": {
+                "correct": "Right: hables is the wanted-event form in this chapter.",
+                "incorrect": "Hablas can assert; hables follows the learned wish frame."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-one-two",
+              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
                 "ES-LEX-HABLAR",
-                "ES-LEX-POR-FAVOR"
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 11,
               "acceptedResponses": [
-                "hable, por favor",
-                "hable por favor",
-                "hable usted por favor"
+                "quiero hablar español; quiero que hables español.",
+                "quiero hablar español quiero que hables español",
+                "quiero hablar español / quiero que hables español"
               ],
               "feedback": {
-                "correct": "The subjunctive, plus please.",
-                "incorrect": "Hable, por favor."
+                "correct": "Right: one doer uses hablar; two use que hables.",
+                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-grid",
-              "prompt": "Of the four command boxes, how many use the subjunctive?",
+              "id": "ES-C18-practice-regular-rows",
+              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-GRAMMAR-COMMAND-NEGATIVE"
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "three",
-                "3",
-                "all but the informal positive"
+                "hables, comas, vivas",
+                "hables comas vivas",
+                "hables / comas / vivas"
               ],
               "feedback": {
-                "correct": "Only the informal positive escapes it.",
-                "incorrect": "Three. Only the tu positive uses an ordinary present form."
+                "correct": "Right: hables, comas, vivas.",
+                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-why",
-              "prompt": "Why is the usted command the polite one?",
+              "id": "ES-C18-practice-yo-stem",
+              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
               "assesses": [
-                "ES-GRAMMAR-USTED-THIRD-PERSON",
-                "ES-LEX-USTED"
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "it is aimed at a title, not at the person",
-                "usted is third person, so the order is indirect",
-                "because it is not pointed straight at them"
+                "the yo form",
+                "yo",
+                "present yo form"
               ],
               "feedback": {
-                "correct": "Indirectness is what politeness is made of.",
-                "incorrect": "Usted is vuestra merced, a title. The command is spoken about your grace rather than to you."
+                "correct": "Right: start from the present yo form.",
+                "incorrect": "The recipe begins with the present yo form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-querer",
+              "prompt": "Give the learned singular subjunctive row of querer.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-poder",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-hacer",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala",
+              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá vivas en madrid.",
+                "ojalá vivas en madrid",
+                "ojala vivas en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá vivas en Madrid.",
+                "incorrect": "Use ojalá directly before vivas en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-subjunctive-name",
+              "prompt": "What does the Latin source subiūnctīvus help you picture?",
+              "assesses": [
+                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "a clause subjoined or joined under another",
+                "subjoined",
+                "joined under"
+              ],
+              "feedback": {
+                "correct": "Right: a subjoined clause.",
+                "incorrect": "It carries the idea of being subjoined, or joined under another."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala-source",
+              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: Hispanic Arabic.",
+                "incorrect": "The route recorded here is Hispanic Arabic."
               }
             }
           ]
@@ -204,7 +470,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Speak, please,\" to usted? (Hable, por favor.) Which form? (The subjunctive again.) Why is it polite? (Because usted is a title — the order is aimed past the person, not at them.) Next: all four in one place."
+              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
             }
           ]
         }

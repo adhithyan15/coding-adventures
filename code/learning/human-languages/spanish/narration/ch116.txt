@@ -1,63 +1,41 @@
-Spanish, chapter 116: Days of the Week.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 116: No Hables --- Telling Somebody Not To.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-lunes to viernes — the planets of the week, worn down.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it.
+Lesson 1 of 1.
+no hables — telling somebody not to.
 
 Warm-up.
 [pause 2 seconds]
-The Romans mapped the seven-day week onto the seven visible "wandering stars" — the planet-gods. Spanish kept that map, but handled the word "day" differently from its Romance cousins: where French still spells out "-di" (day) on every weekday, Spanish mostly just dropped it.
+"Speak" is habla. So "don't speak" should be no habla. Say it, and then be told it is wrong.
 
-The words, taken apart: the planet weekdays.
-Each weekday began life as "[planet-god]'s diēs (day)." In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped.
-Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra "‑coles" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings.
+Grammar Lens: the form you already learned for wanting.
+A negative command uses the subjunctive.
+no hables — don't speak. no comas — don't eat.
+Those are not new forms. You built them chapters ago, when you learned to say quiero que hables — "I want you to speak."
+And the connection is not an accident of grammar. Think about what the subjunctive was for: the form for something not asserted — wanted, feared, hoped for, but not claimed to be happening.
+A negative command is exactly that. No hables does not describe any speaking. There is no speaking; the whole point of the sentence is that you want there to be none. Spanish reaches for the non-asserting form because nothing is being asserted.
+So this is not "the negative command borrows the subjunctive." It is the subjunctive doing the thing it has always done.
 
-Guided Practice.
-[pause 1 second]
-[your turn — say: "lunes, martes, miércoles, jueves, viernes" — the work week]
-[pause 8 seconds for the answer]
-[your turn — say: each as "[planet]'s day, worn down" — "lunes = Moon, jueves = Jupiter"]
-[pause 8 seconds for the answer]
-[your turn — say: the bridge — "martes / Tuesday, both the war-god's day (Mars / Tiw)"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Recall the weekday family:
-What did every Spanish weekday begin life as? ("[Planet-god]'s diēs (day)" — the same Latin phrase French keeps more visibly with -di.)
-Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)
-What's debated about miércoles? (Whether its "‑coles" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)
-Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)
-
-
-Lesson 2 of 2.
-sábado and domingo — the week's religious edge.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view.
-
-The two days, taken apart.
-There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped.
-Two different rewrites:
-sábado would have been "Saturn's day" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath.
-domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, "the Lord's day" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word.
+Why it's said this way.
+There is a lopsidedness here worth naming, because it looks like untidiness and is not.
+habla — an ordinary present form. no hables — a subjunctive form.
+Two different shapes for one verb, depending only on whether there is a no in front. Most languages would use one form for both.
+The reason Spanish does not is that the two sentences are doing genuinely different things. Habla points at an action and hands it to you. No hables points at an action and refuses it — and the refusal, not the action, is the sentence's content. The form follows the content, as it did in every subjunctive sentence you have already met.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the full week — "lunes, martes, miércoles, jueves, viernes, sábado, domingo"]
+[your turn — say: "habla" then "no hables" — hear the form change with the no]
 [pause 8 seconds for the answer]
-[your turn — say: "sábado = Sabbath, domingo = the Lord's day" — religion, not planets]
+[your turn — say: "quiero que hables" then "no hables" — the same form, twice]
 [pause 8 seconds for the answer]
-[your turn — say: the pair-ups — "sábado / Saturday (Sabbath vs. Saturn)", "domingo / Sunday (Lord vs. Sun)"]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Tell somebody not to speak.
+[question — say your answer, then pause 8 seconds]
+Tell somebody not to eat.
+[question — say your answer, then pause 14 seconds]
+Why does a negative command take the subjunctive?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? ("The Lord's day," diēs Dominica.)
+"Don't speak"? (No hables.) Which form is that? (The subjunctive — the one for what is not asserted.) Next: the same form again, this time for politeness rather than negation.

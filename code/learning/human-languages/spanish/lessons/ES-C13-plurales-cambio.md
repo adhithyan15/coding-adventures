@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-plurales-cambio
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1076
-chapter: 52
+sequence: 1096
+chapter: 57
 type: grammar
 headword: queremos · quieren
 gloss: the stem-changers in the plural — and you can work them out before you are told

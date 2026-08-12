@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 173,
-  "title": "Synthesis --- Describing Where You Are",
+  "title": "Synthesis --- Sentences Worth Saying",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:aa8cf3d44afaedc5",
+  "sourceHash": "fnv1a64:195edf8a6e2c13d6",
   "lessons": [
     {
-      "id": "ES-C54-sintesis-lo-que-hay",
-      "sequence": 2100,
-      "title": "Synthesis — describing where you are",
+      "id": "ES-C53-sintesis-frases-largas",
+      "sequence": 2115,
+      "title": "Synthesis — sentences worth saying",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — describing a place you are standing in, which needs almost everything this book has given you",
+      "gloss": "synthesis — the first sentences in this book long enough to be worth saying, and why length is not the same as difficulty",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa0d26d599a4b619",
+      "sourceHash": "fnv1a64:26fd24351c4e2cca",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hay is the word you reach for to describe a place. Look around the room you are in and say what is there."
+              "text": "Until this rung, every sentence you could build had one verb in it. Count the verbs in the next one."
             }
           ]
         },
@@ -46,46 +46,46 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Qué hay aquí? — Hay una casa. Hay libros — los que compré. — ¿Y la comida que haces? — Lo que hay, hay que comerlo."
+              "text": "— ¿Tienes el libro que compré? — Sí. Lo que no tengo es la comida que haces."
             },
             {
               "kind": "speech",
-              "text": "The last line is four words of grammar stacked on each other, and every piece came from a different chapter:"
+              "text": "Read the second line again. It has three verbs in it, and you can build every piece of it:"
             },
             {
               "kind": "speech",
-              "text": "lo que hay — the noun-shaped hole, filled by hay."
+              "text": "lo que no tengo — the thing I do not have (a noun-shaped hole)."
             },
             {
               "kind": "speech",
-              "text": "hay que — obligation with nobody obliged."
+              "text": "es — is."
             },
             {
               "kind": "speech",
-              "text": "comerlo — the object pronoun, riding on the end of an infinitive."
+              "text": "la comida que haces — the meal you make (a noun with a sentence hung off it)."
             },
             {
               "kind": "speech",
-              "text": "You have not been taught that last one, and you can still read it: comer plus lo. That is what it feels like when a language starts assembling itself."
+              "text": "Nothing in that sentence is new. What is new is that the pieces are allowed to sit inside each other."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what you can do now",
+          "title": "Grammar Lens: length is not difficulty",
           "segments": [
             {
               "kind": "speech",
-              "text": "Describing a place is a small thing that needs a surprising amount: an existence word, articles that count, nouns, relative clauses to pick things out, and a way to say what has to happen. This chapter needed all of them, and you supplied them without any of it being new."
+              "text": "Long sentences look like an increase in difficulty and are not."
             },
             {
               "kind": "speech",
-              "text": "That is the honest end of a beginner's course. Not \"you are finished\" — nobody is — but the machinery is assembled. Every remaining thing in Spanish is either a word you have not met yet or a familiar structure standing somewhere you have not seen it stand."
+              "text": "A relative clause does not add grammar. It adds a slot where a whole sentence can go, and you fill it with the same Spanish you were already making. Two short sentences become one long one, and the only new thing is the joint."
             },
             {
               "kind": "speech",
-              "text": "The eleven gaps found in the original audit are now closed. What is left is not a gap. It is the ordinary, unbounded work of using the thing."
+              "text": "That is why this is the last structural rung a beginner's course owes you. Not because nothing is left, but because from here the growth is more of what you have, arranged more deeply. What remains genuinely hard is vocabulary and hearing speed, and both are time."
             }
           ]
         },
@@ -103,20 +103,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole four-line exchange",
+              "instruction": "the full two-line exchange",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole four-line exchange]"
+              "source": "[YOU SAY: the full two-line exchange]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo que hay, hay que comerlo\" — and hear four chapters at once",
+              "instruction": "the long sentence broken into its three pieces, then whole",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo que hay, hay que comerlo\" — and hear four chapters at once]"
+              "source": "[YOU SAY: the long sentence broken into its three pieces, then whole]"
             },
             {
               "kind": "repeat",
@@ -126,80 +126,79 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-ask",
-              "prompt": "Ask what there is here.",
+              "id": "ES-C53-sintesis-frases-largas-ask",
+              "prompt": "Ask whether somebody has the book you bought.",
               "assesses": [
-                "ES-LEX-HAY",
-                "ES-LEX-AQUI"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "que hay aqui",
-                "¿qué hay aquí?"
-              ],
-              "feedback": {
-                "correct": "The question you will ask in every new room.",
-                "incorrect": "¿Que hay aqui?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-pick",
-              "prompt": "Say there are books, the ones I bought.",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
                 "ES-LEX-LIBRO",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE"
+                "ES-LEX-COMPRAR-07"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "hay libros, los que compre",
-                "hay libros — los que compré"
+                "tienes el libro que compre",
+                "¿tienes el libro que compré?"
               ],
               "feedback": {
-                "correct": "Hay, then a relative clause picking them out.",
-                "incorrect": "Hay libros, los que compre."
+                "correct": "The que English would have dropped.",
+                "incorrect": "¿Tienes el libro que compre?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-must",
-              "prompt": "Say what there is, one must eat.",
+              "id": "ES-C53-sintesis-frases-largas-hole",
+              "prompt": "Say the thing I do not have.",
               "assesses": [
                 "ES-GRAMMAR-LO-QUE",
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-HAY"
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo que no tengo",
+                "lo que no tengo."
+              ],
+              "feedback": {
+                "correct": "A noun-shaped hole.",
+                "incorrect": "Lo que no tengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-sintesis-frases-largas-full",
+              "prompt": "Say what I do not have is the meal you make.",
+              "assesses": [
+                "ES-GRAMMAR-LO-QUE",
+                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 16,
               "acceptedResponses": [
-                "lo que hay, hay que comerlo",
-                "lo que hay hay que comer"
+                "lo que no tengo es la comida que haces",
+                "lo que no tengo es la comida que haces."
               ],
               "feedback": {
-                "correct": "Four pieces, four different chapters.",
-                "incorrect": "Lo que hay, hay que comerlo."
+                "correct": "Three verbs, and every piece was already yours.",
+                "incorrect": "Lo que no tengo es la comida que haces."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-done",
-              "prompt": "What is left to learn now that the machinery is assembled?",
+              "id": "ES-C53-sintesis-frases-largas-why",
+              "prompt": "Why is a long sentence not harder than the short ones it is made of?",
               "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-GRAMMAR-RELATIVE-QUE"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "words, and familiar structures in new places",
-                "vocabulary and practice",
-                "nothing structural"
+                "the clause only adds a slot, not new grammar",
+                "it is the same spanish arranged inside itself"
               ],
               "feedback": {
-                "correct": "Not a gap — the ordinary unbounded work of using it.",
-                "incorrect": "Words you have not met, and familiar structures standing somewhere new."
+                "correct": "The only new thing is the joint.",
+                "incorrect": "A relative clause adds a slot where a sentence can go — not new grammar."
               }
             }
           ]
@@ -217,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask what there is here. (¿Qué hay aquí?) Say what there is, one must eat. (Lo que hay, hay que comerlo.) And what is left after this? (Words, and practice — the machinery is assembled.)"
+              "text": "How many verbs can one sentence hold now? (As many as you can join.) What does a relative clause actually add? (A slot, not new grammar.) And what is genuinely hard from here? (Vocabulary and hearing speed — both of which are time.)"
             }
           ]
         }

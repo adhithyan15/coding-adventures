@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 96,
-  "title": "Has, Ha, Hemos, Habeis, Han",
+  "title": "Tenia and Tuve --- When the Tense Changes the Meaning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b2e2158ceeb97819",
+  "sourceHash": "fnv1a64:f6c660a1110d7912",
   "lessons": [
     {
-      "id": "ES-C49-haber-completo",
-      "sequence": 1277,
-      "title": "has, ha, hemos, habéis, han",
-      "headword": "has · ha · hemos · habéis · han",
-      "romanization": "has · ha · hemos · habéis · han",
-      "gloss": "the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short",
+      "id": "ES-C48-tenia-tuve",
+      "sequence": 1292,
+      "title": "tenía and tuve — when the tense changes the meaning",
+      "headword": "tenía / tuve",
+      "romanization": "tenía / tuve",
+      "gloss": "the place where the choice stops being a viewpoint and becomes a different meaning outright",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7283fa69267cad34",
+      "sourceHash": "fnv1a64:ce94e54a4c709b73",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,54 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have eaten.\" (He comido.) Now the other five people need their word."
+              "text": "So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the whole of it",
+          "title": "Grammar Lens: having, and getting",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "haber",
-                "with a participle"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "I. haber: he. with a participle: he comido.",
-                "you. haber: has. with a participle: has comido.",
-                "he / she / usted. haber: ha. with a participle: ha comido.",
-                "we. haber: hemos. with a participle: hemos comido.",
-                "you all (Spain). haber: habéis. with a participle: habéis comido.",
-                "they / ustedes. haber: han. with a participle: han comido."
-              ]
+              "kind": "speech",
+              "text": "Tenía una casa. — I had a house. Tuve una casa. — I got a house."
             },
             {
               "kind": "speech",
-              "text": "Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often."
+              "text": "Read those twice. The second one is not \"I had a house, viewed as finished.\" It is a different verb in English altogether."
             },
             {
               "kind": "speech",
-              "text": "That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in."
+              "text": "The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something."
             },
             {
               "kind": "speech",
-              "text": "Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know."
+              "text": "Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started."
+            },
+            {
+              "kind": "speech",
+              "text": "It also explains a frustration you may already have had. English \"I had\" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,110 +95,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he, has, ha, hemos, habéis, han\" until the list is one breath",
+              "instruction": "\"Tenía una casa\" then \"Tuve una casa\" — hear the English change",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he, has, ha, hemos, habéis, han\" until the list is one breath]"
+              "source": "[YOU SAY: \"Tenía una casa\" then \"Tuve una casa\" — hear the English change]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he comido, has comido, ha comido…\" through all six",
+              "instruction": "the rule aloud — a state in the preterite gives you its beginning",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he comido, has comido, ha comido…\" through all six]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: the rule aloud — a state in the preterite gives you its beginning]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-all",
-              "prompt": "Give all six forms of haber, in order.",
+              "id": "ES-C48-tenia-tuve-had",
+              "prompt": "Say I had a house, meaning it was simply so.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-HABER"
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-LEX-TENER",
+                "ES-LEX-CASA"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tenia una casa",
+                "tenía una casa",
+                "yo tenia una casa"
+              ],
+              "feedback": {
+                "correct": "A state, so the imperfect.",
+                "incorrect": "Tenia una casa — having is a state, and states take the imperfect."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-tenia-tuve-got",
+              "prompt": "What does tuve una casa actually mean?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "he, has, ha, hemos, habeis, han",
-                "he has ha hemos habéis han"
+                "i got a house",
+                "i received a house",
+                "the moment i came to have one"
               ],
               "feedback": {
-                "correct": "Five of six are one syllable.",
-                "incorrect": "he, has, ha, hemos, habeis, han."
+                "correct": "The edge of having is getting.",
+                "incorrect": "I got a house — the preterite gives you the moment the state began."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-they",
-              "prompt": "Say they have eaten.",
+              "id": "ES-C48-tenia-tuve-rule",
+              "prompt": "You meet a new verb that names a state. What will its preterite mean?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-COMER",
-                "ES-LEX-USTEDES"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "han comido",
-                "ellos han comido",
-                "ustedes han comido"
-              ],
-              "feedback": {
-                "correct": "Han comido.",
-                "incorrect": "Han comido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-haber-completo-why",
-              "prompt": "Why is haber shorter than an ordinary verb?",
-              "assesses": [
-                "ES-ETYMON-HABERE",
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "because it is said more often",
-                "frequency wears words down",
-                "it is used in every perfect sentence"
+                "the moment the state began",
+                "when it started",
+                "the start of the state"
               ],
               "feedback": {
-                "correct": "The same reason ser and ir are worn strange.",
-                "incorrect": "Frequency. The most-used words wear down the most."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-haber-completo-participle",
-              "prompt": "How many forms does comido take across all six rows?",
-              "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-GRAMMAR-PERFECT-COMPLETE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "one",
-                "1",
-                "it never changes"
-              ],
-              "feedback": {
-                "correct": "All the person-work is in the little word.",
-                "incorrect": "One. The participle never moves."
+                "correct": "So you will never need a list for these.",
+                "incorrect": "The moment that state began — the same rule, every time."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -205,7 +186,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"They have eaten\"? (Han comido.) \"We have eaten\"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule."
+              "text": "Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place."
             }
           ]
         }

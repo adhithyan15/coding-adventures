@@ -1,35 +1,40 @@
-Spanish, chapter 169: Hay --- There Is, There Are, Same Word.
+Spanish, chapter 169: El Libro Que Compro --- One Sentence Out of Two.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-hay — "there is," "there are," same word.
+el libro que compro — one sentence out of two.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have eaten." (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it.
+Say "I want you to speak." (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short.
 
-Sounds you'll need.
-diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always.
+Grammar Lens: stapling two sentences together.
+You have two sentences about one book:
+Tengo el libro. — I have the book. Compro el libro. — I buy the book.
+Que joins them, and the repeated noun disappears:
+Tengo el libro que compro. — I have the book that I buy.
+That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone.
+This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length.
 
-Grammar Lens: one form, and it does not count.
-hay — there is, and there are.
-Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here.
-Read those twice. One book or a hundred, hay does not move.
-That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros.
-Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever.
+The word, taken apart.
+Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions.
+That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement.
+So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Hay una casa" then "Hay libros" — the same word, twice]
+[your turn — say: the two short sentences, then the joined one]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say there is a house.
-[question — say your answer, then pause 8 seconds]
-Say there are books.
-[question — say your answer, then pause 8 seconds]
-What does hay agree with?
+[your turn — say: "el libro que compro", "la casa que tengo"]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 12 seconds]
+Join Tengo el libro and Compro el libro into one sentence.
+[question — say your answer, then pause 10 seconds]
+What happens to the repeated noun when que joins two sentences?
+[question — say your answer, then pause 10 seconds]
+Which question words share que's root?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"There is a house"? (Hay una casa.) "There are books"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it.
+Join "I have the book" and "I buy the book." (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner.

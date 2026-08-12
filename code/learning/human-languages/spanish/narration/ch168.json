@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 168,
-  "title": "Synthesis --- Sentences Worth Saying",
+  "title": "Synthesis --- Reading the Window",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:12314897440dba4d",
+  "sourceHash": "fnv1a64:8e949554195be5af",
   "lessons": [
     {
-      "id": "ES-C53-sintesis-frases-largas",
-      "sequence": 2095,
-      "title": "Synthesis — sentences worth saying",
+      "id": "ES-C52-sintesis-el-letrero",
+      "sequence": 2110,
+      "title": "Synthesis — reading the window",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — the first sentences in this book long enough to be worth saying, and why length is not the same as difficulty",
+      "gloss": "synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49915b6015c2397d",
+      "sourceHash": "fnv1a64:ba52c08b0a213ece",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Until this rung, every sentence you could build had one verb in it. Count the verbs in the next one."
+              "text": "Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it."
             }
           ]
         },
@@ -46,46 +46,46 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro que compré? — Sí. Lo que no tengo es la comida que haces."
+              "text": "Four things on four windows, in one street:"
             },
             {
               "kind": "speech",
-              "text": "Read the second line again. It has three verbs in it, and you can build every piece of it:"
+              "text": "SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR."
             },
             {
               "kind": "speech",
-              "text": "lo que no tengo — the thing I do not have (a noun-shaped hole)."
+              "text": "Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular."
             },
             {
               "kind": "speech",
-              "text": "es — is."
+              "text": "That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose."
             },
             {
               "kind": "speech",
-              "text": "la comida que haces — the meal you make (a noun with a sentence hung off it)."
+              "text": "And for the two unknown words, you already have the tool:"
             },
             {
               "kind": "speech",
-              "text": "Nothing in that sentence is new. What is new is that the pieces are allowed to sit inside each other."
+              "text": "¿Cómo se dice \"fumar\", por favor?"
+            },
+            {
+              "kind": "speech",
+              "text": "Which is itself the same construction, asked out loud."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: length is not difficulty",
+          "title": "Grammar Lens: what it means that nobody is named",
           "segments": [
             {
               "kind": "speech",
-              "text": "Long sentences look like an increase in difficulty and are not."
+              "text": "A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made."
             },
             {
               "kind": "speech",
-              "text": "A relative clause does not add grammar. It adds a slot where a whole sentence can go, and you fill it with the same Spanish you were already making. Two short sentences become one long one, and the only new thing is the joint."
-            },
-            {
-              "kind": "speech",
-              "text": "That is why this is the last structural rung a beginner's course owes you. Not because nothing is left, but because from here the growth is more of what you have, arranged more deeply. What remains genuinely hard is vocabulary and hearing speed, and both are time."
+              "text": "So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting."
             }
           ]
         },
@@ -103,20 +103,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full two-line exchange",
+              "instruction": "the four signs aloud as if walking past them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full two-line exchange]"
+              "source": "[YOU SAY: the four signs aloud as if walking past them]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the long sentence broken into its three pieces, then whole",
+              "instruction": "\"¿Cómo se dice, por favor?\" — the way out of any of them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the long sentence broken into its three pieces, then whole]"
+              "source": "[YOU SAY: \"¿Cómo se dice, por favor?\" — the way out of any of them]"
             },
             {
               "kind": "repeat",
@@ -126,79 +126,80 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-sintesis-frases-largas-ask",
-              "prompt": "Ask whether somebody has the book you bought.",
+              "id": "ES-C52-sintesis-el-letrero-read",
+              "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
-                "ES-LEX-LIBRO",
-                "ES-LEX-COMPRAR-07"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "tienes el libro que compre",
-                "¿tienes el libro que compré?"
-              ],
-              "feedback": {
-                "correct": "The que English would have dropped.",
-                "incorrect": "¿Tienes el libro que compre?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-sintesis-frases-largas-hole",
-              "prompt": "Say the thing I do not have.",
-              "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+                "ES-LEX-COMPRAR-07",
+                "ES-LEX-LIBRO"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo que no tengo",
-                "lo que no tengo."
+                "books are bought here",
+                "they buy books",
+                "we buy books"
               ],
               "feedback": {
-                "correct": "A noun-shaped hole.",
-                "incorrect": "Lo que no tengo."
+                "correct": "And the verb is plural because libros is.",
+                "incorrect": "Books are bought here."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-sintesis-frases-largas-full",
-              "prompt": "Say what I do not have is the meal you make.",
+              "id": "ES-C52-sintesis-el-letrero-unknown",
+              "prompt": "A sign has a word you do not know. Ask somebody, politely.",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-LEX-COMO-SE-DICE",
+                "ES-LEX-POR-FAVOR"
               ],
-              "responseSeconds": 16,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "lo que no tengo es la comida que haces",
-                "lo que no tengo es la comida que haces."
+                "como se dice, por favor",
+                "¿cómo se dice, por favor?"
               ],
               "feedback": {
-                "correct": "Three verbs, and every piece was already yours.",
-                "incorrect": "Lo que no tengo es la comida que haces."
+                "correct": "The same construction, asked out loud.",
+                "incorrect": "¿Como se dice, por favor?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-sintesis-frases-largas-why",
-              "prompt": "Why is a long sentence not harder than the short ones it is made of?",
+              "id": "ES-C52-sintesis-el-letrero-eat",
+              "prompt": "Say the food is good here, the way a sign would.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-COMER",
+                "ES-LEX-BIEN"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "aqui se come bien",
+                "se come bien"
+              ],
+              "feedback": {
+                "correct": "Nobody named, and none needed.",
+                "incorrect": "Aqui se come bien."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-sintesis-el-letrero-authority",
+              "prompt": "Why does leaving the person out give a sign its authority?",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "the clause only adds a slot, not new grammar",
-                "it is the same spanish arranged inside itself"
+                "nobody is claiming it, so there is nobody to argue with",
+                "there is no person to disagree with",
+                "it sounds like a fact rather than an opinion"
               ],
               "feedback": {
-                "correct": "The only new thing is the joint.",
-                "incorrect": "A relative clause adds a slot where a sentence can go — not new grammar."
+                "correct": "Worth noticing every time you meet it.",
+                "incorrect": "No person is claiming anything, so there is nobody to argue with."
               }
             }
           ]
@@ -216,7 +217,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many verbs can one sentence hold now? (As many as you can join.) What does a relative clause actually add? (A slot, not new grammar.) And what is genuinely hard from here? (Vocabulary and hearing speed — both of which are time.)"
+              "text": "Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)"
             }
           ]
         }

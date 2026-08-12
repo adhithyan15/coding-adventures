@@ -1,170 +1,140 @@
-Spanish, chapter 46: Hacer, Decir, and the -go Verb Club.
-4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+Spanish, chapter 46: Ser in the Plural.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 4.
-hacer — doing or making with three singular forms.
+somos — "we are".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You already use tengo, tienes, tiene, and you already know café and the question word qué. Reuse that small frontier for one verb that covers both English “do” and “make.”
+Say "I am." (Soy.) And "we speak." (Hablamos.)
 
-Sounds you'll need.
-The h in hacer is silent, just as it is in hola. In hago, the written g has the hard sound heard before a.
+Grammar Lens: the -mos survives even here.
+somos — we are.
+Look at what survived. Ser is the most irregular verb in Spanish — soy, eres, es share almost nothing — and yet the plural still ends in -mos, exactly as hablamos and comemos do.
+That ending is the single most stable thing in the language. Even a verb that has thrown away everything else kept it.
 
 The word, taken apart.
-hacer means “to do” or “to make.” It descends from Latin facere, with the same making root preserved in English fact, factory, and manufacture. Much of early Castilian changed word-initial Latin f into an h sound that later became silent, leaving the spelling as a historical trace.
-
-Grammar Lens: only the three singular forms.
-[a table of 3 rows, read aloud]
-person: yo. present of hacer: hago.
-person: tú. present of hacer: haces.
-person: él / ella / usted. present of hacer: hace.
-Say the bounded set as hago, haces, hace. Only the learned yo form contains g. Compare it with the familiar tengo, but do not extend the comparison beyond forms you already own.
-Use the forms with one known object:
-Hago café. — “I make coffee.”
-Haces café. — “You make coffee.”
-Hace café. — “He, she, or formal you makes coffee.”
-You can also ask ¿Qué haces? — “What are you doing?” Plural persons and weather expressions wait for later lessons.
+And here is why ser's forms refuse to resemble each other: it is not one verb. It is two Latin verbs fused into a single paradigm.
+Latin esse, "to be", gave soy and somos — the s- forms, and the rest of that family arrives over the next two lessons.
+Latin sedēre, "to sit", gave ser itself, and the future and conditional.
+So somos and ser are not irregular versions of each other. They are descendants of different words, brought together because Spanish needed one verb where Latin had two.
+English did something very similar. Am, is, are, was, be — no two of those look related, because they are not: they come from three separate Old English verbs. Every language seems to build "to be" out of spare parts.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hacer — hago, haces, hace”]
+[your turn — say: "hablamos, comemos, somos" — the same ending, three times]
 [pause 8 seconds for the answer]
-[your turn — say: “¿Qué haces? Hago café.”]
-[pause 8 seconds for the answer]
-[your turn — say: “facere — fact — factory — hacer”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Say 'I make coffee' in Spanish.
+Say we are.
+[question — say your answer, then pause 10 seconds]
+Why do ser's forms look so unlike each other?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two English verbs does hacer cover? (“Do” and “make.”) Give the three learned forms. (Hago, haces, hace.) Which Latin source and English cousin help explain it? (Facere; fact or factory.) Next: add decir without widening the person frame.
+What is "we are"? (Somos.) Which ending did even this verb keep? (-mos.) And why do soy and ser look unrelated? (They are unrelated — two Latin verbs in one paradigm.)
 
 
 Lesson 2 of 4.
-decir — saying with the same small person frame.
+son — "they are".
 
 Warm-up.
 [pause 2 seconds]
-You can ask cómo, say hola, and retrieve hago, haces, hace. Keep those three persons fixed while adding the verb “to say.”
+Say "we are." (Somos.) And "they speak." (Hablan.)
 
-Sounds you'll need.
-In digo, the g before o is hard. Keep the i in all three learned forms short and clear: digo, dices, dice.
+Grammar Lens: the final -n, again.
+son — they are, and ustedes son, you all are.
+Three letters, and it is one of the two or three commonest words in the whole language. The rule you know holds even here: a final -n means the subject is plural and is not you.
 
 The word, taken apart.
-decir means “to say” or “to tell.” It descends from Latin dīcere, “to say.” English keeps the same root in diction, dictionary, predict (“say beforehand”), and verdict (“a true saying”).
-
-Grammar Lens: one more three-form set.
-[a table of 3 rows, read aloud]
-person: yo. present of decir: digo.
-person: tú. present of decir: dices.
-person: él / ella / usted. present of decir: dice.
-Say digo, dices, dice. The yo form has g, while the other two learned forms do not. Do not build a full table or a general vowel-change rule from this small set yet.
-Now combine it only with known language:
-Digo hola. — “I say hello.”
-Dices hola. — “You say hello.”
-Dice hola. — “He, she, or formal you says hello.”
-¿Cómo dices “hola”? — “How do you say ‘hello’?”
+Latin's form was sunt. Spanish dropped the final -t, exactly as it dropped it from hablat to give habla, and sunt became son.
+That is worth noticing because it is the same erosion you have already watched happen twice. Irregular verbs are not exempt from sound change; they are simply verbs where sound change ran on material that had already been strange.
+A word you may already know. English sonata, sonnet and sound have nothing to do with this — they come from Latin sonāre, "to sound". Son the verb and son the noun in English are unrelated to each other and to both. Spanish is full of these collisions, and the way through is always the same: the root, not the spelling.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “decir — digo, dices, dice”]
+[your turn — say: "somos, son" — the two plural forms you now hold]
 [pause 8 seconds for the answer]
-[your turn — say: “Digo hola. ¿Cómo dices hola?”]
+[your turn — say: "ustedes son", addressing a group]
 [pause 8 seconds for the answer]
-[your turn — say: “dīcere — diction — decir”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Give the learned singular present forms of decir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Say they are.
 [question — say your answer, then pause 8 seconds]
-Say 'I say hello' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Ask one friend 'How do you say hello?' in Spanish.
+What Latin form is son worn down from?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does decir mean? (“To say” or “to tell.”) Give the three learned forms. (Digo, dices, dice.) Which Latin source and English cousin help explain it? (Dīcere; diction, dictionary, or predict.) Next: compare only the three yo forms you have actually learned.
+What is "they are"? (Son.) What did Latin's sunt lose? (Its -t, like every other final -t.) Who else does son address? (Ustedes.)
 
 
 Lesson 3 of 4.
-tengo, hago, digo — compare only what you know.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: one visible corner until you have stopped, and I will say so again when we reach it.
+sois — the last of the six.
 
 Warm-up.
 [pause 2 seconds]
-Three learned verbs now place g in the yo form: tengo, hago, digo. Compare those three without guessing the form of any unseen verb.
+Say "they are." (Son.) And which region uses vosotros? (Spain.)
 
-Grammar Lens: one visible corner.
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: infinitive, meaning, learned yo form, learned tú form. Come back and look at it when you have stopped.
-The shared observation is narrow: each learned yo form ends in -go, while each learned tú form does not. This is a memory organizer for three known forms, not permission to manufacture new ones.
+Grammar Lens: one syllable, and the paradigm closes.
+vosotros sois — you all are, in Spain.
+One syllable, and with it the six forms of ser are complete: soy, eres, es, somos, sois, son.
+As before, this is the form you need in order to follow Spain rather than to speak everywhere. In the Americas, ustedes son does the same job.
 
-The pattern, taken apart — convergence, not one magic rule.
-The three modern forms did not arise by attaching one productive Latin -go ending. Older stem sounds changed in different ways, and analogy helped common verbs converge on a familiar shape. That mixed history explains why the group is useful to remember but unsafe as a prediction rule.
-Later lessons can introduce other verbs on their own evidence. For now, the complete comparison is exactly tengo, hago, digo.
+The word, taken apart.
+Latin had estis. Spanish wore away the e- at the front and the -t- in the middle, and sois is what was left — a word reduced almost to nothing but still doing its whole job.
+That is the pattern with this verb throughout. Ser is short everywhere because it is said constantly, and constant use grinds words down. The commonest verb in a language is almost always its most eroded one.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “tengo — hago — digo”]
+[your turn — hear: "sois"]
 [pause 8 seconds for the answer]
-[your turn — say: “tienes — haces — dices”]
+becomes Spain, addressing friends.
+[your turn — say: "ustedes son" then "vosotros sois" — the same sentence, two continents]
 [pause 8 seconds for the answer]
-[your turn — say: “a memory organizer, not a prediction machine”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned yo forms of tener, hacer, and decir, in that order.
 [question — say your answer, then pause 6 seconds]
-Which learned yo form means 'I do' or 'I make'?
+Vosotros, from ser.
+[question — say your answer, then pause 8 seconds]
+The same thing in Peru: which form?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which three learned yo forms end in -go? (Tengo, hago, digo.) May this comparison predict an unseen verb? (No.) Why not? (Different sound histories and analogy converged on the same shape.) Next: retrieve the whole chapter without adding any word or form.
+What is the vosotros form of ser? (Sois.) What Latin word is it worn from? (Estis.) And why is this verb so short everywhere? (Because it is said constantly, and constant use grinds words down.)
 
 
 Lesson 4 of 4.
-Practice — doing, making, and saying in the singular.
+Review — all of ser.
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds nothing. Retrieve two bounded three-form sets, use them with known words, and compare only tengo, hago, digo.
+Nothing new. Say "we are", then "they are."
 
-Grammar Lens: the complete small chapter frame.
-doing or making: hago, haces, hace.
-saying or telling: digo, dices, dice.
-the learned yo comparison: tengo, hago, digo.
-known-word use: Hago café. Digo hola. ¿Cómo dices “hola”?
-Plural persons, weather nouns, homework vocabulary, and unseen verbs remain outside this checkpoint.
-
-The words, taken apart — retrieve the history.
-hacer continues Latin facere, the making family of fact and factory.
-decir continues Latin dīcere, the saying family of diction and predict.
-inherited sound changes and analogy made three known yo forms converge on -go; the resemblance does not predict forms you have not learned.
+Grammar Lens: the table, and why it looks like that.
+[a table of 6 rows, read aloud]
+who: yo. ser, which gives:: soy.
+who: tú. ser, which gives:: eres.
+who: él, ella, usted. ser, which gives:: es.
+who: nosotros. ser, which gives:: somos.
+who: vosotros. ser, which gives:: sois.
+who: ellos, ustedes. ser, which gives:: son.
+Most books present this as a table to memorise. You have built it a form at a time, and you can now read something off it that memorisation would never give you.
+Five of the six begin with s-. One does not. Eres is the outlier, and it is the outlier because it comes from somewhere else — Latin eris, from esse's own future stem, pulled in to fill a gap. The rest are the s- family: sum, sumus, sunt.
+So the "irregularity" is not chaos. It is a seam between two verbs, and you can see exactly where it runs.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hago, haces, hace”]
+[your turn — say: all six, top to bottom]
 [pause 8 seconds for the answer]
-[your turn — say: “digo, dices, dice”]
+[your turn — say: the five s- forms, then eres on its own]
 [pause 8 seconds for the answer]
-[your turn — say: “tengo, hago, digo”]
-[pause 8 seconds for the answer]
-[your turn — say: “Hago café. Digo hola.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the learned singular forms of hacer: yo, tú, then usted.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular forms of decir: yo, tú, then usted.
-[question — say your answer, then pause 9 seconds]
-Give the learned yo forms of tener, hacer, and decir, in that order.
-[question — say your answer, then pause 8 seconds]
-Say 'I make coffee' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Ask one friend 'How do you say hello?' in Spanish.
+[repeat that twice]
+[question — say your answer, then pause 6 seconds]
+We are.
+[question — say your answer, then pause 6 seconds]
+They are.
+[question — say your answer, then pause 10 seconds]
+Which of the six does not begin with s, and why?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) The next chapter may now introduce its own verbs one at a time.
+Give all six forms of ser. (Soy, eres, es, somos, sois, son.) How many begin with s-? (Five.) And why does the sixth not? (It came from a different Latin verb — the seam is visible.)

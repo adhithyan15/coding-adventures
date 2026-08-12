@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-hablan
 spine_node: SPINE-ASK-LOCATION
-sequence: 690
-chapter: 30
+sequence: 710
+chapter: 35
 type: grammar
 headword: hablan
 gloss: "they speak" — and, across most of the Spanish-speaking world, "you all speak"

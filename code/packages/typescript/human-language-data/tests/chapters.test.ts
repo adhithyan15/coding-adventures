@@ -313,8 +313,8 @@ describe("corpus snapshot", () => {
     // +1 to both: Tamil chapter 39, ledgered in chapters.json, declared in
     // book-generation.json and \input into tamil/book/book.tex. All three are needed —
     // the first alone fails the book-cli "ledgered chapter into its book" gate.
-    expect(report.summary.bookChapters).toBe(646); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis)
-    expect(report.summary.declaredChapters).toBe(646); // +98: handwritten capability closure // +4: HL-C98
+    expect(report.summary.bookChapters).toBe(651); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis)
+    expect(report.summary.declaredChapters).toBe(651); // +98: handwritten capability closure // +4: HL-C98
     expect(report.summary.chaptersWithoutCapability).toBe(0);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);
@@ -379,6 +379,10 @@ describe("corpus snapshot", () => {
       policy: loadChapterPolicy(),
     });
     const patternLessons = lessons.filter((lesson) => lesson.realization.type === "pattern");
+    // Still one. The friends arc (HL-C88) teaches productive ENDING rules, and
+    // they are deliberately `grammar` rather than `pattern`: this corpus
+    // reserves `pattern` for a slot-filling production with a single
+    // `-PATTERN-` atom, which an ending correspondence is not.
     expect(patternLessons.map((lesson) => lesson.realization.lessonId)).toEqual([
       "ES-C17-comer-futuro",
     ]);

@@ -1,42 +1,38 @@
-Spanish, chapter 96: Has, Ha, Hemos, Habeis, Han.
+Spanish, chapter 96: Tenia and Tuve --- When the Tense Changes the Meaning.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-has, ha, hemos, habéis, han — the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short.
+tenía and tuve — when the tense changes the meaning.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have eaten." (He comido.) Now the other five people need their word.
+So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events.
 
-Grammar Lens: the whole of it.
-[a table of 6 rows, read aloud]
-I. haber: he. with a participle: he comido.
-you. haber: has. with a participle: has comido.
-he / she / usted. haber: ha. with a participle: ha comido.
-we. haber: hemos. with a participle: hemos comido.
-you all (Spain). haber: habéis. with a participle: habéis comido.
-they / ustedes. haber: han. with a participle: han comido.
-Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often.
-That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in.
-Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know.
+Grammar Lens: having, and getting.
+Tenía una casa. — I had a house. Tuve una casa. — I got a house.
+Read those twice. The second one is not "I had a house, viewed as finished." It is a different verb in English altogether.
+The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something.
+Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting.
+Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English.
+
+Why it's said this way.
+This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started.
+It also explains a frustration you may already have had. English "I had" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "he, has, ha, hemos, habéis, han" until the list is one breath]
+[your turn — say: "Tenía una casa" then "Tuve una casa" — hear the English change]
 [pause 8 seconds for the answer]
-[your turn — say: "he comido, has comido, ha comido…" through all six]
+[your turn — say: the rule aloud — a state in the preterite gives you its beginning]
 [pause 8 seconds for the answer]
-[repeat that twice]
+[question — say your answer, then pause 10 seconds]
+Say I had a house, meaning it was simply so.
 [question — say your answer, then pause 12 seconds]
-Give all six forms of haber, in order.
-[question — say your answer, then pause 8 seconds]
-Say they have eaten.
+What does tuve una casa actually mean?
 [question — say your answer, then pause 12 seconds]
-Why is haber shorter than an ordinary verb?
-[question — say your answer, then pause 8 seconds]
-How many forms does comido take across all six rows?
+You meet a new verb that names a state. What will its preterite mean?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"They have eaten"? (Han comido.) "We have eaten"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule.
+Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place.

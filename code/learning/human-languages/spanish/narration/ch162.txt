@@ -1,44 +1,46 @@
-Spanish, chapter 162: Review --- The Three Se's.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 162: Review --- One Arrow.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Review — the three se's.
+Review — one arrow.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart.
+Nothing new. One question before the table: which way does each preposition point?
 
 What you've built.
-[a table of 3 rows, read aloud]
-reflexive. example: se llama. what the se is: himself.
-impersonal. example: se habla español. what the se is: nobody named.
-the impostor. example: se lo digo. what the se is: le, in disguise.
-And here is the fact that makes this a review rather than a fourth thing to learn:
-The first two are the same word. The third is not.
-The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched.
-The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo.
-So Spanish does not have three ses. It has two, and a coincidence.
+[a table of 7 rows, read aloud]
+built from. para — toward: ad, "toward". por — through, because: per, "through".
+the arrow. para — toward: points at it. por — through, because: comes from it.
+a person. para — toward: para ti — you get it. por — through, because: por ti — you caused it.
+a time. para — toward: para mañana — by then. por — through, because: —.
+thanks. para — toward: —. por — through, because: gracias por — for what caused it.
+asking. para — toward: —. por — through, because: por favor — through a favour.
+asking why. para — toward: —. por — through, because: ¿por qué? — through what?
+Look at the right-hand column. Four of those six por entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it.
+That happens more than a course usually admits. A great deal of what looks like new grammar late in a book is a name for something you have been doing correctly and blindly for a long time.
 
-Grammar Lens: how to tell them apart in the wild.
-You will not have to work this out consciously for long, but while you do:
-Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them.
-Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien.
-Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta.
-The first test is nearly free, because that direct object pronoun is sitting right there in the open.
+Grammar Lens: what to do when you are unsure.
+You will still hesitate sometimes. Two things help, in this order:
+Ask what the sentence is about. A destination, a deadline, a recipient, a purpose — para. A cause, a route, a swap, a duration — por.
+If it is genuinely both, it is genuinely both. Lo hago para ti and lo hago por ti are both good Spanish; you are not choosing right from wrong, you are choosing which thing to say.
+That second point matters more than it looks. Most por/para anxiety comes from believing every sentence has one correct answer waiting to be found. Plenty of sentences take either, and the choice is the meaning.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "se llama", "se habla español", "se lo digo" — two of these are relatives]
+[your turn — say: "para ti / por ti", "para mañana", "gracias por la comida"]
 [pause 8 seconds for the answer]
 [repeat that twice]
+[question — say your answer, then pause 10 seconds]
+Give the two directions in one line.
 [question — say your answer, then pause 12 seconds]
-Of the three se's, which two are really one word?
-[question — say your answer, then pause 10 seconds]
-What single thing right after se tells you it is the impostor?
-[question — say your answer, then pause 10 seconds]
-Which se is in como se dice?
+Name three phrases you already knew that turn out to contain por.
+[question — say your answer, then pause 12 seconds]
+A sentence takes either por or para. What should you conclude?
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it.
+Para — which way? (At it.) Por — which way? (From it.) And when a sentence takes either? (Both are right — the choice is the meaning.) Next: the two of them in a conversation, where the choice does real work.

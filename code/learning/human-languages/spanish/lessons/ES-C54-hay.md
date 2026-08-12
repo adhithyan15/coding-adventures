@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C54-hay
 spine_node: SPINE-ASK-LOCATION
-sequence: 2096
-chapter: 169
+sequence: 2116
+chapter: 174
 type: word
 headword: hay
 gloss: "there is" and "there are" — one word for both, which no other Spanish verb form manages

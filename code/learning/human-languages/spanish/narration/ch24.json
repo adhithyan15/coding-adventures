@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 24,
-  "title": "Putting the -ar Verbs to Work",
+  "title": "-dad --- Twelve Hundred More",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f7d2a21b0e224a3e",
+  "sourceHash": "fnv1a64:a290b3606135cfdd",
   "lessons": [
     {
-      "id": "ES-C06-practice",
-      "sequence": 570,
-      "title": "Practice — making sentences with -ar verbs",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "your first sentences — the -ar present tense in action",
+      "id": "ES-C56-dad",
+      "sequence": 535,
+      "title": "-dad — twelve hundred more",
+      "headword": "-dad",
+      "romanization": "-dad",
+      "gloss": "the ending behind another twelve hundred words, and the one that hides best",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3abdedf57cb6767b",
+      "sourceHash": "fnv1a64:80bb2a0fee628d97",
       "notice": null,
       "blocks": [
         {
@@ -35,74 +35,64 @@
             },
             {
               "kind": "speech",
-              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
+              "text": "-ción is -tion. Here is a second ending, and this one is harder to spot because the two languages wore it down by different amounts."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: conjugate on command",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
               "kind": "speech",
-              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
-            },
-            {
-              "kind": "speech",
-              "text": "hablar: hablo, hablas, habla."
-            },
-            {
-              "kind": "speech",
-              "text": "trabajar: trabajo, trabajas, trabaja."
-            },
-            {
-              "kind": "speech",
-              "text": "estudiar: estudio, estudias, estudia."
-            },
-            {
-              "kind": "speech",
-              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
+              "text": "d-soft — the d between vowels is soft, close to English th in this: ciudad ends nearer -dath than -dad."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange — say something real",
+          "type": "grammar",
+          "title": "Grammar Lens: -dad is -ty",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
+              "text": "Spanish -dad (or -tad) is English -ty."
+            },
+            {
+              "kind": "speech",
+              "text": "ciudad becomes city, libertad becomes liberty, universidad becomes university realidad becomes reality, dificultad becomes difficulty, sociedad becomes society."
+            },
+            {
+              "kind": "speech",
+              "text": "This one does not announce itself the way -ción does. Ciudad and city do not look alike at a glance — but line the endings up and the rule is exact, and once you have seen it you cannot unsee it."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine again, every time: la ciudad, la libertad. That is now two endings that carry their own gender, which between them cover a large slice of the abstract nouns in the language."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built this chapter",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
+              "text": "Latin -tātem made a noun meaning the quality of being something."
             },
             {
               "kind": "speech",
-              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
+              "text": "Spanish inherited it and wore it to -dad: the t softened to d between vowels, exactly as it does in the middle of ciudad today. English took it through French, where it had already worn much further — -tātem to -té to -ty."
             },
             {
               "kind": "speech",
-              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
+              "text": "So English is holding a shorter stub of the same ending. That is why this pair looks less alike than -ción/-tion: not a different relationship, just more erosion on the English side."
             },
             {
               "kind": "speech",
-              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
+              "text": "Which gives you a way to read the ones you have not met. See a Spanish word ending in -dad and you are looking at an abstract quality, and English almost certainly has the same word with a smaller tail."
             }
           ]
         },
@@ -120,38 +110,75 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
+              "instruction": "\"ciudad, libertad, universidad\" — the same tail three times",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
+              "source": "[YOU SAY: \"ciudad, libertad, universidad\" — the same tail three times]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
+              "instruction": "\"city, liberty, university\" straight after, and hear the shorter tail",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
+              "source": "[YOU SAY: \"city, liberty, university\" straight after, and hear the shorter tail]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-dad-make",
+              "prompt": "Turn the English word university into Spanish.",
+              "assesses": [
+                "ES-FRIEND-DAD-TY"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
+              "acceptedResponses": [
+                "universidad",
+                "la universidad"
+              ],
+              "feedback": {
+                "correct": "-ty becomes -dad.",
+                "incorrect": "Universidad."
+              }
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-dad-read",
+              "prompt": "You see the word realidad and have never met it. What does it mean?",
+              "assesses": [
+                "ES-FRIEND-DAD-TY"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "reality",
+                "reality, the quality of being real"
+              ],
+              "feedback": {
+                "correct": "Read, not memorised.",
+                "incorrect": "Reality."
+              }
             },
             {
-              "kind": "speech",
-              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-dad-why",
+              "prompt": "Why does -dad look less like -ty than -cion looks like -tion?",
+              "assesses": [
+                "ES-ETYMON-TATEM",
+                "ES-ETYMON-TIONEM"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "english wore that ending down further",
+                "english took it through french and it eroded more"
+              ],
+              "feedback": {
+                "correct": "Same relationship, more erosion on one side.",
+                "incorrect": "English took -tatem through French, where it had already worn down to -ty."
+              }
             }
           ]
         },
@@ -168,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
+              "text": "English -ty becomes? (-dad.) Gender? (Feminine.) And what does a -dad word always name? (A quality — the state of being something.) Next: an ending you can put on almost any adjective."
             }
           ]
         }

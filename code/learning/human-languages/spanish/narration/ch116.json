@@ -2,34 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 116,
-  "title": "Days of the Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e12854e67301adc7",
+  "title": "No Hables --- Telling Somebody Not To",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:bc025e8786352fd8",
   "lessons": [
     {
-      "id": "ES-C21-lunes-viernes",
-      "sequence": 1490,
-      "title": "lunes to viernes — the planets of the week, worn down",
-      "headword": "lunes, martes, miércoles, jueves, viernes",
-      "romanization": "lunes, martes, miércoles, jueves, viernes",
-      "gloss": "the weekdays (Monday–Friday) — worn-down planet-god names",
+      "id": "ES-C50-no-hables",
+      "sequence": 1409,
+      "title": "no hables — telling somebody not to",
+      "headword": "no hables",
+      "romanization": "no hables",
+      "gloss": "telling somebody NOT to do something — and Spanish reaches for the subjunctive, which is exactly the right place to reach",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d18f867d5cefd6e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The words, taken apart: the planet weekdays"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The words, taken apart: the planet weekdays until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:665c12fa12cb0959",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -44,40 +35,66 @@
             },
             {
               "kind": "speech",
-              "text": "The Romans mapped the seven-day week onto the seven visible \"wandering stars\" — the planet-gods. Spanish kept that map, but handled the word \"day\" differently from its Romance cousins: where French still spells out \"-di\" (day) on every weekday, Spanish mostly just dropped it."
+              "text": "\"Speak\" is habla. So \"don't speak\" should be no habla. Say it, and then be told it is wrong."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The words, taken apart: the planet weekdays",
+          "type": "grammar",
+          "title": "Grammar Lens: the form you already learned for wanting",
           "segments": [
             {
               "kind": "speech",
-              "text": "Each weekday began life as \"[planet-god]'s diēs (day).\" In Vulgar Latin, diēs was simply dropped as a separate word in most of these — what survived is just the planet's own Latin genitive form. That's why martes, jueves, viernes already end in ‑s: not because diēs wore down into one, but because Martis, Iovis, Veneris — the planets' own genitive forms — end in ‑s in Latin already. Lunes has no such ‑s to inherit (lūnae doesn't end in one), so it likely picked up the ending by analogy with its four siblings:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 5,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "planet-god",
-                "English echo"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, planet-god, English echo. Come back and look at it when you have stopped."
+              "text": "A negative command uses the subjunctive."
             },
             {
               "kind": "speech",
-              "text": "Compare French, which keeps diēs as its own visible syllable on every day — lundi, mardi, jeudi — while Spanish dropped it from four of its five weekdays. miércoles is the odd one out: some historians of the language think its extra \"‑coles\" is a genuine surviving trace of diēs itself (fused in and reshaped) — though the exact sound changes are debated, unlike the plainer, better-understood story for its four siblings."
+              "text": "no hables — don't speak. no comas — don't eat."
+            },
+            {
+              "kind": "speech",
+              "text": "Those are not new forms. You built them chapters ago, when you learned to say quiero que hables — \"I want you to speak.\""
+            },
+            {
+              "kind": "speech",
+              "text": "And the connection is not an accident of grammar. Think about what the subjunctive was for: the form for something not asserted — wanted, feared, hoped for, but not claimed to be happening."
+            },
+            {
+              "kind": "speech",
+              "text": "A negative command is exactly that. No hables does not describe any speaking. There is no speaking; the whole point of the sentence is that you want there to be none. Spanish reaches for the non-asserting form because nothing is being asserted."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is not \"the negative command borrows the subjunctive.\" It is the subjunctive doing the thing it has always done."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is a lopsidedness here worth naming, because it looks like untidiness and is not."
+            },
+            {
+              "kind": "speech",
+              "text": "habla — an ordinary present form. no hables — a subjunctive form."
+            },
+            {
+              "kind": "speech",
+              "text": "Two different shapes for one verb, depending only on whether there is a no in front. Most languages would use one form for both."
+            },
+            {
+              "kind": "speech",
+              "text": "The reason Spanish does not is that the two sentences are doing genuinely different things. Habla points at an action and hands it to you. No hables points at an action and refuses it — and the refusal, not the action, is the sentence's content. The form follows the content, as it did in every subjunctive sentence you have already met."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,183 +107,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lunes, martes, miércoles, jueves, viernes\" — the work week",
+              "instruction": "\"habla\" then \"no hables\" — hear the form change with the no",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lunes, martes, miércoles, jueves, viernes\" — the work week]"
+              "source": "[YOU SAY: \"habla\" then \"no hables\" — hear the form change with the no]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"",
+              "instruction": "\"quiero que hables\" then \"no hables\" — the same form, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each as \"[planet]'s day, worn down\" — \"lunes = Moon, jueves = Jupiter\"]"
+              "source": "[YOU SAY: \"quiero que hables\" then \"no hables\" — the same form, twice]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the bridge — \"martes / Tuesday, both the war-god's day (Mars / Tiw)\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Recall the weekday family:"
-            },
-            {
-              "kind": "speech",
-              "text": "What did every Spanish weekday begin life as? (\"[Planet-god]'s diēs (day)\" — the same Latin phrase French keeps more visibly with -di.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes, jueves, viernes end in -s, and where does lunes get its -s from? (From the planet's own Latin genitive — Martis/Iovis/ Veneris already end in -s; lunes likely picked it up by analogy, since lūnae has no -s of its own.)"
-            },
-            {
-              "kind": "speech",
-              "text": "What's debated about miércoles? (Whether its \"‑coles\" is a genuine surviving trace of diēs — unlike the plainer, better-understood story for its four siblings.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Why do martes and Tuesday line up? (They name the same day for the war-god: Mars in Latin, Tiw in Germanic.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C21-sabado-domingo",
-      "sequence": 1500,
-      "title": "sábado and domingo — the week's religious edge",
-      "headword": "sábado, domingo",
-      "romanization": "sábado, domingo",
-      "gloss": "the weekend (Saturday, Sunday) — where religion overwrote astronomy",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:47221a2e0ff30478",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The two days, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The two days, taken apart until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Five days named for planets — then two that broke the pattern entirely. The weekend is where religion overwrote astronomy, and Spanish keeps both rewrites in plain view."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The two days, taken apart",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 2,
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "meaning",
-                "note"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-no-hables-say",
+              "prompt": "Tell somebody not to speak.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-NEGATIVE",
+                "ES-LEX-HABLAR"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 2 rows, and it has more columns than can be held in the ear at once. Its columns are: Spanish, from Latin, meaning, note. Come back and look at it when you have stopped."
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no hables",
+                "¡no hables!"
+              ],
+              "feedback": {
+                "correct": "The subjunctive, doing what it always does.",
+                "incorrect": "No hables — subjunctive, not no habla."
+              }
             },
             {
-              "kind": "speech",
-              "text": "Two different rewrites:"
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-no-hables-eat",
+              "prompt": "Tell somebody not to eat.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-NEGATIVE",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no comas",
+                "¡no comas!"
+              ],
+              "feedback": {
+                "correct": "No comas.",
+                "incorrect": "No comas."
+              }
             },
             {
-              "kind": "speech",
-              "text": "sábado would have been \"Saturn's day\" (as English Saturday still is — the one weekday English kept a Roman god for). Instead, Latin Christians borrowed the Jewish Sabbath (Sabbatum from Hebrew shabbāt), and it became sábado. So English Saturday and Spanish sábado are the same day, two different names — the planet vs. the Sabbath."
-            },
-            {
-              "kind": "speech",
-              "text": "domingo drops Sun-worship entirely: where English keeps Sunday, Spanish made it diēs Dominica, \"the Lord's day\" (Dominus becomes English dominion, dominate, dame). Spanish kept domingo recognizably close to Dominica — compare French's more worn-down dimanche, where the di- (day) fossil jumped to the front of the word."
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-no-hables-why",
+              "prompt": "Why does a negative command take the subjunctive?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-COMMAND-NEGATIVE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "because nothing is being asserted",
+                "there is no speaking to describe",
+                "the subjunctive is the non-asserting form"
+              ],
+              "feedback": {
+                "correct": "The subjunctive doing the thing it has always done.",
+                "incorrect": "Nothing is asserted — no hables describes no speaking at all."
+              }
             }
           ]
         },
         {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full week — \"lunes, martes, miércoles, jueves, viernes, sábado, domingo\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sábado = Sabbath, domingo = the Lord's day\" — religion, not planets]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair-ups — \"sábado / Saturday (Sabbath vs. Saturn)\", \"domingo / Sunday (Lord vs. Sun)\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -278,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give all seven Spanish days. (Lunes … domingo.) Where does sábado come from, and its English contrast? (The Sabbath, Sabbatum; English kept Saturday = Saturn's day.) What does domingo mean literally? (\"The Lord's day,\" diēs Dominica.)"
+              "text": "\"Don't speak\"? (No hables.) Which form is that? (The subjunctive — the one for what is not asserted.) Next: the same form again, this time for politeness rather than negation."
             }
           ]
         }

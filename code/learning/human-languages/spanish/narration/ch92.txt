@@ -1,48 +1,113 @@
-Spanish, chapter 92: Review --- One Question, Three Answers.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 92: The Only Three Irregulars.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Review — one question, three answers.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 3.
+era — an old root in an open past.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new. Before the table: do the two past tenses differ in when?
+You know present soy, eres, es and completed-past fui, fuiste, fue. The open or background past of ser uses a different short stem: era.
 
-What you've built.
-Three chapters, one question, three ways it gets answered.
-[a table of 4 rows, read aloud]
-what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.
-what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.
-what you are doing: naming a state. tense: imperfect. example: tenía — I had.
-what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got.
-Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened.
+Grammar Lens: the singular ser row.
+[a table of 3 rows, read aloud]
+person: yo. open or background past: era.
+person: tú. open or background past: eras.
+person: él / ella / usted. open or background past: era.
+Say era, eras, era. The first and third forms match, just as they did in the regular imperfect rows. ¿Era usted? asks “Was it you?” without adding a new noun. Plural persons wait.
 
-Grammar Lens: the question to actually ask.
-Not "which tense is this?" — that has no answer without you.
-Am I telling you what happened, or what things were like?
-What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:
-Estudiaba cuando habló Ana.
-And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one.
-There is no list to memorise here, and that is deliberate. Lists of "preterite trigger words" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking.
+The root, taken apart.
+Era continues Latin eram, an old form in the esse family. That is the family already connected to Spanish ser and English essence. The preterite fue comes from another historical set, so era / fue is a real contrast inside one modern verb.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablé / hablaba", then "tenía / tuve", and name the difference in each pair]
+[your turn — say: “era, eras, era”]
 [pause 8 seconds for the answer]
-[your turn — say: the question aloud before each one]
+[your turn — say: “¿Era usted?”]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the question arrives before the verb does.
-[question — say your answer, then pause 12 seconds]
-State the one question that chooses the tense.
-[question — say your answer, then pause 10 seconds]
-In estudiaba cuando hablo Ana, which verb is the scene?
-[question — say your answer, then pause 12 seconds]
-Which two rows of the table are NOT the same event seen twice?
+[your turn — say: “era comes from Latin eram”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned singular imperfect forms of ser: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which ser form presents a background past: era or fue?
+[question — say your answer, then pause 6 seconds]
+Which Latin form stands directly behind Spanish era: eram or ībam?
 
 Wrap-up Recall.
 [pause 3 seconds]
-The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for.
+Give the three learned ser forms. (Era, eras, era.) Which past form supplies background, era or fue? (Era.) Which Latin form stands behind it? (Eram.) Next: follow ir back toward its own older verb.
+
+
+Lesson 2 of 3.
+iba — ir returns to its inherited past.
+
+Warm-up.
+[pause 2 seconds]
+Present voy and completed-past fui came from different historical sets. For an open or habitual past, ir gives you iba — “I was going” or “I used to go.”
+
+Grammar Lens: the singular ir row.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: iba.
+person: tú. open or habitual past: ibas.
+person: él / ella / usted. open or habitual past: iba.
+Say iba, ibas, iba. Reuse the destination frame: Iba a Madrid — “I was going to Madrid” or “I used to go to Madrid.” Plural persons wait.
+
+The word, taken apart.
+Iba continues Latin ībam, from īre, the inherited verb behind the Spanish infinitive ir. Present voy contains material associated with vādere, while preterite fui comes from the Latin “be” perfect family. These sources help explain the three learned sets; they do not mean that every form in every tense can be assigned to one source by a three-box rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “iba, ibas, iba”]
+[pause 8 seconds for the answer]
+[your turn — say: “Fui a Madrid. Iba a Madrid.”]
+[pause 8 seconds for the answer]
+[your turn — say: “iba continues ībam from īre”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned singular imperfect forms of ir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I was going to Madrid' in Spanish.
+[question — say your answer, then pause 6 seconds]
+Which inherited Latin verb stands behind iba: īre or vidēre?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Iba, ibas, iba.) Say “I was going to Madrid.” (Iba a Madrid.) Which Latin form stands behind iba? (Ībam, from īre.) Next: put newly learned ver into the same past.
+
+
+Lesson 3 of 3.
+veía — keep the extra e you already met.
+
+Warm-up.
+[pause 2 seconds]
+You learned ver before its past: veo, ves, ve. Its imperfect keeps ve- and adds the familiar -ía row. That gives veía — “I was seeing” or “I used to see.”
+
+Grammar Lens: the singular ver row.
+[a table of 3 rows, read aloud]
+person: yo. open or habitual past: veía.
+person: tú. open or habitual past: veías.
+person: él / ella / usted. open or habitual past: veía.
+Say veía, veías, veía. Keep í-a in separate syllables. Plural persons wait.
+
+The extra e, taken apart.
+Old Spanish veer displays the ve- shape clearly. The imperfect veía preserves that vowel before the familiar -ía material. It is useful to call this an exceptional learned row, but not to pretend that ver was already known before this chapter or that the history is merely “regular plus one letter.”
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “veía, veías, veía”]
+[pause 8 seconds for the answer]
+[your turn — say: “Veo café. Veía café.”]
+[pause 8 seconds for the answer]
+[your turn — say: “veer helps explain ve-”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the learned singular imperfect forms of ver: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Which sentence means 'I was seeing coffee': Veo café or Veía café?
+[question — say your answer, then pause 6 seconds]
+Which earlier Spanish form makes the extra e of veía easier to see: veer or ir?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Veía, veías, veía.) Which vowel stays before -ía? (e.) Which earlier form displays it? (Veer.) Next: retrieve every row of this chapter and make a few bounded contrasts.

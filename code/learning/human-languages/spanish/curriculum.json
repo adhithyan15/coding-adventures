@@ -260,6 +260,66 @@
       ]
     },
     {
+      "id": "ES-PATH-028-CION",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C56-cion"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-CION"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-028-DAD",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C56-dad"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-DAD"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-028-MENTE",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C56-mente"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-MENTE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-028-REVIEW-FR",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C56-repaso-amigos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-REVIEW-FR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-028-SYNTH-FR",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C56-sintesis-leer"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-SYNTH-FR"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
@@ -2013,6 +2073,11 @@
     },
     "SPINE-SAY-WHAT-I-DO": {
       "segments": [
+        "ES-PATH-028-CION",
+        "ES-PATH-028-DAD",
+        "ES-PATH-028-MENTE",
+        "ES-PATH-028-REVIEW-FR",
+        "ES-PATH-028-SYNTH-FR",
         "ES-PATH-028",
         "ES-PATH-029",
         "ES-PATH-030-TENER",
@@ -4173,6 +4238,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C55-la-bebo"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-CION",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-cion"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-DAD",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-dad"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-MENTE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-mente"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-REVIEW-FR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-repaso-amigos"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-SYNTH-FR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-sintesis-leer"
       ]
     }
   ]

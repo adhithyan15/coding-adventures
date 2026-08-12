@@ -1,46 +1,44 @@
-Spanish, chapter 72: Les --- And What the Second System Costs.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 72: Los and Las --- Them, Derived.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-les — "to them," and what this system really costs.
+los and las — "them".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Lo became los. So what does le become? Say it before you read on.
+Tengo el libro becomes lo tengo. Now: Tengo los libros. Say the short version out loud before reading on.
 
-Grammar Lens: right again, and then something better.
-les — to them, to you all.
-Le digo. — I tell him. becomes Les digo. — I tell them.
-Add -s. That is the second time an object pronoun has pluralised without argument, and it will not be the last.
-Now the part worth the chapter. You have just met the sixth and last indirect object pronoun — and you have only ever been taught two of them.
+Grammar Lens: you were right.
+los — them, masculine. las — them, feminine.
+Tengo los libros. becomes Los tengo. — I have them. Hago las comidas. becomes Las hago. — I make them.
+Add -s. That is the whole lesson, and you did it yourself in the warm-up.
+Two chapters have now asked you for a plural and this is the first one that behaved exactly as you would guess. That is worth noticing rather than passing over: most of what is ahead of you in Spanish is like this, and the memorable exceptions are memorable because they are rare.
 
-What you've built.
-Here are the two sets, side by side:
-[a table of 6 rows, read aloud]
-me. direct (what): me. indirect (to whom): me.
-you. direct (what): te. indirect (to whom): te.
-him / her / you. direct (what): lo, la. indirect (to whom): le.
-us. direct (what): nos. indirect (to whom): nos.
-you all (Spain). direct (what): os. indirect (to whom): os.
-them / you all. direct (what): los, las. indirect (to whom): les.
-Look down the two columns. Four of the six rows are identical. Me, te, nos and os do not change at all — the same word does both jobs, and Spanish never asks you to choose.
-So a "whole second system" turns out to cost exactly two new words: le and les. Everything else you already owned, and you owned it before you knew there were two systems to own it in.
-This is worth holding onto beyond this chapter. A grammar book will show you two complete tables and it will look like twelve things. Count what is actually different and it is two.
+The word, taken apart.
+There is one genuinely satisfying thing here.
+The article could not do this. El did not become els; it became los, because el is a worn-down elo that had lost its vowel and the plural had kept it.
+The pronoun never lost that vowel. Lo is illum with the vowel intact — which is exactly why it was not el in the first place. So when the plural came, lo had nothing to repair:
+[a table of 2 rows, read aloud]
+article. singular: el (worn down). plural: los.
+pronoun. singular: lo (vowel kept). plural: los.
+The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in one column and none in the other, from one Latin word, decided entirely by which one got leaned on.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le digo" then "les digo"]
+[your turn — say: "lo tengo" then "los tengo"; "la hago" then "las hago"]
 [pause 8 seconds for the answer]
-[your turn — say: "me, te, nos, os" and note that this list is finished for both systems at once]
+[your turn — say: "el / los" then "lo / los" — one pair changed shape, one did not]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I tell them.
+Say I have them, about los libros.
 [question — say your answer, then pause 8 seconds]
-How many genuinely new words does the indirect set add?
-[question — say your answer, then pause 10 seconds]
-Which four pronouns are identical in both sets?
+Say I make them, about las comidas.
+[question — say your answer, then pause 12 seconds]
+The article el had to change shape for its plural. Why did the pronoun lo not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I tell them"? (Les digo.) How many new words did the whole indirect system cost you? (Two.) Next: how to know which of the two a verb is asking for.
+"I have them," about books? (Los tengo.) About meals? (Las hago.) How do you make an object pronoun plural? (Add -s.) Next: one more form, and it belongs to one part of the world.

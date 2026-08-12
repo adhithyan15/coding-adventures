@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 163,
-  "title": "Synthesis --- Reading the Window",
+  "title": "Synthesis --- The Gift and the Motive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2198b314d8f09005",
+  "sourceHash": "fnv1a64:255e1a10c60e0ffe",
   "lessons": [
     {
-      "id": "ES-C52-sintesis-el-letrero",
-      "sequence": 2090,
-      "title": "Synthesis — reading the window",
+      "id": "ES-C51-sintesis-regalo-motivo",
+      "sequence": 2105,
+      "title": "Synthesis — the gift and the motive",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have",
+      "gloss": "synthesis — a short exchange in which the two-letter difference changes what one person means to another",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4afe0fd2b10f46c6",
+      "sourceHash": "fnv1a64:1107f23e112c961c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it."
+              "text": "Para ti or por ti — one of them is a present and one of them is a reason. Which is which?"
             }
           ]
         },
@@ -46,46 +46,46 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four things on four windows, in one street:"
+              "text": "Read this twice, changing only one word."
             },
             {
               "kind": "speech",
-              "text": "SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR."
+              "text": "— Hago la comida para ti. — Gracias."
             },
             {
               "kind": "speech",
-              "text": "Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular."
+              "text": "— Hago la comida por ti. — …gracias."
             },
             {
               "kind": "speech",
-              "text": "That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose."
+              "text": "The first is somebody cooking you dinner. The second is somebody telling you they are cooking because of you — which, depending on the day, is an act of love or a small complaint."
             },
             {
               "kind": "speech",
-              "text": "And for the two unknown words, you already have the tool:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Cómo se dice \"fumar\", por favor?"
-            },
-            {
-              "kind": "speech",
-              "text": "Which is itself the same construction, asked out loud."
+              "text": "Two letters. Nothing else in the sentence moved."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what it means that nobody is named",
+          "title": "Grammar Lens: a preposition carrying the feeling",
           "segments": [
             {
               "kind": "speech",
-              "text": "A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made."
+              "text": "This is the first place in the book where the smallest word in the sentence carries its emotional content."
             },
             {
               "kind": "speech",
-              "text": "So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting."
+              "text": "Nouns and verbs have been doing the meaning until now. Here the noun is the same, the verb is the same, the person is the same — and the sentence changes completely on a preposition. That is worth meeting deliberately, because English speakers arrive expecting the little words to be plumbing."
+            },
+            {
+              "kind": "speech",
+              "text": "They are not plumbing here. Por and para are the difference between I made this for you and I made this because of you, and no amount of context repairs the wrong one: your listener will simply hear the thing you did not mean."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is also the reassuring part. If you pick the wrong one, you have not produced nonsense or bad grammar — you have said something true about a different situation. Somebody will look faintly puzzled, and you will notice, and that is how this stops being difficult."
             }
           ]
         },
@@ -103,20 +103,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four signs aloud as if walking past them",
+              "instruction": "both versions of the dinner sentence, and hear the second one land differently",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four signs aloud as if walking past them]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cómo se dice, por favor?\" — the way out of any of them",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice, por favor?\" — the way out of any of them]"
+              "source": "[YOU SAY: both versions of the dinner sentence, and hear the second one land differently]"
             },
             {
               "kind": "repeat",
@@ -126,80 +117,80 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-read",
-              "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
+              "id": "ES-C51-sintesis-regalo-motivo-gift",
+              "prompt": "Tell somebody you are making the meal as a gift to them.",
               "assesses": [
-                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
-                "ES-LEX-COMPRAR-07",
-                "ES-LEX-LIBRO"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "books are bought here",
-                "they buy books",
-                "we buy books"
+                "hago la comida para ti",
+                "la hago para ti"
               ],
               "feedback": {
-                "correct": "And the verb is plural because libros is.",
-                "incorrect": "Books are bought here."
+                "correct": "They receive it.",
+                "incorrect": "Hago la comida para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-unknown",
-              "prompt": "A sign has a word you do not know. Ask somebody, politely.",
+              "id": "ES-C51-sintesis-regalo-motivo-cause",
+              "prompt": "Now say it meaning they are the reason you are doing it at all.",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-POR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice, por favor",
-                "¿cómo se dice, por favor?"
+                "hago la comida por ti",
+                "la hago por ti"
               ],
               "feedback": {
-                "correct": "The same construction, asked out loud.",
-                "incorrect": "¿Como se dice, por favor?"
+                "correct": "Love or complaint, depending on the day.",
+                "incorrect": "Hago la comida por ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-eat",
-              "prompt": "Say the food is good here, the way a sign would.",
+              "id": "ES-C51-sintesis-regalo-motivo-thanks",
+              "prompt": "Thank somebody for the meal.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMER",
-                "ES-LEX-BIEN"
+                "ES-LEX-GRACIAS",
+                "ES-LEX-POR",
+                "ES-LEX-COMIDA"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "aqui se come bien",
-                "se come bien"
+                "gracias por la comida",
+                "gracias por la comida."
               ],
               "feedback": {
-                "correct": "Nobody named, and none needed.",
-                "incorrect": "Aqui se come bien."
+                "correct": "Por — the cause of your thanks.",
+                "incorrect": "Gracias por la comida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-authority",
-              "prompt": "Why does leaving the person out give a sign its authority?",
+              "id": "ES-C51-sintesis-regalo-motivo-wrong",
+              "prompt": "You pick the wrong one of the two. What have you produced?",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "nobody is claiming it, so there is nobody to argue with",
-                "there is no person to disagree with",
-                "it sounds like a fact rather than an opinion"
+                "a true sentence about a different situation",
+                "something correct that means something else",
+                "not nonsense, just the wrong meaning"
               ],
               "feedback": {
-                "correct": "Worth noticing every time you meet it.",
-                "incorrect": "No person is claiming anything, so there is nobody to argue with."
+                "correct": "Which is why this stops being difficult once you are talking to people.",
+                "incorrect": "Not bad grammar — a perfectly good sentence about something you did not mean."
               }
             }
           ]
@@ -217,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)"
+              "text": "Para ti — a gift or a reason? (A gift.) Por ti? (A reason.) And what happens if you choose wrong? (You say something true about a different situation — and somebody will look puzzled, which is how you learn it.)"
             }
           ]
         }

@@ -1,38 +1,39 @@
-Spanish, chapter 91: Tenia and Tuve --- When the Tense Changes the Meaning.
+Spanish, chapter 91: Ver --- Seeing.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-tenía and tuve — when the tense changes the meaning.
+ver — learn the verb before its past.
 
 Warm-up.
 [pause 2 seconds]
-So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events.
+Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver.
 
-Grammar Lens: having, and getting.
-Tenía una casa. — I had a house. Tuve una casa. — I got a house.
-Read those twice. The second one is not "I had a house, viewed as finished." It is a different verb in English altogether.
-The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something.
-Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting.
-Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English.
+Grammar Lens: three present forms.
+[a table of 3 rows, read aloud]
+person: yo. present: veo.
+person: tú. present: ves.
+person: él / ella / usted. present: ve.
+The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”
 
-Why it's said this way.
-This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started.
-It also explains a frustration you may already have had. English "I had" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began.
+The word, taken apart.
+Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tenía una casa" then "Tuve una casa" — hear the English change]
+[your turn — say: “ver — to see”]
 [pause 8 seconds for the answer]
-[your turn — say: the rule aloud — a state in the preterite gives you its beginning]
+[your turn — say: “veo, ves, ve”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Say I had a house, meaning it was simply so.
-[question — say your answer, then pause 12 seconds]
-What does tuve una casa actually mean?
-[question — say your answer, then pause 12 seconds]
-You meet a new verb that names a state. What will its preterite mean?
+[your turn — say: “ver comes through veer from vidēre”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 5 seconds]
+What does Spanish ver mean?
+[question — say your answer, then pause 8 seconds]
+Give the learned present forms of ver: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 6 seconds]
+Which Latin verb stands behind Spanish ver: vidēre or īre?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place.
+What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past.

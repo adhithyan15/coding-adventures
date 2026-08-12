@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 49,
-  "title": "Venir --- Coming",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ed848767dade3d44",
+  "title": "Ir in the Plural --- a Verb That Is Not Ir",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:0eb1735e534b7d68",
   "lessons": [
     {
-      "id": "ES-C13-venir",
-      "sequence": 1060,
-      "title": "venir — coming with three singular forms",
-      "headword": "venir",
-      "romanization": "venir",
-      "gloss": "to come — with the singular present forms vengo, vienes, and viene",
+      "id": "ES-C10-vamos",
+      "sequence": 960,
+      "title": "vamos — from a verb that is not ir",
+      "headword": "vamos · vais",
+      "romanization": "vamos · vais",
+      "gloss": "\"we go,\" \"you all go\" — from a verb that is not ir at all",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afcf9d48919ebeec",
+      "sourceHash": "fnv1a64:15d68b1076bd26f5",
       "notice": null,
       "blocks": [
         {
@@ -35,18 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "You can say salgo de Madrid, and you already know tengo, tienes, tiene. Now learn venir, “to come,” inside exactly the same three singular persons."
+              "text": "Say \"I go.\" (Voy.) And \"we speak.\" (Hablamos.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: -amos and -áis, on a stem you have not seen",
           "segments": [
             {
               "kind": "speech",
-              "text": "The g in vengo is hard. In vienes and viene, let ie move as one smooth vowel sequence."
+              "text": "vamos — we go., vais — you all go."
+            },
+            {
+              "kind": "speech",
+              "text": "The endings are ordinary. -amos and -áis are the plain -ar endings from hablamos and habláis."
+            },
+            {
+              "kind": "speech",
+              "text": "What is strange is the stem. The infinitive is ir, and there is no v in it anywhere — yet every one of these forms begins with one."
             }
           ]
         },
@@ -57,58 +65,28 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "venir descends from Latin venīre, “to come.” English convene means “come together”; an event is something that “comes out”; and adventure passed through the idea of what may “come to” a person. The recurring ven- or vent- shape marks this old coming family."
+              "text": "You met this shape two chapters ago and now you can use it as a tool."
+            },
+            {
+              "kind": "speech",
+              "text": "Ir is not one verb. Latin had īre, \"to go\", which gives the infinitive ir and little else. It also had vādere, \"to advance, to make one's way\", which gives voy, vas, va, vamos, vais and one more — the entire present tense."
+            },
+            {
+              "kind": "speech",
+              "text": "So the present of ir is not irregular. It is regular for a different verb, one whose infinitive Spanish stopped using. The endings behave perfectly; they are simply attached to a stem the dictionary form does not show you."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the third time this pattern has explained something: ser from esse and sedēre, and now ir from īre and vādere. English does it too — go and went, where went is really the past of wend."
+            },
+            {
+              "kind": "speech",
+              "text": "The commonest verbs in a language are the likeliest to be made of more than one, because they are used so much that no single word's forms survive intact."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one known comparison, still singular",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present of venir",
-                "known tener comparison"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present of venir: vengo. known tener comparison: tengo.",
-                "person: tú. present of venir: vienes. known tener comparison: tienes.",
-                "person: él / ella / usted. present of venir: viene. known tener comparison: tiene."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say vengo, vienes, viene. The learned singular forms line up closely with tengo, tienes, tiene: the yo form ends in -go, while the other two show ie. This comparison describes two complete learned sets; it does not introduce a plural “boot” table or license guesses about other verbs."
-            },
-            {
-              "kind": "speech",
-              "text": "Now contrast leaving and coming with known de and Madrid:"
-            },
-            {
-              "kind": "speech",
-              "text": "Salgo de Madrid. — “I leave Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Vengo de Madrid. — “I come from Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Vienes de Madrid. — “You come from Madrid.”"
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons and free-standing arrival vocabulary wait for later lessons."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -121,94 +99,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“venir — vengo, vienes, viene”",
+              "instruction": "\"hablamos, vamos\" — the same ending, an unexpected stem",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “venir — vengo, vienes, viene”]"
+              "source": "[YOU SAY: \"hablamos, vamos\" — the same ending, an unexpected stem]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Vengo de Madrid.”",
+              "instruction": "\"voy, vas, va, vamos, vais\" — all one verb, and it is not ir",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Vengo de Madrid.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“vengo / tengo — vienes / tienes”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “vengo / tengo — vienes / tienes”]"
+              "source": "[YOU SAY: \"voy, vas, va, vamos, vais\" — all one verb, and it is not *ir*]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-venir-singular-forms",
-              "prompt": "Give the learned singular present forms of venir: yo, tú, then él/ella/usted.",
+              "id": "ES-C10-vamos-form",
+              "prompt": "Say we go.",
               "assesses": [
-                "ES-LEX-VENIR",
-                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-IR-VERB-PRESENT-1PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "vamos",
+                "nosotros vamos"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "vamos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C10-vamos-why",
+              "prompt": "Why does the present of ir begin with v when the infinitive has none?",
+              "assesses": [
+                "ES-ETYMON-IRE-VADERE",
+                "ES-LEX-IR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "vengo, vienes, viene",
-                "vengo vienes viene",
-                "vengo / vienes / viene"
+                "the present comes from a different verb, vadere",
+                "it is a different verb",
+                "from vadere",
+                "ir is two verbs"
               ],
               "feedback": {
-                "correct": "Right: vengo, vienes, viene.",
-                "incorrect": "Retrieve the bounded set: vengo, vienes, viene."
+                "correct": "Right — the present is regular for vadere, a verb Spanish stopped using whole.",
+                "incorrect": "Because the present descends from vadere, not from ire."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-venir-come-from-madrid",
-              "prompt": "Say 'I come from Madrid' in Spanish.",
+              "id": "ES-C10-vamos-english",
+              "prompt": "Name the English pair that works the same way.",
               "assesses": [
-                "ES-LEX-VENIR",
-                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
-                "ES-LEX-DE"
+                "ES-ETYMON-IRE-VADERE"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "vengo de madrid.",
-                "vengo de madrid"
+                "go and went",
+                "go, went",
+                "went is from wend"
               ],
               "feedback": {
-                "correct": "Right: Vengo de Madrid.",
-                "incorrect": "Use vengo, then the known de plus Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C13-venir-tener-contrast",
-              "prompt": "Give the tú forms of venir and tener, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "vienes, tienes",
-                "vienes tienes",
-                "vienes / tienes"
-              ],
-              "feedback": {
-                "correct": "Right: vienes, tienes.",
-                "incorrect": "Both learned tú forms show ie: vienes, tienes."
+                "correct": "Yes — went is really the past of wend.",
+                "incorrect": "Go and went; went belongs to wend."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -220,7 +187,213 @@
             },
             {
               "kind": "speech",
-              "text": "What does venir mean? (“To come.”) Give its three learned forms. (Vengo, vienes, viene.) Which learned verb provides the close comparison? (Tener: tengo, tienes, tiene.) Which Latin source and English cousin help explain it? (Venīre; convene, event, or adventure.) Next: compare all six learned yo forms only after retrieving this chapter's three verbs."
+              "text": "What is \"we go\"? (Vamos.) Which Latin verb do these forms come from? (Vādere.) And what does that make ir? (Two verbs, like ser — and like English go and went.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C10-van",
+      "sequence": 964,
+      "title": "van — and the four are done",
+      "headword": "van",
+      "romanization": "van",
+      "gloss": "\"they go\" — three letters, and the high-frequency verbs are complete",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1f13c9e04c16539",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we go.\" (Vamos.) And \"they speak.\" (Hablan.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the last form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "van — they go, and ustedes van, you all go."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin's form was vadunt. Spanish wore it down to three letters, and the rule still holds visibly: a final -n, and the subject is plural and not you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four chapters ago you could conjugate any regular verb in the present, and none of the irregular ones. Now the four commonest verbs in Spanish are complete in every person:"
+            },
+            {
+              "kind": "speech",
+              "text": "ser, estar, tener, ir — to be, to be, to have, to go."
+            },
+            {
+              "kind": "speech",
+              "text": "And each one taught something that outlives it:"
+            },
+            {
+              "kind": "speech",
+              "text": "ser — two Latin verbs fused, so the seam shows at eres."
+            },
+            {
+              "kind": "speech",
+              "text": "estar — one verb, so it is regular; the accent only marks stress."
+            },
+            {
+              "kind": "speech",
+              "text": "tener — the stem breaks exactly where it is stressed, in every stem-changing verb, which is why nosotros and vosotros never break."
+            },
+            {
+              "kind": "speech",
+              "text": "ir — its present belongs to a different verb entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of those four are about the same underlying thing: a verb that looks chaotic is usually more than one word, and the places it looks regular are the places one word survived intact."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"somos, estamos, tenemos, vamos\" — the four, in the we form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"somos, estamos, tenemos, vamos\" — the four, in the *we* form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"son, están, tienen, van\" — the four, in the they form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"son, están, tienen, van\" — the four, in the *they* form]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until all four run without a gap."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C10-van-form",
+              "prompt": "Say they go.",
+              "assesses": [
+                "ES-GRAMMAR-IR-VERB-PRESENT-3PL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "van",
+                "ellos van",
+                "ustedes van"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "van."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C10-van-four",
+              "prompt": "They are (permanently), and they are (right now): which two forms?",
+              "assesses": [
+                "ES-GRAMMAR-SER-PRESENT-COMPLETE",
+                "ES-GRAMMAR-ESTAR-PRESENT-COMPLETE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "son and estan",
+                "son, están",
+                "son y estan"
+              ],
+              "feedback": {
+                "correct": "Both, and you now hold every person of each.",
+                "incorrect": "Son and estan."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C10-van-lesson",
+              "prompt": "What usually explains a Spanish verb that looks chaotic?",
+              "assesses": [
+                "ES-ETYMON-IRE-VADERE",
+                "ES-GRAMMAR-TENER-PRESENT-3PL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "it is more than one verb",
+                "two verbs fused",
+                "it is several words",
+                "suppletion"
+              ],
+              "feedback": {
+                "correct": "Right — and the regular-looking parts are where one word survived whole.",
+                "incorrect": "That it is more than one verb wearing a single name."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"they go\"? (Van.) Name the four verbs you have just completed. (Ser, estar, tener, ir.) And what do three of them have in common? (Each is more than one Latin verb, or its stem change follows the stress.)"
             }
           ]
         }

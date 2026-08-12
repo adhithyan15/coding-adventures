@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 73,
-  "title": "Which One Is the Verb Asking For?",
+  "title": "Os --- You All, in Spain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b3fa81cec18eceb6",
+  "sourceHash": "fnv1a64:01ef346e5b96b484",
   "lessons": [
     {
-      "id": "ES-C46-cual-pide",
-      "sequence": 1123,
-      "title": "Which one is the verb asking for?",
-      "headword": "lo tengo / le hablo",
-      "romanization": "lo tengo / le hablo",
-      "gloss": "how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb",
+      "id": "ES-C45-os",
+      "sequence": 1138,
+      "title": "os — \"you all,\" in Spain",
+      "headword": "os",
+      "romanization": "os",
+      "gloss": "\"you all\" as the object — the shortest word in the set, and the one that stops at a border",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60286167a8fe81ef",
+      "sourceHash": "fnv1a64:f3009532ebd80497",
       "notice": null,
       "blocks": [
         {
@@ -35,61 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not."
+              "text": "Which word for \"you all\" is used in Spain, and which everywhere else? (Vosotros in Spain; ustedes everywhere.) That split is about to appear one last time."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: ask the verb one question",
+          "title": "Grammar Lens: the object form of vosotros",
           "segments": [
             {
               "kind": "speech",
-              "text": "Does the verb do something to this, or aim something at this?"
+              "text": "os — you all, as the one it happens to."
             },
             {
               "kind": "speech",
-              "text": "That is the whole test."
+              "text": "Os quiero. — I love you all."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect."
+              "text": "Two letters, the shortest word in the set. It pairs with vosotros, so it lives exactly where vosotros lives: Spain, and nowhere else in daily speech."
             },
             {
               "kind": "speech",
-              "text": "Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:"
+              "text": "Across the Atlantic, \"you all\" as an object is los or las — the same forms you learned last chapter, because ustedes is grammatically a they-word:"
             },
             {
               "kind": "speech",
-              "text": "I speak to her becomes le hablo. Fits."
+              "text": "Os quiero. — I love you all. (Spain) Los quiero. — I love you all. (everywhere else)."
             },
             {
               "kind": "speech",
-              "text": "I have to the book becomes nonsense. So lo tengo."
-            },
-            {
-              "kind": "speech",
-              "text": "English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le."
+              "text": "Neither is a mistake for the other. Several hundred million speakers will never say os in their lives, and forty million say it every day."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "One thing the test will not settle, said now rather than met later as a shock."
+              "text": "Os was vos, and the v simply fell off in the object slot — a word this small, said this often, and never stressed, wears faster than the rest of the language."
             },
             {
               "kind": "speech",
-              "text": "In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it."
+              "text": "That same vos is still visible in two places you have met. It is the front of vosotros (vos + otros, \"you others,\" built exactly like nosotros). And it survives whole as a subject pronoun in Argentina and much of Central America, where vos replaces tú."
             },
             {
               "kind": "speech",
-              "text": "So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere."
+              "text": "So one Latin word left three descendants alive in three different conditions: worn to os in Spain, glued into vosotros in Spain, and standing intact as vos across the Río de la Plata. Same word, three fates, decided by geography."
             }
           ]
         },
@@ -107,89 +103,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo tengo\" then \"Le hablo\" — which question does each answer?",
+              "instruction": "\"Os quiero\" then \"Los quiero\" — the same sentence, two continents",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo tengo\" then \"Le hablo\" — which question does each answer?]"
+              "source": "[YOU SAY: \"Os quiero\" then \"Los quiero\" — the same sentence, two continents]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vos\", \"os\", \"vosotros\" and hear one word in three states",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vos\", \"os\", \"vosotros\" and hear one word in three states]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-test",
-              "prompt": "State the one-question test in your own words.",
+              "id": "ES-C45-os-say",
+              "prompt": "Say I love you all, as a speaker in Spain would.",
               "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "does the verb act on it or aim at it",
-                "can you put to in front of it in english",
-                "to whom versus what"
-              ],
-              "feedback": {
-                "correct": "Acts on it, or aims at it.",
-                "incorrect": "Ask whether the verb acts ON the thing, or aims something AT the person."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-cual-pide-speak",
-              "prompt": "Say I speak to her.",
-              "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-1SG"
+                "ES-GRAMMAR-OS-DIRECT-OBJECT",
+                "ES-LEX-OS-OBJECT"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "le hablo",
-                "yo le hablo"
+                "os quiero",
+                "yo os quiero"
               ],
               "feedback": {
-                "correct": "Aimed at her, so le.",
-                "incorrect": "Le hablo — the speaking is aimed at somebody."
+                "correct": "Os quiero.",
+                "incorrect": "Os quiero — the object partner of vosotros."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-have",
-              "prompt": "Say I have it, about the book, and say which set that is.",
+              "id": "ES-C45-os-other",
+              "prompt": "Say the same thing the way most of the Spanish-speaking world would.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-LEX-USTEDES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo tengo, direct",
-                "lo tengo"
+                "los quiero",
+                "las quiero",
+                "los quiero a ustedes"
               ],
               "feedback": {
-                "correct": "The having lands on the book.",
-                "incorrect": "Lo tengo — direct, because the verb acts on the thing."
+                "correct": "Ustedes behaves as a they-word, so the pronoun is los or las.",
+                "incorrect": "Los quiero — or las, for a group of women."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-leismo",
-              "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
+              "id": "ES-C45-os-vos",
+              "prompt": "Which older word is os worn down from, and where is it still said whole?",
               "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT",
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
+                "ES-LEX-OS-OBJECT",
+                "ES-LEX-VOSOTROS"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "no, it is leismo and it is accepted",
-                "no",
-                "no, that is normal in spain"
+                "vos, in argentina",
+                "vos",
+                "vos, in the river plate region"
               ],
               "feedback": {
-                "correct": "Two answers, both somebody's normal.",
-                "incorrect": "No. That is leismo, it is old and accepted for people, and about a fifth of speakers do it."
+                "correct": "One word, three fates.",
+                "incorrect": "Vos — worn to os in Spain, glued into vosotros, and standing whole in Argentina."
               }
             }
           ]
@@ -207,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place."
+              "text": "\"I love you all,\" in Spain? (Os quiero.) Elsewhere? (Los quiero.) What is os worn down from? (Vos.) Next: all eight of these in one place."
             }
           ]
         }

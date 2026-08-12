@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 58,
-  "title": "-es --- The Plural Chapter One Promised",
+  "title": "La Casa --- Your First Everyday Noun",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a3543424b1973307",
+  "sourceHash": "fnv1a64:3252917a9a695d30",
   "lessons": [
     {
-      "id": "ES-C44-plural-es",
-      "sequence": 1089,
-      "title": "-es — the plural your first chapter owed you",
-      "headword": "-es",
-      "romanization": "-es",
-      "gloss": "the plural ending for words that end in a consonant — a rule you have been using since you learned ustedes",
+      "id": "ES-C43-casa",
+      "sequence": 1099,
+      "title": "la casa — \"house,\" and \"home\"",
+      "headword": "la casa",
+      "romanization": "la casa",
+      "gloss": "house, home — and a word French wore down so far it stopped looking like a noun",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05e61b6e76601a8d",
+      "sourceHash": "fnv1a64:a1d97dc8f6cf8973",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,65 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"you,\" formally. (Usted.) Now say it to a group. (Ustedes.) Hold both of those in your mouth for a moment."
+              "text": "You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: you have been doing this for fifty chapters",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Your first chapter gave you half a rule and said the rest was for later. This is later."
-            },
-            {
-              "kind": "speech",
-              "text": "A word ending in a vowel adds -s. A word ending in a consonant adds -es."
-            },
-            {
-              "kind": "speech",
-              "text": "And you already know the second half, because you have been saying it since the day you learned to address a group:"
-            },
-            {
-              "kind": "speech",
-              "text": "usted becomes ustedes."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a special word. That is the consonant rule, and nobody told you. Here it is again on something you also hold:"
-            },
-            {
-              "kind": "speech",
-              "text": "español becomes españoles — Spanish people, Spanish speakers. los españoles — with the plural article from last chapter."
+              "text": "s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The extra e is not decoration and not an exception. Try saying usteds out loud. Then españols."
+              "text": "la casa — the house, and just as often home."
             },
             {
               "kind": "speech",
-              "text": "Spanish does not let a word end in that pile of consonants. So when the plural -s would land somewhere unsayable, the language puts in the vowel it needs to get the -s out — and that vowel is e."
+              "text": "Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa."
             },
             {
               "kind": "speech",
-              "text": "Which means the rule is really one rule with a repair attached: add -s; if you cannot say it, make room. That is a better thing to hold than two rules, because it will keep explaining things long after this chapter."
+              "text": "French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, \"at the house of me.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Italian kept a small one too: casino is casa plus a diminutive ending — literally \"little house.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a feminine noun, behaving exactly as promised",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones."
+            },
+            {
+              "kind": "speech",
+              "text": "la casa — the house. Tengo una casa. — I have a house."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,93 +106,81 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"usted\" then \"ustedes\" — the rule you already had",
+              "instruction": "\"la casa\" — KAH-sah, a clean s",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"usted\" then \"ustedes\" — the rule you already had]"
+              "source": "[YOU SAY: \"la casa\" — *KAH-sah*, a clean *s*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"los españoles\"",
+              "instruction": "\"Tengo una casa\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"los españoles\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "try \"usteds\" and hear why the e exists",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: try \"usteds\" and hear why the *e* exists]"
+              "source": "[YOU SAY: \"Tengo una casa\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-plural-es-espanol",
-              "prompt": "Make espanol plural.",
+              "id": "ES-C43-casa-article",
+              "prompt": "Say the house in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-NOUN-PLURAL-ES",
-                "ES-LEX-ESPANOL"
+                "ES-LEX-CASA",
+                "ES-GRAMMAR-NOUN-GENDER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "espanoles",
-                "los espanoles"
+                "la casa",
+                "casa"
               ],
               "feedback": {
-                "correct": "Consonant ending, so -es.",
-                "incorrect": "Espanoles — the consonant takes -es."
+                "correct": "Feminine, so la.",
+                "incorrect": "La casa — it ends in -a and is feminine."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-plural-es-already",
-              "prompt": "Which word have you been using this rule on since long before this chapter?",
+              "id": "ES-C43-casa-have",
+              "prompt": "Say I have a house.",
               "assesses": [
-                "ES-LEX-USTEDES",
-                "ES-LEX-USTED",
-                "ES-GRAMMAR-NOUN-PLURAL-ES"
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "ustedes",
-                "usted becomes ustedes",
-                "usted"
+                "tengo una casa",
+                "yo tengo una casa"
               ],
               "feedback": {
-                "correct": "You had the rule before you had the rule.",
-                "incorrect": "Ustedes — that is usted plus the consonant plural."
+                "correct": "Yes — and note you needed no new grammar for it.",
+                "incorrect": "Tengo una casa."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-plural-es-why",
-              "prompt": "Why -es rather than plain -s after a consonant?",
+              "id": "ES-C43-casa-french",
+              "prompt": "Which French word is casa worn all the way down?",
               "assesses": [
-                "ES-GRAMMAR-NOUN-PLURAL-ES"
+                "ES-ETYMON-CASA"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "the bare s would be unsayable",
-                "you cannot pronounce it",
-                "spanish needs a vowel to get the s out"
+                "chez",
+                "chez, as in chez moi"
               ],
               "feedback": {
-                "correct": "One rule and a repair, not two rules.",
-                "incorrect": "Try saying ustedes without the e. The vowel is there to make the -s pronounceable."
+                "correct": "Chez moi is literally at the house of me.",
+                "incorrect": "Chez. The noun wore down until it became a preposition."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "Vowel ending — which plural? (-s.) Consonant ending? (-es.) And why? (A bare -s there would be unsayable.) Next: the four articles in one place, now that every one of them has been earned."
+              "text": "What is \"the house\"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree."
             }
           ]
         }

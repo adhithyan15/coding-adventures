@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 75,
-  "title": "Synthesis --- The Thing and the Person",
+  "title": "Synthesis --- The Conversation Without Them",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f9bb44c0d193770b",
+  "sourceHash": "fnv1a64:1fa274394aa6163d",
   "lessons": [
     {
-      "id": "ES-C46-sintesis-dar-y-decir",
-      "sequence": 1125,
-      "title": "Synthesis — the thing and the person, in one sentence",
+      "id": "ES-C45-sintesis-sin-repetir",
+      "sequence": 1140,
+      "title": "Synthesis — the conversation without them",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — choosing between the two sets at conversation speed, where the choice is made by meaning and not by a table",
+      "gloss": "synthesis — a conversation that would collapse without these eight words, and one that shows what they cost",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:055510210186d1f8",
+      "sourceHash": "fnv1a64:93f1f4fb7046c896",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pronouns, one question. Lo or le — what decides?"
+              "text": "¿Tienes los libros? Answer yes without saying libros."
             }
           ]
         },
@@ -46,50 +46,42 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read this aloud and watch the two sets take turns."
+              "text": "Four turns, with the pronouns:"
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Y Ana? — Le digo hoy."
+              "text": "— ¿Tienes los libros? — Sí, los tengo. — ¿Y las comidas? — Las hago hoy."
             },
             {
               "kind": "speech",
-              "text": "Four turns. The book gets lo, because the having lands on it. Ana gets le, because the telling is aimed at her."
+              "text": "Now the same four turns without them:"
             },
             {
               "kind": "speech",
-              "text": "Nothing in the sentence shape tells you which. Same slot, two letters each, one Latin ancestor. The only thing separating them is what you mean."
+              "text": "— ¿Tienes los libros? — Sí, tengo los libros. — ¿Y las comidas? — Hago las comidas hoy."
             },
             {
               "kind": "speech",
-              "text": "That is new. Every choice so far could be settled by looking at something — a noun's ending, its article, where the stress falls. This one cannot."
+              "text": "Read the second version aloud, all four lines. It is not wrong anywhere. It is exhausting, and by the fourth line it sounds like somebody being careful with a stranger rather than talking."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: choosing at speed",
+          "title": "Grammar Lens: what a pronoun buys, and what it costs",
           "segments": [
             {
               "kind": "speech",
-              "text": "In a real conversation you do not have time to run a test. So do not aim for the test — aim for the feeling of the two verbs:"
+              "text": "The pronoun buys speed, and it is paid for with attention."
             },
             {
               "kind": "speech",
-              "text": "Verbs that hold, make, want, see land on a thing. Those take lo, la, los, las."
+              "text": "Los tengo is only clear because both of you remember what los points at. If the last three sentences were about meals and you say los tengo, your listener hunts for a masculine thing and finds none. A pronoun is a promise that the thing is still in the room."
             },
             {
               "kind": "speech",
-              "text": "Verbs that tell, speak, give, ask are aimed at a person. Those take le, les."
-            },
-            {
-              "kind": "speech",
-              "text": "Say enough sentences and the verb starts arriving with its pronoun attached, which is what fluency here actually is. The test is scaffolding for when you are unsure, not the method."
-            },
-            {
-              "kind": "speech",
-              "text": "And when you get it wrong you will be understood: lo digo and le digo are both ordinary sentences. You will have said something slightly other than you meant, and the person will ask."
+              "text": "That is the real skill, and it is not on the grid: hold what has been said, and point back at it accurately. English asks the same of you and you have done it since you were three, which is why nobody taught it to you. Here the pointer must also agree in gender and number — which is why lo and la were the hard quarter of that table."
             }
           ]
         },
@@ -107,88 +99,100 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo, le digo, los tengo, les hablo\" until each verb brings its own pronoun",
+              "instruction": "both versions of the four-turn exchange, and hear the second one tire",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo, le digo, los tengo, les hablo\" until each verb brings its own pronoun]"
+              "source": "[YOU SAY: both versions of the four-turn exchange, and hear the second one tire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-sintesis-dar-y-decir-book",
-              "prompt": "Answer yes to Tienes el libro, without the noun.",
+              "id": "ES-C45-sintesis-sin-repetir-books",
+              "prompt": "Answer yes to Tienes los libros, without the noun.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
                 "ES-LEX-LIBRO",
                 "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "si, lo tengo",
-                "lo tengo"
+                "si, los tengo",
+                "los tengo",
+                "si los tengo"
               ],
               "feedback": {
-                "correct": "The having lands on the book.",
-                "incorrect": "Si, lo tengo."
+                "correct": "Los tengo.",
+                "incorrect": "Si, los tengo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-sintesis-dar-y-decir-person",
-              "prompt": "Say I tell her today.",
+              "id": "ES-C45-sintesis-sin-repetir-meals",
+              "prompt": "Answer the question about las comidas, saying you make them.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "le digo hoy",
-                "le digo"
+                "las hago",
+                "si, las hago",
+                "las hago hoy"
               ],
               "feedback": {
-                "correct": "Aimed at her, so le.",
-                "incorrect": "Le digo hoy."
+                "correct": "Feminine plural, so las.",
+                "incorrect": "Las hago."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-sintesis-dar-y-decir-plural",
-              "prompt": "Say I speak to them.",
+              "id": "ES-C45-sintesis-sin-repetir-us",
+              "prompt": "Say they love us.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-1SG"
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "les hablo",
-                "yo les hablo"
+                "nos quieren",
+                "ellos nos quieren"
               ],
               "feedback": {
-                "correct": "Les hablo.",
-                "incorrect": "Les hablo — aimed at more than one person."
+                "correct": "Nos quieren.",
+                "incorrect": "Nos quieren."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-sintesis-dar-y-decir-what",
-              "prompt": "Two pronouns in the same slot, both two letters, both from one Latin word. What is the only thing that tells them apart?",
+              "id": "ES-C45-sintesis-sin-repetir-cost",
+              "prompt": "You have been talking about meals and you say los tengo. What goes wrong for your listener?",
               "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "what you mean",
-                "the meaning",
-                "whether the verb acts on it or aims at it"
+                "they look for a masculine thing and there is not one",
+                "the pronoun points at nothing",
+                "the gender does not match what was said"
               ],
               "feedback": {
-                "correct": "The first choice in this book that nothing on the page can settle.",
-                "incorrect": "What you mean — whether the verb acts on the thing or is aimed at the person."
+                "correct": "A pronoun is a promise that the thing is still in the room.",
+                "incorrect": "Los is masculine, and nothing masculine has been named. The pointer misses."
               }
             }
           ]
@@ -206,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes el libro? (Sí, lo tengo.) \"I tell her today\"? (Le digo hoy.) What decides between lo and le? (What you mean — nothing on the page.) Next: what happens when a sentence needs both at once."
+              "text": "¿Tienes los libros? (Sí, los tengo.) ¿Y las comidas? (Las hago.) What does a pronoun promise? (That the thing it points at is still in the room.) Next: the past tense."
             }
           ]
         }

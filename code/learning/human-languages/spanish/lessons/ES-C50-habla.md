@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C50-habla
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1387
-chapter: 109
+sequence: 1407
+chapter: 114
 type: grammar
 headword: habla · come · vive
 gloss: telling somebody to do something — and the form is one you have had since your seventh chapter

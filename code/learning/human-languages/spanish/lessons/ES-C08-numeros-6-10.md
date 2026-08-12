@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C08-numeros-6-10
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 790
-chapter: 38
+sequence: 810
+chapter: 43
 type: word
 headword: seis, siete, ocho, nueve, diez
 gloss: the numbers 6–10 and the old counting hidden in month names

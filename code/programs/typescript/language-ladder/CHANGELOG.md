@@ -12,6 +12,11 @@
 - Render **我** in nine source-aligned movements across seven strokes.
 - Preserve the hooked vertical, six lifts, and the Noto Sans SC outline fit.
 
+### Changed — Spanish runs 1..178 (HL-C88)
+
+- Re-pin the Spanish book-hash table for the five friends chapters inserted at
+  23; chapters after them shift by five.
+
 ### Changed — Spanish runs 1..173 (HL-C107)
 
 - Re-pin the Spanish book-hash table for the pronoun-evidence chapter inserted

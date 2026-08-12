@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 167,
-  "title": "Review --- Three Jobs, No New Words",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fc8918a12bd95de1",
+  "title": "Review --- The Three Se's",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:187d6bc6f0006853",
   "lessons": [
     {
-      "id": "ES-C53-repaso-que",
-      "sequence": 2094,
-      "title": "Review — three jobs, no new words",
+      "id": "ES-C52-tres-ses",
+      "sequence": 2109,
+      "title": "Review — the three se's",
       "headword": "(review)",
       "romanization": "(review)",
-      "gloss": "review — a whole grammatical machine assembled from two words you already had",
+      "gloss": "review — the three se's, two of which are one word and one of which is an impostor",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:388ddb3e42eecd4a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:fe0f31ba4993efe8",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. One question first: how many new words did this rung teach you?"
+              "text": "Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart."
             }
           ]
         },
@@ -52,58 +45,66 @@
           "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "None. Here is the whole rung:"
-            },
-            {
               "kind": "table",
               "headers": [
                 "",
-                "Spanish",
-                "English"
+                "example",
+                "what the se is"
               ],
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "joining to a noun. Spanish: el libro que compro. English: the book that I buy.",
-                "the same, with English's that dropped. Spanish: la casa que tengo. English: the house I have.",
-                "no noun to join to. Spanish: lo que digo. English: what I say."
+                "reflexive. example: se llama. what the se is: himself.",
+                "impersonal. example: se habla español. what the se is: nobody named.",
+                "the impostor. example: se lo digo. what the se is: le, in disguise."
               ]
             },
             {
               "kind": "speech",
-              "text": "Que you have held since quiero que hables. Lo you have held since the object pronouns. This rung put them to work and added nothing."
+              "text": "And here is the fact that makes this a review rather than a fourth thing to learn:"
             },
             {
               "kind": "speech",
-              "text": "That is worth pausing on, because it is the last big structural piece a beginner's course owes you, and it turned out to cost no vocabulary at all. Almost everything in a language is like this eventually: the pieces stop being new and start being rearranged."
+              "text": "The first two are the same word. The third is not."
+            },
+            {
+              "kind": "speech",
+              "text": "The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched."
+            },
+            {
+              "kind": "speech",
+              "text": "The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo."
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish does not have three ses. It has two, and a coincidence."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what to actually watch for",
+          "title": "Grammar Lens: how to tell them apart in the wild",
           "segments": [
             {
               "kind": "speech",
-              "text": "One error will outlive the others, so it gets the last word here."
+              "text": "You will not have to work this out consciously for long, but while you do:"
             },
             {
               "kind": "speech",
-              "text": "English deletes its joint. Spanish never does."
+              "text": "Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them."
             },
             {
               "kind": "speech",
-              "text": "You will think the book I bought, translate what you thought, and produce el libro compré. It will feel complete because your English was complete."
+              "text": "Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien."
             },
             {
               "kind": "speech",
-              "text": "The check is mechanical and takes a second: a noun, then a new subject and verb, with nothing in between — that gap needs a que."
+              "text": "Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta."
             },
             {
               "kind": "speech",
-              "text": "And when there is no noun to begin with, lo supplies one so that que has something to hang from. Which means both chapters were about the same thing: Spanish will not let the joint go missing."
+              "text": "The first test is nearly free, because that direct object pronoun is sitting right there in the open."
             }
           ]
         },
@@ -121,11 +122,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all three rows of the table",
+              "instruction": "\"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all three rows of the table]"
+              "source": "[YOU SAY: \"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives]"
             },
             {
               "kind": "repeat",
@@ -133,63 +134,62 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "speech",
-              "text": "Until the missing English that is loud."
-            },
-            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-repaso-que-none",
-              "prompt": "How many new words did this rung introduce?",
+              "id": "ES-C52-tres-ses-two",
+              "prompt": "Of the three se's, which two are really one word?",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-GRAMMAR-LO-QUE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "Que and lo were both already yours.",
-                "incorrect": "None."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-repaso-que-drop",
-              "prompt": "Say the house I have, and name the trap.",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+                "ES-ETYMON-GELO"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "la casa que tengo; english drops the that",
-                "la casa que tengo"
+                "the reflexive and the impersonal",
+                "se llama and se habla",
+                "reflexive and impersonal"
               ],
               "feedback": {
-                "correct": "You think the English, and the que goes missing with it.",
-                "incorrect": "La casa que tengo. The trap is that English deletes its that."
+                "correct": "The impersonal grew out of the reflexive.",
+                "incorrect": "The reflexive and the impersonal. The se of se lo is a different word entirely."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-repaso-que-hole",
-              "prompt": "When there is no noun to join to, what supplies one?",
+              "id": "ES-C52-tres-ses-test",
+              "prompt": "What single thing right after se tells you it is the impostor?",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE"
+                "ES-GRAMMAR-SE-FOR-LE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo",
-                "lo, as in lo que"
+                "lo, la, los or las",
+                "a direct object pronoun",
+                "lo or la"
               ],
               "feedback": {
-                "correct": "So that que has something to hang from.",
-                "incorrect": "Lo — giving que something to attach to."
+                "correct": "Sitting right there in the open.",
+                "incorrect": "A lo, la, los or las immediately after it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-tres-ses-which",
+              "prompt": "Which se is in como se dice?",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-COMO-SE-DICE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the impersonal",
+                "impersonal — nobody is named"
+              ],
+              "feedback": {
+                "correct": "Asking how it gets said, not who says it.",
+                "incorrect": "The impersonal. Nobody is named as the sayer."
               }
             }
           ]
@@ -207,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "New words this rung? (None.) The error that outlives the others? (Dropping que, because English drops that.) Next: sentences long enough to be worth saying."
+              "text": "How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it."
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C48-tenia-tuve
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1272
-chapter: 91
+sequence: 1292
+chapter: 96
 type: grammar
 headword: tenía / tuve
 gloss: the place where the choice stops being a viewpoint and becomes a different meaning outright

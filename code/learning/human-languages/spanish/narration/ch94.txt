@@ -1,42 +1,44 @@
-Spanish, chapter 94: Hablado, Comido, Vivido --- The Participle.
+Spanish, chapter 94: Hablaba and Hablo --- Two Ways of Looking.
 1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-hablado, comido, vivido — the participle.
+hablaba and habló — two ways of looking.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one.
+You hold two past tenses. Say "I spoke" in both. (Hablé. Hablaba.)
 
-Grammar Lens: two endings, not three.
-hablar becomes hablado, comer becomes comido, vivir becomes vivido.
--ar verbs take -ado.
--er and -ir verbs both take -ido.
-You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing.
-So this is one new ending and one you can predict.
-The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back.
+Grammar Lens: not two times — two viewpoints.
+The obvious guess is that one is further back than the other. It is not. Both describe the same afternoon.
+Ayer hablé con Ana. — Yesterday I spoke with Ana. Ayer hablaba con Ana. — Yesterday I was speaking with Ana.
+Same day, same conversation, same two people. What changes is where you are standing.
+Hablé looks at the conversation from outside, finished, as one thing with edges. It happened, it is over, next.
+Hablaba puts you inside it, while it is still going on. No edges. It is the scenery, not the event.
+This is why the choice cannot be made by a rule about time. It is made by what you are doing with the sentence: reporting something that happened, or setting a scene where something else can happen.
+Grammar books call this aspect. The word is not important. The habit is: when you reach for a past tense, you are being asked a question about your own point of view, and you answer it every time whether you notice or not.
 
-The word, taken apart.
-Grammarians call this a participle, from Latin participium — "the form that takes part." It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective.
-You can see the adjective half immediately. Cansado ("tired") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work.
-Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all.
+Why it's said this way.
+English asks you the same question and lets you dodge it.
+I spoke. I was speaking. I used to speak.
+Those are three different viewpoints, and English marks them with extra words rather than with the verb itself. Because they are optional, you can say "I spoke" for almost anything and be understood.
+Spanish put the choice inside the verb, so it is not optional. Every past sentence commits to a viewpoint before it commits to anything else. That is why this is the piece of Spanish that stays difficult longest for English speakers: not because it is complicated, but because it asks a question your first language let you leave unanswered.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablado, comido, vivido" — one ending, then the shared one]
+[your turn — say: "hablé" then "hablaba" — outside, then inside]
 [pause 8 seconds for the answer]
-[your turn — say: "comí, viví" then "comido, vivido" — the same merger, twice]
+[your turn — say: "estudié" then "estudiaba"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the participle of hablar.
 [question — say your answer, then pause 10 seconds]
-Give the participles of comer and vivir.
+Do the two past tenses differ in when something happened?
 [question — say your answer, then pause 8 seconds]
-Does the participle change for who is speaking?
+Which form looks at the event from outside, finished?
+[question — say your answer, then pause 8 seconds]
+Say I was studying, putting the listener inside it.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense.
+Do the two pasts differ in when? (No — in how you look at it.) Which one has edges? (The preterite.) Next: the word that lets both of them stand in one sentence.

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C47-me-lo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1126
-chapter: 76
+sequence: 1146
+chapter: 81
 type: grammar
 headword: me lo
 gloss: two pronouns at once — and the order is fixed, which means there is one thing to learn and not two
