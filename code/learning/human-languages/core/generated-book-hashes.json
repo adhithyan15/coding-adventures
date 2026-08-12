@@ -432,6 +432,43 @@
       "tex": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:2cc8d10a95ff36e5",
+      "lessonIds": [
+        "BN-C13-doya-kore",
+        "BN-C13-dukkhito",
+        "BN-C13-maf-korben",
+        "BN-C13-sbagotom"
+      ],
+      "tex": "bengali/book/chapters/ch13-please-sorry-welcome.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:dfec40d016988583",
+      "lessonIds": [
+        "BN-C14-lal",
+        "BN-C14-nil",
+        "BN-C14-kalo",
+        "BN-C14-shada",
+        "BN-C14-shobuj"
+      ],
+      "tex": "bengali/book/chapters/ch14-five-colors.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:bb12d12e0bdc9e26",
+      "lessonIds": [
+        "BN-C15-kapor",
+        "BN-C15-jama",
+        "BN-C15-shari",
+        "BN-C15-choshma"
+      ],
+      "tex": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:bdf9d6e995f6b71d",

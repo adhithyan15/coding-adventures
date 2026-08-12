@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c5c2044d2b34595b",
+  "sourceHash": "fnv1a64:854db42aeff067a4",
   "summary": {
     "totalLessons": 1895,
-    "voice": 1282,
-    "sight": 544,
+    "voice": 1272,
+    "sight": 554,
     "pen": 69,
-    "drivableLessons": 1282,
-    "drivablePercent": 68,
+    "drivableLessons": 1272,
+    "drivablePercent": 67,
     "trackCount": 22,
     "chapterCount": 681,
-    "drivablePrefixTotal": 1089,
-    "fullyDrivableChapters": 457,
-    "unstartableChapters": 167,
+    "drivablePrefixTotal": 1082,
+    "fullyDrivableChapters": 456,
+    "unstartableChapters": 169,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -612,11 +612,11 @@
     },
     {
       "language": "bengali",
-      "lessonCount": 57,
+      "lessonCount": 70,
       "voice": 14,
-      "sight": 43,
+      "sight": 56,
       "pen": 0,
-      "drivablePercent": 25,
+      "drivablePercent": 20,
       "drivablePrefixTotal": 7,
       "modalities": [
         "voice",
@@ -802,6 +802,48 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "BN-C12-chokh",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 13,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "BN-C13-doya-kore",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 14,
+          "lessonCount": 5,
+          "voice": 0,
+          "sight": 5,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "BN-C14-lal",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "BN-C15-kapor",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -11392,12 +11434,12 @@
     },
     {
       "language": "urdu",
-      "lessonCount": 59,
-      "voice": 41,
-      "sight": 18,
+      "lessonCount": 46,
+      "voice": 31,
+      "sight": 15,
       "pen": 0,
-      "drivablePercent": 69,
-      "drivablePrefixTotal": 30,
+      "drivablePercent": 67,
+      "drivablePrefixTotal": 23,
       "modalities": [
         "voice",
         "sight"
@@ -11607,59 +11649,6 @@
           "drivable": false,
           "drivableLessonIds": [
             "UR-C12-pani"
-          ]
-        },
-        {
-          "chapter": 13,
-          "lessonCount": 4,
-          "voice": 4,
-          "sight": 0,
-          "pen": 0,
-          "modalities": [
-            "voice"
-          ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "UR-C13-lal",
-            "UR-C13-safed",
-            "UR-C13-kala",
-            "UR-C13-nila"
-          ]
-        },
-        {
-          "chapter": 14,
-          "lessonCount": 4,
-          "voice": 2,
-          "sight": 2,
-          "pen": 0,
-          "modalities": [
-            "voice",
-            "sight"
-          ],
-          "drivablePrefix": 0,
-          "firstNonVoiceLesson": "UR-C14-qamiz",
-          "drivable": false,
-          "drivableLessonIds": []
-        },
-        {
-          "chapter": 15,
-          "lessonCount": 5,
-          "voice": 4,
-          "sight": 1,
-          "pen": 0,
-          "modalities": [
-            "voice",
-            "sight"
-          ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "UR-C15-garmi",
-          "drivable": false,
-          "drivableLessonIds": [
-            "UR-C15-barish",
-            "UR-C15-dhoop",
-            "UR-C15-hawa"
           ]
         }
       ]
@@ -14759,6 +14748,279 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:ace5e34488c3d602",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C13-doya-kore",
+      "language": "bengali",
+      "chapter": 13,
+      "sequence": 1000,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:62bd76a1ad4c9542",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C13-dukkhito",
+      "language": "bengali",
+      "chapter": 13,
+      "sequence": 1010,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4fa1250af5ed940d",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C13-maf-korben",
+      "language": "bengali",
+      "chapter": 13,
+      "sequence": 1020,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8f474ddd4d824d26",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C13-sbagotom",
+      "language": "bengali",
+      "chapter": 13,
+      "sequence": 1030,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0ab6d51218767ac6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C14-lal",
+      "language": "bengali",
+      "chapter": 14,
+      "sequence": 1100,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2277cd04e9616cf7",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C14-nil",
+      "language": "bengali",
+      "chapter": 14,
+      "sequence": 1110,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2dcd743705687c71",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C14-kalo",
+      "language": "bengali",
+      "chapter": 14,
+      "sequence": 1120,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:322869d6cf49c0ce",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C14-shada",
+      "language": "bengali",
+      "chapter": 14,
+      "sequence": 1130,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dba53bdc0029abd3",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C14-shobuj",
+      "language": "bengali",
+      "chapter": 14,
+      "sequence": 1140,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:25e82d4b8c4d5add",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C15-kapor",
+      "language": "bengali",
+      "chapter": 15,
+      "sequence": 1200,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7b44fcd2e26effb3",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C15-jama",
+      "language": "bengali",
+      "chapter": 15,
+      "sequence": 1210,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6fa947452f036e20",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C15-shari",
+      "language": "bengali",
+      "chapter": 15,
+      "sequence": 1220,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:18eb94eb5d5822ae",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C15-choshma",
+      "language": "bengali",
+      "chapter": 15,
+      "sequence": 1230,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:03bb7a2f8bcd229d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47079,249 +47341,6 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:62ba291ba7e6bb42"
-    },
-    {
-      "id": "UR-C13-lal",
-      "language": "urdu",
-      "chapter": 13,
-      "sequence": 480,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0e078c8829986cb1"
-    },
-    {
-      "id": "UR-C13-safed",
-      "language": "urdu",
-      "chapter": 13,
-      "sequence": 500,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:24698f32b2ab0585"
-    },
-    {
-      "id": "UR-C13-kala",
-      "language": "urdu",
-      "chapter": 13,
-      "sequence": 520,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:34294901b168db42"
-    },
-    {
-      "id": "UR-C13-nila",
-      "language": "urdu",
-      "chapter": 13,
-      "sequence": 540,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:d27e4eeb71e112fc"
-    },
-    {
-      "id": "UR-C14-qamiz",
-      "language": "urdu",
-      "chapter": 14,
-      "sequence": 560,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:f657e3d46d3bfcfd",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "UR-C14-juta",
-      "language": "urdu",
-      "chapter": 14,
-      "sequence": 580,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a5a0d789eb23fb53",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "UR-C14-topi",
-      "language": "urdu",
-      "chapter": 14,
-      "sequence": 600,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:e6f70d71fb90cdc2"
-    },
-    {
-      "id": "UR-C14-koat",
-      "language": "urdu",
-      "chapter": 14,
-      "sequence": 620,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:d2c295672fe6ff21"
-    },
-    {
-      "id": "UR-C15-barish",
-      "language": "urdu",
-      "chapter": 15,
-      "sequence": 640,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:35bf8f44ab39d7d0"
-    },
-    {
-      "id": "UR-C15-dhoop",
-      "language": "urdu",
-      "chapter": 15,
-      "sequence": 660,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:5e6ce7b7152ed836"
-    },
-    {
-      "id": "UR-C15-hawa",
-      "language": "urdu",
-      "chapter": 15,
-      "sequence": 680,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:cd7b9bc6292f1226"
-    },
-    {
-      "id": "UR-C15-garmi",
-      "language": "urdu",
-      "chapter": 15,
-      "sequence": 700,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:bcc653d8c97fe62b",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "UR-C15-sardi",
-      "language": "urdu",
-      "chapter": 15,
-      "sequence": 720,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:3d53dbd9a31d4ac8"
     }
   ],
   "findings": []

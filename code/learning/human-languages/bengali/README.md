@@ -85,6 +85,34 @@ before the whole; and a book you can read straight through.
   (the payoff — a tatsama with a poetic tadbhava twin, হিয়া, and the widest
   confirmed cousin family in the track: **heart**, *kardía*, *cor*). In the
   book.
+- **Chapter 13 — Please, Sorry, and Welcome** ([`lessons/BN-C13-*`](./lessons/)):
+  doya kore ("please," literally "having done a kindness" — the noun-plus-করা
+  pattern's third demonstration, root PIE *deh₂-, proposed cousin of Greek
+  *dêmos* and English *democracy*), dukkhito ("sorry," Sanskrit *duḥkha* —
+  the secure half *dus-* shares Greek *dys-*, the disputed half *kha* is
+  reported as a traditional story rather than settled fact), maf korben
+  ("excuse me," the identical Persian/Arabic loan Hindi's own "sorry" phrase
+  uses, softened by the future tense rather than a command), shbagotom (the
+  payoff — "welcome," "a good coming," carrying the same আ- "hither" prefix
+  আসা already taught, this time on √gam, PIE *gʷem-*, ancestor of English
+  *come*). Closes the two courtesy concepts, please and sorry, this track had
+  never realized, plus a third greeting concept, welcome. In the book.
+- **Chapter 14 — Five Colors** ([`lessons/BN-C14-*`](./lessons/)): lāl (red, a
+  Persian gem-name Hindi shares exactly), nīl (blue, Sanskrit *nīla*, one
+  form where Hindi's *nīlā/nīlī* changes for gender), kālo (black, the same
+  word as *kāla*, "time," tied to Kālī and Yama), shādā (white — the one
+  color where Bengali and Hindi genuinely parted ways, keeping the native
+  word where Hindi took a Persian loan instead), shôbuj (the payoff — green,
+  a second Persian loan, the same root behind Hindi's *sabzī*, "vegetable").
+  In the book.
+- **Chapter 15 — Cloth, Shirt, Sari, and Glasses**
+  ([`lessons/BN-C15-*`](./lessons/)): kāpoṛ (cloth, a Sanskrit *deśī* —
+  homegrown, not inherited — word shared across five Indo-Aryan languages),
+  jāmā (shirt, a Persian loan identical to Hindi's), shāṛi (sari, the one
+  word in this track that reached English as a direct modern loanword rather
+  than through a shared ancient root), chôshmā (the payoff — glasses, built
+  on the Persian word for "eye" চোখ's own lesson already named as its only
+  cousin). In the book.
 
 With Chapters 8 and 9 the track realizes **14 of the 40 core verb concepts**, up
 from six, and joins Spanish, Latin and Portuguese on all eight of
@@ -93,7 +121,11 @@ from six, and joins Spanish, Latin and Portuguese on all eight of
 concept before and is now a four-track one. Chapters 10–12 add twelve
 pre-A1 nouns, moving the track's pre-A1 vocabulary from 21 to 33 distinct
 headwords (of the 300 HL09 asks for) and closing the one pre-A1 spine node —
-`SPINE-POLITE-REQUEST-REPAIR` — this track had never realized.
+`SPINE-POLITE-REQUEST-REPAIR` — this track had never realized. Chapters
+13–15 add thirteen more pre-A1 words, moving the track's pre-A1 vocabulary
+from 33 to 46 distinct headwords, and close two universal concepts —
+`COURTESY-PLEASE` and `COURTESY-SORRY` — this track had never realized,
+plus `GREETING-WELCOME`.
 
 ---
 
@@ -150,6 +182,25 @@ first-person can-do sentence and the lesson that pays it off.
   [`BN-C12-hridoy`](./lessons/BN-C12-hridoy.md), a spoken production
   covering the chapter's 4 new lexical atoms plus a rescue of Chapter 8's
   flapped-ড় sound rule and causative-আনো grammar.
+- **Chapter 13** — *"I can say please and sorry in Bengali, excuse myself
+  politely, and welcome someone with a word that carries the same 'hither'
+  prefix already met on the verb for coming."* Payoff:
+  [`BN-C13-sbagotom`](./lessons/BN-C13-sbagotom.md), a spoken production
+  covering **4 of the chapter's 6** introduced atoms — the four lexical
+  headwords; the two grammar atoms (করা's participle and future-as-request
+  shapes) are retrieved by name in the chapter's own guided practice.
+- **Chapter 14** — *"I can name five colors in Bengali and say which came
+  from Persian, which from Sanskrit, and which is the one color where
+  Bengali and Hindi genuinely parted ways."* Payoff:
+  [`BN-C14-shobuj`](./lessons/BN-C14-shobuj.md), a spoken production
+  covering **5 of the chapter's 5** introduced atoms.
+- **Chapter 15** — *"I can name cloth, a shirt, a sari and glasses in
+  Bengali, and say which word English borrowed directly and which is built
+  on the same Persian word already met for 'eye'."* Payoff:
+  [`BN-C15-choshma`](./lessons/BN-C15-choshma.md), a spoken production
+  covering **4 of the chapter's 4** introduced atoms, plus a rescue of the
+  dative construction and ভালোবাসা from the liking-and-loving lesson,
+  unrevisited since they were taught.
 
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
@@ -160,25 +211,27 @@ gap report is meant to surface; the entries land as those chapters migrate.
 
 Compiles with XeLaTeX using the **vendored** Noto Sans Bengali font
 (`../../_fonts/NotoSansBengali-Static.ttf`). `latexmk -xelatex book.tex`.
-Chapters 6 through 12 are generated from the canonical lessons; their
+Chapters 6 through 15 are generated from the canonical lessons; their
 Bengali-script runs use that font while their section bookmarks use authored
 romanization.
 
-The forced twelve-chapter build is warning-free — 76 pages, zero
-`Missing character`, zero over/underfull boxes, and the conjuncts Chapters 8
-through 12 add (**ড়**, **জ্ঞ**, **য্য**, **দ্বার**, **ন্ধ**, **ৃ**) all
-render from the vendored font with no preamble change: main-font
-punctuation, chapter-qualified recap anchors, bookmark-safe Bengali, natural
-page bottoms, explicit static-font shapes, and a breakable long title keep
-the downloadable PDF and its outline clean. Two details serve the generated
-chapters: the `grammarlens` box takes an optional title, because the
-generator passes each lesson's own "Grammar Lens: …" heading through, and
-`ǵ`/`ḱ` are composed with `\newunicodechar` since the main font has no
-precomposed glyph for the reconstructed PIE palatals. Every Sanskrit
-citation in the prose is rendered in **Bengali script**, never Devanagari —
-the only Indic font this book loads — which Chapters 10–12 learned the hard
-way when a first pass quoted roots in Devanagari and briefly reintroduced
-91 `Missing character` errors.
+The forced fifteen-chapter build is warning-free — 119 pages, zero
+`Missing character`, zero over/underfull boxes, and the conjuncts and marks
+Chapters 8 through 15 add (**ড়**, **জ্ঞ**, **য্য**, **দ্বার**, **ন্ধ**,
+**ৃ**, **ঃ**, **শ**, **স্ব**) all render from the vendored font with no
+preamble change: main-font punctuation, chapter-qualified recap anchors,
+bookmark-safe Bengali, natural page bottoms, explicit static-font shapes,
+and a breakable long title keep the downloadable PDF and its outline clean.
+Two details serve the generated chapters: the `grammarlens` box takes an
+optional title, because the generator passes each lesson's own "Grammar
+Lens: …" heading through, and `ǵ`/`ḱ` are composed with `\newunicodechar`
+since the main font has no precomposed glyph for the reconstructed PIE
+palatals. Every Sanskrit citation in the prose is rendered in **Bengali
+script**, never Devanagari — the only Indic font this book loads — which
+Chapters 10–12 learned the hard way when a first pass quoted roots in
+Devanagari and briefly reintroduced 91 `Missing character` errors, and
+which Chapter 13's first pass repeated with a stray Arabic script aside
+before it was caught and replaced with a plain romanization.
 
 ## Files
 

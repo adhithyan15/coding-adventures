@@ -227,17 +227,74 @@
         "BN-EXT-016-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "BN-PATH-018",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "BN-C13-doya-kore",
+        "BN-C13-dukkhito",
+        "BN-C13-maf-korben"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-018-COURTESY-AND-WELCOME"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-019",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "BN-C13-sbagotom"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-020",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "BN-C14-lal",
+        "BN-C14-nil",
+        "BN-C14-kalo",
+        "BN-C14-shada",
+        "BN-C14-shobuj"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-020-COLORS"
+      ],
+      "after": []
+    },
+    {
+      "id": "BN-PATH-021",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "BN-C15-kapor",
+        "BN-C15-jama",
+        "BN-C15-shari",
+        "BN-C15-choshma"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-021-CLOTHING-AND-ACCESSORIES"
+      ],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "BN-PATH-001"
+        "BN-PATH-001",
+        "BN-PATH-019"
       ],
       "omits": [
         "GREETING-FORMAL",
-        "GREETING-PEACE",
-        "GREETING-WELCOME"
+        "GREETING-PEACE"
       ],
       "relocates": {}
     },
@@ -276,7 +333,9 @@
       "segments": [
         "BN-PATH-006",
         "BN-PATH-008",
-        "BN-PATH-016"
+        "BN-PATH-016",
+        "BN-PATH-020",
+        "BN-PATH-021"
       ],
       "omits": [
         "WORD-GOOD",
@@ -286,12 +345,10 @@
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
-        "BN-PATH-014"
+        "BN-PATH-014",
+        "BN-PATH-018"
       ],
-      "omits": [
-        "COURTESY-PLEASE",
-        "COURTESY-SORRY"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
@@ -717,6 +774,59 @@
         "BN-C12-mukh",
         "BN-C12-nak",
         "BN-C12-hridoy"
+      ]
+    },
+    {
+      "id": "BN-EXT-018-COURTESY-AND-WELCOME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say please and sorry in Bengali, and excuse myself politely with a softened future-tense request.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C13-doya-kore",
+        "BN-C13-dukkhito",
+        "BN-C13-maf-korben"
+      ]
+    },
+    {
+      "id": "BN-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can welcome someone in Bengali, naming the same 'hither' prefix already met on the verb for coming.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C13-sbagotom"
+      ]
+    },
+    {
+      "id": "BN-EXT-020-COLORS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name five colors in Bengali and say which arrived from Persian, which from Sanskrit, and which parted ways with Hindi's own word for the same color.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C14-lal",
+        "BN-C14-nil",
+        "BN-C14-kalo",
+        "BN-C14-shada",
+        "BN-C14-shobuj"
+      ]
+    },
+    {
+      "id": "BN-EXT-021-CLOTHING-AND-ACCESSORIES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name cloth, a shirt, a sari and glasses in Bengali, and say which word English borrowed whole and which is built on the same Persian word already met for 'eye'.",
+      "prerequisites": [],
+      "lessons": [
+        "BN-C15-kapor",
+        "BN-C15-jama",
+        "BN-C15-shari",
+        "BN-C15-choshma"
       ]
     }
   ]
