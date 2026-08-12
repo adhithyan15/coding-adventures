@@ -1,0 +1,74 @@
+% ============================================================================
+% fossil-preservation-type — three named STRUCTURES a fossil can be preserved
+% as, and what each actually is (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% A fossil is not always the organism itself — sometimes it is the SHAPE the
+% organism left behind. Recall is a binding query:
+%
+%     ? fossil_preservation_type(mold, $D)
+%       % three_dimensional_impression_of_all_or_part_of_a_body_fossil_or_trace_fossil
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `fossil_preservation_type(type, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on a preservation-related term that is not one of these three. The
+% query also runs BACKWARD — bind a description and recall the preservation
+% type it names:
+%
+%     ? fossil_preservation_type($T, consists_of_the_evidence_of_living_organisms_but_not_the_actual_organism_itself)
+%       % trace_fossil
+%
+% DISTINCT FROM `fossil-formation-type.adj` (a sibling library in this same
+% directory): that table names three FORMATION MECHANISMS (amber, cast_or_mold,
+% permineralization) from a different source (Ducksters, consensus), and
+% deliberately bundles mold and cast together into ONE coarse row
+% (`cast_or_mold`) since its own source only gives that pairing one combined
+% sentence. THIS table instead names three PRESERVATION STRUCTURES from a
+% more detailed primary source that gives mold and cast their OWN separate
+% defining sentences, refining that coarser pairing rather than duplicating
+% it — the two tables answer different questions (how did it form? vs. what
+% shape is it?) and neither one supersedes the other.
+%
+% The three preservation types, as a little truth table:
+%
+%     type            description                                                                       quote (verbatim)
+%     --------------  --------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------------------------------
+%     mold             three_dimensional_impression_of_all_or_part_of_a_body_fossil_or_trace_fossil        "A three-dimensional impression of all or part of a body fossil or trace fossil."
+%     cast             replica_of_an_organism_or_a_trace_produced_by_the_infilling_of_a_natural_mold        "A replica of an organism or a trace such as a footprint or burrow produced by the infilling of a natural mold."
+%     trace_fossil     consists_of_the_evidence_of_living_organisms_but_not_the_actual_organism_itself      "Trace fossils consist of the evidence of living organisms, but not of the actual plant, animal, or microorganism itself."
+%
+% Provenance: `mold` and `cast` are quoted verbatim from the formal glossary
+% section of the National Park Service's "Mold Casts and Steinkerns" article;
+% `trace_fossil` is quoted verbatim from that same article's introductory
+% paragraph (the page's own glossary list does not carry a separate entry for
+% it, but the introduction states it in one clean, complete, standalone
+% sentence). `trust authoritative` — the National Park Service is a primary
+% U.S. government (.gov) source, the same tier `volcano-type.adj` (a sibling
+% library in this directory, USGS-sourced) already uses. WebFetch-verified
+% twice — the second pass specifically pulled the page's glossary-vs-prose
+% structure and confirmed neither quoted sentence is truncated or bundles in
+% an example the way a rejected row would.
+%
+% Honest abstention on `steinkern`: a real, well-documented term the SAME
+% page defines with its own clean sentence ("A stony three-dimensional cast
+% of the interior of a shell or other hollow organic structure made by
+% sediment infilling prior to the shell being dissolved.") — but the page
+% itself frames a steinkern as a SPECIFIC KIND of cast (an internal cast),
+% not a fourth preservation type alongside these three. So a recall on it
+% ABSTAINS rather than inventing a peer-level row for a sub-category. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table fossil_preservation_type {
+    columns type, description
+
+    row (mold, three_dimensional_impression_of_all_or_part_of_a_body_fossil_or_trace_fossil)
+    row (cast, replica_of_an_organism_or_a_trace_produced_by_the_infilling_of_a_natural_mold)
+    row (trace_fossil, consists_of_the_evidence_of_living_organisms_but_not_the_actual_organism_itself)
+
+    source "A three-dimensional impression of all or part of a body fossil or trace fossil."
+    locator "https://www.nps.gov/articles/000/mold-casts-and-steinkerns.htm"
+    trust authoritative
+}
