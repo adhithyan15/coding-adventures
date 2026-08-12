@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.9.0
+
+- Route graph edges to composite-group boundary geometry.
+
 ## 0.8.0
 
 - Stack concurrent state regions and resolve horizontal group dividers.

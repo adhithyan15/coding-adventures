@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.59.0
+
+- Preserve composite state IDs as transition endpoints without synthetic nodes.
+
 ## 0.58.0
 
 - Preserve grammar-backed concurrent state regions as ordered group membership.

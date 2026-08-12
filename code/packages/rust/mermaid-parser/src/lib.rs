@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.58.0";
+pub const VERSION: &str = "0.59.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1433,6 +1433,15 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             "unterminated composite state group",
         ));
     }
+
+    let group_ids: std::collections::HashSet<_> =
+        groups.iter().map(|group| group.id.as_str()).collect();
+    nodes.retain(|node| !group_ids.contains(node.id.as_str()));
+    node_indices = nodes
+        .iter()
+        .enumerate()
+        .map(|(index, node)| (node.id.clone(), index))
+        .collect();
 
     for (ids, class_name) in pending_classes {
         let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
@@ -4589,6 +4598,18 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_transitions_keep_composite_group_endpoints() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Active {\nIdle --> Busy\n}\nReady --> Active\nActive --> Done\n",
+        )
+        .expect("composite transition endpoints should parse");
+
+        assert_eq!(diagram.edges[1].to, "Active");
+        assert_eq!(diagram.edges[2].from, "Active");
+        assert!(!diagram.nodes.iter().any(|node| node.id == "Active"));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5359,7 +5380,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.58.0");
+        assert_eq!(crate::VERSION, "0.59.0");
     }
 
     #[test]
