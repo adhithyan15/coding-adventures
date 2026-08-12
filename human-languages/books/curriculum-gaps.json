@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1809,
+    "totalLessons": 1814,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -28,12 +28,12 @@
     "lessonsOpeningMultipleScripts": 5,
     "lessonsWithoutSequence": 477,
     "forwardReviews": 267,
-    "atomsNeverRevisited": 475,
+    "atomsNeverRevisited": 474,
     "forwardReferences": 435,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 25,
     "chapterGateCleanTracks": 12,
-    "drivableLessons": 1627,
+    "drivableLessons": 1632,
     "drivablePercent": 90,
     "chaptersWithoutDrivablePrefix": 60,
     "unexplainedModalityOverrides": 0
@@ -660,7 +660,12 @@
           154,
           155,
           156,
-          157
+          157,
+          158,
+          159,
+          160,
+          161,
+          162
         ],
         "bookChapters": [
           1,
@@ -819,7 +824,12 @@
           154,
           155,
           156,
-          157
+          157,
+          158,
+          159,
+          160,
+          161,
+          162
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2009,9 +2019,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 303,
+        "lessonCount": 308,
         "versions": {
-          "2": 303
+          "2": 308
         }
       },
       {
@@ -2527,8 +2537,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 157,
-        "declaredChapters": 157,
+        "bookChapters": 162,
+        "declaredChapters": 162,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -2559,8 +2569,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 630,
-      "declaredChapters": 630,
+      "bookChapters": 635,
+      "declaredChapters": 635,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 25,
@@ -2572,12 +2582,12 @@
     }
   },
   "levels": {
-    "totalLessons": 1809,
+    "totalLessons": 1814,
     "byLevel": {
       "pre-A1": 896,
       "A1": 356,
       "A2": 458,
-      "B1": 13,
+      "B1": 18,
       "B2": 0,
       "C1": 0,
       "C2": 0
@@ -2857,12 +2867,12 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 303,
+        "lessonCount": 308,
         "byLevel": {
           "pre-A1": 80,
           "A1": 88,
           "A2": 122,
-          "B1": 13,
+          "B1": 18,
           "B2": 0,
           "C1": 0,
           "C2": 0
@@ -3507,9 +3517,9 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 303,
-        "measurable": 243,
-        "unmeasurable": 60,
+        "lessonCount": 308,
+        "measurable": 246,
+        "unmeasurable": 62,
         "lessonViolations": 2,
         "chapterViolations": 0
       },
@@ -4457,7 +4467,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 303,
+          "lessonCount": 308,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -4515,7 +4525,7 @@
     "summary": {
       "lessonViolations": 42,
       "chapterViolations": 20,
-      "unmeasurableLessons": 571,
+      "unmeasurableLessons": 573,
       "measurablePercent": 68,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -11884,6 +11894,19 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-IMPERARE",
+        "language": "spanish",
+        "introducedBy": "ES-C50-habla",
+        "introducedAt": 223,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "ES-ETYMON-LIBER",
         "language": "spanish",
         "introducedBy": "ES-C43-libro",
@@ -13523,6 +13546,18 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-CONTAR-09",
+        "language": "spanish",
+        "introducedBy": "ES-C38-contar",
+        "introducedAt": 284,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "ES-ETYMON-DE",
         "language": "spanish",
         "introducedBy": "ES-C09-soy-de",
@@ -13575,18 +13610,6 @@
         "language": "spanish",
         "introducedBy": "ES-C04-y",
         "introducedAt": 44,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ES-ETYMON-GELO",
-        "language": "spanish",
-        "introducedBy": "ES-C47-por-que-se",
-        "introducedAt": 171,
         "missed": [
           "R2",
           "R3",
@@ -13689,18 +13712,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "ES-ETYMON-IMPERARE",
-        "language": "spanish",
-        "introducedBy": "ES-C50-habla",
-        "introducedAt": 223,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
       },
       {
         "atom": "ES-ETYMON-IN",
@@ -14219,16 +14230,40 @@
         "revisits": 1
       },
       {
-        "atom": "ES-GRAMMAR-BARE-PLURAL-NOUN",
+        "atom": "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
         "language": "spanish",
-        "introducedBy": "ES-C44-sintesis-mas-de-uno",
-        "introducedAt": 152,
+        "introducedBy": "ES-C50-ocho-cortos",
+        "introducedAt": 224,
         "missed": [
-          "R1",
+          "R2",
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "ES-GRAMMAR-COMMAND-NEGATIVE",
+        "language": "spanish",
+        "introducedBy": "ES-C50-no-hables",
+        "introducedAt": 225,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-GRAMMAR-COMMAND-USTED",
+        "language": "spanish",
+        "introducedBy": "ES-C50-hable-usted",
+        "introducedAt": 226,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-DEFAULT-STRESS",
@@ -14507,6 +14542,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-GRAMMAR-NARRATIVE-10",
+        "language": "spanish",
+        "introducedBy": "ES-C38-contar",
+        "introducedAt": 284,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "ES-GRAMMAR-NOUN-PLURAL-ES",
         "language": "spanish",
         "introducedBy": "ES-C44-plural-es",
@@ -14655,18 +14702,6 @@
         "language": "spanish",
         "introducedBy": "ES-C03-me-llamo",
         "introducedAt": 18,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-GRAMMAR-SE-FOR-LE",
-        "language": "spanish",
-        "introducedBy": "ES-C47-se-lo",
-        "introducedAt": 170,
         "missed": [
           "R2",
           "R3",
@@ -15033,6 +15068,18 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-CONTAR-08",
+        "language": "spanish",
+        "introducedBy": "ES-C38-contar",
+        "introducedAt": 284,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
       },
       {
         "atom": "ES-LEX-CUANDO",
@@ -19508,15 +19555,15 @@
         "revisits": 0
       },
       {
-        "atom": "ES-ETYMON-CONTAR-09",
+        "atom": "ES-ETYMON-CONSEGUIR-05",
         "language": "spanish",
-        "introducedBy": "ES-C38-contar",
-        "introducedAt": 284,
+        "introducedBy": "ES-C39-conseguir",
+        "introducedAt": 286,
         "missed": [
-          "R1",
-          "R2"
+          "R2",
+          "R3"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-CORRER-11",
@@ -19607,6 +19654,17 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-GELO",
+        "language": "spanish",
+        "introducedBy": "ES-C47-por-que-se",
+        "introducedAt": 171,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-GERMANUS-02",
         "language": "spanish",
         "introducedBy": "ES-C23-hermano-hermana",
@@ -19640,6 +19698,17 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-IMPERFECTUS-07",
+        "language": "spanish",
+        "introducedBy": "ES-C38-imperfecto",
+        "introducedAt": 283,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-IRE-VADERE",
         "language": "spanish",
         "introducedBy": "ES-C10-ir",
@@ -19649,6 +19718,17 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-ETYMON-JUGAR-08",
+        "language": "spanish",
+        "introducedBy": "ES-C39-jugar",
+        "introducedAt": 287,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-LATIN-TEENS-05",
@@ -19849,6 +19929,17 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-TRAER-02",
+        "language": "spanish",
+        "introducedBy": "ES-C39-traer",
+        "introducedAt": 285,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-VERDE-02",
         "language": "spanish",
         "introducedBy": "ES-C33-verde",
@@ -19959,37 +20050,26 @@
         "revisits": 6
       },
       {
-        "atom": "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+        "atom": "ES-GRAMMAR-BARE-PLURAL-NOUN",
         "language": "spanish",
-        "introducedBy": "ES-C50-ocho-cortos",
-        "introducedAt": 224,
+        "introducedBy": "ES-C44-sintesis-mas-de-uno",
+        "introducedAt": 152,
         "missed": [
-          "R2",
+          "R1",
           "R3"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-GRAMMAR-COMMAND-NEGATIVE",
+        "atom": "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
         "language": "spanish",
-        "introducedBy": "ES-C50-no-hables",
-        "introducedAt": 225,
+        "introducedBy": "ES-C50-habla",
+        "introducedAt": 223,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-GRAMMAR-COMMAND-USTED",
-        "language": "spanish",
-        "introducedBy": "ES-C50-hable-usted",
-        "introducedAt": 226,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL",
@@ -20300,17 +20380,6 @@
         "revisits": 8
       },
       {
-        "atom": "ES-GRAMMAR-NARRATIVE-10",
-        "language": "spanish",
-        "introducedBy": "ES-C38-contar",
-        "introducedAt": 284,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE",
         "language": "spanish",
         "introducedBy": "ES-C10-ir-a-futuro",
@@ -20407,7 +20476,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
@@ -20419,6 +20488,28 @@
           "R4"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "ES-GRAMMAR-SCENE-VS-EVENT-06",
+        "language": "spanish",
+        "introducedBy": "ES-C38-imperfecto",
+        "introducedAt": 283,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-GRAMMAR-SE-FOR-LE",
+        "language": "spanish",
+        "introducedBy": "ES-C47-se-lo",
+        "introducedAt": 170,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
@@ -20452,6 +20543,28 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-GRAMMAR-STEM-E-I-06",
+        "language": "spanish",
+        "introducedBy": "ES-C39-conseguir",
+        "introducedAt": 286,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-GRAMMAR-STEM-U-UE-09",
+        "language": "spanish",
+        "introducedBy": "ES-C39-jugar",
+        "introducedAt": 287,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
@@ -20652,28 +20765,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-COMPRAR-07",
-        "language": "spanish",
-        "introducedBy": "ES-C40-comprar",
-        "introducedAt": 293,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "ES-LEX-CONTAR-08",
-        "language": "spanish",
-        "introducedBy": "ES-C38-contar",
-        "introducedAt": 284,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-CORRER-10",
         "language": "spanish",
         "introducedBy": "ES-C36-correr",
@@ -20793,6 +20884,17 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-JUGAR-07",
+        "language": "spanish",
+        "introducedBy": "ES-C39-jugar",
+        "introducedAt": 287,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-LEER-05",
@@ -20990,7 +21092,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 12
+        "revisits": 14
       },
       {
         "atom": "ES-LEX-REGULAR",
@@ -21034,7 +21136,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-SENTARSE-07",
@@ -29382,16 +29484,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ETYMON-CONSEGUIR-05",
-        "language": "spanish",
-        "introducedBy": "ES-C39-conseguir",
-        "introducedAt": 286,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-ETYMON-CONTESTAR-05",
         "language": "spanish",
         "introducedBy": "ES-C40-contestar",
@@ -29452,26 +29544,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-ETYMON-IMPERFECTUS-07",
-        "language": "spanish",
-        "introducedBy": "ES-C38-imperfecto",
-        "introducedAt": 283,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ES-ETYMON-JUGAR-08",
-        "language": "spanish",
-        "introducedBy": "ES-C39-jugar",
-        "introducedAt": 287,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-ETYMON-PENSAR-02",
         "language": "spanish",
         "introducedBy": "ES-C34-pensar",
@@ -29480,6 +29552,26 @@
           "R1"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-ETYMON-PER-AD",
+        "language": "spanish",
+        "introducedBy": "ES-C51-para",
+        "introducedAt": 298,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-PRO-PER",
+        "language": "spanish",
+        "introducedBy": "ES-C51-por",
+        "introducedAt": 299,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-SIC-04",
@@ -29500,16 +29592,6 @@
           "R3"
         ],
         "revisits": 9
-      },
-      {
-        "atom": "ES-ETYMON-TRAER-02",
-        "language": "spanish",
-        "introducedBy": "ES-C39-traer",
-        "introducedAt": 285,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-VOS-03",
@@ -29592,16 +29674,6 @@
         "revisits": 5
       },
       {
-        "atom": "ES-GRAMMAR-AR-PRESENT-3PL",
-        "language": "spanish",
-        "introducedBy": "ES-C07-hablan",
-        "introducedAt": 92,
-        "missed": [
-          "R4"
-        ],
-        "revisits": 7
-      },
-      {
         "atom": "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
         "language": "spanish",
         "introducedBy": "ES-C14-hablar-preterite",
@@ -29632,16 +29704,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
-        "language": "spanish",
-        "introducedBy": "ES-C50-habla",
-        "introducedAt": 223,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
         "atom": "ES-GRAMMAR-CONOCER-SABER-12",
         "language": "spanish",
         "introducedBy": "ES-C39-conocer",
@@ -29650,16 +29712,6 @@
           "R2"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
-        "language": "spanish",
-        "introducedBy": "ES-C12-decir",
-        "introducedAt": 133,
-        "missed": [
-          "R4"
-        ],
-        "revisits": 11
       },
       {
         "atom": "ES-GRAMMAR-DIRECT-OBJECT-LO",
@@ -29742,6 +29794,16 @@
         "revisits": 4
       },
       {
+        "atom": "ES-GRAMMAR-PARA-FORWARD",
+        "language": "spanish",
+        "introducedBy": "ES-C51-para",
+        "introducedAt": 298,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
         "language": "spanish",
         "introducedBy": "ES-C11-poder",
@@ -29750,6 +29812,26 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-GRAMMAR-POR-PARA-CONTRAST",
+        "language": "spanish",
+        "introducedBy": "ES-C51-la-flecha",
+        "introducedAt": 300,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-GRAMMAR-POR-THROUGH-BECAUSE",
+        "language": "spanish",
+        "introducedBy": "ES-C51-por",
+        "introducedAt": 299,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-PRO-DROP",
@@ -29762,16 +29844,6 @@
         "revisits": 12
       },
       {
-        "atom": "ES-GRAMMAR-SCENE-VS-EVENT-06",
-        "language": "spanish",
-        "introducedBy": "ES-C38-imperfecto",
-        "introducedAt": 283,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ES-GRAMMAR-SER-PRESENT-SINGULAR",
         "language": "spanish",
         "introducedBy": "ES-C09-ser",
@@ -29780,16 +29852,6 @@
           "R3"
         ],
         "revisits": 7
-      },
-      {
-        "atom": "ES-GRAMMAR-STEM-E-I-06",
-        "language": "spanish",
-        "introducedBy": "ES-C39-conseguir",
-        "introducedAt": 286,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "ES-GRAMMAR-STEM-O-UE-06",
@@ -29802,16 +29864,6 @@
         "revisits": 6
       },
       {
-        "atom": "ES-GRAMMAR-STEM-U-UE-09",
-        "language": "spanish",
-        "introducedBy": "ES-C39-jugar",
-        "introducedAt": 287,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
         "language": "spanish",
         "introducedBy": "ES-C08-tener",
@@ -29820,6 +29872,16 @@
           "R2"
         ],
         "revisits": 25
+      },
+      {
+        "atom": "ES-GRAMMAR-TRAER-LLEVAR-03",
+        "language": "spanish",
+        "introducedBy": "ES-C39-traer",
+        "introducedAt": 285,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-GRAMMAR-USTED-THIRD-PERSON",
@@ -29849,7 +29911,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "ES-LEX-BLANCO-03",
@@ -29899,7 +29961,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ES-LEX-COMO-ESTA-USTED",
@@ -29912,6 +29974,16 @@
         "revisits": 5
       },
       {
+        "atom": "ES-LEX-COMPRAR-07",
+        "language": "spanish",
+        "introducedBy": "ES-C40-comprar",
+        "introducedAt": 293,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-CONOCER-10",
         "language": "spanish",
         "introducedBy": "ES-C39-conocer",
@@ -29920,6 +29992,16 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-CONSEGUIR-04",
+        "language": "spanish",
+        "introducedBy": "ES-C39-conseguir",
+        "introducedAt": 286,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-CONTESTAR-04",
@@ -29999,7 +30081,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 22
+        "revisits": 25
       },
       {
         "atom": "ES-LEX-ESPERAR-01",
@@ -30052,16 +30134,6 @@
         "revisits": 8
       },
       {
-        "atom": "ES-LEX-JUGAR-07",
-        "language": "spanish",
-        "introducedBy": "ES-C39-jugar",
-        "introducedAt": 287,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-LEX-LEVANTARSE-09",
         "language": "spanish",
         "introducedBy": "ES-C37-levantarse",
@@ -30070,16 +30142,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-LIBRO",
-        "language": "spanish",
-        "introducedBy": "ES-C43-libro",
-        "introducedAt": 146,
-        "missed": [
-          "R4"
-        ],
-        "revisits": 13
       },
       {
         "atom": "ES-LEX-NEGRO-01",
@@ -30102,6 +30164,16 @@
         "revisits": 5
       },
       {
+        "atom": "ES-LEX-PARA",
+        "language": "spanish",
+        "introducedBy": "ES-C51-para",
+        "introducedAt": 298,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "ES-LEX-PERRO-03",
         "language": "spanish",
         "introducedBy": "ES-C32-perro",
@@ -30120,6 +30192,16 @@
           "R3"
         ],
         "revisits": 6
+      },
+      {
+        "atom": "ES-LEX-POR",
+        "language": "spanish",
+        "introducedBy": "ES-C51-por",
+        "introducedAt": 299,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-PORQUE-03",
@@ -30210,6 +30292,16 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-TRAER-01",
+        "language": "spanish",
+        "introducedBy": "ES-C39-traer",
+        "introducedAt": 285,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ES-LEX-VOS-01",
@@ -41297,12 +41389,12 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 303,
+        "lessonCount": 308,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 494,
-        "atomsNeverRevisited": 66,
+        "atomsTaught": 497,
+        "atomsNeverRevisited": 65,
         "forwardReferences": 69
       },
       {
@@ -41341,14 +41433,14 @@
       "tracksWithUnorderedLessons": 17,
       "forwardPrerequisites": 225,
       "forwardReviews": 267,
-      "atomsTaught": 2770,
-      "atomsNeverRevisited": 475,
+      "atomsTaught": 2773,
+      "atomsNeverRevisited": 474,
       "neverRevisitedPercent": 17,
       "missedByWindow": {
         "R1": 889,
-        "R2": 1891,
-        "R3": 1410,
-        "R4": 307
+        "R2": 1897,
+        "R3": 1424,
+        "R4": 306
       },
       "forwardReferences": 435
     }
@@ -41758,7 +41850,7 @@
             "shortfall": 34
           }
         ],
-        "vocabulary": 144
+        "vocabulary": 145
       },
       {
         "language": "tamil",
@@ -41849,11 +41941,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1809,
-    "voice": 1210,
+    "totalLessons": 1814,
+    "voice": 1215,
     "sight": 530,
     "pen": 69,
-    "coreVoice": 1627,
+    "coreVoice": 1632,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 90,
     "tracks": [
@@ -47601,13 +47693,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 303,
-        "voice": 269,
+        "lessonCount": 308,
+        "voice": 274,
         "sight": 27,
         "pen": 7,
-        "coreVoice": 269,
+        "coreVoice": 274,
         "drivablePercent": 89,
-        "drivablePrefixTotal": 256,
+        "drivablePrefixTotal": 261,
         "chapters": [
           {
             "language": "spanish",
@@ -49819,6 +49911,76 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 158,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 159,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 160,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 161,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 162,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -51586,8 +51748,8 @@
     "neverSpent": 1810,
     "payoffDistribution": {
       "0": 1810,
-      "1": 587,
-      "2": 246,
+      "1": 586,
+      "2": 247,
       "3": 57,
       "4": 17,
       "5": 11,
@@ -51599,7 +51761,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 1809,
+    "lessons": 1814,
     "lessonsWithFindings": 112,
     "ruleStatements": 21,
     "paradigmTables": 95,
@@ -51609,14 +51771,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 48,
-    "lessonsUsingTerms": 1793,
-    "usesBeforeIntroduction": 8317,
-    "technicalUsesBeforeIntroduction": 2528,
-    "technicalLessons": 1255,
+    "lessonsUsingTerms": 1798,
+    "usesBeforeIntroduction": 8341,
+    "technicalUsesBeforeIntroduction": 2538,
+    "technicalLessons": 1258,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 865
+        "lessons": 867
       },
       {
         "term": "noun",
@@ -51628,7 +51790,7 @@
       },
       {
         "term": "pronoun",
-        "lessons": 128
+        "lessons": 129
       },
       {
         "term": "regular",
