@@ -714,6 +714,139 @@
           "TE-ETYMON-C07-NUMBERS-6-10-03"
         ]
       }
+    },
+    {
+      "chapter": 35,
+      "title": "Family and Friends",
+      "label": "ch:te-family-and-friends",
+      "canDo": "I can name my family as a group in Telugu and name a friend, and say which of the two words is a Sanskrit loan and which is Telugu's own native word.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C35-snehitudu",
+        "kind": "production",
+        "summary": "Say ఇది నా కుటుంబం and ఇతను నా స్నేహితుడు, trace కుటుంబం and స్నేహితుడు back to Sanskrit, and set స్నేహితుడు beside the native, DEDR-attested నేస్తం.",
+        "assesses": [
+          "TE-LEX-C35-KUTUMBAM-01",
+          "TE-ETYMON-C35-KUTUMBAM-02",
+          "TE-LEX-C35-SNEHITUDU-01",
+          "TE-ETYMON-C35-SNEHITUDU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 36,
+      "title": "Son and Daughter, Two Different Roots",
+      "label": "ch:te-son-and-daughter",
+      "canDo": "I can say son and daughter in Telugu, and show that they trace to two different Proto-Dravidian roots rather than one shared root.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C36-kuuturu",
+        "kind": "production",
+        "summary": "Line up కొడుకు and కూతురు against their two separate Proto-Dravidian roots, trace కొడుకు's own root sideways to కోడలు (\"daughter-in-law\"), and trace కూతురు's root across the family to Kannada's word for infant.",
+        "assesses": [
+          "TE-LEX-C35-SNEHITUDU-01",
+          "TE-LEX-C36-KODUKU-01",
+          "TE-ETYMON-C36-KODUKU-02",
+          "TE-LEX-C36-KUUTURU-01",
+          "TE-ETYMON-C36-KUUTURU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 37,
+      "title": "Four Words on the Face",
+      "label": "ch:te-face-words",
+      "canDo": "I can name my eye, ear, nose and mouth in Telugu, and say which three the family agrees on and which one Telugu's word does not obviously match.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C37-noru",
+        "kind": "production",
+        "summary": "Name కన్ను, చెవి, ముక్కు and నోరు; close the loop Chapter 32 left open on కన్ను; and say why నోరు, unlike the other three, shows no visible trace of the shared vాy root Tamil, Malayalam and Kannada all carry.",
+        "assesses": [
+          "TE-LEX-C37-KANNU-01",
+          "TE-ETYMON-C37-KANNU-02",
+          "TE-LEX-C37-CEVI-01",
+          "TE-ETYMON-C37-CEVI-02",
+          "TE-LEX-C37-MUKKU-01",
+          "TE-ETYMON-C37-MUKKU-02",
+          "TE-LEX-C37-NORU-01",
+          "TE-ETYMON-C37-NORU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 38,
+      "title": "The Heart, Two Ways",
+      "label": "ch:te-heart",
+      "canDo": "I can name my heart in Telugu two ways, the everyday native word and the literary Sanskrit loan, and trace the Sanskrit one to the same Proto-Indo-European root as the English word heart.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C38-hrudayam",
+        "kind": "production",
+        "summary": "Say నా గుండె and నా హృదయం నీది, set the everyday native word beside the literary Sanskrit loan, and trace హృదయం to the same PIE root as English heart, Latin cor and Greek kardía.",
+        "assesses": [
+          "TE-LEX-C37-NORU-01",
+          "TE-LEX-C38-GUNDE-01",
+          "TE-ETYMON-C38-GUNDE-02",
+          "TE-LEX-C38-HRUDAYAM-01",
+          "TE-ETYMON-C38-HRUDAYAM-02"
+        ]
+      }
+    },
+    {
+      "chapter": 39,
+      "title": "Tea and Milk, Two Roads",
+      "label": "ch:te-tea-and-milk",
+      "canDo": "I can politely ask for tea or milk in Telugu, and say which word travelled by sea and which one three Dravidian cousins share under one regular sound law.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C39-paalu",
+        "kind": "production",
+        "summary": "Ask దయచేసి టీ and దయచేసి పాలు, follow టీ along its sea route through Hokkien and Malay against the overland chai route, then place పాలు beside Tamil and Malayalam's matching pāl against Kannada's own p-to-h shift.",
+        "assesses": [
+          "TE-LEX-C39-TII-01",
+          "TE-ETYMON-C39-TII-02",
+          "TE-LEX-C39-PAALU-01",
+          "TE-ETYMON-C39-PAALU-02"
+        ]
+      }
+    },
+    {
+      "chapter": 40,
+      "title": "A Meal",
+      "label": "ch:te-a-meal",
+      "canDo": "I can say I am having a meal in Telugu, using the word an earlier chapter already used and never explained.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C40-bhojanam",
+        "kind": "production",
+        "summary": "Say భోజనం చేద్దాం, explain భోజనం against everyday తిండి the way Chapter 32 first set them side by side, and apologise for a late meal with Chapter 9's క్షమించండి.",
+        "assesses": [
+          "TE-LEX-C39-PAALU-01",
+          "TE-ETYMON-C39-PAALU-02",
+          "TE-LEX-C32-TINU-01",
+          "TE-ETYMON-C32-TINU-02",
+          "TE-LEX-C08-DAYACHESI-01",
+          "TE-ETYMON-C08-DAYACHESI-02",
+          "TE-ETYMON-C09-KSHAMINCHANDI-01",
+          "TE-ETYMON-C09-KSHAMINCHANDI-02",
+          "TE-PRAGMATICS-C09-KSHAMINCHANDI-03",
+          "TE-LEX-C40-BHOJANAM-01",
+          "TE-ETYMON-C40-BHOJANAM-02"
+        ]
+      }
     }
   ]
 }

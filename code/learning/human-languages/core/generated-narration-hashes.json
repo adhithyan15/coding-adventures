@@ -10258,6 +10258,97 @@
       "jsonHash": "fnv1a64:1eb4252081885219"
     },
     {
+      "language": "telugu",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:9ba4a94c2488290c",
+      "lessonIds": [
+        "TE-C35-kutumbam",
+        "TE-C35-snehitudu"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "telugu/narration/ch35.txt",
+      "json": "telugu/narration/ch35.json",
+      "textHash": "fnv1a64:49b1072461877ee6",
+      "jsonHash": "fnv1a64:3d08593d8f1529d7"
+    },
+    {
+      "language": "telugu",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:c1c16bb52871e671",
+      "lessonIds": [
+        "TE-C36-koduku",
+        "TE-C36-kuuturu"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "telugu/narration/ch36.txt",
+      "json": "telugu/narration/ch36.json",
+      "textHash": "fnv1a64:eca9fcd3ef2aac4f",
+      "jsonHash": "fnv1a64:91f1dfdd861b1d06"
+    },
+    {
+      "language": "telugu",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:9c82dfc9859c9d6e",
+      "lessonIds": [
+        "TE-C37-kannu",
+        "TE-C37-cevi",
+        "TE-C37-mukku",
+        "TE-C37-noru"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "telugu/narration/ch37.txt",
+      "json": "telugu/narration/ch37.json",
+      "textHash": "fnv1a64:bac71d7bcda9e09b",
+      "jsonHash": "fnv1a64:c9274384ea8d0ebc"
+    },
+    {
+      "language": "telugu",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:b709fab34f226240",
+      "lessonIds": [
+        "TE-C38-gunde",
+        "TE-C38-hrudayam"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "telugu/narration/ch38.txt",
+      "json": "telugu/narration/ch38.json",
+      "textHash": "fnv1a64:760ccc4455aea9da",
+      "jsonHash": "fnv1a64:d2f591efa46da539"
+    },
+    {
+      "language": "telugu",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:d451cc87fd725a8c",
+      "lessonIds": [
+        "TE-C39-tii",
+        "TE-C39-paalu"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "telugu/narration/ch39.txt",
+      "json": "telugu/narration/ch39.json",
+      "textHash": "fnv1a64:a931a2d87ab28f5a",
+      "jsonHash": "fnv1a64:07af9bc6289bfde8"
+    },
+    {
+      "language": "telugu",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:293dfa17b7e153ae",
+      "lessonIds": [
+        "TE-C40-bhojanam"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "telugu/narration/ch40.txt",
+      "json": "telugu/narration/ch40.json",
+      "textHash": "fnv1a64:54cbf9f29f1ef90e",
+      "jsonHash": "fnv1a64:5d4ed84ceb73f55c"
+    },
+    {
       "language": "urdu",
       "chapter": 1,
       "sourceHash": "fnv1a64:6f9688165869e235",

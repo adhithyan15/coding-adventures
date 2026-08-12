@@ -5746,6 +5746,67 @@
       "tex": "telugu/book/chapters/ch34-verbs-between-people.tex"
     },
     {
+      "language": "telugu",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:a046c10800d4c720",
+      "lessonIds": [
+        "TE-C35-kutumbam",
+        "TE-C35-snehitudu"
+      ],
+      "tex": "telugu/book/chapters/ch35-family-and-friends.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:bb02855f3f7cc56f",
+      "lessonIds": [
+        "TE-C36-koduku",
+        "TE-C36-kuuturu"
+      ],
+      "tex": "telugu/book/chapters/ch36-son-and-daughter.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:b5b4d35b459695ed",
+      "lessonIds": [
+        "TE-C37-kannu",
+        "TE-C37-cevi",
+        "TE-C37-mukku",
+        "TE-C37-noru"
+      ],
+      "tex": "telugu/book/chapters/ch37-face-words.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:8b1c9f855f4a15e9",
+      "lessonIds": [
+        "TE-C38-gunde",
+        "TE-C38-hrudayam"
+      ],
+      "tex": "telugu/book/chapters/ch38-heart.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:80be68cd30a8f7b6",
+      "lessonIds": [
+        "TE-C39-tii",
+        "TE-C39-paalu"
+      ],
+      "tex": "telugu/book/chapters/ch39-tea-and-milk.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:e9561e4d86bf949c",
+      "lessonIds": [
+        "TE-C40-bhojanam"
+      ],
+      "tex": "telugu/book/chapters/ch40-a-meal.tex"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "sourceHash": "fnv1a64:1524be4104638c47",

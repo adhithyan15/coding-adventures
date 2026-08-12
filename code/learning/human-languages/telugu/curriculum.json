@@ -354,6 +354,85 @@
         "TE-EXT-028-SOCIAL-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-028",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C35-kutumbam",
+        "TE-C35-snehitudu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-029-FAMILY-FRIENDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-029",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C36-koduku",
+        "TE-C36-kuuturu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-030-SON-DAUGHTER"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-030",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C37-kannu",
+        "TE-C37-cevi",
+        "TE-C37-mukku",
+        "TE-C37-noru"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-031-FACE-WORDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-031",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C38-gunde",
+        "TE-C38-hrudayam"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-032-HEART"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-032",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C39-tii",
+        "TE-C39-paalu"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-033-TEA-MILK"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-033",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C40-bhojanam"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-034-MEAL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -394,7 +473,9 @@
         "TE-PATH-007",
         "TE-PATH-011",
         "TE-PATH-016",
-        "TE-PATH-021"
+        "TE-PATH-021",
+        "TE-PATH-028",
+        "TE-PATH-029"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -406,7 +487,9 @@
       "segments": [
         "TE-PATH-006",
         "TE-PATH-008",
-        "TE-PATH-017"
+        "TE-PATH-017",
+        "TE-PATH-030",
+        "TE-PATH-031"
       ],
       "omits": [
         "WORD-GOOD",
@@ -417,7 +500,9 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "TE-PATH-013",
-        "TE-PATH-019"
+        "TE-PATH-019",
+        "TE-PATH-032",
+        "TE-PATH-033"
       ],
       "omits": [],
       "relocates": {}
@@ -961,6 +1046,79 @@
       "prerequisites": [],
       "lessons": [
         "TE-C01-namaskaram"
+      ]
+    },
+    {
+      "id": "TE-EXT-029-FAMILY-FRIENDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my family as a group and name a friend in Telugu, and say which of the two words is a Sanskrit loan and which is Telugu's own native word.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C35-kutumbam",
+        "TE-C35-snehitudu"
+      ]
+    },
+    {
+      "id": "TE-EXT-030-SON-DAUGHTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say son and daughter in Telugu, and show that they trace to two different Proto-Dravidian roots rather than one shared root.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C36-koduku",
+        "TE-C36-kuuturu"
+      ]
+    },
+    {
+      "id": "TE-EXT-031-FACE-WORDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my eye, ear, nose and mouth in Telugu, and say which three the family agrees on and which one Telugu's word does not obviously match.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C37-kannu",
+        "TE-C37-cevi",
+        "TE-C37-mukku",
+        "TE-C37-noru"
+      ]
+    },
+    {
+      "id": "TE-EXT-032-HEART",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my heart in Telugu two ways, the everyday native word and the literary Sanskrit loan, and trace the Sanskrit one to the same root as the English word heart.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C38-gunde",
+        "TE-C38-hrudayam"
+      ]
+    },
+    {
+      "id": "TE-EXT-033-TEA-MILK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for tea or milk in Telugu, and say which word travelled by sea and which one three Dravidian cousins share under one regular sound law.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C39-tii",
+        "TE-C39-paalu"
+      ]
+    },
+    {
+      "id": "TE-EXT-034-MEAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I am having a meal in Telugu, using the word an earlier chapter already used and never explained.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C40-bhojanam"
       ]
     }
   ]
