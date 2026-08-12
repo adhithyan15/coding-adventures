@@ -123,7 +123,7 @@ does not install automatic press tracking.
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
 | `HostDraggable`  | Native SwiftUI drag transfer plus accessible keyboard grab/drop *(UI35)* |
 | `HostDropTarget` | Native SwiftUI drop delegate with accepts filtering and proposal dispatch *(UI35)* |
-| `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
+| `HostTable`      | Canonical dynamic Grid shapes use native `SwiftUI.Table` / `TableColumnForEach`; older systems use `List`, and unsupported shapes retain the structural fallback *(UI31)* |
 | `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
 
 ### Native drag and drop
@@ -139,6 +139,22 @@ enforces `accepts` and disabled state, and reports pointer position as
 so payloads cannot cross component instances. Pointer/touch and keyboard drops
 share one accepted-drop function and therefore emit the same proposal payload.
 Announcements use the platform accessibility notification API.
+
+### Native data tables
+
+The canonical UI31 Grid shape (`HostTableHead > Row > For` plus
+`HostTableBody > For > Row > For`) lowers to SwiftUI's native `Table`. Dynamic
+headers become `TableColumnForEach` definitions, each runtime row receives a
+stable integer identity, authored column widths are bounds-checked before
+reaching `TableColumn.width`, and the existing interactive Cell subtree remains
+the column content. This gives VoiceOver the platform table/header/cell model
+and preserves native keyboard traversal and column resizing.
+
+`TableColumnForEach` begins at macOS 14.4 and iOS 17.4. The generated package
+still targets macOS 13 and iOS 16, so older systems render the same rows through
+a native `List`/`Section` compatibility path. Structurally ambiguous tables
+retain the prior VStack/HStack visual fallback and remain a strict-profile
+degradation rather than being certified as accessible.
 
 ### `HostInput` binding choice
 

@@ -72,7 +72,7 @@
 //! | `HostScroll`   | `ScrollView { ... }`                            |
 //! | `HostInput`    | `TextField(placeholder, text: .constant(value))` |
 //! | `HostButton`   | `Button(action:) { Text(label) }`               |
-//! | `HostTable`    | `VStack { HStack { ... } }` (see [`emit_host_table`]) |
+//! | `HostTable`    | canonical dynamic Grid shapes use native `SwiftUI.Table`; other shapes keep the structural fallback |
 //! | `For`          | `ForEach(...) { ... }` (see [`emit_for_swift`]) |
 //! | `If` / `Else`  | `if cond { ... } else { ... }` (see [`emit_if_swift`]) |
 //!
@@ -950,6 +950,12 @@ const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState: View
 }
 "#;
 
+const TABLE_ROW_HELPER_SWIFT: &str = r#"private struct _MosaicTableRow<Value>: Identifiable {
+    let id: Int
+    let values: [Value]
+}
+"#;
+
 // =====================================================================
 // HostTable column-widths threading — TableContext
 // =====================================================================
@@ -1173,6 +1179,11 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+fn layout_contains_native_table(node: &LayoutNode) -> bool {
+    (node.tag == "HostTable" && host_table_has_native_semantics(node))
+        || node.children.iter().any(layout_contains_native_table)
 }
 
 /// One state layer collected from a node's `state-when-<X>: ( expr )` props.
@@ -2111,6 +2122,10 @@ pub fn from_pipeline(
     }
     if layout_uses_automatic_press(&layout.root, &part_styles) {
         out.push_str(PRESS_STATE_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
+    if layout_contains_native_table(&layout.root) {
+        out.push_str(TABLE_ROW_HELPER_SWIFT);
         writeln!(out).unwrap();
     }
     if layout_contains_tag(&layout.root, "HostDraggable")
@@ -3092,8 +3107,8 @@ fn emit_view_tree(
         "HostNumberInput" => emit_host_number_input(node, indent)?,
 
         // UI29 kernel — `HostTable` is the semantic data-table primitive.
-        // See [`emit_host_table`] for the lowering rationale (VStack +
-        // HStack rows, not SwiftUI.Table — for now).
+        // Canonical dynamic Grid trees lower to native SwiftUI.Table; other
+        // structural shapes retain the VStack/HStack visual fallback.
         //
         // `HostTable` is an entry point for [`TableContext`]: it discovers
         // a nested `HostTableColGroup`'s `For ( each: slot: column-widths
@@ -4875,22 +4890,347 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
 // UI29 kernel — HostTable emitter
 // =====================================================================
 
-/// Lower a UI29 `HostTable` node to a SwiftUI `VStack` of `HStack` rows.
+/// Canonical UI31/Grid structure that SwiftUI can lower to a native table.
 ///
-/// ## Why not `SwiftUI.Table`?
+/// SwiftUI's table columns are definitions rather than child views, so the
+/// native path deliberately accepts the package shape whose data loops can be
+/// re-bound as table rows and columns:
 ///
-/// SwiftUI's `Table` view is data-driven: it takes a `[RowType]` collection
-/// plus `TableColumn`s with key-paths, and is not naturally produced by a
-/// structural "compose from children" emitter — the data shape lives in the
-/// host, not in the layout IR. The follow-up that wires `For` into
-/// `HostTable` will revisit this and emit a real `Table { ... }` once the
-/// IR carries the row-data shape needed to drive it.
+/// ```text
+/// HostTable
+///   HostTableHead > Row > For > <header cell>
+///   HostTableBody > For > Row > For > <body cell>
+/// ```
 ///
-/// For now we do the simpler structural thing: emit a `VStack` whose
-/// children are `HStack` rows, with a `Divider` separating head from body.
-/// Headers render `.bold()`. The visual result is the same as
-/// `SwiftUI.Table` for static rows, just without the built-in sorting /
-/// selection / column-resize behaviour Table provides.
+/// Other structural HostTables retain the existing VStack/HStack rendering
+/// and remain visible to native-complete degradation analysis.
+#[derive(Clone, Copy)]
+struct SwiftUITableShape<'a> {
+    header_cells: &'a LayoutNode,
+    body_rows: &'a LayoutNode,
+    body_row: &'a LayoutNode,
+    body_cells: &'a LayoutNode,
+}
+
+fn safe_for_binding(node: &LayoutNode, prop: &str) -> Option<String> {
+    let binding = to_camel_case_first_lower(find_keyword_prop(node, prop)?);
+    is_safe_swift_identifier(&binding).then_some(binding)
+}
+
+fn swift_for_collection_expr(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|prop| prop.name == "each")?;
+    match &prop.value {
+        LayoutPropValue::SlotRef(slot) => {
+            let slot = to_camel_case_first_lower(slot);
+            is_safe_swift_identifier(&slot).then_some(slot)
+        }
+        LayoutPropValue::Expr(expression) => Some(expression.clone()),
+        LayoutPropValue::Keyword(binding) => {
+            let binding = to_camel_case_first_lower(binding);
+            is_safe_swift_identifier(&binding).then_some(binding)
+        }
+        _ => None,
+    }
+}
+
+fn swiftui_table_shape(host_table: &LayoutNode) -> Option<SwiftUITableShape<'_>> {
+    if host_table.children.iter().any(|child| {
+        !matches!(
+            child.tag.as_str(),
+            "HostTableColGroup" | "HostTableHead" | "HostTableBody"
+        )
+    }) {
+        return None;
+    }
+
+    let mut heads = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableHead");
+    let head = heads.next()?;
+    if heads.next().is_some() {
+        return None;
+    }
+    let mut bodies = host_table
+        .children
+        .iter()
+        .filter(|child| child.tag == "HostTableBody");
+    let body = bodies.next()?;
+    if bodies.next().is_some() {
+        return None;
+    }
+
+    let [header_row] = head.children.as_slice() else {
+        return None;
+    };
+    if header_row.tag != "Row" {
+        return None;
+    }
+    let [header_cells] = header_row.children.as_slice() else {
+        return None;
+    };
+    if header_cells.tag != "For" || header_cells.children.len() != 1 {
+        return None;
+    }
+
+    let [body_rows] = body.children.as_slice() else {
+        return None;
+    };
+    if body_rows.tag != "For" {
+        return None;
+    }
+    let [body_row] = body_rows.children.as_slice() else {
+        return None;
+    };
+    if body_row.tag != "Row" {
+        return None;
+    }
+    let [body_cells] = body_row.children.as_slice() else {
+        return None;
+    };
+    if body_cells.tag != "For" || body_cells.children.len() != 1 {
+        return None;
+    }
+
+    // The native adapter needs stable aliases for the same expressions the
+    // ordinary For emitter exposes. Requiring explicit indexes also keeps row
+    // identity and number-slot comparisons deterministic.
+    let _header_item = safe_for_binding(header_cells, "as")?;
+    let _header_index = safe_for_binding(header_cells, "index")?;
+    let row_item = safe_for_binding(body_rows, "as")?;
+    let row_index = safe_for_binding(body_rows, "index")?;
+    let cell_item = safe_for_binding(body_cells, "as")?;
+    let cell_index = safe_for_binding(body_cells, "index")?;
+    let _header_collection = swift_for_collection_expr(header_cells)?;
+    let _row_collection = swift_for_collection_expr(body_rows)?;
+
+    // The inner loop must iterate the outer row binding. Accepting an
+    // unrelated collection would render a different data model in the native
+    // and fallback branches.
+    let inner_collection = swift_for_collection_expr(body_cells)?;
+    if inner_collection != row_item {
+        return None;
+    }
+    let native_bindings = [&row_item, &row_index, &cell_item, &cell_index];
+    for (index, binding) in native_bindings.iter().enumerate() {
+        if native_bindings[..index].contains(binding) {
+            return None;
+        }
+    }
+
+    Some(SwiftUITableShape {
+        header_cells,
+        body_rows,
+        body_row,
+        body_cells,
+    })
+}
+
+/// Returns whether a HostTable has the canonical dynamic structure lowered to
+/// native SwiftUI `Table` / `TableColumnForEach` semantics.
+///
+/// Package capability analysis calls this same predicate so strict-profile
+/// reporting cannot drift from the emitter's actual lowering.
+pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
+    swiftui_table_shape(host_table).is_some()
+}
+
+fn append_table_layout_direction(out: &mut String, node: &LayoutNode, indent: usize) {
+    let pad = " ".repeat(indent);
+    if let Some(slot) = find_slot_ref_prop(node, "dir") {
+        let camel = to_camel_case_first_lower(slot);
+        if is_safe_swift_identifier(&camel) {
+            writeln!(out, "{pad}.environment(\\.layoutDirection, {camel})").unwrap();
+        }
+    } else if let Some(keyword) = find_keyword_prop(node, "dir") {
+        match keyword {
+            "rtl" => {
+                writeln!(out, "{pad}.environment(\\.layoutDirection, .rightToLeft)").unwrap();
+            }
+            "ltr" => {
+                writeln!(out, "{pad}.environment(\\.layoutDirection, .leftToRight)").unwrap();
+            }
+            _ => {}
+        }
+    }
+}
+
+/// Emit the canonical dynamic Grid as a native SwiftUI table.
+///
+/// `TableColumnForEach` is the first SwiftUI API that can preserve Mosaic's
+/// runtime-sized column list without generating an arbitrary fixed maximum.
+/// It is available on macOS 14.4 / iOS 17.4. Generated packages still target
+/// macOS 13 / iOS 16, so the availability branch uses the UI31-required
+/// native `List` fallback on older systems. Both branches keep the authored
+/// cell subtree and semantic event dispatch; the table branch additionally
+/// provides the host platform's table/header/cell accessibility model,
+/// keyboard traversal, selection affordances, and column resizing.
+fn emit_native_host_table(
+    node: &LayoutNode,
+    shape: SwiftUITableShape<'_>,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let closure_pad = " ".repeat(indent + 4);
+    let return_pad = " ".repeat(indent + 8);
+    let branch_pad = " ".repeat(indent + 12);
+    let table_pad = " ".repeat(indent + 16);
+    let column_pad = " ".repeat(indent + 20);
+    let cell_pad = " ".repeat(indent + 24);
+    let binding_pad = " ".repeat(indent + 28);
+
+    let header_collection = swift_for_collection_expr(shape.header_cells)
+        .expect("native table predicate checked the header collection");
+    let row_collection = swift_for_collection_expr(shape.body_rows)
+        .expect("native table predicate checked the row collection");
+    let row_item = safe_for_binding(shape.body_rows, "as")
+        .expect("native table predicate checked the row binding");
+    let row_index = safe_for_binding(shape.body_rows, "index")
+        .expect("native table predicate checked the row index");
+    let cell_item = safe_for_binding(shape.body_cells, "as")
+        .expect("native table predicate checked the cell binding");
+    let cell_index = safe_for_binding(shape.body_cells, "index")
+        .expect("native table predicate checked the cell index");
+    let table_ctx = extract_table_context(node);
+
+    // Preserve styling authored on the logical Row by applying the same part
+    // and state props to each native table cell. SwiftUI owns the physical row
+    // container, so a per-cell Group is the closest native equivalent and
+    // keeps hover/selection colors visually continuous across columns.
+    let styled_cell = LayoutNode {
+        tag: "Box".to_string(),
+        part_name: shape.body_row.part_name.clone(),
+        props: shape.body_row.props.clone(),
+        children: shape.body_cells.children.clone(),
+    };
+    let cell_payload = Some(ForPayloadScope {
+        item: cell_item.as_str(),
+        index: Some(cell_index.as_str()),
+    });
+    let native_cell = emit_view_tree(
+        &styled_cell,
+        indent + 32,
+        part_styles,
+        emits,
+        None,
+        cell_payload,
+        None,
+    )?;
+
+    let mut out = String::new();
+    if let Some(part) = &node.part_name {
+        writeln!(out, "{pad}// part: {part}").unwrap();
+    }
+    writeln!(out, "{pad}({{ () -> AnyView in").unwrap();
+    writeln!(
+        out,
+        "{closure_pad}let _mosaicTableRows = {row_collection}.enumerated().map {{ _MosaicTableRow(id: $0.offset, values: $0.element) }}"
+    )
+    .unwrap();
+    writeln!(out, "{closure_pad}return AnyView(").unwrap();
+    writeln!(out, "{return_pad}Group {{").unwrap();
+    writeln!(out, "{branch_pad}if #available(macOS 14.4, iOS 17.4, *) {{").unwrap();
+    writeln!(out, "{table_pad}SwiftUI.Table(_mosaicTableRows) {{").unwrap();
+    writeln!(
+        out,
+        "{column_pad}TableColumnForEach(Array({header_collection}.enumerated()), id: \\.offset) {{ _mosaicColumn in"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{cell_pad}TableColumn(_mosaicColumn.element) {{ _mosaicRow in"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}if _mosaicColumn.offset < _mosaicRow.values.count {{"
+    )
+    .unwrap();
+    writeln!(out, "{binding_pad}    let {row_item} = _mosaicRow.values").unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let {row_index}: Double = Double(_mosaicRow.id)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let {cell_item} = _mosaicRow.values[_mosaicColumn.offset]"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let {cell_index}: Double = Double(_mosaicColumn.offset)"
+    )
+    .unwrap();
+    writeln!(
+        out,
+        "{binding_pad}    let _ = ({row_item}, {row_index}, {cell_item}, {cell_index})"
+    )
+    .unwrap();
+    out.push_str(&native_cell);
+    writeln!(out, "{binding_pad}}} else {{").unwrap();
+    writeln!(out, "{binding_pad}    EmptyView()").unwrap();
+    writeln!(out, "{binding_pad}}}").unwrap();
+    writeln!(out, "{cell_pad}}}").unwrap();
+    if let Some(widths) = table_ctx.column_widths_slot.as_deref() {
+        writeln!(
+            out,
+            "{cell_pad}.width(_mosaicColumn.offset < {widths}.count ? {widths}[_mosaicColumn.offset] : nil)"
+        )
+        .unwrap();
+    }
+    writeln!(out, "{column_pad}}}").unwrap();
+    writeln!(out, "{table_pad}}}").unwrap();
+    writeln!(out, "{branch_pad}}} else {{").unwrap();
+
+    // UI31's compatibility path is a List, never a grid of unrelated
+    // containers. Reuse the ordinary For emitter so pre-17.4 systems keep
+    // header/cell styling, explicit widths, row identity, and dispatch.
+    writeln!(out, "{table_pad}List {{").unwrap();
+    writeln!(out, "{column_pad}Section {{").unwrap();
+    out.push_str(&emit_for_swift(
+        shape.body_rows,
+        indent + 24,
+        part_styles,
+        emits,
+        Some(&table_ctx),
+        for_payload,
+        false,
+    )?);
+    writeln!(out, "{column_pad}}} header: {{").unwrap();
+    writeln!(out, "{cell_pad}HStack(spacing: 0) {{").unwrap();
+    out.push_str(&emit_for_swift(
+        shape.header_cells,
+        indent + 28,
+        part_styles,
+        emits,
+        Some(&table_ctx),
+        for_payload,
+        true,
+    )?);
+    writeln!(out, "{cell_pad}}}").unwrap();
+    writeln!(out, "{column_pad}}}").unwrap();
+    writeln!(out, "{table_pad}}}").unwrap();
+    writeln!(out, "{branch_pad}}}").unwrap();
+    writeln!(out, "{return_pad}}}").unwrap();
+    writeln!(out, "{closure_pad})").unwrap();
+    writeln!(out, "{pad}}})()").unwrap();
+    append_table_layout_direction(&mut out, node, indent);
+    Ok(out)
+}
+
+/// Lower UI29 `HostTable` through the native or structural path.
+///
+/// [`swiftui_table_shape`] recognizes the canonical data-driven Grid and
+/// delegates it to [`emit_native_host_table`]. Arbitrary static/mixed
+/// HostTable trees cannot be represented faithfully by SwiftUI's declarative
+/// column builder, so they retain the compatibility `VStack` of `HStack`
+/// rows, with a `Divider` separating head from body and bold headers. Package
+/// capability analysis uses the same native-shape predicate, so this fallback
+/// remains an explicit table-semantics degradation.
 ///
 /// ## Sub-tag handling
 ///
@@ -4925,6 +5265,10 @@ fn emit_host_table(
     emits: &[EmitDecl],
     for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
+    if let Some(shape) = swiftui_table_shape(node) {
+        return emit_native_host_table(node, shape, indent, part_styles, emits, for_payload);
+    }
+
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
 
@@ -4932,10 +5276,8 @@ fn emit_host_table(
     if let Some(part) = &node.part_name {
         writeln!(out, "{pad}// part: {part}").unwrap();
     }
-    // NOTE: This first cut lowers HostTable to a VStack of HStack rows
-    // rather than SwiftUI.Table. SwiftUI.Table is data-driven and needs a
-    // row-data shape the IR does not yet carry. See [`emit_host_table`]
-    // doc comment for the rationale.
+    // The canonical data-driven shape returned above. This branch is the
+    // compatibility renderer for static, mixed, or otherwise ambiguous trees.
     if node.children.is_empty() {
         writeln!(out, "{pad}VStack(alignment: .leading, spacing: 0) {{ }}").unwrap();
         return Ok(out);
@@ -5048,27 +5390,7 @@ fn emit_host_table(
     // expression position because it never reaches the format string.
     // Slot refs run through `is_safe_swift_identifier` so they can't
     // either.
-    if let Some(slot) = find_slot_ref_prop(node, "dir") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_swift_identifier(&camel) {
-            writeln!(out, "{pad}.environment(\\.layoutDirection, {camel})").unwrap();
-        }
-    } else if let Some(kw) = find_keyword_prop(node, "dir") {
-        match kw {
-            "rtl" => {
-                writeln!(out, "{pad}.environment(\\.layoutDirection, .rightToLeft)").unwrap();
-            }
-            "ltr" => {
-                writeln!(out, "{pad}.environment(\\.layoutDirection, .leftToRight)").unwrap();
-            }
-            // `auto` — let the ambient Environment value flow through.
-            // SwiftUI has no `.automatic` enum case for layoutDirection;
-            // the spec-mandated semantic for `auto` is "let the host
-            // decide", which is exactly what the SwiftUI default does.
-            "auto" => {}
-            _ => {}
-        }
-    }
+    append_table_layout_direction(&mut out, node, indent);
 
     Ok(out)
 }
@@ -7403,6 +7725,148 @@ mod tests {
             })
             .collect();
         container_node(tag, row_nodes)
+    }
+
+    fn canonical_dynamic_host_table() -> LayoutNode {
+        let header_cells = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "headers"),
+                prop_keyword("as", "header"),
+                prop_keyword("index", "column"),
+            ],
+            vec![container_node(
+                "Box",
+                vec![leaf("Text", vec![prop_slot_ref("content", "header")])],
+            )],
+        );
+        let body_cells = node_with_props(
+            "For",
+            vec![
+                prop_keyword("each", "row"),
+                prop_keyword("as", "value"),
+                prop_keyword("index", "column"),
+            ],
+            vec![container_node(
+                "Box",
+                vec![leaf("Text", vec![prop_slot_ref("content", "value")])],
+            )],
+        );
+        let mut body_row = container_node("Row", vec![body_cells]);
+        body_row.part_name = Some("data-row".to_string());
+        let body_rows = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", "row-index"),
+            ],
+            vec![body_row],
+        );
+        let column_widths = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "widths"),
+                prop_keyword("as", "width"),
+                prop_keyword("index", "column"),
+            ],
+            vec![leaf("Col", vec![])],
+        );
+        container_node(
+            "HostTable",
+            vec![
+                container_node("HostTableColGroup", vec![column_widths]),
+                container_node(
+                    "HostTableHead",
+                    vec![container_node("Row", vec![header_cells])],
+                ),
+                container_node("HostTableBody", vec![body_rows]),
+            ],
+        )
+    }
+
+    #[test]
+    fn canonical_dynamic_host_table_emits_native_table_and_list_fallback() {
+        let layout = layout_with(
+            "Grid",
+            container_node("Box", vec![canonical_dynamic_host_table()]),
+        );
+        let out = from_pipeline(
+            &component(
+                "Grid",
+                vec![
+                    slot(
+                        "headers",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        true,
+                    ),
+                    slot(
+                        "rows",
+                        SlotType::List(Box::new(ListInnerType::List(Box::new(
+                            ListInnerType::Text,
+                        )))),
+                        true,
+                    ),
+                    slot(
+                        "widths",
+                        SlotType::List(Box::new(ListInnerType::Number)),
+                        true,
+                    ),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Grid"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(host_table_has_native_semantics(&layout.root.children[0]));
+        assert!(out.contains("private struct _MosaicTableRow<Value>: Identifiable"));
+        assert!(out.contains("if #available(macOS 14.4, iOS 17.4, *)"));
+        assert!(out.contains("SwiftUI.Table(_mosaicTableRows)"));
+        assert!(out.contains("TableColumnForEach(Array(headers.enumerated()), id: \\.offset)"));
+        assert!(out.contains("TableColumn(_mosaicColumn.element)"));
+        assert!(out.contains("let rowIndex: Double = Double(_mosaicRow.id)"));
+        assert!(out.contains("let column: Double = Double(_mosaicColumn.offset)"));
+        assert!(out.contains(
+            ".width(_mosaicColumn.offset < widths.count ? widths[_mosaicColumn.offset] : nil)"
+        ));
+        assert!(out.contains("} else {"));
+        assert!(out.contains("List {"));
+    }
+
+    #[test]
+    fn unsupported_host_table_shape_keeps_structural_fallback_and_no_helper() {
+        let table = container_node(
+            "HostTable",
+            vec![table_section("HostTableBody", vec![vec!["value"]])],
+        );
+        assert!(!host_table_has_native_semantics(&table));
+        let layout = layout_with("Grid", container_node("Box", vec![table]));
+        let out = from_pipeline(
+            &component("Grid", vec![], vec![]),
+            &layout,
+            &empty_style("Grid"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("VStack(alignment: .leading, spacing: 0)"));
+        assert!(!out.contains("_MosaicTableRow"));
+        assert!(!out.contains("SwiftUI.Table"));
+
+        let mut colliding_bindings = canonical_dynamic_host_table();
+        let body_cells = &mut colliding_bindings.children[2].children[0].children[0].children[0];
+        body_cells
+            .props
+            .iter_mut()
+            .find(|prop| prop.name == "index")
+            .expect("cell index")
+            .value = LayoutPropValue::Keyword("row-index".to_string());
+        assert!(
+            !host_table_has_native_semantics(&colliding_bindings),
+            "flattening nested loop scopes must not generate duplicate Swift locals"
+        );
     }
 
     // ---------------------------------------------------------------------

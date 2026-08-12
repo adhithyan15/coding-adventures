@@ -969,6 +969,12 @@ jobs:
           set -euo pipefail
           output="$RUNNER_TEMP/mosaic-swift-taskapp"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$output" --emit-project
+          jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$output/swiftui"
+          (
+            cd "$output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
+          )
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
           runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
 

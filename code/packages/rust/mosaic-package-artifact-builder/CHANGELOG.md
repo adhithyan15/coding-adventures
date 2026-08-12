@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - SwiftUI native table capability
+
+- Native-complete analysis recognizes the canonical dynamic UI31/Grid shape
+  when the SwiftUI emitter supplies native `Table` / `TableColumnForEach`
+  semantics and the version-gated `List` fallback.
+- Unsupported or structurally ambiguous SwiftUI HostTable trees retain the
+  stable `accessibility.table-semantics-missing` degradation.
+- Permissive TaskApp SwiftUI output now reports only the sample-runtime
+  fallback before compiling on both macOS and the iOS 16 deployment target.
+
 ## [Unreleased] - SwiftUI native drag capability
 
 - Native-complete analysis no longer reports SwiftUI `HostDraggable` and
