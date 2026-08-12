@@ -4,6 +4,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Chinese 不 (HL-C09CM)
+
+- Verify 不 as four separately placed strokes with three lifts against the pinned PRC source.
+- Record that planned 叫 is outside the measured inventory and needs a separate font-resubsetting change.
+- Reduce HL-C09 debt to 141 entries; Chinese has 10 outstanding.
+
 ### Added - source-verified Chinese 是 (HL-C09CL)
 
 - Verify 是 as nine ordered strokes with eight lifts against the pinned PRC source.

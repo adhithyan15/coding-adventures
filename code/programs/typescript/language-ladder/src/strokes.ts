@@ -1414,6 +1414,36 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("是"),
   },
+  // 不 places four independent strokes: top horizontal, long falling stroke,
+  // central vertical, then the right-falling dot. Four strokes mean three
+  // lifts and four visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "不")]: {
+    script: "chinese",
+    glyph: "不",
+    strokes: [
+      { segments: [{ label: "draw the top horizontal left-to-right", path: [
+        { x: 85, y: 730 }, { x: 200, y: 730 }, { x: 320, y: 730 },
+        { x: 440, y: 730 }, { x: 560, y: 730 }, { x: 680, y: 730 },
+        { x: 800, y: 730 }, { x: 915, y: 730 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the long stroke down-left", path: [
+        { x: 545, y: 710 }, { x: 525, y: 650 }, { x: 490, y: 590 },
+        { x: 440, y: 525 }, { x: 380, y: 460 }, { x: 315, y: 395 },
+        { x: 245, y: 330 }, { x: 175, y: 275 }, { x: 105, y: 225 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the central vertical", path: [
+        { x: 500, y: 550 }, { x: 500, y: 475 }, { x: 500, y: 400 },
+        { x: 500, y: 325 }, { x: 500, y: 250 }, { x: 500, y: 175 },
+        { x: 500, y: 100 }, { x: 500, y: 20 }, { x: 500, y: -55 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the separate right-falling dot", path: [
+        { x: 610, y: 470 }, { x: 660, y: 430 }, { x: 715, y: 390 },
+        { x: 770, y: 350 }, { x: 825, y: 305 }, { x: 875, y: 260 },
+        { x: 920, y: 220 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("不"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
