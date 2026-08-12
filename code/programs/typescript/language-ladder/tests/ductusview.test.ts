@@ -104,6 +104,8 @@ const CHINESE_ROOF_RADICAL = ductusFor("宀", "chinese")!;
 const chineseRoofRadicalOutline = chineseOutline("宀");
 const CHINESE_YOU = ductusFor("你", "chinese")!;
 const chineseYouOutline = chineseOutline("你");
+const CHINESE_GOOD = ductusFor("好", "chinese")!;
+const chineseGoodOutline = chineseOutline("好");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1124,6 +1126,34 @@ describe("Chinese 你 — seven cited strokes with two joined hooks", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_YOU.strokes[6], 1),
+    );
+  });
+});
+
+describe("Chinese 好 — six cited strokes with 女 before 子", () => {
+  const steps = ductusSteps(CHINESE_GOOD);
+  const strip = ductusFilmstrip(CHINESE_GOOD, chineseGoodOutline);
+
+  it("keeps all three internal turns joined across six component-ordered strokes", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3, 3, 4, 4, 5]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, false, true, true, true, false, true, false, true,
+    ]);
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 9 movements");
+  });
+
+  it("draws the exact Noto Sans SC character with five completed strokes behind the final bar", () => {
+    const paths = byTag(strip.frames[8], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseGoodOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual(
+      CHINESE_GOOD.strokes.slice(0, 5).map((stroke) => penPathD(stroke, 1)),
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_GOOD.strokes[5], 1),
     );
   });
 });
