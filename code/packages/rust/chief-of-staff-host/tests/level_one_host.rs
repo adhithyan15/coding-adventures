@@ -45,11 +45,30 @@ use coding_adventures_ed25519::generate_keypair;
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_x3dh::generate_identity_keypair;
 #[cfg(unix)]
+use embeddable_http_server::HttpRequest;
+#[cfg(unix)]
+use http_core::{Header, HttpVersion, RequestHead};
+#[cfg(unix)]
+use smart_home_controller_runtime::SmartHomeControllerRuntime;
+#[cfg(unix)]
+use smart_home_core::{
+    AgentId as SmartHomeAgentId, CapabilityGrant, CapabilityGrantId,
+    PrivilegeTier as SmartHomePrivilegeTier,
+};
+#[cfg(unix)]
+use smart_home_platform_http::{
+    home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
+};
+#[cfg(unix)]
+use smart_home_testkit::hue_lighting_runtime;
+#[cfg(unix)]
+use std::convert::Infallible;
+#[cfg(unix)]
 use std::fs;
 #[cfg(unix)]
 use std::io::{Read, Write};
 #[cfg(unix)]
-use std::net::TcpListener;
+use std::net::{SocketAddr, TcpListener};
 use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
@@ -57,6 +76,8 @@ use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 #[cfg(unix)]
 use storage_core::StorageBackend;
+#[cfg(unix)]
+use tcp_runtime::{ConnectionId, TcpConnectionInfo};
 
 const TEST_KEY_ID: &str = "level-one-host-test";
 const TEST_SEED: [u8; 32] = [73; 32];
@@ -175,7 +196,7 @@ impl MessageMetadataSource for FixedMetadata {
 #[cfg(unix)]
 struct ScriptedOllama {
     endpoint: String,
-    request_body: Arc<Mutex<Option<String>>>,
+    request_bodies: Arc<Mutex<Vec<String>>>,
     join: Option<thread::JoinHandle<()>>,
 }
 
@@ -184,52 +205,58 @@ impl ScriptedOllama {
     fn spawn() -> Self {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let endpoint = format!("http://{}", listener.local_addr().unwrap());
-        let request_body = Arc::new(Mutex::new(None));
-        let captured = Arc::clone(&request_body);
+        let request_bodies = Arc::new(Mutex::new(Vec::new()));
+        let captured = Arc::clone(&request_bodies);
         let join = thread::spawn(move || {
-            let (mut stream, _) = listener.accept().unwrap();
-            let mut request = Vec::new();
-            let mut buffer = [0; 4096];
-            let (body_start, content_length) = loop {
-                let count = stream.read(&mut buffer).unwrap();
-                assert!(count > 0, "Ollama fixture request ended before headers");
-                request.extend_from_slice(&buffer[..count]);
-                let Some(header_end) = request.windows(4).position(|bytes| bytes == b"\r\n\r\n")
-                else {
-                    continue;
+            let responses = [
+                r#"{"model":"weather-fixture","message":{"role":"assistant","content":"{\"kind\":\"tool_call\",\"call_id\":\"call-1\",\"name\":\"smart_home.list_devices\",\"arguments\":{}}"},"done":true,"done_reason":"stop","prompt_eval_count":12,"eval_count":4}"#,
+                r#"{"model":"weather-fixture","message":{"role":"assistant","content":"{\"kind\":\"final\",\"text\":\"The central smart-home inventory is available.\"}"},"done":true,"done_reason":"stop","prompt_eval_count":18,"eval_count":7}"#,
+            ];
+            for body in responses {
+                let (mut stream, _) = listener.accept().unwrap();
+                let mut request = Vec::new();
+                let mut buffer = [0; 4096];
+                let (body_start, content_length) = loop {
+                    let count = stream.read(&mut buffer).unwrap();
+                    assert!(count > 0, "Ollama fixture request ended before headers");
+                    request.extend_from_slice(&buffer[..count]);
+                    let Some(header_end) =
+                        request.windows(4).position(|bytes| bytes == b"\r\n\r\n")
+                    else {
+                        continue;
+                    };
+                    let headers = std::str::from_utf8(&request[..header_end]).unwrap();
+                    assert!(headers.starts_with("POST /api/chat HTTP/1.1\r\n"));
+                    let length = headers
+                        .lines()
+                        .find_map(|line| line.strip_prefix("Content-Length:"))
+                        .map(str::trim)
+                        .unwrap()
+                        .parse::<usize>()
+                        .unwrap();
+                    break (header_end + 4, length);
                 };
-                let headers = std::str::from_utf8(&request[..header_end]).unwrap();
-                assert!(headers.starts_with("POST /api/chat HTTP/1.1\r\n"));
-                let length = headers
-                    .lines()
-                    .find_map(|line| line.strip_prefix("Content-Length:"))
-                    .map(str::trim)
-                    .unwrap()
-                    .parse::<usize>()
-                    .unwrap();
-                break (header_end + 4, length);
-            };
-            while request.len() - body_start < content_length {
-                let count = stream.read(&mut buffer).unwrap();
-                assert!(count > 0, "Ollama fixture request ended before its body");
-                request.extend_from_slice(&buffer[..count]);
-            }
-            *captured.lock().unwrap() = Some(
-                String::from_utf8(request[body_start..body_start + content_length].to_vec())
-                    .unwrap(),
-            );
+                while request.len() - body_start < content_length {
+                    let count = stream.read(&mut buffer).unwrap();
+                    assert!(count > 0, "Ollama fixture request ended before its body");
+                    request.extend_from_slice(&buffer[..count]);
+                }
+                captured.lock().unwrap().push(
+                    String::from_utf8(request[body_start..body_start + content_length].to_vec())
+                        .unwrap(),
+                );
 
-            let body = r#"{"model":"weather-fixture","message":{"role":"assistant","content":"{\"kind\":\"final\",\"text\":\"Bring an umbrella.\"}"},"done":true,"done_reason":"stop","prompt_eval_count":12,"eval_count":4}"#;
-            let response = format!(
-                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
-                body.len(),
-                body
-            );
-            stream.write_all(response.as_bytes()).unwrap();
+                let response = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                );
+                stream.write_all(response.as_bytes()).unwrap();
+            }
         });
         Self {
             endpoint,
-            request_body,
+            request_bodies,
             join: Some(join),
         }
     }
@@ -238,10 +265,30 @@ impl ScriptedOllama {
         &self.endpoint
     }
 
-    fn finish(mut self) -> String {
+    fn finish(mut self) -> Vec<String> {
         self.join.take().unwrap().join().unwrap();
-        let body = self.request_body.lock().unwrap().take().unwrap();
-        body
+        std::mem::take(&mut *self.request_bodies.lock().unwrap())
+    }
+}
+
+#[cfg(unix)]
+fn web_request(target: &str) -> HttpRequest {
+    HttpRequest {
+        connection: TcpConnectionInfo {
+            id: ConnectionId(0),
+            peer_addr: SocketAddr::from(([127, 0, 0, 1], 10_000)),
+            local_addr: SocketAddr::from(([127, 0, 0, 1], 8_123)),
+        },
+        head: RequestHead {
+            method: "GET".to_string(),
+            target: target.to_string(),
+            version: HttpVersion { major: 1, minor: 1 },
+            headers: vec![Header {
+                name: "Host".to_string(),
+                value: "localhost".to_string(),
+            }],
+        },
+        body: Vec::new(),
     }
 }
 
@@ -540,7 +587,7 @@ fn real_level_one_host_runs_one_authenticated_turn_and_terminates_cleanly() {
 
 #[cfg(unix)]
 #[test]
-fn production_composition_runs_encrypted_weather_turn_through_ollama() {
+fn production_composition_runs_tool_turn_through_d23_and_home_assistant_readback() {
     let home = TestHome::new();
     let ollama = ScriptedOllama::spawn();
     let (package, keyring) = TestPackage::new();
@@ -551,6 +598,28 @@ fn production_composition_runs_encrypted_weather_turn_through_ollama() {
     let pipeline_id = PipelineId::new(uuid_v7(9)).unwrap();
     let input_channel = ChannelId(uuid_v7(1));
     let output_channel = ChannelId(uuid_v7(2));
+
+    let controller =
+        SmartHomeControllerRuntime::restore(FsStorageBackend::new(home.0.join("state"))).unwrap();
+    let mut initial_runtime = hue_lighting_runtime();
+    initial_runtime
+        .registry_mut()
+        .upsert_capability_grant(CapabilityGrant::for_all_smart_home(
+            CapabilityGrantId::trusted("grant-weather-level-one"),
+            SmartHomeAgentId::trusted("weather-level-one"),
+            SmartHomePrivilegeTier::HumanApproval,
+            "user:test",
+            0,
+        ));
+    let initial_authorization_decisions =
+        initial_runtime.registry().counts().authorization_decisions;
+    controller
+        .transaction(1, |runtime, _| {
+            *runtime = initial_runtime;
+            Ok::<(), Infallible>(())
+        })
+        .unwrap();
+    drop(controller);
 
     let input_signing = OriginatorSigningKey::from_seed([0x11; 32]);
     let input_key = ChannelMasterKey::from_bytes([0x12; 32]);
@@ -738,7 +807,10 @@ ollama_models = [
         );
         thread::sleep(Duration::from_millis(10));
     };
-    assert_eq!(report.payload, b"Bring an umbrella.");
+    assert_eq!(
+        report.payload,
+        b"The central smart-home inventory is available."
+    );
     assert_eq!(report.content_type, LEVEL_ONE_RESPONSE_CONTENT_TYPE);
 
     while ChannelStore::new(backend.as_ref(), input_channel)
@@ -760,12 +832,48 @@ ollama_models = [
         &registration,
         SupervisorPhase::Exited { exit_code: Some(0) },
     );
-    let request = ollama.finish();
-    assert!(request.contains("\"model\":\"weather-fixture\""));
-    assert!(request.contains("Weather Reporter"));
-    assert!(request.contains("\"content\":\"Seattle\""));
+    drop(supervisor);
+
+    let requests = ollama.finish();
+    assert_eq!(requests.len(), 2);
+    assert!(requests[0].contains("\"model\":\"weather-fixture\""));
+    assert!(requests[0].contains("Weather Reporter"));
+    assert!(requests[0].contains("\"content\":\"Seattle\""));
     assert!(
-        request.contains("smart_home.list_devices"),
-        "production catalog was absent from Ollama request: {request}"
+        requests[0].contains("smart_home.list_devices"),
+        "production catalog was absent from first Ollama request: {}",
+        requests[0]
     );
+    assert!(requests[1].contains("tool_results"));
+    assert!(requests[1].contains("call-1"));
+
+    let restored =
+        SmartHomeControllerRuntime::restore(FsStorageBackend::new(home.0.join("state"))).unwrap();
+    let durable = restored.durable_snapshot().unwrap().unwrap();
+    assert_eq!(
+        durable.runtime.registry().counts().authorization_decisions,
+        initial_authorization_decisions + 1
+    );
+    let app = home_assistant_runtime_web_app(
+        SmartHomePlatformHttpRuntime::new(
+            durable.runtime,
+            SmartHomePlatformHttpConfig::new("Codex Home"),
+        )
+        .with_now_ms(2),
+    );
+    let entity = app.handle(web_request("/api/states/light.entity_light_1"));
+    assert_eq!(entity.status, 200);
+    let entity_body = String::from_utf8(entity.body).unwrap();
+    assert!(entity_body.contains(r#""entity_id":"entity-light-1""#));
+    assert!(entity_body.contains(r#""friendly_name":"Kitchen Light""#));
+
+    let audit = app.handle(web_request(
+        "/api/smart_home/authorization_decisions?principal_id=weather-level-one&outcome=allowed",
+    ));
+    assert_eq!(audit.status, 200);
+    let audit_body = String::from_utf8(audit.body).unwrap();
+    assert!(audit_body.contains(r#""total_decisions":1"#));
+    assert!(audit_body.contains(r#""principal_id":"weather-level-one""#));
+    assert!(audit_body.contains(r#""outcome":"allowed""#));
+    assert!(audit_body.contains(r#""kind":"tool""#));
 }
