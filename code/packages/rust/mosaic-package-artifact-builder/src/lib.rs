@@ -1118,7 +1118,7 @@ fn collect_native_degradations(
             "interaction.dialog-placeholder",
             "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog",
         )),
-        "HostSlider" if backend.is_native() => Some((
+        "HostSlider" if backend.is_native() && backend != Backend::Compose => Some((
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
         )),
@@ -4660,7 +4660,7 @@ layout Board {
     }
 
     #[test]
-    fn host_slider_is_explicitly_incomplete_until_native_lowerings_land() {
+    fn host_slider_tracks_each_native_lowering_independently() {
         let pkg = make_package("mosaic-pkg-volume", &["Volume"]);
         fs::write(
             pkg.path().join("src/Volume.mll"),
@@ -4678,8 +4678,25 @@ layout Volume {
         )
         .unwrap();
 
+        let compose_out = TempDir::new().unwrap();
+        let compose_report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: compose_out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Compose slider capability analysis");
+        assert!(
+            compose_report.native_complete,
+            "Compose now has a native adjustable slider lowering: {:?}",
+            compose_report.degradations
+        );
+
         for backend in [
-            Backend::Compose,
             Backend::Flutter,
             Backend::Qt,
             Backend::SwiftUI,

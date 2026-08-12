@@ -69,13 +69,14 @@ wants the strict-Flux store/dispatcher contract.
 | HostInput    | `BasicTextField(value, onValueChange...)` |
 | Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
+| HostSlider   | native adjustable `Slider`                |
 | HostLink     | native annotated text link                |
 | HostDialog   | native `Dialog` / non-modal `Popup`       |
 | HostDraggable / HostDropTarget | native Compose Desktop drag/drop plus keyboard and accessibility controller |
 
 The emitter also lowers `For`, `If`/`Else`, table structure with native
 collection/header/cell accessibility semantics for the canonical dynamic Grid
-shape, buttons, checkbox and radio controls, number inputs, links, accessible
+shape, buttons, checkbox and radio controls, number inputs, sliders, links, accessible
 dialog and tooltip overlays, and native Compose Desktop drag/drop. Unsupported
 primitives still return a clear `UnknownPrimitive` error instead of silently
 disappearing.
