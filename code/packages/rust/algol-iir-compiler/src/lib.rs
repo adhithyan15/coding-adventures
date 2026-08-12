@@ -2319,6 +2319,19 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<(&'n GrammarASTNode, &'n GrammarASTNode, &'n GrammarASTNode)> {
+        let (condition, then_node, else_node) = self.conditional_expression_parts(node)?;
+        if !self.is_static_real_output_expr(then_node)
+            || !self.is_static_real_output_expr(else_node)
+        {
+            return None;
+        }
+        Some((condition, then_node, else_node))
+    }
+
+    fn conditional_expression_parts<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<(&'n GrammarASTNode, &'n GrammarASTNode, &'n GrammarASTNode)> {
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
             || !direct_tokens(node).iter().any(|token| token.value == "if")
         {
@@ -2330,10 +2343,7 @@ impl Compiler {
             .into_iter()
             .filter(|child| child.rule_name == node.rule_name)
             .collect();
-        if branches.len() != 2
-            || !self.is_static_real_output_expr(branches[0])
-            || !self.is_static_real_output_expr(branches[1])
-        {
+        if branches.len() != 2 {
             return None;
         }
         Some((condition, branches[0], branches[1]))
@@ -2358,6 +2368,24 @@ impl Compiler {
             self.static_standard_real_value(call)
                 .or_else(|| self.static_tracked_numeric_value(call, widen_tracked_integers))
         })
+    }
+
+    fn static_assigned_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        if let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let then_value = self.static_assigned_real_value(then_node)?;
+            let else_value = self.static_assigned_real_value(else_node)?;
+            return (then_value.to_bits() == else_value.to_bits()).then_some(then_value);
+        }
+        self.static_real_arithmetic_value(node)
+    }
+
+    fn static_assigned_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let then_value = self.static_assigned_integer_value(then_node)?;
+            let else_value = self.static_assigned_integer_value(else_node)?;
+            return (then_value == else_value).then_some(then_value);
+        }
+        self.static_integer_scalar_value(node)
     }
 
     fn static_tracked_numeric_value(
@@ -4017,12 +4045,12 @@ impl Compiler {
         let expr = first_direct_node(node, "expression")
             .ok_or_else(|| CompileError::Malformed("assign_stmt has no expression".into()))?;
         let static_real_text = (!self.static_real_tracking_disabled)
-            .then(|| self.static_real_arithmetic_value(expr))
+            .then(|| self.static_assigned_real_value(expr))
             .flatten()
             .filter(|value| value.is_finite())
             .map(|value| value.to_string());
         let static_integer_value = (!self.static_real_tracking_disabled)
-            .then(|| self.static_integer_scalar_value(expr))
+            .then(|| self.static_assigned_integer_value(expr))
             .flatten();
 
         if let Some(literal) = expr_string_literal(expr) {
@@ -7599,6 +7627,48 @@ mod tests {
             "test",
         )
         .expect_err("a user-defined sign call must not become static metadata");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_equal_conditional_assignments_preserve_static_snapshots() {
+        let module = compile_source(
+            "begin boolean flag; integer n; real x; flag := false; n := if flag then 40 else 40; x := if flag then 2.5 else 2.5; output(n + x) end",
+            "test",
+        )
+        .expect("equal conditional branches preserve assignment snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "jmp_if_false")
+                .count(),
+            2,
+            "both runtime conditions must still be evaluated"
+        );
+    }
+
+    #[test]
+    fn al4_different_conditional_integer_branches_invalidate_snapshot() {
+        let err = compile_source(
+            "begin boolean flag; integer n; flag := false; n := if flag then 40 else 41; output(n + 2.5) end",
+            "test",
+        )
+        .expect_err("path-dependent integer values must invalidate metadata");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_different_conditional_real_branches_invalidate_snapshot() {
+        let err = compile_source(
+            "begin boolean flag; real x; flag := false; x := if flag then 2.5 else 3.5; output(x) end",
+            "test",
+        )
+        .expect_err("path-dependent real values must invalidate metadata");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

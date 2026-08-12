@@ -1395,6 +1395,17 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a runtime condition may preserve assignment metadata when
+    // both independently proven branches have exactly the same value. The
+    // condition still lowers and executes; only the path-independent snapshot
+    // is reused by later formatter-free mixed real output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; integer n; real x; flag := false; n := if flag then 40 else 40; x := if flag then 2.5 else 2.5; output(n + x) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — exact unary signs stay attached to direct real literals while
     // the bounded source-spelling path continues to reject computed reals.
     Prog {
