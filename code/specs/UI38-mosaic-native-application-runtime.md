@@ -488,6 +488,9 @@ unblocks multiple downstream targets; never count source generation as completio
 - [x] Add schema-versioned theme-token inputs to mosstyle and package builds,
   with global values, per-backend overrides, recursive package inheritance,
   aliases, and fail-closed validation.
+  - [x] Let packages declare a safe, package-relative token palette so reusable
+    libraries carry scoped defaults automatically; dependency defaults are
+    overridden by the consuming package and then explicit application input.
 - [ ] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.

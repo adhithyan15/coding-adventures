@@ -345,6 +345,19 @@ impl TokenOverrides {
         }
         Ok(overrides)
     }
+
+    /// Layer a higher-precedence palette over this palette.
+    ///
+    /// The merged map is validated again because replacing one side of an
+    /// alias can introduce a cycle even when both input palettes were valid
+    /// independently. This is the primitive used by package composition:
+    /// dependency defaults are lower precedence than consuming-package
+    /// defaults, which are lower precedence than explicit application input.
+    pub fn overlay(&self, higher: &Self) -> Result<Self, TokenPaletteError> {
+        let mut values = self.values.clone();
+        values.extend(higher.values.clone());
+        Self::try_from_values(values)
+    }
 }
 
 /// Parse a versioned JSON token palette and select overrides for `backend`.
@@ -1834,6 +1847,47 @@ mod tests {
         "#;
         let result = compile_with_tokens(src, None, &palette).expect("style compiles");
         assert_eq!(result.def.parts[0].base[0].value, "#abcdef");
+    }
+
+    #[test]
+    fn token_palette_overlay_uses_higher_precedence_and_reresolves_aliases() {
+        let defaults = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#123456",
+                "button-accent": "$brand-accent"
+              }
+            }"##,
+            None,
+        )
+        .unwrap();
+        let app = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": { "brand-accent": "#abcdef" }
+            }"##,
+            None,
+        )
+        .unwrap();
+        let layered = defaults.overlay(&app).expect("palettes layer");
+        let output = compile_with_tokens(
+            "style Button { part root { background: $button-accent ; } }",
+            None,
+            &layered,
+        )
+        .unwrap();
+        assert_eq!(output.def.parts[0].base[0].value, "#abcdef");
+
+        let higher_cycle = parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": { "brand-accent": "$button-accent" }
+            }"##,
+            None,
+        )
+        .unwrap_err();
+        assert!(higher_cycle.message.contains("missing or circular"));
     }
 
     #[test]

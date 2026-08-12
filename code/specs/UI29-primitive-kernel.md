@@ -315,6 +315,11 @@ exports = ["Grid", "Cell", "Column"]
 # No other packages — this one is built only from UI29 kernel primitives.
 # A future mosaic-pkg-grid-pinned-columns might list `mosaic-pkg-grid = "0.1"`.
 
+[styles]
+# Optional. A safe package-relative schema-v1 palette supplies this package's
+# defaults without requiring each consuming application to pass a CLI flag.
+token_palette = "tokens/grid.json"
+
 [kernel]
 version = "1"      // declares which UI29 kernel revision the package targets
 ```
@@ -322,6 +327,12 @@ version = "1"      // declares which UI29 kernel revision the package targets
 The manifest is the single source of truth for which components a
 package exposes. The compiler resolves `Grid` (in another `.mll`'s
 node tag) by looking up which package declares it in `exports`.
+
+Package token palettes are scoped defaults, not ambient global mutation. A
+dependency palette styles that dependency and its transitive package
+components. The consuming package's palette overrides dependency values, and
+an explicit application/CLI palette has final precedence. Backend overrides
+inside each schema-v1 palette are selected before the layers are combined.
 
 ### 4.3 Compiling a package
 

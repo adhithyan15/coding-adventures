@@ -131,6 +131,17 @@ Token names use lowercase kebab-case. Values are single safe declarations;
 single-token aliases are supported. Unknown schema versions, misspelled backend
 names, unsafe values, missing references, and cycles fail the build.
 
+Packages may also carry defaults without a CLI flag:
+
+```toml
+[styles]
+token_palette = "tokens/foundation.json"
+```
+
+The path must be a safe package-relative `.json` file. Dependency package
+defaults are applied first, a consuming package palette overrides them, and an
+explicit `--token-palette` has final precedence.
+
 Package mode defaults to `--profile permissive`, which emits the package plus a
 machine-readable `<backend>/mosaic-degradations.json`. Use
 `--profile native-complete` in CI to reject known interactive, accessibility,

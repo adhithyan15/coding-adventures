@@ -366,6 +366,9 @@ pub enum BuildError {
     /// A `pkg::P::C` reference in a component layout could not be resolved or
     /// inlined before backend emission.
     PackageReferenceError { component: String, error: String },
+    /// A manifest-declared token palette could not be read, parsed, or safely
+    /// layered with higher-precedence package/application values.
+    TokenPalette { path: PathBuf, error: String },
     /// The strict profile found known degradations. The diagnostic JSON is
     /// written, but no application/backend artifacts are emitted.
     NativeIncomplete {
@@ -410,6 +413,9 @@ impl std::fmt::Display for BuildError {
                     f,
                     "package reference error for component '{component}': {error}"
                 )
+            }
+            BuildError::TokenPalette { path, error } => {
+                write!(f, "token palette '{}': {error}", path.display())
             }
             BuildError::NativeIncomplete {
                 backend,
@@ -461,6 +467,7 @@ pub struct ComposedComponent {
 struct StyleCompositionOptions<'a> {
     theme: Option<&'a str>,
     tokens: &'a mosstyle_compiler::TokenOverrides,
+    backend: Option<Backend>,
 }
 
 /// Compile MIL, MLL, and MSL sources into one package-composed component.
@@ -498,16 +505,37 @@ pub fn compose_component_with_tokens(
     theme: Option<&str>,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_backend_tokens(
+        component,
+        mil_src,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        &StyleCompositionOptions {
+            theme,
+            tokens,
+            backend: None,
+        },
+    )
+}
+
+fn compose_component_with_backend_tokens(
+    component: &str,
+    mil_src: &str,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    style_options: &StyleCompositionOptions<'_>,
+) -> Result<ComposedComponent, BuildError> {
     let model =
         mosmodel_compiler::compile(mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
-    compose_component_with_model_and_tokens(
+    compose_component_with_model_and_style_options(
         component,
         model,
         mll_src,
         msl_src,
         package_search_paths,
-        theme,
-        tokens,
+        style_options,
     )
 }
 
@@ -544,14 +572,35 @@ pub fn compose_component_with_model_and_tokens(
     theme: Option<&str>,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_model_and_style_options(
+        component,
+        model,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        &StyleCompositionOptions {
+            theme,
+            tokens,
+            backend: None,
+        },
+    )
+}
+
+fn compose_component_with_model_and_style_options(
+    component: &str,
+    model: mosmodel_compiler::CompileOutput,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    style_options: &StyleCompositionOptions<'_>,
+) -> Result<ComposedComponent, BuildError> {
     let mut layout = moslayout_compiler::compile(mll_src, Some(&model.descriptor_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
-    let style_options = StyleCompositionOptions { theme, tokens };
     let dependency_style_parts = collect_dependency_style_parts(
         component,
         &layout.def,
         package_search_paths,
-        &style_options,
+        style_options,
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
@@ -561,9 +610,12 @@ pub fn compose_component_with_model_and_tokens(
         &model.descriptor_json,
         package_search_paths,
     )?;
-    let own_style =
-        mosstyle_compiler::compile_with_tokens(msl_src, Some(&layout.part_map_json), tokens)
-            .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let own_style = mosstyle_compiler::compile_with_tokens(
+        msl_src,
+        Some(&layout.part_map_json),
+        style_options.tokens,
+    )
+    .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let style = merge_dependency_styles(own_style.def, dependency_style_parts);
 
     Ok(ComposedComponent {
@@ -818,7 +870,12 @@ pub fn build_package_with_profile_runtime_and_tokens(
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
     validate_runtime_library_selection(opts, runtime_library)?;
-    let report = analyze_package_degradations_with_runtime(opts, profile, runtime_library)?;
+    let report = analyze_package_degradations_with_runtime_and_tokens(
+        opts,
+        profile,
+        runtime_library,
+        tokens,
+    )?;
     let backend_dir = opts.output_root.join(opts.backend.dir_name());
     let report_path = backend_dir.join("mosaic-degradations.json");
 
@@ -853,9 +910,25 @@ pub fn analyze_package_degradations_with_runtime(
     profile: BuildProfile,
     runtime_library: Option<&Path>,
 ) -> Result<DegradationReport, BuildError> {
+    analyze_package_degradations_with_runtime_and_tokens(
+        opts,
+        profile,
+        runtime_library,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+fn analyze_package_degradations_with_runtime_and_tokens(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<DegradationReport, BuildError> {
     validate_runtime_library_selection(opts, runtime_library)?;
     let manifest_path = opts.package_root.join("mosaic-package.toml");
     let manifest = parse_manifest(&manifest_path)?;
+    let package_tokens =
+        load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
     validate_package_name(&manifest.package.name)?;
     for component in &manifest.components.exports {
         validate_component_name(component)?;
@@ -863,7 +936,6 @@ pub fn analyze_package_degradations_with_runtime(
     if let Some(theme) = &opts.theme {
         validate_theme_name(theme)?;
     }
-
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let mut degradations = Vec::new();
@@ -959,13 +1031,18 @@ pub fn analyze_package_degradations_with_runtime(
                 Some(path) => read_to_string(&path)?,
                 None => format!("style {component} {{ }}"),
             };
-            let composed = compose_component(
+            let style_options = StyleCompositionOptions {
+                theme: opts.theme.as_deref(),
+                tokens: &package_tokens,
+                backend: Some(opts.backend),
+            };
+            let composed = compose_component_with_backend_tokens(
                 component,
                 &mil_src,
                 &mll_src,
                 &msl_src,
                 &package_search_paths,
-                opts.theme.as_deref(),
+                &style_options,
             )?;
             collect_native_degradations(
                 opts.backend,
@@ -1233,6 +1310,8 @@ fn build_package_inner(
     if let Some(theme) = &opts.theme {
         validate_theme_name(theme)?;
     }
+    let package_tokens =
+        load_package_tokens(&opts.package_root, &manifest, Some(opts.backend), tokens)?;
 
     // ----- 3. Prepare the output directory ---------------------------------
     //
@@ -1260,7 +1339,8 @@ fn build_package_inner(
     let package_search_paths = default_package_search_paths(&opts.package_root);
     let style_options = StyleCompositionOptions {
         theme: opts.theme.as_deref(),
-        tokens,
+        tokens: &package_tokens,
+        backend: Some(opts.backend),
     };
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
@@ -1331,6 +1411,7 @@ fn build_package_inner(
                 package_name: &manifest.package.name,
                 package_search_paths: &package_search_paths,
                 theme: opts.theme.as_deref(),
+                tokens: &package_tokens,
                 profile,
                 runtime_library,
             })?;
@@ -1546,6 +1627,52 @@ fn unsafe_path_err(kind: &'static str, path: &str) -> BuildError {
     }
 }
 
+/// Load one package's declared token defaults and place `higher` over them.
+///
+/// Palettes are scoped while walking the package graph: a dependency's
+/// defaults style that dependency and its descendants, while the consuming
+/// package and explicit application palette remain higher precedence. The
+/// manifest parser has already rejected absolute and traversal paths.
+fn load_package_tokens(
+    package_root: &Path,
+    manifest: &MosaicPackage,
+    backend: Option<Backend>,
+    higher: &mosstyle_compiler::TokenOverrides,
+) -> Result<mosstyle_compiler::TokenOverrides, BuildError> {
+    let Some(relative_path) = manifest.styles.token_palette.as_deref() else {
+        return Ok(higher.clone());
+    };
+    let relative = safe_manifest_relative_path("token palette", relative_path)?;
+    let path = package_root.join(relative);
+    let canonical_root =
+        fs::canonicalize(package_root).map_err(|error| BuildError::TokenPalette {
+            path: package_root.to_path_buf(),
+            error: format!("cannot resolve package root: {error}"),
+        })?;
+    let canonical_path = fs::canonicalize(&path).map_err(|error| BuildError::TokenPalette {
+        path: path.clone(),
+        error: format!("cannot resolve file: {error}"),
+    })?;
+    if !canonical_path.starts_with(&canonical_root) {
+        return Err(unsafe_path_err("token palette", relative_path));
+    }
+    let source = fs::read_to_string(&canonical_path).map_err(|error| BuildError::TokenPalette {
+        path: path.clone(),
+        error: format!("cannot read file: {error}"),
+    })?;
+    let defaults = mosstyle_compiler::parse_token_palette(&source, backend.map(Backend::dir_name))
+        .map_err(|error| BuildError::TokenPalette {
+            path: path.clone(),
+            error: error.to_string(),
+        })?;
+    defaults
+        .overlay(higher)
+        .map_err(|error| BuildError::TokenPalette {
+            path,
+            error: format!("cannot layer palette: {error}"),
+        })
+}
+
 /// UI32-M: emit the per-backend project shell for the package's first
 /// component. Returns the list of side-file paths written into
 /// `backend_dir`.
@@ -1569,6 +1696,7 @@ struct ProjectShellOptions<'a> {
     package_name: &'a str,
     package_search_paths: &'a [PathBuf],
     theme: Option<&'a str>,
+    tokens: &'a mosstyle_compiler::TokenOverrides,
     profile: Option<BuildProfile>,
     runtime_library: Option<&'a Path>,
 }
@@ -1583,6 +1711,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         package_name,
         package_search_paths,
         theme,
+        tokens,
         profile,
         runtime_library,
     } = options;
@@ -1613,13 +1742,18 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         format!("style {component} {{ }}")
     };
 
-    let composed = compose_component(
+    let shell_style_options = StyleCompositionOptions {
+        theme,
+        tokens,
+        backend: Some(backend),
+    };
+    let composed = compose_component_with_backend_tokens(
         component,
         &mil_src,
         &mll_src,
         &msl_src,
         package_search_paths,
-        theme,
+        &shell_style_options,
     )?;
     let mosmodel_out = composed.model;
     let layout_out = composed.layout;
@@ -2799,14 +2933,13 @@ fn compile_one_component(
     // Each compile call may return a `Vec<CompileError>`. We render the
     // first one and wrap it as `PipelineError` so the caller gets one
     // line per component rather than a flood.
-    let composed = compose_component_with_tokens(
+    let composed = compose_component_with_backend_tokens(
         component,
         &mil_src,
         &mll_src,
         &msl_src,
         package_search_paths,
-        style_options.theme,
-        style_options.tokens,
+        style_options,
     )?;
     let mosmodel_out = composed.model;
     let layout_out = composed.layout;
@@ -3121,6 +3254,18 @@ fn collect_dependency_component_style_parts(
         ));
     }
 
+    let dependency_tokens = load_package_tokens(
+        &package_root,
+        &manifest,
+        style_options.backend,
+        style_options.tokens,
+    )?;
+    let dependency_style_options = StyleCompositionOptions {
+        theme: style_options.theme,
+        tokens: &dependency_tokens,
+        backend: style_options.backend,
+    };
+
     let src_dir = package_root.join("src");
     let mil_path = src_dir.join(format!("{component}.mil"));
     let mll_path = src_dir.join(format!("{component}.mll"));
@@ -3154,7 +3299,7 @@ fn collect_dependency_component_style_parts(
         owner_component,
         &layout_out.def,
         package_search_paths,
-        style_options,
+        &dependency_style_options,
         visiting,
         collected,
     )?;
@@ -3168,7 +3313,7 @@ fn collect_dependency_component_style_parts(
     let style_out = mosstyle_compiler::compile_with_tokens(
         &msl_src,
         Some(&layout_out.part_map_json),
-        style_options.tokens,
+        dependency_style_options.tokens,
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     dependency_parts.extend(style_out.def.parts);
@@ -4023,6 +4168,20 @@ version = "1"
         let manifest = fs::read_to_string(&manifest_path).unwrap();
         let manifest = manifest.replace("[kernel]", &format!("{toml}\n[kernel]"));
         fs::write(manifest_path, manifest).unwrap();
+    }
+
+    fn declare_token_palette(root: &Path, relative_path: &str, source: &str) {
+        let manifest_path = root.join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        let styles = format!("[styles]\ntoken_palette = {relative_path:?}\n");
+        fs::write(
+            &manifest_path,
+            manifest.replace("[kernel]", &format!("{styles}[kernel]")),
+        )
+        .unwrap();
+        let palette_path = root.join(relative_path);
+        fs::create_dir_all(palette_path.parent().unwrap()).unwrap();
+        fs::write(palette_path, source).unwrap();
     }
 
     // -----------------------------------------------------------------------
@@ -6244,6 +6403,220 @@ style FocusField {
             "dependency token missing:\n{html}"
         );
         assert!(html.contains("#2468ac"), "parent token missing:\n{html}");
+    }
+
+    #[test]
+    fn package_token_palettes_follow_dependency_parent_and_app_precedence() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent { Text [ accent-label ] ( content : slot: label ) }"#,
+            r#"style Accent { part accent-label { color : $brand-accent ; } }"#,
+        );
+        declare_token_palette(
+            &child,
+            "tokens/foundation.json",
+            r##"{
+              "schema_version": 1,
+              "tokens": { "brand-accent": "#111111" },
+              "backends": { "html": { "brand-accent": "#121212" } }
+            }"##,
+        );
+
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Shell",
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+            r#"style Shell { part shell-root { background : $color-surface ; } }"#,
+        );
+
+        let build_html = |output: &Path, tokens: &mosstyle_compiler::TokenOverrides| {
+            build_package_with_tokens(
+                &BuildOptions {
+                    package_root: parent.clone(),
+                    output_root: output.to_path_buf(),
+                    backend: Backend::Html,
+                    emit_project: true,
+                    theme: None,
+                },
+                tokens,
+            )
+            .expect("package palette build");
+            fs::read_to_string(output.join("html/Shell.html")).unwrap()
+        };
+
+        let dependency_output = TempDir::new().unwrap();
+        let html = build_html(
+            dependency_output.path(),
+            &mosstyle_compiler::TokenOverrides::default(),
+        );
+        assert!(
+            html.contains("#121212"),
+            "dependency backend default should style its component:\n{html}"
+        );
+
+        declare_token_palette(
+            &parent,
+            "tokens/app.json",
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#222222",
+                "color-surface": "#aaaaaa"
+              }
+            }"##,
+        );
+        let parent_output = TempDir::new().unwrap();
+        let html = build_html(
+            parent_output.path(),
+            &mosstyle_compiler::TokenOverrides::default(),
+        );
+        assert!(
+            html.contains("#222222"),
+            "parent should override dependency"
+        );
+        assert!(html.contains("#aaaaaa"), "parent should style its own root");
+        assert!(
+            !html.contains("#121212"),
+            "dependency default must be replaced"
+        );
+
+        let app_tokens = mosstyle_compiler::parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#333333",
+                "color-surface": "#bbbbbb"
+              }
+            }"##,
+            Some("html"),
+        )
+        .unwrap();
+        let app_output = TempDir::new().unwrap();
+        let html = build_html(app_output.path(), &app_tokens);
+        assert!(html.contains("#333333"), "app should override parent");
+        assert!(html.contains("#bbbbbb"), "app should override root default");
+        assert!(!html.contains("#222222"));
+    }
+
+    #[test]
+    fn package_token_palette_errors_are_fail_closed_and_path_specific() {
+        let pkg = make_package("mosaic-pkg-themed", &["Theme"]);
+        declare_token_palette(pkg.path(), "tokens/theme.json", r#"{"schema_version":2}"#);
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::SwiftUI,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_err();
+        assert!(matches!(
+            error,
+            BuildError::TokenPalette { ref path, ref error }
+                if path.ends_with("tokens/theme.json") && error.contains("expected 1")
+        ));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn package_token_palette_rejects_symlink_escape() {
+        use std::os::unix::fs::symlink;
+
+        let pkg = make_package("mosaic-pkg-themed", &["Theme"]);
+        let outside = TempDir::new().unwrap();
+        let outside_palette = outside.path().join("outside.json");
+        fs::write(&outside_palette, r#"{"schema_version":1}"#).unwrap();
+
+        let manifest_path = pkg.path().join("mosaic-package.toml");
+        let manifest = fs::read_to_string(&manifest_path).unwrap();
+        fs::write(
+            &manifest_path,
+            manifest.replace(
+                "[kernel]",
+                "[styles]\ntoken_palette = \"tokens/theme.json\"\n[kernel]",
+            ),
+        )
+        .unwrap();
+        fs::create_dir_all(pkg.path().join("tokens")).unwrap();
+        symlink(&outside_palette, pkg.path().join("tokens/theme.json")).unwrap();
+
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_err();
+        assert!(matches!(
+            error,
+            BuildError::UnsafePath {
+                kind: "token palette",
+                ..
+            }
+        ));
+    }
+
+    #[test]
+    fn package_backend_token_defaults_build_on_every_emitter() {
+        let pkg = make_package("mosaic-pkg-themed", &["Theme"]);
+        write_component_sources(
+            pkg.path(),
+            "Theme",
+            "component Theme { }",
+            "layout Theme { Box [ root ] { } }",
+            "style Theme { part root { background : $backend-surface ; } }",
+        );
+        declare_token_palette(
+            pkg.path(),
+            "tokens/theme.json",
+            r##"{
+              "schema_version": 1,
+              "backends": {
+                "react": { "backend-surface": "#010101" },
+                "electron": { "backend-surface": "#020202" },
+                "swiftui": { "backend-surface": "#030303" },
+                "qt": { "backend-surface": "#040404" },
+                "webcomponent": { "backend-surface": "#050505" },
+                "html": { "backend-surface": "#060606" },
+                "xaml": { "backend-surface": "#070707" },
+                "flutter": { "backend-surface": "#080808" },
+                "compose": { "backend-surface": "#090909" }
+              }
+            }"##,
+        );
+
+        for backend in Backend::ALL {
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .unwrap_or_else(|error| panic!("{backend:?} package palette build failed: {error}"));
+        }
     }
 
     #[test]
