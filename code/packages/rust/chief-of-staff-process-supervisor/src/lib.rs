@@ -10,7 +10,7 @@
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
     ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
-    OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
+    OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType, ToolCompletionCall,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -924,6 +924,18 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
         let (_, frame) = self
             .control
             .request_completion(call)
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
+    /// Request one provider-neutral tool-aware completion turn.
+    pub fn request_tool_completion(
+        &mut self,
+        call: ToolCompletionCall,
+    ) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_tool_completion(call)
             .map_err(|_| ProcessSupervisorError::Control)?;
         self.exchange_data_plane(frame)
     }

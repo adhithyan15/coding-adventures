@@ -5,8 +5,12 @@
 
 use chief_of_staff_host_control_protocol::{
     ChannelBindingAccess, CompletionCall, CompletionFinishReason, CompletionProvider,
-    CompletionResult, DataPlaneFailure, DataPlaneResponse, LaunchBindings, PromptMessage,
-    PromptRole,
+    CompletionResult, DataPlaneFailure, DataPlaneResponse, LaunchBindings,
+    ModelToolCall as WireModelToolCall, ModelToolChoice as WireModelToolChoice,
+    ModelToolDefinition as WireModelToolDefinition, ModelToolResult as WireModelToolResult,
+    PromptMessage, PromptRole, ToolCompletionCall as WireToolCompletionCall,
+    ToolCompletionOutput as WireToolCompletionOutput,
+    ToolCompletionResult as WireToolCompletionResult,
 };
 use chief_of_staff_host_runtime::{
     verify_agent_package, AgentPackageRuntime, PackageKeyring, PackageVerificationError,
@@ -17,7 +21,9 @@ use chief_of_staff_skill_runtime::{
 };
 use llm_gateway::{
     Capabilities, CompletionJsonResponse, CompletionRequest, CompletionResponse, FinishReason,
-    JsonSchema, LlmClient, LlmError, MessageContent, ProviderIdentity, Role, TokenUsage,
+    JsonSchema, LlmClient, LlmError, MessageContent, ModelToolCall, ModelToolChoice,
+    ProviderIdentity, Role, TokenUsage, ToolCompletionOutput, ToolCompletionRequest,
+    ToolCompletionResponse,
 };
 use std::collections::BTreeMap;
 use std::ffi::OsString;
@@ -374,6 +380,76 @@ impl<'a, R: Read + Send, W: Write + Send> ControlLlmClient<'a, R, W> {
             latency_ms: result.latency_ms,
         })
     }
+
+    fn tool_completion_call(
+        &self,
+        request: ToolCompletionRequest,
+    ) -> Result<WireToolCompletionCall, CompletionAdapterError> {
+        Ok(WireToolCompletionCall {
+            completion: self.completion_call(request.completion)?,
+            tools: request
+                .tools
+                .into_iter()
+                .map(|tool| WireModelToolDefinition {
+                    name: tool.name,
+                    description: tool.description,
+                    input_schema: tool.input_schema,
+                })
+                .collect(),
+            choice: match request.choice {
+                ModelToolChoice::Auto => WireModelToolChoice::Auto,
+                ModelToolChoice::Required => WireModelToolChoice::Required,
+                ModelToolChoice::Named(name) => WireModelToolChoice::Named(name),
+            },
+            results: request
+                .results
+                .into_iter()
+                .map(|result| WireModelToolResult {
+                    call: WireModelToolCall {
+                        call_id: result.call.call_id,
+                        name: result.call.name,
+                        arguments: result.call.arguments,
+                    },
+                    output: result.output,
+                    is_error: result.is_error,
+                })
+                .collect(),
+        })
+    }
+
+    fn tool_completion_response(
+        &self,
+        result: WireToolCompletionResult,
+    ) -> Result<ToolCompletionResponse, CompletionAdapterError> {
+        let input_tokens = usize::try_from(result.usage.input_tokens)
+            .map_err(|_| CompletionAdapterError::Usage)?;
+        let output_tokens = usize::try_from(result.usage.output_tokens)
+            .map_err(|_| CompletionAdapterError::Usage)?;
+        let cached_tokens = usize::try_from(result.usage.cached_tokens)
+            .map_err(|_| CompletionAdapterError::Usage)?;
+        Ok(ToolCompletionResponse {
+            output: match result.output {
+                WireToolCompletionOutput::FinalText(text) => ToolCompletionOutput::FinalText(text),
+                WireToolCompletionOutput::ToolCall(call) => {
+                    ToolCompletionOutput::ToolCall(ModelToolCall {
+                        call_id: call.call_id,
+                        name: call.name,
+                        arguments: call.arguments,
+                    })
+                }
+            },
+            model: result.model,
+            usage: TokenUsage {
+                input_tokens,
+                output_tokens,
+                cached_tokens,
+            },
+            finish_reason: protocol_finish_reason(result.finish_reason),
+            provider_id: provider_identity(result.provider),
+            latency_ms: result.latency_ms,
+            polyfill_used: result.polyfill_used,
+        })
+    }
 }
 
 impl<R: Read + Send, W: Write + Send> LlmClient for ControlLlmClient<'_, R, W> {
@@ -424,6 +500,67 @@ impl<R: Read + Send, W: Write + Send> LlmClient for ControlLlmClient<'_, R, W> {
         _schema: &JsonSchema,
     ) -> Result<CompletionJsonResponse, LlmError> {
         Err(self.error("structured completion is unavailable"))
+    }
+
+    fn complete_with_tools(
+        &self,
+        request: ToolCompletionRequest,
+    ) -> Result<ToolCompletionResponse, LlmError> {
+        let call = self
+            .tool_completion_call(request)
+            .map_err(|error| self.error(error.message()))?;
+        let response = self
+            .control
+            .lock()
+            .map_err(|_| self.error("host control is unavailable"))?
+            .request_tool_completion(call.clone());
+        let response = match response {
+            Ok(response) => response,
+            Err(ProcessSupervisorError::Terminated) => {
+                self.terminated.store(true, Ordering::SeqCst);
+                return Err(self.error("host termination requested"));
+            }
+            Err(_) => return Err(self.error("host control is unavailable")),
+        };
+        match response {
+            DataPlaneResponse::ToolCompleted { result, .. } => {
+                if !wire_tool_output_allowed(&result.output, &call.tools, &call.choice) {
+                    return Err(self.error("tool completion selected an unoffered output"));
+                }
+                self.tool_completion_response(*result)
+                    .map_err(|error| self.error(error.message()))
+            }
+            DataPlaneResponse::Failed { .. } => Err(self.error("tool completion failed")),
+            _ => Err(self.error("invalid tool completion response")),
+        }
+    }
+}
+
+fn protocol_finish_reason(reason: CompletionFinishReason) -> FinishReason {
+    match reason {
+        CompletionFinishReason::Stop => FinishReason::Stop,
+        CompletionFinishReason::MaxTokens => FinishReason::MaxTokens,
+        CompletionFinishReason::Refusal => FinishReason::Refusal,
+        CompletionFinishReason::Other => FinishReason::Other,
+    }
+}
+
+fn wire_tool_output_allowed(
+    output: &WireToolCompletionOutput,
+    tools: &[WireModelToolDefinition],
+    choice: &WireModelToolChoice,
+) -> bool {
+    match output {
+        WireToolCompletionOutput::FinalText(text) => {
+            !text.is_empty() && matches!(choice, WireModelToolChoice::Auto)
+        }
+        WireToolCompletionOutput::ToolCall(call) => {
+            tools.iter().any(|tool| tool.name == call.name)
+                && match choice {
+                    WireModelToolChoice::Named(name) => name == &call.name,
+                    WireModelToolChoice::Auto | WireModelToolChoice::Required => true,
+                }
+        }
     }
 }
 
@@ -501,6 +638,40 @@ mod tests {
         assert!(matches!(
             sole_level_one_channels(&multiple_reads),
             Err(HostError::UnsupportedTopology)
+        ));
+    }
+
+    #[test]
+    fn tool_response_must_match_the_offered_catalog_and_choice() {
+        let tools = vec![WireModelToolDefinition {
+            name: "smart_home.list_entities".to_string(),
+            description: "List normalized entities".to_string(),
+            input_schema: serde_json::json!({"type": "object"}),
+        }];
+        let offered = WireToolCompletionOutput::ToolCall(WireModelToolCall {
+            call_id: "call-1".to_string(),
+            name: "smart_home.list_entities".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        let unoffered = WireToolCompletionOutput::ToolCall(WireModelToolCall {
+            call_id: "call-2".to_string(),
+            name: "smart_home.command".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        assert!(wire_tool_output_allowed(
+            &offered,
+            &tools,
+            &WireModelToolChoice::Required
+        ));
+        assert!(!wire_tool_output_allowed(
+            &unoffered,
+            &tools,
+            &WireModelToolChoice::Auto
+        ));
+        assert!(!wire_tool_output_allowed(
+            &WireToolCompletionOutput::FinalText("done".to_string()),
+            &tools,
+            &WireModelToolChoice::Named("smart_home.list_entities".to_string())
         ));
     }
 }

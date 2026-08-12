@@ -29,6 +29,7 @@ coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_storage_fs = { path = "../storage-fs" }
 coding_adventures_x3dh = { path = "../x3dh" }
 storage-core = { path = "../storage-core" }
+serde_json = "1"
 
 [[bin]]
 name = "chief-of-staff-host"

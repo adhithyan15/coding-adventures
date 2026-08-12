@@ -532,7 +532,10 @@ The strict readiness, heartbeat, and termination state machine is specified in
 The concrete Level 1 child composition is specified in
 [`level-one-host.md`](level-one-host.md).
 That same authenticated session carries a serialized, bounded channel and
-provider-neutral completion data plane after readiness. The protocol permits one
+provider-neutral text and tool-aware completion data plane after readiness. The
+tool-aware operation carries bounded declarations, selection policy, replayable
+prior call/results, and one structured response without authorizing or executing
+the emitted D18D call. The protocol permits one
 request in flight with exact monotonic correlation; the orchestrator-side adapter
 authorizes and executes the operation without creating a second child pipe. For
 every request, the dedicated data-plane dispatcher reloads the exact pipeline

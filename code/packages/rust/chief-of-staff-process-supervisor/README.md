@@ -14,7 +14,7 @@ environment or registry input.
 
 The same authenticated session now carries the host data plane. Child-side
 helpers serialize bounded channel receive/publish/acknowledge and provider-neutral
-completion exchanges. When a dispatcher is injected, the supervisor automatically
+text/tool-aware completion exchanges. When a dispatcher is injected, the supervisor automatically
 reauthorizes and answers each request before processing the next record. A manual
 composition may instead retain one authenticated request per host until its
 service adapter answers through `respond_data_plane`. Both paths preserve exact

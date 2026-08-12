@@ -19,6 +19,12 @@ An authenticated `Terminate` received while waiting for any operation is a clean
 exit. Data-plane failures are redacted and terminal for this child, leaving durable
 input acknowledgement unchanged when processing did not finish.
 
+The child-side `LlmClient` also carries provider-neutral tool-aware turns over a
+distinct authenticated operation. Complete offered definitions, selection policy,
+and prior call/result pairs cross the session, and structured final-text/tool-call
+responses retain provider and polyfill audit fields. The model-emitted call is not
+executed by this adapter; D18D policy and execution remain parent-side work.
+
 The production integration gate launches this executable with durable pipeline
 bindings, provisions its exact channel keys from owner-only files, sends its model
 request through the daemon's configured Ollama adapter, decrypts the published

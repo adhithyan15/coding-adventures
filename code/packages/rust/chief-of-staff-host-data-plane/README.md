@@ -13,7 +13,9 @@ validates service responses before they re-enter the authenticated session.
 `AuthorityBackedHostDataPlaneService` is the concrete execution layer. It opens
 the real durable encrypted receiver/originator endpoints, retains a bounded
 receive-to-ack delivery ledger, provisions sealed receiver grants before a
-publication, and maps provider-neutral completion calls to an exact model client.
+publication, and maps provider-neutral text and tool-aware completion calls to an
+exact model client. Tool declarations and replayable prior results remain model
+inputs here; this layer does not authorize or execute model-emitted D18D calls.
 Keys are released one operation at a time by `ChannelKeyAuthority`; provider
 credentials and selection remain behind `ModelProviderAuthority`. Neither secret
 boundary is visible to the payload-blind dispatcher or orchestration core.

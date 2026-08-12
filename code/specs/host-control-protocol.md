@@ -146,21 +146,26 @@ Kinds are:
 | 11  | child -> orchestrator | `Publish` | request ID, channel UUID-v7, content type, payload |
 | 12  | child -> orchestrator | `Acknowledge` | request ID, channel and message UUID-v7 |
 | 13  | child -> orchestrator | `Complete` | request ID, provider-neutral completion call |
+| 14  | child -> orchestrator | `CompleteWithTools` | request ID, completion controls, tool catalog/choice, and prior calls/results |
 | 20  | orchestrator -> child | `Received` | request ID and verified message page |
 | 21  | orchestrator -> child | `Published` | request ID, message UUID-v7, sequence, timestamp |
 | 22  | orchestrator -> child | `Acknowledged` | request ID and monotonic sequence |
 | 23  | orchestrator -> child | `Completed` | request ID and provider-neutral completion result |
 | 24  | orchestrator -> child | `Failed` | request ID and redacted stable failure code |
+| 25  | orchestrator -> child | `ToolCompleted` | request ID, final text or one structured call, and provider audit result |
 
 All multi-byte integers are big-endian. The package key ID and channel names use bounded `u8`
 length; data-plane variable bytes and UTF-8 strings use a `u32` length; vectors
 use their specified `u8` or `u16` count. UUID fields must be canonical
 UUID-v7 values. Data-plane bodies are capped at 768 KiB, a single channel payload
 or completion text at 512 KiB, a receive page and completion prompt at 64 items,
-and completion metadata at 32 unique canonically ordered keys. Completion calls
-are provider-neutral, text-only in v1, and bound model, prompt, stop, temperature,
-token, seed, and metadata fields. Responses retain provider identity, usage,
-finish reason, and latency for audit.
+and completion metadata at 32 unique canonically ordered keys. Text-completion calls
+remain byte-compatible with v1. Separate tool-aware records add at most 128 unique
+bounded declarations, auto/required/named choice, and at most 128 replayable prior
+calls/results. Schemas and arguments must be JSON objects, each JSON value is capped
+at 64 KiB, and a response contains exactly final text or one structured call.
+Responses retain provider identity, usage, finish reason, latency, and tool-polyfill
+evidence for audit.
 
 Unknown versions/tags/enum values, invalid UTF-8 or UUIDs, non-finite or out-of-range
 temperatures, duplicate metadata keys, truncation, trailing bytes, oversized
@@ -218,6 +223,8 @@ impl ChildControl {
         message_id: [u8; 16])
         -> Result<(RequestId, Vec<u8>), ControlError>;
     pub fn request_completion(&mut self, call: CompletionCall)
+        -> Result<(RequestId, Vec<u8>), ControlError>;
+    pub fn request_tool_completion(&mut self, call: ToolCompletionCall)
         -> Result<(RequestId, Vec<u8>), ControlError>;
     pub fn receive_orchestrator(&mut self, frame: &[u8])
         -> Result<OrchestratorEvent, ControlError>;

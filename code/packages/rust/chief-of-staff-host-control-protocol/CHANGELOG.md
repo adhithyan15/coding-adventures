@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add distinct authenticated tool-completion request/response tags with bounded
+  unique catalogs, auto/required/named choice, replayable prior calls/results,
+  object-shaped JSON, and retained provider/polyfill audit metadata. Existing
+  text-completion tags and bytes remain unchanged.
 - Expose response validation so injected data-plane services can reject malformed
   or oversized provider/channel output before authenticated framing.
 - Add an exactly-once pre-ready `LaunchBindings` record with canonical bounded

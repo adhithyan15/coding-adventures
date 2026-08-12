@@ -1,6 +1,6 @@
 //! Strict bounded data-plane records carried by the authenticated host session.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::ControlError;
 
@@ -8,11 +8,13 @@ pub(crate) const RECEIVE_REQUEST_TAG: u8 = 10;
 pub(crate) const PUBLISH_REQUEST_TAG: u8 = 11;
 pub(crate) const ACKNOWLEDGE_REQUEST_TAG: u8 = 12;
 pub(crate) const COMPLETE_REQUEST_TAG: u8 = 13;
+pub(crate) const COMPLETE_WITH_TOOLS_REQUEST_TAG: u8 = 14;
 pub(crate) const RECEIVED_RESPONSE_TAG: u8 = 20;
 pub(crate) const PUBLISHED_RESPONSE_TAG: u8 = 21;
 pub(crate) const ACKNOWLEDGED_RESPONSE_TAG: u8 = 22;
 pub(crate) const COMPLETED_RESPONSE_TAG: u8 = 23;
 pub(crate) const FAILED_RESPONSE_TAG: u8 = 24;
+pub(crate) const TOOL_COMPLETED_RESPONSE_TAG: u8 = 25;
 
 /// Maximum plaintext bytes in one data-plane body before the six-byte control header.
 pub const MAX_DATA_PLANE_RECORD_BYTES: usize = 768 * 1024;
@@ -33,6 +35,16 @@ const MAX_METADATA_VALUE_BYTES: usize = 4 * 1024;
 const MAX_PROVIDER_FIELD_BYTES: usize = 512;
 const MAX_PROVIDER_ENDPOINT_BYTES: usize = 4 * 1024;
 const MAX_COMPLETION_TOKENS: u32 = 1_000_000;
+/// Maximum tool definitions or prior results carried by one model turn.
+pub const MAX_MODEL_TOOLS: usize = 128;
+/// Maximum bytes in one repository-owned tool name.
+pub const MAX_MODEL_TOOL_NAME_BYTES: usize = 128;
+/// Maximum bytes in one tool description.
+pub const MAX_MODEL_TOOL_DESCRIPTION_BYTES: usize = 4 * 1024;
+/// Maximum bytes in one tool call identity.
+pub const MAX_MODEL_TOOL_CALL_ID_BYTES: usize = 256;
+/// Maximum canonical JSON bytes in one schema, arguments object, or result.
+pub const MAX_MODEL_TOOL_JSON_BYTES: usize = 64 * 1024;
 
 /// Non-zero request identity minted monotonically by the child endpoint.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -64,6 +76,8 @@ pub enum DataPlaneOperation {
     Acknowledge,
     /// Execute one provider-neutral LLM completion.
     Complete,
+    /// Execute one provider-neutral tool-aware LLM completion turn.
+    CompleteWithTools,
 }
 
 /// Text-only role accepted by the first production Level 1 data plane.
@@ -161,6 +175,91 @@ pub struct CompletionResult {
     pub latency_ms: u64,
 }
 
+/// One bounded provider-neutral model tool declaration.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ModelToolDefinition {
+    /// Repository-owned tool identifier.
+    pub name: String,
+    /// Human-readable model guidance.
+    pub description: String,
+    /// Object-shaped JSON input schema.
+    pub input_schema: serde_json::Value,
+}
+
+/// How the model may choose a tool for one authenticated completion turn.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ModelToolChoice {
+    /// The model may emit final text or one offered tool call.
+    Auto,
+    /// The model must emit one offered tool call.
+    Required,
+    /// The model must emit this exact offered tool.
+    Named(String),
+}
+
+/// One provider-neutral model-emitted tool call.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ModelToolCall {
+    /// Stable call identity used to correlate a later result.
+    pub call_id: String,
+    /// Exact offered tool name.
+    pub name: String,
+    /// Object-shaped structured arguments.
+    pub arguments: serde_json::Value,
+}
+
+/// One complete prior tool call and its structured result.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ModelToolResult {
+    /// Complete preceding model call, retained for replay.
+    pub call: ModelToolCall,
+    /// Structured tool output.
+    pub output: serde_json::Value,
+    /// Whether execution returned a tool-level error.
+    pub is_error: bool,
+}
+
+/// Provider-neutral tool-aware completion request used by a child host.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ToolCompletionCall {
+    /// Existing text-completion controls and ordered prompt.
+    pub completion: CompletionCall,
+    /// Bounded offered catalog.
+    pub tools: Vec<ModelToolDefinition>,
+    /// Selection policy for this turn.
+    pub choice: ModelToolChoice,
+    /// Complete prior calls and results needed to replay the conversation.
+    pub results: Vec<ModelToolResult>,
+}
+
+/// Mutually exclusive output of one tool-aware model turn.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ToolCompletionOutput {
+    /// Final assistant text; allowed only for automatic selection.
+    FinalText(String),
+    /// One model-requested call for an offered tool.
+    ToolCall(ModelToolCall),
+}
+
+/// Successful provider-neutral tool-aware completion result.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ToolCompletionResult {
+    /// Final text or one model-emitted call.
+    pub output: ToolCompletionOutput,
+    /// Provider-reported model.
+    pub model: String,
+    /// Provider audit identity.
+    pub provider: CompletionProvider,
+    /// Provider token accounting.
+    pub usage: CompletionUsage,
+    /// Provider stop reason.
+    pub finish_reason: CompletionFinishReason,
+    /// Provider-reported latency in milliseconds.
+    pub latency_ms: u64,
+    /// Whether a text-provider JSON polyfill produced the result.
+    pub polyfill_used: bool,
+}
+
 /// Verified plaintext channel message returned to the child host.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DataPlaneMessage {
@@ -232,6 +331,13 @@ pub enum DataPlaneRequest {
         /// Validated completion input.
         call: CompletionCall,
     },
+    /// Execute one provider-neutral tool-aware completion turn.
+    CompleteWithTools {
+        /// Correlation identity.
+        id: RequestId,
+        /// Validated tool-aware completion input.
+        call: Box<ToolCompletionCall>,
+    },
 }
 
 impl DataPlaneRequest {
@@ -241,7 +347,8 @@ impl DataPlaneRequest {
             Self::Receive { id, .. }
             | Self::Publish { id, .. }
             | Self::Acknowledge { id, .. }
-            | Self::Complete { id, .. } => *id,
+            | Self::Complete { id, .. }
+            | Self::CompleteWithTools { id, .. } => *id,
         }
     }
 
@@ -252,6 +359,7 @@ impl DataPlaneRequest {
             Self::Publish { .. } => DataPlaneOperation::Publish,
             Self::Acknowledge { .. } => DataPlaneOperation::Acknowledge,
             Self::Complete { .. } => DataPlaneOperation::Complete,
+            Self::CompleteWithTools { .. } => DataPlaneOperation::CompleteWithTools,
         }
     }
 }
@@ -291,6 +399,13 @@ pub enum DataPlaneResponse {
         /// Completion output and audit identity.
         result: Box<CompletionResult>,
     },
+    /// Successful provider-neutral tool-aware completion.
+    ToolCompleted {
+        /// Correlation identity.
+        id: RequestId,
+        /// Tool-aware output and provider audit identity.
+        result: Box<ToolCompletionResult>,
+    },
     /// Redacted operation failure.
     Failed {
         /// Correlation identity.
@@ -317,6 +432,7 @@ impl DataPlaneResponse {
             | Self::Published { id, .. }
             | Self::Acknowledged { id, .. }
             | Self::Completed { id, .. }
+            | Self::ToolCompleted { id, .. }
             | Self::Failed { id, .. } => *id,
         }
     }
@@ -328,6 +444,7 @@ impl DataPlaneResponse {
             Self::Published { .. } => Some(DataPlaneOperation::Publish),
             Self::Acknowledged { .. } => Some(DataPlaneOperation::Acknowledge),
             Self::Completed { .. } => Some(DataPlaneOperation::Complete),
+            Self::ToolCompleted { .. } => Some(DataPlaneOperation::CompleteWithTools),
             Self::Failed { .. } => None,
         }
     }
@@ -385,6 +502,10 @@ pub(crate) fn encode(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError>
                     encode_completion_call(&mut encoder, call)?;
                     COMPLETE_REQUEST_TAG
                 }
+                DataPlaneRequest::CompleteWithTools { call, .. } => {
+                    encode_tool_completion_call(&mut encoder, call)?;
+                    COMPLETE_WITH_TOOLS_REQUEST_TAG
+                }
             }
         }
         DataRecord::Response(response) => {
@@ -420,6 +541,10 @@ pub(crate) fn encode(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError>
                 DataPlaneResponse::Completed { result, .. } => {
                     encode_completion_result(&mut encoder, result)?;
                     COMPLETED_RESPONSE_TAG
+                }
+                DataPlaneResponse::ToolCompleted { result, .. } => {
+                    encode_tool_completion_result(&mut encoder, result)?;
+                    TOOL_COMPLETED_RESPONSE_TAG
                 }
                 DataPlaneResponse::Failed { failure, .. } => {
                     encoder.u8(encode_failure(*failure));
@@ -467,6 +592,12 @@ pub(crate) fn decode(tag: u8, body: &[u8]) -> Result<DataRecord, ControlError> {
             id,
             call: decode_completion_call(&mut decoder)?,
         }),
+        COMPLETE_WITH_TOOLS_REQUEST_TAG => {
+            DataRecord::Request(DataPlaneRequest::CompleteWithTools {
+                id,
+                call: Box::new(decode_tool_completion_call(&mut decoder)?),
+            })
+        }
         RECEIVED_RESPONSE_TAG => {
             let count = decoder.u16()? as usize;
             if count > MAX_DATA_PLANE_MESSAGES {
@@ -491,6 +622,10 @@ pub(crate) fn decode(tag: u8, body: &[u8]) -> Result<DataRecord, ControlError> {
         COMPLETED_RESPONSE_TAG => DataRecord::Response(DataPlaneResponse::Completed {
             id,
             result: Box::new(decode_completion_result(&mut decoder)?),
+        }),
+        TOOL_COMPLETED_RESPONSE_TAG => DataRecord::Response(DataPlaneResponse::ToolCompleted {
+            id,
+            result: Box::new(decode_tool_completion_result(&mut decoder)?),
         }),
         FAILED_RESPONSE_TAG => DataRecord::Response(DataPlaneResponse::Failed {
             id,
@@ -672,6 +807,215 @@ fn decode_completion_result(decoder: &mut Decoder<'_>) -> Result<CompletionResul
     })
 }
 
+fn encode_tool_completion_call(
+    encoder: &mut Encoder,
+    call: &ToolCompletionCall,
+) -> Result<(), ControlError> {
+    encode_completion_call(encoder, &call.completion)?;
+    if call.tools.is_empty()
+        || call.tools.len() > MAX_MODEL_TOOLS
+        || call.results.len() > MAX_MODEL_TOOLS
+    {
+        return Err(ControlError::InvalidDataPlaneRecord);
+    }
+    let mut names = BTreeSet::new();
+    encoder.u8(call.tools.len() as u8);
+    for tool in &call.tools {
+        validate_string(&tool.description, 1, MAX_MODEL_TOOL_DESCRIPTION_BYTES)?;
+        if !valid_tool_name(&tool.name)
+            || tool
+                .input_schema
+                .get("type")
+                .and_then(serde_json::Value::as_str)
+                != Some("object")
+            || !names.insert(tool.name.as_str())
+        {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
+        encoder.string(&tool.name)?;
+        encoder.string(&tool.description)?;
+        encoder.json(&tool.input_schema, true)?;
+        encoder.ensure_record_bound()?;
+    }
+    match &call.choice {
+        ModelToolChoice::Auto => encoder.u8(1),
+        ModelToolChoice::Required => encoder.u8(2),
+        ModelToolChoice::Named(name) if names.contains(name.as_str()) => {
+            encoder.u8(3);
+            encoder.string(name)?;
+        }
+        ModelToolChoice::Named(_) => return Err(ControlError::InvalidDataPlaneRecord),
+    }
+    encoder.u8(call.results.len() as u8);
+    for result in &call.results {
+        if !names.contains(result.call.name.as_str()) {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
+        encode_model_tool_call(encoder, &result.call)?;
+        encoder.json(&result.output, false)?;
+        encoder.boolean(result.is_error);
+        encoder.ensure_record_bound()?;
+    }
+    Ok(())
+}
+
+fn decode_tool_completion_call(
+    decoder: &mut Decoder<'_>,
+) -> Result<ToolCompletionCall, ControlError> {
+    let completion = decode_completion_call(decoder)?;
+    let tool_count = decoder.u8()? as usize;
+    if tool_count == 0 || tool_count > MAX_MODEL_TOOLS {
+        return Err(ControlError::InvalidDataPlaneRecord);
+    }
+    let mut tools = Vec::with_capacity(tool_count);
+    let mut names = BTreeSet::new();
+    for _ in 0..tool_count {
+        let name = decoder.string(1, MAX_MODEL_TOOL_NAME_BYTES)?;
+        let description = decoder.string(1, MAX_MODEL_TOOL_DESCRIPTION_BYTES)?;
+        let input_schema = decoder.json(true)?;
+        if !valid_tool_name(&name)
+            || input_schema.get("type").and_then(serde_json::Value::as_str) != Some("object")
+            || !names.insert(name.clone())
+        {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
+        tools.push(ModelToolDefinition {
+            name,
+            description,
+            input_schema,
+        });
+    }
+    let choice = match decoder.u8()? {
+        1 => ModelToolChoice::Auto,
+        2 => ModelToolChoice::Required,
+        3 => {
+            let name = decoder.string(1, MAX_MODEL_TOOL_NAME_BYTES)?;
+            if !names.contains(&name) {
+                return Err(ControlError::InvalidDataPlaneRecord);
+            }
+            ModelToolChoice::Named(name)
+        }
+        _ => return Err(ControlError::InvalidDataPlaneRecord),
+    };
+    let result_count = decoder.u8()? as usize;
+    if result_count > MAX_MODEL_TOOLS {
+        return Err(ControlError::InvalidDataPlaneRecord);
+    }
+    let mut results = Vec::with_capacity(result_count);
+    for _ in 0..result_count {
+        let call = decode_model_tool_call(decoder)?;
+        if !names.contains(&call.name) {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
+        results.push(ModelToolResult {
+            call,
+            output: decoder.json(false)?,
+            is_error: decoder.boolean()?,
+        });
+    }
+    Ok(ToolCompletionCall {
+        completion,
+        tools,
+        choice,
+        results,
+    })
+}
+
+fn encode_tool_completion_result(
+    encoder: &mut Encoder,
+    result: &ToolCompletionResult,
+) -> Result<(), ControlError> {
+    match &result.output {
+        ToolCompletionOutput::FinalText(text) => {
+            validate_string(text, 1, MAX_DATA_PLANE_PAYLOAD_BYTES)?;
+            encoder.u8(1);
+            encoder.string(text)?;
+        }
+        ToolCompletionOutput::ToolCall(call) => {
+            encoder.u8(2);
+            encode_model_tool_call(encoder, call)?;
+        }
+    }
+    validate_string(&result.model, 1, MAX_MODEL_BYTES)?;
+    validate_string(&result.provider.vendor, 1, MAX_PROVIDER_FIELD_BYTES)?;
+    validate_string(&result.provider.model_family, 1, MAX_PROVIDER_FIELD_BYTES)?;
+    validate_string(&result.provider.model_version, 1, MAX_PROVIDER_FIELD_BYTES)?;
+    encoder.string(&result.model)?;
+    encoder.string(&result.provider.vendor)?;
+    encoder.string(&result.provider.model_family)?;
+    encoder.string(&result.provider.model_version)?;
+    encoder.optional_string(
+        result.provider.endpoint.as_deref(),
+        MAX_PROVIDER_ENDPOINT_BYTES,
+    )?;
+    encoder.u64(result.usage.input_tokens);
+    encoder.u64(result.usage.output_tokens);
+    encoder.u64(result.usage.cached_tokens);
+    encoder.u8(encode_finish_reason(result.finish_reason));
+    encoder.u64(result.latency_ms);
+    encoder.boolean(result.polyfill_used);
+    Ok(())
+}
+
+fn decode_tool_completion_result(
+    decoder: &mut Decoder<'_>,
+) -> Result<ToolCompletionResult, ControlError> {
+    let output = match decoder.u8()? {
+        1 => ToolCompletionOutput::FinalText(decoder.string(1, MAX_DATA_PLANE_PAYLOAD_BYTES)?),
+        2 => ToolCompletionOutput::ToolCall(decode_model_tool_call(decoder)?),
+        _ => return Err(ControlError::InvalidDataPlaneRecord),
+    };
+    Ok(ToolCompletionResult {
+        output,
+        model: decoder.string(1, MAX_MODEL_BYTES)?,
+        provider: CompletionProvider {
+            vendor: decoder.string(1, MAX_PROVIDER_FIELD_BYTES)?,
+            model_family: decoder.string(1, MAX_PROVIDER_FIELD_BYTES)?,
+            model_version: decoder.string(1, MAX_PROVIDER_FIELD_BYTES)?,
+            endpoint: decoder.optional_string(MAX_PROVIDER_ENDPOINT_BYTES)?,
+        },
+        usage: CompletionUsage {
+            input_tokens: decoder.u64()?,
+            output_tokens: decoder.u64()?,
+            cached_tokens: decoder.u64()?,
+        },
+        finish_reason: decode_finish_reason(decoder.u8()?)?,
+        latency_ms: decoder.u64()?,
+        polyfill_used: decoder.boolean()?,
+    })
+}
+
+fn encode_model_tool_call(encoder: &mut Encoder, call: &ModelToolCall) -> Result<(), ControlError> {
+    validate_string(&call.call_id, 1, MAX_MODEL_TOOL_CALL_ID_BYTES)?;
+    if !valid_tool_name(&call.name) {
+        return Err(ControlError::InvalidDataPlaneRecord);
+    }
+    encoder.string(&call.call_id)?;
+    encoder.string(&call.name)?;
+    encoder.json(&call.arguments, true)
+}
+
+fn decode_model_tool_call(decoder: &mut Decoder<'_>) -> Result<ModelToolCall, ControlError> {
+    let call_id = decoder.string(1, MAX_MODEL_TOOL_CALL_ID_BYTES)?;
+    let name = decoder.string(1, MAX_MODEL_TOOL_NAME_BYTES)?;
+    if !valid_tool_name(&name) {
+        return Err(ControlError::InvalidDataPlaneRecord);
+    }
+    Ok(ModelToolCall {
+        call_id,
+        name,
+        arguments: decoder.json(true)?,
+    })
+}
+
+fn valid_tool_name(name: &str) -> bool {
+    !name.is_empty()
+        && name.len() <= MAX_MODEL_TOOL_NAME_BYTES
+        && name
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-' | b'.'))
+}
+
 fn validate_uuid_v7(bytes: &[u8; 16]) -> Result<(), ControlError> {
     if bytes[6] >> 4 != 7 || bytes[8] & 0xc0 != 0x80 {
         return Err(ControlError::InvalidDataPlaneRecord);
@@ -770,6 +1114,10 @@ impl Encoder {
         self.bytes.push(value);
     }
 
+    fn boolean(&mut self, value: bool) {
+        self.u8(u8::from(value));
+    }
+
     fn u16(&mut self, value: u16) {
         self.bytes.extend_from_slice(&value.to_be_bytes());
     }
@@ -796,6 +1144,22 @@ impl Encoder {
 
     fn string(&mut self, value: &str) -> Result<(), ControlError> {
         self.bytes(value.as_bytes())
+    }
+
+    fn json(
+        &mut self,
+        value: &serde_json::Value,
+        require_object: bool,
+    ) -> Result<(), ControlError> {
+        if require_object && !value.is_object() {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
+        let encoded =
+            serde_json::to_vec(value).map_err(|_| ControlError::InvalidDataPlaneRecord)?;
+        if encoded.len() > MAX_MODEL_TOOL_JSON_BYTES {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
+        self.bytes(&encoded)
     }
 
     fn optional_string(&mut self, value: Option<&str>, maximum: usize) -> Result<(), ControlError> {
@@ -860,6 +1224,14 @@ impl<'a> Decoder<'a> {
         Ok(self.take(1)?[0])
     }
 
+    fn boolean(&mut self) -> Result<bool, ControlError> {
+        match self.u8()? {
+            0 => Ok(false),
+            1 => Ok(true),
+            _ => Err(ControlError::InvalidDataPlaneRecord),
+        }
+    }
+
     fn u16(&mut self) -> Result<u16, ControlError> {
         let bytes = self
             .take(2)?
@@ -896,6 +1268,16 @@ impl<'a> Decoder<'a> {
         let bytes = self.bytes(maximum)?;
         let value = String::from_utf8(bytes).map_err(|_| ControlError::InvalidDataPlaneRecord)?;
         validate_string(&value, minimum, maximum)?;
+        Ok(value)
+    }
+
+    fn json(&mut self, require_object: bool) -> Result<serde_json::Value, ControlError> {
+        let encoded = self.bytes(MAX_MODEL_TOOL_JSON_BYTES)?;
+        let value: serde_json::Value =
+            serde_json::from_slice(&encoded).map_err(|_| ControlError::InvalidDataPlaneRecord)?;
+        if require_object && !value.is_object() {
+            return Err(ControlError::InvalidDataPlaneRecord);
+        }
         Ok(value)
     }
 
@@ -999,6 +1381,50 @@ mod tests {
         }
     }
 
+    fn tool_call() -> ToolCompletionCall {
+        ToolCompletionCall {
+            completion: call_with_all_roles(),
+            tools: vec![ModelToolDefinition {
+                name: "smart_home.list_entities".to_string(),
+                description: "List normalized entities".to_string(),
+                input_schema: serde_json::json!({
+                    "type": "object",
+                    "additionalProperties": false
+                }),
+            }],
+            choice: ModelToolChoice::Named("smart_home.list_entities".to_string()),
+            results: vec![ModelToolResult {
+                call: ModelToolCall {
+                    call_id: "call-1".to_string(),
+                    name: "smart_home.list_entities".to_string(),
+                    arguments: serde_json::json!({}),
+                },
+                output: serde_json::json!({"entities": []}),
+                is_error: false,
+            }],
+        }
+    }
+
+    fn tool_result() -> ToolCompletionResult {
+        ToolCompletionResult {
+            output: ToolCompletionOutput::ToolCall(ModelToolCall {
+                call_id: "call-2".to_string(),
+                name: "smart_home.list_entities".to_string(),
+                arguments: serde_json::json!({}),
+            }),
+            model: "model".to_string(),
+            provider: result(CompletionFinishReason::Stop).provider,
+            usage: CompletionUsage {
+                input_tokens: 5,
+                output_tokens: 6,
+                cached_tokens: 7,
+            },
+            finish_reason: CompletionFinishReason::Stop,
+            latency_ms: 8,
+            polyfill_used: true,
+        }
+    }
+
     #[test]
     fn every_enum_value_and_optional_absence_round_trips() {
         let request = DataRecord::Request(DataPlaneRequest::Complete {
@@ -1007,6 +1433,22 @@ mod tests {
         });
         let (tag, body) = encode(&request).unwrap();
         assert_eq!(decode(tag, &body).unwrap(), request);
+
+        let tool_request = DataRecord::Request(DataPlaneRequest::CompleteWithTools {
+            id: RequestId::new(2).unwrap(),
+            call: Box::new(tool_call()),
+        });
+        let (tag, body) = encode(&tool_request).unwrap();
+        assert_eq!(tag, COMPLETE_WITH_TOOLS_REQUEST_TAG);
+        assert_eq!(decode(tag, &body).unwrap(), tool_request);
+
+        let tool_response = DataRecord::Response(DataPlaneResponse::ToolCompleted {
+            id: RequestId::new(3).unwrap(),
+            result: Box::new(tool_result()),
+        });
+        let (tag, body) = encode(&tool_response).unwrap();
+        assert_eq!(tag, TOOL_COMPLETED_RESPONSE_TAG);
+        assert_eq!(decode(tag, &body).unwrap(), tool_response);
 
         for reason in [
             CompletionFinishReason::Stop,
@@ -1216,6 +1658,63 @@ mod tests {
             encode(&DataRecord::Response(DataPlaneResponse::Completed {
                 id,
                 result: Box::new(invalid_result),
+            })),
+            Err(ControlError::InvalidDataPlaneRecord)
+        );
+
+        let invalid_tool_calls = [
+            ToolCompletionCall {
+                tools: Vec::new(),
+                ..tool_call()
+            },
+            ToolCompletionCall {
+                tools: vec![tool_call().tools[0].clone(), tool_call().tools[0].clone()],
+                ..tool_call()
+            },
+            ToolCompletionCall {
+                choice: ModelToolChoice::Named("smart_home.command".to_string()),
+                ..tool_call()
+            },
+            ToolCompletionCall {
+                tools: vec![ModelToolDefinition {
+                    description: "List\0normalized entities".to_string(),
+                    ..tool_call().tools[0].clone()
+                }],
+                ..tool_call()
+            },
+            ToolCompletionCall {
+                results: vec![ModelToolResult {
+                    call: ModelToolCall {
+                        call_id: "call-x".to_string(),
+                        name: "smart_home.command".to_string(),
+                        arguments: serde_json::json!({}),
+                    },
+                    output: serde_json::Value::Null,
+                    is_error: true,
+                }],
+                ..tool_call()
+            },
+        ];
+        for call in invalid_tool_calls {
+            assert_eq!(
+                encode(&DataRecord::Request(DataPlaneRequest::CompleteWithTools {
+                    id,
+                    call: Box::new(call),
+                })),
+                Err(ControlError::InvalidDataPlaneRecord)
+            );
+        }
+
+        let mut invalid_tool_result = tool_result();
+        invalid_tool_result.output = ToolCompletionOutput::ToolCall(ModelToolCall {
+            call_id: String::new(),
+            name: "smart_home.list_entities".to_string(),
+            arguments: serde_json::json!({}),
+        });
+        assert_eq!(
+            encode(&DataRecord::Response(DataPlaneResponse::ToolCompleted {
+                id,
+                result: Box::new(invalid_tool_result),
             })),
             Err(ControlError::InvalidDataPlaneRecord)
         );

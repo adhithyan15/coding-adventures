@@ -1962,8 +1962,12 @@ without allowing the model gateway to authorize or execute D18D calls:
 - Invalid catalogs, unknown named choices, malformed responses, unoffered
   calls, refusals, and truncated outputs fail closed with the existing provider
   identity and error taxonomy.
-- Authenticated Chief host transport, D18D dispatch, and production daemon
-  injection remain separate ownership steps below.
+- Distinct bounded request/response tags now carry the catalog, selection policy,
+  replayable prior calls/results, and structured result over the authenticated
+  Chief host session. The child `LlmClient`, process supervisor, and exact-model
+  authority-backed data plane preserve the merged gateway contract end to end.
+- D18D dispatch and production daemon injection remain separate ownership steps
+  below.
 
 ## Smart Home Remaining Work
 
@@ -1976,11 +1980,12 @@ and Reolink pairing migrations are complete. The remaining central-composition
 backlog takes priority over adding another isolated integration or Chief read
 model. The thread-safe Chief controller adapter is now complete:
 
-1. Carry the completed provider-neutral model tool declarations, calls, and
-   results through the authenticated host data plane, dispatch returned calls
-   through D18D, and inject the resulting catalog into the production Chief
-   daemon.
-2. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+1. Resolve the offered tool catalog from the exact host profile, dispatch returned
+   calls through the existing profile-gated D18D runtime, and feed structured
+   results into the next authenticated model turn.
+2. Inject that composed catalog/runtime and the central smart-home controller into
+   the production Chief daemon.
+3. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those
