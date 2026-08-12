@@ -1118,6 +1118,96 @@ function lessonSequence(lesson: ParsedLesson): number {
   return Number(stringValue(lesson.frontmatter.sequence));
 }
 
+/**
+ * How wide a short title may be before it is cut down, in display columns.
+ *
+ * A section's short title goes to the table of contents and the running head,
+ * and both are one line wide. A headword that overflows there is not merely
+ * ugly: `\@dottedtocline` sets `\parfillskip -\rightskip`, cancelling the
+ * ragged-right stretch on the entry's LAST line, so a wrapped entry has to be
+ * justified -- and a script with no hyphenation patterns cannot do that without
+ * a badly stretched line. kannada and telugu each carried one.
+ *
+ * 40 is the corpus's 99th percentile: across the 1,663 non-practice lessons the
+ * median short title is 7 columns wide and the 95th percentile is 23, so this
+ * touches only the tail. That tail is month lists and weekday lists -- the
+ * twelve Malayalam months, the seven Kannada weekdays -- which no table of
+ * contents should be carrying in full anyway. A TOC line is a pointer, not the
+ * content.
+ */
+const SHORT_TITLE_MAX_COLUMNS = 40;
+
+/**
+ * Estimate how many columns a string occupies.
+ *
+ * This is a proxy, not a measurement -- only XeLaTeX knows real widths, and
+ * they differ per font. Combining marks are counted as zero because they stack
+ * on the character before them, and East Asian wide forms as two. The proxy is
+ * good enough to rank titles, which is all a cut-off needs; whether the cut-off
+ * actually fixed the page is settled by building the book, not by this
+ * function.
+ */
+function displayColumns(text: string): number {
+  // East Asian Wide and Fullwidth ranges, written as escapes rather than as the
+  // characters themselves so the source stays reviewable in a plain diff.
+  const wide =
+    /[\u1100-\u115F\u2E80-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE30-\uFE4F\uFF00-\uFF60\uFFE0-\uFFE6]/u;
+  let columns = 0;
+  for (const character of text) {
+    if (/\p{Mn}|\p{Me}/u.test(character)) continue;
+    columns += wide.test(character) ? 2 : 1;
+  }
+  return columns;
+}
+
+/**
+ * Cut a short title to the width budget at a word boundary, marking the cut.
+ *
+ * Cutting happens on the authored text, BEFORE the Markdown is rendered, so a
+ * cut can never land inside a `\textbf{...}` the renderer has produced. It can
+ * still land inside authored `**emphasis**`, so a truncation that leaves an odd
+ * number of `*` or `_` runs drops one more word rather than emitting markup the
+ * renderer would mis-pair.
+ */
+function truncateShortTitle(title: string): string {
+  if (displayColumns(title) <= SHORT_TITLE_MAX_COLUMNS) return title;
+  const words = title.split(" ");
+  const balanced = (text: string): boolean =>
+    (text.match(/\*\*/g)?.length ?? 0) % 2 === 0 &&
+    (text.match(/(?<!\*)\*(?!\*)/g)?.length ?? 0) % 2 === 0 &&
+    (text.match(/_/g)?.length ?? 0) % 2 === 0;
+  let kept: string[] = [];
+  for (const word of words) {
+    const candidate = [...kept, word].join(" ");
+    // The ellipsis costs two columns of its own: one for the character, one for
+    // the space before it.
+    if (displayColumns(candidate) + 2 > SHORT_TITLE_MAX_COLUMNS) break;
+    kept.push(word);
+  }
+  while (kept.length > 1 && !balanced(kept.join(" "))) kept = kept.slice(0, -1);
+  // Do not hand the ellipsis a dangling separator. Cutting `di - haz - ve -
+  // pon - ten - sal - se - ven` between items leaves the separator that was
+  // joining them to the item now gone, and `sal - se - ...` reads as though
+  // something were missing from the middle rather than trimmed from the end.
+  // The same goes for a trailing comma in `dies Lunae, Martis, Iovis, ...`.
+  while (kept.length > 1 && /^[\u00b7\u2014\u2013/|,;:]+$/u.test(kept[kept.length - 1]!)) {
+    kept = kept.slice(0, -1);
+  }
+  if (kept.length > 0) kept[kept.length - 1] = kept[kept.length - 1]!.replace(/[,;:]+$/u, "");
+  // A single word wider than the whole budget cannot be cut at a word boundary.
+  // Keep it whole: a truncated word is unreadable, and one long word is a
+  // narrower defect than a wrapped list.
+  //
+  // Two kinds of title land here, and the second is a real limit rather than an
+  // edge case. One is a genuinely long word. The other is any script that does
+  // not separate words with spaces -- Chinese, Japanese, Thai -- where the whole
+  // title is one "word" and so is never cut at all. Those books are short today
+  // and none of them warns, but if one ever does, the fix is a script-aware
+  // break rule and not a bigger budget.
+  if (kept.length === 0) return words[0] ?? title;
+  return `${kept.join(" ")} \u2026`;
+}
+
 function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsInput): string {
   const title = lesson.realization.type.startsWith("practice")
     ? "Practice"
@@ -1125,7 +1215,9 @@ function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsIn
       ? stringValue(lesson.frontmatter.romanization)
       : lesson.realization.headword;
   return renderInlineMarkdown(
-    title.replaceAll("←", " from ").replaceAll("→", " to ").replace(/\s+/g, " ").trim(),
+    truncateShortTitle(
+      title.replaceAll("←", " from ").replaceAll("→", " to ").replace(/\s+/g, " ").trim(),
+    ),
     options,
   );
 }
