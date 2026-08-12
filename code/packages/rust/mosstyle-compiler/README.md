@@ -37,8 +37,11 @@ style Grid {
 ```
 
 Design tokens such as `$token-name` resolve to literal values using the UI15
-dark-mode palette baked into the compiler. Full Lattice token file support is
-planned for a later pass.
+dark-mode palette by default. `parse_token_palette` and `compile_with_tokens`
+overlay a strict schema-v1 application palette, including optional per-backend
+values and single-token aliases. Package builds expose that contract through
+`mosaic-compile pkg --token-palette <JSON>` so dependency components inherit
+the same tokens as the app.
 
 Transitions may be declared at the part level, where they apply to every state
 change, or inside a `state` block, where they apply when entering that state:

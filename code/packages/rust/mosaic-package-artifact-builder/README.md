@@ -81,6 +81,13 @@ events are rejected until those emitter paths preserve the authored behavior.
 builds and standalone three-file compilation. It returns the compiled model,
 resolved layout, and merged style definition without selecting a backend.
 
+`build_package_with_tokens` and
+`build_package_with_profile_runtime_and_tokens` accept one resolved token map
+for the full composition. The map is used for both the root package and every
+recursive dependency style, so reusable controls inherit app branding without
+copying or editing their MSL. Existing entry points retain the built-in Mosaic
+palette for source compatibility.
+
 Package references such as `pkg::mosaic-pkg-card::Card` are inlined before
 backend emission. Styles from referenced packages are compiled and merged first,
 then the consuming package's style is applied, so apps get reusable component

@@ -36,8 +36,8 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package_with_profile_and_runtime, compose_component_with_model, Backend, BuildOptions,
-    BuildProfile,
+    build_package_with_profile_runtime_and_tokens, compose_component_with_model, Backend,
+    BuildOptions, BuildProfile,
 };
 use mosaic_vm::MosaicVM;
 
@@ -1334,6 +1334,23 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         .and_then(|value| value.as_str())
         .map(PathBuf::from);
 
+    let token_palette = flags
+        .get("token-palette")
+        .and_then(|value| value.as_str())
+        .map(|path| {
+            let source = fs::read_to_string(path).unwrap_or_else(|error| {
+                eprintln!("mosaic-compile pkg: cannot read token palette {path}: {error}");
+                process::exit(1);
+            });
+            mosstyle_compiler::parse_token_palette(&source, Some(backend_str)).unwrap_or_else(
+                |error| {
+                    eprintln!("mosaic-compile pkg: invalid token palette {path}: {error}");
+                    process::exit(1);
+                },
+            )
+        })
+        .unwrap_or_default();
+
     // Theme selector for style (`.msl`) resolution — the style analogue of
     // the layout `--variant` flag. `--theme light` makes the builder read
     // each component's `<Component>.light.msl` (with fallback to the bare
@@ -1381,7 +1398,12 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         theme: theme.map(|s| s.to_string()),
     };
 
-    match build_package_with_profile_and_runtime(&opts, profile, runtime_library.as_deref()) {
+    match build_package_with_profile_runtime_and_tokens(
+        &opts,
+        profile,
+        runtime_library.as_deref(),
+        &token_palette,
+    ) {
         Ok(result) => {
             for path in &result.artifacts {
                 eprintln!("Written: {}", path.display());

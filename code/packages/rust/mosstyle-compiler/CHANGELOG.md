@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added - versioned application token palettes
+
+- Added strict schema-v1 JSON token-palette parsing with global values and
+  optional per-backend overrides.
+- Added `compile_with_tokens` and `analyze_with_tokens`; existing entry points
+  retain the built-in palette.
+- Single-token aliases resolve recursively, while invalid names, unsafe
+  declarations, unknown backends, missing aliases, and cycles are rejected.
+
 ### Added - MSL transition declarations
 
 - Added part-level and state-local `transition` declarations with optional

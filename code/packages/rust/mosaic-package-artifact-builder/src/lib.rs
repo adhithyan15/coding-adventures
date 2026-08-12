@@ -458,6 +458,11 @@ pub struct ComposedComponent {
     pub style: mosstyle_compiler::StyleDef,
 }
 
+struct StyleCompositionOptions<'a> {
+    theme: Option<&'a str>,
+    tokens: &'a mosstyle_compiler::TokenOverrides,
+}
+
 /// Compile MIL, MLL, and MSL sources into one package-composed component.
 ///
 /// Qualified `pkg::P::C` layout nodes are resolved recursively before
@@ -472,15 +477,37 @@ pub fn compose_component(
     package_search_paths: &[PathBuf],
     theme: Option<&str>,
 ) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_tokens(
+        component,
+        mil_src,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        theme,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+/// Compile and compose a component with application-wide token overrides.
+pub fn compose_component_with_tokens(
+    component: &str,
+    mil_src: &str,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<ComposedComponent, BuildError> {
     let model =
         mosmodel_compiler::compile(mil_src).map_err(|errs| pipeline_err(component, &errs[0]))?;
-    compose_component_with_model(
+    compose_component_with_model_and_tokens(
         component,
         model,
         mll_src,
         msl_src,
         package_search_paths,
         theme,
+        tokens,
     )
 }
 
@@ -496,13 +523,35 @@ pub fn compose_component_with_model(
     package_search_paths: &[PathBuf],
     theme: Option<&str>,
 ) -> Result<ComposedComponent, BuildError> {
+    compose_component_with_model_and_tokens(
+        component,
+        model,
+        mll_src,
+        msl_src,
+        package_search_paths,
+        theme,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+/// Complete package composition with application-wide token overrides.
+pub fn compose_component_with_model_and_tokens(
+    component: &str,
+    model: mosmodel_compiler::CompileOutput,
+    mll_src: &str,
+    msl_src: &str,
+    package_search_paths: &[PathBuf],
+    theme: Option<&str>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<ComposedComponent, BuildError> {
     let mut layout = moslayout_compiler::compile(mll_src, Some(&model.descriptor_json))
         .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_options = StyleCompositionOptions { theme, tokens };
     let dependency_style_parts = collect_dependency_style_parts(
         component,
         &layout.def,
         package_search_paths,
-        theme,
+        &style_options,
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
@@ -512,8 +561,9 @@ pub fn compose_component_with_model(
         &model.descriptor_json,
         package_search_paths,
     )?;
-    let own_style = mosstyle_compiler::compile(msl_src, Some(&layout.part_map_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let own_style =
+        mosstyle_compiler::compile_with_tokens(msl_src, Some(&layout.part_map_json), tokens)
+            .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let style = merge_dependency_styles(own_style.def, dependency_style_parts);
 
     Ok(ComposedComponent {
@@ -751,6 +801,22 @@ pub fn build_package_with_profile_and_runtime(
     profile: BuildProfile,
     runtime_library: Option<&Path>,
 ) -> Result<BuildResult, BuildError> {
+    build_package_with_profile_runtime_and_tokens(
+        opts,
+        profile,
+        runtime_library,
+        &mosstyle_compiler::TokenOverrides::default(),
+    )
+}
+
+/// Analyze and build a package with one token palette shared by root and
+/// dependency component styles.
+pub fn build_package_with_profile_runtime_and_tokens(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<BuildResult, BuildError> {
     validate_runtime_library_selection(opts, runtime_library)?;
     let report = analyze_package_degradations_with_runtime(opts, profile, runtime_library)?;
     let backend_dir = opts.output_root.join(opts.backend.dir_name());
@@ -766,7 +832,7 @@ pub fn build_package_with_profile_and_runtime(
         });
     }
 
-    let mut result = build_package_inner(opts, Some(profile), runtime_library)?;
+    let mut result = build_package_inner(opts, Some(profile), runtime_library, tokens)?;
     write_degradation_report(&report_path, &report)?;
     result.artifacts.push(report_path);
     Ok(result)
@@ -1111,13 +1177,22 @@ fn flutter_link_requires_url_host(node: &LayoutNode) -> bool {
 ///   build into a stable dist directory and treat a half-written tree as
 ///   the same outcome as a successful rebuild that subsequently failed.
 pub fn build_package(opts: &BuildOptions) -> Result<BuildResult, BuildError> {
-    build_package_inner(opts, None, None)
+    build_package_with_tokens(opts, &mosstyle_compiler::TokenOverrides::default())
+}
+
+/// Build a package with application-wide token overrides.
+pub fn build_package_with_tokens(
+    opts: &BuildOptions,
+    tokens: &mosstyle_compiler::TokenOverrides,
+) -> Result<BuildResult, BuildError> {
+    build_package_inner(opts, None, None, tokens)
 }
 
 fn build_package_inner(
     opts: &BuildOptions,
     profile: Option<BuildProfile>,
     runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
@@ -1183,6 +1258,10 @@ fn build_package_inner(
     // listed separately in `BuildResult.artifacts`.
     let src_dir = opts.package_root.join("src");
     let package_search_paths = default_package_search_paths(&opts.package_root);
+    let style_options = StyleCompositionOptions {
+        theme: opts.theme.as_deref(),
+        tokens,
+    };
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
 
@@ -1192,7 +1271,7 @@ fn build_package_inner(
             let component_artifacts = compile_one_component(
                 component,
                 variant.as_deref(),
-                opts.theme.as_deref(),
+                &style_options,
                 &src_dir,
                 &backend_dir,
                 opts.backend,
@@ -2667,7 +2746,7 @@ fn build_electron_readme(npm_name: &str, component_name: &str) -> String {
 fn compile_one_component(
     component: &str,
     variant: Option<&str>,
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     src_dir: &Path,
     out_dir: &Path,
     backend: Backend,
@@ -2693,7 +2772,7 @@ fn compile_one_component(
         Some(v) => src_dir.join(format!("{component}.{v}.mll")),
         None => src_dir.join(format!("{component}.mll")),
     };
-    let msl_path = resolve_style_path(src_dir, component, theme)?;
+    let msl_path = resolve_style_path(src_dir, component, style_options.theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(BuildError::SourceNotFound {
@@ -2720,13 +2799,14 @@ fn compile_one_component(
     // Each compile call may return a `Vec<CompileError>`. We render the
     // first one and wrap it as `PipelineError` so the caller gets one
     // line per component rather than a flood.
-    let composed = compose_component(
+    let composed = compose_component_with_tokens(
         component,
         &mil_src,
         &mll_src,
         &msl_src,
         package_search_paths,
-        theme,
+        style_options.theme,
+        style_options.tokens,
     )?;
     let mosmodel_out = composed.model;
     let layout_out = composed.layout;
@@ -2950,7 +3030,7 @@ fn collect_dependency_style_parts(
     owner_component: &str,
     layout: &moslayout_compiler::LayoutDef,
     package_search_paths: &[PathBuf],
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -2958,7 +3038,7 @@ fn collect_dependency_style_parts(
         owner_component,
         &layout.root,
         package_search_paths,
-        theme,
+        style_options,
         visiting,
         collected,
     )
@@ -2968,7 +3048,7 @@ fn collect_dependency_style_parts_from_node(
     owner_component: &str,
     node: &moslayout_compiler::LayoutNode,
     package_search_paths: &[PathBuf],
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -2980,7 +3060,7 @@ fn collect_dependency_style_parts_from_node(
             package,
             component,
             package_search_paths,
-            theme,
+            style_options,
             visiting,
             collected,
         )?);
@@ -2991,7 +3071,7 @@ fn collect_dependency_style_parts_from_node(
             owner_component,
             child,
             package_search_paths,
-            theme,
+            style_options,
             visiting,
             collected,
         )?);
@@ -3005,7 +3085,7 @@ fn collect_dependency_component_style_parts(
     package: &str,
     component: &str,
     package_search_paths: &[PathBuf],
-    theme: Option<&str>,
+    style_options: &StyleCompositionOptions<'_>,
     visiting: &mut Vec<(String, String)>,
     collected: &mut HashSet<(String, String)>,
 ) -> Result<Vec<mosstyle_compiler::PartStyle>, BuildError> {
@@ -3044,7 +3124,7 @@ fn collect_dependency_component_style_parts(
     let src_dir = package_root.join("src");
     let mil_path = src_dir.join(format!("{component}.mil"));
     let mll_path = src_dir.join(format!("{component}.mll"));
-    let msl_path = resolve_style_path(&src_dir, component, theme)?;
+    let msl_path = resolve_style_path(&src_dir, component, style_options.theme)?;
 
     if !mil_path.exists() || !mll_path.exists() {
         return Err(package_reference_err(
@@ -3074,7 +3154,7 @@ fn collect_dependency_component_style_parts(
         owner_component,
         &layout_out.def,
         package_search_paths,
-        theme,
+        style_options,
         visiting,
         collected,
     )?;
@@ -3085,8 +3165,12 @@ fn collect_dependency_component_style_parts(
         package_search_paths,
     )?;
 
-    let style_out = mosstyle_compiler::compile(&msl_src, Some(&layout_out.part_map_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+    let style_out = mosstyle_compiler::compile_with_tokens(
+        &msl_src,
+        Some(&layout_out.part_map_json),
+        style_options.tokens,
+    )
+    .map_err(|errs| pipeline_err(component, &errs[0]))?;
     dependency_parts.extend(style_out.def.parts);
 
     visiting.pop();
@@ -6096,6 +6180,70 @@ style FocusField {
             html.contains("#abcdef"),
             "dependency text style should be present in emitted HTML:\n{html}"
         );
+    }
+
+    #[test]
+    fn token_overrides_apply_to_parent_and_dependency_styles() {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent { Text [ accent-label ] ( content : slot: label ) }"#,
+            r#"style Accent { part accent-label { color : $brand-accent ; } }"#,
+        );
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(
+            &parent,
+            "Shell",
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+            r#"style Shell { part shell-root { background : $app-surface ; } }"#,
+        );
+
+        let tokens = mosstyle_compiler::parse_token_palette(
+            r##"{
+              "schema_version": 1,
+              "tokens": {
+                "brand-accent": "#13579b",
+                "app-surface": "#2468ac"
+              }
+            }"##,
+            Some("html"),
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_tokens(
+            &BuildOptions {
+                package_root: parent,
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+                theme: None,
+            },
+            &tokens,
+        )
+        .expect("parent package should build with shared token overrides");
+
+        let html = fs::read_to_string(out.path().join("html").join("Shell.html")).unwrap();
+        assert!(
+            html.contains("#13579b"),
+            "dependency token missing:\n{html}"
+        );
+        assert!(html.contains("#2468ac"), "parent token missing:\n{html}");
     }
 
     #[test]

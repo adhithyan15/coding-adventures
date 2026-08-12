@@ -90,7 +90,7 @@ Package mode compiles a Mosaic package directory that contains
 files:
 
 ```text
-mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--runtime-library <CDYLIB>]
+mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--runtime-library <CDYLIB>] [--token-palette <JSON>]
 
 BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 ```
@@ -108,6 +108,28 @@ Flutter uses Dart's stable build-hook/code-asset packaging contract and therefor
 requires Flutter 3.38+ and Dart 3.10+ when a runtime is bundled. The option
 requires `--emit-project`; strict project builds on all five native backends
 require it.
+
+`--token-palette` applies one versioned palette to the app package and every
+referenced Mosaic package. Global values can be refined per generated backend:
+
+```json
+{
+  "schema_version": 1,
+  "tokens": {
+    "color-accent": "#5b5bd6",
+    "brand-action": "$color-accent",
+    "radius-md": "10px"
+  },
+  "backends": {
+    "swiftui": { "radius-md": "12px" },
+    "xaml": { "radius-md": "8px" }
+  }
+}
+```
+
+Token names use lowercase kebab-case. Values are single safe declarations;
+single-token aliases are supported. Unknown schema versions, misspelled backend
+names, unsafe values, missing references, and cycles fail the build.
 
 Package mode defaults to `--profile permissive`, which emits the package plus a
 machine-readable `<backend>/mosaic-degradations.json`. Use

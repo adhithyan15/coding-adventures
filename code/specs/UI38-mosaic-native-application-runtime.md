@@ -485,13 +485,18 @@ unblocks multiple downstream targets; never count source generation as completio
 ### P1 — reusable application vocabulary
 
 - [ ] Add named records, enums, optional fields, and keyed collections to mosmodel.
-- [ ] Add versioned theme tokens and platform/style override inputs to mosstyle.
+- [x] Add schema-versioned theme-token inputs to mosstyle and package builds,
+  with global values, per-backend overrides, recursive package inheritance,
+  aliases, and fail-closed validation.
 - [ ] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.
 - [ ] Ship `mosaic-std-services` and umbrella `mosaic-std` manifests.
+- [ ] Make the standalone legacy `mosaic-pkg-grid` package compile on every
+  native backend; SwiftUI currently rejects its exported `Cell` component when
+  built directly even though package-expanded TaskApp table composition passes.
 - [x] Make the existing `mosaic-pkg-toolkit` compile across all five native
   backends as a migration baseline.
   - [x] Lower `HostLink` to native Compose annotated links, including internal
