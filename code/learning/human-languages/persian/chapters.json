@@ -226,6 +226,90 @@
           "FA-STEM-DAN"
         ]
       }
+    },
+    {
+      "chapter": 9,
+      "title": "Please: Water, Bread, Tea, Key",
+      "label": "ch:fa-please-requests",
+      "canDo": "I can politely ask for water, bread, tea, or my key in Persian, and I can name the four vocabulary layers those four words come from.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "FA-C09-kelid",
+        "kind": "production",
+        "summary": "The chapter closes on kelid, a Greek loan, then runs all four requests back to back — âb, nân, chây, kelid, each with lotfan — and reuses the ezafe from Chapter 2 to ask for kelid-e man, my key.",
+        "assesses": [
+          "FA-LEX-AB",
+          "FA-PHRASE-LOTFAN",
+          "FA-ETYMON-AB",
+          "FA-LEX-NAN",
+          "FA-ETYMON-NAN",
+          "FA-LEX-CHAY",
+          "FA-ETYMON-CHAY",
+          "FA-LEX-KELID",
+          "FA-ETYMON-KELID",
+          "FA-GRAMMAR-EZAFE-OWNER"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Mother, Father, Brother, Daughter",
+      "label": "ch:fa-family",
+      "canDo": "I can name my mother, father, brother, and daughter in Persian, the four secure English cousins Chapter 6 named without teaching.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "FA-C10-dokhtar",
+        "kind": "production",
+        "summary": "The chapter closes on dokhtar, daughter, then runs all four family words back to back and reuses the ezafe from esm-e man ast and kelid-e man to say dokhtar-e man, my daughter.",
+        "assesses": [
+          "FA-LEX-MADAR",
+          "FA-ETYMON-MADAR",
+          "FA-LEX-PEDAR",
+          "FA-ETYMON-PEDAR",
+          "FA-LEX-BARADAR",
+          "FA-ETYMON-BARADAR",
+          "FA-LEX-DOKHTAR",
+          "FA-ETYMON-DOKHTAR",
+          "FA-GRAMMAR-EZAFE-OWNER",
+          "FA-SCRIPT-ESM-MAN-AST"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Eye, Hand, Foot, Tongue",
+      "label": "ch:fa-body",
+      "canDo": "I can name my eye, hand, foot, and tongue in Persian, and I can say zabân for both tongue and language — the word for the thing this whole track teaches.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "FA-C11-zaban",
+        "kind": "production",
+        "summary": "The chapter and the tranche close on zabân, tongue and language together, then run a short scene built from every chapter so far: the name exchange, the wellbeing question, this chapter's own requests and family and body words, and khodâhâfez to close.",
+        "assesses": [
+          "FA-LEX-CHESHM",
+          "FA-ETYMON-CHESHM",
+          "FA-LEX-DAST",
+          "FA-ETYMON-DAST",
+          "FA-LEX-PA",
+          "FA-ETYMON-PA",
+          "FA-LEX-ZABAN",
+          "FA-ETYMON-ZABAN",
+          "FA-SCRIPT-ZE",
+          "FA-SCRIPT-SHOMA-TO",
+          "FA-DIALOGUE-TAKE-LEAVE",
+          "FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS",
+          "FA-SCRIPT-KHUBAM",
+          "FA-SCRIPT-CHETOR",
+          "FA-SCRIPT-HAL",
+          "FA-SCRIPT-ESM-MAN-AST"
+        ]
+      }
     }
   ]
 }

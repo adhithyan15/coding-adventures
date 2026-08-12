@@ -1,5 +1,102 @@
 # Changelog
 
+## 0.10.0 — 2026-08-08
+
+- Added twelve schema-v2 word lessons across three new chapters (9-11), the
+  track's first pre-A1 noun tranche and part of the corpus-wide pre-A1
+  vocabulary program (HL-C41 continuation). Persian's pre-A1 headword count
+  rises from 17 to 29 against the 300-word target (shortfall 283 → 271);
+  track-wide vocabulary rises from 30 to 42. Persian moved off zero pre-A1
+  spine-node debt: `SPINE-POLITE-REQUEST-REPAIR` was the one social spine
+  node this track had never realized, and Chapter 9 closes it.
+- **Chapter 9, *Please: Water, Bread, Tea, Key*** (`FA-PATH-010`): the track's
+  first “please,” **لطفاً** *lotfan*, run against **آب** *âb*, **نان** *nân*,
+  **چای** *chây*, **کلید** *kelid*. The four words were chosen to carry all
+  three of Persian's vocabulary layers this track already names: **آب** is
+  inherited Iranian; **نان** has no securely traceable Indo-European root at
+  all, though the word itself was borrowed onward into English as **naan** via
+  Hindi-Urdu; **چای** is an overland Chinese loan that later passed onward
+  into Urdu as **چائے**; **کلید** is a Greek loan (**κλειδίον**) carried since
+  the Hellenistic centuries after Alexander, cognate through Latin *claudere*
+  with English **close**, **conclude**, **exclude**. **لطفاً**'s closing
+  **ً** is taught as *tanvin*, a frozen Arabic adverbial ending that survives
+  in only a handful of borrowed Persian adverbs. The payoff, `FA-C09-kelid`,
+  reuses the ezafe from Chapter 2 to build **کلیدِ من، لطفاً**, “my key,
+  please.”
+- **Chapter 10, *Mother, Father, Brother, Daughter*** (`FA-PATH-011`):
+  **مادر**, **پدر**, **برادر**, **دختر**. All four are the exact four
+  Indo-European kinship cousins Chapter 6's `FA-C06-budan` etymology already
+  named in passing, as English cousins spotted inside “Persian's plainest
+  words,” but never taught as lessons of their own; this chapter delivers on
+  that six-chapter-old promise. `مادر` ← \**méh₂tēr*, `پدر` ← \**ph₂tḗr*,
+  `برادر` ← \**bʰréh₂tēr*, `دختر` ← \**dʰugh₂tḗr* — four of the most secure
+  Indo-European cognate sets
+  that exist, none needing a page of caveats. The payoff, `FA-C10-dokhtar`,
+  reuses ezafe again (**دخترِ من**) and reaches back to `FA-SCRIPT-ESM-MAN-AST`
+  from Chapter 2.
+- **Chapter 11, *Eye, Hand, Foot, Tongue*** (`FA-PATH-012`, closing the
+  tranche): **چشم**, **دست**, **پا**, **زبان**. `چشم` traces to \**spek'-*,
+  “to look, to observe” — not English **eye**, but Latin *specere*, giving
+  **spy**, **spectacle**, **species**. `دست` is the tranche's most
+  instructive cousin: Old Persian **d**, Avestan **z**, and Sanskrit **h**
+  (हस्त *hasta*) look unrelated letter for letter, but descend from the
+  identical Proto-Indo-Iranian \**ǵʰes-to-* by a completely regular
+  Indo-Iranian sound law — a genuine cognate proven by regularity, the same
+  standard the corpus's *panj*/Punjab convergence lesson uses to show a
+  **false** one. `پا` ← \**ped-*/\**pod-* needed no such argument at all —
+  English **foot**, Latin **pes**, Greek **pous**, Sanskrit **pāda** are all
+  close enough to hear directly. The chapter and tranche close on `زبان`
+  *zabân*, which — like English — names the tongue and the language with one
+  word; its etymology traces to the same old “tongue” root behind English
+  **tongue** and, by a well-documented but disputed *d*-to-*l* shift, Latin
+  *lingua* (**language**, **linguistics**). `زبان` also introduces the
+  track's first new letter since Chapter 6: **ز** *ze*, an ordinary member of
+  the inherited Arabic set.
+- **A correction against the brief's own assumption, checked before use**:
+  the brief that requested this tranche assumed Persian **آب** *âb* and
+  Hindi/Marathi's **पानी**/**पाणी** *pānī*/*pāṇī* might be cognates by both
+  being Indo-Iranian words for water. They are not. Sanskrit independently
+  preserves *two* ancient water-words — **आप्** *áp-* (Persian's cousin,
+  \**h₂ep-*) and **पा** *pā-* “to drink” (\**peh₃-*, the source of Hindi and
+  Marathi's everyday word, and of English **potion**/**poison**) — and the
+  everyday Indo-Aryan vocabulary kept the second one while Persian kept the
+  first. The place-name **Punjab** (**پنج آب**, “five waters”) is stated as
+  “usually explained as” this word rather than asserted outright, since the
+  Persian coinage and the older Sanskrit **पञ्चनद** *Pañcanada* both name the
+  same five rivers.
+- **Reinforcement discipline**: each lesson's `practises.knowledge` reaches
+  back to the one to three lessons before it (closing the R1/R2 windows
+  across all three new chapters), and `FA-C11-zaban`, the tranche's payoff,
+  reaches back across the whole track to rescue atoms that had never been
+  revisited at any distance: `FA-SCRIPT-CHETOR`, `FA-SCRIPT-HAL`, and
+  `FA-SCRIPT-ESM-MAN-AST` each pick up a second revisit and clear the
+  reinforcement floor entirely; `FA-SCRIPT-SHOMA-TO`, `FA-DIALOGUE-TAKE-LEAVE`,
+  `FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS`, and `FA-SCRIPT-KHUBAM` each pick up their
+  first. `FA-C09-ab`'s Warm-up does the same for Chapter 8's closing atoms
+  (`FA-LEX-DASHTAN`, `FA-STEM-DAR`, `FA-LEX-DUST-DASHTAN`), which had been
+  orphaned since nothing followed `FA-C08-dust-dashtan`. Persian's
+  never-revisited atoms fall from **11 of 82** to **5 of 108** — the residual
+  five are two script/etymology atoms this chapter's design does not reach
+  and the three atoms `FA-C11-zaban` itself introduces, which nothing yet
+  follows.
+- Both new-chapter payoffs (`FA-C09-kelid`, `FA-C10-dokhtar`) and the tranche
+  payoff (`FA-C11-zaban`) assess every atom their own chapter introduces,
+  well above the 0.5 representativeness floor, and each `chapters.json` entry
+  records its `canDo` and payoff summary in the established HL05 format.
+- Every new lesson reuses letters the track has already taught, with one
+  exception: **ز** *ze* inside **زبان**, added to `pronunciation-reference.md`
+  as the sole new script atom across all twelve lessons.
+- No new atom-budget violations: each lesson introduces two or three new
+  atoms (never more than three), and each chapter introduces eight to ten
+  (against the twelve-atom ceiling). The two pre-existing atom-budget
+  violations (`FA-C03-shoma-to`, `FA-C05-khodahafez`) are unrelated to this
+  tranche and are left untouched.
+- The book gains Chapters 9-11 (`ch09-please-requests.tex`, `ch10-family.tex`,
+  `ch11-body.tex`), generated from the same canonical lesson AST as the rest
+  of the track. Verified locally with XeLaTeX: zero `Missing character`
+  lines. `pronunciation-reference.md` and `book.tex`'s front matter are
+  updated to match (eight chapters → eleven).
+
 ## 0.9.0 — 2026-08-07
 
 - Added eight schema-v2 lessons across two new chapters, closing the eight-verb
