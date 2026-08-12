@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native adjustable slider
+
+`HostSlider` now lowers to SwiftUI's native `Slider`, including controlled
+range, discrete or continuous movement, disabled state, continuous change
+dispatch, and exact release-value commit dispatch. Strict generated macOS and
+iOS artifacts compile in required CI.
+
 ### Added - portable Text accessibility
 
 `Text` now lowers literal or slot-backed accessible names, heading traits, and

@@ -120,6 +120,7 @@ does not install automatic press tracking.
 | `Input`          | `TextEditor` when `multiline: true`; otherwise the native `TextField` path *(UI25 compatibility)* |
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
+| `HostSlider`     | Native `Slider` with controlled live value and movement/release events |
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
 | `HostDraggable`  | Native SwiftUI drag transfer plus accessible keyboard grab/drop *(UI35)* |
 | `HostDropTarget` | Native SwiftUI drop delegate with accepts filtering and proposal dispatch *(UI35)* |
