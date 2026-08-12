@@ -5719,7 +5719,7 @@ impl HtmlParser {
             ));
         }
 
-        if namespace.is_none() && name == "form" {
+        if namespace.is_none() && name == "form" && !self.has_open_html_template_element() {
             self.form_element_pointer_set = true;
         }
         let node = element_node(name.clone(), attributes, namespace);
@@ -7506,7 +7506,9 @@ impl HtmlParser {
                 self.remove_pending_formatting_reconstruction(name);
             }
             if name == "form" {
-                self.form_element_pointer_set = false;
+                if !self.has_open_html_template_element() {
+                    self.form_element_pointer_set = false;
+                }
                 self.generate_implied_end_tags_above(index);
                 self.open_elements.remove(index);
                 return;
@@ -7841,7 +7843,7 @@ impl HtmlParser {
                 }
                 false
             }
-            "form" if self.form_element_pointer_set => {
+            "form" if self.form_element_pointer_set && !self.has_open_html_template_element() => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "nested-form-start-tag",
                     "nested form start tag was ignored while a form element was already open",
@@ -8956,6 +8958,14 @@ impl HtmlParser {
                 element.name == "template"
                     && element.namespace.is_none()
                     && !has_fragment_context_marker(element)
+            })
+        })
+    }
+
+    fn has_open_html_template_element(&self) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name == "template" && element.namespace.is_none()
             })
         })
     }
@@ -31721,6 +31731,57 @@ mod tests {
         let paragraph = element(&div.children[2]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("After")]);
+    }
+
+    #[test]
+    fn keeps_template_owned_forms_separate_from_the_form_pointer() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><template><form id=inner><input id=inside></form></template><form id=ignored><input id=outer-input></form><form id=next></form>",
+        )
+        .unwrap();
+
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
+                .count(),
+            1
+        );
+
+        let outer = find_element_by_id(&output.document.children, "outer")
+            .expect("the outer pointer-owned form should remain in the document");
+        let template = find_first_element_in_nodes(&outer.children, "template")
+            .expect("the outer form should contain the template");
+        let inner = find_element_by_id(&template.children, "inner")
+            .expect("a template-owned form should not be rejected by the outer form pointer");
+        assert!(find_element_by_id(&inner.children, "inside").is_some());
+        assert!(find_element_by_id(&outer.children, "ignored").is_none());
+        assert!(find_element_by_id(&outer.children, "outer-input").is_some());
+        assert!(find_element_by_id(&output.document.children, "next").is_some());
+
+        let without_outer = parse_html(
+            "<!doctype html><template><form id=inner></form></template><form id=outer></form>",
+        )
+        .unwrap();
+        assert!(find_element_by_id(&without_outer.children, "inner").is_some());
+        assert!(find_element_by_id(&without_outer.children, "outer").is_some());
+
+        let foreign_template = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><svg><template><form id=ignored></form></template></svg>",
+        )
+        .unwrap();
+        let foreign_form = find_element_by_id(&foreign_template.document.children, "ignored")
+            .expect("the foreign form-named element should remain in SVG content");
+        assert_eq!(foreign_form.namespace.as_deref(), Some("svg"));
+        assert_eq!(
+            foreign_template
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
+                .count(),
+            0
+        );
     }
 
     #[test]
