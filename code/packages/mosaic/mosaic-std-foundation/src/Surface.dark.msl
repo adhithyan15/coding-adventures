@@ -1,0 +1,9 @@
+style Surface {
+  part surface-root {
+    background    : $foundation-color-surface-dark ;
+    border-color : $foundation-color-border-dark ;
+    border-width : 1 ;
+    border-radius: $foundation-radius-md ;
+    padding      : $foundation-space-md ;
+  }
+}

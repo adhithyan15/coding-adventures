@@ -495,7 +495,7 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Let packages declare a safe, package-relative token palette so reusable
     libraries carry scoped defaults automatically; dependency defaults are
     overridden by the consuming package and then explicit application input.
-- [ ] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
+- [x] Ship `mosaic-std-foundation`: tokens, type scale, spacing, surfaces, icons.
   - [x] Ship v0.1 package-owned light/dark tokens plus accessible display,
     heading, body, caption, and semantic icon components, with dependency
     inclusion and `native-complete` acceptance across all five native backends.
@@ -507,8 +507,11 @@ unblocks multiple downstream targets; never count source generation as completio
     - [x] Preserve one default inline child region through typed MLL mounts and
       package expansion, with all-five-native acceptance and fail-closed
       rejection when a referenced component has no mount.
+    - [x] Ship a themed `Surface` through the portable package-expansion path,
+      with all-five-native consuming-package acceptance.
     - [ ] Add named child regions and standalone exported-component child
-      parameters before `Surface` itself can pass `native-complete` directly.
+      parameters so `Surface` can also pass `native-complete` when compiled as
+      an isolated host-facing component.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.

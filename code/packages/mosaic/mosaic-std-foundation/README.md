@@ -6,6 +6,7 @@ visual baseline. Version 0.1 supplies:
 - package-owned light and dark color tokens;
 - a 4/8/16/24/32 spacing scale and 6/10/16 radius scale;
 - accessible display, heading, body, and caption components; and
+- a themed `Surface` that accepts arbitrary Mosaic children; and
 - a semantic icon component whose accessible label is required by its MIL
   contract.
 
@@ -23,24 +24,31 @@ Explicit application values remain the highest-precedence overrides.
 ```mll
 layout Welcome {
   Column [ root ] {
-    DisplayText ( content: "Welcome" )
-    BodyText ( content: "Your native Mosaic app is ready." )
-    FoundationIcon ( glyph: "star", accessible-label: "Featured" )
+    pkg::mosaic-std-foundation::Surface {
+      pkg::mosaic-std-foundation::DisplayText ( content: "Welcome" )
+      pkg::mosaic-std-foundation::BodyText (
+        content: "Your native Mosaic app is ready."
+      )
+      pkg::mosaic-std-foundation::FoundationIcon (
+        glyph: "star",
+        accessible-label: "Featured"
+      )
+    }
   }
 }
 ```
 
-All exported components are built exclusively from Mosaic kernel primitives
-and pass the `native-complete` package profile on SwiftUI, Qt/QML, XAML,
-Flutter, and Compose.
+All components are built exclusively from Mosaic kernel primitives. A consuming
+package expands `Surface` and its authored children before emission and passes
+the `native-complete` profile on SwiftUI, Qt/QML, XAML, Flutter, and Compose.
+The typography and icon leaf components also pass that profile as standalone
+exports.
 
 ## Deliberate v0.1 boundary
 
-A general `Surface` must accept arbitrary Mosaic children. UI29-2 now preserves
-one default authored child region when a package reference is expanded, but
-standalone exported-component child parameters and named regions are not yet
-implemented. A host-native `node` slot is not a portable substitute because
-Flutter's JSON runtime cannot materialize a Dart `Widget`. Foundation therefore
-does not claim a fake text-only surface. Surface components land after the
-remaining composition contract is available; the palette already reserves
-surface and border tokens for them.
+UI29-2 currently preserves one default authored child region during package
+expansion. That is sufficient for `Surface` in an included Foundation package,
+which is the supported portable path. Compiling `Surface` itself as a standalone
+host-facing component still reports
+`composition.child-slot-parameter-unimplemented`; backend child parameters and
+named regions remain follow-up work rather than being silently approximated.
