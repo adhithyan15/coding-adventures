@@ -247,7 +247,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 1
+        "underfull": 0
       },
       "blocking": false,
       "counts": {
@@ -256,7 +256,7 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 1
+        "underfull": 0
       },
       "improvements": [],
       "log": "code/learning/human-languages/latin/book/book.log",
