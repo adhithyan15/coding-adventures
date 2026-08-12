@@ -1108,6 +1108,12 @@ jobs:
           cmake -S "$strict_output/qt" -B "$strict_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$strict_output/qt/build" --config Release --parallel
 
+          slider_output="$RUNNER_TEMP/mosaic-qt-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-slider --backend qt --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/qt/mosaic-degradations.json"
+          cmake -S "$slider_output/qt" -B "$slider_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$slider_output/qt/build" --config Release --parallel
+
           strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
           set +e
           QT_QPA_PLATFORM=offscreen \

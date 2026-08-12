@@ -1120,7 +1120,10 @@ fn collect_native_degradations(
         )),
         "HostSlider"
             if backend.is_native()
-                && !matches!(backend, Backend::Compose | Backend::Flutter) => Some((
+                && !matches!(
+                    backend,
+                    Backend::Compose | Backend::Flutter | Backend::Qt
+                ) => Some((
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
         )),
@@ -4716,7 +4719,25 @@ layout Volume {
             flutter_report.degradations
         );
 
-        for backend in [Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
+        let qt_out = TempDir::new().unwrap();
+        let qt_report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: qt_out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Qt slider capability analysis");
+        assert!(
+            qt_report.native_complete,
+            "Qt now has a native adjustable slider lowering: {:?}",
+            qt_report.degradations
+        );
+
+        for backend in [Backend::SwiftUI, Backend::Xaml] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {

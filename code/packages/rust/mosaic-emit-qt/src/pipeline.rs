@@ -1367,6 +1367,9 @@ fn from_pipeline_with_runtime_policy(
     if tree_needs_controls_import(&layout.root) {
         writeln!(out, "import QtQuick.Controls").unwrap();
     }
+    if layout_contains_tag(&layout.root, "HostSlider") {
+        writeln!(out, "import QtQuick.Controls as MosaicControls").unwrap();
+    }
     writeln!(out).unwrap();
 
     // 3. Open the root `Item`. See the module-level doc for why the root
@@ -1647,6 +1650,7 @@ fn emit_qml_tree(
         // QtQuick basics couldn't replicate.
         "HostCheckbox" => return emit_host_checkbox_qml(node, depth, ctx),
         "HostRadio" => return emit_host_radio_qml(node, depth, ctx),
+        "HostSlider" => return emit_host_slider_qml(node, depth, ctx),
 
         // UI29-4 kernel — `HostLink` lowers to a rich-text `Text`
         // with `onLinkActivated` (Qt has no first-class hyperlink
@@ -2044,7 +2048,8 @@ fn primitive_to_qml(tag: &str) -> Result<QmlElement, PipelineEmitError> {
         // their own emitters earlier in `emit_qml_tree`; reaching this
         // branch would be an internal logic error.
         "Input" | "HostInput" | "HostButton" | "HostDialog" | "HostCheckbox" | "HostRadio"
-        | "HostLink" | "HostTooltip" | "HostNumberInput" | "HostDraggable" | "HostDropTarget" => {
+        | "HostSlider" | "HostLink" | "HostTooltip" | "HostNumberInput" | "HostDraggable"
+        | "HostDropTarget" => {
             unreachable!(
                 "host primitives with dedicated emitters should not reach primitive_to_qml"
             )
@@ -2781,10 +2786,9 @@ fn build_text_attribute(node: &LayoutNode) -> Option<String> {
 fn build_text_accessible_name_attribute(node: &LayoutNode) -> Option<String> {
     let prop = node.props.iter().find(|p| p.name == "a11y-label")?;
     match &prop.value {
-        LayoutPropValue::String(label) => Some(format!(
-            "Accessible.name: \"{}\"",
-            escape_qml_string(label)
-        )),
+        LayoutPropValue::String(label) => {
+            Some(format!("Accessible.name: \"{}\"", escape_qml_string(label)))
+        }
         LayoutPropValue::SlotRef(slot) => {
             let camel = to_camel_case_first_lower(slot);
             is_safe_identifier(&camel).then(|| format!("Accessible.name: {camel}"))
@@ -3541,6 +3545,77 @@ fn emit_host_radio_qml(
         .unwrap();
     }
 
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
+}
+
+/// Lower `HostSlider` to QtQuick.Controls' native adjustable `Slider`.
+///
+/// `moved()` fires on every user-driven drag tick without echoing controlled
+/// value updates. `pressedChanged` supplies release-time commit semantics; the
+/// current native value is read after `pressed` becomes false. A module alias
+/// avoids recursively resolving a user component that is itself named Slider.
+fn emit_host_slider_qml(
+    node: &LayoutNode,
+    depth: usize,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let number_expr = |name: &str, default: &str| -> Result<String, PipelineEmitError> {
+        let Some(prop) = node.props.iter().find(|prop| prop.name == name) else {
+            return Ok(default.to_string());
+        };
+        match &prop.value {
+            LayoutPropValue::SlotRef(slot) => {
+                let field = to_camel_case_first_lower(slot);
+                validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+                Ok(format!("mosaicRoot.{field}"))
+            }
+            LayoutPropValue::Number(number) => Ok(number.to_string()),
+            LayoutPropValue::Expr(expression) => Ok(expression.clone()),
+            _ => Ok(default.to_string()),
+        }
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}MosaicControls.Slider {{").unwrap();
+    writeln!(out, "{inner}value: {}", number_expr("value", "0")?).unwrap();
+    writeln!(out, "{inner}from: {}", number_expr("min", "0")?).unwrap();
+    writeln!(out, "{inner}to: {}", number_expr("max", "100")?).unwrap();
+    let step = find_number_prop(node, "step").unwrap_or(1.0);
+    writeln!(out, "{inner}stepSize: {step}").unwrap();
+    if step > 0.0 {
+        writeln!(out, "{inner}snapMode: MosaicControls.Slider.SnapAlways").unwrap();
+    }
+    if let Some(prop) = node.props.iter().find(|prop| prop.name == "disabled") {
+        let enabled = match &prop.value {
+            LayoutPropValue::SlotRef(slot) => {
+                let field = to_camel_case_first_lower(slot);
+                validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+                format!("!mosaicRoot.{field}")
+            }
+            LayoutPropValue::Keyword(value) if value == "true" || value == "false" => {
+                format!("!{value}")
+            }
+            _ => "true".to_string(),
+        };
+        writeln!(out, "{inner}enabled: {enabled}").unwrap();
+    }
+    if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let signal = qml_signal_name(emit_name, ctx.signal_names)?;
+        let arg = pick_signal_arg_with(emit_name, ctx.emits, "value");
+        writeln!(out, "{inner}onMoved: mosaicRoot.{signal}({arg})").unwrap();
+    }
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let signal = qml_signal_name(emit_name, ctx.signal_names)?;
+        let arg = pick_signal_arg_with(emit_name, ctx.emits, "value");
+        writeln!(
+            out,
+            "{inner}onPressedChanged: if (!pressed) mosaicRoot.{signal}({arg})"
+        )
+        .unwrap();
+    }
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
 }
@@ -6055,9 +6130,7 @@ mod tests {
                 children: Vec::new(),
             },
         };
-        let out = from_pipeline(&m, &l, &empty_style("Title"))
-            .unwrap()
-            .output;
+        let out = from_pipeline(&m, &l, &empty_style("Title")).unwrap().output;
         assert!(out.contains("Accessible.name: spokenTitle"));
         assert!(out.contains("Accessible.role: Accessible.Heading"));
 
@@ -9586,6 +9659,108 @@ mod tests {
             out.contains("HoverHandler { id: hoverHandler }"),
             "expected HoverHandler, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_slider_lowers_native_range_step_disabled_and_events() {
+        let m = component(
+            "Slider",
+            vec![
+                slot("value", SlotType::Number, true),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![
+                EmitDecl {
+                    name: "onChange".to_string(),
+                    params: vec![mosmodel_compiler::EmitParam {
+                        name: "value".to_string(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                },
+                EmitDecl {
+                    name: "onCommit".to_string(),
+                    params: vec![mosmodel_compiler::EmitParam {
+                        name: "value".to_string(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                },
+            ],
+        );
+        let l = LayoutDef {
+            component_name: "Slider".to_string(),
+            root: LayoutNode {
+                tag: "HostSlider".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::SlotRef("value".to_string()),
+                    },
+                    LayoutProp {
+                        name: "min".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".to_string(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    LayoutProp {
+                        name: "disabled".to_string(),
+                        value: LayoutPropValue::SlotRef("disabled".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onChange".to_string(),
+                        value: LayoutPropValue::EmitRef("onChange".to_string()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".to_string(),
+                        value: LayoutPropValue::EmitRef("onCommit".to_string()),
+                    },
+                ],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Slider"))
+            .expect("emit native Qt slider")
+            .output;
+        assert!(out.contains("import QtQuick.Controls as MosaicControls"));
+        assert!(out.contains("MosaicControls.Slider {"));
+        assert!(out.contains("value: mosaicRoot.value"));
+        assert!(out.contains("from: 0"));
+        assert!(out.contains("to: 100"));
+        assert!(out.contains("stepSize: 5"));
+        assert!(out.contains("snapMode: MosaicControls.Slider.SnapAlways"));
+        assert!(out.contains("enabled: !mosaicRoot.disabled"));
+        assert!(out.contains("onMoved: mosaicRoot.change(value)"));
+        assert!(out.contains("onPressedChanged: if (!pressed) mosaicRoot.commit(value)"));
+    }
+
+    #[test]
+    fn host_slider_step_zero_is_continuous() {
+        let m = component("Opacity", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "Opacity".to_string(),
+            root: LayoutNode {
+                tag: "HostSlider".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "step".to_string(),
+                    value: LayoutPropValue::Number(0.0),
+                }],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Opacity"))
+            .expect("emit continuous Qt slider")
+            .output;
+        assert!(out.contains("stepSize: 0"));
+        assert!(!out.contains("snapMode:"));
+        assert!(!out.contains("onMoved:"));
+        assert!(!out.contains("onPressedChanged:"));
     }
 
     /// UI29-4 Qt test 4 — bare `HostNumberInput` lowers to a
