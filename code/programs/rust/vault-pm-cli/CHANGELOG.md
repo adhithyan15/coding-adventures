@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed audited authored secure-note conflict merge with hidden body input,
+  opaque base retention, and all-current-parent publication.
 - Exposed audited authored login conflict merge with opaque base selection,
   complete hidden form collection, durable failure ordering, and an
   all-current-parent success mutation.

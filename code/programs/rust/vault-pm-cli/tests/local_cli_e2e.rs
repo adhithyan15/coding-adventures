@@ -272,6 +272,21 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(!failed_merge_transcript.contains("Title: "));
     assert_transcript_excludes_secrets(&failed_merge_transcript);
 
+    let (failed_note_merge_status, failed_note_merge_transcript) = run_unlock_in_pty(
+        &home,
+        &[
+            "conflict",
+            "merge",
+            "secure-note",
+            &item_id,
+            &original_revision,
+        ],
+        b"vault-pm: recovery or conflict required",
+    );
+    assert_eq!(failed_note_merge_status.code(), Some(5));
+    assert!(!failed_note_merge_transcript.contains("Title: "));
+    assert_transcript_excludes_secrets(&failed_note_merge_transcript);
+
     let expected_delete = format!("Item deleted: {item_id}");
     let (delete_status, delete_transcript) = run_unlock_in_pty(
         &home,
@@ -351,7 +366,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(
         post_failure_transcript
-            .contains("commits=24 catalogs=6 revisions=5 items=2 audit_events=24"),
+            .contains("commits=25 catalogs=6 revisions=5 items=2 audit_events=25"),
         "unexpected post-failure audit totals: {post_failure_transcript}"
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
@@ -410,7 +425,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         "final audit verification failed: {final_audit_transcript}"
     );
     assert!(
-        final_audit_transcript.contains("audit_events=28"),
+        final_audit_transcript.contains("audit_events=29"),
         "unexpected final audit total: {final_audit_transcript}"
     );
     assert_transcript_excludes_secrets(&final_audit_transcript);

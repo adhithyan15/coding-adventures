@@ -14,9 +14,10 @@ selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
 ITEM REVISION`. `conflict list ITEM`,
 `conflict reveal ITEM REVISION FIELD`, `conflict choose ITEM REVISION`, and
-`conflict merge login ITEM BASE_REVISION` expose redacted current candidates,
-explicit audited field inspection, choose-existing resolution, and a complete
-user-authored login merge.
+`conflict merge login ITEM BASE_REVISION`, and
+`conflict merge secure-note ITEM BASE_REVISION` expose redacted current
+candidates, explicit audited field inspection, choose-existing resolution, and
+complete user-authored login/secure-note merges.
 `item reveal ITEM FIELD` adds explicitly confirmed, publish-before-release
 interactive access to one schema-specific current secret without returning the
 revision capability or complete document to CLI orchestration.
@@ -209,6 +210,11 @@ or entropy failures, and invalid forms publish failed item-scoped
 `ItemConflictMerge` events before their closed outcome; success atomically
 publishes one all-current-parent revision and a succeeded merge event. The only
 output is the merged item selector. Other record schemas remain later slices.
+
+`conflict merge secure-note ITEM BASE_REVISION` applies the same opaque-base,
+all-current-parent, item-scoped audit ordering to a complete title and hidden
+body form. It never prefills or exposes a candidate body. Success emits only
+the merged item selector; failures emit no partial output.
 
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
 schema-specific selectors. It reserves time and audit entropy before

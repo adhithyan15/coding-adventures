@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge secure-note ITEM BASE_REVISION`, with an
+  opaque exact-current note base, hidden complete body input, durable
+  precondition/host failures, and atomic all-current-parent success.
 - Added audit-required `conflict merge login ITEM BASE_REVISION`, which keeps
   the exact current login base opaque, collects a complete bounded terminal
   form, durably records precondition/prompt/entropy/validation failures, and

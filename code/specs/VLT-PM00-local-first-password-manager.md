@@ -1572,8 +1572,13 @@ changelog, focused build, and downstream validation.
               complete hidden terminal form, durable host/validation failures,
               and an atomic all-current-parent merge, using
               `VLT-PM33-cli-authored-login-conflict-merge.md`.
-9b-3b-2b-2b. remaining authored merge ceremonies for secure notes, payment
-              cards, API keys, database credentials, TOTP, and opaque records.
+9b-3b-2b-2b-1. completed audit-required user-authored secure-note conflict
+                merge using an opaque exact-current metadata base, hidden body
+                collection, durable host/precondition failures, and an atomic
+                all-current-parent result, using
+                `VLT-PM34-cli-authored-secure-note-conflict-merge.md`.
+9b-3b-2b-2b-2. remaining authored merge ceremonies for payment cards, API
+                keys, database credentials, TOTP, and opaque records.
 9b-4a. completed authenticated encrypted portable export with a separately
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
@@ -1685,7 +1690,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM30-cli-rich-login-edit.md`, and
   `VLT-PM31-cli-audited-search.md`, and
   `VLT-PM32-cli-conflict-candidate-reveal.md`, and
-  `VLT-PM33-cli-authored-login-conflict-merge.md` —
+  `VLT-PM33-cli-authored-login-conflict-merge.md`, and
+  `VLT-PM34-cli-authored-secure-note-conflict-merge.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1701,7 +1707,9 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   API-key and static database-credential creation with redacted observation,
   plus exact audited conflict-candidate secret reveal using
   `VLT-PM32-cli-conflict-candidate-reveal.md`, plus audited user-authored login
-  conflict merge using `VLT-PM33-cli-authored-login-conflict-merge.md`.
+  conflict merge using `VLT-PM33-cli-authored-login-conflict-merge.md`, plus
+  audited user-authored secure-note conflict merge using
+  `VLT-PM34-cli-authored-secure-note-conflict-merge.md`.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
