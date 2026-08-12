@@ -3158,6 +3158,31 @@
       "output": "spanish/book/chapters/ch167-synthesis-relative.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 168,
+      "output": "spanish/book/chapters/ch168-hay.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 169,
+      "output": "spanish/book/chapters/ch169-hay-etymology.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 170,
+      "output": "spanish/book/chapters/ch170-hay-que.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 171,
+      "output": "spanish/book/chapters/ch171-review-hay.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 172,
+      "output": "spanish/book/chapters/ch172-synthesis-hay.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

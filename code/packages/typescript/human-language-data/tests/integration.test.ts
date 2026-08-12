@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(167); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(172); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -709,6 +709,22 @@ describe("real curriculum", () => {
       "ES-C53-sintesis-frases-largas-full",
       "ES-C53-sintesis-frases-largas-hole",
       "ES-C53-sintesis-frases-largas-why",
+      "ES-C54-ha-mas-y-fossil",
+      "ES-C54-ha-mas-y-french",
+      "ES-C54-ha-mas-y-parts",
+      "ES-C54-hay-many",
+      "ES-C54-hay-one",
+      "ES-C54-hay-que-form",
+      "ES-C54-hay-que-pair",
+      "ES-C54-hay-que-say",
+      "ES-C54-hay-unique",
+      "ES-C54-repaso-hay-never",
+      "ES-C54-repaso-hay-small",
+      "ES-C54-repaso-hay-three",
+      "ES-C54-sintesis-lo-que-hay-ask",
+      "ES-C54-sintesis-lo-que-hay-done",
+      "ES-C54-sintesis-lo-que-hay-must",
+      "ES-C54-sintesis-lo-que-hay-pick",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

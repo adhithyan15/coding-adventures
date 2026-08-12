@@ -10,6 +10,11 @@
   second stroke and one pen lift.
 - Reduce Chinese's remaining verified-ductus inventory to 17 entries.
 
+### Changed — Spanish runs 1..172 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five `hay` chapters appended at
+  168, completing the HL10 rung audit.
+
 ### Added — cited Chinese 日 ductus (HL-C09CE)
 
 - Render **日** in five source-aligned frames: descend the left side, cross the
