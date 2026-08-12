@@ -11,4 +11,6 @@ import "verb-type.adj"
 
 ? verb_type(action_verb, $D)                                       % expect physical_action_or_activity_that_can_be_seen_or_heard (direct)
 ? verb_type($T, changes_another_verbs_tense_voice_or_mood)          % expect auxiliary_verb (reverse)
-? verb_type(transitive_verb, $D)                                    % expect abstain -- a real verb type the source covers, but not one of the three tabled here
+? verb_type(stative_verb, $D)                                       % expect describes_a_subjects_state_or_feeling (newly added row)
+? verb_type($T, describes_a_subjects_state_or_feeling)               % expect stative_verb (newly added row, reverse)
+? verb_type(transitive_verb, $D)                                    % expect abstain -- a real verb type the source covers, but not one of the four tabled here
