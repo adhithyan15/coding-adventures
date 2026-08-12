@@ -108,7 +108,9 @@ the same participant/message/lifeline IR.
 The initial Mermaid 11.16.1 state slice is grammar-backed and covers
 `stateDiagram`/`stateDiagram-v2` headers, simple declarations and quoted
 aliases, standalone `State: description` labels, labeled transitions, document
-direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
+direction, modern or legacy title statements, and `[*]` start/end edge states.
+Titles survive graph IR and layout, then use the existing shaped Paint title
+pipeline on native backends. The family lowers into the shared graph IR,
 graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
 both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. The family
