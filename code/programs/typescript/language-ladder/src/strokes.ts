@@ -1497,6 +1497,63 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("名"),
   },
+  // 字 writes 宀 before 子. The roof ends in one joined hook; 子 then keeps its
+  // top turn and vertical base hook joined: six strokes, five lifts, and nine
+  // visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "字")]: {
+    script: "chinese",
+    glyph: "字",
+    strokes: [
+      { segments: [{ label: "draw 宀's top dot down-right", path: [
+        { x: 455, y: 825 }, { x: 475, y: 800 }, { x: 495, y: 775 },
+        { x: 520, y: 750 }, { x: 545, y: 725 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 宀's left-side stroke down-left", path: [
+        { x: 125, y: 690 }, { x: 120, y: 650 }, { x: 115, y: 610 },
+        { x: 105, y: 570 }, { x: 95, y: 535 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 宀's horizontal roof", path: [
+          { x: 140, y: 700 }, { x: 250, y: 700 }, { x: 360, y: 700 },
+          { x: 470, y: 700 }, { x: 580, y: 700 }, { x: 690, y: 700 },
+          { x: 800, y: 700 }, { x: 880, y: 700 },
+        ] },
+        { label: "hook down-left without lifting", path: [
+          { x: 880, y: 700 }, { x: 875, y: 660 }, { x: 865, y: 620 },
+          { x: 855, y: 580 }, { x: 850, y: 545 },
+        ] },
+      ] },
+      { segments: [
+        { label: "lift, then draw 子's top horizontal", path: [
+          { x: 260, y: 515 }, { x: 345, y: 515 }, { x: 430, y: 515 },
+          { x: 515, y: 515 }, { x: 600, y: 515 }, { x: 685, y: 515 },
+          { x: 735, y: 515 },
+        ] },
+        { label: "turn down-left without lifting", path: [
+          { x: 735, y: 515 }, { x: 700, y: 480 }, { x: 660, y: 445 },
+          { x: 615, y: 410 }, { x: 570, y: 380 }, { x: 525, y: 350 },
+          { x: 490, y: 330 },
+        ] },
+      ] },
+      { segments: [
+        { label: "lift, then descend 子's vertical", path: [
+          { x: 500, y: 350 }, { x: 500, y: 290 }, { x: 500, y: 230 },
+          { x: 500, y: 170 }, { x: 500, y: 110 }, { x: 500, y: 50 },
+          { x: 500, y: 5 },
+        ] },
+        { label: "hook left without lifting", path: [
+          { x: 500, y: 5 }, { x: 480, y: -20 }, { x: 450, y: -35 },
+          { x: 410, y: -40 }, { x: 365, y: -40 }, { x: 325, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 子's middle horizontal", path: [
+        { x: 85, y: 265 }, { x: 200, y: 265 }, { x: 315, y: 265 },
+        { x: 430, y: 265 }, { x: 545, y: 265 }, { x: 660, y: 265 },
+        { x: 775, y: 265 }, { x: 900, y: 265 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("字"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
