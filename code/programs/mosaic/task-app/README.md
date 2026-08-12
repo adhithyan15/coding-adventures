@@ -38,11 +38,13 @@ generated native UI + standard host binding
 task-mosaic-app (MIL slots/events + presentation state) → task-core
 ```
 
-Qt, Flutter, and Compose Desktop are gated on this concrete engine. CI requires
-zero degradations, builds the generated native project, verifies the bundled
-library byte-for-byte, and launches the installed app without an injected runtime
-path. The ABI conformance fixture remains a separate gate, so a passing TaskApp
-launch cannot mask a regression in the standard host binding.
+Qt, Flutter, Compose Desktop, and SwiftUI on macOS are gated on this concrete
+engine. CI requires zero degradations, builds the generated native project,
+verifies the bundled library byte-for-byte, and launches the installed app without
+an injected runtime path. The ABI conformance fixture remains a separate gate, so
+a passing TaskApp launch cannot mask a regression in the standard host binding.
+The generated SwiftUI sources also compile for the iOS 16 deployment target; that
+gate is source portability rather than a claim that a macOS dylib can run on iOS.
 
 ## What it does
 

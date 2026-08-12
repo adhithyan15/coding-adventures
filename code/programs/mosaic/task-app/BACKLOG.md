@@ -36,10 +36,9 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 - **Promote the concrete TaskApp Rust adapter on the remaining native backends.**
   `task-mosaic-app` now supplies the complete MIL prop/event contract and Qt bundles
-  it in a strict, zero-degradation app (see Resolved). Replace the conformance
-  fixture with this application library for SwiftUI and XAML one backend at a time,
-  retaining each platform's build/install/launch gate. Flutter and Compose now use
-  the concrete adapter and launch their generated Linux desktop apps (see Resolved).
+  it in a strict, zero-degradation app (see Resolved). Promote XAML next while
+  retaining its build/install/launch gate. Flutter, Compose, and SwiftUI on macOS
+  now use the concrete adapter and launch their generated native apps (see Resolved).
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
@@ -94,6 +93,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   needs SQL-over-IndexedDB rather than load-all.
 
 ## Resolved (kept for traceability, not actionable)
+
+- **Concrete Rust TaskApp engine on strict SwiftUI for macOS.** SwiftUI CI keeps
+  the counter ABI conformance package and harness independent, then emits TaskApp
+  with `task-mosaic-app`, requires zero degradations, compares the SwiftPM resource
+  `libmosaic_app.dylib` byte-for-byte with the adapter artifact, and launches the
+  generated macOS executable from `/` without an injected runtime path. The same
+  generated UI also compiles separately for iOS 16 without bundling the macOS dylib.
 
 - **Native SwiftUI table semantics for the Sheet.** The canonical dynamic
   UI31/Grid shape now uses native `Table` and runtime-sized

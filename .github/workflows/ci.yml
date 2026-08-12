@@ -964,17 +964,9 @@ jobs:
       - name: Round-trip Rust engine through standard SwiftUI binding
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         shell: bash
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           set -euo pipefail
-          output="$RUNNER_TEMP/mosaic-swift-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$output" --emit-project
-          jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$output/swiftui/mosaic-degradations.json"
-          swift build --package-path "$output/swiftui"
-          (
-            cd "$output/swiftui"
-            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
-          )
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
           runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
 
@@ -995,6 +987,41 @@ jobs:
           cp "$bundled_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
 
           env -u MOSAIC_APP_LIBRARY swift run --package-path "$harness" Conformance --library "$installed_runtime"
+
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.dylib"
+          taskapp_output="$RUNNER_TEMP/mosaic-swift-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$taskapp_output/swiftui"
+          taskapp_bin="$(swift build --package-path "$taskapp_output/swiftui" --show-bin-path)"
+          installed_taskapp_runtime="$(find "$taskapp_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
+          test -n "$installed_taskapp_runtime"
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+          installed_taskapp="$taskapp_bin/App"
+          test -x "$installed_taskapp"
+          taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" >"$taskapp_log" 2>&1 &
+            taskapp_pid=$!
+            trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
+            sleep 5
+            kill -0 "$taskapp_pid"
+            kill "$taskapp_pid"
+            wait "$taskapp_pid" || true
+            trap - EXIT
+          )
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$taskapp_log"
+
+          ios_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-source"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_output" --emit-project
+          jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$ios_output/swiftui/mosaic-degradations.json"
+          (
+            cd "$ios_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
+          )
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project

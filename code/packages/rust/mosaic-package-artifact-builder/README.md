@@ -51,17 +51,15 @@ those emitters use native pointer/touch drag targets plus the UI35 keyboard,
 accepted-drop, component-scoping, and announcement contracts. XAML remains an
 explicit degradation until it ships equivalent behavior.
 
-The package-expanded TaskApp is the full strict-profile proof point for Flutter
-and Compose. Qt and SwiftUI now recognize the same canonical table as native
-and accessible; their permissive acceptance reports retain only the
-sample-runtime fallback. SwiftUI emits `Table` with dynamic columns on macOS
-14.4 / iOS 17.4 and a native `List` compatibility path on the package's older
-deployment targets. The strict Flutter and Compose outputs have no known
-degradations and require the standard Rust runtime. Flutter passes whole-project
-Dart analysis and a native desktop build; Compose passes Kotlin compilation and
-native desktop distribution packaging. This does not close the cross-backend
-milestone; XAML retains explicit TaskApp degradations and the concrete SwiftUI
-TaskApp adapter promotion remains separate.
+The package-expanded TaskApp is the full strict-profile proof point for Flutter,
+Compose, Qt, and SwiftUI on macOS. SwiftUI emits `Table` with dynamic columns on
+macOS 14.4 / iOS 17.4 and a native `List` compatibility path on the package's
+older deployment targets. Each strict desktop output has no known degradations,
+bundles the standard Rust runtime, verifies that installed runtime against the
+selected artifact, and launches without an injected library path. SwiftUI's iOS
+16 build remains a separate source-portability gate rather than packaging the
+macOS dylib. This does not close the cross-backend milestone; XAML retains
+explicit TaskApp degradations and concrete adapter promotion remains separate.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false

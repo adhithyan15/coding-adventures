@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - concrete Rust TaskApp runtime on SwiftUI for macOS
+
+SwiftUI's strict acceptance lane now keeps ABI conformance on its dedicated
+counter runtime, then separately bundles `task-mosaic-app` into the generated
+TaskApp resource bundle. CI requires zero degradations, checks the bundled dylib
+byte-for-byte, and launches the generated macOS executable from outside its build
+directory without `MOSAIC_APP_LIBRARY`, rejecting runtime, required-prop, and
+Swift fatal-error output. A separate permissive build continues to compile the
+same generated UI for iOS 16 without treating the macOS dylib as an iOS artifact.
+
 ### Added - concrete Rust TaskApp runtime on Compose Desktop
 
 Compose Desktop's strict acceptance lane now keeps ABI conformance on its
