@@ -13,6 +13,8 @@ from build_tool.resolver import (
     MetadataEncodingError,
     _build_known_names,
     _build_known_names_for_language,
+    _dependency_scope,
+    _in_dependency_scope,
     _parse_build_tool_deps,
     _parse_python_deps,
     _parse_ruby_deps,
@@ -432,8 +434,8 @@ class TestResolveDependencies:
         assert groups[2] == ["python/pkg-a"]
 
 
-class TestFieldAwareHaskellAndGradleResolution:
-    """Consume the shared Cabal and Gradle resolution contracts."""
+class TestFieldAwareManifestResolution:
+    """Consume the shared Cabal, Gradle, and .NET resolution contracts."""
 
     @staticmethod
     def _materialize_case(
@@ -472,10 +474,18 @@ class TestFieldAwareHaskellAndGradleResolution:
             "resolution-haskell-field-aware.json",
             "resolution-gradle-java-field-aware.json",
             "resolution-gradle-kotlin-field-aware.json",
+            "resolution-dotnet-csharp-field-aware.json",
+            "resolution-dotnet-fsharp-field-aware.json",
+            "resolution-dotnet-cross-language-field-aware.json",
         ],
     )
     def test_shared_resolution_fixture(self, tmp_path, fixture_name):
         case, packages = self._materialize_case(tmp_path, fixture_name)
+        language = case["input"]["options"].get("language", "all")
+        if language != "all":
+            packages = [
+                package for package in packages if package.language == language
+            ]
 
         graph = resolve_dependencies(packages)
 
@@ -500,6 +510,16 @@ class TestFieldAwareHaskellAndGradleResolution:
                 "resolution-gradle-kotlin-field-aware.json",
                 "kotlin/gamma",
                 "kotlin/alpha",
+            ),
+            (
+                "resolution-dotnet-csharp-field-aware.json",
+                "csharp/gamma",
+                "csharp/alpha",
+            ),
+            (
+                "resolution-dotnet-fsharp-field-aware.json",
+                "fsharp/gamma",
+                "fsharp/alpha",
             ),
         ],
     )
@@ -532,6 +552,16 @@ class TestFieldAwareHaskellAndGradleResolution:
         graph = resolve_dependencies(packages)
 
         assert graph.edges() == []
+
+    def test_dotnet_languages_share_only_the_dotnet_scope(self):
+        assert _dependency_scope("csharp") == "dotnet"
+        assert _dependency_scope("fsharp") == "dotnet"
+        assert _dependency_scope("dotnet") == "dotnet"
+        assert all(
+            _in_dependency_scope(language, "dotnet")
+            for language in ("csharp", "fsharp", "dotnet")
+        )
+        assert not _in_dependency_scope("java", "dotnet")
 
 
 class TestEcosystemScopedAliases:

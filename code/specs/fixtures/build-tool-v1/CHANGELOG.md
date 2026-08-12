@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-12
+
+- Expanded the canonical discovery registry with paired C# and F# package and
+  program identities so every consumer must preserve the `programs` segment
+  before exposing the established .NET lanes as filters.
+
 ## 2026-08-11
 
 - Expanded the canonical discovery registry with colliding package/program

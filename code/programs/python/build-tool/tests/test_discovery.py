@@ -31,7 +31,7 @@ SHARED_LANGUAGE_REGISTRY = (
     / "cases"
     / "discovery-language-registry.json"
 )
-FILTER_LANGUAGES = frozenset({"haskell", "java", "kotlin"})
+FILTER_LANGUAGES = frozenset({"csharp", "fsharp", "haskell", "java", "kotlin"})
 
 
 class TestReadLines:
@@ -86,7 +86,7 @@ class TestInferLanguage:
         assert _infer_language(path) == "rust"
 
     @pytest.mark.parametrize("language", sorted(FILTER_LANGUAGES))
-    def test_haskell_and_jvm_paths(self, tmp_path, language):
+    def test_newly_exposed_filter_paths(self, tmp_path, language):
         path = tmp_path / "packages" / language / "demo"
         path.mkdir(parents=True)
         assert _infer_language(path) == language
@@ -326,7 +326,7 @@ class TestDiscoverRecursive:
         langs = {p.language for p in packages}
         assert langs == {"python", "ruby", "go", "rust"}
 
-    def test_consumes_shared_haskell_and_jvm_identity_contract(self, tmp_path):
+    def test_consumes_shared_filter_identity_contract(self, tmp_path):
         fixture = json.loads(SHARED_LANGUAGE_REGISTRY.read_text(encoding="utf-8"))
 
         selected_files = []
@@ -338,7 +338,7 @@ class TestDiscoverRecursive:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_text(file_record["content_utf8"], encoding="utf-8")
 
-        assert len(selected_files) == 7
+        assert len(selected_files) == 11
         packages = discover_packages(tmp_path / "code")
         actual = [
             (

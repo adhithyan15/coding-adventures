@@ -22,12 +22,20 @@
         "content_utf8": "echo cpp\n"
       },
       {
+        "path": "code/packages/csharp/demo-csharp/BUILD",
+        "content_utf8": "echo csharp\n"
+      },
+      {
         "path": "code/packages/custom/go/BUILD",
         "content_utf8": "echo exact-bucket-only\n"
       },
       {
         "path": "code/packages/dart/demo-dart/BUILD",
         "content_utf8": "echo dart\n"
+      },
+      {
+        "path": "code/packages/fsharp/demo-fsharp/BUILD",
+        "content_utf8": "echo fsharp\n"
       },
       {
         "path": "code/packages/haskell/demo-haskell/BUILD",
@@ -64,6 +72,14 @@
       {
         "path": "code/programs/elixir/ircd/BUILD",
         "content_utf8": "echo elixir program\n"
+      },
+      {
+        "path": "code/programs/csharp/demo-csharp/BUILD",
+        "content_utf8": "echo csharp program\n"
+      },
+      {
+        "path": "code/programs/fsharp/demo-fsharp/BUILD",
+        "content_utf8": "echo fsharp program\n"
       },
       {
         "path": "code/programs/go/build-tool/BUILD",
@@ -123,6 +139,20 @@
           "rel_path": "code/packages/cpp/demo-cpp"
         },
         {
+          "build_file": "code/packages/csharp/demo-csharp/BUILD",
+          "is_starlark": false,
+          "language": "csharp",
+          "name": "csharp/demo-csharp",
+          "rel_path": "code/packages/csharp/demo-csharp"
+        },
+        {
+          "build_file": "code/programs/csharp/demo-csharp/BUILD",
+          "is_starlark": false,
+          "language": "csharp",
+          "name": "csharp/programs/demo-csharp",
+          "rel_path": "code/programs/csharp/demo-csharp"
+        },
+        {
           "build_file": "code/packages/dart/demo-dart/BUILD",
           "is_starlark": false,
           "language": "dart",
@@ -135,6 +165,20 @@
           "language": "elixir",
           "name": "elixir/programs/ircd",
           "rel_path": "code/programs/elixir/ircd"
+        },
+        {
+          "build_file": "code/packages/fsharp/demo-fsharp/BUILD",
+          "is_starlark": false,
+          "language": "fsharp",
+          "name": "fsharp/demo-fsharp",
+          "rel_path": "code/packages/fsharp/demo-fsharp"
+        },
+        {
+          "build_file": "code/programs/fsharp/demo-fsharp/BUILD",
+          "is_starlark": false,
+          "language": "fsharp",
+          "name": "fsharp/programs/demo-fsharp",
+          "rel_path": "code/programs/fsharp/demo-fsharp"
         },
         {
           "build_file": "code/programs/go/build-tool/BUILD",

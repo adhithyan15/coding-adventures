@@ -75,6 +75,8 @@ DISCOVERABLE_LANGUAGES: tuple[str, ...] = (
     "haskell",
     "java",
     "kotlin",
+    "csharp",
+    "fsharp",
 )
 
 

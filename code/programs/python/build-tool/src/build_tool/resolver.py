@@ -4,8 +4,9 @@ resolver.py -- Dependency Resolution from Package Metadata
 
 This module reads package metadata files (pyproject.toml for Python, .gemspec
 for Ruby, go.mod for Go, package.json for TypeScript, Cargo.toml for Rust,
-Package.swift for Swift) and extracts internal dependencies. It builds a
-directed graph where edges represent "A depends on B".
+Package.swift for Swift, and root project files for C# and F#) and extracts
+internal dependencies. It builds a directed graph where edges represent
+"A depends on B".
 
 Dependency mapping conventions
 ------------------------------
@@ -318,7 +319,6 @@ def _parse_go_deps(package: Package, known_names: dict[str, str]) -> list[str]:
 # ---------------------------------------------------------------------------
 # Elixir dependency parsing
 # ---------------------------------------------------------------------------
-
 def _parse_elixir_deps(package: Package, known_names: dict[str, str]) -> list[str]:
     """Extract internal dependencies from an Elixir mix.exs file."""
     mix_exs = package.path / "mix.exs"
@@ -689,7 +689,6 @@ def _parse_haskell_deps(package: Package, known_names: dict[str, str]) -> list[s
 # ---------------------------------------------------------------------------
 # Gradle (Java / Kotlin) dependency parsing
 # ---------------------------------------------------------------------------
-
 def _skip_gradle_string(source: str | list[str], index: int) -> int:
     """Return the first character after one double-quoted Kotlin string."""
     index += 1
@@ -873,6 +872,192 @@ def _parse_gradle_deps(package: Package, known_paths: dict[str, str]) -> list[st
 
 
 # ---------------------------------------------------------------------------
+# .NET (C# / F#) dependency parsing
+# ---------------------------------------------------------------------------
+
+
+def _root_dotnet_project_files(root: Path) -> list[Path]:
+    """Return only C# and F# project files directly inside a package root."""
+    try:
+        return sorted(
+            (
+                entry
+                for entry in root.iterdir()
+                if entry.is_file() and entry.suffix.lower() in {".csproj", ".fsproj"}
+            ),
+            key=lambda path: path.name.lower(),
+        )
+    except OSError:
+        return []
+
+
+def _skip_xml_markup(source: str, index: int, terminator: str) -> int:
+    relative = source.find(terminator, index)
+    if relative < 0:
+        return len(source)
+    return relative + len(terminator)
+
+
+def _is_xml_name_character(character: str) -> bool:
+    return character.isascii() and (character.isalnum() or character in ":_-.")
+
+
+def _parse_xml_start_tag(source: str, index: int) -> tuple[str | None, str, int]:
+    if (
+        index >= len(source)
+        or source[index] != "<"
+        or index + 1 >= len(source)
+        or source[index + 1] == "/"
+    ):
+        return None, "", index
+
+    name_start = index + 1
+    name_end = name_start
+    while name_end < len(source) and _is_xml_name_character(source[name_end]):
+        name_end += 1
+    if name_end == name_start:
+        return None, "", index
+
+    quote: str | None = None
+    end = name_end
+    while end < len(source):
+        character = source[end]
+        if quote is not None:
+            if character == quote:
+                quote = None
+        elif character in {"'", '"'}:
+            quote = character
+        elif character == ">":
+            return source[name_start:name_end], source[name_end:end], end + 1
+        end += 1
+    return None, "", len(source)
+
+
+def _skip_xml_whitespace(source: str, index: int) -> int:
+    while index < len(source) and source[index] in " \t\r\n":
+        index += 1
+    return index
+
+
+def _xml_literal_attribute(attributes: str, wanted: str) -> str | None:
+    index = 0
+    while index < len(attributes):
+        index = _skip_xml_whitespace(attributes, index)
+        if index >= len(attributes) or attributes[index] == "/":
+            return None
+
+        name_start = index
+        while index < len(attributes) and _is_xml_name_character(attributes[index]):
+            index += 1
+        if index == name_start:
+            index += 1
+            continue
+        name = attributes[name_start:index]
+
+        index = _skip_xml_whitespace(attributes, index)
+        if index >= len(attributes) or attributes[index] != "=":
+            continue
+        index = _skip_xml_whitespace(attributes, index + 1)
+        if index >= len(attributes) or attributes[index] not in {"'", '"'}:
+            continue
+
+        quote = attributes[index]
+        value_start = index + 1
+        index = value_start
+        while index < len(attributes) and attributes[index] != quote:
+            index += 1
+        if index >= len(attributes):
+            return None
+        value = attributes[value_start:index]
+        index += 1
+        if name == wanted:
+            return value
+    return None
+
+
+def _dotnet_project_reference_includes(source: str) -> list[str]:
+    """Read literal Include attributes from unqualified start elements."""
+    includes: list[str] = []
+    index = 0
+    while index < len(source):
+        index = source.find("<", index)
+        if index < 0:
+            break
+        if source.startswith("<!--", index):
+            index = _skip_xml_markup(source, index + 4, "-->")
+            continue
+        if source.startswith("<![CDATA[", index):
+            index = _skip_xml_markup(source, index + 9, "]]>")
+            continue
+        if source.startswith("<?", index):
+            index = _skip_xml_markup(source, index + 2, "?>")
+            continue
+        if source.startswith("<!", index):
+            index = _skip_xml_markup(source, index + 2, ">")
+            continue
+
+        name, attributes, next_index = _parse_xml_start_tag(source, index)
+        if name is None:
+            index += 1
+            continue
+        index = next_index
+        if name != "ProjectReference":
+            continue
+        include = _xml_literal_attribute(attributes, "Include")
+        if include is not None:
+            includes.append(include)
+    return includes
+
+
+def _normalized_dotnet_project_path(path: Path | str) -> str:
+    return os.path.normcase(os.path.normpath(str(path))).lower()
+
+
+def _dotnet_project_reference_path(project_file: Path, include: str) -> str | None:
+    if (
+        not include
+        or any(character in include for character in "*?#&")
+        or "$(" in include
+        or _portable_path_is_absolute(include)
+    ):
+        return None
+    portable = include.replace("/", os.sep).replace("\\", os.sep)
+    return _normalized_dotnet_project_path(project_file.parent / portable)
+
+
+def _build_known_dotnet_project_paths(
+    packages: list[Package],
+) -> dict[str, str]:
+    known: dict[str, str] = {}
+    for package in packages:
+        if not _in_dependency_scope(package.language, "dotnet"):
+            continue
+        for project_file in _root_dotnet_project_files(package.path):
+            known[_normalized_dotnet_project_path(project_file)] = package.name
+    return known
+
+
+def _parse_dotnet_deps(
+    package: Package, known_project_paths: dict[str, str]
+) -> list[str]:
+    """Resolve literal root ProjectReference paths without opening targets."""
+    dependencies: set[str] = set()
+    for project_file in _root_dotnet_project_files(package.path):
+        try:
+            source = project_file.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            continue
+        for include in _dotnet_project_reference_includes(source):
+            target = _dotnet_project_reference_path(project_file, include)
+            if target is None:
+                continue
+            dependency = known_project_paths.get(target)
+            if dependency is not None and dependency != package.name:
+                dependencies.add(dependency)
+    return sorted(dependencies)
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -904,11 +1089,15 @@ def _parse_build_tool_deps(
 
 def _dependency_scope(language: str) -> str:
     """Return the ecosystem scope used for ordinary manifest aliases."""
+    if language in {"csharp", "fsharp", "dotnet"}:
+        return "dotnet"
     return language
 
 
 def _in_dependency_scope(package_language: str, scope: str) -> bool:
     """Whether a package may contribute aliases to one resolver scope."""
+    if scope == "dotnet":
+        return package_language in {"csharp", "fsharp", "dotnet"}
     return package_language == scope
 
 
@@ -930,19 +1119,33 @@ def _build_known_names_for_language(
     """
     known: dict[str, str] = {}
     known_paths: dict[str, Path] = {}
+    known_languages: dict[str, str] = {}
     scope = _dependency_scope(language)
 
     def _set_known(key: str, value: str, pkg_path: Path) -> None:
         """Insert key→value, letting library packages overwrite programs."""
+        package_language = value.split("/", 1)[0]
         if key not in known:
             known[key] = value
             known_paths[key] = pkg_path
+            known_languages[key] = package_language
             return
         existing_is_program = "/programs/" in str(known_paths[key]).replace("\\", "/")
         current_is_program = "/programs/" in str(pkg_path).replace("\\", "/")
         if existing_is_program and not current_is_program:
             known[key] = value
             known_paths[key] = pkg_path
+            known_languages[key] = package_language
+            return
+        if not existing_is_program and current_is_program:
+            return
+        if scope == "dotnet":
+            if known_languages[key] == language:
+                return
+            if package_language == language:
+                known[key] = value
+                known_paths[key] = pkg_path
+                known_languages[key] = package_language
 
     for pkg in packages:
         if not _in_dependency_scope(pkg.language, scope):
@@ -1036,6 +1239,11 @@ def _build_known_names_for_language(
             dir_base = pkg.path.name.lower()
             _set_known(dir_base, pkg.name, pkg.path)
 
+        elif pkg.language in ("csharp", "fsharp", "dotnet"):
+            # C#, F#, and shared dotnet programs form one MSBuild scope.
+            dir_base = pkg.path.name.lower()
+            _set_known(dir_base, pkg.name, pkg.path)
+
     return known
 
 
@@ -1086,6 +1294,7 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
         language: _build_known_gradle_paths_for_language(packages, language)
         for language in ("java", "kotlin")
     }
+    known_dotnet_project_paths = _build_known_dotnet_project_paths(packages)
     known_package_names = {pkg.name for pkg in packages}
 
     # Parse dependencies for each package.
@@ -1115,6 +1324,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_gradle_deps(
                 pkg, known_gradle_paths_by_language[pkg.language]
             )
+        elif pkg.language in ("csharp", "fsharp", "dotnet"):
+            deps = _parse_dotnet_deps(pkg, known_dotnet_project_paths)
         else:
             deps = []
 

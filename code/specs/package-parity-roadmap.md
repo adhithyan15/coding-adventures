@@ -3058,6 +3058,45 @@ preserves `<language>/programs/<name>` identities, and derives CLI choices from
 the canonical registry. Canonical-CBOR lane children remain ready, but each
 advances only one dependency of the twelve-child completion umbrella.
 
+## Post-#10828 Refresh and .NET Resolver Selection
+
+External review merged ready-for-review PR #10828 as
+`399a87fff348db21258b14a6410fef6612d4ed41` after all 20 required, neutral, and
+expected skipped checks reached a terminal success state. The collision-checked
+refresh covers 15 established lanes, 1,302 normalized implementation identities,
+and 4,458 established slots. It reports 173 high-consensus identities with 269
+missing slots, 852 singletons with 11,928 missing singleton slots, 656 Rust
+singletons, zero canonical collisions, and zero unknown buckets.
+
+The sole topology addition since the prior inventory is Rust `task-mosaic-app`
+from merged PR #10859. This TaskApp-specific cdylib/rlib maps the authored MIL
+slot and event vocabulary to the separately owned pure `task-core` engine,
+uses `mosaic-app-runtime` for deterministic transactions and snapshots, and
+exports the reviewed fixed `mosaic-app-capi` ABI to generated native hosts. A
+blocked native-wrapper applicability owner now tracks complete mapping,
+rollback, stable errors, ABI symbol/lifetime/panic behavior, platform evidence,
+and missing empty capability metadata. Reusable runtime and domain semantics
+remain with their existing portable owners; fifteen application-specific ABI
+copies would not be honest parity.
+
+The dependency/leverage pass selected
+`build-tool-python-dotnet-field-aware-resolution-and-filter`. Its Haskell/JVM
+filter prerequisite is now merged, and the existing language-neutral .NET
+fixtures define one closed `ProjectReference` grammar for both established
+lanes. A single bounded standard-library tranche therefore makes 198 C# roots
+with 238 edges and 197 F# roots with 239 edges safe to discover, resolve, and
+filter while preserving package/program identities and the shared `dotnet`
+toolchain mapping. The 83-root Dart manifest family and Windows atomic plan
+replacement remain separate owners. Canonical-CBOR lane children remain ready,
+but none independently unlocks their twelve-child completion umbrella.
+
+A late pre-publication rebase moved the tranche to `7bb2b558c85`. The
+intervening Mermaid, language-ladder, ALGOL, ADJ, and final ADJ state-only
+changes, plus Vault named-target integration, modify only existing identities
+and do not overlap this work. The collision-checked counts remain exactly 1,302
+identities, 4,458 slots, 852 singletons, 11,928 singleton gaps, 656 Rust
+singletons, zero collisions, and zero unknown buckets.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

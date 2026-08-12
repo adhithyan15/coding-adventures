@@ -38,6 +38,10 @@ build-tool --language python
 build-tool --language haskell --dry-run
 build-tool --language java --dry-run
 build-tool --language kotlin --dry-run
+
+# Safely plan the field-aware .NET lanes
+build-tool --language csharp --dry-run
+build-tool --language fsharp --dry-run
 ```
 
 ## How it fits in the stack
@@ -50,9 +54,10 @@ language listed by `build-tool --help`.
 Discovery infers a language only from an exact `packages/<language>` or
 `programs/<language>` bucket. Package identities use `<language>/<name>`;
 program identities preserve their role as `<language>/programs/<name>`, so a
-package and program with the same basename never collide. Haskell, Java, and
-Kotlin are available as explicit filters because their manifest resolvers are
-field-aware.
+package and program with the same basename never collide. Haskell, Java,
+Kotlin, C#, and F# are available as explicit filters because their manifest
+resolvers are field-aware. C# and F# both request the shared `dotnet` CI
+toolchain.
 
 Lua rockspec metadata is decoded as strict UTF-8. Invalid text fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic rather than using a host locale or
@@ -77,6 +82,14 @@ the Haskell scope. Java and Kotlin resolution scans real multiline
 `includeBuild("...")` calls outside nested comments and example strings, then
 normalizes their relative paths lexically against already discovered roots in
 the same language. Referenced targets are never opened or followed.
+
+C# and F# resolution scans only `.csproj` and `.fsproj` files directly inside
+each discovered root. It accepts literal quoted `Include` attributes from
+unqualified `ProjectReference` start elements, normalizes `/` and `\` paths
+lexically, and matches exact project files already discovered in the shared
+C#/F#/dotnet scope. It does not evaluate XML entities, MSBuild properties,
+conditions, wildcards, package references, or nested test projects, and it
+never opens or follows a referenced target.
 
 ## Installation
 

@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10828,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "38ecfd9ff014d447659b37227abd44fcfc55dcc5",
+    "revision": "7bb2b558c85133d0724b1fac3c115ba76f1c4a12",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1301,
-    "implementation_package_slots": 4457,
+    "implementation_identities": 1302,
+    "implementation_package_slots": 4458,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 851,
-    "singleton_missing_slots": 11914,
-    "rust_singletons": 655,
+    "singleton_packages": 852,
+    "singleton_missing_slots": 11928,
+    "rust_singletons": 656,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -928,15 +928,18 @@
     {
       "id": "build-tool-python-haskell-language-filter",
       "title": "Expose Haskell, Java, and Kotlin in Python build-tool filtering",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-rockspec-encoding", "build-tool-python-ecosystem-scoped-alias-resolution", "build-tool-python-haskell-gradle-field-aware-resolution"],
       "branch": "codex/python-haskell-jvm-language-filter",
       "pr_number": 10828,
       "selection_revision": "a4ad42e1f71ad146af212817ef72c7154af83a9b",
       "selection_notes": "Selected after PR #10751 merged externally and the collision-clean refresh classified smart-home-controller-runtime. This bounded follow-up exposes 206 Haskell, 129 Java, and 133 Kotlin build roots only after their resolver graphs became field-aware, while also making their package/program identities follow the shared discovery contract. Canonical-CBOR lane children remain ready but none independently unlocks the twelve-child completion umbrella.",
       "implementation_revision": "f3be67ab1be17c6294f20b01b72e66732c7e1cc1",
+      "merged_head_revision": "deec18ffb68e6cb951f25478f5e481db2153361c",
+      "merged_at": "2026-08-12T02:14:46Z",
+      "merge_revision": "399a87fff348db21258b14a6410fef6612d4ed41",
       "validation_notes": "Both Python BUILD front doors pass 379 tests with 89.23% total coverage and 96% discovery coverage under Python 3.13.14; focused discovery and filter coverage passes 70 tests. The 58-case language-neutral corpus validates 243 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, trimpath build, and the strengthened discovery fixture. With real Cabal output still present and excluded, exact Python-versus-Go equality holds for 206 Haskell nodes/487 edges/3 programs, 129 Java nodes/186 edges/1 program, and 133 Kotlin nodes/166 edges/7 programs. Native GHC 9.4.8/Cabal tests pass for Haskell logic-gates (6 examples) and its arithmetic downstream (5 examples); Temurin 21.0.12 and Gradle 8.11.1 pass Java and Kotlin algol-lexer plus each algol-parser downstream. Scoped Ruff safety rules, discovery MyPy, Bandit, Go vet, state-graph, strict-JSON, credential-pattern, diff, and collision gates pass. The repository's pre-existing full Ruff debt decreases from 19 to 14 findings; the one pre-existing CLI MyPy nullable-length finding remains outside this tranche. The collision-clean report remains 1,301 identities, 4,457 slots, 851 singletons, 11,914 singleton gaps, 655 Rust singletons, zero collisions, and zero unknown buckets. Reusing an existing Windows plan filename reproduced the separately tracked atomic-overwrite owner; fresh output paths pass all real plan comparisons.",
-      "publication_notes": "Ready-for-review PR #10828 opened from f3be67ab1b. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
+      "publication_notes": "Ready-for-review PR #10828 opened from f3be67ab1b and merged externally as 399a87fff3 after all 20 required, neutral, and expected skipped checks reached terminal success with no failures.",
       "notes": "Discovered while validating the full Python build-tool scan. Haskell resolver branches exist but discovery omits the lane, while Java and Kotlin are discoverable and resolvable but absent from ALL_LANGUAGES and argparse choices. Add the focused discovery, filter, and dry-run contract only after ecosystem-scoped aliases and field-aware Cabal/Gradle resolution make default all-language planning safe."
     },
     {
@@ -960,10 +963,13 @@
     {
       "id": "build-tool-python-dotnet-field-aware-resolution-and-filter",
       "title": "Add field-aware C# and F# support to the Python build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-python-haskell-language-filter"],
-      "branch": null,
+      "branch": "codex/python-dotnet-field-aware-filter",
       "pr_number": null,
+      "selection_revision": "399a87fff348db21258b14a6410fef6612d4ed41",
+      "selection_notes": "Selected after PR #10828 merged externally, the collision-clean refresh classified task-mosaic-app, and a dependency/leverage pass compared all newly ready work. The shared .NET project-reference grammar closes 198 C# roots with 238 edges and 197 F# roots with 239 edges in one bounded standard-library tranche. Dart remains a separate 83-root manifest family; the Windows plan-overwrite fix remains a separate atomic-write owner; and no individual canonical-CBOR lane child unlocks its twelve-child completion umbrella.",
+      "validation_notes": "Both Python BUILD front doors pass 394 tests with 89.31% total coverage, 91% resolver coverage, and 96% discovery coverage under Python 3.13.14; focused discovery, resolver, CLI, and toolchain tests pass 141 tests. The 58-case language-neutral corpus validates 247 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, a trimpath build, and the expanded discovery fixture. Unique Windows plan paths avoid the separately owned atomic-overwrite debt while exact Python-versus-Go equality holds for 198 C# nodes/238 edges/1 program and 197 F# nodes/239 edges/1 program. Native .NET 9 tests pass C# logic-gates (5 tests, 100% line coverage) and arithmetic downstream (20 tests, 99%), plus F# logic-gates (5 tests, 91.17%) and arithmetic downstream (18 tests, 92.42%). Both real filter dry runs and BUILD-file validation pass. Scoped Ruff safety and unused-import checks, MyPy, Bandit, strict JSON, state-graph, credential-pattern, diff, and collision gates pass. The collision-clean report remains 1,302 identities, 4,458 slots, 852 singletons, 11,928 singleton gaps, 656 Rust singletons, zero collisions, and zero unknown buckets.",
       "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established C# and F# package roots as unknown, has no project-file resolver branch, and omits both filters even though the shared C#, F#, and cross-language .NET fixtures define authoritative project references. Consume those fixtures, preserve package/program identities and the reviewed shared dotnet toolchain mapping, compare complete graphs with Go, then expose both lanes without widening the Haskell/JVM tranche."
     },
     {
@@ -2716,6 +2722,16 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered in the collision-checked 5415ba120d inventory after merged PR #10382 added Rust mosaic-app-conformance. The crate is a cdylib/rlib fixture that exposes the real deterministic Mosaic runtime through the reviewed C ABI to Compose, Flutter, Qt, SwiftUI, and XAML conformance harnesses. Require an explicit empty capability profile plus platform evidence for dynamic-library lifecycle, opaque handles, returned buffers, snapshots, and teardown. Keep runtime semantics in the portable owner and ABI or generated-host behavior in the existing wrapper reviews; do not manufacture fifteen implementations of this native fixture."
+    },
+    {
+      "id": "task-mosaic-app-native-abi-review",
+      "title": "Review the TaskApp Mosaic application adapter applicability exception",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 399a87fff3 inventory after merged PR #10859 added Rust-only task-mosaic-app. The crate is a TaskApp-specific cdylib/rlib adapter: it maps the authored TaskApp MIL slot/event vocabulary and presentation cursor to the separately owned pure task-core engine, provides transactional no-mutation dispatch failures and versioned snapshots through mosaic-app-runtime, and exports the reviewed fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, and SwiftUI hosts. Review exact complete slot/event coverage, deterministic startup/dispatch/snapshot/restore behavior, stable payload-free errors, dynamic-library symbols and buffer/lifetime/panic containment through the existing Mosaic ABI owners, platform packaging/launch evidence, and add explicit empty capability metadata. Do not manufacture fifteen implementations of this application-specific native ABI adapter; reusable runtime semantics remain in mosaic-app-runtime, domain behavior in task-core, and host bindings in mosaic-app-bindings. This wrapper-applicability item is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-axis-pairing-service-native-authority-review",

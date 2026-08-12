@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.5] - 2026-08-12
+
+### Fixed
+
+- **Field-aware .NET resolution**: C#, F#, and shared dotnet programs now
+  resolve only literal `ProjectReference Include` paths from root project
+  files against already discovered project identities, without reading or
+  following referenced targets.
+- **Closed XML and MSBuild grammar**: comments, CDATA, processing instructions,
+  namespaces, entity-escaped attributes, properties, globs, absolute paths,
+  unknown targets, nested test projects, self-references, and duplicates cannot
+  create dependency edges.
+- **Safe C# and F# filters**: `--language csharp` and `--language fsharp` now
+  share the canonical discovery registry, preserve program identities, and map
+  to the existing `dotnet` CI toolchain.
+
 ## [0.3.4] - 2026-08-11
 
 ### Fixed
