@@ -15,8 +15,8 @@
 use chief_of_staff_tool_api::{
     InMemoryToolRuntime, JsonSchema, PrivilegeTier as ToolPrivilegeTier, SchemaProperty,
     ToolApiError, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind,
-    ToolExecutionContext, ToolHandlerOutput, ToolIdempotency, ToolSideEffects, ToolStability,
-    ToolStreaming,
+    ToolExecutionContext, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolResult,
+    ToolSideEffects, ToolStability, ToolStreaming,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_controller_runtime::{
@@ -891,6 +891,18 @@ impl<B: StorageBackend + 'static> SmartHomeToolBridge<B> {
             tool_runtime.register_handler(definition, handler)?;
         }
         Ok(())
+    }
+
+    /// Execute one request through a freshly registered D18D runtime.
+    ///
+    /// The bridge and central controller remain thread-safe; the short-lived
+    /// registry is only a validation, policy, event, and terminal-result shell.
+    pub fn invoke(&self, request: &ToolInvocationRequest) -> Result<ToolResult, ToolApiError> {
+        let mut runtime = InMemoryToolRuntime::new();
+        let definition = smart_home_tool_definition(&request.tool_id)
+            .ok_or_else(|| ToolApiError::UnknownTool(request.tool_id.clone()))?;
+        runtime.register_handler(definition, self.handler_for(&request.tool_id))?;
+        Ok(runtime.invoke(request))
     }
 
     fn handler_for(

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add an injected manifest-blind model-tool dispatcher, require the entire
+  offered catalog to equal its installed catalog, and carry exact structured
+  D18D execution results back to the authenticated child.
 - Carry bounded tool-aware completion turns through exact-model authorization,
   adapt declarations and prior results to `llm-gateway`, and retain structured
   calls, provider identity, usage, finish reason, latency, and polyfill evidence.

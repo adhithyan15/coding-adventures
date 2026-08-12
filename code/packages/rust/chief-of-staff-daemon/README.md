@@ -35,6 +35,11 @@ receive fresh UUID-v7 identities plus process-monotonic timestamps. Startup does
 not probe model endpoints. An absent or empty table preserves the fail-closed
 unavailable service for existing control-plane-only deployments.
 
+When an Ollama model is configured, the daemon also restores the central durable
+smart-home controller and injects a bounded core `smart_home.*` D18D catalog.
+Model-offered definitions must match that catalog exactly; returned calls run
+through D18D with the authenticated host identity and return structured results.
+
 The exported production data-plane composition boundary is also used by the real
 Level 1 host integration test. That test supplies owner-only key files and a
 loopback Ollama fixture, then proves encrypted receive, completion, encrypted

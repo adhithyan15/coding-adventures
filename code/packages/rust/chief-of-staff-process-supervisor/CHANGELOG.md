@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Carry a model-returned call through a separate authenticated D18D execution
+  exchange and prove the sixth data-plane operation over the real child pipe.
 - Carry tool-aware completion turns through the child stream helper and prove the
   fifth authenticated data-plane operation over a real signed-package child pipe.
 - Surface an authenticated `Terminate` received during a child data-plane

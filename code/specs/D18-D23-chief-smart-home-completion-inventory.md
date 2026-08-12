@@ -1969,6 +1969,23 @@ without allowing the model gateway to authorize or execute D18D calls:
 - D18D dispatch and production daemon injection remain separate ownership steps
   below.
 
+## Current Chief Host D18D Dispatch Slice
+
+This slice composes the provider-neutral host contract with the central durable
+smart-home authority:
+
+- The authenticated host protocol carries a model-returned call through a
+  distinct execute-tool request and returns the exact structured result.
+- The authority-backed data plane requires the whole offered catalog to equal
+  its injected dispatcher catalog, then invokes D18D outside the model gateway.
+- The process supervisor carries the sixth authenticated operation over the
+  real cross-platform child pipe.
+- The production daemon restores the central `SmartHomeControllerRuntime`,
+  injects a bounded ten-tool `smart_home.*` catalog, and dispatches each call
+  through the existing D18D `SmartHomeToolBridge`.
+- D23 remains the source of truth for authorization, state, commands, pairing,
+  supervision, durable revisions, and audit evidence.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1978,14 +1995,10 @@ The reusable central owner, discovery service transaction migration,
 production Hue mDNS composition, and Hue, ONVIF, Axis, ZoneMinder, Synology,
 and Reolink pairing migrations are complete. The remaining central-composition
 backlog takes priority over adding another isolated integration or Chief read
-model. The thread-safe Chief controller adapter is now complete:
+model. The thread-safe Chief controller adapter, exact host catalog, D18D
+dispatcher, and production daemon injection are now complete:
 
-1. Resolve the offered tool catalog from the exact host profile, dispatch returned
-   calls through the existing profile-gated D18D runtime, and feed structured
-   results into the next authenticated model turn.
-2. Inject that composed catalog/runtime and the central smart-home controller into
-   the production Chief daemon.
-3. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+1. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those

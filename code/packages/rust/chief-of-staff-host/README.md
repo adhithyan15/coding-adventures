@@ -22,8 +22,9 @@ input acknowledgement unchanged when processing did not finish.
 The child-side `LlmClient` also carries provider-neutral tool-aware turns over a
 distinct authenticated operation. Complete offered definitions, selection policy,
 and prior call/result pairs cross the session, and structured final-text/tool-call
-responses retain provider and polyfill audit fields. The model-emitted call is not
-executed by this adapter; D18D policy and execution remain parent-side work.
+responses retain provider and polyfill audit fields. The model-emitted call is
+never executed by this adapter; it returns across the authenticated session for
+parent-owned D18D policy and execution.
 
 The production integration gate launches this executable with durable pipeline
 bindings, provisions its exact channel keys from owner-only files, sends its model

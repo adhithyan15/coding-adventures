@@ -15,9 +15,12 @@ use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFile
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
+use chief_of_staff_host_control_protocol::{
+    DataPlaneFailure, ModelToolCall, ModelToolDefinition, ModelToolResult,
+};
 use chief_of_staff_host_data_plane::{
     AuthorityBackedHostDataPlaneService, DurableHostDataPlaneDispatcher, HostDataPlaneDispatcher,
-    HostDataPlaneService, UnavailableHostDataPlaneService,
+    HostDataPlaneService, ModelToolDispatcher, UnavailableHostDataPlaneService,
 };
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
@@ -25,9 +28,21 @@ use chief_of_staff_process_supervisor::{
     ProcessSupervisorError, SystemMonotonicClock, UuidV7SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{ConfigError as ReconcileConfigError, ReconcileConfig};
+use chief_of_staff_smart_home_tools::{
+    smart_home_tool_definition, SmartHomeToolBridge, SMART_HOME_COMMAND_TOOL_ID,
+    SMART_HOME_COMPLETE_PAIRING_TOOL_ID, SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID,
+    SMART_HOME_DISCOVER_TOOL_ID, SMART_HOME_GET_HEALTH_TOOL_ID, SMART_HOME_GET_STATE_TOOL_ID,
+    SMART_HOME_LIST_BRIDGES_TOOL_ID, SMART_HOME_LIST_DEVICES_TOOL_ID,
+    SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID, SMART_HOME_PAIR_BRIDGE_TOOL_ID,
+};
+use chief_of_staff_tool_api::{RequestedBy, ToolInvocationRequest};
+use coding_adventures_json_serializer::serialize as serialize_json;
+use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_x3dh::generate_identity_keypair;
 use process_shutdown::{ShutdownError, ShutdownListener};
+use smart_home_controller_runtime::{ControllerRestoreError, SmartHomeControllerRuntime};
+use smart_home_core::AgentId as SmartHomeAgentId;
 use std::env;
 use std::ffi::OsString;
 use std::fmt::{self, Display, Formatter};
@@ -67,6 +82,8 @@ pub enum ChiefDaemonError {
     Keyring(KeyringLoadError),
     /// Explicit channel-key or model-provider authority provisioning failed.
     Authority(AuthorityProvisioningError),
+    /// The central smart-home controller could not restore its durable state.
+    SmartHome(ControllerRestoreError),
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -104,6 +121,7 @@ impl Display for ChiefDaemonError {
             Self::Config(_) => "chief daemon: config validation failed",
             Self::Keyring(_) => "chief daemon: package keyring failed",
             Self::Authority(_) => "chief daemon: data-plane authority provisioning failed",
+            Self::SmartHome(_) => "chief daemon: smart-home controller restore failed",
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
@@ -322,12 +340,126 @@ fn compose_data_plane_service(
     let authorities =
         provision_authorities(config.data_plane(), home).map_err(ChiefDaemonError::Authority)?;
     let (channel_keys, models) = authorities.into_parts();
-    Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
-        backend,
-        Arc::new(channel_keys),
-        Arc::new(models),
-        metadata_source,
-    )))
+    if config.data_plane().ollama_models().is_empty() {
+        return Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
+            backend,
+            Arc::new(channel_keys),
+            Arc::new(models),
+            metadata_source,
+        )));
+    }
+    let state_dir = config
+        .orchestrator()
+        .state_dir()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let controller = SmartHomeControllerRuntime::restore(FsStorageBackend::new(state_dir))
+        .map_err(ChiefDaemonError::SmartHome)?;
+    let bridge = SmartHomeToolBridge::new(
+        controller,
+        SmartHomeAgentId::trusted("chief-daemon-model-tools"),
+    );
+    Ok(Arc::new(
+        AuthorityBackedHostDataPlaneService::with_model_tools(
+            backend,
+            Arc::new(channel_keys),
+            Arc::new(models),
+            Arc::new(D18dSmartHomeModelTools { bridge }),
+            metadata_source,
+        ),
+    ))
+}
+
+const PRODUCTION_SMART_HOME_MODEL_TOOLS: &[&str] = &[
+    SMART_HOME_LIST_BRIDGES_TOOL_ID,
+    SMART_HOME_DISCOVER_TOOL_ID,
+    SMART_HOME_LIST_DEVICES_TOOL_ID,
+    SMART_HOME_GET_STATE_TOOL_ID,
+    SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID,
+    SMART_HOME_GET_HEALTH_TOOL_ID,
+    SMART_HOME_COMMAND_TOOL_ID,
+    SMART_HOME_PAIR_BRIDGE_TOOL_ID,
+    SMART_HOME_COMPLETE_PAIRING_TOOL_ID,
+    SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
+];
+
+struct D18dSmartHomeModelTools<B> {
+    bridge: SmartHomeToolBridge<B>,
+}
+
+impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTools<B> {
+    fn definitions(
+        &self,
+        _binding: &chief_of_staff_pipeline_bindings::HostPipelineBinding,
+    ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+        PRODUCTION_SMART_HOME_MODEL_TOOLS
+            .iter()
+            .map(|tool_id| {
+                let definition =
+                    smart_home_tool_definition(tool_id).ok_or(DataPlaneFailure::Internal)?;
+                let input_schema_json = serialize_json(&definition.input_json_schema())
+                    .map_err(|_| DataPlaneFailure::Internal)?;
+                Ok(ModelToolDefinition {
+                    name: definition.tool_id,
+                    description: definition.description,
+                    input_schema: serde_json::from_str(&input_schema_json)
+                        .map_err(|_| DataPlaneFailure::Internal)?,
+                })
+            })
+            .collect()
+    }
+
+    fn execute(
+        &self,
+        binding: &chief_of_staff_pipeline_bindings::HostPipelineBinding,
+        call: &ModelToolCall,
+    ) -> Result<ModelToolResult, DataPlaneFailure> {
+        if !PRODUCTION_SMART_HOME_MODEL_TOOLS.contains(&call.name.as_str()) {
+            return Err(DataPlaneFailure::Unauthorized);
+        }
+        let arguments_json =
+            serde_json::to_string(&call.arguments).map_err(|_| DataPlaneFailure::InvalidRequest)?;
+        let arguments =
+            parse_json(&arguments_json).map_err(|_| DataPlaneFailure::InvalidRequest)?;
+        let result = self
+            .bridge
+            .invoke(&ToolInvocationRequest {
+                call_id: call.call_id.clone(),
+                tool_id: call.name.clone(),
+                arguments,
+                requested_by: RequestedBy::Agent,
+                session_id: None,
+                job_id: None,
+                agent_id: Some(binding.registration().host_name().as_str().to_string()),
+                user_id: None,
+                requested_at: 0,
+                deadline_at: None,
+                idempotency_key: None,
+            })
+            .map_err(|_| DataPlaneFailure::Internal)?;
+        let (output, is_error) = if result.ok {
+            (result.output.unwrap_or(JsonValue::Null), false)
+        } else {
+            let error = result.error.ok_or(DataPlaneFailure::Internal)?;
+            (
+                JsonValue::Object(vec![
+                    (
+                        "kind".to_string(),
+                        JsonValue::String(error.kind.to_string()),
+                    ),
+                    ("message".to_string(), JsonValue::String(error.message)),
+                    ("details".to_string(), error.details),
+                ]),
+                true,
+            )
+        };
+        let output_json = serialize_json(&output).map_err(|_| DataPlaneFailure::Internal)?;
+        Ok(ModelToolResult {
+            call: call.clone(),
+            output: serde_json::from_str(&output_json).map_err(|_| DataPlaneFailure::Internal)?,
+            is_error,
+        })
+    }
 }
 
 struct SystemMessageMetadataSource {
@@ -510,6 +642,10 @@ fn same_file(left: &Metadata, right: &Metadata) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chief_of_staff_channel_endpoints::AgentId as ChannelAgentId;
+    use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
+    use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
+    use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
     use std::sync::atomic::{AtomicU64, Ordering};
     use storage_core::InMemoryStorageBackend;
 
@@ -655,6 +791,57 @@ hardware_key_timeout = 60
         assert_eq!(first.message_id.as_bytes()[6] >> 4, 7);
         assert_eq!(first.message_id.as_bytes()[8] & 0xc0, 0x80);
         assert!(second.timestamp_ns >= first.timestamp_ns);
+    }
+
+    #[test]
+    fn production_model_catalog_dispatches_through_smart_home_d18d_bridge() {
+        let backend = InMemoryStorageBackend::new();
+        let controller = SmartHomeControllerRuntime::restore(backend).unwrap();
+        let tools = D18dSmartHomeModelTools {
+            bridge: SmartHomeToolBridge::new(
+                controller,
+                SmartHomeAgentId::trusted("chief-daemon-model-tools"),
+            ),
+        };
+        let mut pipeline_id = [0; 16];
+        pipeline_id[6] = 0x70;
+        pipeline_id[8] = 0x80;
+        let binding = HostPipelineBinding::new(
+            PipelineId::new(pipeline_id).unwrap(),
+            HostRegistration::new(
+                HostName::new("home-host").unwrap(),
+                PackagePath::new("/srv/home.agent").unwrap(),
+                [7; 32],
+                RestartPolicy::Always,
+            ),
+            ChannelAgentId::new(b"home-agent".to_vec()).unwrap(),
+            LaunchBindings::new(
+                Vec::new(),
+                Some(LevelOneModelBinding::new("test-model", 0.0, 128).unwrap()),
+            )
+            .unwrap(),
+        );
+        let definitions = tools.definitions(&binding).unwrap();
+        assert_eq!(definitions.len(), PRODUCTION_SMART_HOME_MODEL_TOOLS.len());
+        assert!(definitions
+            .iter()
+            .any(|definition| definition.name == SMART_HOME_GET_HEALTH_TOOL_ID));
+
+        let call = ModelToolCall {
+            call_id: "call-1".to_string(),
+            name: SMART_HOME_GET_HEALTH_TOOL_ID.to_string(),
+            arguments: serde_json::json!({}),
+        };
+        let result = tools.execute(&binding, &call).unwrap();
+        assert_eq!(result.call, call);
+        assert!(result.output.is_object());
+
+        let mut unknown = call;
+        unknown.name = "smart_home.uninstalled".to_string();
+        assert_eq!(
+            tools.execute(&binding, &unknown),
+            Err(DataPlaneFailure::Unauthorized)
+        );
     }
 
     #[test]

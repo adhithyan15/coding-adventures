@@ -9,12 +9,14 @@ pub(crate) const PUBLISH_REQUEST_TAG: u8 = 11;
 pub(crate) const ACKNOWLEDGE_REQUEST_TAG: u8 = 12;
 pub(crate) const COMPLETE_REQUEST_TAG: u8 = 13;
 pub(crate) const COMPLETE_WITH_TOOLS_REQUEST_TAG: u8 = 14;
+pub(crate) const EXECUTE_TOOL_REQUEST_TAG: u8 = 15;
 pub(crate) const RECEIVED_RESPONSE_TAG: u8 = 20;
 pub(crate) const PUBLISHED_RESPONSE_TAG: u8 = 21;
 pub(crate) const ACKNOWLEDGED_RESPONSE_TAG: u8 = 22;
 pub(crate) const COMPLETED_RESPONSE_TAG: u8 = 23;
 pub(crate) const FAILED_RESPONSE_TAG: u8 = 24;
 pub(crate) const TOOL_COMPLETED_RESPONSE_TAG: u8 = 25;
+pub(crate) const TOOL_EXECUTED_RESPONSE_TAG: u8 = 26;
 
 /// Maximum plaintext bytes in one data-plane body before the six-byte control header.
 pub const MAX_DATA_PLANE_RECORD_BYTES: usize = 768 * 1024;
@@ -78,6 +80,8 @@ pub enum DataPlaneOperation {
     Complete,
     /// Execute one provider-neutral tool-aware LLM completion turn.
     CompleteWithTools,
+    /// Execute one model-returned call through the parent-owned D18D runtime.
+    ExecuteTool,
 }
 
 /// Text-only role accepted by the first production Level 1 data plane.
@@ -209,7 +213,7 @@ pub struct ModelToolCall {
 }
 
 /// One complete prior tool call and its structured result.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ModelToolResult {
     /// Complete preceding model call, retained for replay.
     pub call: ModelToolCall,
@@ -338,6 +342,13 @@ pub enum DataPlaneRequest {
         /// Validated tool-aware completion input.
         call: Box<ToolCompletionCall>,
     },
+    /// Execute one model-returned call through the parent-owned D18D runtime.
+    ExecuteTool {
+        /// Correlation identity.
+        id: RequestId,
+        /// Exact call previously returned by the model provider.
+        call: Box<ModelToolCall>,
+    },
 }
 
 impl DataPlaneRequest {
@@ -348,7 +359,8 @@ impl DataPlaneRequest {
             | Self::Publish { id, .. }
             | Self::Acknowledge { id, .. }
             | Self::Complete { id, .. }
-            | Self::CompleteWithTools { id, .. } => *id,
+            | Self::CompleteWithTools { id, .. }
+            | Self::ExecuteTool { id, .. } => *id,
         }
     }
 
@@ -360,6 +372,7 @@ impl DataPlaneRequest {
             Self::Acknowledge { .. } => DataPlaneOperation::Acknowledge,
             Self::Complete { .. } => DataPlaneOperation::Complete,
             Self::CompleteWithTools { .. } => DataPlaneOperation::CompleteWithTools,
+            Self::ExecuteTool { .. } => DataPlaneOperation::ExecuteTool,
         }
     }
 }
@@ -406,6 +419,13 @@ pub enum DataPlaneResponse {
         /// Tool-aware output and provider audit identity.
         result: Box<ToolCompletionResult>,
     },
+    /// Terminal D18D execution result for one model-returned call.
+    ToolExecuted {
+        /// Correlation identity.
+        id: RequestId,
+        /// Structured result paired to the exact requested call.
+        result: Box<ModelToolResult>,
+    },
     /// Redacted operation failure.
     Failed {
         /// Correlation identity.
@@ -433,6 +453,7 @@ impl DataPlaneResponse {
             | Self::Acknowledged { id, .. }
             | Self::Completed { id, .. }
             | Self::ToolCompleted { id, .. }
+            | Self::ToolExecuted { id, .. }
             | Self::Failed { id, .. } => *id,
         }
     }
@@ -445,6 +466,7 @@ impl DataPlaneResponse {
             Self::Acknowledged { .. } => Some(DataPlaneOperation::Acknowledge),
             Self::Completed { .. } => Some(DataPlaneOperation::Complete),
             Self::ToolCompleted { .. } => Some(DataPlaneOperation::CompleteWithTools),
+            Self::ToolExecuted { .. } => Some(DataPlaneOperation::ExecuteTool),
             Self::Failed { .. } => None,
         }
     }
@@ -506,6 +528,10 @@ pub(crate) fn encode(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError>
                     encode_tool_completion_call(&mut encoder, call)?;
                     COMPLETE_WITH_TOOLS_REQUEST_TAG
                 }
+                DataPlaneRequest::ExecuteTool { call, .. } => {
+                    encode_model_tool_call(&mut encoder, call)?;
+                    EXECUTE_TOOL_REQUEST_TAG
+                }
             }
         }
         DataRecord::Response(response) => {
@@ -545,6 +571,10 @@ pub(crate) fn encode(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError>
                 DataPlaneResponse::ToolCompleted { result, .. } => {
                     encode_tool_completion_result(&mut encoder, result)?;
                     TOOL_COMPLETED_RESPONSE_TAG
+                }
+                DataPlaneResponse::ToolExecuted { result, .. } => {
+                    encode_model_tool_result(&mut encoder, result)?;
+                    TOOL_EXECUTED_RESPONSE_TAG
                 }
                 DataPlaneResponse::Failed { failure, .. } => {
                     encoder.u8(encode_failure(*failure));
@@ -598,6 +628,10 @@ pub(crate) fn decode(tag: u8, body: &[u8]) -> Result<DataRecord, ControlError> {
                 call: Box::new(decode_tool_completion_call(&mut decoder)?),
             })
         }
+        EXECUTE_TOOL_REQUEST_TAG => DataRecord::Request(DataPlaneRequest::ExecuteTool {
+            id,
+            call: Box::new(decode_model_tool_call(&mut decoder)?),
+        }),
         RECEIVED_RESPONSE_TAG => {
             let count = decoder.u16()? as usize;
             if count > MAX_DATA_PLANE_MESSAGES {
@@ -626,6 +660,10 @@ pub(crate) fn decode(tag: u8, body: &[u8]) -> Result<DataRecord, ControlError> {
         TOOL_COMPLETED_RESPONSE_TAG => DataRecord::Response(DataPlaneResponse::ToolCompleted {
             id,
             result: Box::new(decode_tool_completion_result(&mut decoder)?),
+        }),
+        TOOL_EXECUTED_RESPONSE_TAG => DataRecord::Response(DataPlaneResponse::ToolExecuted {
+            id,
+            result: Box::new(decode_model_tool_result(&mut decoder)?),
         }),
         FAILED_RESPONSE_TAG => DataRecord::Response(DataPlaneResponse::Failed {
             id,
@@ -851,9 +889,7 @@ fn encode_tool_completion_call(
         if !names.contains(result.call.name.as_str()) {
             return Err(ControlError::InvalidDataPlaneRecord);
         }
-        encode_model_tool_call(encoder, &result.call)?;
-        encoder.json(&result.output, false)?;
-        encoder.boolean(result.is_error);
+        encode_model_tool_result(encoder, result)?;
         encoder.ensure_record_bound()?;
     }
     Ok(())
@@ -907,11 +943,9 @@ fn decode_tool_completion_call(
         if !names.contains(&call.name) {
             return Err(ControlError::InvalidDataPlaneRecord);
         }
-        results.push(ModelToolResult {
-            call,
-            output: decoder.json(false)?,
-            is_error: decoder.boolean()?,
-        });
+        let result = decode_model_tool_result_after_call(decoder, call)?;
+        debug_assert!(names.contains(&result.call.name));
+        results.push(result);
     }
     Ok(ToolCompletionCall {
         completion,
@@ -993,6 +1027,32 @@ fn encode_model_tool_call(encoder: &mut Encoder, call: &ModelToolCall) -> Result
     encoder.string(&call.call_id)?;
     encoder.string(&call.name)?;
     encoder.json(&call.arguments, true)
+}
+
+fn encode_model_tool_result(
+    encoder: &mut Encoder,
+    result: &ModelToolResult,
+) -> Result<(), ControlError> {
+    encode_model_tool_call(encoder, &result.call)?;
+    encoder.json(&result.output, false)?;
+    encoder.boolean(result.is_error);
+    Ok(())
+}
+
+fn decode_model_tool_result(decoder: &mut Decoder<'_>) -> Result<ModelToolResult, ControlError> {
+    let call = decode_model_tool_call(decoder)?;
+    decode_model_tool_result_after_call(decoder, call)
+}
+
+fn decode_model_tool_result_after_call(
+    decoder: &mut Decoder<'_>,
+    call: ModelToolCall,
+) -> Result<ModelToolResult, ControlError> {
+    Ok(ModelToolResult {
+        call,
+        output: decoder.json(false)?,
+        is_error: decoder.boolean()?,
+    })
 }
 
 fn decode_model_tool_call(decoder: &mut Decoder<'_>) -> Result<ModelToolCall, ControlError> {

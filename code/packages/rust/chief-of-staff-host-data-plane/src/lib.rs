@@ -84,6 +84,43 @@ impl HostDataPlaneService for UnavailableHostDataPlaneService {
     }
 }
 
+/// D18D catalog and execution authority injected into the authenticated model boundary.
+pub trait ModelToolDispatcher: Send + Sync {
+    /// Return the definitions this exact durable host binding may offer to a model.
+    fn definitions(
+        &self,
+        binding: &HostPipelineBinding,
+    ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure>;
+
+    /// Execute one model-returned call through the canonical D18D runtime.
+    fn execute(
+        &self,
+        binding: &HostPipelineBinding,
+        call: &ModelToolCall,
+    ) -> Result<ModelToolResult, DataPlaneFailure>;
+}
+
+/// Fail-closed tool authority used when the daemon installed no D18D catalog.
+#[derive(Default)]
+pub struct UnavailableModelToolDispatcher;
+
+impl ModelToolDispatcher for UnavailableModelToolDispatcher {
+    fn definitions(
+        &self,
+        _binding: &HostPipelineBinding,
+    ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+        Err(DataPlaneFailure::Unavailable)
+    }
+
+    fn execute(
+        &self,
+        _binding: &HostPipelineBinding,
+        _call: &ModelToolCall,
+    ) -> Result<ModelToolResult, DataPlaneFailure> {
+        Err(DataPlaneFailure::Unavailable)
+    }
+}
+
 /// Stable channel-key lookup failure supplied by an isolated custody adapter.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ChannelKeyAuthorityError {
@@ -406,6 +443,7 @@ pub struct AuthorityBackedHostDataPlaneService {
     backend: Arc<dyn StorageBackend>,
     key_authority: Arc<dyn ChannelKeyAuthority>,
     model_authority: Arc<dyn ModelProviderAuthority>,
+    model_tools: Arc<dyn ModelToolDispatcher>,
     metadata_source: Arc<dyn MessageMetadataSource>,
     deliveries: Mutex<BTreeMap<DeliveryKey, Sequence>>,
 }
@@ -422,6 +460,25 @@ impl AuthorityBackedHostDataPlaneService {
             backend,
             key_authority,
             model_authority,
+            model_tools: Arc::new(UnavailableModelToolDispatcher),
+            metadata_source,
+            deliveries: Mutex::new(BTreeMap::new()),
+        }
+    }
+
+    /// Compose the data plane with an explicit D18D catalog and execution authority.
+    pub fn with_model_tools(
+        backend: Arc<dyn StorageBackend>,
+        key_authority: Arc<dyn ChannelKeyAuthority>,
+        model_authority: Arc<dyn ModelProviderAuthority>,
+        model_tools: Arc<dyn ModelToolDispatcher>,
+        metadata_source: Arc<dyn MessageMetadataSource>,
+    ) -> Self {
+        Self {
+            backend,
+            key_authority,
+            model_authority,
+            model_tools,
             metadata_source,
             deliveries: Mutex::new(BTreeMap::new()),
         }
@@ -634,6 +691,10 @@ impl AuthorityBackedHostDataPlaneService {
             .model_authority
             .resolve(binding, &call.completion.model)
             .map_err(|_| DataPlaneFailure::Unavailable)?;
+        let installed = self.model_tools.definitions(binding)?;
+        if call.tools != installed {
+            return Err(DataPlaneFailure::Unauthorized);
+        }
         let response = provider
             .complete_with_tools(GatewayToolCompletionRequest {
                 completion: gateway_completion_request(&call.completion),
@@ -682,6 +743,22 @@ impl AuthorityBackedHostDataPlaneService {
                 latency_ms: response.latency_ms,
                 polyfill_used: response.polyfill_used,
             }),
+        })
+    }
+
+    fn execute_tool(
+        &self,
+        binding: &HostPipelineBinding,
+        id: chief_of_staff_host_control_protocol::RequestId,
+        call: &ModelToolCall,
+    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
+        let result = self.model_tools.execute(binding, call)?;
+        if result.call != *call {
+            return Err(DataPlaneFailure::Internal);
+        }
+        Ok(DataPlaneResponse::ToolExecuted {
+            id,
+            result: Box::new(result),
         })
     }
 }
@@ -797,11 +874,13 @@ impl HostDataPlaneService for AuthorityBackedHostDataPlaneService {
             DataPlaneRequest::CompleteWithTools { id, call } => {
                 self.complete_with_tools(binding, *id, call)
             }
+            DataPlaneRequest::ExecuteTool { id, call } => self.execute_tool(binding, *id, call),
         }?;
         validate_data_plane_response(&response).map_err(|_| match request {
             DataPlaneRequest::Complete { .. } | DataPlaneRequest::CompleteWithTools { .. } => {
                 DataPlaneFailure::Completion
             }
+            DataPlaneRequest::ExecuteTool { .. } => DataPlaneFailure::Internal,
             _ => DataPlaneFailure::Channel,
         })?;
         Ok(response)
@@ -919,6 +998,9 @@ fn request_is_authorized(binding: &HostPipelineBinding, request: &DataPlaneReque
                     && model.temperature().to_bits() == call.completion.temperature.to_bits()
                     && Some(model.max_tokens()) == call.completion.max_tokens
             }),
+        DataPlaneRequest::ExecuteTool { .. } => {
+            binding.launch_bindings().level_one_model().is_some()
+        }
     }
 }
 
@@ -1247,6 +1329,10 @@ mod tests {
                 DataPlaneRequest::CompleteWithTools { id, .. } => DataPlaneResponse::Failed {
                     id: *id,
                     failure: DataPlaneFailure::Completion,
+                },
+                DataPlaneRequest::ExecuteTool { id, .. } => DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Internal,
                 },
             })
         }
@@ -1578,6 +1664,31 @@ mod tests {
         ));
     }
 
+    struct FixtureModelTools {
+        definitions: Vec<ModelToolDefinition>,
+    }
+
+    impl ModelToolDispatcher for FixtureModelTools {
+        fn definitions(
+            &self,
+            _binding: &HostPipelineBinding,
+        ) -> Result<Vec<ModelToolDefinition>, DataPlaneFailure> {
+            Ok(self.definitions.clone())
+        }
+
+        fn execute(
+            &self,
+            _binding: &HostPipelineBinding,
+            call: &ModelToolCall,
+        ) -> Result<ModelToolResult, DataPlaneFailure> {
+            Ok(ModelToolResult {
+                call: call.clone(),
+                output: serde_json::json!({"healthy": true}),
+                is_error: false,
+            })
+        }
+    }
+
     #[test]
     fn authority_backed_service_executes_real_encrypted_turn() {
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
@@ -1645,10 +1756,14 @@ mod tests {
                 ),
             )
             .unwrap();
-        let service = AuthorityBackedHostDataPlaneService::new(
+        let installed_tools = tool_call.tools.clone();
+        let service = AuthorityBackedHostDataPlaneService::with_model_tools(
             Arc::clone(&backend),
             Arc::new(exact_keys(&binding)),
             Arc::new(models),
+            Arc::new(FixtureModelTools {
+                definitions: installed_tools,
+            }),
             Arc::new(FixedMetadata {
                 message_id: uuid_v7(5),
                 timestamp_ns: 11,
@@ -1689,7 +1804,7 @@ mod tests {
                 &binding,
                 &DataPlaneRequest::CompleteWithTools {
                     id: request_id(6),
-                    call: Box::new(tool_call),
+                    call: Box::new(tool_call.clone()),
                 },
             )
             .unwrap();
@@ -1709,6 +1824,39 @@ mod tests {
                 name: "smart_home.list_entities".to_string(),
                 arguments: serde_json::json!({}),
             })
+        );
+
+        let ToolCompletionOutput::ToolCall(model_call) = tool_result.output.clone() else {
+            unreachable!();
+        };
+        let executed = service
+            .execute(
+                &binding,
+                &DataPlaneRequest::ExecuteTool {
+                    id: request_id(7),
+                    call: Box::new(model_call.clone()),
+                },
+            )
+            .unwrap();
+        assert!(matches!(
+            executed,
+            DataPlaneResponse::ToolExecuted { result, .. }
+                if result.call == model_call
+                    && result.output == serde_json::json!({"healthy": true})
+                    && !result.is_error
+        ));
+
+        let mut altered_catalog = tool_call;
+        altered_catalog.tools[0].description = "Escalated definition".to_string();
+        assert_eq!(
+            service.execute(
+                &binding,
+                &DataPlaneRequest::CompleteWithTools {
+                    id: request_id(8),
+                    call: Box::new(altered_catalog),
+                },
+            ),
+            Err(DataPlaneFailure::Unauthorized)
         );
 
         let published = service

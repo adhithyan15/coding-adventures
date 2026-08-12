@@ -375,10 +375,6 @@ impl HostDataPlaneDispatcher for ScriptedDataPlane {
                     }),
                 }
             }
-            DataPlaneRequest::CompleteWithTools { id, .. } => DataPlaneResponse::Failed {
-                id: *id,
-                failure: DataPlaneFailure::Unavailable,
-            },
             DataPlaneRequest::Publish {
                 id,
                 channel_id,
@@ -409,6 +405,11 @@ impl HostDataPlaneDispatcher for ScriptedDataPlane {
                     sequence: 7,
                 }
             }
+            DataPlaneRequest::CompleteWithTools { id, .. }
+            | DataPlaneRequest::ExecuteTool { id, .. } => DataPlaneResponse::Failed {
+                id: *id,
+                failure: DataPlaneFailure::Unavailable,
+            },
         }
     }
 }
