@@ -1803,6 +1803,23 @@ fn emit_qml_tree(
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
+        if let Some(line) = build_text_accessible_name_attribute(node) {
+            writeln!(out, "{pad}    {line}").unwrap();
+        }
+        match find_keyword_prop(node, "a11y-role") {
+            Some("heading") => {
+                writeln!(out, "{pad}    Accessible.role: Accessible.Heading").unwrap();
+            }
+            Some("none") => {
+                writeln!(out, "{pad}    Accessible.ignored: true").unwrap();
+            }
+            _ => {}
+        }
+        if matches!(find_keyword_prop(node, "a11y-hidden"), Some("true"))
+            && !matches!(find_keyword_prop(node, "a11y-role"), Some("none"))
+        {
+            writeln!(out, "{pad}    Accessible.ignored: true").unwrap();
+        }
     }
 
     // Image primitive: emit a `source: ...` line.
@@ -2759,6 +2776,21 @@ fn build_text_attribute(node: &LayoutNode) -> Option<String> {
         // this branch used to emit before §3.4 made scope rules explicit.
         LayoutPropValue::Expr(text) => format!("text: {text}"),
     })
+}
+
+fn build_text_accessible_name_attribute(node: &LayoutNode) -> Option<String> {
+    let prop = node.props.iter().find(|p| p.name == "a11y-label")?;
+    match &prop.value {
+        LayoutPropValue::String(label) => Some(format!(
+            "Accessible.name: \"{}\"",
+            escape_qml_string(label)
+        )),
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            is_safe_identifier(&camel).then(|| format!("Accessible.name: {camel}"))
+        }
+        _ => None,
+    }
 }
 
 /// Build the `source: ...` attribute for an Image primitive, if a `source`
@@ -5992,6 +6024,52 @@ mod tests {
             "missing escaped string literal in:\n{}",
             result.output
         );
+    }
+
+    #[test]
+    fn text_accessibility_metadata_lowers_to_qml_accessible_properties() {
+        let m = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "Title".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Visible title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::SlotRef("spoken-title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-role".to_string(),
+                        value: LayoutPropValue::Keyword("heading".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Title"))
+            .unwrap()
+            .output;
+        assert!(out.contains("Accessible.name: spokenTitle"));
+        assert!(out.contains("Accessible.role: Accessible.Heading"));
+
+        let mut hidden = l;
+        hidden.root.props = vec![LayoutProp {
+            name: "a11y-hidden".to_string(),
+            value: LayoutPropValue::Keyword("true".to_string()),
+        }];
+        let hidden_out = from_pipeline(&m, &hidden, &empty_style("Title"))
+            .unwrap()
+            .output;
+        assert!(hidden_out.contains("Accessible.ignored: true"));
     }
 
     // -------- Test 10: Image source binding --------

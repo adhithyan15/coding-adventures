@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - portable Text accessibility capability
+
+- Native-complete analysis accepts the cross-backend `Text` contract for
+  literal or slot-backed accessible names, heading/none roles, and static
+  hidden state.
+- Unsupported label forms, text roles, and dynamic hidden state now produce
+  stable property-level degradation codes instead of being silently ignored.
+
 ## [Unreleased] - application token palettes
 
 - Added token-aware composition and package-build entry points.

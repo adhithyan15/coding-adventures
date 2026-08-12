@@ -1,5 +1,10 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — portable Text accessibility
+
+`Text` now emits UI Automation names, heading levels, and raw-view hiding from
+Mosaic accessibility metadata, including live `x:Bind` accessible-name slots.
+
 ## [Unreleased] — native WinUI drag and drop
 
 `HostDraggable` and `HostDropTarget` now lower to component-scoped WinUI

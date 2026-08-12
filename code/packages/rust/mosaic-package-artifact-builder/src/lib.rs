@@ -1165,6 +1165,36 @@ fn ignored_native_property(
     property: &LayoutProp,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
+        ("Text", "a11y-label")
+            if backend.is_native()
+                && !matches!(
+                    &property.value,
+                    LayoutPropValue::String(_) | LayoutPropValue::SlotRef(_)
+                ) =>
+        {
+            Some((
+                "accessibility.text-label-unsupported",
+                "native Text accessible names must be a string literal or slot reference",
+            ))
+        }
+        ("Text", "a11y-role")
+            if backend.is_native()
+                && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "heading" || value == "none") =>
+        {
+            Some((
+                "accessibility.text-role-unsupported",
+                "native Text supports the portable heading and none accessibility roles",
+            ))
+        }
+        ("Text", "a11y-hidden")
+            if backend.is_native()
+                && !matches!(&property.value, LayoutPropValue::Keyword(value) if value == "true" || value == "false") =>
+        {
+            Some((
+                "accessibility.text-hidden-unsupported",
+                "native Text accessibility hiding must be a static true or false value",
+            ))
+        }
         ("HostDialog", "open") if backend == Backend::Xaml => Some((
             "property.dialog-open-host-required",
             "the XAML emitter documents the authored open state but requires application code-behind to show and hide the native dialog",
@@ -4813,6 +4843,128 @@ layout Controls {
 
         assert!(report.degradations.is_empty());
         assert!(report.native_complete);
+    }
+
+    #[test]
+    fn portable_text_accessibility_is_native_complete_on_all_backends() {
+        let pkg = make_package("mosaic-pkg-accessible-text", &["AccessibleText"]);
+        fs::write(
+            pkg.path().join("src/AccessibleText.mil"),
+            "component AccessibleText { slot spoken-title : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/AccessibleText.mll"),
+            r#"
+layout AccessibleText {
+  Column [ root ] {
+    Text [ title ] (
+      content: "Visible title",
+      a11y-label: slot: spoken-title,
+      a11y-role: heading
+    )
+    Text [ decoration ] ( content: "*", a11y-hidden: true )
+    Text [ duplicate ] ( content: "Repeated", a11y-role: none )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("portable Text accessibility analysis");
+            assert!(
+                report.native_complete && report.degradations.is_empty(),
+                "unexpected {backend:?} degradation inventory: {:?}",
+                report.degradations
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_text_accessibility_forms_are_explicit_degradations() {
+        let pkg = make_package("mosaic-pkg-accessible-text", &["AccessibleText"]);
+        fs::write(
+            pkg.path().join("src/AccessibleText.mil"),
+            "component AccessibleText { slot hidden : bool ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/AccessibleText.mll"),
+            r#"
+layout AccessibleText {
+  Column [ root ] {
+    Text (
+      content: "Visible title",
+      a11y-label: 42,
+      a11y-role: button,
+      a11y-hidden: slot: hidden
+    )
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("unsupported Text accessibility analysis");
+            assert_eq!(
+                report
+                    .degradations
+                    .iter()
+                    .map(|entry| (entry.code.as_str(), entry.layout_path.as_str()))
+                    .collect::<Vec<_>>(),
+                vec![
+                    (
+                        "accessibility.text-label-unsupported",
+                        "root.children[0].props[1]"
+                    ),
+                    (
+                        "accessibility.text-role-unsupported",
+                        "root.children[0].props[2]"
+                    ),
+                    (
+                        "accessibility.text-hidden-unsupported",
+                        "root.children[0].props[3]"
+                    ),
+                ],
+                "unexpected {backend:?} degradation inventory"
+            );
+        }
     }
 
     #[test]

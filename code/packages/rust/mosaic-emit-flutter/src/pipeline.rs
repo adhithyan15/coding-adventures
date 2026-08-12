@@ -3026,18 +3026,12 @@ fn emit_styled_box(
 /// `Text ( content: ( v ) )` reach the Flutter widget unchanged.
 fn emit_text(node: &LayoutNode, indent: usize) -> String {
     let pad = " ".repeat(indent);
-    if let Some(s) = find_string_prop(node, "content") {
-        return format!("{pad}Text(\"{}\")\n", escape_dart_string(s));
-    }
-    if let Some(slot) = find_slot_ref_prop(node, "content") {
+    let text = if let Some(s) = find_string_prop(node, "content") {
+        format!("Text(\"{}\")", escape_dart_string(s))
+    } else if let Some(slot) = find_slot_ref_prop(node, "content") {
         let camel = to_camel_case_first_lower(slot);
-        return format!("{pad}Text({camel})\n");
-    }
-    // UI28-1 / U29-D1 — Expr content. mosaic-pkg-grid v0.2.0's
-    // `Text ( content: ( v ) )` shape, where `v` is the inner For
-    // loop's binding. The Expr text is the literal Dart expression
-    // evaluated in the surrounding .map closure's scope.
-    if let Some(expr_text) = node
+        format!("Text({camel})")
+    } else if let Some(expr_text) = node
         .props
         .iter()
         .find(|p| p.name == "content")
@@ -3046,9 +3040,40 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
             _ => None,
         })
     {
-        return format!("{pad}Text({expr_text})\n");
+        // UI28-1 / U29-D1 — Expr content passes verbatim into Text so
+        // surrounding For-loop bindings remain live.
+        format!("Text({expr_text})")
+    } else {
+        "const Text(\"\")".to_string()
+    };
+
+    let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
+        || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
+    if hidden {
+        return format!("{pad}ExcludeSemantics(child: {text})\n");
     }
-    format!("{pad}const Text(\"\")\n")
+
+    let label = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(value)) => {
+            Some(format!("\"{}\"", escape_dart_string(value)))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => Some(to_camel_case_first_lower(slot)),
+        _ => None,
+    };
+    let heading = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "heading");
+    if label.is_none() && !heading {
+        return format!("{pad}{text}\n");
+    }
+    let mut args = Vec::new();
+    if let Some(label) = label {
+        args.push(format!("label: {label}"));
+        args.push("excludeSemantics: true".to_string());
+    }
+    if heading {
+        args.push("header: true".to_string());
+    }
+    args.push(format!("child: {text}"));
+    format!("{pad}Semantics({})\n", args.join(", "))
 }
 
 /// Lower an `Image` node to `Image.network(...)` for URL sources or
@@ -5209,6 +5234,60 @@ mod tests {
             "expected `Text(greeting)`, got:\n{}",
             r.output
         );
+    }
+
+    #[test]
+    fn text_accessibility_metadata_lowers_to_flutter_semantics() {
+        let m = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "Title",
+            node_with(
+                "Text",
+                vec![
+                    LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Visible title".into()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::SlotRef("spoken-title".into()),
+                    },
+                    LayoutProp {
+                        name: "a11y-role".into(),
+                        value: LayoutPropValue::Keyword("heading".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Title")).unwrap().output;
+        assert!(out.contains(
+            "Semantics(label: spokenTitle, excludeSemantics: true, header: true, child: Text(\"Visible title\"))"
+        ));
+
+        let hidden = layout(
+            "Hidden",
+            node_with(
+                "Text",
+                vec![LayoutProp {
+                    name: "a11y-hidden".into(),
+                    value: LayoutPropValue::Keyword("true".into()),
+                }],
+                vec![],
+            ),
+        );
+        let hidden_out = from_pipeline(
+            &component("Hidden", vec![], vec![]),
+            &hidden,
+            &empty_style("Hidden"),
+        )
+        .unwrap()
+        .output;
+        assert!(hidden_out.contains("ExcludeSemantics(child: const Text(\"\"))"));
     }
 
     // ----- HostButton + onTap dispatch placeholder ---------------------

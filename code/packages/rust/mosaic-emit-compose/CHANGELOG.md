@@ -7,6 +7,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `Text` now lowers literal or slot-backed accessible names, heading roles,
+  and intentional hiding through Compose semantics. Replacement labels clear
+  the built-in text semantics so assistive technology does not announce both
+  the visible content and its authored accessible name.
+
 - Canonical dynamic `HostTable`/UI31 Grid layouts now expose Compose's native
   collection semantics: total row/column counts on the table, heading metadata
   on header cells, and stable row/column coordinates on every body cell.

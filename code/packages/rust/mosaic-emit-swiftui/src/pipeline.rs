@@ -3046,7 +3046,20 @@ fn emit_view_tree(
         // Leaf primitives — emit a single line, no children.
         // -----------------------------------------------------------------
         "Text" => {
-            let expr = swift_text_expression(node, for_payload);
+            let mut expr = swift_text_expression(node, for_payload);
+            if let Some(label) = swift_accessibility_label(node) {
+                expr.push_str(&format!(".accessibilityLabel({label})"));
+            }
+            match find_keyword_prop(node, "a11y-role") {
+                Some("heading") => expr.push_str(".accessibilityAddTraits(.isHeader)"),
+                Some("none") => expr.push_str(".accessibilityHidden(true)"),
+                _ => {}
+            }
+            if matches!(find_keyword_prop(node, "a11y-hidden"), Some("true"))
+                && !expr.ends_with(".accessibilityHidden(true)")
+            {
+                expr.push_str(".accessibilityHidden(true)");
+            }
             format!("{pad}{expr}\n")
         }
         "Spacer" => format!("{pad}Spacer()\n"),
@@ -3724,6 +3737,21 @@ fn swift_text_expression(node: &LayoutNode, for_payload: Option<ForPayloadScope<
         }
     }
     "Text(\"\")".to_string()
+}
+
+/// Lower the portable Text accessible-name subset. String labels stay
+/// verbatim and slot labels use the same Any-to-Text helper as content.
+fn swift_accessibility_label(node: &LayoutNode) -> Option<String> {
+    match find_prop_value(node, "a11y-label")? {
+        LayoutPropValue::String(label) => Some(format!(
+            "Text(verbatim: \"{}\")",
+            escape_swift_string(label)
+        )),
+        LayoutPropValue::SlotRef(slot) => {
+            Some(format!("_mosaicText({})", to_camel_case_first_lower(slot)))
+        }
+        _ => None,
+    }
 }
 
 fn swift_collection_index_expr(
@@ -6712,6 +6740,54 @@ mod tests {
             out.contains("_mosaicText(displayName)"),
             "expected verbatim slot text, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn text_accessibility_metadata_lowers_to_native_modifiers() {
+        let layout = layout_with(
+            "Title",
+            leaf(
+                "Text",
+                vec![
+                    prop_string("content", "Visible title"),
+                    prop_slot_ref("a11y-label", "spoken-title"),
+                    prop_keyword("a11y-role", "heading"),
+                ],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Title",
+                vec![slot("spoken-title", SlotType::Text, true)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Title"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains(
+            "Text(\"Visible title\").accessibilityLabel(_mosaicText(spokenTitle)).accessibilityAddTraits(.isHeader)"
+        ));
+
+        let hidden = layout_with(
+            "Decorative",
+            leaf(
+                "Text",
+                vec![
+                    prop_string("content", "Decoration"),
+                    prop_keyword("a11y-hidden", "true"),
+                ],
+            ),
+        );
+        let hidden_out = from_pipeline(
+            &component("Decorative", vec![], vec![]),
+            &hidden,
+            &empty_style("Decorative"),
+        )
+        .unwrap()
+        .output;
+        assert!(hidden_out.contains("Text(\"Decoration\").accessibilityHidden(true)"));
     }
 
     // ---------------------------------------------------------------------

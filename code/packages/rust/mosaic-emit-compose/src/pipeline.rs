@@ -109,6 +109,8 @@ pub fn from_pipeline(
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
     let uses_native_table_semantics = layout_has_native_table_semantics(&layout.root);
+    let uses_text_heading = layout_has_text_role(&layout.root, "heading");
+    let uses_text_replacement_semantics = layout_has_text_replacement_semantics(&layout.root);
     let uses_icon = layout_contains_tag(&layout.root, "Icon");
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
@@ -280,8 +282,11 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.semantics.onClick").unwrap();
         writeln!(out, "import androidx.compose.ui.semantics.stateDescription").unwrap();
     }
-    if uses_host_dialog || uses_native_table_semantics {
+    if uses_host_dialog || uses_native_table_semantics || uses_text_heading {
         writeln!(out, "import androidx.compose.ui.semantics.heading").unwrap();
+    }
+    if uses_text_replacement_semantics {
+        writeln!(out, "import androidx.compose.ui.semantics.clearAndSetSemantics").unwrap();
     }
     if uses_native_table_semantics {
         writeln!(out, "import androidx.compose.ui.semantics.CollectionInfo").unwrap();
@@ -1367,6 +1372,33 @@ fn layout_has_native_table_semantics(node: &LayoutNode) -> bool {
         || node.children.iter().any(layout_has_native_table_semantics)
 }
 
+fn layout_has_text_role(node: &LayoutNode, role: &str) -> bool {
+    (node.tag == "Text"
+        && matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == role))
+        || node
+            .children
+            .iter()
+            .any(|child| layout_has_text_role(child, role))
+}
+
+fn layout_has_text_replacement_semantics(node: &LayoutNode) -> bool {
+    (node.tag == "Text"
+        && (matches!(
+            find_prop_value(node, "a11y-label"),
+            Some(LayoutPropValue::String(_) | LayoutPropValue::SlotRef(_))
+        )
+            || layout_node_is_accessibility_hidden(node)))
+        || node
+            .children
+            .iter()
+            .any(layout_has_text_replacement_semantics)
+}
+
+fn layout_node_is_accessibility_hidden(node: &LayoutNode) -> bool {
+    matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
+        || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true")
+}
+
 fn for_collection_expr(node: &LayoutNode) -> Option<String> {
     match find_prop_value(node, "each")? {
         LayoutPropValue::SlotRef(slot) | LayoutPropValue::Keyword(slot) => {
@@ -2008,12 +2040,19 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     ctx
 }
 
-fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>) -> String {
+fn text_call(
+    value_expr: &str,
+    text_ctx: Option<&TextStyleCtx>,
+    modifier: Option<&str>,
+) -> String {
     let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    let modifier_arg = modifier
+        .map(|value| format!(", modifier = {value}"))
+        .unwrap_or_default();
     if args.is_empty() {
-        format!("Text(text = {value_expr})")
+        format!("Text(text = {value_expr}{modifier_arg})")
     } else {
-        format!("Text({value_expr}{args})")
+        format!("Text({value_expr}{modifier_arg}{args})")
     }
 }
 
@@ -3189,7 +3228,29 @@ fn emit_text(
     // args appended (`Text(( v ), color = ..., fontFamily = ...)`).
     // With no styling, keep the labelled `Text(text = ...)` shape so the
     // styleless passthrough (e.g. FormulaBar) is byte-identical to before.
-    Ok(format!("{pad}{}\n", text_call(&value_expr, text_ctx)))
+    let modifier = if layout_node_is_accessibility_hidden(node) {
+        Some("Modifier.clearAndSetSemantics { }".to_string())
+    } else {
+        let label = text_prop_expr(node, "a11y-label")?;
+        let is_heading = matches!(
+            find_prop_value(node, "a11y-role"),
+            Some(LayoutPropValue::Keyword(value)) if value == "heading"
+        );
+        match (label, is_heading) {
+            (Some(label), true) => Some(format!(
+                "Modifier.clearAndSetSemantics {{ contentDescription = {label}; heading() }}"
+            )),
+            (Some(label), false) => Some(format!(
+                "Modifier.clearAndSetSemantics {{ contentDescription = {label} }}"
+            )),
+            (None, true) => Some("Modifier.semantics { heading() }".to_string()),
+            (None, false) => None,
+        }
+    };
+    Ok(format!(
+        "{pad}{}\n",
+        text_call(&value_expr, text_ctx, modifier.as_deref())
+    ))
 }
 
 /// Mosaic loop indices are exposed as `number`, so Compose keeps the authored
@@ -3418,7 +3479,12 @@ fn emit_host_button(
     } else {
         writeln!(out, "{pad}Button(onClick = {{ {on_click} }}) {{").unwrap();
     }
-    writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
+    writeln!(
+        out,
+        "{inner}{}",
+        text_call(&label, Some(&label_text), None)
+    )
+    .unwrap();
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
 }
@@ -3793,7 +3859,12 @@ fn emit_host_checkbox(
         for line in checkbox_lines {
             writeln!(out, "{line}").unwrap();
         }
-        writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
+        writeln!(
+            out,
+            "{inner}{}",
+            text_call(&label, Some(&label_text), None)
+        )
+        .unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
@@ -3882,7 +3953,12 @@ fn emit_host_radio(
         for line in radio_lines {
             writeln!(out, "{line}").unwrap();
         }
-        writeln!(out, "{inner}{}", text_call(&label, Some(&label_text))).unwrap();
+        writeln!(
+            out,
+            "{inner}{}",
+            text_call(&label, Some(&label_text), None)
+        )
+        .unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
@@ -4978,6 +5054,61 @@ mod tests {
             "expected real dispatch call, got:\n{out}"
         );
         assert!(out.contains("enabled = !_mosaicTruthy(readOnly),"));
+    }
+
+    #[test]
+    fn text_accessibility_metadata_lowers_to_compose_semantics() {
+        let m = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout(
+            "Title",
+            node(
+                "Text",
+                vec![
+                    LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Visible title".into()),
+                    },
+                    slot_prop("a11y-label", "spoken-title"),
+                    LayoutProp {
+                        name: "a11y-role".into(),
+                        value: LayoutPropValue::Keyword("heading".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Title")).unwrap().output;
+        assert!(out.contains("import androidx.compose.ui.semantics.clearAndSetSemantics"));
+        assert!(out.contains("import androidx.compose.ui.semantics.heading"));
+        assert!(out.contains(
+            "Text(text = \"Visible title\", modifier = Modifier.clearAndSetSemantics { contentDescription = spokenTitle; heading() })"
+        ));
+
+        let hidden = layout(
+            "Hidden",
+            node(
+                "Text",
+                vec![LayoutProp {
+                    name: "a11y-role".into(),
+                    value: LayoutPropValue::Keyword("none".into()),
+                }],
+                vec![],
+            ),
+        );
+        let hidden_out = from_pipeline(
+            &component("Hidden", vec![], vec![]),
+            &hidden,
+            &empty_style("Hidden"),
+        )
+        .unwrap()
+        .output;
+        assert!(hidden_out.contains(
+            "Text(text = \"\", modifier = Modifier.clearAndSetSemantics { })"
+        ));
     }
 
     #[test]

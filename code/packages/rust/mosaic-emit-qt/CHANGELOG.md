@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - portable Text accessibility
+
+`Text` now emits live `Accessible.name` bindings, the native heading role, and
+intentional tree hiding from Mosaic accessibility metadata.
+
 ### Fixed - non-empty For delegates under Bound component behavior
 
 Generated `Repeater` delegates now declare Qt's injected `modelData` and optional
