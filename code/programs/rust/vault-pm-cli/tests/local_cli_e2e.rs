@@ -16,6 +16,7 @@ const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
 const SECURE_NOTE_BODY: &[u8] = b"e2e secure note body stays encrypted";
 const CARD_NUMBER: &[u8] = b"4242424242424242";
 const CARD_CVV: &[u8] = b"7391";
+const API_KEY_TOKEN: &[u8] = b"vlt_e2e_d83f71a5c82b46a3910ec7fd2146b90a";
 const EXPORT_PASSPHRASE: &[u8] = b"e2e distinct portable export passphrase";
 const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n";
 
@@ -471,6 +472,89 @@ fn real_cli_creates_redacts_and_separately_reveals_a_payment_card() {
     assert_tree_excludes(&home.0, CARD_NUMBER);
 }
 
+#[test]
+fn real_cli_creates_redacts_and_separately_reveals_an_api_key() {
+    let home = TestHome::new();
+    let (init_status, init_transcript) = run_init_in_pty(&home);
+    assert!(init_status.success(), "init failed: {init_transcript}");
+
+    let (add_status, add_transcript) = run_add_api_key_in_pty(&home);
+    assert!(add_status.success(), "API-key add failed: {add_transcript}");
+    for prompt in [
+        "Label: ",
+        "Service: ",
+        "Token: ",
+        "Scopes (comma-separated, optional): ",
+        "Expiry Unix seconds (optional): ",
+    ] {
+        assert!(add_transcript.contains(prompt), "{add_transcript}");
+    }
+    assert!(!add_transcript.contains(core::str::from_utf8(API_KEY_TOKEN).unwrap()));
+    let item_id = extract_item_id(&add_transcript);
+
+    let (show_status, show_transcript) =
+        run_unlock_in_pty(&home, &["item", "show", &item_id], b"Token: <redacted>");
+    assert!(
+        show_status.success(),
+        "API-key show failed: {show_transcript}"
+    );
+    assert!(show_transcript.contains("Label: \"Issue automation\""));
+    assert!(show_transcript.contains("Service: \"api.example.test\""));
+    assert!(show_transcript.contains("Scope: \"read:issues\""));
+    assert!(show_transcript.contains("Scope: \"write:comments\""));
+    assert!(show_transcript.contains("Expiry: 1893456000"));
+    assert!(show_transcript.contains("Token: <redacted>"));
+    assert!(!show_transcript.contains(core::str::from_utf8(API_KEY_TOKEN).unwrap()));
+
+    let (reveal_status, reveal_transcript, stdout) =
+        run_secret_reveal_in_pty(&home, &item_id, "api-key-token", API_KEY_TOKEN);
+    assert!(
+        reveal_status.success(),
+        "API-key token reveal failed: {reveal_transcript}"
+    );
+    assert!(reveal_transcript.contains(&format!(
+        "Secret: {:?}",
+        core::str::from_utf8(API_KEY_TOKEN).unwrap()
+    )));
+    assert!(stdout.is_empty(), "API-key token entered process stdout");
+    assert_transcript_excludes_secrets(&reveal_transcript);
+
+    let (audit_status, audit_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_create\toutcome=succeeded",
+    );
+    assert!(
+        audit_status.success(),
+        "audit list failed: {audit_transcript}"
+    );
+    assert!(audit_transcript.contains("action=item_read\toutcome=succeeded"));
+    assert!(!audit_transcript.contains(core::str::from_utf8(API_KEY_TOKEN).unwrap()));
+    assert!(!audit_transcript.contains("Issue automation"));
+    assert!(!audit_transcript.contains("read:issues"));
+    assert_audit_rows_have_only_closed_fields(&audit_transcript);
+
+    let (verify_status, verify_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "verify"],
+        b"commits=5 catalogs=2 revisions=1 items=1 audit_events=5",
+    );
+    assert!(
+        verify_status.success(),
+        "API-key audit verification failed: {verify_transcript}"
+    );
+    assert!(
+        verify_transcript.contains("commits=5"),
+        "{verify_transcript}"
+    );
+    assert!(
+        verify_transcript.contains("revisions=1"),
+        "{verify_transcript}"
+    );
+    assert!(verify_transcript.contains("items=1"), "{verify_transcript}");
+    assert_tree_excludes(&home.0, API_KEY_TOKEN);
+}
+
 fn run_export_in_pty(home: &TestHome, destination: &Path) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
@@ -672,6 +756,62 @@ fn run_add_card_in_pty(home: &TestHome) -> (ExitStatus, String) {
         b"Billing postal code (optional): ",
     );
     master.write_all(b"94107\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Item added: ");
+    let item_line = transcript.len() - b"Item added: ".len();
+    read_until_from(&mut master, &mut transcript, item_line, b"\n");
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn run_add_api_key_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["item", "add", "api-key"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Label: ");
+    master.write_all(b"Issue automation\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Service: ");
+    master.write_all(b"api.example.test\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Token: ");
+    master.write_all(API_KEY_TOKEN).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Scopes (comma-separated, optional): ",
+    );
+    master.write_all(b"read:issues,write:comments\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Expiry Unix seconds (optional): ",
+    );
+    master.write_all(b"1893456000\n").unwrap();
     read_until(&mut master, &mut transcript, b"Item added: ");
     let item_line = transcript.len() - b"Item added: ".len();
     read_until_from(&mut master, &mut transcript, item_line, b"\n");

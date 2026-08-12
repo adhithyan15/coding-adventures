@@ -37,11 +37,11 @@ use coding_adventures_vault_pm_domain::{
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
 use coding_adventures_vault_records::{
-    AnyRecord, Card, Login, SecureNote, CARD_V1, LOGIN_V1, SECURE_NOTE_V1,
+    AnyRecord, ApiKey, Card, Login, SecureNote, API_KEY_V1, CARD_V1, LOGIN_V1, SECURE_NOTE_V1,
 };
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -52,7 +52,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -171,6 +171,21 @@ pub trait CliHost {
 
     /// Collect an optional payment-card billing postal code.
     fn read_card_billing_postal_code(&self) -> Result<Option<Zeroizing<String>>, HostError>;
+
+    /// Collect an API-key display label from the controlling terminal.
+    fn read_api_key_label(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an API-key service name from the controlling terminal.
+    fn read_api_key_service(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an API-key token with terminal echo disabled.
+    fn read_api_key_token(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an optional comma-separated API-key scope list.
+    fn read_api_key_scopes(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an optional API-key expiry in Unix seconds.
+    fn read_api_key_expiry(&self) -> Result<Zeroizing<String>, HostError>;
 
     /// Require explicit interactive confirmation before revealing a secret.
     fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
@@ -314,6 +329,34 @@ impl CliHost for NativeCliHost {
         Ok((!value.is_empty()).then_some(value))
     }
 
+    fn read_api_key_label(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::ApiKeyLabel)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_api_key_service(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::ApiKeyService)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_api_key_token(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::ApiKeyToken)
+    }
+
+    fn read_api_key_scopes(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::ApiKeyScopes)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_api_key_expiry(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::ApiKeyExpiry)
+            .map_err(map_native_cli_host)
+    }
+
     fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
         ControllingTerminal
             .confirm_secret_reveal()
@@ -443,6 +486,7 @@ enum Command {
     ItemAddLogin,
     ItemAddSecureNote,
     ItemAddCard,
+    ItemAddApiKey,
     ItemEdit {
         item_id: ItemId,
     },
@@ -620,6 +664,7 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
             Ok(Command::ItemAddSecureNote)
         }
         [action, kind] if action == "add" && kind == "card" => Ok(Command::ItemAddCard),
+        [action, kind] if action == "add" && kind == "api-key" => Ok(Command::ItemAddApiKey),
         [action, item] if action == "edit" => Ok(Command::ItemEdit {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
@@ -727,6 +772,7 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_add_secure_note(host, prepared.paths(), &writer, selected_vault)
         }
         Command::ItemAddCard => item_add_card(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddApiKey => item_add_api_key(host, prepared.paths(), &writer, selected_vault),
         Command::ItemEdit { item_id } => {
             item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
         }
@@ -1444,6 +1490,86 @@ fn item_add_card(
     context.complete(document)
 }
 
+fn item_add_api_key(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let context = prepare_item_create(host, paths, writer, selected_vault)?;
+    let input = (|| {
+        Ok::<_, HostError>((
+            host.read_api_key_label()?,
+            host.read_api_key_service()?,
+            host.read_api_key_token()?,
+            host.read_api_key_scopes()?,
+            host.read_api_key_expiry()?,
+        ))
+    })();
+    let (label, service, token, scopes, expiry) = match input {
+        Ok(input) => input,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    let scopes = match parse_api_key_scopes(&scopes) {
+        Ok(scopes) => scopes,
+        Err(error) => return context.fail(error),
+    };
+    let expires_at = match parse_optional_unix_seconds(&expiry) {
+        Ok(expires_at) => expires_at,
+        Err(error) => return context.fail(error),
+    };
+    let document = context.document(
+        API_KEY_V1,
+        AnyRecord::ApiKey(ApiKey {
+            label: label.into_inner(),
+            service: service.into_inner(),
+            token: token.into_inner(),
+            scopes,
+            expires_at,
+        }),
+    );
+    let document = match document {
+        Ok(document) => document,
+        Err(error) => return context.fail(error),
+    };
+    context.complete(document)
+}
+
+fn parse_api_key_scopes(value: &str) -> Result<Vec<String>, CliFailure> {
+    if value.is_empty() {
+        return Ok(Vec::new());
+    }
+    let mut seen = BTreeSet::new();
+    let mut scopes = Vec::new();
+    for scope in value.split(',') {
+        if scopes.len() == 64
+            || scope.is_empty()
+            || scope.trim() != scope
+            || scope.len() > 256
+            || !seen.insert(scope)
+        {
+            return Err(CliFailure::InvalidCommand);
+        }
+        scopes.push(scope.to_owned());
+    }
+    Ok(scopes)
+}
+
+fn parse_optional_unix_seconds(value: &str) -> Result<Option<u64>, CliFailure> {
+    if value.is_empty() {
+        return Ok(None);
+    }
+    if value.starts_with('0') || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let seconds = value
+        .parse::<u64>()
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    (seconds != 0 && seconds.to_string() == value)
+        .then_some(Some(seconds))
+        .ok_or(CliFailure::InvalidCommand)
+}
+
 fn validate_ascii_digits(value: &str, min: usize, max: usize) -> Result<(), CliFailure> {
     if (min..=max).contains(&value.len()) && value.bytes().all(|byte| byte.is_ascii_digit()) {
         Ok(())
@@ -1972,6 +2098,34 @@ fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
             } else {
                 "absent\n"
             });
+        }
+        RedactedRecordView::ApiKey {
+            label,
+            service,
+            scopes,
+            expires_at,
+            ..
+        } => {
+            output.push_str("Label: ");
+            output.push_str(&quoted(label));
+            output.push_str("\nService: ");
+            output.push_str(&quoted(service));
+            output.push('\n');
+            if scopes.is_empty() {
+                output.push_str("Scopes: none\n");
+            } else {
+                for scope in scopes {
+                    output.push_str("Scope: ");
+                    output.push_str(&quoted(scope));
+                    output.push('\n');
+                }
+            }
+            output.push_str("Expiry: ");
+            match expires_at {
+                Some(seconds) => output.push_str(&seconds.to_string()),
+                None => output.push_str("none"),
+            }
+            output.push_str("\nToken: <redacted>\n");
         }
         _ => return Err(CliFailure::Unsupported),
     }
@@ -3001,6 +3155,28 @@ mod tests {
         fn read_card_billing_postal_code(&self) -> Result<Option<Zeroizing<String>>, HostError> {
             self.text()
                 .map(|value| (!value.is_empty()).then_some(value))
+        }
+
+        fn read_api_key_label(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_api_key_service(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_api_key_token(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
+        }
+
+        fn read_api_key_scopes(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_api_key_expiry(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
         }
 
         fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
@@ -4848,6 +5024,190 @@ mod tests {
             core::str::from_utf8(&number).unwrap(),
             core::str::from_utf8(&cvv).unwrap(),
             postal_code,
+        ] {
+            assert!(!audit.stdout().contains(value));
+        }
+    }
+
+    #[test]
+    fn api_key_create_failures_and_success_are_audited_without_token_rendering() {
+        assert_eq!(
+            parse(["item", "add", "api-key"]),
+            default_invocation(Command::ItemAddApiKey)
+        );
+        assert_eq!(
+            parse(["--vault", "work", "item", "add", "api-key"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ItemAddApiKey,
+            })
+        );
+        assert_eq!(
+            parse(["item", "add", "api-key", "secret-in-argv"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(parse_api_key_scopes(""), Ok(Vec::new()));
+        assert_eq!(
+            parse_api_key_scopes("read:issues,write:comments"),
+            Ok(vec!["read:issues".to_owned(), "write:comments".to_owned()])
+        );
+        for invalid in [
+            "read:issues, read:users",
+            "read:issues,read:issues",
+            ",read",
+        ] {
+            assert_eq!(
+                parse_api_key_scopes(invalid),
+                Err(CliFailure::InvalidCommand)
+            );
+        }
+        assert_eq!(
+            parse_api_key_scopes(&"x".repeat(257)),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse_api_key_scopes(&vec!["scope"; 65].join(",")),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(parse_optional_unix_seconds(""), Ok(None));
+        assert_eq!(
+            parse_optional_unix_seconds("1893456000"),
+            Ok(Some(1_893_456_000))
+        );
+        for invalid in ["0", "01", "+1", "1.0", "18446744073709551616"] {
+            assert_eq!(
+                parse_optional_unix_seconds(invalid),
+                Err(CliFailure::InvalidCommand)
+            );
+        }
+
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"api key create passphrase".to_vec();
+        let token = b"vlt_e2e_4d0a6b7335c9f428f00b8f75265f19d7".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let unavailable_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 11);
+        let unavailable = run(["item", "add", "api-key"], &unavailable_host);
+        assert_eq!(
+            unavailable.exit_code(),
+            ExitCode::Provider,
+            "{unavailable:?}"
+        );
+        assert!(unavailable.stdout().is_empty());
+
+        let invalid_utf8_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), vec![0xff]],
+            ["Automation key".to_owned(), "api.example.test".to_owned()],
+            19,
+        );
+        let invalid_utf8 = run(["item", "add", "api-key"], &invalid_utf8_host);
+        assert_eq!(
+            invalid_utf8.exit_code(),
+            ExitCode::InvalidInput,
+            "{invalid_utf8:?}"
+        );
+        assert!(invalid_utf8.stdout().is_empty());
+
+        let invalid_attempt = |seed, scopes: &str, expiry: &str| {
+            let host = TestHost::with_texts_and_entropy_seed(
+                paths.clone(),
+                [passphrase.clone(), token.clone()],
+                [
+                    "Automation key".to_owned(),
+                    "api.example.test".to_owned(),
+                    scopes.to_owned(),
+                    expiry.to_owned(),
+                ],
+                seed,
+            );
+            let output = run(["item", "add", "api-key"], &host);
+            assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{output:?}");
+            assert!(output.stdout().is_empty());
+        };
+        invalid_attempt(23, "read:issues, read:users", "1893456000");
+        invalid_attempt(31, "read:issues", "01");
+
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), token.clone()],
+            [
+                "Automation key".to_owned(),
+                "api.example.test".to_owned(),
+                "read:issues,write:comments".to_owned(),
+                "1893456000".to_owned(),
+            ],
+            43,
+        );
+        let added = run(["item", "add", "api-key"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap();
+        assert!(ItemId::from_user_string(item).is_ok());
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert_eq!(
+            listed.stdout(),
+            format!("{item}\t{API_KEY_V1}\t\"Automation key\"\n")
+        );
+        assert!(!listed
+            .stdout()
+            .contains(core::str::from_utf8(&token).unwrap()));
+
+        let show_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let shown = run(["item", "show", item], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(
+            shown.stdout(),
+            format!(
+                "Item: {item}\nType: {API_KEY_V1}\nLabel: \"Automation key\"\nService: \"api.example.test\"\nScope: \"read:issues\"\nScope: \"write:comments\"\nExpiry: 1893456000\nToken: <redacted>\nFavorite: no\nUpdated: 1700000000000\n"
+            )
+        );
+        assert!(!shown
+            .stdout()
+            .contains(core::str::from_utf8(&token).unwrap()));
+
+        let reveal_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            47,
+        );
+        let revealed = run(["item", "reveal", item, "api-key-token"], &reveal_host);
+        assert_eq!(revealed.exit_code(), ExitCode::Success, "{revealed:?}");
+        assert!(revealed.stdout().is_empty());
+        assert!(reveal_host.revealed_equals(&token));
+
+        let audit_host = TestHost::with_entropy_seed(paths, [passphrase], 59);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_create\toutcome=failed"))
+                .count(),
+            4,
+            "{audit:?}"
+        );
+        assert!(audit.stdout().lines().any(|line| {
+            line.contains("action=item_create\toutcome=succeeded")
+                && line.contains(&format!("\titem={item}"))
+        }));
+        for value in [
+            "Automation key",
+            "api.example.test",
+            "read:issues",
+            "write:comments",
+            "1893456000",
+            core::str::from_utf8(&token).unwrap(),
         ] {
             assert!(!audit.stdout().contains(value));
         }

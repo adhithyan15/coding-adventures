@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audited `item add api-key` with a hidden token prompt, closed scope and
+  expiry validation, redacted metadata rendering, durable failure events, and
+  separate VLT-PM25 token reveal reuse.
 - Added audited `item add card` with hidden PAN/CVV prompts, closed offline
   validation, redacted holder/last-four/expiry rendering, durable failure
   events, and separate VLT-PM25 reveal reuse.

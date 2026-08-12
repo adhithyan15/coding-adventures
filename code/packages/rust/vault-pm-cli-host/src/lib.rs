@@ -108,6 +108,14 @@ pub enum TextPrompt {
     CardExpiryYear,
     /// Optional payment-card billing postal code.
     CardBillingPostalCode,
+    /// Required API-key display label.
+    ApiKeyLabel,
+    /// Required API-key service name.
+    ApiKeyService,
+    /// Optional comma-separated API-key scopes.
+    ApiKeyScopes,
+    /// Optional API-key expiry in Unix seconds.
+    ApiKeyExpiry,
     /// Optional login username or account handle.
     LoginUsername,
     /// Optional primary login URL.
@@ -124,6 +132,10 @@ impl TextPrompt {
             Self::CardExpiryMonth => "Expiry month (1-12): ",
             Self::CardExpiryYear => "Expiry year (YYYY): ",
             Self::CardBillingPostalCode => "Billing postal code (optional): ",
+            Self::ApiKeyLabel => "Label: ",
+            Self::ApiKeyService => "Service: ",
+            Self::ApiKeyScopes => "Scopes (comma-separated, optional): ",
+            Self::ApiKeyExpiry => "Expiry Unix seconds (optional): ",
             Self::LoginUsername => "Username: ",
             Self::LoginUrl => "URL (optional): ",
             Self::SecretRevealConfirmation => {
@@ -138,7 +150,11 @@ impl TextPrompt {
             | Self::SecureNoteTitle
             | Self::CardTitle
             | Self::CardHolder
-            | Self::CardBillingPostalCode => 256,
+            | Self::CardBillingPostalCode
+            | Self::ApiKeyLabel
+            | Self::ApiKeyService => 256,
+            Self::ApiKeyScopes => MAX_TEXT_BYTES,
+            Self::ApiKeyExpiry => 20,
             Self::CardExpiryMonth => 2,
             Self::CardExpiryYear => 4,
             Self::LoginUsername => 1_024,
@@ -153,6 +169,8 @@ impl TextPrompt {
             Self::LoginUsername
                 | Self::LoginUrl
                 | Self::CardBillingPostalCode
+                | Self::ApiKeyScopes
+                | Self::ApiKeyExpiry
                 | Self::SecretRevealConfirmation
         )
     }
@@ -183,6 +201,8 @@ pub enum SecretPrompt {
     CardNumber,
     /// Collect a payment-card verification code without terminal echo.
     CardCvv,
+    /// Collect an API-key token without terminal echo.
+    ApiKeyToken,
 }
 
 impl SecretPrompt {
@@ -198,6 +218,7 @@ impl SecretPrompt {
             Self::SecureNoteBody => "Note: ",
             Self::CardNumber => "Card number: ",
             Self::CardCvv => "CVV: ",
+            Self::ApiKeyToken => "Token: ",
         }
     }
 }
@@ -437,6 +458,7 @@ mod tests {
         assert_eq!(SecretPrompt::SecureNoteBody.message(), "Note: ");
         assert_eq!(SecretPrompt::CardNumber.message(), "Card number: ");
         assert_eq!(SecretPrompt::CardCvv.message(), "CVV: ");
+        assert_eq!(SecretPrompt::ApiKeyToken.message(), "Token: ");
         assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
         assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
         assert_eq!(TextPrompt::CardTitle.message(), "Title: ");
@@ -449,6 +471,16 @@ mod tests {
         assert_eq!(
             TextPrompt::CardBillingPostalCode.message(),
             "Billing postal code (optional): "
+        );
+        assert_eq!(TextPrompt::ApiKeyLabel.message(), "Label: ");
+        assert_eq!(TextPrompt::ApiKeyService.message(), "Service: ");
+        assert_eq!(
+            TextPrompt::ApiKeyScopes.message(),
+            "Scopes (comma-separated, optional): "
+        );
+        assert_eq!(
+            TextPrompt::ApiKeyExpiry.message(),
+            "Expiry Unix seconds (optional): "
         );
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
@@ -463,6 +495,10 @@ mod tests {
         assert!(!TextPrompt::CardExpiryMonth.allows_empty());
         assert!(!TextPrompt::CardExpiryYear.allows_empty());
         assert!(TextPrompt::CardBillingPostalCode.allows_empty());
+        assert!(!TextPrompt::ApiKeyLabel.allows_empty());
+        assert!(!TextPrompt::ApiKeyService.allows_empty());
+        assert!(TextPrompt::ApiKeyScopes.allows_empty());
+        assert!(TextPrompt::ApiKeyExpiry.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
         assert!(TextPrompt::LoginUrl.allows_empty());
         assert!(TextPrompt::SecretRevealConfirmation.allows_empty());
