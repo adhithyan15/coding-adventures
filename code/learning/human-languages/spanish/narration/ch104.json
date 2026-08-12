@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 104,
-  "title": "He Hablado --- A Verb With No Meaning Left",
+  "title": "Tenia and Tuve --- When the Tense Changes the Meaning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a2285a7e58008c34",
+  "sourceHash": "fnv1a64:2bd5e7c465306e79",
   "lessons": [
     {
-      "id": "ES-C49-he-hablado",
-      "sequence": 1316,
-      "title": "he hablado — \"I have spoken\"",
-      "headword": "he hablado",
-      "romanization": "he hablado",
-      "gloss": "\"I have spoken\" — and haber, a verb that gave away its meaning and kept only a job",
+      "id": "ES-C48-tenia-tuve",
+      "sequence": 1342,
+      "title": "tenía and tuve — when the tense changes the meaning",
+      "headword": "tenía / tuve",
+      "romanization": "tenía / tuve",
+      "gloss": "the place where the choice stops being a viewpoint and becomes a different meaning outright",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:594d436d0d5d8ef7",
+      "sourceHash": "fnv1a64:9c1101f84abfbe3f",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,54 @@
             },
             {
               "kind": "speech",
-              "text": "You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word."
+              "text": "So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: having, and getting",
           "segments": [
             {
               "kind": "speech",
-              "text": "silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh."
+              "text": "Tenía una casa. — I had a house. Tuve una casa. — I got a house."
+            },
+            {
+              "kind": "speech",
+              "text": "Read those twice. The second one is not \"I had a house, viewed as finished.\" It is a different verb in English altogether."
+            },
+            {
+              "kind": "speech",
+              "text": "The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something."
+            },
+            {
+              "kind": "speech",
+              "text": "Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the emptied verb",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "he + participle — I have done something."
+              "text": "This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started."
             },
             {
               "kind": "speech",
-              "text": "He hablado español. — I have spoken Spanish."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody."
-            },
-            {
-              "kind": "speech",
-              "text": "He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not \"I hold spoken.\" You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place."
+              "text": "It also explains a frustration you may already have had. English \"I had\" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Haber comes from Latin habēre, \"to hold, to have\" — a completely ordinary verb with a completely ordinary meaning."
-            },
-            {
-              "kind": "speech",
-              "text": "Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower \"hold, grip\"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed."
-            },
-            {
-              "kind": "speech",
-              "text": "English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for \"hold\" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually."
-            },
-            {
-              "kind": "speech",
-              "text": "So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,86 +95,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He hablado español\"",
+              "instruction": "\"Tenía una casa\" then \"Tuve una casa\" — hear the English change",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He hablado español\"]"
+              "source": "[YOU SAY: \"Tenía una casa\" then \"Tuve una casa\" — hear the English change]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I have eaten\" in English, and notice that nothing is being held",
+              "instruction": "the rule aloud — a state in the preterite gives you its beginning",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I have eaten\" in English, and notice that nothing is being held]"
+              "source": "[YOU SAY: the rule aloud — a state in the preterite gives you its beginning]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-say",
-              "prompt": "Say I have spoken Spanish.",
+              "id": "ES-C48-tenia-tuve-had",
+              "prompt": "Say I had a house, meaning it was simply so.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-FIRST-PERSON",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
+                "ES-LEX-TENER",
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "he hablado espanol",
-                "he hablado español",
-                "yo he hablado espanol"
+                "tenia una casa",
+                "tenía una casa",
+                "yo tenia una casa"
               ],
               "feedback": {
-                "correct": "He carries the person; hablado carries the meaning.",
-                "incorrect": "He hablado espanol."
+                "correct": "A state, so the imperfect.",
+                "incorrect": "Tenia una casa — having is a state, and states take the imperfect."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-mean",
-              "prompt": "What does haber mean in he hablado?",
+              "id": "ES-C48-tenia-tuve-got",
+              "prompt": "What does tuve una casa actually mean?",
               "assesses": [
-                "ES-LEX-HABER",
-                "ES-ETYMON-HABERE"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "nothing on its own",
-                "nothing",
-                "it has no meaning here, only a job"
+                "i got a house",
+                "i received a house",
+                "the moment i came to have one"
               ],
               "feedback": {
-                "correct": "The meaning left; the machinery stayed.",
-                "incorrect": "Nothing. Its meaning went to tener and it kept only this job."
+                "correct": "The edge of having is getting.",
+                "incorrect": "I got a house — the preterite gives you the moment the state began."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-english",
-              "prompt": "Which English verb was hollowed out the same way?",
+              "id": "ES-C48-tenia-tuve-rule",
+              "prompt": "You meet a new verb that names a state. What will its preterite mean?",
               "assesses": [
-                "ES-ETYMON-HABERE",
-                "ES-LEX-TENER"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "have",
-                "to have",
-                "have, as in i have eaten"
+                "the moment the state began",
+                "when it started",
+                "the start of the state"
               ],
               "feedback": {
-                "correct": "Nobody holds anything in I have eaten.",
-                "incorrect": "Have — I have eaten holds nothing."
+                "correct": "So you will never need a list for these.",
+                "incorrect": "The moment that state began — the same rule, every time."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +186,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have spoken\"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it."
+              "text": "Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place."
             }
           ]
         }

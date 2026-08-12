@@ -1,90 +1,34 @@
-Spanish, chapter 135: The Weather.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 135: La Bebo --- The Pronoun Tells the Truth.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-el tiempo — one word doing two jobs.
-
-Warm-up.
-[pause 2 seconds]
-Ask a Spanish speaker ¿qué tiempo hace? and you are literally asking "what time does it make?" — because tiempo does not split "time" from "weather" the way English does.
-
-The word, taken apart: el tiempo.
-el tiempo = both "time" and "weather" — from Latin tempus, which already carried this same double sense. Nothing was merged in Spanish; the two meanings simply arrived together and stayed.
-English inherited the word too, through borrowing, but kept only the time half: temporal, contemporary, tempo, temporary. So the double meaning is not a Spanish oddity — it is the older state of affairs, and English is the one that narrowed.
-How does a Spanish speaker know which is meant? Context alone, and it is never ambiguous in practice: no tengo tiempo is "I have no time," ¿qué tiempo hace? is "what's the weather like?"
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "el tiempo" — time, or weather, depending on context]
-[pause 8 seconds for the answer]
-[your turn — say: "¿qué tiempo hace?" — what's the weather like?]
-[pause 8 seconds for the answer]
-[your turn — say: "tiempo" then English "tempo, temporal" — the tempus family]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What two things does el tiempo mean? (Time and weather.) Which Latin word gives it, and did it already mean both? (Tempus — yes, both.) Which language narrowed the meaning, Spanish or English? (English — it kept only "time.") Next: how to actually answer ¿qué tiempo hace?
-
-
-Lesson 2 of 3.
-hace calor, hace frío, hace sol — the weather Spanish makes.
+Lesson 1 of 1.
+la bebo — the pronoun tells the truth.
 
 Warm-up.
 [pause 2 seconds]
-You can ask ¿qué tiempo hace? Now answer it. Three of Spanish's commonest weather answers all take the same verb you already know — hacer, "to make."
+Which article does agua take? (El.) And what gender is agua really? (Feminine — the article is a sound rule, not a gender.)
 
-The words, taken apart: calor, frío, sol.
-calor from Latin calor, "heat, warmth" becomes English calorie, caloric, cauldron.
-frío from Latin frigidus, "cold" (the middle syllable syncopated away) becomes English frigid, refrigerate.
-sol from Latin sol, "sun," unchanged becomes English solar, solstice, parasol.
-Here is the part worth noticing: all three are nouns, not adjectives. Calor is "heat," not "hot." That is exactly why Spanish reaches for hacer: you cannot be a noun, but the world can make one.
-hace calor — "it's hot," literally "it makes heat" hace frío — "it's cold," literally "it makes cold" hace sol — "it's sunny," literally "it makes sun".
-French does the same thing with the same logic (il fait chaud); English is the outlier, forcing weather into "it is hot" with an adjective.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hace calor. hace frío. hace sol."]
-[pause 8 seconds for the answer]
-[your turn — say: the literal reading — "it makes heat, it makes cold, it makes sun"]
-[pause 8 seconds for the answer]
-[your turn — say: "calor" then English "calorie"; "frío" then "refrigerate"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "it's hot," "it's cold," "it's sunny." (Hace calor, hace frío, hace sol.) Why does Spanish use hacer rather than a "to be" verb? (Because calor, frío and sol are nouns — the weather makes heat, it does not be hot.) Give an English cousin of frío. (Frigid, refrigerate.)
-
-
-Lesson 3 of 3.
-llueve — the one weather word that will not join hacer.
-
-Warm-up.
-[pause 2 seconds]
-Hace calor, hace frío, hace sol — three answers, one pattern. Now try rain, and the pattern breaks. Rain does not get made in Spanish; rain has a verb of its own.
-
-Grammar Lens: rain brings its own verb.
-llueve = "it's raining." Not hace lluvia, not "it makes rain" — just llueve, a single word that is a complete sentence.
-It comes from llover, "to rain," and llover is impersonal: it has no subject at all, not even a "it" you could point to. Compare the two shapes side by side:
-[a table of 2 rows, read aloud]
-pattern: hacer + noun. example: hace calor. what carries the weather: the noun (calor, heat).
-pattern: dedicated verb. example: llueve. what carries the weather: the verb itself.
-English does exactly the same split, which makes it easy to feel: you say "it is hot" with an adjective, but "it rains" with a verb built for the job. Spanish just draws the line in the same place.
-
-The word, taken apart: llover.
-llover from Latin pluere, "to rain." Recognise that pl- becomes ll- shift? It is the same regular sound change that gave you llamar ( from clamāre), llave ( from clāvem, "key") and llama ( from flamma, "flame"). Latin's cl-, fl- and pl- clusters all became Spanish ll-.
-So llueve is not an exception you have to memorise twice: it is a predictable descendant of pluere (the same root English keeps in pluvial and the pluviometer, a rain gauge), and it is the one weather word with enough of its own life to refuse the hacer frame.
+Grammar Lens: a third witness.
+When you met el agua you were given two proofs that the word is feminine underneath: the adjective it takes and the plural it forms. Here is a third, and it costs you nothing new.
+Bebo el agua. — I drink the water. La bebo. — I drink it.
+Not lo bebo. La bebo.
+The article had to say el for a reason that has nothing to do with gender — two a sounds colliding. The pronoun is under no such pressure. Nothing sits in front of it, no vowels collide, so it reports the gender straight.
+This is worth more than one word. When an article looks suspicious, the object pronoun is a witness that cannot be leaned on. You now have a test you can run yourself, rather than a list to trust.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "¿qué tiempo hace?" then "hace calor. hace frío. hace sol."]
+[your turn — say: "el agua" then "la bebo" — until the clash stops feeling like an error]
 [pause 8 seconds for the answer]
-[your turn — say: "llueve" — one word, a whole sentence, no hacer]
+[your turn — say: "lo bebo" then "la bebo", and notice which one is about water]
 [pause 8 seconds for the answer]
-[your turn — say: the family — "llamar, llave, llama, llover" — four Latin clusters, one Spanish ll-]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say I drink it, about el agua.
+[question — say your answer, then pause 12 seconds]
+Why can the pronoun show a gender the article hides?
+[question — say your answer, then pause 12 seconds]
+You meet a new noun and cannot tell its gender from its article. What can you listen for?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which weather word does not use hacer, and why? (Llueve — rain has its own impersonal verb, llover.) What Latin word is llover from? (Pluere.) What sound change turned its pl- into ll-, and what other words show it? (Latin cl-/fl-/pl- becomes Spanish ll- — llamar, llave, llama.) And what does el tiempo mean? (Time and weather, from tempus.)
+El agua — which pronoun replaces it? (La.) And why does that not contradict the article? (The article changed for sound, not gender.)

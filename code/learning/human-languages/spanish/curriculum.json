@@ -492,6 +492,54 @@
       "after": []
     },
     {
+      "id": "ES-PATH-030-PROFESOR",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-profesor"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-PROFESOR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-ESTUDIANTE",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-estudiante"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-ESTUDIANTE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-ISTA",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-ista"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-ISTA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-SYNTH-WORK",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-sintesis-trabajo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-SYNTH-WORK"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-011-SER-ESTAR",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
@@ -2134,6 +2182,10 @@
         "ES-PATH-029",
         "ES-PATH-030-TENER",
         "ES-PATH-030-SER",
+        "ES-PATH-030-PROFESOR",
+        "ES-PATH-030-ESTUDIANTE",
+        "ES-PATH-030-ISTA",
+        "ES-PATH-030-SYNTH-WORK",
         "ES-PATH-030-ABILITY-CH11",
         "ES-PATH-030-HACER-CH12",
         "ES-PATH-030-DECIR-CH12",
@@ -4389,6 +4441,50 @@
       "prerequisites": [],
       "lessons": [
         "ES-C57-sintesis-descifrar"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-PROFESOR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-profesor"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-ESTUDIANTE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-estudiante"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-ISTA",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-ista"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-SYNTH-WORK",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-sintesis-trabajo"
       ]
     }
   ]

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 164,
-  "title": "Por --- And Three Phrases You Already Owned",
+  "title": "Synthesis --- The Choices English Never Makes You Make",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2c65dc5fd86e34c4",
+  "sourceHash": "fnv1a64:ab7f5ab4d74b4d14",
   "lessons": [
     {
-      "id": "ES-C51-por",
-      "sequence": 2122,
-      "title": "por — and you already know three of these",
-      "headword": "por",
-      "romanization": "por",
-      "gloss": "\"for\" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page",
+      "id": "ES-C39-sintesis-elegir",
+      "sequence": 2086,
+      "title": "Synthesis — the choices English never makes you make",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — three places where English hands you one word and Spanish makes you choose",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94060c45359ed091",
+      "sourceHash": "fnv1a64:53c63bfa43fccdcc",
       "notice": null,
       "blocks": [
         {
@@ -35,78 +35,72 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"please.\" (Por favor.) Say \"why.\" (¿Por qué?) Say \"because.\" (Porque.) You have been carrying this word since your first page and nobody has told you what it means."
+              "text": "Nothing new here. Two verbs to say aloud first: traer, conocer."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the arrow points back, or through",
+          "title": "Grammar Lens: one English word, two Spanish verbs",
           "segments": [
             {
               "kind": "speech",
-              "text": "por — for, when something is the cause, the route, or what is given in exchange."
+              "text": "Three times now you have met a pair of verbs where English makes do with one. They arrived chapters apart and have never been put side by side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English gives you",
+                "Spanish makes you choose",
+                "the question you must answer"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "English gives you: to ask. Spanish makes you choose: preguntar, pedir. the question you must answer: asking a question, or asking for a thing?",
+                "English gives you: to bring / take. Spanish makes you choose: traer, llevar. the question you must answer: toward the speaker, or away?",
+                "English gives you: to know. Spanish makes you choose: conocer, saber. the question you must answer: a person or place, or a fact?"
+              ]
             },
             {
               "kind": "speech",
-              "text": "Gracias por la comida. — Thanks for the meal. (the cause) Por ti. — Because of you. (the cause)."
-            },
-            {
-              "kind": "speech",
-              "text": "Where para pointed forward at a target, por points back at a reason or through a middle — what something came through, not what it heads toward."
-            },
-            {
-              "kind": "speech",
-              "text": "Now look again at the three phrases you already own:"
-            },
-            {
-              "kind": "speech",
-              "text": "por favor — literally by way of a favour. You are not aiming at a favour; you are asking through one."
-            },
-            {
-              "kind": "speech",
-              "text": "¿por qué? — literally through what? — that is, caused by what?"
-            },
-            {
-              "kind": "speech",
-              "text": "porque — the same two words fused into an answer: because."
-            },
-            {
-              "kind": "speech",
-              "text": "Three of your oldest phrases turn out to be the same preposition, doing exactly what this chapter says it does. You knew por before you knew hola meant anything."
+              "text": "None of these is a vocabulary problem. In each one, the word is easy and the decision is the work — and the decision is information English speakers are simply never required to supply."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Por is two Latin words run together: pro (\"in front of, on behalf of\") and per (\"through\")."
+              "text": "When you pick traer over llevar, you have told your listener where you are standing. When you pick conocer over saber, you have told them whether you have met the thing or only heard of it. The grammar is carrying meaning that English would need a whole clause to add."
             },
             {
               "kind": "speech",
-              "text": "The per half is still alive and unchanged in English, in the least poetic corner of the language:"
-            },
-            {
-              "kind": "speech",
-              "text": "per hour, per person, per cent — cent being hundred, so literally through each hundred."
-            },
-            {
-              "kind": "speech",
-              "text": "percolate, permeate, perforate — all piercing through."
-            },
-            {
-              "kind": "speech",
-              "text": "English kept per meaning \"through\" and Spanish kept it inside por. Saying por favor, you are using the same word as miles per hour."
+              "text": "You are not translating any more. You are choosing."
             }
           ]
         },
         {
           "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Conoces Madrid? — Sí, conozco Madrid. Pero no sé dónde está el café."
+            },
+            {
+              "kind": "speech",
+              "text": "Two \"knows\" in two lines, and not interchangeable. The first is acquaintance — I have been there. The second is a fact. English uses know for both and loses the difference."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,84 +113,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word]"
+              "source": "[YOU SAY: the exchange above, both parts]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Gracias por la comida\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Gracias por la comida\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the choice happens before you notice making it."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-por-thanks",
-              "prompt": "Say thanks for the meal.",
+              "id": "ES-C39-sintesis-elegir-know",
+              "prompt": "You want to say you know a person. Conocer or saber?",
               "assesses": [
-                "ES-LEX-POR",
-                "ES-LEX-GRACIAS",
-                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
+                "ES-GRAMMAR-CONOCER-SABER-12"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "gracias por la comida",
-                "gracias por la comida."
+                "conocer",
+                "conocer (acquaintance)",
+                "conozco"
               ],
               "feedback": {
-                "correct": "Por — the cause of the thanks.",
-                "incorrect": "Gracias por la comida."
+                "correct": "Yes — conocer is for people and places you have met.",
+                "incorrect": "Conocer. Saber is for facts."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-por-favor",
-              "prompt": "What does por favor literally say?",
+              "id": "ES-C39-sintesis-elegir-bring",
+              "prompt": "Someone asks you to move something toward where they are. Traer or llevar?",
               "assesses": [
-                "ES-LEX-POR-FAVOR",
-                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
+                "ES-GRAMMAR-TRAER-LLEVAR-03"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "by way of a favour",
-                "through a favour",
-                "by means of a favour"
+                "traer",
+                "traer (toward)",
+                "bring"
               ],
               "feedback": {
-                "correct": "Not aimed at a favour — asked through one.",
-                "incorrect": "By way of a favour."
+                "correct": "Yes — traer moves it toward the speaker.",
+                "incorrect": "Traer. Llevar moves it away."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-por-per",
-              "prompt": "Which everyday English word is the per inside por, still meaning through?",
+              "id": "ES-C39-sintesis-elegir-ask",
+              "prompt": "You want to ask for a coffee, not ask a question. Preguntar or pedir?",
               "assesses": [
-                "ES-ETYMON-PRO-PER"
+                "ES-GRAMMAR-ASK-SPLIT-04",
+                "ES-LEX-PREGUNTAR-03"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "per, as in per hour",
-                "per",
-                "per hour, per cent"
+                "pedir",
+                "pedir (request)",
+                "pedir un cafe"
               ],
               "feedback": {
-                "correct": "Per cent is literally through each hundred.",
-                "incorrect": "Per — per hour, per person, per cent."
+                "correct": "Yes — pedir is asking FOR something.",
+                "incorrect": "Pedir. Preguntar is asking a question."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -208,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which direction does por point? (Back at a cause, or through something.) What is por favor literally? (By way of a favour.) Which English word is the per inside it? (Per, as in per hour.) Next: the two side by side."
+              "text": "What does choosing traer tell your listener? (Where you are standing.) What does choosing conocer tell them? (That you have met it, not just heard of it.) And which of the three pairs did you learn first? (Preguntar and pedir — long before the other two.)"
             }
           ]
         }

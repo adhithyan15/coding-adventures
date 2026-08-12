@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 74,
-  "title": "Synthesis --- Saying It Once",
+  "title": "Lo --- Saying It Without Naming It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a921606081b95220",
+  "sourceHash": "fnv1a64:ddf66e523e5b4013",
   "lessons": [
     {
-      "id": "ES-C42-sintesis-decirlo-una-vez",
-      "sequence": 1155,
-      "title": "Synthesis — saying it once",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — what these four words are for, which is not accuracy but not sounding like a stranger",
+      "id": "ES-C42-lo",
+      "sequence": 1175,
+      "title": "lo — \"it\"",
+      "headword": "lo",
+      "romanization": "lo",
+      "gloss": "\"it\" — a word you have been saying since your fourth chapter, in a job you have not met yet",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:425a2e9ef9831e06",
+      "sourceHash": "fnv1a64:cf124c145259318d",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro."
+              "text": "Say \"my name is\" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: a slot you have been using all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here are the same two exchanges, twice. Read both versions aloud."
+              "text": "Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name."
             },
             {
               "kind": "speech",
-              "text": "Version one:"
+              "text": "Here is a second word for that same slot."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida."
+              "text": "lo — it, standing in for something masculine."
             },
             {
               "kind": "speech",
-              "text": "Version two:"
+              "text": "Watch what it does:"
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago."
+              "text": "Tengo el libro. — I have the book. Lo tengo. — I have it."
             },
             {
               "kind": "speech",
-              "text": "Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them."
+              "text": "The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what the pronoun is actually for",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise."
+              "text": "Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause."
             },
             {
               "kind": "speech",
-              "text": "A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book."
+              "text": "Latin ille, \"that one,\" changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:"
             },
             {
               "kind": "speech",
-              "text": "So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that."
+              "text": "Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el."
+            },
+            {
+              "kind": "speech",
+              "text": "Standing alone in the verb's slot, it kept the vowel: illum becomes lo."
+            },
+            {
+              "kind": "speech",
+              "text": "So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job."
             }
           ]
         },
@@ -103,101 +115,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the book exchange, and hear the difference",
+              "instruction": "\"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the book exchange, and hear the difference]"
+              "source": "[YOU SAY: \"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed",
+              "instruction": "\"me llamo\" then \"lo tengo\" — the same slot, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed]"
+              "source": "[YOU SAY: \"me llamo\" then \"lo tengo\" — the same slot, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-book",
-              "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
+              "id": "ES-C42-lo-replace",
+              "prompt": "Say I have it, replacing el libro.",
               "assesses": [
                 "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-LEX-LO-OBJECT"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "si, lo tengo",
                 "lo tengo",
-                "si lo tengo"
+                "yo lo tengo"
               ],
               "feedback": {
-                "correct": "That is what a speaker would actually say.",
-                "incorrect": "Si, lo tengo. The noun was already named once; that was enough."
+                "correct": "Yes — and note the order: the little word comes first.",
+                "incorrect": "Lo tengo. The pronoun goes in front of the verb, exactly where me goes."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-meal",
-              "prompt": "Answer yes to Haces la comida, without repeating the noun.",
+              "id": "ES-C42-lo-place",
+              "prompt": "Does the pronoun go before or after the conjugated verb?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-OBJECT-PRONOUN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "before",
+                "in front of it",
+                "before the verb"
+              ],
+              "feedback": {
+                "correct": "Before — the same slot me has always taken.",
+                "incorrect": "Before the verb, just like the me in me llamo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-lo-origin",
+              "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
+              "assesses": [
+                "ES-ETYMON-ILLE-ILLA",
+                "ES-GRAMMAR-DEFINITE-ARTICLES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "si, la hago",
-                "la hago",
-                "si la hago"
+                "el",
+                "the article el",
+                "el, the article"
               ],
               "feedback": {
-                "correct": "La, because comida is feminine.",
-                "incorrect": "Si, la hago. The pronoun carries the gender of the noun that left."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-people",
-              "prompt": "Somebody says Te quiero. Say the answering half.",
-              "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "me quieres",
-                "y yo te quiero",
-                "te quiero"
-              ],
-              "feedback": {
-                "correct": "Two people, four words, a complete exchange.",
-                "incorrect": "Me quieres — or turn it back with te quiero."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-point",
-              "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "it named the same thing twice",
-                "it repeated the noun",
-                "nobody talks like that"
-              ],
-              "feedback": {
-                "correct": "Right — correct is not the same as what a speaker would say.",
-                "incorrect": "Nothing was ungrammatical. It just repeated a thing both people already had in mind."
+                "correct": "Right — one Latin word, worn down two different ways.",
+                "incorrect": "El. Both descend from illum; the article lost the vowel and the pronoun kept it."
               }
             }
           ]
@@ -215,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there."
+              "text": "What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all."
             }
           ]
         }

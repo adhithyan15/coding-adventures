@@ -1,48 +1,41 @@
-Spanish, chapter 83: Review --- Two Systems, Two New Words.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 83: Synthesis --- The Conversation Without Them.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — two systems, two new words.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Synthesis — the conversation without them.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?
+¿Tienes los libros? Answer yes without saying libros.
 
-What you've built.
-[a table of 6 rows, read aloud]
-me. direct — what: me. indirect — to whom: me.
-you. direct — what: te. indirect — to whom: te.
-him / her / usted. direct — what: lo, la. indirect — to whom: le.
-us. direct — what: nos. indirect — to whom: nos.
-you all (Spain). direct — what: os. indirect — to whom: os.
-them / ustedes. direct — what: los, las. indirect — to whom: les.
-Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s.
-Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys.
+The exchange.
+Four turns, with the pronouns:
+— ¿Tienes los libros? — Sí, los tengo. — ¿Y las comidas? — Las hago hoy.
+Now the same four turns without them:
+— ¿Tienes los libros? — Sí, tengo los libros. — ¿Y las comidas? — Hago las comidas hoy.
+Read the second version aloud, all four lines. It is not wrong anywhere. It is exhausting, and by the fourth line it sounds like somebody being careful with a stranger rather than talking.
 
-Grammar Lens: the one asymmetry.
-Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:
-direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked.
-Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole.
-It is good news. The row that carries all the difficulty in one column carries none in the other.
+Grammar Lens: what a pronoun buys, and what it costs.
+The pronoun buys speed, and it is paid for with attention.
+Los tengo is only clear because both of you remember what los points at. If the last three sentences were about meals and you say los tengo, your listener hunts for a masculine thing and finds none. A pronoun is a promise that the thing is still in the room.
+That is the real skill, and it is not on the grid: hold what has been said, and point back at it accurately. English asks the same of you and you have done it since you were three, which is why nobody taught it to you. Here the pointer must also agree in gender and number — which is why lo and la were the hard quarter of that table.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the direct six, then the indirect six, and hear how much is the same]
+[your turn — say: both versions of the four-turn exchange, and hear the second one tire]
 [pause 8 seconds for the answer]
-[your turn — say: "lo tengo, le hablo, los tengo, les hablo"]
+[your turn — say: "los tengo" and "las hago" until the gender arrives with the noun, not after it]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the shared four stop feeling like two separate lists.
-[question — say your answer, then pause 10 seconds]
-Give the six indirect object pronouns.
-[question — say your answer, then pause 12 seconds]
-Which row is the only one where the two sets differ in shape, and how?
-[question — say your answer, then pause 12 seconds]
-Across both tables, how many distinct word shapes are there in total?
+[question — say your answer, then pause 8 seconds]
+Answer yes to Tienes los libros, without the noun.
+[question — say your answer, then pause 8 seconds]
+Answer the question about las comidas, saying you make them.
+[question — say your answer, then pause 8 seconds]
+Say they love us.
+[question — say your answer, then pause 14 seconds]
+You have been talking about meals and you say los tengo. What goes wrong for your listener?
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast.
+¿Tienes los libros? (Sí, los tengo.) ¿Y las comidas? (Las hago.) What does a pronoun promise? (That the thing it points at is still in the room.) Next: the past tense.

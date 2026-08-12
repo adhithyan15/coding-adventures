@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 179,
-  "title": "Ha + Y --- The Fossil in a Three-Letter Word",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5b00f07768f7ab93",
+  "title": "Lo Que --- What, Out of Two Old Words",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:82aaf0bca0826c78",
   "lessons": [
     {
-      "id": "ES-C54-ha-mas-y",
-      "sequence": 2137,
-      "title": "ha + y — the fossil in a three-letter word",
-      "headword": "ha + y",
-      "romanization": "ha + y",
-      "gloss": "the fossil inside hay — a word for \"there\" that exists nowhere else in Spanish, and survives whole in French",
+      "id": "ES-C53-lo-que",
+      "sequence": 2163,
+      "title": "lo que — \"what,\" out of two old words",
+      "headword": "lo que",
+      "romanization": "lo que",
+      "gloss": "\"what\" — two words you already own, put together to name a thing you cannot name",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da01451a41371213",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:543d97e7f911068a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,46 +35,42 @@
             },
             {
               "kind": "speech",
-              "text": "Hay looks like nothing. Say the haber form for he/she. (Ha.) Now look at hay again with that in mind."
+              "text": "You have lo. You have que. This chapter puts them next to each other and adds nothing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: a noun-shaped hole",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hay is two words fused:"
+              "text": "lo que — what, in the sense of the thing that."
             },
             {
               "kind": "speech",
-              "text": "ha + y."
+              "text": "Lo que digo — what I say. (= the thing that I say) Lo que compro — what I buy."
             },
             {
               "kind": "speech",
-              "text": "The ha you already hold: it is haber, third person. The y is the interesting half. It is Latin ibi, meaning \"there\" — and Spanish otherwise lost that word completely."
+              "text": "Every relative clause so far has hung off a noun: el libro que compro. But sometimes there is no noun, because you do not know or do not care what the thing is. Lo stands in for it — a placeholder with no gender and nothing behind it — and que does its usual job of joining."
             },
             {
               "kind": "speech",
-              "text": "There is no y meaning \"there\" anywhere else in modern Spanish. It survives in exactly one place, welded to the front of a verb, because words that get glued to something else stop being available to be replaced. Hay is a museum case with one object in it."
+              "text": "So lo que is a noun-shaped hole with a sentence attached. That is why it translates as English what, which is doing exactly the same thing: what I say is the thing that I say with the word thing taken out."
             },
             {
               "kind": "speech",
-              "text": "So the literal reading is: \"it has there.\" Which is a strange way to say something exists, until you notice that the neighbours do the same:"
+              "text": "Now compare it to the lo you already know:"
             },
             {
               "kind": "speech",
-              "text": "French: il y a — \"it there has.\" Same haber verb, same ibi, same order, three words instead of one. French kept its y separate, so its fossil is still visible on the surface."
+              "text": "Lo digo. — I say it. (a specific thing, already named) Lo que digo — what I say. (no specific thing at all)."
             },
             {
               "kind": "speech",
-              "text": "English: there is — which also starts with a place-word doing a job that has nothing to do with place. Nobody is pointing anywhere when they say there is a problem."
-            },
-            {
-              "kind": "speech",
-              "text": "Three languages, three different verbs, and all of them reached for a word meaning \"there\" to announce that something exists. That is not borrowing; it is the same instinct arriving three times."
+              "text": "Same word. In the first it points at something known; in the second it points at a gap the following clause will fill."
             }
           ]
         },
@@ -99,76 +88,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ha\" then \"hay\" — hear the extra piece",
+              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ha\" then \"hay\" — hear the extra piece]"
+              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hay\", \"il y a\", \"there is\" — three languages, one instinct",
+              "instruction": "\"lo que compro\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hay\", \"il y a\", \"there is\" — three languages, one instinct]"
+              "source": "[YOU SAY: \"lo que compro\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-ha-mas-y-parts",
-              "prompt": "What two pieces make up hay?",
+              "id": "ES-C53-lo-que-say",
+              "prompt": "Say what I say, meaning the thing that I say.",
               "assesses": [
-                "ES-ETYMON-HAY-IBI",
-                "ES-LEX-HABER"
+                "ES-GRAMMAR-LO-QUE",
+                "ES-LEX-DECIR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "ha and y",
-                "ha plus y",
-                "ha + y"
+                "lo que digo",
+                "lo que yo digo"
               ],
               "feedback": {
-                "correct": "The haber you know, plus a word for there.",
-                "incorrect": "Ha, from haber, plus y."
+                "correct": "A noun-shaped hole with a sentence attached.",
+                "incorrect": "Lo que digo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-ha-mas-y-fossil",
-              "prompt": "Where else in modern Spanish does that y meaning there appear?",
+              "id": "ES-C53-lo-que-contrast",
+              "prompt": "What is the difference between lo digo and lo que digo?",
               "assesses": [
-                "ES-ETYMON-HAY-IBI"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 14,
               "acceptedResponses": [
-                "nowhere",
-                "nowhere else",
-                "only in hay"
+                "lo digo points at a known thing, lo que digo points at no thing",
+                "one is i say it, the other is what i say"
               ],
               "feedback": {
-                "correct": "A museum case with one object in it.",
-                "incorrect": "Nowhere else. It survived only because it was glued to a verb."
+                "correct": "Same word, pointing at something known or at a gap.",
+                "incorrect": "Lo digo = I say it, about something already named. Lo que digo = what I say, with no specific thing."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-ha-mas-y-french",
-              "prompt": "Which French phrase is the same three pieces, kept separate?",
+              "id": "ES-C53-lo-que-new",
+              "prompt": "How many new words did this chapter introduce?",
               "assesses": [
-                "ES-ETYMON-HAY-IBI"
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "il y a",
-                "il y a — it there has"
+                "none",
+                "zero",
+                "0"
               ],
               "feedback": {
-                "correct": "French left its fossil on the surface.",
-                "incorrect": "Il y a — literally it there has."
+                "correct": "Two old words, side by side.",
+                "incorrect": "None. Lo and que were both already yours."
               }
             }
           ]
@@ -186,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is hay made of? (Ha + y.) What does the y mean, and where else is it? (\"There\" — and nowhere else in Spanish.) What did French do with the same pieces? (Kept them apart: il y a.) Next: hay with a verb after it."
+              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place."
             }
           ]
         }

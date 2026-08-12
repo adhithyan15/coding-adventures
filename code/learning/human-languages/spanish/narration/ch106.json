@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 106,
-  "title": "Hecho, Dicho, Visto, Puesto",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9b3bb81f26be05be",
+  "title": "Synthesis --- A Small Story",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:a88bc482c3c9b3b7",
   "lessons": [
     {
-      "id": "ES-C49-participios-irregulares",
-      "sequence": 1318,
-      "title": "hecho, dicho, visto, puesto",
-      "headword": "hecho · dicho · visto · puesto",
-      "romanization": "hecho · dicho · visto · puesto",
-      "gloss": "four participles that refused the ending — and they are the four verbs you would have guessed",
+      "id": "ES-C48-sintesis-una-historia",
+      "sequence": 1344,
+      "title": "Synthesis — a small story",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ab41e7fd320161b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:f16d92879f453c0d",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,73 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "By the rule, the participle of hacer should be hacido. Say it. Now be told that nobody has ever said it."
+              "text": "Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: four, and you could have guessed which",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "participle",
-                "in use"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "verb: hacer. participle: hecho. in use: he hecho — I have done.",
-                "verb: decir. participle: dicho. in use: he dicho — I have said.",
-                "verb: ver. participle: visto. in use: he visto — I have seen.",
-                "verb: poner. participle: puesto. in use: he puesto — I have put."
-              ]
+              "kind": "speech",
+              "text": "Four sentences. Watch the tenses take turns."
             },
             {
               "kind": "speech",
-              "text": "Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular."
+              "text": "Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana."
             },
             {
               "kind": "speech",
-              "text": "You already know this in English. Go/went, see/saw, do/did, put/put — and nobody struggles with them, because you meet them a hundred times a day. The same will happen here."
+              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
+            },
+            {
+              "kind": "speech",
+              "text": "The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: what you can now do",
           "segments": [
             {
               "kind": "speech",
-              "text": "These four are not broken. They are older than the rule."
+              "text": "Notice the third sentence. Tuve un libro is not \"I had a book\" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular."
             },
             {
               "kind": "speech",
-              "text": "hecho from Latin factum — the thing done. English fact is that same word: a fact is literally a thing that has been done."
+              "text": "That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did."
             },
             {
               "kind": "speech",
-              "text": "dicho from Latin dictum — the thing said. English keeps dictum whole, and dictation, verdict (\"a true saying\"), contradict."
-            },
-            {
-              "kind": "speech",
-              "text": "visto from Latin vīsum — the thing seen. English vision, visible."
-            },
-            {
-              "kind": "speech",
-              "text": "puesto from Latin positum — the thing placed. English position, deposit, compose."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin already had participles for these verbs, and Spanish inherited them intact instead of rebuilding them from the stem. The regular -ado / -ido forms are the newer machinery; these four are what was there before it."
-            },
-            {
-              "kind": "speech",
-              "text": "So an irregular participle is not a form that went wrong. It is a form that was never replaced."
+              "text": "It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not."
             }
           ]
         },
@@ -126,98 +99,103 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hecho, dicho, visto, puesto\"",
+              "instruction": "the four sentences straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hecho, dicho, visto, puesto\"]"
+              "source": "[YOU SAY: the four sentences straight through]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"",
+              "instruction": "only the imperfects, then only the preterites, and hear the two layers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"]"
+              "source": "[YOU SAY: only the imperfects, then only the preterites, and hear the two layers]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-four",
-              "prompt": "Give the participles of hacer, decir, ver and poner.",
+              "id": "ES-C48-sintesis-una-historia-layers",
+              "prompt": "In the story, which two verbs are the background?",
               "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES",
-                "ES-LEX-HACER",
-                "ES-LEX-DECIR",
-                "ES-LEX-VER",
-                "ES-LEX-PONER"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "hecho, dicho, visto, puesto",
-                "hecho dicho visto puesto"
-              ],
-              "feedback": {
-                "correct": "The four commonest, as always.",
-                "incorrect": "hecho, dicho, visto, puesto."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participios-irregulares-fact",
-              "prompt": "Which everyday English noun is the same word as hecho?",
-              "assesses": [
-                "ES-ETYMON-FACTUM-DICTUM",
-                "ES-LEX-HACER"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "fact",
-                "fact, from factum"
+                "estudiaba and tenia",
+                "estudiaba, tenía",
+                "the imperfects"
               ],
               "feedback": {
-                "correct": "A fact is a thing that has been done.",
-                "incorrect": "Fact — Latin factum, the thing done."
+                "correct": "What things were like.",
+                "incorrect": "Estudiaba and tenia — the imperfects."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-why",
-              "prompt": "Why are these four irregular rather than some other four?",
+              "id": "ES-C48-sintesis-una-historia-third",
+              "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
               "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "they are the most used",
-                "because they are the commonest verbs",
-                "frequency"
+                "tuve is the moment of getting it",
+                "because it is an event, not a state",
+                "getting has edges"
               ],
               "feedback": {
-                "correct": "Only frequent words are used enough to survive being irregular.",
-                "incorrect": "They are the commonest verbs — the same four that break every other tense."
+                "correct": "Same verb, both layers, nothing irregular.",
+                "incorrect": "Tuve is the moment you got one — an event with edges."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-use",
-              "prompt": "Say we have seen it, using the participle of ver.",
+              "id": "ES-C48-sintesis-una-historia-tell",
+              "prompt": "Say I was studying when I spoke with Ana.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VER"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO",
+                "ES-LEX-ESTUDIAR",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "lo hemos visto",
-                "hemos visto"
+                "estudiaba cuando hable con ana",
+                "estudiaba cuando hablé con ana"
               ],
               "feedback": {
-                "correct": "Hemos visto.",
-                "incorrect": "Lo hemos visto — or just hemos visto."
+                "correct": "Background, then the thing that walked into it.",
+                "incorrect": "Estudiaba cuando hable con Ana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-sintesis-una-historia-why",
+              "prompt": "Why did this take three chapters when neither tense was new?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "because the choice is the difficulty, not the forms",
+                "english lets you leave the question unanswered",
+                "the forms were never the hard part"
+              ],
+              "feedback": {
+                "correct": "Spanish asks a question your first language let you skip.",
+                "incorrect": "The forms were never the difficulty. The choice is."
               }
             }
           ]
@@ -235,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "The four? (Hecho, dicho, visto, puesto.) Are they broken forms? (No — they are older than the rule, inherited whole from Latin.) Next: all of it together."
+              "text": "Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)"
             }
           ]
         }

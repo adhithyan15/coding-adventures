@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C36-dormir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1910
-chapter: 152
+sequence: 1940
+chapter: 156
 type: word
 headword: dormir
 gloss: to sleep — and the other half of the boot, where a stressed o breaks to ue

@@ -1,42 +1,48 @@
-Spanish, chapter 105: Has, Ha, Hemos, Habeis, Han.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 105: Review --- One Question, Three Answers.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-has, ha, hemos, habéis, han — the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short.
+Review — one question, three answers.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have eaten." (He comido.) Now the other five people need their word.
+Nothing new. Before the table: do the two past tenses differ in when?
 
-Grammar Lens: the whole of it.
-[a table of 6 rows, read aloud]
-I. haber: he. with a participle: he comido.
-you. haber: has. with a participle: has comido.
-he / she / usted. haber: ha. with a participle: ha comido.
-we. haber: hemos. with a participle: hemos comido.
-you all (Spain). haber: habéis. with a participle: habéis comido.
-they / ustedes. haber: han. with a participle: han comido.
-Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often.
-That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in.
-Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know.
+What you've built.
+Three chapters, one question, three ways it gets answered.
+[a table of 4 rows, read aloud]
+what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.
+what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.
+what you are doing: naming a state. tense: imperfect. example: tenía — I had.
+what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got.
+Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened.
+
+Grammar Lens: the question to actually ask.
+Not "which tense is this?" — that has no answer without you.
+Am I telling you what happened, or what things were like?
+What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:
+Estudiaba cuando habló Ana.
+And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one.
+There is no list to memorise here, and that is deliberate. Lists of "preterite trigger words" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "he, has, ha, hemos, habéis, han" until the list is one breath]
+[your turn — say: "hablé / hablaba", then "tenía / tuve", and name the difference in each pair]
 [pause 8 seconds for the answer]
-[your turn — say: "he comido, has comido, ha comido…" through all six]
+[your turn — say: the question aloud before each one]
 [pause 8 seconds for the answer]
 [repeat that twice]
+Until the question arrives before the verb does.
 [question — say your answer, then pause 12 seconds]
-Give all six forms of haber, in order.
-[question — say your answer, then pause 8 seconds]
-Say they have eaten.
+State the one question that chooses the tense.
+[question — say your answer, then pause 10 seconds]
+In estudiaba cuando hablo Ana, which verb is the scene?
 [question — say your answer, then pause 12 seconds]
-Why is haber shorter than an ordinary verb?
-[question — say your answer, then pause 8 seconds]
-How many forms does comido take across all six rows?
+Which two rows of the table are NOT the same event seen twice?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"They have eaten"? (Han comido.) "We have eaten"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule.
+The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for.

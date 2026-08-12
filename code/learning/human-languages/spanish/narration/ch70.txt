@@ -1,43 +1,43 @@
-Spanish, chapter 70: Lo --- Saying It Without Naming It.
+Spanish, chapter 70: Los --- The One That Does Not Add -s.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-lo — "it".
+los libros — "the books".
 
 Warm-up.
 [pause 2 seconds]
-Say "my name is" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?
+Last chapter: la casa becomes las casas. Apply the same move to el libro and say what you get, out loud, before reading on.
 
-Grammar Lens: a slot you have been using all along.
-Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name.
-Here is a second word for that same slot.
-lo — it, standing in for something masculine.
-Watch what it does:
-Tengo el libro. — I have the book. Lo tengo. — I have it.
-The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own.
-Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first.
+Grammar Lens: not els.
+If you said els libros, you did exactly the right thing and Spanish did not.
+los — the, for more than one masculine thing.
+el libro becomes los libros — the books.
+The noun behaved. The article did not: el became los, not els. Out of four articles this is the only one that changes more than its ending, and it is worth two minutes rather than a shrug.
 
 The word, taken apart.
-Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause.
-Latin ille, "that one," changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:
-Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el.
-Standing alone in the verb's slot, it kept the vowel: illum becomes lo.
-So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job.
+You have met this exact story before, three chapters ago, wearing different clothes.
+El is not a whole word that lost its way. It is a worn-down one: Latin illum gave elo, and elo lost its final vowel to become el. The plural came from illos — and it did not lose that vowel. It kept it, dropped the front instead, and arrived as los.
+So the pair is not el + s. It is two forms of one Latin word that wore down in two different directions:
+[a table of 2 rows, read aloud]
+masculine. singular: elo becomes el. plural: illos becomes los.
+feminine. singular: illam becomes la. plural: illas becomes las.
+This is the same shape as el and lo, which you met when the object pronouns started: the masculine forms lost a vowel where the feminine ones had none to lose. One sound change, showing up for the third time.
+An "irregular" article turns out to be a regular word that was worn down twice.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tengo el libro" then "Lo tengo" — hear the noun disappear]
+[your turn — say: "el libro" then "los libros"]
 [pause 8 seconds for the answer]
-[your turn — say: "me llamo" then "lo tengo" — the same slot, twice]
+[your turn — say: "el, la, los, las" — the whole set, in order]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I have it, replacing el libro.
-[question — say your answer, then pause 8 seconds]
-Does the pronoun go before or after the conjugated verb?
+Say the books.
+[question — say your answer, then pause 12 seconds]
+Why is it los and not els?
 [question — say your answer, then pause 10 seconds]
-Which everyday Spanish word comes from the same Latin word as lo?
+Give all four forms of the Spanish word for the.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all.
+"The books"? (Los libros.) Why not els? (El is worn down from elo; the plural kept the vowel.) Next: the plural rule your first chapter promised and did not give you.

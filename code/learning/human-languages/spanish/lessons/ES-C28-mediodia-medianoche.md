@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C28-mediodia-medianoche
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1690
-chapter: 133
+sequence: 1720
+chapter: 137
 type: word
 headword: mediodía, medianoche
 gloss: noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit

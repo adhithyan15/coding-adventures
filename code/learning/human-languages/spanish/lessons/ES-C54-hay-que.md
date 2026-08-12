@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C54-hay-que
 spine_node: SPINE-ASK-LOCATION
-sequence: 2138
-chapter: 180
+sequence: 2168
+chapter: 184
 type: grammar
 headword: hay que
 gloss: "one must" — obligation with nobody obliged, and the second of Spanish's two ways to leave a person out

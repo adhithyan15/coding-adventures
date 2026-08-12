@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 87,
-  "title": "Why Se? --- Gelo, and a Collision",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c5a8e618b55ad916",
+  "title": "Review --- Two Systems, Two New Words",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:76e6f2f3408989a6",
   "lessons": [
     {
-      "id": "ES-C47-por-que-se",
-      "sequence": 1168,
-      "title": "Why se? — and why it is not the se you know",
-      "headword": "gelo → se lo",
-      "romanization": "gelo → se lo",
-      "gloss": "why le turns into se — and why it is not the se you already know, however much it looks like it",
+      "id": "ES-C46-repaso-dos-sistemas",
+      "sequence": 1194,
+      "title": "Review — two systems, two new words",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — two systems, twelve cells, and only two of them new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c8c0429c85b82afb",
-      "notice": null,
+      "sourceHash": "fnv1a64:194b3653f471f3c0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,69 +42,63 @@
             },
             {
               "kind": "speech",
-              "text": "You have known a word se since almost the beginning: se llama, \"he calls himself.\" Now you have met a second se, in se lo digo. The obvious conclusion is that they are the same word doing a second job."
-            },
-            {
-              "kind": "speech",
-              "text": "They are not. They are two different words that arrived at the same spelling, and knowing that removes a confusion most learners carry for years."
+              "text": "Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Old Spanish did not say se lo. It said gelo."
+              "kind": "table",
+              "headers": [
+                "",
+                "direct — what",
+                "indirect — to whom"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "me. direct — what: me. indirect — to whom: me.",
+                "you. direct — what: te. indirect — to whom: te.",
+                "him / her / usted. direct — what: lo, la. indirect — to whom: le.",
+                "us. direct — what: nos. indirect — to whom: nos.",
+                "you all (Spain). direct — what: os. indirect — to whom: os.",
+                "them / ustedes. direct — what: los, las. indirect — to whom: les."
+              ]
             },
             {
               "kind": "speech",
-              "text": "That came from the two Latin pronouns you already know, run together and worn down: illī (the dative, giving le) plus illum (the accusative, giving lo) becomes gelo. One squeezed word for \"to-him it.\""
+              "text": "Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s."
             },
             {
               "kind": "speech",
-              "text": "So the medieval sentence was gelo digo, and it was regular. There was no substitution and no rule to learn."
-            },
-            {
-              "kind": "speech",
-              "text": "Then two things happened:"
-            },
-            {
-              "kind": "speech",
-              "text": "The word split back into two — gelo was re-analysed as ge + lo, matching the two-pronoun pattern everywhere else in the language."
-            },
-            {
-              "kind": "speech",
-              "text": "The sound ge drifted until it was pronounced exactly like se — and once two words sound identical, spelling follows."
-            },
-            {
-              "kind": "speech",
-              "text": "By the sixteenth century ge lo had become se lo, and the trail was cold."
+              "text": "Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: the one asymmetry",
           "segments": [
             {
               "kind": "speech",
-              "text": "This matters for a practical reason, not a historical one."
+              "text": "Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:"
             },
             {
               "kind": "speech",
-              "text": "The reflexive se in se llama means himself. If the se in se lo digo were that word, the sentence would have to mean something reflexive — and learners who assume it do spend years trying to make \"he tells it to himself\" fit sentences where it plainly does not."
+              "text": "direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked."
             },
             {
               "kind": "speech",
-              "text": "It does not fit because it is not that word. One se is Latin sē, \"himself\"; the other is illī, \"to him.\" Unrelated, and collided by accident of sound."
+              "text": "Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole."
             },
             {
               "kind": "speech",
-              "text": "Two words wearing one shape is something this language does often — ser is built from two Latin verbs, ir borrows its present from a third. Here it happens to two of the smallest words in Spanish, which is where it is hardest to notice."
+              "text": "It is good news. The row that carries all the difficulty in one column carries none in the other."
             }
           ]
         },
@@ -115,68 +116,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\" then \"se lo digo\" — two different words, one sound",
+              "instruction": "the direct six, then the indirect six, and hear how much is the same",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\" then \"se lo digo\" — two different words, one sound]"
+              "source": "[YOU SAY: the direct six, then the indirect six, and hear how much is the same]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C47-por-que-se-old",
-              "prompt": "What did Old Spanish say instead of se lo?",
-              "assesses": [
-                "ES-ETYMON-GELO"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lo tengo, le hablo, los tengo, les hablo\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
+              "source": "[YOU SAY: \"lo tengo, le hablo, los tengo, les hablo\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the shared four stop feeling like two separate lists."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-repaso-dos-sistemas-indirect",
+              "prompt": "Give the six indirect object pronouns.",
+              "assesses": [
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
+              ],
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "gelo",
-                "ge lo"
+                "me, te, le, nos, os, les",
+                "me te le nos os les"
               ],
               "feedback": {
-                "correct": "One squeezed word, and perfectly regular.",
-                "incorrect": "Gelo — from illi plus illum."
+                "correct": "Four of them were already yours.",
+                "incorrect": "me, te, le, nos, os, les."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-two",
-              "prompt": "Is the se of se lo digo the same word as the se of se llama?",
+              "id": "ES-C46-repaso-dos-sistemas-row",
+              "prompt": "Which row is the only one where the two sets differ in shape, and how?",
               "assesses": [
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "no",
-                "no, they are unrelated",
-                "no, they only sound alike"
+                "the him/her row: lo and la versus le",
+                "the third row",
+                "lo la versus le"
               ],
               "feedback": {
-                "correct": "One is Latin se, himself. The other is illi, to him.",
-                "incorrect": "No. They collided by sound; one is Latin se and the other is illi."
+                "correct": "Two forms in one column, one in the other.",
+                "incorrect": "The him/her/usted row: direct has lo and la, indirect has only le."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-why",
-              "prompt": "Which two Latin pronouns were squeezed together to make gelo?",
+              "id": "ES-C46-repaso-dos-sistemas-count",
+              "prompt": "Across both tables, how many distinct word shapes are there in total?",
               "assesses": [
-                "ES-ETYMON-GELO",
-                "ES-ETYMON-ILLI-DATIVE"
+                "ES-GRAMMAR-OBJECT-SETS-OVERLAP",
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "illi and illum",
-                "illi, illum",
-                "the dative and the accusative"
+                "nine",
+                "9",
+                "me te lo la le nos os los las les"
               ],
               "feedback": {
-                "correct": "The same two that gave you le and lo separately.",
-                "incorrect": "Illi and illum — the dative and accusative you already met."
+                "correct": "Nine shapes covering twelve cells, because four do double duty.",
+                "incorrect": "Nine: me, te, lo, la, le, nos, os, los, las, les — with four shared between the systems."
               }
             }
           ]
@@ -194,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "What was se lo before it was se lo? (Gelo.) Is it the reflexive se? (No — a different word that came to sound the same.) Next: all of it together."
+              "text": "How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast."
             }
           ]
         }

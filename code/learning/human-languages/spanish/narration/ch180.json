@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 180,
-  "title": "Hay Que --- Somebody Has To, and Nobody in Particular",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fa05edc5bdab17b0",
+  "title": "Review --- Three Jobs, No New Words",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:9021a59a2e171810",
   "lessons": [
     {
-      "id": "ES-C54-hay-que",
-      "sequence": 2138,
-      "title": "hay que — somebody has to, and nobody in particular",
-      "headword": "hay que",
-      "romanization": "hay que",
-      "gloss": "\"one must\" — obligation with nobody obliged, and the second of Spanish's two ways to leave a person out",
+      "id": "ES-C53-repaso-que",
+      "sequence": 2164,
+      "title": "Review — three jobs, no new words",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — a whole grammatical machine assembled from two words you already had",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2fbc7776273137fe",
-      "notice": null,
+      "sourceHash": "fnv1a64:561ab97098a8a549",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,57 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español left the person out. So did every sign you read. Here is the other way Spanish does that — and this one is about obligation."
+              "text": "Nothing new. One question first: how many new words did this rung teach you?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: an obligation with nobody in it",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "hay que + a plain infinitive — one must, you have to, it is necessary to."
-            },
-            {
-              "kind": "speech",
-              "text": "Hay que hablar español. — You have to speak Spanish. Hay que comer. — One must eat."
-            },
-            {
-              "kind": "speech",
-              "text": "Three words you already own, and no new grammar: hay, que, and a verb in its dictionary form."
-            },
-            {
-              "kind": "speech",
-              "text": "What it produces is an obligation with nobody obliged. Hay que hablar español does not say who has to — not you, not me, not them. It says the requirement exists, the way a sign says a thing is forbidden without saying who forbids it."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the same move as the impersonal se, and now you have both:"
+              "text": "None. Here is the whole rung:"
             },
             {
               "kind": "table",
               "headers": [
                 "",
                 "Spanish",
-                "leaves out"
+                "English"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
-                "something happens. Spanish: se habla español. leaves out: who does it.",
-                "something must happen. Spanish: hay que hablar español. leaves out: who must."
+                "joining to a noun. Spanish: el libro que compro. English: the book that I buy.",
+                "the same, with English's that dropped. Spanish: la casa que tengo. English: the house I have.",
+                "no noun to join to. Spanish: lo que digo. English: what I say."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two constructions, one habit: Spanish is comfortable saying that something is the case without saying who is behind it. English needs a vague you or they or a passive to manage the same thing, and always sounds slightly like it is avoiding the question."
+              "text": "Que you have held since quiero que hables. Lo you have held since the object pronouns. This rung put them to work and added nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth pausing on, because it is the last big structural piece a beginner's course owes you, and it turned out to cost no vocabulary at all. Almost everything in a language is like this eventually: the pieces stop being new and start being rearranged."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what to actually watch for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One error will outlive the others, so it gets the last word here."
+            },
+            {
+              "kind": "speech",
+              "text": "English deletes its joint. Spanish never does."
+            },
+            {
+              "kind": "speech",
+              "text": "You will think the book I bought, translate what you thought, and produce el libro compré. It will feel complete because your English was complete."
+            },
+            {
+              "kind": "speech",
+              "text": "The check is mechanical and takes a second: a noun, then a new subject and verb, with nothing in between — that gap needs a que."
+            },
+            {
+              "kind": "speech",
+              "text": "And when there is no noun to begin with, lo supplies one so that que has something to hang from. Which means both chapters were about the same thing: Spanish will not let the joint go missing."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -98,76 +121,81 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hay que hablar español\" then \"Se habla español\" — both with nobody in them",
+              "instruction": "all three rows of the table",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hay que hablar español\" then \"Se habla español\" — both with nobody in them]"
+              "source": "[YOU SAY: all three rows of the table]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the missing English that is loud."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-que-say",
-              "prompt": "Say you have to speak Spanish, without naming anybody.",
+              "id": "ES-C53-repaso-que-none",
+              "prompt": "How many new words did this rung introduce?",
               "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hay que hablar espanol",
-                "hay que hablar español"
+                "none",
+                "zero",
+                "0"
               ],
               "feedback": {
-                "correct": "An obligation with nobody obliged.",
-                "incorrect": "Hay que hablar espanol."
+                "correct": "Que and lo were both already yours.",
+                "incorrect": "None."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-que-form",
-              "prompt": "What form of the verb follows hay que?",
+              "id": "ES-C53-repaso-que-drop",
+              "prompt": "Say the house I have, and name the trap.",
               "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-QUE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the infinitive",
-                "the dictionary form",
-                "the plain infinitive"
-              ],
-              "feedback": {
-                "correct": "No conjugation at all — there is nobody to conjugate for.",
-                "incorrect": "The infinitive, the dictionary form."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-hay-que-pair",
-              "prompt": "Name the other Spanish construction that leaves the person out.",
-              "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-HAY-QUE"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "the impersonal se",
-                "se habla espanol",
-                "the se of se habla"
+                "la casa que tengo; english drops the that",
+                "la casa que tengo"
               ],
               "feedback": {
-                "correct": "One says something happens; the other says something must.",
-                "incorrect": "The impersonal se — se habla espanol."
+                "correct": "You think the English, and the que goes missing with it.",
+                "incorrect": "La casa que tengo. The trap is that English deletes its that."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-repaso-que-hole",
+              "prompt": "When there is no noun to join to, what supplies one?",
+              "assesses": [
+                "ES-GRAMMAR-LO-QUE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo",
+                "lo, as in lo que"
+              ],
+              "feedback": {
+                "correct": "So that que has something to hang from.",
+                "incorrect": "Lo — giving que something to attach to."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -179,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"One must eat\"? (Hay que comer.) Who must? (Nobody named.) And which other construction does the same? (The impersonal se.) Next: all of it in one place."
+              "text": "New words this rung? (None.) The error that outlives the others? (Dropping que, because English drops that.) Next: sentences long enough to be worth saying."
             }
           ]
         }

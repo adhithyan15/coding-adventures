@@ -2,6 +2,10 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Spanish reaches 186 chapters
+
+- Re-pin the Spanish chapter table from the generated manifest.
+
 ### Changed — Spanish reaches 182 chapters
 
 - Re-pin the Spanish chapter table from the generated manifest.

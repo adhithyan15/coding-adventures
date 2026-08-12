@@ -1,36 +1,44 @@
-Spanish, chapter 175: Lo Que --- What, Out of Two Old Words.
+Spanish, chapter 175: Review --- The Three Se's.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-lo que — "what," out of two old words.
+Review — the three se's.
 
 Warm-up.
 [pause 2 seconds]
-You have lo. You have que. This chapter puts them next to each other and adds nothing.
+Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart.
 
-Grammar Lens: a noun-shaped hole.
-lo que — what, in the sense of the thing that.
-Lo que digo — what I say. (= the thing that I say) Lo que compro — what I buy.
-Every relative clause so far has hung off a noun: el libro que compro. But sometimes there is no noun, because you do not know or do not care what the thing is. Lo stands in for it — a placeholder with no gender and nothing behind it — and que does its usual job of joining.
-So lo que is a noun-shaped hole with a sentence attached. That is why it translates as English what, which is doing exactly the same thing: what I say is the thing that I say with the word thing taken out.
-Now compare it to the lo you already know:
-Lo digo. — I say it. (a specific thing, already named) Lo que digo — what I say. (no specific thing at all).
-Same word. In the first it points at something known; in the second it points at a gap the following clause will fill.
+What you've built.
+[a table of 3 rows, read aloud]
+reflexive. example: se llama. what the se is: himself.
+impersonal. example: se habla español. what the se is: nobody named.
+the impostor. example: se lo digo. what the se is: le, in disguise.
+And here is the fact that makes this a review rather than a fourth thing to learn:
+The first two are the same word. The third is not.
+The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched.
+The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo.
+So Spanish does not have three ses. It has two, and a coincidence.
+
+Grammar Lens: how to tell them apart in the wild.
+You will not have to work this out consciously for long, but while you do:
+Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them.
+Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien.
+Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta.
+The first test is nearly free, because that direct object pronoun is sitting right there in the open.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "lo digo" then "lo que digo" — pointing at a thing, then at a gap]
+[your turn — say: "se llama", "se habla español", "se lo digo" — two of these are relatives]
 [pause 8 seconds for the answer]
-[your turn — say: "lo que compro"]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say what I say, meaning the thing that I say.
-[question — say your answer, then pause 14 seconds]
-What is the difference between lo digo and lo que digo?
-[question — say your answer, then pause 8 seconds]
-How many new words did this chapter introduce?
+[repeat that twice]
+[question — say your answer, then pause 12 seconds]
+Of the three se's, which two are really one word?
+[question — say your answer, then pause 10 seconds]
+What single thing right after se tells you it is the impostor?
+[question — say your answer, then pause 10 seconds]
+Which se is in como se dice?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "what I buy." (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place.
+How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it.

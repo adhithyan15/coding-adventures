@@ -2,180 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 52,
-  "title": "Tener in the Plural, and the Stem-Change Rule",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:65f3f570c4bb8dc4",
+  "title": "Estudiante --- a Word You Can Build",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8b6172542524dacb",
   "lessons": [
     {
-      "id": "ES-C08-tenemos",
-      "sequence": 970,
-      "title": "tenemos — and the stem change disappears",
-      "headword": "tenemos · tenéis",
-      "romanization": "tenemos · tenéis",
-      "gloss": "\"we have,\" \"you all have\" — and the stem change vanishes, for a reason you already know",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:09b6a064001e6559",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I have\" and \"you have.\" (Tengo, tienes.) And \"we eat.\" (Comemos.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the break is gone",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tenemos — we have., tenéis — you all have."
-            },
-            {
-              "kind": "speech",
-              "text": "Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem."
-            },
-            {
-              "kind": "speech",
-              "text": "You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress."
-            },
-            {
-              "kind": "speech",
-              "text": "Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole."
-            },
-            {
-              "kind": "speech",
-              "text": "The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tienes\" then \"tenemos\" — and hear the stress move off the stem",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tienes\" then \"tenemos\" — and hear the stress move off the stem]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comemos, tenemos\" — the same endings",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"comemos, tenemos\" — the same endings]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tenemos-form",
-              "prompt": "Say we have.",
-              "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-1PL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tenemos",
-                "nosotros tenemos"
-              ],
-              "feedback": {
-                "correct": "Yes — and no ie.",
-                "incorrect": "tenemos, with a plain e."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tenemos-why",
-              "prompt": "Why does tienes break its stem but tenemos does not?",
-              "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-1PL",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the stress is on the stem in tienes and on the ending in tenemos",
-                "stress",
-                "because of where the stress falls",
-                "tenemos stresses the ending"
-              ],
-              "feedback": {
-                "correct": "Right — the break follows the stress, not the verb.",
-                "incorrect": "Stress. Tienes stresses the stem; tenemos stresses the ending."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is \"we have\"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C08-tienen",
-      "sequence": 974,
-      "title": "tienen — the break comes back",
-      "headword": "tienen",
-      "romanization": "tienen",
-      "gloss": "\"they have\" — where the stress returns to the stem, and so does the break",
+      "id": "ES-C09-estudiante",
+      "sequence": 965,
+      "title": "estudiante",
+      "headword": "estudiante",
+      "romanization": "estudiante",
+      "gloss": "student — a word you can build yourself, out of a verb you already have",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51c3ab69b1cf3d6a",
+      "sourceHash": "fnv1a64:17b32a18e8b99151",
       "notice": null,
       "blocks": [
         {
@@ -191,39 +35,92 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"we have\", then \"you have\" to a friend. (Tenemos, tienes.) Which one has the broken stem?"
+              "text": "Say \"to study.\" (Estudiar.) You have had it since your first handful of verbs."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am a teacher.\" (Soy profesor — no un.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the rule, stated once and for all",
+          "title": "Grammar Lens: the one who is doing it",
           "segments": [
             {
               "kind": "speech",
-              "text": "tienen — they have, and ustedes tienen, you all have."
+              "text": "Verb + -ante = the person doing it."
             },
             {
               "kind": "speech",
-              "text": "The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:"
+              "text": "Take estudiar, cut the -ar, add -ante:"
             },
             {
               "kind": "speech",
-              "text": "A stem change happens exactly where the stem is stressed, and nowhere else."
+              "text": "estudiar becomes estudiante — the one who is studying."
             },
             {
               "kind": "speech",
-              "text": "That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language."
+              "text": "You did not memorise that word. You built it, from a verb you already had."
             },
             {
               "kind": "speech",
-              "text": "Learners are usually told to memorise a shape called \"the boot\" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do."
+              "text": "English uses the same ending, worn down to -ant: a participant takes part, an assistant assists, an inhabitant inhabits. So -ante and -ant are one more pair for your decoder."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "estudiante means student.",
+                "importante means important.",
+                "elegante means elegant."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And estudiante also begins es- + consonant. Take the e- off: studiante. Student. Two of your rules on one word."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, either person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Profesor changed to profesora for a woman. Estudiante does not change at all:"
+            },
+            {
+              "kind": "speech",
+              "text": "Él es estudiante., Ella es estudiante."
+            },
+            {
+              "kind": "speech",
+              "text": "The article moves instead — el estudiante, la estudiante — but the word itself stays put. Words ending in -ante almost never shift."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -236,94 +133,107 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tienes, tenemos, tienen\" — break, no break, break",
+              "instruction": "Soy estudiante",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tienes, tenemos, tienen\" — break, no break, break]"
+              "source": "[YOU SAY: *Soy estudiante*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two forms that never break, for any verb",
+              "instruction": "Somos estudiantes",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two forms that never break, for any verb]"
+              "source": "[YOU SAY: *Somos estudiantes*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tienen-form",
-              "prompt": "Say they have.",
+              "id": "ES-C09-estudiante-build",
+              "prompt": "Build the word for the one who studies, from estudiar.",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-3PL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tienen",
-                "ellos tienen",
-                "ustedes tienen"
-              ],
-              "feedback": {
-                "correct": "Yes — the break is back.",
-                "incorrect": "tienen."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tienen-rule",
-              "prompt": "In any stem-changing verb, which two forms never break?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
+                "ES-FRIEND-ANTE-ANT"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nosotros and vosotros",
-                "nosotros, vosotros",
-                "we and you all"
+                "estudiante",
+                "el estudiante"
               ],
               "feedback": {
-                "correct": "Those two, always — because the stress is on the ending there.",
-                "incorrect": "Nosotros and vosotros, in every stem-changing verb."
+                "correct": "Built, not memorised.",
+                "incorrect": "Cut the -ar, add -ante: estudiante."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tienen-boot",
-              "prompt": "What actually decides whether the stem breaks?",
+              "id": "ES-C09-estudiante-we",
+              "prompt": "Say: we are students.",
               "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
+                "ES-GRAMMAR-SER-PRESENT-1PL",
+                "ES-LEX-ESTUDIANTE"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "whether the stem is stressed",
-                "stress",
-                "where the stress falls"
+                "somos estudiantes",
+                "nosotros somos estudiantes"
               ],
               "feedback": {
-                "correct": "Stress — that is the whole rule.",
-                "incorrect": "Whether the stem carries the stress."
+                "correct": "And still no un or unos.",
+                "incorrect": "Somos estudiantes."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estudiante-decode",
+              "prompt": "Decode importante.",
+              "assesses": [
+                "ES-FRIEND-ANTE-ANT"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "important",
+                "importantly"
+              ],
+              "feedback": {
+                "correct": "-ante to -ant.",
+                "incorrect": "Important."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "What is \"they have\"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)"
+              "text": "What does -ante do to a verb? (Makes the one doing it.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And does estudiante change for a woman? (No — only the article does.)"
             }
           ]
         }

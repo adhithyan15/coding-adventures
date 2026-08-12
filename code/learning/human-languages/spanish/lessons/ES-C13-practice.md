@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-practice
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1110
-chapter: 59
+sequence: 1140
+chapter: 63
 type: practice-mix
 headword: (practice)
 gloss: singular putting, leaving, and coming, plus the six learned yo forms

@@ -1,41 +1,48 @@
-Spanish, chapter 87: Why Se? --- Gelo, and a Collision.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 87: Review --- Two Systems, Two New Words.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Why se? — and why it is not the se you know.
+Review — two systems, two new words.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You have known a word se since almost the beginning: se llama, "he calls himself." Now you have met a second se, in se lo digo. The obvious conclusion is that they are the same word doing a second job.
-They are not. They are two different words that arrived at the same spelling, and knowing that removes a confusion most learners carry for years.
+Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?
 
-The word, taken apart.
-Old Spanish did not say se lo. It said gelo.
-That came from the two Latin pronouns you already know, run together and worn down: illī (the dative, giving le) plus illum (the accusative, giving lo) becomes gelo. One squeezed word for "to-him it."
-So the medieval sentence was gelo digo, and it was regular. There was no substitution and no rule to learn.
-Then two things happened:
-The word split back into two — gelo was re-analysed as ge + lo, matching the two-pronoun pattern everywhere else in the language.
-The sound ge drifted until it was pronounced exactly like se — and once two words sound identical, spelling follows.
-By the sixteenth century ge lo had become se lo, and the trail was cold.
+What you've built.
+[a table of 6 rows, read aloud]
+me. direct — what: me. indirect — to whom: me.
+you. direct — what: te. indirect — to whom: te.
+him / her / usted. direct — what: lo, la. indirect — to whom: le.
+us. direct — what: nos. indirect — to whom: nos.
+you all (Spain). direct — what: os. indirect — to whom: os.
+them / ustedes. direct — what: los, las. indirect — to whom: les.
+Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s.
+Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys.
 
-Why it's said this way.
-This matters for a practical reason, not a historical one.
-The reflexive se in se llama means himself. If the se in se lo digo were that word, the sentence would have to mean something reflexive — and learners who assume it do spend years trying to make "he tells it to himself" fit sentences where it plainly does not.
-It does not fit because it is not that word. One se is Latin sē, "himself"; the other is illī, "to him." Unrelated, and collided by accident of sound.
-Two words wearing one shape is something this language does often — ser is built from two Latin verbs, ir borrows its present from a third. Here it happens to two of the smallest words in Spanish, which is where it is hardest to notice.
+Grammar Lens: the one asymmetry.
+Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:
+direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked.
+Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole.
+It is good news. The row that carries all the difficulty in one column carries none in the other.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "se llama" then "se lo digo" — two different words, one sound]
+[your turn — say: the direct six, then the indirect six, and hear how much is the same]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-What did Old Spanish say instead of se lo?
+[your turn — say: "lo tengo, le hablo, los tengo, les hablo"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until the shared four stop feeling like two separate lists.
+[question — say your answer, then pause 10 seconds]
+Give the six indirect object pronouns.
 [question — say your answer, then pause 12 seconds]
-Is the se of se lo digo the same word as the se of se llama?
+Which row is the only one where the two sets differ in shape, and how?
 [question — say your answer, then pause 12 seconds]
-Which two Latin pronouns were squeezed together to make gelo?
+Across both tables, how many distinct word shapes are there in total?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What was se lo before it was se lo? (Gelo.) Is it the reflexive se? (No — a different word that came to sound the same.) Next: all of it together.
+How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast.

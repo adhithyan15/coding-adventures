@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 69,
-  "title": "Synthesis --- More Than One",
+  "title": "Las --- The Plural Article That Behaves",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cba24af877e5ca75",
+  "sourceHash": "fnv1a64:f93efe639dd1b2ed",
   "lessons": [
     {
-      "id": "ES-C44-sintesis-mas-de-uno",
-      "sequence": 1133,
-      "title": "Synthesis — more than one",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — talking about more than one, and the article that disappears instead of pluralising",
+      "id": "ES-C44-las",
+      "sequence": 1155,
+      "title": "las casas — \"the houses\"",
+      "headword": "las casas",
+      "romanization": "las casas",
+      "gloss": "\"the houses\" — the plural article, which does exactly what the noun does",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea2fb3ad18fce376",
+      "sourceHash": "fnv1a64:0f0b30b75e5fcccb",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,35 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have a book.\" (Tengo un libro.) Now say \"I have books,\" and notice where you hesitate."
+              "text": "You learned this in your first chapter: a noun ending in a vowel adds -s. So what is \"houses\"? (Casas.) Now — what is \"the houses\"?"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the article that leaves",
+          "title": "Grammar Lens: the article does what the noun does",
           "segments": [
             {
               "kind": "speech",
-              "text": "The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because \"a\" and \"more than one\" disagree by definition."
+              "text": "las — the, for more than one feminine thing."
             },
             {
               "kind": "speech",
-              "text": "English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:"
+              "text": "la casa becomes las casas — the houses. la comida becomes las comidas — the meals."
             },
             {
               "kind": "speech",
-              "text": "Tengo un libro. — I have a book. Tengo libros. — I have books."
+              "text": "The -s lands on both words. That is not two rules; it is one rule applied where it belongs. You have already seen Spanish do this — buenas noches is buena copying noche's number — and it is the same instinct throughout the language: the words around a noun agree with it, so when the noun goes plural, they follow."
             },
             {
               "kind": "speech",
-              "text": "The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less."
+              "text": "So las is not a word to memorise. It is la obeying the rule you already hold."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Read this aloud and watch the two plurals doing different jobs."
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no."
-            },
-            {
-              "kind": "speech",
-              "text": "Bare libros means \"books, some books, books in general.\" Los libros means \"the books\" — particular ones, already known to both of you."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,105 +76,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo un libro\" then \"Tengo libros\" — hear the article vanish",
+              "instruction": "\"la casa\" then \"las casas\" — hear the -s twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo libros\" — hear the article vanish]"
+              "source": "[YOU SAY: \"la casa\" then \"las casas\" — hear the *-s* twice]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"libros\" then \"los libros\", twice, until the two feel like different questions",
+              "instruction": "\"las comidas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"libros\" then \"los libros\", twice, until the two feel like different questions]"
+              "source": "[YOU SAY: \"las comidas\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-bare",
-              "prompt": "Say I have books.",
+              "id": "ES-C44-las-houses",
+              "prompt": "Say the houses.",
               "assesses": [
-                "ES-GRAMMAR-BARE-PLURAL-NOUN",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tengo libros",
-                "yo tengo libros"
-              ],
-              "feedback": {
-                "correct": "No article at all — that is the whole trick.",
-                "incorrect": "Tengo libros. The indefinite article is dropped, not pluralised."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-definite",
-              "prompt": "Now say I have the books.",
-              "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
-                "ES-LEX-LIBRO"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tengo los libros",
-                "yo tengo los libros"
-              ],
-              "feedback": {
-                "correct": "Los libros — particular ones.",
-                "incorrect": "Tengo los libros. The definite article does pluralise."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-meals",
-              "prompt": "Say I make meals, meaning meals in general.",
-              "assesses": [
-                "ES-GRAMMAR-BARE-PLURAL-NOUN",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago comidas",
-                "yo hago comidas"
-              ],
-              "feedback": {
-                "correct": "Bare plural, no article.",
-                "incorrect": "Hago comidas — nothing in front of it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C44-sintesis-mas-de-uno-contrast",
-              "prompt": "What is the difference in meaning between casas and las casas?",
-              "assesses": [
-                "ES-GRAMMAR-BARE-PLURAL-NOUN",
                 "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
                 "ES-LEX-CASA"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "houses in general versus particular known ones",
-                "one is indefinite and one is definite",
-                "las casas means the houses"
+                "las casas",
+                "las casa s"
               ],
               "feedback": {
-                "correct": "The same choice English makes without noticing.",
-                "incorrect": "Casas is houses in general; las casas is the houses, ones you both already have in mind."
+                "correct": "Both words take the -s.",
+                "incorrect": "Las casas — the article follows the noun."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-las-meals",
+              "prompt": "Say the meals.",
+              "assesses": [
+                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+                "ES-LEX-COMIDA"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "las comidas",
+                "comidas"
+              ],
+              "feedback": {
+                "correct": "Las comidas.",
+                "incorrect": "Las comidas."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-las-rule",
+              "prompt": "How many new rules did this lesson add?",
+              "assesses": [
+                "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL",
+                "ES-GRAMMAR-NOUN-NUMBER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "none",
+                "zero",
+                "0"
+              ],
+              "feedback": {
+                "correct": "None — the noun rule simply also applies to the article.",
+                "incorrect": "None. The -s rule you learned in chapter one covers this."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -213,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have books\"? (Tengo libros — no article.) \"I have the books\"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named."
+              "text": "\"The houses\"? (Las casas.) Where did the -s go? (Both words.) Next: the masculine one, which does not do the obvious thing — and the reason will be familiar."
             }
           ]
         }

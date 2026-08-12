@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-repaso-ser-estar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 969
-chapter: 51
+sequence: 999
+chapter: 55
 type: practice-mix
 headword: (review)
 gloss: review — two verbs for "to be," in every person, and why only one of them is strange

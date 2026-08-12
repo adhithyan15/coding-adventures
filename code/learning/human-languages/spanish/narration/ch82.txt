@@ -1,41 +1,46 @@
-Spanish, chapter 82: Which One Is the Verb Asking For?.
+Spanish, chapter 82: Review --- All Eight.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Which one is the verb asking for? — how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb.
+Review — all eight.
 
 Warm-up.
 [pause 2 seconds]
-You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not.
+Nothing new here. Before the grid: where does an object pronoun sit, and has that ever changed?
 
-Grammar Lens: ask the verb one question.
-Does the verb do something to this, or aim something at this?
-That is the whole test.
-Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect.
-Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:
-I speak to her becomes le hablo. Fits.
-I have to the book becomes nonsense. So lo tengo.
-English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le.
+What you've built.
+Never, in nine chapters. Here is the complete set:
+[a table of 4 rows, read aloud]
+me. singular: me. plural: nos.
+you. singular: te. plural: os (Spain).
+it / them — masculine. singular: lo. plural: los.
+it / them — feminine. singular: la. plural: las.
+Eight cells, built one at a time, and this is the first page on which they have all appeared together. That is deliberate. A grid handed to you on the day you met the first one would have been eight things to memorise; here it is a picture of ground you already hold.
+Count the genuinely new shapes you had to learn across those chapters: me was already yours from chapter four, te was one, nos one, os one, lo one, la one — and los and las were free, because you produced them yourself from an -s.
 
-Why it's said this way.
-One thing the test will not settle, said now rather than met later as a shock.
-In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it.
-So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere.
+Grammar Lens: two questions.
+Reading the grid as eight decisions is the hard way. It is two:
+Who is on the receiving end — me, you, or something else?
+How many, and if it is a thing, which gender?
+The second question only bites in the bottom two rows, because only there does a noun decide. Me, te, nos and os are settled by the conversation itself: you always know who is talking.
+So the difficulty is not eight-eighths of this table. It is one quarter of it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Lo tengo" then "Le hablo" — which question does each answer?]
+[your turn — say: the eight in grid order, twice]
 [pause 8 seconds for the answer]
+[your turn — say: "me quieres, te quiero, nos quieren, os quiero"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until the grid is a reflex rather than a lookup.
 [question — say your answer, then pause 12 seconds]
-State the one-question test in your own words.
-[question — say your answer, then pause 8 seconds]
-Say I speak to her.
+Give all eight direct object pronouns.
 [question — say your answer, then pause 10 seconds]
-Say I have it, about the book, and say which set that is.
-[question — say your answer, then pause 12 seconds]
-Somebody in Madrid says le veo for I see him. Has a rule been broken?
+Which four of the eight need you to know a noun's gender?
+[question — say your answer, then pause 10 seconds]
+Which two of the eight did you never have to be taught?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place.
+How many direct object pronouns are there? (Eight.) How many of them depend on a noun? (Four.) Next: what all eight are for, in a conversation that would be unbearable without them.

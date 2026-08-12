@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C46-le
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1161
-chapter: 80
+sequence: 1191
+chapter: 84
 type: word
 headword: le
 gloss: "to him, to her, to you" — a Latin case Spanish kept and English threw away
