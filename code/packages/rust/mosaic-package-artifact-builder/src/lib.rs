@@ -601,6 +601,13 @@ fn validate_runtime_library_selection(
     Ok(())
 }
 
+fn project_shell_requires_runtime(
+    profile: Option<BuildProfile>,
+    runtime_library: Option<&Path>,
+) -> bool {
+    profile == Some(BuildProfile::NativeComplete) || runtime_library.is_some()
+}
+
 fn install_compose_runtime_library(
     source: &Path,
     backend_dir: &Path,
@@ -808,7 +815,7 @@ pub fn analyze_package_degradations_with_runtime(
         });
     }
 
-    let runtime_required_shell = profile == BuildProfile::NativeComplete
+    let runtime_required_shell = project_shell_requires_runtime(Some(profile), runtime_library)
         && matches!(
             opts.backend,
             Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
@@ -1676,7 +1683,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             let bundle_runtime = runtime_library.is_some();
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project: true,
-                require_runtime: profile == Some(BuildProfile::NativeComplete),
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 ..Default::default()
             };
             let r = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -1757,7 +1764,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::Compose => {
-            let require_runtime = profile == Some(BuildProfile::NativeComplete);
+            let require_runtime = project_shell_requires_runtime(profile, runtime_library);
             let bundle_runtime = runtime_library.is_some();
             let flat: [(&str, String); 3] = [
                 (
@@ -1808,7 +1815,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             written.push(host_nested);
         }
         Backend::Qt => {
-            let require_runtime = profile == Some(BuildProfile::NativeComplete);
+            let require_runtime = project_shell_requires_runtime(profile, runtime_library);
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime,
@@ -1878,7 +1885,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         Backend::SwiftUI => {
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 emit_project: true,
-                require_runtime: profile == Some(BuildProfile::NativeComplete),
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 ..Default::default()
             };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
@@ -1952,7 +1959,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         Backend::Xaml => {
             let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
                 emit_project: true,
-                require_runtime: profile == Some(BuildProfile::NativeComplete),
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 ..Default::default()
             };
             let r = mosaic_emit_xaml::pipeline::from_pipeline(
@@ -4670,6 +4677,52 @@ layout NativeEvents {
             assert_eq!(report.degradations[0].code, "runtime.sample-fallback");
             assert_eq!(report.degradations[0].layout_path, "$project");
         }
+    }
+
+    #[test]
+    fn permissive_xaml_with_selected_runtime_omits_sample_fallback() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.mil"),
+            "component Card { slot label : text ; }\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        let runtime = pkg.path().join("selected_task_app.dll");
+        fs::write(&runtime, b"selected-task-runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: true,
+                theme: None,
+            },
+            BuildProfile::Permissive,
+            Some(&runtime),
+        )
+        .expect("permissive XAML shell with selected runtime");
+
+        let report_path = out.path().join("xaml/mosaic-degradations.json");
+        assert!(result.artifacts.contains(&report_path));
+        let report = fs::read_to_string(report_path).unwrap();
+        assert!(report.contains("\"profile\": \"permissive\""));
+        assert!(report.contains("\"nativeComplete\": true"));
+        assert!(!report.contains("runtime.sample-fallback"));
+
+        let window = fs::read_to_string(out.path().join("xaml/MainWindow.xaml.cs")).unwrap();
+        assert!(window.contains("MosaicRuntimeHost.LoadRequired()"));
+        assert!(window.contains("MosaicRuntimeHost.ApplyRequiredProps"));
+        assert!(!window.contains("sample props loaded"));
+        assert_eq!(
+            fs::read(out.path().join("xaml/mosaic_app.dll")).unwrap(),
+            b"selected-task-runtime"
+        );
     }
 
     #[test]

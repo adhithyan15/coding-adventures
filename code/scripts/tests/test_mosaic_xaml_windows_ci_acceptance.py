@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 import tempfile
@@ -24,6 +25,14 @@ XAML_PACKAGE = (
     / "rust"
     / "mosaic-app-conformance"
     / "package"
+)
+TASK_XAML_CONFORMANCE = (
+    Path(__file__).resolve().parents[2]
+    / "packages"
+    / "rust"
+    / "task-mosaic-app"
+    / "conformance"
+    / "xaml"
 )
 SPEC = importlib.util.spec_from_file_location("mosaic_xaml_windows_ci_acceptance", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
@@ -57,11 +66,13 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 )
 
     def test_task_app_requires_acceptance(self) -> None:
-        self.assertTrue(
-            MODULE.requires_mosaic_xaml_windows(
-                {"affected_packages": ["unknown/programs/task-app"]}
-            )
-        )
+        for package in ("unknown/programs/task-app", "rust/task-mosaic-app"):
+            with self.subTest(package=package):
+                self.assertTrue(
+                    MODULE.requires_mosaic_xaml_windows(
+                        {"affected_packages": [package]}
+                    )
+                )
 
     def test_standard_mosaic_package_requires_acceptance(self) -> None:
         self.assertTrue(
@@ -103,6 +114,52 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             )
         self.assertEqual(result.stdout, "required=true\n")
 
+    def test_taskapp_report_requires_exact_documented_gaps(self) -> None:
+        report = {
+            "backend": "xaml",
+            "nativeComplete": False,
+            "degradations": [
+                *({"code": "interaction.drag-drop-inert"} for _ in range(4)),
+                {"code": "accessibility.table-semantics-missing"},
+            ],
+        }
+        MODULE.validate_taskapp_report(report)
+        report["degradations"].append({"code": "runtime.sample-fallback"})
+        with self.assertRaisesRegex(ValueError, "observed"):
+            MODULE.validate_taskapp_report(report)
+
+    def test_cli_validates_taskapp_report(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / "mosaic-degradations.json"
+            report.write_text(
+                json.dumps(
+                    {
+                        "backend": "xaml",
+                        "nativeComplete": False,
+                        "degradations": [
+                            *(
+                                {"code": "interaction.drag-drop-inert"}
+                                for _ in range(4)
+                            ),
+                            {"code": "accessibility.table-semantics-missing"},
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--validate-taskapp-report",
+                    str(report),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        self.assertIn("matches the five documented gaps", result.stdout)
+
     def test_workflow_routes_windows_toolchains_and_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn(
@@ -114,18 +171,30 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             "python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py",
             workflow,
         )
-        self.assertIn("Build complete Mosaic TaskApp WinUI shell", workflow)
+        self.assertIn("Build concrete Mosaic TaskApp WinUI shell", workflow)
         self.assertIn("timeout-minutes: 15", workflow)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,
         )
-        self.assertIn("--backend xaml --output $output --emit-project", workflow)
+        self.assertIn("-p mosaic-app-conformance -p task-mosaic-app", workflow)
+        self.assertIn("task_mosaic_app.dll", workflow)
+        self.assertIn(
+            "--backend xaml --output $output --emit-project --runtime-library $taskLibrary.Path",
+            workflow,
+        )
+        self.assertIn("--validate-taskapp-report", workflow)
+        self.assertIn("TaskApp XAML degradation validation failed", workflow)
         self.assertIn("dotnet build (Split-Path -Leaf $project)", workflow)
         self.assertIn("selected by generated global.json", workflow)
         self.assertIn("TaskApp.binlog", workflow)
         self.assertIn("output.json", workflow)
         self.assertIn("TaskApp WinUI build did not produce TaskApp.exe", workflow)
+        self.assertIn("mosaic_app.dll beside TaskApp.exe", workflow)
+        self.assertIn("TaskApp WinUI runtime bytes differ from task-mosaic-app.dll", workflow)
+        self.assertIn("TaskAppXamlRuntimeConformance.csproj", workflow)
+        self.assertIn("TaskAppXamlRuntimeConformance.dll", workflow)
+        self.assertIn("TaskApp XAML Rust runtime conformance failed", workflow)
         self.assertIn("mosaic-pkg-rating-controls --backend xaml", workflow)
         self.assertIn("--emit-project --profile native-complete", workflow)
         self.assertIn("--runtime-library $library.Path", workflow)
@@ -175,6 +244,24 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertTrue((XAML_PACKAGE / "mosaic-package.toml").is_file())
         for suffix in ("mil", "mll", "msl"):
             self.assertTrue((XAML_PACKAGE / "src" / f"Counter.{suffix}").is_file())
+
+    def test_task_app_conformance_drives_the_generated_binding(self) -> None:
+        project = (
+            TASK_XAML_CONFORMANCE / "TaskAppXamlRuntimeConformance.csproj"
+        ).read_text(encoding="utf-8")
+        program = (TASK_XAML_CONFORMANCE / "Program.cs").read_text(encoding="utf-8")
+        color_stub = (TASK_XAML_CONFORMANCE / "WindowsColorStub.cs").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("<TargetFramework>net9.0</TargetFramework>", project)
+        self.assertNotIn("Microsoft.WindowsAppSDK", project)
+        self.assertIn("MosaicRuntimeHost.LoadRequired()", program)
+        self.assertIn('"app-title", "new-task-name"', program)
+        self.assertIn('MosaicName => "newTaskNameChange"', program)
+        self.assertIn("Ship on Windows", program)
+        self.assertIn("MosaicRuntimeHost.HandleRequiredEvent", program)
+        self.assertIn("TaskApp XAML Rust runtime conformance passed", program)
+        self.assertIn("namespace Windows.UI;", color_stub)
 
 
 if __name__ == "__main__":

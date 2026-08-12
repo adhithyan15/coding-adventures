@@ -58,8 +58,11 @@ older deployment targets. Each strict desktop output has no known degradations,
 bundles the standard Rust runtime, verifies that installed runtime against the
 selected artifact, and launches without an injected library path. SwiftUI's iOS
 16 build remains a separate source-portability gate rather than packaging the
-macOS dylib. This does not close the cross-backend milestone; XAML retains
-explicit TaskApp degradations and concrete adapter promotion remains separate.
+macOS dylib. XAML now also bundles the concrete `task-mosaic-app` adapter, verifies
+the DLL installed beside `TaskApp.exe`, and drives the generated .NET binding with
+that app-local engine. It remains permissive while four drag/drop paths and one
+table-semantics path are explicit degradations; hosted Windows CI therefore does
+not close the cross-backend strict-profile milestone or claim a visible launch.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false
@@ -107,7 +110,10 @@ runner edits. The Compose and SwiftUI bindings resolve their installed
 resources, while the Qt and XAML bindings resolve the engine beside the
 installed executable before global lookup. A strict project build on any of the
 five native backends without that selection reports
-`runtime.library-not-bundled`.
+`runtime.library-not-bundled`. Selecting a runtime also makes the generated
+shell require that engine even under the permissive reporting profile. This
+allows an app with unrelated, explicitly reported UI degradations to ship a
+fail-closed engine boundary without retaining preview/sample props.
 Every exported Compose component is mirrored into the generated Gradle source
 set, so `gradle compileKotlin` type-checks the complete package even though the
 shell mounts the manifest's first export as its entry component.

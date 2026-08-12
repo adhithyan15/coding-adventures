@@ -18,4 +18,11 @@ cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
 ```
 
 Pass the resulting platform library to `mosaic-compile --runtime-library` when
-emitting `code/programs/mosaic/task-app` with the `native-complete` profile.
+emitting `code/programs/mosaic/task-app`. Use the `native-complete` profile on
+backends whose capability report is empty; XAML remains permissive until its
+native drag/drop and table-semantics gaps close.
+
+`conformance/xaml` is the task-specific .NET binding fixture. Windows CI combines
+it with the binding generated beside the complete TaskApp, places the built
+adapter under the conventional app-local `mosaic_app.dll` name, and verifies both
+initial props and a real semantic event without an environment override.

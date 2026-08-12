@@ -399,6 +399,12 @@ unblocks multiple downstream targets; never count source generation as completio
       `task-mosaic-app` runtime, byte-for-byte SwiftPM resource verification,
       and direct launch without `MOSAIC_APP_LIBRARY`. Keep iOS 16 compilation
       as a separate source-portability gate rather than packaging a macOS dylib.
+    - [x] Promote the concrete `task-mosaic-app` runtime into the complete XAML
+      WinUI artifact, verify the DLL beside `TaskApp.exe` byte-for-byte, and drive
+      TaskApp startup props plus a semantic event through the generated .NET
+      binding without `MOSAIC_APP_LIBRARY`. Keep the build permissive until the
+      four drag/drop and one table-semantics degradations below are removed;
+      visible launch remains an interactive Windows-worker gate.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.
