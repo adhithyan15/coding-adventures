@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.32.0
+
+- Preserve an optional requested graph canvas width through semantic and layout IR.
+
 ## 0.31.0
 
 - Preserve optional local direction on composite graph groups and layout groups.

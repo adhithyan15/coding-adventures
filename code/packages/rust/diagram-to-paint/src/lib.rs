@@ -2905,6 +2905,7 @@ mod tests {
     fn simple_layout() -> LayoutedGraphDiagram {
         LayoutedGraphDiagram {
             direction: DiagramDirection::Lr,
+            requested_width: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,

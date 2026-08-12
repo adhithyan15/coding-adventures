@@ -547,6 +547,7 @@ fn lower(doc: &DotDocument) -> GraphDiagram {
 
     GraphDiagram {
         direction,
+        requested_width: None,
         title,
         accessibility_title: None,
         accessibility_description: None,

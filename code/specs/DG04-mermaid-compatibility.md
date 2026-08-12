@@ -151,6 +151,9 @@ Graph layout stacks direct region members into deterministic lanes and Paint
 lowering emits horizontal divider paths for every backend.
 Composite-local `direction` statements remain scoped to their group in semantic
 IR and arrange direct region members independently of the document direction.
+`scale N width` preserves the requested canvas width in graph IR. Layout scales
+all geometry and resolved stroke, corner, and font sizes uniformly before the
+backend-neutral Paint scene reaches Metal or another renderer.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.
