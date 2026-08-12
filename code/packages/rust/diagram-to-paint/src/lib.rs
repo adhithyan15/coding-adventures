@@ -474,12 +474,14 @@ where
 
     // Node labels — vertically centred inside each node bounding box.
     for node in &diagram.nodes {
-        text_children.push(text_node(
+        let line_count = node.label.text.lines().count().max(1) as f64;
+        let text_height = line_count * label_size * 1.2;
+        text_children.push(text_node_no_wrap(
             &node.label.text,
             node.x,
-            node.y + (node.height - label_size) / 2.0,
+            node.y + (node.height - text_height) / 2.0,
             node.width,
-            label_size * 1.2,
+            text_height,
             {
                 let mut f = label_font.clone();
                 f.size = node.style.font_size;

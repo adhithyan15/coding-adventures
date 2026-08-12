@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.61.0
+
+- Preserve repeated state descriptions as ordered multiline labels.
+
 ## 0.60.0
 
 - Preserve modern and legacy state diagram titles in graph semantic IR.

@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -145,7 +145,16 @@ fn node_dimensions(
                 .fold(opts.min_node_width, f64::max);
             (width, (24.0 + line_count * 18.0).max(opts.node_height))
         }
-        _ => (node_width(&node.label.text, opts, measurer), opts.node_height),
+        _ => {
+            let width = node
+                .label
+                .text
+                .lines()
+                .map(|line| node_width(line, opts, measurer))
+                .fold(opts.min_node_width, f64::max);
+            let line_count = node.label.text.lines().count().max(1) as f64;
+            (width, opts.node_height.max(24.0 + line_count * 18.0))
+        }
     }
 }
 
@@ -747,7 +756,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.9.0");
+        assert_eq!(VERSION, "0.10.0");
     }
 
     #[test]

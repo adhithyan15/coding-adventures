@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.10.0
+
+- Reserve line-aware node geometry for repeated state descriptions.
+
 ## 0.9.0
 
 - Route graph edges to composite-group boundary geometry.

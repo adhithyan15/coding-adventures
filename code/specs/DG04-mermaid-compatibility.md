@@ -116,6 +116,9 @@ PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
 both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. The family
 remains partial until the pinned upstream corpus passes without unsupported
 forms or lossy semantics.
+Repeated `State: description` statements accumulate as ordered multiline
+semantic labels; graph layout reserves line-aware node geometry before Paint
+shapes each authored line without backend soft wrapping.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
