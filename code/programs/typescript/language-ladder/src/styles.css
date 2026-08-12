@@ -803,3 +803,11 @@ body {
 }
 
 .drill__verdict.yes { font-weight: 600; }
+
+/* Voice mode (HL10 §10.2). */
+.voice { margin: 0.6rem 0 0; }
+.voice__now {
+  margin: 0.4rem 0 0;
+  font-size: 0.86rem;
+  font-style: italic;
+}
