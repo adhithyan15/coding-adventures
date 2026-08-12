@@ -1,0 +1,72 @@
+% ============================================================================
+% igneous-rock-type — the two broad types of igneous rock and what actually
+% defines each (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% Every igneous rock forms from cooled magma, but WHERE it cools splits every
+% one into exactly one of two broad types: intrusive rock solidifies below
+% ground, extrusive rock solidifies at or above the surface. Recall is a
+% binding query:
+%
+%     ? igneous_rock_type(intrusive, $D)
+%       % solidifies_within_earth
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `igneous_rock_type(type, description)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on an igneous-rock-related term that is not one of these two. The
+% query also runs BACKWARD — bind a description and recall the type it
+% names:
+%
+%     ? igneous_rock_type($T, erupted_onto_the_surface_or_into_the_atmosphere)
+%       % extrusive
+%
+% The two types, as a little truth table:
+%
+%     type         description                                              quote (verbatim)
+%     -----------  -------------------------------------------------------  --------------------------------------------------------------------------------
+%     intrusive     solidifies_within_earth                                  "Intrusive igneous rocks solidify within Earth."
+%     extrusive     erupted_onto_the_surface_or_into_the_atmosphere          "Extrusive igneous rocks are erupted onto the surface or into the atmosphere."
+%
+% Provenance: quoted verbatim from the U.S. National Park Service's
+% "Igneous Rocks" geology page, which opens by stating "there are two broad
+% types of igneous rocks" and gives each its own standalone, parallel first
+% sentence under its own subsection heading. WebFetch-verified across two
+% passes before writing, the second pass pulling the full first paragraph
+% under each heading to confirm the target sentence stands alone as a
+% complete, grammatically independent statement, and a third pass
+% confirming the page names no third igneous-rock category (intrusive and
+% extrusive are presented as the complete, exhaustive two-way split).
+% `trust authoritative` — NPS is a U.S. government (.gov) agency, the
+% primary tier this stdlib already reserves for other government sources
+% (e.g. NASA, USGS, NOAA, Cal OES).
+%
+% Unlike most sibling tables in this directory, intrusive/extrusive is a
+% genuinely EXHAUSTIVE two-way split, not an arbitrary subset of a longer
+% list — the source's own opening line states there are exactly two broad
+% types. So honest abstention is instead demonstrated with `hypabyssal`: a
+% real geological term for rock that cooled at a shallow, intermediate
+% depth, but one this source's own two-category framework does not name or
+% pin to a defining sentence, so a recall on it ABSTAINS rather than
+% inventing a description or a third category. Picked using the mandatory
+% full-tree-grep-before-scoping discipline — zero hits for
+% "igneous_rock_type"/"intrusive"/"extrusive" before this file was written,
+% after checking two not-yet-reviewed science tables this window
+% (heat-transfer.adj, chemical-bonds.adj — both closed exhaustive
+% classifications, non-extendable); distinct from the sibling
+% `earth-science/rock-types.adj`, which names the three ROCK-CYCLE families
+% (igneous/sedimentary/metamorphic) by formation mechanism, not this
+% within-igneous split by cooling location. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table igneous_rock_type {
+    columns type, description
+
+    row (intrusive, solidifies_within_earth)
+    row (extrusive, erupted_onto_the_surface_or_into_the_atmosphere)
+
+    source "Intrusive igneous rocks solidify within Earth."
+    locator "https://www.nps.gov/subjects/geology/igneous.htm"
+    trust authoritative
+}
