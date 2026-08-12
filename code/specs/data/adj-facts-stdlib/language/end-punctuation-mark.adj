@@ -1,0 +1,60 @@
+% ============================================================================
+% end-punctuation-mark — three marks that end a sentence and what each
+% actually does (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Every sentence ends with ONE of a small set of marks, and which mark you
+% pick depends on the sentence's job -- a period closes a plain statement,
+% a question mark closes a question, an exclamation point closes a sentence
+% said with strong feeling. Recall is a binding query:
+%
+%     ? end_punctuation_mark(period, $D)
+%       % ends_a_declarative_sentence
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `end_punctuation_mark(mark, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a punctuation-related term that is not one
+% of these three. The query also runs BACKWARD — bind a description and
+% recall the mark it names:
+%
+%     ? end_punctuation_mark($M, communicates_that_a_sentence_is_a_question)
+%       % question_mark
+%
+% The three end-punctuation marks, as a little truth table:
+%
+%     mark                description                                       quote (verbatim)
+%     ------------------  ------------------------------------------------  --------------------------------------------------------------------------------
+%     period               ends_a_declarative_sentence                       "It has one job: to end a declarative sentence."
+%     question_mark        communicates_that_a_sentence_is_a_question        "They look like ? and they're used to communicate that a sentence is a question."
+%     exclamation_point    makes_sentences_exciting                          "Much like the period, the exclamation point has one job: to make sentences exciting!"
+%
+% Provenance: quoted verbatim from Grammarly's "Punctuation: The Best Guide
+% to Using Punctuation Marks" article, which introduces each of these
+% three end-punctuation marks in its own complete sentence. WebFetch-
+% verified before writing (twice — the second pass specifically
+% re-confirmed each sentence's exact wording via the surrounding
+% paragraph). `trust consensus` — Grammarly is a reputable secondary
+% reference, the same tier the sibling `noun-type.adj`/`verb-type.adj`/
+% `pronoun-type.adj`/`preposition-type.adj`/`conjunction-type.adj`/
+% `determiner-type.adj` (the other libraries in this directory) already
+% use for their Grammarly citations. A punctuation mark that is NOT one
+% of these three — "comma", a real mark the same page also covers, but
+% one that belongs to a DIFFERENT category (a mid-sentence pause mark,
+% not an end-of-sentence mark like the three tabled here) — is
+% deliberately NOT a row, so a recall ABSTAINS on it rather than
+% inventing a description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table end_punctuation_mark {
+    columns mark, description
+
+    row (period, ends_a_declarative_sentence)
+    row (question_mark, communicates_that_a_sentence_is_a_question)
+    row (exclamation_point, makes_sentences_exciting)
+
+    source "It has one job: to end a declarative sentence."
+    locator "https://www.grammarly.com/blog/punctuation-capitalization/punctuation/"
+    trust consensus
+}
