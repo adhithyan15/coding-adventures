@@ -1988,6 +1988,26 @@ smart-home authority:
 - D23 remains the source of truth for authorization, state, commands, pairing,
   supervision, durable revisions, and audit evidence.
 
+## Current Chief HTTP Request Clock Slice
+
+This slice closes the remaining request-time ambiguity in the shared
+Home Assistant adapter:
+
+- `smart-home-platform-http` accepts an explicitly fallible live clock and pins
+  one successful sample to the current request thread until the response is
+  produced.
+- Missing time returns HTTP 503 from the pre-handler boundary, so no route can
+  authorize, mutate, audit, or persist at a fabricated timestamp.
+- Grant activation and expiry, authorization decisions, durable mutation
+  timestamps, freshness projections, and response generation reuse the exact
+  pinned request value.
+- Chief passes through its fallible production Unix clock without substituting
+  zero; the standalone controller also refuses startup when its initial wall
+  clock cannot be represented.
+- Tests prove single-sample activation/expiry behavior, unavailable-clock
+  non-mutation, identical audit/persistence timestamps, and Chief composition
+  propagation after startup.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -2000,7 +2020,9 @@ execution, and durable Home Assistant readback are complete. The production
 Chief daemon now restores one D23 controller and optionally serves the Home
 Assistant-compatible API from that exact live owner. Listener authority is
 provisioned through a central transaction; both loopback listeners bind before
-serving and share coordinated failure and shutdown semantics.
+serving and share coordinated failure and shutdown semantics. The shared HTTP
+surface also samples one fallible request clock and fails closed before handler
+execution instead of fabricating timestamp zero.
 
 The remaining central-composition backlog still takes priority over adding
 another isolated integration or Chief read model:

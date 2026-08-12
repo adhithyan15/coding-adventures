@@ -67,6 +67,12 @@ joins it before control-plane teardown. The standalone
 into Chief composition, but it must not point at the same state directory while
 this table is enabled.
 
+The shared HTTP adapter receives the same fallible Unix-millisecond clock as the
+model-tool dispatcher. It samples that source once for every matched request
+and reuses the result for grant activation/expiry, authorization audit,
+persistence, freshness, and response generation. Clock unavailability returns
+HTTP 503 before the handler runs; the daemon never substitutes timestamp zero.
+
 The exported production data-plane composition boundary is also used by the real
 Level 1 host integration test. That test supplies owner-only key files and a
 loopback Ollama fixture, then proves encrypted receive, completion, encrypted

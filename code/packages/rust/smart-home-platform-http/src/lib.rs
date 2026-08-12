@@ -19,9 +19,8 @@ use smart_home_core::{
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
     DeviceCommand, DeviceControlCommandType, DeviceEvent, DeviceEventType, Entity, EntityId,
-    EntityKind, EventId, Health,
-    IntegrationId, MediaCommandType, PrivilegeTier, Scene, SceneScope, SmartHomeTool,
-    StateConfidence, StateDelta, StateSource, Value, ValueKind,
+    EntityKind, EventId, Health, IntegrationId, MediaCommandType, PrivilegeTier, Scene, SceneScope,
+    SmartHomeTool, StateConfidence, StateDelta, StateSource, Value, ValueKind,
 };
 use smart_home_dashboard_core::NativeDashboardManifest;
 use smart_home_runtime::{
@@ -36,15 +35,62 @@ use smart_home_runtime::{
     RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
     SmartHomeRuntime,
 };
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::sync::{Arc, Mutex};
+use std::thread::ThreadId;
 use web_core::{WebApp, WebRequest, WebResponse};
 
 pub const VERSION: &str = "0.1.0";
 
 const CONTROLLER_HANDOFF_PATH: &str = "/api/smart_home/controller_handoff";
 
-type RuntimeClock = Arc<dyn Fn() -> u64 + Send + Sync>;
+type RuntimeClockSource = Arc<dyn Fn() -> Option<u64> + Send + Sync>;
+
+#[derive(Clone)]
+struct RuntimeClock {
+    source: RuntimeClockSource,
+    request_times: Arc<Mutex<HashMap<ThreadId, u64>>>,
+}
+
+impl RuntimeClock {
+    fn infallible(source: impl Fn() -> u64 + Send + Sync + 'static) -> Self {
+        Self::fallible(move || Some(source()))
+    }
+
+    fn fallible(source: impl Fn() -> Option<u64> + Send + Sync + 'static) -> Self {
+        Self {
+            source: Arc::new(source),
+            request_times: Arc::new(Mutex::new(HashMap::new())),
+        }
+    }
+
+    fn begin_request(&self) -> Option<u64> {
+        let now_ms = (self.source)()?;
+        self.request_times
+            .lock()
+            .ok()?
+            .insert(std::thread::current().id(), now_ms);
+        Some(now_ms)
+    }
+
+    fn end_request(&self) {
+        if let Ok(mut request_times) = self.request_times.lock() {
+            request_times.remove(&std::thread::current().id());
+        }
+    }
+
+    fn now_ms(&self) -> Option<u64> {
+        if let Some(now_ms) = self
+            .request_times
+            .lock()
+            .ok()
+            .and_then(|request_times| request_times.get(&std::thread::current().id()).copied())
+        {
+            return Some(now_ms);
+        }
+        (self.source)()
+    }
+}
 type RuntimeMutationPersistence =
     Arc<dyn Fn(&SmartHomeRuntime, u64) -> Result<(), String> + Send + Sync>;
 type AutomationMutationPersistence = Arc<
@@ -2255,7 +2301,7 @@ impl SmartHomePlatformHttpRuntime {
             config,
             event_types: default_event_types(),
             principal_id: AgentId::trusted("agent:home-assistant-local-api"),
-            clock: Arc::new(|| 0),
+            clock: RuntimeClock::infallible(|| 0),
             mutation_persistence: None,
             automation_persistence: None,
         }
@@ -2275,13 +2321,26 @@ impl SmartHomePlatformHttpRuntime {
     }
 
     pub fn with_now_ms(mut self, now_ms: u64) -> Self {
-        self.clock = Arc::new(move || now_ms);
+        self.clock = RuntimeClock::infallible(move || now_ms);
         self
     }
 
     /// Use a live clock for request timestamps and freshness projections.
     pub fn with_clock(mut self, clock: impl Fn() -> u64 + Send + Sync + 'static) -> Self {
-        self.clock = Arc::new(clock);
+        self.clock = RuntimeClock::infallible(clock);
+        self
+    }
+
+    /// Use a live clock that can explicitly report that wall time is unavailable.
+    ///
+    /// HTTP requests fail with 503 before their handler runs when the clock does
+    /// not yield a timestamp. Mutating direct APIs return an error without
+    /// changing runtime state.
+    pub fn with_fallible_clock(
+        mut self,
+        clock: impl Fn() -> Option<u64> + Send + Sync + 'static,
+    ) -> Self {
+        self.clock = RuntimeClock::fallible(clock);
         self
     }
 
@@ -2343,7 +2402,7 @@ impl SmartHomePlatformHttpRuntime {
             .map_err(|_| "automation runtime mutex was poisoned".to_string())?;
         let previous_runtime = runtime.clone();
         let previous_automations = automations.clone();
-        let now_ms = self.now_ms();
+        let now_ms = self.try_now_ms()?;
         let report = automations
             .evaluate(
                 &mut runtime,
@@ -2367,6 +2426,7 @@ impl SmartHomePlatformHttpRuntime {
         &self,
         definition: AutomationDefinition,
     ) -> Result<Option<AutomationDefinition>, String> {
+        let now_ms = self.try_now_ms()?;
         let automation_runtime = self
             .automation_runtime
             .as_ref()
@@ -2382,8 +2442,7 @@ impl SmartHomePlatformHttpRuntime {
         let replaced = automations
             .upsert_definition(definition)
             .map_err(|error| error.to_string())?;
-        if let Err(error) = self.persist_automation_mutation(&runtime, &automations, self.now_ms())
-        {
+        if let Err(error) = self.persist_automation_mutation(&runtime, &automations, now_ms) {
             *automations = previous;
             return Err(error);
         }
@@ -2414,20 +2473,35 @@ impl SmartHomePlatformHttpRuntime {
     }
 
     pub fn snapshot(&self) -> SmartHomePlatformHttpState {
+        self.try_snapshot()
+            .expect("request clock should be available when taking a snapshot")
+    }
+
+    /// Build a runtime projection without inventing a timestamp when a
+    /// fallible clock is unavailable.
+    pub fn try_snapshot(&self) -> Result<SmartHomePlatformHttpState, String> {
         let runtime = self
             .runtime
             .lock()
-            .expect("smart-home runtime mutex should not be poisoned");
-        SmartHomePlatformHttpState::from_runtime(
+            .map_err(|_| "smart-home runtime mutex was poisoned".to_string())?;
+        Ok(SmartHomePlatformHttpState::from_runtime(
             &runtime,
             self.config.clone(),
             self.event_types.clone(),
-            self.now_ms(),
-        )
+            self.try_now_ms()?,
+        ))
     }
 
     fn now_ms(&self) -> u64 {
-        (self.clock)()
+        self.clock
+            .now_ms()
+            .expect("request clock should be sampled before handling")
+    }
+
+    fn try_now_ms(&self) -> Result<u64, String> {
+        self.clock
+            .now_ms()
+            .ok_or_else(|| "request clock is unavailable".to_string())
     }
 
     fn persist_mutation_or_restore(
@@ -2524,6 +2598,24 @@ pub fn home_assistant_web_app(state: SmartHomePlatformHttpState) -> WebApp {
 
 pub fn home_assistant_runtime_web_app(runtime: SmartHomePlatformHttpRuntime) -> WebApp {
     let mut app = WebApp::new();
+
+    {
+        let clock = runtime.clock.clone();
+        app.before_handler(move |_| {
+            clock
+                .begin_request()
+                .is_none()
+                .then(|| json_error(503, "request clock is unavailable; request was not handled"))
+        });
+    }
+
+    {
+        let clock = runtime.clock.clone();
+        app.after_handler(move |_, response| {
+            clock.end_request();
+            response
+        });
+    }
 
     app.get("/", |_| dashboard_ui_response());
     app.get("/dashboard", |_| dashboard_ui_response());
@@ -10278,9 +10370,7 @@ fn command_type_label(command_type: CommandType) -> &'static str {
         CommandType::DeviceControl(DeviceControlCommandType::SetDisplayBrightness) => {
             "device_set_display_brightness"
         }
-        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => {
-            "sensor_calibrate"
-        }
+        CommandType::DeviceControl(DeviceControlCommandType::CalibrateSensor) => "sensor_calibrate",
         CommandType::DeviceControl(DeviceControlCommandType::SetTemperatureUnit) => {
             "device_set_temperature_unit"
         }
@@ -10909,6 +10999,7 @@ mod tests {
     use std::io::{BufRead, BufReader, Read, Write};
     use std::net::{SocketAddr, TcpStream};
     use std::path::PathBuf;
+    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::Arc;
     use std::thread;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -11551,6 +11642,46 @@ mod tests {
     }
 
     #[test]
+    fn runtime_web_app_reuses_request_timestamp_for_audit_and_persistence() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let clock_calls = Arc::clone(&calls);
+        let saved_at = Arc::new(Mutex::new(Vec::new()));
+        let persisted_at = Arc::clone(&saved_at);
+        let runtime = fixture_runtime(true)
+            .with_fallible_clock(move || {
+                let call = clock_calls.fetch_add(1, Ordering::SeqCst);
+                Some(if call == 0 { 5_000 } else { 6_000 })
+            })
+            .with_mutation_persistence(move |_, saved_at_ms| {
+                persisted_at.lock().unwrap().push(saved_at_ms);
+                Ok(())
+            });
+        let shared_runtime = Arc::clone(&runtime.runtime);
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let response: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/services/light/turn_on",
+                r#"{"entity_id":"entity-light-1"}"#,
+            ))
+            .into();
+
+        assert_eq!(response.status, 200);
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+        assert_eq!(*saved_at.lock().unwrap(), vec![5_000]);
+        let runtime = shared_runtime.lock().unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions()
+            .collect::<Vec<_>>();
+        assert!(!decisions.is_empty());
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.decided_at_ms == 5_000));
+    }
+
+    #[test]
     fn runtime_web_app_serves_dashboard_ready_audit_routes() {
         let app = home_assistant_runtime_web_app(fixture_runtime(true));
 
@@ -11878,6 +12009,81 @@ mod tests {
             ))
             .into();
         assert_eq!(invalid_command.status, 400);
+    }
+
+    #[test]
+    fn runtime_web_app_pins_one_fallible_timestamp_per_request() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let clock_calls = Arc::clone(&calls);
+        let runtime = fixture_runtime(false).with_fallible_clock(move || {
+            let call = clock_calls.fetch_add(1, Ordering::SeqCst);
+            Some(if call == 0 { 5_000 } else { 6_000 })
+        });
+        runtime
+            .runtime
+            .lock()
+            .unwrap()
+            .registry_mut()
+            .upsert_capability_grant(
+                CapabilityGrant::for_all_smart_home(
+                    CapabilityGrantId::trusted("grant:test:request-clock"),
+                    AgentId::trusted("agent:home-assistant-local-api"),
+                    PrivilegeTier::HighRisk,
+                    "test",
+                    4_000,
+                )
+                .with_expiry(5_500),
+            );
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let first = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on",
+            ))
+            .into(),
+        );
+        assert!(first.contains(r#""authorized":true"#));
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+
+        let second = response_body(
+            app.handle(request(
+                "GET",
+                "/api/smart_home/command_authorization?entity_id=light.entity_light_1&command_type=turn_on",
+            ))
+            .into(),
+        );
+        assert!(second.contains(r#""authorized":false"#));
+        assert_eq!(calls.load(Ordering::SeqCst), 2);
+    }
+
+    #[test]
+    fn runtime_web_app_rejects_mutation_before_handler_when_clock_is_unavailable() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let clock_calls = Arc::clone(&calls);
+        let runtime = fixture_runtime(true).with_fallible_clock(move || {
+            clock_calls.fetch_add(1, Ordering::SeqCst);
+            None
+        });
+        let shared_runtime = Arc::clone(&runtime.runtime);
+        let app = home_assistant_runtime_web_app(runtime);
+
+        let response: WebResponse = app
+            .handle(request_with_body(
+                "POST",
+                "/api/smart_home/desired_states/light.entity_light_1",
+                r#"{"desired_state":{"light.on_off":true}}"#,
+            ))
+            .into();
+
+        assert_eq!(response.status, 503);
+        assert!(response_body(response).contains("request clock is unavailable"));
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+        let runtime = shared_runtime.lock().unwrap();
+        let desired_states = runtime.query_desired_states(
+            &DesiredStateQuery::new().for_entity(EntityId::trusted("entity-light-1")),
+        );
+        assert!(desired_states.is_empty());
     }
 
     #[test]
@@ -13856,7 +14062,10 @@ mod tests {
     #[test]
     fn media_command_labels_round_trip_through_local_api_labels() {
         let commands = [
-            ("media_set_playback_state", MediaCommandType::SetPlaybackState),
+            (
+                "media_set_playback_state",
+                MediaCommandType::SetPlaybackState,
+            ),
             ("media_play_next", MediaCommandType::PlayNext),
             ("media_play_previous", MediaCommandType::PlayPrevious),
             ("media_set_volume", MediaCommandType::SetVolume),

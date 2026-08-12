@@ -2253,6 +2253,13 @@ before serving and stop as one process; a bind or serving failure cannot leave t
 peer listener running. A standalone local controller must not concurrently own
 the same D23 state directory.
 
+That HTTP adapter MUST preserve wall-clock failure rather than converting it to
+a sentinel timestamp. Chief samples its injected Unix-millisecond clock exactly
+once before each matched HTTP handler. An unavailable clock returns HTTP 503
+before authorization or mutation; a successful sample is pinned across grant
+activation/expiry checks, authorization audit, durable persistence, freshness,
+and every response projection produced by that request.
+
 The operator credential path is a fail-closed local trust boundary. Composition
 MUST load an existing canonical 64-byte lowercase-hex credential or claim an absent
 file name without truncating or replacing any existing object. Reads are bounded,

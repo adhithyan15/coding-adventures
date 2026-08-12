@@ -549,7 +549,7 @@ fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
         SmartHomePlatformHttpConfig::new(config.instance_name()),
     )
     .with_principal_id(SmartHomeAgentId::trusted(SMART_HOME_HTTP_PRINCIPAL_ID))
-    .with_clock(move || request_clock.now_ms().unwrap_or(0))
+    .with_fallible_clock(move || request_clock.now_ms())
     .with_automation_runtime(controller.automation_runtime_handle())
     .with_mutation_persistence(controller.runtime_persistence_adapter())
     .with_automation_persistence(controller.automation_persistence_adapter());
@@ -1050,11 +1050,16 @@ mod tests {
         fn set(&self, now_ms: u64) {
             self.0.store(now_ms, Ordering::Relaxed);
         }
+
+        fn set_unavailable(&self) {
+            self.0.store(u64::MAX, Ordering::Relaxed);
+        }
     }
 
     impl UnixTimeClock for TestUnixTimeClock {
         fn now_ms(&self) -> Option<u64> {
-            Some(self.0.load(Ordering::Relaxed))
+            let now_ms = self.0.load(Ordering::Relaxed);
+            (now_ms != u64::MAX).then_some(now_ms)
         }
     }
 
@@ -1432,6 +1437,29 @@ hardware_key_timeout = 60
             .registry()
             .capability_grant(&CapabilityGrantId::trusted(SMART_HOME_HTTP_GRANT_ID))
             .is_some());
+    }
+
+    #[test]
+    fn smart_home_http_composition_preserves_runtime_clock_unavailability() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let config = smart_home_listener_config();
+        let clock = Arc::new(TestUnixTimeClock::new(1_500));
+        let http = compose_smart_home_http_runtime(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            clock.clone(),
+        )
+        .unwrap();
+        let provisioned_revision = controller.revision().unwrap();
+
+        clock.set_unavailable();
+
+        assert_eq!(
+            http.try_snapshot().unwrap_err(),
+            "request clock is unavailable"
+        );
+        assert_eq!(controller.revision().unwrap(), provisioned_revision);
     }
 
     #[test]

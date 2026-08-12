@@ -9,6 +9,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add a fallible live-clock adapter and pin exactly one timestamp per HTTP
+  request. Unavailable time now returns 503 before route handling, while
+  authorization, audit, persistence, and response projections reuse the same
+  request timestamp.
 - Add opt-in `--hue-mdns-interface` production composition that runs the Hue
   mDNS discovery service actor through the central controller owner.
 - Compose the production local controller through the central
