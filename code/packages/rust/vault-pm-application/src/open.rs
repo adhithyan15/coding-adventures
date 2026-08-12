@@ -32,6 +32,7 @@ use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
 pub const DEFAULT_ITEM_HISTORY_LIMIT: usize = 100;
 /// Hard maximum number of historical revisions returned for one item.
 pub const MAX_ITEM_HISTORY_LIMIT: usize = 4_096;
+const MAX_LOGIN_URLS: usize = 16;
 
 /// Owned wipe-on-drop caller fields for one complete login edit.
 pub struct LoginEditInputV1 {
@@ -112,27 +113,7 @@ impl LoginEditPreparationV1 {
         input: LoginEditInputV1,
         updated_at_ms: u64,
     ) -> Result<ItemDocument, ApplicationError> {
-        let AnyRecord::Login(_) = self.current.payload() else {
-            return Err(ApplicationError::InternalInvariant);
-        };
-        ItemDocument::new(
-            self.current.id(),
-            self.current.schema().clone(),
-            self.current.created_at_ms(),
-            updated_at_ms.max(self.current.updated_at_ms()),
-            self.current.favorite().clone(),
-            self.current.collection_ids().clone(),
-            self.current.tags().clone(),
-            AnyRecord::Login(Login {
-                title: input.title.into_inner(),
-                username: input.username.into_inner(),
-                password: input.password.into_inner(),
-                urls: input.urls.into_iter().map(Zeroizing::into_inner).collect(),
-                notes: input.notes.map(Zeroizing::into_inner),
-            }),
-            self.current.attachments().clone(),
-        )
-        .map_err(|_| ApplicationError::InvalidInput)
+        replacement_login_document(&self.current, input, updated_at_ms)
     }
 
     /// Complete a validated pre-audit login edit as one replacement mutation.
@@ -211,6 +192,126 @@ impl LoginEditPreparationV1 {
             Some(self.expected_revision),
             audit.wall_time_ms,
             audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
+
+fn replacement_login_document(
+    current: &ItemDocument,
+    input: LoginEditInputV1,
+    updated_at_ms: u64,
+) -> Result<ItemDocument, ApplicationError> {
+    let AnyRecord::Login(_) = current.payload() else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    if input.urls.len() > MAX_LOGIN_URLS {
+        return Err(ApplicationError::InvalidInput);
+    }
+    ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        updated_at_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        AnyRecord::Login(Login {
+            title: input.title.into_inner(),
+            username: input.username.into_inner(),
+            password: input.password.into_inner(),
+            urls: input.urls.into_iter().map(Zeroizing::into_inner).collect(),
+            notes: input.notes.map(Zeroizing::into_inner),
+        }),
+        current.attachments().clone(),
+    )
+    .map_err(|_| ApplicationError::InvalidInput)
+}
+
+struct LoginConflictMergeFailureAuditV1 {
+    wall_time_ms: u64,
+    randomness: AuditedAccessRandomnessV1,
+}
+
+/// Opaque application-owned state for one validated authored login conflict
+/// merge.
+///
+/// The base revision and complete secret-bearing base document never cross
+/// this boundary. The value intentionally implements neither `Debug` nor
+/// `Clone` and is consumed by completion or audited failure recording.
+pub struct LoginConflictMergePreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    base: Zeroizing<ItemDocument>,
+    failure_audit: LoginConflictMergeFailureAuditV1,
+}
+
+/// Audited result of validating one authored login conflict merge target.
+pub enum AuditedLoginConflictMergePreparationV1 {
+    /// The application retains the base document and complete conflict set.
+    Ready(Box<LoginConflictMergePreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedLoginConflictMergePreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(self) -> Result<LoginConflictMergePreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
+impl LoginConflictMergePreparationV1 {
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    /// Complete the user-authored login merge, publishing validation failure
+    /// before returning it and success atomically with the merged revision.
+    pub fn complete_audited(
+        self,
+        input: LoginEditInputV1,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let document =
+            match replacement_login_document(&self.base, input, self.failure_audit.wall_time_ms) {
+                Ok(document) => document,
+                Err(error) => return self.publish_audited_failure(error, local_state_store),
+            };
+        let active = self.session.merge_item_conflict(
+            document,
+            self.failure_audit.wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.session.finish_audited_access(
+            AuditActionV1::ItemConflictMerge,
+            Some(self.item_id),
+            None,
+            self.failure_audit.wall_time_ms,
+            self.failure_audit.randomness,
             local_state_store,
             Err(error),
         )
@@ -1904,6 +2005,87 @@ impl UnlockedVaultV1 {
         } else {
             (Err(ApplicationError::NotFound), None)
         }
+    }
+
+    /// Validate one exact current live login as the opaque metadata base for
+    /// an authored conflict merge, or publish the failed precondition before
+    /// releasing its closed error.
+    ///
+    /// The complete base document remains application-owned. Every retained
+    /// live candidate must share its schema and creation time so completion can
+    /// safely publish through the all-current-parent merge primitive.
+    pub fn prepare_audited_login_conflict_merge(
+        self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedLoginConflictMergePreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        match self.login_conflict_merge_precondition(item_id, base_revision) {
+            Ok(base) => Ok(AuditedLoginConflictMergePreparationV1::Ready(Box::new(
+                LoginConflictMergePreparationV1 {
+                    session: self,
+                    item_id,
+                    base,
+                    failure_audit: LoginConflictMergeFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    },
+                },
+            ))),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemConflictMerge,
+                    Some(item_id),
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| AuditedLoginConflictMergePreparationV1::Failed(Box::new(failure))),
+        }
+    }
+
+    fn login_conflict_merge_precondition(
+        &self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let candidates = self
+            .current_catalog
+            .items
+            .get(&item_id)
+            .ok_or(ApplicationError::NotFound)?;
+        if candidates.len() < 2 {
+            return Err(ApplicationError::ConflictRequired);
+        }
+        let selected = candidates
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .ok_or(ApplicationError::NotFound)?;
+        let ItemState::Live(base) = selected.state() else {
+            return Err(ApplicationError::InvalidInput);
+        };
+        if base.id() != item_id {
+            return Err(ApplicationError::InvalidInput);
+        }
+        let AnyRecord::Login(_) = base.payload() else {
+            return Err(ApplicationError::Unsupported);
+        };
+        for candidate in candidates {
+            if let ItemState::Live(current) = candidate.state() {
+                if current.id() != item_id
+                    || current.schema() != base.schema()
+                    || current.created_at_ms() != base.created_at_ms()
+                {
+                    return Err(ApplicationError::InvalidInput);
+                }
+            }
+        }
+        Ok(Zeroizing::new((**base).clone()))
     }
 
     /// Resolve one current conflict with a complete caller-authored document.
@@ -7147,6 +7329,327 @@ mod tests {
         );
         assert_eq!(commit.added_objects().len(), 2);
         assert_eq!(commit.wall_time_ms(), 405);
+    }
+
+    #[test]
+    fn audited_authored_login_merge_records_failures_and_all_current_parent_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x24; 16]);
+        let (publication, revisions) = pending_live_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(406, audited_access_randomness(0x56), &local)
+        .unwrap();
+
+        let missing = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_login_conflict_merge(
+            item_id,
+            RevisionId::new([0xff; 32]),
+            407,
+            audited_access_randomness(0x57),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(missing, Err(ApplicationError::NotFound)));
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+
+        let base_revision = revisions[0].0;
+        let base_document = session.current_catalog.items[&item_id]
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .and_then(|candidate| match candidate.state() {
+                ItemState::Live(document) => Some(document),
+                ItemState::Tombstone(_) => None,
+            })
+            .expect("selected base must remain a live current candidate");
+        let expected_favorite = base_document.favorite().clone();
+        let expected_collections = base_document.collection_ids().clone();
+        let expected_tags = base_document.tags().clone();
+        let expected_attachments = base_document.attachments().clone();
+
+        session
+            .prepare_audited_login_conflict_merge(
+                item_id,
+                base_revision,
+                408,
+                audited_access_randomness(0x58),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .record_audited_host_failure(&local)
+            .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+
+        let invalid = session
+            .prepare_audited_login_conflict_merge(
+                item_id,
+                base_revision,
+                409,
+                audited_access_randomness(0x59),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                LoginEditInputV1::new(
+                    Zeroizing::new("Too many URLs".to_owned()),
+                    Zeroizing::new("merge@example.test".to_owned()),
+                    Zeroizing::new("invalid-merged-secret".to_owned()),
+                    (0..17)
+                        .map(|index| {
+                            Zeroizing::new(format!("https://{index}.invalid.example.test"))
+                        })
+                        .collect(),
+                    None,
+                ),
+                resolve_item_conflict_randomness(0x5a),
+                &local,
+            )
+            .unwrap();
+        assert_eq!(
+            invalid.into_operation(),
+            Err(ApplicationError::InvalidInput)
+        );
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+
+        session
+            .prepare_audited_login_conflict_merge(
+                item_id,
+                base_revision,
+                410,
+                audited_access_randomness(0x5b),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                LoginEditInputV1::new(
+                    Zeroizing::new("Authored merge".to_owned()),
+                    Zeroizing::new("merged@example.test".to_owned()),
+                    Zeroizing::new("authored-merged-secret".to_owned()),
+                    vec![
+                        Zeroizing::new("https://merged.example.test".to_owned()),
+                        Zeroizing::new("https://backup.example.test".to_owned()),
+                    ],
+                    Some(Zeroizing::new("authored private notes".to_owned())),
+                ),
+                resolve_item_conflict_randomness(0x5c),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored login merge must become the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions
+                .iter()
+                .map(|(revision_id, _)| *revision_id)
+                .collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored login merge must publish a live document")
+        };
+        assert_eq!(document.created_at_ms(), 300);
+        assert_eq!(document.updated_at_ms(), 410);
+        assert_eq!(document.favorite(), &expected_favorite);
+        assert_eq!(document.collection_ids(), &expected_collections);
+        assert_eq!(document.tags(), &expected_tags);
+        assert_eq!(document.attachments(), &expected_attachments);
+        let AnyRecord::Login(login) = document.payload() else {
+            panic!("authored login merge must retain the login schema")
+        };
+        assert_eq!(login.title, "Authored merge");
+        assert_eq!(login.username, "merged@example.test");
+        assert_eq!(login.password, "authored-merged-secret");
+        assert_eq!(
+            login.urls,
+            ["https://merged.example.test", "https://backup.example.test"]
+        );
+        assert_eq!(login.notes.as_deref(), Some("authored private notes"));
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_login_merge_rejects_a_current_tombstone_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x23; 16]);
+        let (publication, revisions) =
+            pending_tombstone_publication(&active, item_id, item_id, 2, None);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(411, audited_access_randomness(0x5d), &local)
+        .unwrap();
+
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_login_conflict_merge(
+            item_id,
+            revisions[0],
+            412,
+            audited_access_randomness(0x5e),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(result, Err(ApplicationError::InvalidInput)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
     }
 
     #[test]

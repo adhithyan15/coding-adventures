@@ -158,6 +158,16 @@ cross-item selectors publish failed `ItemConflictResolve` events before their
 closed errors; success publishes the fresh all-candidate-parent resolution and
 its selected-revision event atomically.
 
+Authored login conflict merge now has a separate opaque preparation. The
+application validates one exact current live login as a metadata base, retains
+its complete document without returning it from the preparation, and
+accepts only a complete bounded replacement login form. Invalid selectors,
+host failures, and invalid forms publish failed item-scoped
+`ItemConflictMerge` events before their closed outcome. Success retains the
+base's favorite, collection, tag, and attachment state, names every current
+candidate as a direct parent, and atomically publishes a succeeded merge event
+without claiming that one candidate was selected as the winner.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct
