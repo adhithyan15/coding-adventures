@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.99 - 2026-08-11 (ALGOL controlled-variable snapshots — seven backends)
+
+The single-value loop snapshot regression now explicitly depends on successive
+controlled-variable values, proving that body metadata advances with each
+emitted list-element assignment.
+
 ## 0.220.98 - 2026-08-11 (ALGOL single-value loop snapshots — seven backends)
 
 The LANG matrix now proves that an all-single-value `for` list retains its
