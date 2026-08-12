@@ -44,6 +44,17 @@ injected Unix-millisecond clock sampled immediately before each dispatch. A
 missing, pre-epoch, or unrepresentable production timestamp fails closed before
 the tool can run.
 
+Operators may provision exact Chief host access with additive
+`smart_home_tool_grants` entries in `[data_plane]`. Startup accepts only tools in
+the daemon's installed ten-tool catalog, converts each declaration to a
+tool-scoped least-privilege D23 grant, and commits changed records through the
+central durable controller before serving. Identical records do not create a new
+revision. The grant ledger is durable governance history: deleting a config row
+does not erase an already committed grant; set the same `grant_id` to
+`status = "revoked"` to disable it durably. Unknown tools, persistence failures,
+future issuance times, or an unavailable provisioning clock fail startup without
+publishing a partial in-memory policy.
+
 The exported production data-plane composition boundary is also used by the real
 Level 1 host integration test. That test supplies owner-only key files and a
 loopback Ollama fixture, then proves encrypted receive, completion, encrypted

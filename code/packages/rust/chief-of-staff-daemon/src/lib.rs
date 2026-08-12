@@ -10,7 +10,9 @@ use chief_of_staff_daemon_api::{BindAddress, DaemonApi, DaemonApiError};
 use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
-use chief_of_staff_daemon_config::{parse_config, ChiefConfig, ConfigError};
+use chief_of_staff_daemon_config::{
+    parse_config, ChiefConfig, ConfigError, SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
+};
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
@@ -42,7 +44,11 @@ use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_x3dh::generate_identity_keypair;
 use process_shutdown::{ShutdownError, ShutdownListener};
 use smart_home_controller_runtime::{ControllerRestoreError, SmartHomeControllerRuntime};
-use smart_home_core::AgentId as SmartHomeAgentId;
+use smart_home_core::{
+    AgentId as SmartHomeAgentId, CapabilityGrant, CapabilityGrantId, CapabilityGrantStatus,
+    SmartHomeTool,
+};
+use std::convert::Infallible;
 use std::env;
 use std::ffi::OsString;
 use std::fmt::{self, Display, Formatter};
@@ -85,6 +91,8 @@ pub enum ChiefDaemonError {
     Authority(AuthorityProvisioningError),
     /// The central smart-home controller could not restore its durable state.
     SmartHome(ControllerRestoreError),
+    /// Declared Chief-host smart-home grants could not be validated or committed.
+    SmartHomeGrantProvisioning,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -123,6 +131,9 @@ impl Display for ChiefDaemonError {
             Self::Keyring(_) => "chief daemon: package keyring failed",
             Self::Authority(_) => "chief daemon: data-plane authority provisioning failed",
             Self::SmartHome(_) => "chief daemon: smart-home controller restore failed",
+            Self::SmartHomeGrantProvisioning => {
+                "chief daemon: smart-home grant provisioning failed"
+            }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
@@ -335,13 +346,16 @@ fn compose_data_plane_service(
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
     if config.data_plane().channel_keys().is_empty()
         && config.data_plane().ollama_models().is_empty()
+        && config.data_plane().smart_home_tool_grants().is_empty()
     {
         return Ok(Arc::new(UnavailableHostDataPlaneService));
     }
     let authorities =
         provision_authorities(config.data_plane(), home).map_err(ChiefDaemonError::Authority)?;
     let (channel_keys, models) = authorities.into_parts();
-    if config.data_plane().ollama_models().is_empty() {
+    if config.data_plane().ollama_models().is_empty()
+        && config.data_plane().smart_home_tool_grants().is_empty()
+    {
         return Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
             backend,
             Arc::new(channel_keys),
@@ -356,6 +370,20 @@ fn compose_data_plane_service(
         .map_err(ChiefDaemonError::Config)?;
     let controller = SmartHomeControllerRuntime::restore(FsStorageBackend::new(state_dir))
         .map_err(ChiefDaemonError::SmartHome)?;
+    let unix_clock: Arc<dyn UnixTimeClock> = Arc::new(SystemUnixTimeClock);
+    provision_smart_home_tool_grants(
+        &controller,
+        config.data_plane().smart_home_tool_grants(),
+        unix_clock.as_ref(),
+    )?;
+    if config.data_plane().ollama_models().is_empty() {
+        return Ok(Arc::new(AuthorityBackedHostDataPlaneService::new(
+            backend,
+            Arc::new(channel_keys),
+            Arc::new(models),
+            metadata_source,
+        )));
+    }
     let bridge = SmartHomeToolBridge::new(
         controller,
         SmartHomeAgentId::trusted("chief-daemon-model-tools"),
@@ -367,7 +395,7 @@ fn compose_data_plane_service(
             Arc::new(models),
             Arc::new(D18dSmartHomeModelTools {
                 bridge,
-                clock: Arc::new(SystemUnixTimeClock),
+                clock: unix_clock,
             }),
             metadata_source,
         ),
@@ -405,6 +433,86 @@ impl UnixTimeClock for SystemUnixTimeClock {
             .ok()?
             .as_millis();
         u64::try_from(milliseconds).ok()
+    }
+}
+
+fn provision_smart_home_tool_grants<B: StorageBackend>(
+    controller: &SmartHomeControllerRuntime<B>,
+    declarations: &[SmartHomeToolGrantConfig],
+    clock: &dyn UnixTimeClock,
+) -> Result<(), ChiefDaemonError> {
+    if declarations.is_empty() {
+        return Ok(());
+    }
+    let grants = declarations
+        .iter()
+        .map(configured_smart_home_tool_grant)
+        .collect::<Result<Vec<_>, _>>()?;
+    let saved_at_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
+    if grants.iter().any(|grant| grant.granted_at_ms > saved_at_ms) {
+        return Err(ChiefDaemonError::SmartHomeGrantProvisioning);
+    }
+    let runtime = controller.runtime_handle();
+    let already_current = {
+        let runtime = runtime
+            .lock()
+            .map_err(|_| ChiefDaemonError::SmartHomeGrantProvisioning)?;
+        grants
+            .iter()
+            .all(|grant| runtime.registry().capability_grant(&grant.grant_id) == Some(grant))
+    };
+    if already_current {
+        return Ok(());
+    }
+    controller
+        .transaction(saved_at_ms, move |runtime, _| {
+            for grant in grants {
+                runtime.registry_mut().upsert_capability_grant(grant);
+            }
+            Ok::<(), Infallible>(())
+        })
+        .map_err(|_| ChiefDaemonError::SmartHomeGrantProvisioning)?;
+    Ok(())
+}
+
+fn configured_smart_home_tool_grant(
+    declaration: &SmartHomeToolGrantConfig,
+) -> Result<CapabilityGrant, ChiefDaemonError> {
+    let tool = production_smart_home_tool(declaration.tool_id())
+        .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
+    let mut grant = CapabilityGrant::for_tool(
+        CapabilityGrantId::trusted(declaration.grant_id()),
+        SmartHomeAgentId::trusted(declaration.principal_id()),
+        tool,
+        declaration.granted_by(),
+        declaration.granted_at_ms(),
+    );
+    if let Some(expires_at_ms) = declaration.expires_at_ms() {
+        grant = grant.with_expiry(expires_at_ms);
+    }
+    grant = grant.with_status(match declaration.status() {
+        SmartHomeToolGrantStatus::Pending => CapabilityGrantStatus::Pending,
+        SmartHomeToolGrantStatus::Active => CapabilityGrantStatus::Active,
+        SmartHomeToolGrantStatus::Revoked => CapabilityGrantStatus::Revoked,
+    });
+    Ok(grant)
+}
+
+fn production_smart_home_tool(tool_id: &str) -> Option<SmartHomeTool> {
+    match tool_id {
+        SMART_HOME_LIST_BRIDGES_TOOL_ID => Some(SmartHomeTool::ListBridges),
+        SMART_HOME_DISCOVER_TOOL_ID => Some(SmartHomeTool::Discover),
+        SMART_HOME_LIST_DEVICES_TOOL_ID => Some(SmartHomeTool::ListDevices),
+        SMART_HOME_GET_STATE_TOOL_ID => Some(SmartHomeTool::GetState),
+        SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID => Some(SmartHomeTool::DescribeCapabilities),
+        SMART_HOME_GET_HEALTH_TOOL_ID => Some(SmartHomeTool::GetHealth),
+        SMART_HOME_COMMAND_TOOL_ID => Some(SmartHomeTool::Command),
+        SMART_HOME_PAIR_BRIDGE_TOOL_ID => Some(SmartHomeTool::PairBridge),
+        SMART_HOME_COMPLETE_PAIRING_TOOL_ID => Some(SmartHomeTool::CompletePairing),
+        SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID => Some(SmartHomeTool::ObserveSupervision),
+        _ => None,
     }
 }
 
@@ -704,13 +812,17 @@ mod tests {
     }
 
     fn test_model_binding() -> HostPipelineBinding {
+        test_model_binding_for("home-host")
+    }
+
+    fn test_model_binding_for(host_name: &str) -> HostPipelineBinding {
         let mut pipeline_id = [0; 16];
         pipeline_id[6] = 0x70;
         pipeline_id[8] = 0x80;
         HostPipelineBinding::new(
             PipelineId::new(pipeline_id).unwrap(),
             HostRegistration::new(
-                HostName::new("home-host").unwrap(),
+                HostName::new(host_name).unwrap(),
                 PackagePath::new("/srv/home.agent").unwrap(),
                 [7; 32],
                 RestartPolicy::Always,
@@ -972,6 +1084,227 @@ hardware_key_timeout = 60
                 .authorization_decisions,
             0
         );
+    }
+
+    #[test]
+    fn configured_host_tool_grants_commit_durably_and_support_revocation() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let active = configured_tool_grant_config("active", SMART_HOME_LIST_DEVICES_TOOL_ID);
+        let clock = Arc::new(TestUnixTimeClock::new(1_500));
+
+        provision_smart_home_tool_grants(
+            &controller,
+            active.data_plane().smart_home_tool_grants(),
+            clock.as_ref(),
+        )
+        .unwrap();
+        let first_revision = controller.revision().unwrap().unwrap();
+        assert_eq!(controller.last_saved_at_ms().unwrap(), Some(1_500));
+        assert!(matches!(
+            provision_smart_home_tool_grants(
+                &controller,
+                active.data_plane().smart_home_tool_grants(),
+                &UnavailableUnixTimeClock
+            ),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+        clock.set(999);
+        assert!(matches!(
+            provision_smart_home_tool_grants(
+                &controller,
+                active.data_plane().smart_home_tool_grants(),
+                clock.as_ref()
+            ),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+        assert_eq!(controller.revision().unwrap(), Some(first_revision.clone()));
+        clock.set(1_500);
+        let grant_id = CapabilityGrantId::trusted("grant-weather-list-devices");
+        {
+            let runtime = controller.runtime_handle();
+            let runtime = runtime.lock().unwrap();
+            let grant = runtime.registry().capability_grant(&grant_id).unwrap();
+            assert_eq!(grant.principal_id, AgentId::trusted("weather-level-one"));
+            assert_eq!(
+                grant.scope,
+                smart_home_core::CapabilityGrantScope::Tool(SmartHomeTool::ListDevices)
+            );
+            assert_eq!(grant.expires_at_ms, Some(2_000));
+            assert_eq!(grant.status, CapabilityGrantStatus::Active);
+        }
+        let tools = D18dSmartHomeModelTools {
+            bridge: SmartHomeToolBridge::new(
+                controller.clone(),
+                SmartHomeAgentId::trusted("chief-daemon-model-tools"),
+            ),
+            clock: clock.clone(),
+        };
+        let call = ModelToolCall {
+            call_id: "configured-grant-call".to_string(),
+            name: SMART_HOME_LIST_DEVICES_TOOL_ID.to_string(),
+            arguments: serde_json::json!({}),
+        };
+        assert!(
+            !tools
+                .execute(&test_model_binding_for("weather-level-one"), &call)
+                .unwrap()
+                .is_error
+        );
+        let revision_after_execution = controller.revision().unwrap().unwrap();
+        assert_ne!(revision_after_execution, first_revision);
+
+        provision_smart_home_tool_grants(
+            &controller,
+            active.data_plane().smart_home_tool_grants(),
+            clock.as_ref(),
+        )
+        .unwrap();
+        assert_eq!(
+            controller.revision().unwrap(),
+            Some(revision_after_execution)
+        );
+        drop(tools);
+        drop(controller);
+
+        let restored =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        assert!(restored
+            .runtime_handle()
+            .lock()
+            .unwrap()
+            .registry()
+            .capability_grant(&grant_id)
+            .is_some());
+
+        clock.set(1_600);
+        let revoked = configured_tool_grant_config("revoked", SMART_HOME_LIST_DEVICES_TOOL_ID);
+        provision_smart_home_tool_grants(
+            &restored,
+            revoked.data_plane().smart_home_tool_grants(),
+            clock.as_ref(),
+        )
+        .unwrap();
+        assert_eq!(restored.last_saved_at_ms().unwrap(), Some(1_600));
+        assert_eq!(
+            restored
+                .runtime_handle()
+                .lock()
+                .unwrap()
+                .registry()
+                .capability_grant(&grant_id)
+                .unwrap()
+                .status,
+            CapabilityGrantStatus::Revoked
+        );
+        let revoked_tools = D18dSmartHomeModelTools {
+            bridge: SmartHomeToolBridge::new(
+                restored,
+                SmartHomeAgentId::trusted("chief-daemon-model-tools"),
+            ),
+            clock,
+        };
+        assert!(
+            revoked_tools
+                .execute(&test_model_binding_for("weather-level-one"), &call)
+                .unwrap()
+                .is_error
+        );
+    }
+
+    #[test]
+    fn configured_host_tool_grants_reject_uninstalled_tools_and_missing_time() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let unknown = configured_tool_grant_config("active", "smart_home.list_scenes");
+        assert!(matches!(
+            provision_smart_home_tool_grants(
+                &controller,
+                unknown.data_plane().smart_home_tool_grants(),
+                &TestUnixTimeClock::new(1_500)
+            ),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+
+        let active = configured_tool_grant_config("active", SMART_HOME_LIST_DEVICES_TOOL_ID);
+        assert!(matches!(
+            provision_smart_home_tool_grants(
+                &controller,
+                active.data_plane().smart_home_tool_grants(),
+                &UnavailableUnixTimeClock
+            ),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+        assert_eq!(controller.revision().unwrap(), None);
+        assert_eq!(
+            controller
+                .runtime_handle()
+                .lock()
+                .unwrap()
+                .registry()
+                .counts()
+                .capability_grants,
+            0
+        );
+
+        let future = configured_tool_grant_config_at(
+            "active",
+            SMART_HOME_LIST_DEVICES_TOOL_ID,
+            2_000,
+            3_000,
+        );
+        assert!(matches!(
+            provision_smart_home_tool_grants(
+                &controller,
+                future.data_plane().smart_home_tool_grants(),
+                &TestUnixTimeClock::new(1_500)
+            ),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+        assert_eq!(controller.revision().unwrap(), None);
+    }
+
+    #[test]
+    fn production_composition_provisions_grants_before_models_are_enabled() {
+        let directory = TestDir::new();
+        let config = configured_tool_grant_config("active", SMART_HOME_LIST_DEVICES_TOOL_ID);
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        let monotonic: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
+        let metadata: Arc<dyn MessageMetadataSource> =
+            Arc::new(SystemMessageMetadataSource::new(monotonic));
+
+        compose_data_plane_service(&config, &directory.0, backend, metadata).unwrap();
+
+        let restored = SmartHomeControllerRuntime::restore(FsStorageBackend::new(
+            directory.0.join(".chief-of-staff/state/"),
+        ))
+        .unwrap();
+        let grant_id = CapabilityGrantId::trusted("grant-weather-list-devices");
+        assert!(restored
+            .runtime_handle()
+            .lock()
+            .unwrap()
+            .registry()
+            .capability_grant(&grant_id)
+            .is_some());
+    }
+
+    fn configured_tool_grant_config(status: &str, tool_id: &str) -> ChiefConfig {
+        configured_tool_grant_config_at(status, tool_id, 1_000, 2_000)
+    }
+
+    fn configured_tool_grant_config_at(
+        status: &str,
+        tool_id: &str,
+        granted_at_ms: u64,
+        expires_at_ms: u64,
+    ) -> ChiefConfig {
+        parse_config(&format!(
+            "{VALID_CONFIG}\n[data_plane]\nchannel_keys = []\nollama_models = []\nsmart_home_tool_grants = [\n  {{ grant_id = \"grant-weather-list-devices\", principal_id = \"weather-level-one\", tool_id = \"{tool_id}\", granted_by = \"operator:test\", granted_at_ms = {granted_at_ms}, expires_at_ms = {expires_at_ms}, status = \"{status}\" }},\n]\n"
+        ))
+        .unwrap()
     }
 
     #[test]

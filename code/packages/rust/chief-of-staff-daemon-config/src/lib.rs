@@ -22,7 +22,11 @@ const MAX_PATH_BYTES: usize = 4096;
 const MAX_TRUSTED_KEYS: usize = 256;
 const MAX_CHANNEL_KEYS: usize = 1024;
 const MAX_OLLAMA_MODELS: usize = 256;
+const MAX_SMART_HOME_TOOL_GRANTS: usize = 4096;
 const MAX_AGENT_ID_BYTES: usize = 4 * 1024;
+const MAX_GRANT_ID_BYTES: usize = 4 * 1024;
+const MAX_GRANTED_BY_BYTES: usize = 4 * 1024;
+const MAX_TOOL_ID_BYTES: usize = 512;
 const MAX_MODEL_BYTES: usize = 200;
 const MAX_ENDPOINT_BYTES: usize = 512;
 const MAX_PROCESS_TIMEOUT_MILLIS: u64 = 5 * 60 * 1000;
@@ -356,6 +360,66 @@ pub struct OllamaModelConfig {
     timeout: Duration,
 }
 
+/// Configured lifecycle state for one durable smart-home capability grant.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SmartHomeToolGrantStatus {
+    /// The grant is declared but cannot authorize requests yet.
+    Pending,
+    /// The grant may authorize requests while its time bounds remain valid.
+    Active,
+    /// The grant is durably disabled and retained for governance history.
+    Revoked,
+}
+
+/// One operator-declared, exact Chief-host smart-home tool grant.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SmartHomeToolGrantConfig {
+    grant_id: String,
+    principal_id: String,
+    tool_id: String,
+    granted_by: String,
+    granted_at_ms: u64,
+    expires_at_ms: Option<u64>,
+    status: SmartHomeToolGrantStatus,
+}
+
+impl SmartHomeToolGrantConfig {
+    /// Return the stable operator-assigned grant identifier.
+    pub fn grant_id(&self) -> &str {
+        &self.grant_id
+    }
+
+    /// Return the exact Chief host name authorized by this grant.
+    pub fn principal_id(&self) -> &str {
+        &self.principal_id
+    }
+
+    /// Return the exact production smart-home tool identifier.
+    pub fn tool_id(&self) -> &str {
+        &self.tool_id
+    }
+
+    /// Return the non-secret operator identity recorded on the grant.
+    pub fn granted_by(&self) -> &str {
+        &self.granted_by
+    }
+
+    /// Return the absolute Unix-millisecond issuance timestamp.
+    pub fn granted_at_ms(&self) -> u64 {
+        self.granted_at_ms
+    }
+
+    /// Return the optional exclusive Unix-millisecond expiry timestamp.
+    pub fn expires_at_ms(&self) -> Option<u64> {
+        self.expires_at_ms
+    }
+
+    /// Return the configured lifecycle state.
+    pub fn status(&self) -> SmartHomeToolGrantStatus {
+        self.status
+    }
+}
+
 impl OllamaModelConfig {
     /// Return the exact launch selector and Ollama model tag.
     pub fn model(&self) -> &str {
@@ -378,6 +442,7 @@ impl OllamaModelConfig {
 pub struct DataPlaneConfig {
     channel_keys: Vec<ChannelKeyConfig>,
     ollama_models: Vec<OllamaModelConfig>,
+    smart_home_tool_grants: Vec<SmartHomeToolGrantConfig>,
 }
 
 impl DataPlaneConfig {
@@ -389,6 +454,11 @@ impl DataPlaneConfig {
     /// Return exact Ollama model registrations.
     pub fn ollama_models(&self) -> &[OllamaModelConfig] {
         &self.ollama_models
+    }
+
+    /// Return exact durable smart-home tool grants for Chief host principals.
+    pub fn smart_home_tool_grants(&self) -> &[SmartHomeToolGrantConfig] {
+        &self.smart_home_tool_grants
     }
 }
 
@@ -495,6 +565,11 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         DataPlaneConfig {
             channel_keys: parse_channel_keys(document.take(DATA_PLANE, "channel_keys")?)?,
             ollama_models: parse_ollama_models(document.take(DATA_PLANE, "ollama_models")?)?,
+            smart_home_tool_grants: document
+                .take_optional(DATA_PLANE, "smart_home_tool_grants")
+                .map(parse_smart_home_tool_grants)
+                .transpose()?
+                .unwrap_or_default(),
         }
     } else {
         DataPlaneConfig::default()
@@ -641,6 +716,91 @@ fn parse_ollama_models(value: RawValue) -> Result<Vec<OllamaModelConfig>, Config
         });
     }
     Ok(declarations)
+}
+
+fn parse_smart_home_tool_grants(
+    value: RawValue,
+) -> Result<Vec<SmartHomeToolGrantConfig>, ConfigError> {
+    let RawValue::Array(values) = value else {
+        return Err(ConfigError::InvalidType);
+    };
+    if values.len() > MAX_SMART_HOME_TOOL_GRANTS {
+        return Err(ConfigError::InvalidValue);
+    }
+    let mut grant_ids = BTreeSet::new();
+    let mut grants = Vec::with_capacity(values.len());
+    for value in values {
+        let RawValue::InlineTable(mut fields) = value else {
+            return Err(ConfigError::InvalidType);
+        };
+        let grant_id = bounded_identity(
+            expect_string(take_inline(&mut fields, "grant_id")?)?,
+            MAX_GRANT_ID_BYTES,
+        )?;
+        let principal_id = bounded_identity(
+            expect_string(take_inline(&mut fields, "principal_id")?)?,
+            MAX_AGENT_ID_BYTES,
+        )?;
+        let tool_id = bounded_identity(
+            expect_string(take_inline(&mut fields, "tool_id")?)?,
+            MAX_TOOL_ID_BYTES,
+        )?;
+        if !tool_id.starts_with("smart_home.") {
+            return Err(ConfigError::InvalidValue);
+        }
+        let granted_by = bounded_identity(
+            expect_string(take_inline(&mut fields, "granted_by")?)?,
+            MAX_GRANTED_BY_BYTES,
+        )?;
+        let granted_at_ms = positive_integer(take_inline(&mut fields, "granted_at_ms")?)?;
+        let expires_at_ms = fields
+            .remove(&vec!["expires_at_ms".to_string()])
+            .map(positive_integer)
+            .transpose()?;
+        if expires_at_ms.is_some_and(|expires_at_ms| expires_at_ms <= granted_at_ms) {
+            return Err(ConfigError::InvalidValue);
+        }
+        let status = fields
+            .remove(&vec!["status".to_string()])
+            .map(expect_string)
+            .transpose()?
+            .map(|status| match status.as_str() {
+                "pending" => Ok(SmartHomeToolGrantStatus::Pending),
+                "active" => Ok(SmartHomeToolGrantStatus::Active),
+                "revoked" => Ok(SmartHomeToolGrantStatus::Revoked),
+                _ => Err(ConfigError::InvalidValue),
+            })
+            .transpose()?
+            .unwrap_or(SmartHomeToolGrantStatus::Active);
+        if !fields.is_empty() {
+            return Err(ConfigError::Unknown);
+        }
+        if !grant_ids.insert(grant_id.clone()) {
+            return Err(ConfigError::Duplicate);
+        }
+        grants.push(SmartHomeToolGrantConfig {
+            grant_id,
+            principal_id,
+            tool_id,
+            granted_by,
+            granted_at_ms,
+            expires_at_ms,
+            status,
+        });
+    }
+    Ok(grants)
+}
+
+fn bounded_identity(value: String, max_bytes: usize) -> Result<String, ConfigError> {
+    if value.is_empty()
+        || value.len() > max_bytes
+        || value.trim() != value
+        || value.chars().any(char::is_control)
+    {
+        Err(ConfigError::InvalidValue)
+    } else {
+        Ok(value)
+    }
 }
 
 fn parse_uuid_v7(value: String) -> Result<[u8; 16], ConfigError> {
@@ -834,6 +994,12 @@ impl RawDocument {
         let mut key = strings_to_vec(table);
         key.push(field.to_string());
         self.fields.remove(&key).ok_or(ConfigError::Missing)
+    }
+
+    fn take_optional(&mut self, table: &[&str], field: &str) -> Option<RawValue> {
+        let mut key = strings_to_vec(table);
+        key.push(field.to_string());
+        self.fields.remove(&key)
     }
 }
 
@@ -1064,6 +1230,7 @@ hardware_key_timeout = 60
         );
         assert!(config.data_plane().channel_keys().is_empty());
         assert!(config.data_plane().ollama_models().is_empty());
+        assert!(config.data_plane().smart_home_tool_grants().is_empty());
     }
 
     #[test]
@@ -1096,6 +1263,60 @@ ollama_models = [
         assert_eq!(models[0].model(), "qwen2.5:0.5b");
         assert_eq!(models[0].endpoint(), "http://127.0.0.1:11434");
         assert_eq!(models[0].timeout(), Duration::from_secs(120));
+        assert!(config.data_plane().smart_home_tool_grants().is_empty());
+    }
+
+    #[test]
+    fn parses_bounded_smart_home_tool_grants_without_weakening_existing_configs() {
+        let source = format!(
+            r#"{VALID}
+
+[data_plane]
+channel_keys = []
+ollama_models = [
+  {{ model = "qwen2.5:0.5b", endpoint = "http://127.0.0.1:11434", timeout = 120000 }},
+]
+smart_home_tool_grants = [
+  {{ grant_id = "grant-weather-list", principal_id = "weather-level-one", tool_id = "smart_home.list_devices", granted_by = "operator:local", granted_at_ms = 1000, expires_at_ms = 2000 }},
+  {{ grant_id = "grant-weather-state", principal_id = "weather-level-one", tool_id = "smart_home.get_state", granted_by = "operator:local", granted_at_ms = 1000, status = "revoked" }},
+]
+"#
+        );
+        let config = parse_config(&source).unwrap();
+        let grants = config.data_plane().smart_home_tool_grants();
+        assert_eq!(grants.len(), 2);
+        assert_eq!(grants[0].grant_id(), "grant-weather-list");
+        assert_eq!(grants[0].principal_id(), "weather-level-one");
+        assert_eq!(grants[0].tool_id(), "smart_home.list_devices");
+        assert_eq!(grants[0].granted_by(), "operator:local");
+        assert_eq!(grants[0].granted_at_ms(), 1_000);
+        assert_eq!(grants[0].expires_at_ms(), Some(2_000));
+        assert_eq!(grants[0].status(), SmartHomeToolGrantStatus::Active);
+        assert_eq!(grants[1].status(), SmartHomeToolGrantStatus::Revoked);
+
+        assert_eq!(
+            parse_config(&source.replace("expires_at_ms = 2000", "expires_at_ms = 1000")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace("smart_home.list_devices", "network.fetch")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace("grant-weather-state", "grant-weather-list")),
+            Err(ConfigError::Duplicate)
+        );
+        assert_eq!(
+            parse_config(&source.replace("status = \"revoked\"", "status = \"expired\"")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "status = \"revoked\"",
+                "status = \"revoked\", surprise = true"
+            )),
+            Err(ConfigError::Unknown)
+        );
     }
 
     #[test]
