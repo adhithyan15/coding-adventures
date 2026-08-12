@@ -182,6 +182,45 @@
 \XeTeXinterchartoks \hlslashclass 0   = {\ifmmode\else\allowbreak\fi}
 \XeTeXinterchartoks \hlslashclass 255 = {\ifmmode\else\allowbreak\fi}
 
+% ---------------------------------------------------------------------------
+% An opening delimiter must not cost a word its hyphenation (HL-C109c).
+%
+% TeX only hyphenates a word that follows glue. A word preceded by an opening
+% delimiter -- ( [ or an opening quote -- is therefore never hyphenated at all,
+% and becomes one unbreakable unit as wide as the whole phrase. In latin that
+% was the phrase ("tomorrow") on the first line of a paragraph: nowhere to
+% break, so the line stretched to badness 3088.
+%
+% That the cause really was hyphenation, and not merely the extra width, was
+% settled by keeping the delimiters and writing to\-mor\-row by hand. The box
+% went, at unchanged length.
+%
+% \nobreak\hskip0pt is zero-width glue behind an infinite penalty: it restarts
+% TeX's word scan, so the following word can hyphenate, while forbidding a break
+% after the delimiter itself -- a line must never end with a dangling `('.
+%
+% The \relax is load-bearing. A glue specification absorbs a following `plus' or
+% `minus' keyword, and `(plus a few invented for Slavic sounds)' is ordinary
+% English -- russian has exactly that sentence. Without \relax, \hskip0pt reads
+% on into `plus a' and stops with "Missing number, treated as zero", failing the
+% whole book. \fi does not help: it is expandable, so it is expanded away during
+% the scan for the number rather than ending it.
+%
+% The two kinds of delimiter need two different mechanisms, which is worth
+% knowing before editing this. Inter-character classes act on characters read
+% from the SOURCE: ( and [ are exactly that, so a class reaches them. The quotes
+% are not -- the book generator emits \textquotedblleft{}, a command -- so a
+% class keyed on U+201C compiles cleanly and does nothing whatsoever. Those have
+% to be wrapped at the command.
+\newXeTeXintercharclass\hlopenclass
+\XeTeXcharclass`\( \hlopenclass
+\XeTeXcharclass`\[ \hlopenclass
+\XeTeXinterchartoks \hlopenclass 0 = {\ifmmode\else\nobreak\hskip0pt\relax\fi}
+\let\hlorigopenquote\textquotedblleft
+\renewcommand{\textquotedblleft}{\hlorigopenquote\nobreak\hskip0pt\relax}
+\let\hlorigopensingle\textquoteleft
+\renewcommand{\textquoteleft}{\hlorigopensingle\nobreak\hskip0pt\relax}
+
 % Callout boxes are set ragged right (HL-C88).
 %
 % Every callout runs at a narrower measure than the body, and its content is the
