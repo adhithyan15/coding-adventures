@@ -13,7 +13,7 @@
 % relation `prefix_meaning(prefix, meaning)` carrying the source citation,
 % so the lookup above is the ordinary SLD binding query — the engine
 % returns the meaning WITH its source, on the CPU, with zero model calls,
-% and abstains on any prefix not one of these three source-cited examples.
+% and abstains on any prefix not one of these six source-cited examples.
 % The query also runs BACKWARD — bind a meaning and recall which prefix
 % carries it:
 %
@@ -40,15 +40,32 @@
 %     un_                                   negation_or_absence      unimportant    "negation or the absence of"
 %     re_                                   doing_again              repeat         "doing something again"
 %     dis_                                  negation_or_reversal     disapprove     "negation or reversal"
+%     non_                                  not_or_negation          nonstop        "not or negation"
+%     pre_                                  happening_before         predict        "happening before"
+%     inter_                                among_between            interact       "among, between"
 %
-% WebFetch-verified before writing. `trust consensus` — Grammarly is a
-% reputable, widely-cited grammar-content company, the same tier this
-% stdlib already reserves for other non-.gov language sources and the same
-% source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
-% `contraction.adj`/`possessive-noun.adj`/`simile-meaning.adj`. A prefix
-% not one of these three — e.g. `over_`, a real, well-known prefix, but
-% not one of this source's own cited rows here — is deliberately NOT a
-% row, so a recall ABSTAINS on it rather than inventing a meaning. (See
+% WebFetch-verified before writing (twice — the second pass re-fetched the
+% same page's full prefix table to pull `non_`/`pre_`/`inter_` alongside
+% the three rows already shipped, confirming each is its own clean,
+% single-fact short phrase in the source's own table, not a bundled
+% multi-sense entry). `trust consensus` — Grammarly is a reputable,
+% widely-cited grammar-content company, the same tier this stdlib already
+% reserves for other non-.gov language sources and the same source family
+% already cited by `sentence-type.adj`/`part-of-speech.adj`/
+% `contraction.adj`/`possessive-noun.adj`/`simile-meaning.adj`. Extends
+% the already-shipped three-row table (un_/re_/dis_) with three more
+% prefixes from the SAME already-cited source page, picked for genuinely
+% distinct semantic categories rather than near-synonyms of the negation
+% family already covered: `non_` (negation, reinforcing but distinct from
+% un_/dis_), `pre_` (temporal — before), `inter_` (relational — among/
+% between). Picked using the mandatory full-tree-grep-before-scoping
+% discipline before this cycle's research pivoted here (an unrelated
+% `homograph` candidate was researched first and abandoned — every source
+% tried bundled both senses of a homograph word into one sentence rather
+% than stating one clean meaning per sentence). A prefix not one of these
+% six — e.g. `over_`, a real, well-known prefix the SAME source page also
+% covers, but deliberately still not a row here — is NOT a row, so a
+% recall ABSTAINS on it rather than inventing a meaning. (See
 % ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -59,6 +76,9 @@ table prefix_meaning {
     row (un_, negation_or_absence)
     row (re_, doing_again)
     row (dis_, negation_or_reversal)
+    row (non_, not_or_negation)
+    row (pre_, happening_before)
+    row (inter_, among_between)
 
     source "negation or the absence of"
     locator "https://www.grammarly.com/blog/parts-of-speech/prefixes/"
