@@ -1082,6 +1082,10 @@ fn collect_native_degradations(
 ) {
     let backend_name = backend.dir_name();
     let reason = match node.tag.as_str() {
+        moslayout_compiler::CHILD_SLOT_MOUNT_TAG if backend.is_native() => Some((
+            "composition.child-slot-parameter-unimplemented",
+            "authored children expand through package references, but standalone exported component parameters for child slots are not implemented on this backend",
+        )),
         "HostDraggable" | "HostDropTarget"
             if backend.is_native()
                 && !(matches!(
@@ -8355,6 +8359,111 @@ version = "1"
             let a = fs::read_to_string(out_a.path().join("react").join(shell_file)).unwrap();
             let b = fs::read_to_string(out_b.path().join("react").join(shell_file)).unwrap();
             assert_eq!(a, b, "`{shell_file}` is not deterministic between runs");
+        }
+    }
+
+    #[test]
+    fn default_authored_children_expand_before_all_five_native_emitters() {
+        let workspace = TempDir::new().unwrap();
+        let foundation = workspace.path().join("mosaic-std-foundation");
+        let app = workspace.path().join("mosaic-authored-children-app");
+
+        write_package_manifest(&foundation, "mosaic-std-foundation", &["Surface"], &[]);
+        write_component_sources(
+            &foundation,
+            "Surface",
+            "component Surface { slot children : list<node> ; }",
+            r#"layout Surface {
+  Column [ foundation-surface-root ] {
+    slot: children
+  }
+}"#,
+            "style Surface { part foundation-surface-root { padding : 16 ; } }",
+        );
+
+        write_package_manifest(
+            &app,
+            "mosaic-authored-children-app",
+            &["App"],
+            &[("mosaic-std-foundation", "0.1.0")],
+        );
+        write_component_sources(
+            &app,
+            "App",
+            "component App { }",
+            r#"layout App {
+  Column [ app-root ] {
+    pkg::mosaic-std-foundation::Surface {
+      Text [ welcome-title ] (
+        content: "Welcome",
+        a11y-role: heading
+      )
+      Row [ app-actions ] {
+        HostButton ( label: "Continue" )
+      }
+    }
+  }
+}"#,
+            "style App { part app-root { padding : 24 ; } }",
+        );
+
+        for backend in [
+            Backend::SwiftUI,
+            Backend::Qt,
+            Backend::Xaml,
+            Backend::Flutter,
+            Backend::Compose,
+        ] {
+            let direct_output = TempDir::new().unwrap();
+            let direct_report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: foundation.clone(),
+                    output_root: direct_output.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("standalone child-slot analysis");
+            assert_eq!(
+                direct_report
+                    .degradations
+                    .iter()
+                    .map(|entry| entry.code.as_str())
+                    .collect::<Vec<_>>(),
+                vec!["composition.child-slot-parameter-unimplemented"],
+                "standalone {backend:?} must remain explicitly incomplete"
+            );
+
+            let output = TempDir::new().unwrap();
+            let result = build_package_with_profile(
+                &BuildOptions {
+                    package_root: app.clone(),
+                    output_root: output.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .unwrap_or_else(|error| panic!("authored children {backend:?} build: {error}"));
+
+            let emitted = result
+                .artifacts
+                .iter()
+                .filter_map(|path| fs::read_to_string(path).ok())
+                .collect::<Vec<_>>()
+                .join("\n");
+            assert!(emitted.contains("Welcome"), "{backend:?} lost title child");
+            assert!(
+                emitted.contains("Continue"),
+                "{backend:?} lost action child"
+            );
+            assert!(
+                !emitted.contains(moslayout_compiler::CHILD_SLOT_MOUNT_TAG),
+                "{backend:?} leaked the internal child mount"
+            );
         }
     }
 }

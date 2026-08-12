@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] - default authored-child package expansion
+
+- Package references splice their default inline MLL child block into a typed
+  `node`/`list<node>` mount before backend emission.
+- One acceptance fixture proves the expanded tree remains `native-complete` on
+  SwiftUI, Qt/QML, XAML, Flutter, and Compose.
+- A surviving child mount receives the stable
+  `composition.child-slot-parameter-unimplemented` degradation, keeping direct
+  standalone component artifacts honest until backend child parameters land.
+
 ## [Unreleased] - portable Text accessibility capability
 
 - Native-complete analysis accepts the cross-backend `Text` contract for

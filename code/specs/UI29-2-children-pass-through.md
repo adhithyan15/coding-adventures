@@ -1,6 +1,9 @@
 # UI29-2 — Children pass-through for component references
 
-**Status:** Specification (draft)
+**Status:** Implementation in progress. Default anonymous child blocks now
+compile, validate, and expand through package references on all five native
+backends. Named regions and standalone exported-component child parameters are
+still pending.
 **Layer:** UI / cross-cutting (moslayout grammar + every backend emitter +
 package convention)
 **Depends on:** UI29 (primitive kernel + userland component packages),
@@ -335,18 +338,19 @@ for this spec PR, but enabled by it.
 | ID | Work | Depends on |
 |---|---|---|
 | **UI29-2-0** | This spec | — |
-| **UI29-2-G1** | moslayout grammar: `{ node* }` block on component refs | UI29-2-0 |
+| **UI29-2-G1** | **Done:** generic `{ node* }` component-ref blocks plus typed `slot: children` mounts | UI29-2-0 |
 | **UI29-2-G2** | moslayout grammar: `named_block` syntax | UI29-2-G1 |
-| **UI29-2-A** | mosmodel-compiler / moslayout-compiler: analyzer validations (§4) | UI29-2-G2 |
-| **UI29-2-K-react** | mosaic-emit-react lowers inline children to JSX | UI29-2-A |
-| **UI29-2-K-swiftui** | mosaic-emit-swiftui lowers to view-builder closures | UI29-2-A |
-| **UI29-2-K-qt** | mosaic-emit-qt lowers to default-property children | UI29-2-A |
-| **UI29-2-K-webcomp** | mosaic-emit-webcomponent lowers to `<slot>` | UI29-2-A |
-| **UI29-2-K-html** | mosaic-emit-html lowers to inline child elements | UI29-2-A |
-| **UI29-2-K-xaml** | mosaic-emit-xaml: ContentProperty attribute + child-node emission in `emit_component_reference` | UI29-2-A |
+| **UI29-2-A1** | **Done:** default mount type/uniqueness validation and resolver splicing | UI29-2-G1 |
+| **UI29-2-A2** | Named-block analyzer validations (§4) | UI29-2-G2 |
+| **UI29-2-K-react** | mosaic-emit-react lowers standalone child parameters to JSX | UI29-2-A1 |
+| **UI29-2-K-swiftui** | mosaic-emit-swiftui lowers to view-builder closures | UI29-2-A1 |
+| **UI29-2-K-qt** | mosaic-emit-qt lowers to default-property children | UI29-2-A1 |
+| **UI29-2-K-webcomp** | mosaic-emit-webcomponent lowers to `<slot>` | UI29-2-A1 |
+| **UI29-2-K-html** | mosaic-emit-html lowers to inline child elements | UI29-2-A1 |
+| **UI29-2-K-xaml** | mosaic-emit-xaml: ContentProperty attribute + child-node emission in `emit_component_reference` | UI29-2-A1 |
 | **UI29-2-P1** | mosaic-pkg-toolkit v0.1.x: Card + Container + Field land | All K-* |
 
-The K-* family is fully parallel after UI29-2-A. The K-xaml piece
+The K-* family is fully parallel after UI29-2-A1. The K-xaml piece
 needs the most thought because it builds on PR-5's `ComponentRegistry`
 work — see §3.5 for the additions.
 

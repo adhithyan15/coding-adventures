@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added - UI29-2 default authored-children mount
+
+- Added `slot: <name>` in layout child position and a recognizable child-mount
+  IR node.
+- Child mounts validate against `node` and `list<node>` MIL slots, reject
+  unknown/non-node slots, reject root placement, and remain unique per layout.
+- Added a checked-in grammar regeneration binary so the canonical grammar and
+  embedded parser table stay reproducible.
+
 ### Added - HostSurface native composition primitive
 
 `HostSurface` now registers as a kernel primitive for mounting a host-supplied

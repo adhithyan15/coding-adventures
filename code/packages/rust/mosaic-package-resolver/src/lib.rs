@@ -470,6 +470,11 @@ pub enum LayoutResolveError {
     CircularPackageReference {
         cycle: Vec<(String, String)>,
     },
+    InlineChildrenNotAccepted {
+        package: String,
+        component: String,
+        child_count: usize,
+    },
     ManifestParseError {
         package: String,
         path: PathBuf,
@@ -520,6 +525,14 @@ impl std::fmt::Display for LayoutResolveError {
             Self::CircularPackageReference { cycle } => {
                 write!(f, "circular package reference: {cycle:?}")
             }
+            Self::InlineChildrenNotAccepted {
+                package,
+                component,
+                child_count,
+            } => write!(
+                f,
+                "component `{package}::{component}` received {child_count} inline child node(s) but its layout has no typed `slot: <name>` child mount"
+            ),
             Self::ManifestParseError {
                 package,
                 path,
@@ -609,7 +622,7 @@ impl LayoutPackageResolver {
                 visiting.push((pkg.clone(), comp.clone()));
                 pushed.push((pkg.clone(), comp.clone()));
                 let resolved = self.resolve_component(&pkg, &comp)?;
-                self.substitute(node, resolved, &pkg)?;
+                self.substitute(node, resolved, &pkg, &comp)?;
             }
             pushed
         };
@@ -631,10 +644,11 @@ impl LayoutPackageResolver {
         target: &mut LayoutNode,
         resolved: LayoutDef,
         pkg: &str,
+        comp: &str,
     ) -> Result<(), LayoutResolveError> {
         let call_props = std::mem::take(&mut target.props);
         let consumer_part = target.part_name.take();
-        let _ = std::mem::take(&mut target.children);
+        let call_children = std::mem::take(&mut target.children);
 
         target.tag = resolved.root.tag;
         target.part_name = consumer_part.or(resolved.root.part_name);
@@ -646,6 +660,16 @@ impl LayoutPackageResolver {
 
         let exports = self.package_exports(pkg)?;
         qualify_local_refs(target, pkg, &exports);
+
+        let child_count = call_children.len();
+        let accepted = splice_default_children(target, call_children);
+        if child_count > 0 && !accepted {
+            return Err(LayoutResolveError::InlineChildrenNotAccepted {
+                package: pkg.to_string(),
+                component: comp.to_string(),
+                child_count,
+            });
+        }
 
         Ok(())
     }
@@ -754,6 +778,36 @@ impl LayoutPackageResolver {
             detail: format!("{e:?}"),
         })
     }
+}
+
+/// Replace the single validated UI29-2 child mount in `node` with the
+/// caller-authored subtrees. The moslayout compiler guarantees that a
+/// component layout contains at most one mount, so the first match is the only
+/// match. Inserted caller nodes are deliberately not traversed here: their
+/// bindings belong to the consuming component and must not be rewritten in the
+/// dependency's slot scope.
+fn splice_default_children(node: &mut LayoutNode, authored: Vec<LayoutNode>) -> bool {
+    let mut authored = Some(authored);
+    splice_default_children_inner(node, &mut authored)
+}
+
+fn splice_default_children_inner(
+    node: &mut LayoutNode,
+    authored: &mut Option<Vec<LayoutNode>>,
+) -> bool {
+    let mut index = 0;
+    while index < node.children.len() {
+        if node.children[index].is_child_slot_mount() {
+            let replacements = authored.take().unwrap_or_default();
+            node.children.splice(index..=index, replacements);
+            return true;
+        }
+        if splice_default_children_inner(&mut node.children[index], authored) {
+            return true;
+        }
+        index += 1;
+    }
+    false
 }
 
 fn read_component_source(pkg: &str, comp: &str, path: &Path) -> Result<String, LayoutResolveError> {
@@ -1047,6 +1101,10 @@ version = "1"
     fn consumer_layout(source: &str) -> LayoutDef {
         let ast = moslayout_compiler::parse_layout(source).expect("parse layout");
         moslayout_compiler::analyze(&ast).expect("analyze layout")
+    }
+
+    fn tree_contains_child_mount(node: &LayoutNode) -> bool {
+        node.is_child_slot_mount() || node.children.iter().any(tree_contains_child_mount)
     }
 
     // ---- Test 1: empty package, no manifest, no deps ----
@@ -1478,6 +1536,137 @@ version = "1"
             }),
             "emit binding should be rewritten to the consumer emit"
         );
+    }
+
+    #[test]
+    fn layout_inliner_splices_default_authored_children_without_rebinding_them() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let foundation = make_pkg(
+            &pkgs,
+            "mosaic-std-foundation",
+            "mosaic-std-foundation",
+            &["Surface"],
+        );
+        write_component(
+            &foundation,
+            "Surface",
+            r#"component Surface {
+  slot label : text ;
+  slot children : list<node> ;
+}"#,
+            r#"layout Surface {
+  Column [ surface-root ] {
+    Text [ surface-label ] ( content: slot: label )
+    Box [ surface-body ] { slot: children }
+  }
+}"#,
+        );
+
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout App {
+  pkg::mosaic-std-foundation::Surface (
+    label: slot: outer-label
+  ) {
+    Text [ caller-title ] ( content: slot: label )
+    Row [ caller-actions ] {
+      HostButton ( label: "Continue" )
+    }
+  }
+}"#,
+        );
+
+        resolver.resolve(&mut layout).expect("surface resolves");
+
+        assert_eq!(layout.root.tag, "Column");
+        assert_eq!(layout.root.part_name.as_deref(), Some("surface-root"));
+        assert_eq!(layout.root.children.len(), 2);
+        assert!(layout.root.children[0].props.iter().any(|prop| {
+            prop.name == "content"
+                && prop.value == LayoutPropValue::SlotRef("outer-label".to_string())
+        }));
+
+        let body = &layout.root.children[1];
+        assert_eq!(body.tag, "Box");
+        assert_eq!(body.children.len(), 2);
+        assert_eq!(body.children[0].part_name.as_deref(), Some("caller-title"));
+        assert!(
+            body.children[0].props.iter().any(|prop| {
+                prop.name == "content"
+                    && prop.value == LayoutPropValue::SlotRef("label".to_string())
+            }),
+            "caller-owned bindings must not be rewritten in the dependency scope"
+        );
+        assert_eq!(
+            body.children[1].part_name.as_deref(),
+            Some("caller-actions")
+        );
+        assert!(!tree_contains_child_mount(&layout.root));
+    }
+
+    #[test]
+    fn layout_inliner_removes_an_unfilled_default_child_mount() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let foundation = make_pkg(
+            &pkgs,
+            "mosaic-std-foundation",
+            "mosaic-std-foundation",
+            &["Surface"],
+        );
+        write_component(
+            &foundation,
+            "Surface",
+            "component Surface { slot children : list<node> ; }",
+            "layout Surface { Box [ surface-root ] { slot: children } }",
+        );
+
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout("layout App { pkg::mosaic-std-foundation::Surface }");
+        resolver
+            .resolve(&mut layout)
+            .expect("empty surface resolves");
+
+        assert_eq!(layout.root.tag, "Box");
+        assert!(layout.root.children.is_empty());
+        assert!(!tree_contains_child_mount(&layout.root));
+    }
+
+    #[test]
+    fn layout_inliner_rejects_children_when_component_has_no_mount() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let mini = make_pkg(&pkgs, "mosaic-pkg-mini", "mosaic-pkg-mini", &["Greet"]);
+        write_component(
+            &mini,
+            "Greet",
+            "component Greet { slot label : text ; }",
+            "layout Greet { Text ( content: slot: label ) }",
+        );
+
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout App {
+  pkg::mosaic-pkg-mini::Greet ( label: "Hello" ) {
+    Text ( content: "must not disappear" )
+  }
+}"#,
+        );
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("inline children must never be silently discarded");
+        assert!(matches!(
+            error,
+            LayoutResolveError::InlineChildrenNotAccepted {
+                package,
+                component,
+                child_count: 1,
+            } if package == "mosaic-pkg-mini" && component == "Greet"
+        ));
     }
 
     #[test]
