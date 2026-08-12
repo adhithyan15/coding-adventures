@@ -1554,6 +1554,94 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("字"),
   },
+  // 谢 writes 讠, then 身, then 寸. Its twelve cited strokes preserve the two
+  // turns in 讠's second run, 身's two-turn enclosure, and 寸's base hook:
+  // twelve strokes, eleven lifts, and seventeen visible movements.
+  [ductusKey("chinese", "谢")]: {
+    script: "chinese",
+    glyph: "谢",
+    strokes: [
+      { segments: [{ label: "draw 讠's top dot down-right", path: [
+        { x: 90, y: 780 }, { x: 120, y: 755 }, { x: 150, y: 725 },
+        { x: 185, y: 690 }, { x: 225, y: 650 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 讠's short horizontal", path: [
+          { x: 50, y: 490 }, { x: 85, y: 490 }, { x: 120, y: 490 },
+          { x: 155, y: 490 }, { x: 195, y: 490 },
+        ] },
+        { label: "turn down without lifting", path: [
+          { x: 195, y: 490 }, { x: 195, y: 400 }, { x: 195, y: 300 },
+          { x: 195, y: 200 }, { x: 195, y: 100 }, { x: 195, y: 10 },
+        ] },
+        { label: "turn and finish rising up-right without lifting", path: [
+          { x: 195, y: 10 }, { x: 225, y: 25 }, { x: 255, y: 50 },
+          { x: 285, y: 80 }, { x: 315, y: 115 }, { x: 335, y: 145 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 身's upper falling stroke", path: [
+        { x: 505, y: 825 }, { x: 500, y: 790 }, { x: 485, y: 755 },
+        { x: 465, y: 720 }, { x: 440, y: 685 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 身's left side", path: [
+        { x: 375, y: 680 }, { x: 375, y: 600 }, { x: 375, y: 520 },
+        { x: 375, y: 440 }, { x: 375, y: 360 }, { x: 375, y: 285 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 身's top horizontal", path: [
+          { x: 405, y: 695 }, { x: 450, y: 695 }, { x: 495, y: 695 },
+          { x: 540, y: 695 }, { x: 580, y: 695 },
+        ] },
+        { label: "turn and descend 身's right side without lifting", path: [
+          { x: 580, y: 695 }, { x: 580, y: 575 }, { x: 580, y: 455 },
+          { x: 580, y: 335 }, { x: 580, y: 215 }, { x: 580, y: 95 },
+          { x: 580, y: 10 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 580, y: 10 }, { x: 565, y: -10 }, { x: 540, y: -25 },
+          { x: 510, y: -35 }, { x: 475, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 身's upper inner horizontal", path: [
+        { x: 390, y: 565 }, { x: 430, y: 565 }, { x: 470, y: 565 },
+        { x: 510, y: 565 }, { x: 550, y: 565 }, { x: 580, y: 565 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 身's lower inner horizontal", path: [
+        { x: 390, y: 430 }, { x: 430, y: 430 }, { x: 470, y: 430 },
+        { x: 510, y: 430 }, { x: 550, y: 430 }, { x: 580, y: 430 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 身's wide lower horizontal", path: [
+        { x: 290, y: 285 }, { x: 350, y: 285 }, { x: 410, y: 285 },
+        { x: 470, y: 285 }, { x: 530, y: 285 }, { x: 585, y: 285 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 身's lower falling stroke down-left", path: [
+        { x: 535, y: 270 }, { x: 510, y: 220 }, { x: 480, y: 170 },
+        { x: 440, y: 120 }, { x: 395, y: 75 }, { x: 345, y: 30 },
+        { x: 295, y: -10 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 寸's horizontal", path: [
+        { x: 650, y: 585 }, { x: 700, y: 585 }, { x: 750, y: 585 },
+        { x: 800, y: 585 }, { x: 850, y: 585 }, { x: 900, y: 585 },
+        { x: 950, y: 585 },
+      ] }] },
+      { segments: [
+        { label: "lift, then descend 寸's vertical", path: [
+          { x: 855, y: 825 }, { x: 855, y: 700 }, { x: 855, y: 575 },
+          { x: 855, y: 450 }, { x: 855, y: 325 }, { x: 855, y: 200 },
+          { x: 855, y: 75 }, { x: 855, y: 5 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 855, y: 5 }, { x: 840, y: -15 }, { x: 815, y: -30 },
+          { x: 785, y: -40 }, { x: 750, y: -40 }, { x: 720, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then place 寸's dot down-right", path: [
+        { x: 680, y: 430 }, { x: 700, y: 390 }, { x: 720, y: 350 },
+        { x: 740, y: 310 }, { x: 760, y: 270 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("谢"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
