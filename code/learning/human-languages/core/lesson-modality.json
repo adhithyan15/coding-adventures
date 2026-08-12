@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ad023e2be92c7f9a",
+  "sourceHash": "fnv1a64:c5c2044d2b34595b",
   "summary": {
-    "totalLessons": 1882,
-    "voice": 1272,
-    "sight": 541,
+    "totalLessons": 1895,
+    "voice": 1282,
+    "sight": 544,
     "pen": 69,
-    "drivableLessons": 1272,
+    "drivableLessons": 1282,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 678,
-    "drivablePrefixTotal": 1082,
-    "fullyDrivableChapters": 456,
-    "unstartableChapters": 166,
+    "chapterCount": 681,
+    "drivablePrefixTotal": 1089,
+    "fullyDrivableChapters": 457,
+    "unstartableChapters": 167,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -11392,12 +11392,12 @@
     },
     {
       "language": "urdu",
-      "lessonCount": 46,
-      "voice": 31,
-      "sight": 15,
+      "lessonCount": 59,
+      "voice": 41,
+      "sight": 18,
       "pen": 0,
-      "drivablePercent": 67,
-      "drivablePrefixTotal": 23,
+      "drivablePercent": 69,
+      "drivablePrefixTotal": 30,
       "modalities": [
         "voice",
         "sight"
@@ -11607,6 +11607,59 @@
           "drivable": false,
           "drivableLessonIds": [
             "UR-C12-pani"
+          ]
+        },
+        {
+          "chapter": 13,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "UR-C13-lal",
+            "UR-C13-safed",
+            "UR-C13-kala",
+            "UR-C13-nila"
+          ]
+        },
+        {
+          "chapter": 14,
+          "lessonCount": 4,
+          "voice": 2,
+          "sight": 2,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "UR-C14-qamiz",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 5,
+          "voice": 4,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 3,
+          "firstNonVoiceLesson": "UR-C15-garmi",
+          "drivable": false,
+          "drivableLessonIds": [
+            "UR-C15-barish",
+            "UR-C15-dhoop",
+            "UR-C15-hawa"
           ]
         }
       ]
@@ -47026,6 +47079,249 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:62ba291ba7e6bb42"
+    },
+    {
+      "id": "UR-C13-lal",
+      "language": "urdu",
+      "chapter": 13,
+      "sequence": 480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0e078c8829986cb1"
+    },
+    {
+      "id": "UR-C13-safed",
+      "language": "urdu",
+      "chapter": 13,
+      "sequence": 500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:24698f32b2ab0585"
+    },
+    {
+      "id": "UR-C13-kala",
+      "language": "urdu",
+      "chapter": 13,
+      "sequence": 520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:34294901b168db42"
+    },
+    {
+      "id": "UR-C13-nila",
+      "language": "urdu",
+      "chapter": 13,
+      "sequence": 540,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d27e4eeb71e112fc"
+    },
+    {
+      "id": "UR-C14-qamiz",
+      "language": "urdu",
+      "chapter": 14,
+      "sequence": 560,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f657e3d46d3bfcfd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "UR-C14-juta",
+      "language": "urdu",
+      "chapter": 14,
+      "sequence": 580,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a5a0d789eb23fb53",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "UR-C14-topi",
+      "language": "urdu",
+      "chapter": 14,
+      "sequence": 600,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e6f70d71fb90cdc2"
+    },
+    {
+      "id": "UR-C14-koat",
+      "language": "urdu",
+      "chapter": 14,
+      "sequence": 620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d2c295672fe6ff21"
+    },
+    {
+      "id": "UR-C15-barish",
+      "language": "urdu",
+      "chapter": 15,
+      "sequence": 640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:35bf8f44ab39d7d0"
+    },
+    {
+      "id": "UR-C15-dhoop",
+      "language": "urdu",
+      "chapter": 15,
+      "sequence": 660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5e6ce7b7152ed836"
+    },
+    {
+      "id": "UR-C15-hawa",
+      "language": "urdu",
+      "chapter": 15,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cd7b9bc6292f1226"
+    },
+    {
+      "id": "UR-C15-garmi",
+      "language": "urdu",
+      "chapter": 15,
+      "sequence": 700,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bcc653d8c97fe62b",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "UR-C15-sardi",
+      "language": "urdu",
+      "chapter": 15,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3d53dbd9a31d4ac8"
     }
   ],
   "findings": []

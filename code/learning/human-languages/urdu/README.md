@@ -57,6 +57,22 @@ root by two roads. Chapter 12 closes with water, tea, milk and bread —
 Chapter 8's dative-experiencer frame on a plain noun (*mujhe roṭī pasand
 hai*) and sorting each word as inherited or Persian.
 
+Chapters 13 through 15 return to everyday nouns for a second pass. Chapter 13
+names four colors — **لال** *lāl*, **سفید** *safed*, **کالا** *kālā*, **نیلا**
+*nīlā* — and sorts them by a new grammar point: **لال** and **سفید** never
+change their ending, while **کالا**/**کالی** and **نیلا**/**نیلی** agree with
+the noun they describe the way **merā**/**merī** already did. **سفید** reuses
+**دل**'s two-roads shape with English **white** itself as the third cousin;
+**نیلا**'s own root is a dead end, but its cousin travelled forward through
+Persian and Arabic into English **aniline**. Chapter 14 names four things you
+wear — **قمیض** *qamīz*, **جوتا** *jūtā*, **ٹوپی** *ṭopī*, **کوٹ** *koṭ* — and
+shows every direction a loanword can travel: Persian and Arabic into Urdu,
+Urdu out into English, and English straight into Urdu, three loans in one
+small set. Chapter 15 closes with weather — **بارش** *bārish*, **دھوپ**
+*dhūp*, **ہوا** *hawā*, **گرمی** *garmī*, **سردی** *sardī* — sorting each word
+by how far its root reaches, from honest Persian and inherited dead ends to
+**گرمی**'s real if disputed cousin in Greek **thermós**.
+
 Later chapters will add wider agreement, postpositions, oblique forms, compound
 verbs, and more letters introduced through familiar Nastaliq words.
 

@@ -1,5 +1,82 @@
 # Changelog
 
+## 0.11.0 — 2026-08-12
+
+Thirteen everyday-noun lessons across three new chapters (13–15), the
+track's second pre-A1 vocabulary tranche (wave 6), continuing the
+cross-track program: `vocabularyOf()` moves Urdu's pre-A1 vocabulary from
+30 to 43 distinct headwords (43 → 56 overall). All seven pre-A1 spine
+nodes were already realized after the first tranche; this wave adds depth,
+not new spine coverage.
+
+- **Ch. 13 — Four Colors** (`SPINE-POLITE-REQUEST-REPAIR`): lāl, safed,
+  kālā, nīlā. Sorts the set into two adjectives that never change ending
+  (lāl, safed) and two that agree with the noun's gender the way *merā*
+  does (kālā/kālī, nīlā/nīlī) — the chapter's first new grammar atom,
+  `UR-GRAMMAR-ADJECTIVE-AGREEMENT`. safed reuses the دل/hṛdaya two-roads
+  shape, this time with English **white** itself as the third cousin
+  (PIE \*ḱweyt-). kālā is inherited from Sanskrit *kāla* but that root is
+  usually traced to Proto-Dravidian \*kār- rather than to
+  Proto-Indo-European — the first inherited word in this book whose own
+  source sits outside the Indo-European family. nīlā's own root is a dead
+  end backward, but its cousin *nīlī* travelled forward through Persian,
+  Arabic *an-nīl*, and Portuguese *anil* into English **aniline**.
+- **Ch. 14 — Four Things You Wear** (`SPINE-POLITE-REQUEST-REPAIR`):
+  qamīz, jūtā, ṭopī, koṭ. Names all three loan directions in one small
+  set: Persian and Arabic into Urdu (qamīz, probably the same Late Latin
+  *camisia* that gives English **chemise**, by two completely different
+  roads); Urdu out into English (ṭopī, borrowed directly as **topee**,
+  1825–35); and English straight into Urdu (koṭ, a homograph of the older,
+  unrelated *koṭ* "fort"). jūtā traces to Sanskrit *yukta* "joined, yoked"
+  from PIE \*yewg-, a cousin of English **yoke** and of Sanskrit's own
+  word **yoga**. Two new letters: **ق** *qāf* and **ض** *zād* (qamīz), and
+  **ت** *te*, contrasted by dot-count with already-known retroflex **ٹ**
+  (jūtā).
+- **Ch. 15 — Rain, Sun, Wind, Heat, Cold** (`SPINE-CHECK-WELLBEING`):
+  bārish, dhūp, hawā, garmī, sardī. Sorts all five by how far their root
+  reaches: two Persian dead ends (bārish, sardī), one inherited dead end
+  (dhūp, the same honest wall as کان and روٹی), one loan of a loan (hawā,
+  Persian's own borrowing from Arabic *hawāʾ* — a shape this book had not
+  shown before), and garmī, whose root reaches Greek **thermós**
+  (PIE \*gʷʰer-) — with English **warm** flagged honestly as only a
+  disputed, not settled, cousin. One new letter, **گ** *gāf* (garmī, one
+  extra stroke on already-known **ک**). sardī closes the tranche and
+  reaches back several chapters to rescue orphaned atoms.
+- Corrected two assumptions before writing: لال ("red") is a Persian loan
+  with no further documented root, not a Sanskrit *lākṣā* ("lac dye")
+  derivation as an initial search suggested; and English **warm**'s link
+  to گرمی's PIE \*gʷʰer- root is only a proposed "distant doublet," not a
+  settled cousin the way Greek *thermós* is — both lessons state the
+  weaker or absent connection rather than the stronger claim that first
+  seemed plausible.
+- Reinforcement: every lesson's `practises.knowledge` reaches back to the
+  preceding one to three lessons, and the tranche is threaded with
+  rescue passes for atoms the corpus had never adequately revisited —
+  `UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING`, `UR-SCRIPT-MERA-NAAM-HAI`,
+  `UR-CROSSLINGUAL-THIK`, `UR-DIALOGUE-TAKE-LEAVE`,
+  `UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS`, and sixteen more spanning chapters
+  2–12. sardī, the tranche's final payoff, reaches back to دل's PIE
+  \*ḱērd- argument and to `UR-REGISTER-TWO-ROADS-ONE-ROOT`. Pre-A1
+  reinforcement debt (revisited fewer than twice) fell from 24 atoms to
+  12; the remainder is this tranche's own tail lessons and a few
+  pre-existing atoms whose thinness only became measurable once the
+  longer track made the R3 window apply — debt left visible for the next
+  wave, not papered over.
+- Declared `chapters.json` chapters 13–15, each with a `canDo` and a
+  payoff whose `assesses` list is the payoff lesson's own
+  `practises.knowledge` verbatim. Wired all three into
+  `core/book-generation.json` (chapter/output/script fields only,
+  deriving title and label from `chapters.json`) and `book/book.tex`.
+- No lesson exceeds three new atoms; no chapter exceeds twelve. The three
+  pre-existing atom-budget violations (chapters 3–5) and the pre-existing
+  chapter-4/3/6 budget overruns are untouched — outside this tranche's
+  scope.
+- Book compiles clean with XeLaTeX: 135 pages, zero errors, zero `Missing
+  character` warnings. Two Devanagari citations and one bare IPA glottal
+  stop (ʔ) were caught by the compile and replaced with plain
+  transliteration, matching the track's transliteration-only convention
+  for Sanskrit forms.
+
 ## 0.10.1 — 2026-08-08
 
 - Replaced the explicitly temporary Naskh presentation with static Noto

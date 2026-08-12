@@ -6025,6 +6025,43 @@
         "UR-C12-roti"
       ],
       "tex": "urdu/book/chapters/ch12-food-words.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:fde7f58004def645",
+      "lessonIds": [
+        "UR-C13-lal",
+        "UR-C13-safed",
+        "UR-C13-kala",
+        "UR-C13-nila"
+      ],
+      "tex": "urdu/book/chapters/ch13-colors.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:79ba217ced73dd76",
+      "lessonIds": [
+        "UR-C14-qamiz",
+        "UR-C14-juta",
+        "UR-C14-topi",
+        "UR-C14-koat"
+      ],
+      "tex": "urdu/book/chapters/ch14-clothing.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:67d202f016620697",
+      "lessonIds": [
+        "UR-C15-barish",
+        "UR-C15-dhoop",
+        "UR-C15-hawa",
+        "UR-C15-garmi",
+        "UR-C15-sardi"
+      ],
+      "tex": "urdu/book/chapters/ch15-weather.tex"
     }
   ]
 }
