@@ -3668,7 +3668,20 @@ fn emit_host_slider(
     if let Some(divisions) = divisions {
         args.push(format!("divisions: {divisions}"));
     }
-    Ok(format!("{pad}material.Slider({})\n", args.join(", ")))
+    let slider = format!("material.Slider({})", args.join(", "));
+    let output = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => format!(
+            "Semantics(label: \"{}\", child: {slider})",
+            escape_dart_string(label)
+        ),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field)?;
+            format!("Semantics(label: {field}, child: {slider})")
+        }
+        _ => slider,
+    };
+    Ok(format!("{pad}{output}\n"))
 }
 
 fn host_slider_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
@@ -5983,6 +5996,7 @@ mod tests {
             vec![
                 slot("value", SlotType::Number, true),
                 slot("disabled", SlotType::Bool, true),
+                slot("label", SlotType::Text, true),
             ],
             vec![
                 emit(
@@ -6027,6 +6041,10 @@ mod tests {
                         value: LayoutPropValue::SlotRef("disabled".into()),
                     },
                     LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::SlotRef("label".into()),
+                    },
+                    LayoutProp {
                         name: "onChange".into(),
                         value: LayoutPropValue::EmitRef("onChange".into()),
                     },
@@ -6044,7 +6062,7 @@ mod tests {
 
         assert!(out.contains("hide Checkbox, Radio, Slider, Tooltip"));
         assert!(out.contains("as material show Slider;"));
-        assert!(out.contains("material.Slider("));
+        assert!(out.contains("Semantics(label: label, child: material.Slider("));
         assert!(out.contains("value: (value).toDouble()"));
         assert!(out.contains("min: (0).toDouble()"));
         assert!(out.contains("max: (100).toDouble()"));
@@ -6081,6 +6099,10 @@ mod tests {
                         name: "step".into(),
                         value: LayoutPropValue::Number(0.0),
                     },
+                    LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::String("Opacity".into()),
+                    },
                 ],
                 vec![],
             ),
@@ -6092,6 +6114,7 @@ mod tests {
             .lines()
             .find(|line| line.contains("material.Slider("))
             .expect("slider line");
+        assert!(slider.contains("Semantics(label: \"Opacity\", child:"));
         assert!(slider.contains("onChanged: false ? null"));
         assert!(!slider.contains("divisions:"));
         assert!(!slider.contains("onChangeEnd:"));

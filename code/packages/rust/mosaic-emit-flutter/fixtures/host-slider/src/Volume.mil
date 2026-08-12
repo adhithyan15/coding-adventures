@@ -1,4 +1,5 @@
 component Volume {
+  slot label : text ;
   slot value : number ;
   slot disabled : bool ;
 

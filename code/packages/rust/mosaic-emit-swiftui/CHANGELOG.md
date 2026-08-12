@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - accessible HostSlider names
+
+Literal and slot-backed `HostSlider.a11y-label` values now lower to a native
+SwiftUI accessibility label without replacing the slider's adjustable role.
+
 ### Added - native adjustable slider
 
 `HostSlider` now lowers to SwiftUI's native `Slider`, including controlled

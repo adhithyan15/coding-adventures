@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - accessible HostSlider names
+
+Literal and slot-backed `HostSlider.a11y-label` values now lower to
+`Accessible.name` on the native Qt Quick Controls slider.
+
 ### Added - native adjustable slider
 
 `HostSlider` now lowers to Qt Quick Controls' native `Slider`, including

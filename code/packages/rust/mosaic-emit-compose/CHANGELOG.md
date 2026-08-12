@@ -12,6 +12,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostSlider` now maps literal and slot-backed `a11y-label` values to the
+  native slider semantics node without replacing its adjustable range role.
 - `HostSlider` now lowers to Compose Material's native adjustable `Slider`,
   including controlled numeric values, range and discrete-step mapping,
   disabled state, continuous `onChange`, and release-time `onCommit` events.

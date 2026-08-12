@@ -4092,6 +4092,7 @@ fn emit_host_slider(
             }
         })
         .transpose()?;
+    let accessibility_label = text_prop_expr(node, "a11y-label")?;
 
     let steps = match find_prop_value(node, "step") {
         Some(LayoutPropValue::Number(step)) if *step == 0.0 => None,
@@ -4125,10 +4126,18 @@ fn emit_host_slider(
         )
         .unwrap();
     }
-    if let Some(style) = &style {
-        if !style.modifier.is_empty() {
-            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
-        }
+    let style_modifier = style
+        .as_ref()
+        .map(|style| style.modifier.as_str())
+        .unwrap_or_default();
+    if let Some(label) = accessibility_label {
+        writeln!(
+            out,
+            "{inner}modifier = Modifier{style_modifier}.semantics {{ contentDescription = {label} }},"
+        )
+        .unwrap();
+    } else if !style_modifier.is_empty() {
+        writeln!(out, "{inner}modifier = Modifier{style_modifier},").unwrap();
     }
     if let Some(enabled) = disabled_prop_enabled_expr(node)? {
         writeln!(out, "{inner}enabled = {enabled},").unwrap();
@@ -5795,6 +5804,7 @@ mod tests {
             vec![
                 slot("value", SlotType::Number, true),
                 slot("locked", SlotType::Bool, true),
+                slot("label", SlotType::Text, true),
             ],
             vec![
                 emit_decl(
@@ -5826,6 +5836,7 @@ mod tests {
                         value: LayoutPropValue::Number(5.0),
                     },
                     slot_prop("disabled", "locked"),
+                    slot_prop("a11y-label", "label"),
                     LayoutProp {
                         name: "onChange".into(),
                         value: LayoutPropValue::EmitRef("onVolumeChange".into()),
@@ -5855,6 +5866,7 @@ mod tests {
             "onValueChangeFinished = { value -> dispatch(VolumeEvent.VolumeCommit(value)) },"
         ));
         assert!(out.contains("enabled = !_mosaicTruthy(locked),"));
+        assert!(out.contains("modifier = Modifier.semantics { contentDescription = label },"));
         assert!(out.contains("valueRange = (0).toFloat()..(100).toFloat(),"));
         assert!(out.contains("steps = 19,"));
     }
@@ -5883,6 +5895,10 @@ mod tests {
                         name: "step".into(),
                         value: LayoutPropValue::Number(0.0),
                     },
+                    LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::String("Opacity".into()),
+                    },
                 ],
                 vec![],
             ),
@@ -5894,6 +5910,7 @@ mod tests {
         assert!(out.contains("value = (0.5).toDouble(),"));
         assert!(out.contains("valueRange = (0).toFloat()..(1).toFloat(),"));
         assert!(out.contains("steps = 0,"));
+        assert!(out.contains("modifier = Modifier.semantics { contentDescription = \"Opacity\" },"));
         assert!(!out.contains("onValueChange = { value ->"));
         assert!(!out.contains("onValueChangeFinished = { value ->"));
     }
