@@ -1,0 +1,15 @@
+% ============================================================================
+% soil-texture-class.query.adj — worked recall over the soil-texture-class
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what size are these
+% particles?" (direct) or "which particle-size class matches this
+% description?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "soil-texture-class.adj"
+
+? soil_texture_class(clay, $D)                                                       % expect less_than_two_thousandths_of_a_millimeter_in_diameter (direct)
+? soil_texture_class($C, larger_than_five_hundredths_of_a_millimeter_in_diameter)     % expect sand (reverse)
+? soil_texture_class(loam, $D)                                                       % expect abstain -- a real soil-texture term, but a composite class made of sand/silt/clay mixed together, not itself one of the three particle-size separates
