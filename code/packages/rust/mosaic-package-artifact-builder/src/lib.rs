@@ -934,7 +934,10 @@ fn collect_native_degradations(
     let reason = match node.tag.as_str() {
         "HostDraggable" | "HostDropTarget"
             if backend.is_native()
-                && !(matches!(backend, Backend::Flutter | Backend::Compose)
+                && !(matches!(
+                    backend,
+                    Backend::Flutter | Backend::Compose | Backend::SwiftUI
+                )
                     || (backend == Backend::Qt
                         && mosaic_emit_qt::pipeline::host_drag_drop_has_native_semantics(node))) => Some((
             "interaction.drag-drop-inert",
@@ -4194,7 +4197,7 @@ layout Board {
     }
 
     #[test]
-    fn flutter_compose_and_qt_native_drag_drop_are_not_reported_as_inert() {
+    fn flutter_compose_qt_and_swiftui_native_drag_drop_are_not_reported_as_inert() {
         let pkg = make_package("mosaic-pkg-board", &["Board"]);
         fs::write(
             pkg.path().join("src/Board.mll"),
@@ -4236,6 +4239,12 @@ layout Board {
             .expect("Qt analysis");
         assert!(qt.native_complete);
         assert!(qt.degradations.is_empty());
+
+        let swiftui =
+            analyze_package_degradations(&options(Backend::SwiftUI), BuildProfile::NativeComplete)
+                .expect("SwiftUI analysis");
+        assert!(swiftui.native_complete);
+        assert!(swiftui.degradations.is_empty());
     }
 
     #[test]
@@ -4534,7 +4543,7 @@ layout NativeEvents {
             &BuildOptions {
                 package_root: parent,
                 output_root: out.path().to_path_buf(),
-                backend: Backend::SwiftUI,
+                backend: Backend::Xaml,
                 emit_project: false,
                 theme: None,
             },

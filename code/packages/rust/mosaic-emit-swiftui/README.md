@@ -121,8 +121,24 @@ does not install automatic press tracking.
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |
+| `HostDraggable`  | Native SwiftUI drag transfer plus accessible keyboard grab/drop *(UI35)* |
+| `HostDropTarget` | Native SwiftUI drop delegate with accepts filtering and proposal dispatch *(UI35)* |
 | `HostTable`      | `VStack(alignment: .leading, spacing: 0) { HStack { ... } }` *(v0.3.0; UI29 kernel)* |
 | `HostDialog`     | `Color.clear.frame(width: 0, height: 0).sheet(...)` / `.popover(...)` *(v0.5.0; UI29-1 kernel)* |
+
+### Native drag and drop
+
+`HostDraggable` uses SwiftUI's native drag session and exposes the authored
+content as a plain-style accessible button for keyboard operation. Space or
+Enter grabs and drops, macOS arrow keys move through compatible targets in
+reading order, and Escape cancels. Named previous-target, next-target, and
+cancel accessibility actions provide the equivalent assistive path on touch
+platforms. `HostDropTarget` uses a native `DropDelegate`,
+enforces `accepts` and disabled state, and reports pointer position as
+`before`, `into`, or `after`. A private scope is created per mounted component,
+so payloads cannot cross component instances. Pointer/touch and keyboard drops
+share one accepted-drop function and therefore emit the same proposal payload.
+Announcements use the platform accessibility notification API.
 
 ### `HostInput` binding choice
 

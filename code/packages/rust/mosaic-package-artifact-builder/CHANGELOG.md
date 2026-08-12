@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - SwiftUI native drag capability
+
+- Native-complete analysis no longer reports SwiftUI `HostDraggable` and
+  `HostDropTarget` nodes as inert now that the emitter supplies native pointer,
+  touch, keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- TaskApp's SwiftUI degradation report now retains only the separate native
+  table-semantics gap plus permissive-shell fallback when applicable.
+
 ## [Unreleased] - Qt native table capability
 
 - Native-complete analysis recognizes the canonical UI31/Grid structure when
