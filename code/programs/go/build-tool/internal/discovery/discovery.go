@@ -109,6 +109,7 @@ var skipDirs = map[string]bool{
 	"node_modules":  true,
 	"vendor":        true,
 	"dist":          true,
+	"dist-newstyle": true, // Cabal build output and dependency workspaces
 	"build":         true,
 	"target":        true,
 	".claude":       true,

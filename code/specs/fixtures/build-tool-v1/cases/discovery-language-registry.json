@@ -30,6 +30,14 @@
         "content_utf8": "echo dart\n"
       },
       {
+        "path": "code/packages/haskell/demo-haskell/BUILD",
+        "content_utf8": "echo haskell\n"
+      },
+      {
+        "path": "code/packages/haskell/dist-newstyle/BUILD",
+        "content_utf8": "echo generated-cabal-output\n"
+      },
+      {
         "path": "code/packages/java/demo-java/BUILD",
         "content_utf8": "echo java\n"
       },
@@ -60,6 +68,18 @@
       {
         "path": "code/programs/go/build-tool/BUILD",
         "content_utf8": "echo go program\n"
+      },
+      {
+        "path": "code/programs/haskell/demo-haskell/BUILD",
+        "content_utf8": "echo haskell program\n"
+      },
+      {
+        "path": "code/programs/java/demo-java/BUILD",
+        "content_utf8": "echo java program\n"
+      },
+      {
+        "path": "code/programs/kotlin/demo-kotlin/BUILD",
+        "content_utf8": "echo kotlin program\n"
       },
       {
         "path": "code/programs/rust/closurec/BUILD",
@@ -124,6 +144,20 @@
           "rel_path": "code/programs/go/build-tool"
         },
         {
+          "build_file": "code/packages/haskell/demo-haskell/BUILD",
+          "is_starlark": false,
+          "language": "haskell",
+          "name": "haskell/demo-haskell",
+          "rel_path": "code/packages/haskell/demo-haskell"
+        },
+        {
+          "build_file": "code/programs/haskell/demo-haskell/BUILD",
+          "is_starlark": false,
+          "language": "haskell",
+          "name": "haskell/programs/demo-haskell",
+          "rel_path": "code/programs/haskell/demo-haskell"
+        },
+        {
           "build_file": "code/packages/java/demo-java/BUILD",
           "is_starlark": false,
           "language": "java",
@@ -131,11 +165,25 @@
           "rel_path": "code/packages/java/demo-java"
         },
         {
+          "build_file": "code/programs/java/demo-java/BUILD",
+          "is_starlark": false,
+          "language": "java",
+          "name": "java/programs/demo-java",
+          "rel_path": "code/programs/java/demo-java"
+        },
+        {
           "build_file": "code/packages/kotlin/demo-kotlin/BUILD",
           "is_starlark": false,
           "language": "kotlin",
           "name": "kotlin/demo-kotlin",
           "rel_path": "code/packages/kotlin/demo-kotlin"
+        },
+        {
+          "build_file": "code/programs/kotlin/demo-kotlin/BUILD",
+          "is_starlark": false,
+          "language": "kotlin",
+          "name": "kotlin/programs/demo-kotlin",
+          "rel_path": "code/programs/kotlin/demo-kotlin"
         },
         {
           "build_file": "code/packages/mosaic/demo-mosaic/BUILD",

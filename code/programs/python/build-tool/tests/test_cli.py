@@ -97,6 +97,29 @@ class TestMainCli:
         ])
         assert exit_code == 0
 
+    @pytest.mark.parametrize("language", ["haskell", "java", "kotlin"])
+    def test_haskell_and_jvm_language_filters(self, tmp_path, capsys, language):
+        """Every safely resolved Haskell/JVM lane has a real dry-run filter."""
+        target = tmp_path / "code" / "packages" / language / "demo"
+        decoy = tmp_path / "code" / "packages" / "python" / "decoy"
+        target.mkdir(parents=True)
+        decoy.mkdir(parents=True)
+        (target / "BUILD").write_text('echo "target"\n', encoding="utf-8")
+        (decoy / "BUILD").write_text('echo "decoy"\n', encoding="utf-8")
+
+        exit_code = main([
+            "--root", str(tmp_path),
+            "--language", language,
+            "--force",
+            "--dry-run",
+        ])
+
+        output = capsys.readouterr().out
+        assert exit_code == 0
+        assert f"{language}/demo" in output
+        assert "python/decoy" not in output
+        assert "Total: 1 packages | 1 would-build" in output
+
     def test_invalid_lua_metadata_fails_closed(self, tmp_path, capsys):
         pkg_dir = tmp_path / "code" / "packages" / "lua" / "pkg"
         pkg_dir.mkdir(parents=True)

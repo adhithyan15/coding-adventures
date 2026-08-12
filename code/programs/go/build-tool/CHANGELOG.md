@@ -32,6 +32,8 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Discovery now skips Cabal `dist-newstyle` output, preventing generated
+  Haskell build trees from becoming packages or disrupting repository scans.
 - Lua standalone validation now treats an absent `BUILD_windows` as missing
   the canonical sibling-install closure, matching the shared
   `lua_windows_sibling_parity` fixture plus the Python and Lua validators.

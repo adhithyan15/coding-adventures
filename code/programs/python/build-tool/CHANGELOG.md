@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] - 2026-08-11
+
+### Fixed
+
+- **Safe Haskell and JVM filters**: `--language haskell`, `java`, and `kotlin`
+  now share the canonical language registry after their Cabal and Gradle
+  resolvers became field-aware.
+- **Canonical discovery buckets**: language inference now accepts only the
+  direct `packages/<language>` and `programs/<language>` buckets instead of
+  borrowing a later path component, and skips generated Cabal
+  `dist-newstyle` trees.
+- **Program identity preservation**: discovered programs retain the
+  `<language>/programs/<name>` identity, keeping same-named packages and
+  programs distinct and matching the language-neutral discovery corpus.
+
 ## [0.3.3] - 2026-08-11
 
 ### Fixed

@@ -37,7 +37,9 @@ inventory is not reported as conformance success.
 
 The 58-case bootstrap corpus covers every process-free v1 domain:
 
-- canonical package and program membership, language-registry classification,
+- canonical package and program membership, language-registry classification
+  with paired Haskell, Java, and Kotlin package/program identities plus Cabal
+  `dist-newstyle` exclusion,
   fixture-tree exclusion, fail-closed duplicate package identities, plus
   Windows, macOS, and Linux BUILD precedence;
 - the shared Python dependency diamond, distinct package/program identities,
