@@ -2143,6 +2143,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — list elements execute in order, and a plain single-value
+    // element runs its body exactly once. It can therefore establish definite
+    // string initialization after an earlier while element runs zero times.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
     // comparisons over string literals and literal-backed scalar variables
     // through the shared E4 `str_eq` / `str_cmp` ops, then compares their
