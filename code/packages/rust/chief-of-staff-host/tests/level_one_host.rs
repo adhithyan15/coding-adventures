@@ -16,8 +16,9 @@ use chief_of_staff_daemon::compose_host_data_plane;
 use chief_of_staff_daemon_config::parse_config;
 use chief_of_staff_host_control_protocol::{
     ChannelBinding, ChannelBindingAccess, CompletionFinishReason, CompletionProvider,
-    CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneMessage, DataPlaneOperation,
-    DataPlaneRequest, DataPlaneResponse, LaunchBindings, LevelOneModelBinding, PromptRole,
+    CompletionUsage, DataPlaneFailure, DataPlaneMessage, DataPlaneOperation, DataPlaneRequest,
+    DataPlaneResponse, LaunchBindings, LevelOneModelBinding, ModelToolCall, ModelToolDefinition,
+    ModelToolResult, PromptRole, ToolCompletionOutput, ToolCompletionResult,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -218,7 +219,7 @@ impl ScriptedOllama {
                     .unwrap(),
             );
 
-            let body = r#"{"model":"weather-fixture","message":{"role":"assistant","content":"Bring an umbrella."},"done":true,"done_reason":"stop","prompt_eval_count":12,"eval_count":4}"#;
+            let body = r#"{"model":"weather-fixture","message":{"role":"assistant","content":"{\"kind\":\"final\",\"text\":\"Bring an umbrella.\"}"},"done":true,"done_reason":"stop","prompt_eval_count":12,"eval_count":4}"#;
             let response = format!(
                 "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
                 body.len(),
@@ -297,6 +298,38 @@ impl ScriptedDataPlane {
     }
 }
 
+fn test_model_tools() -> Vec<ModelToolDefinition> {
+    vec![ModelToolDefinition {
+        name: "smart_home.list_entities".to_string(),
+        description: "List normalized entities".to_string(),
+        input_schema: serde_json::json!({
+            "type": "object",
+            "additionalProperties": false
+        }),
+    }]
+}
+
+fn tool_turn_result(output: ToolCompletionOutput) -> ToolCompletionResult {
+    ToolCompletionResult {
+        output,
+        model: "test-model".to_string(),
+        provider: CompletionProvider {
+            vendor: "fixture".to_string(),
+            model_family: "weather".to_string(),
+            model_version: "1".to_string(),
+            endpoint: None,
+        },
+        usage: CompletionUsage {
+            input_tokens: 8,
+            output_tokens: 4,
+            cached_tokens: 0,
+        },
+        finish_reason: CompletionFinishReason::Stop,
+        latency_ms: 1,
+        polyfill_used: false,
+    }
+}
+
 impl HostDataPlaneDispatcher for ScriptedDataPlane {
     fn dispatch(
         &self,
@@ -338,43 +371,62 @@ impl HostDataPlaneDispatcher for ScriptedDataPlane {
                     },
                 }
             }
-            DataPlaneRequest::Complete { id, call } => {
-                assert_eq!(call.model, "test-model");
-                assert_eq!(call.temperature, 0.0);
-                assert_eq!(call.max_tokens, Some(128));
+            DataPlaneRequest::ListModelTools { id } => {
+                operations.push(DataPlaneOperation::ListModelTools);
+                DataPlaneResponse::ModelToolsListed {
+                    id: *id,
+                    tools: test_model_tools(),
+                }
+            }
+            DataPlaneRequest::CompleteWithTools { id, call } => {
+                assert_eq!(call.completion.model, "test-model");
+                assert_eq!(call.completion.temperature, 0.0);
+                assert_eq!(call.completion.max_tokens, Some(128));
                 assert!(call
+                    .completion
                     .system
                     .as_deref()
                     .is_some_and(|system| system.contains("brief forecast")));
-                assert_eq!(call.messages.len(), 1);
-                assert_eq!(call.messages[0].role, PromptRole::User);
-                assert_eq!(call.messages[0].text, "Paris");
+                assert_eq!(call.completion.messages.len(), 1);
+                assert_eq!(call.completion.messages[0].role, PromptRole::User);
+                assert_eq!(call.completion.messages[0].text, "Paris");
                 assert_eq!(
-                    call.metadata.get("agent").map(String::as_str),
+                    call.completion.metadata.get("agent").map(String::as_str),
                     Some("weather-reporter")
                 );
-                operations.push(DataPlaneOperation::Complete);
-                DataPlaneResponse::Completed {
+                assert_eq!(call.tools, test_model_tools());
+                operations.push(DataPlaneOperation::CompleteWithTools);
+                let output = if call.results.is_empty() {
+                    ToolCompletionOutput::ToolCall(ModelToolCall {
+                        call_id: "call-1".to_string(),
+                        name: "smart_home.list_entities".to_string(),
+                        arguments: serde_json::json!({}),
+                    })
+                } else {
+                    assert_eq!(call.results.len(), 1);
+                    assert_eq!(call.results[0].output, serde_json::json!({"entities": []}));
+                    ToolCompletionOutput::FinalText("Sunny and mild.".to_string())
+                };
+                DataPlaneResponse::ToolCompleted {
                     id: *id,
-                    result: Box::new(CompletionResult {
-                        text: "Sunny and mild.".to_string(),
-                        model: "test-model".to_string(),
-                        provider: CompletionProvider {
-                            vendor: "fixture".to_string(),
-                            model_family: "weather".to_string(),
-                            model_version: "1".to_string(),
-                            endpoint: None,
-                        },
-                        usage: CompletionUsage {
-                            input_tokens: 8,
-                            output_tokens: 4,
-                            cached_tokens: 0,
-                        },
-                        finish_reason: CompletionFinishReason::Stop,
-                        latency_ms: 1,
+                    result: Box::new(tool_turn_result(output)),
+                }
+            }
+            DataPlaneRequest::ExecuteTool { id, call } => {
+                operations.push(DataPlaneOperation::ExecuteTool);
+                DataPlaneResponse::ToolExecuted {
+                    id: *id,
+                    result: Box::new(ModelToolResult {
+                        call: (**call).clone(),
+                        output: serde_json::json!({"entities": []}),
+                        is_error: false,
                     }),
                 }
             }
+            DataPlaneRequest::Complete { id, .. } => DataPlaneResponse::Failed {
+                id: *id,
+                failure: DataPlaneFailure::Unavailable,
+            },
             DataPlaneRequest::Publish {
                 id,
                 channel_id,
@@ -405,12 +457,6 @@ impl HostDataPlaneDispatcher for ScriptedDataPlane {
                     sequence: 7,
                 }
             }
-            DataPlaneRequest::CompleteWithTools { id, .. }
-            | DataPlaneRequest::ExecuteTool { id, .. }
-            | DataPlaneRequest::ListModelTools { id } => DataPlaneResponse::Failed {
-                id: *id,
-                failure: DataPlaneFailure::Unavailable,
-            },
         }
     }
 }
@@ -461,7 +507,10 @@ fn real_level_one_host_runs_one_authenticated_turn_and_terminates_cleanly() {
     supervisor.start(&registration).unwrap();
     let expected = [
         DataPlaneOperation::Receive,
-        DataPlaneOperation::Complete,
+        DataPlaneOperation::ListModelTools,
+        DataPlaneOperation::CompleteWithTools,
+        DataPlaneOperation::ExecuteTool,
+        DataPlaneOperation::CompleteWithTools,
         DataPlaneOperation::Publish,
         DataPlaneOperation::Acknowledge,
         DataPlaneOperation::Receive,
@@ -715,4 +764,8 @@ ollama_models = [
     assert!(request.contains("\"model\":\"weather-fixture\""));
     assert!(request.contains("Weather Reporter"));
     assert!(request.contains("\"content\":\"Seattle\""));
+    assert!(
+        request.contains("smart_home.list_devices"),
+        "production catalog was absent from Ollama request: {request}"
+    );
 }
