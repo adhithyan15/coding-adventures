@@ -1,41 +1,48 @@
-Spanish, chapter 162: Conocer --- Coming to Know.
+Spanish, chapter 162: Traer --- Bringing, and Latin for Dragging.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-conocer — "to meet", because knowing has a first moment.
+traer — "to bring", and the direction baked into it.
 
 Warm-up.
 [pause 2 seconds]
-Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means.
+Me levanto, and now estoy de pie. Up, and carrying something. The verb for that has a direction inside it that English leaves open.
 
 Sounds you'll need.
-soft-c — conoces has a soft second c: a th in Spain, an s elsewhere.
-k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back.
+r-tap — one flick of the tongue: tra-ER, two beats.
+g-hard — the g of traigo is hard, as in English go.
 
-The word, taken apart: conocer.
-conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's "begin to" marker, so nōscere was never "to know" — it was "to come to know". Latin said nōvī, "I have come to know", for actually knowing a thing.
-Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María.
-The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, "the knowable one". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other.
+The word, taken apart: traer.
+traer ("to bring") from Latin trahere, "to drag, to pull". Bringing started out as hauling.
+Latin built a second stem, tract-, and English helped itself to both: tractor, traction, attract, contract, subtract, extract, distract, retract — and abstract, abs- + trahere, something "dragged away" from anything particular.
+Then the worn-down half, through French: trace, train (what is dragged along behind), trail, portray from prōtrahere, "to draw forth", and retreat from retrahere, "to draw back".
 
-Grammar Lens: conocer and saber.
-[a table of 2 rows, read aloud]
-what you know: a person, a city, a book. verb: conocer.
-what you know: a fact, or how to do something. verb: saber.
-English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact.
-The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo.
+Grammar Lens: the hard g, for the second time.
+[a table of 5 rows, read aloud]
+person: yo. form: traigo.
+person: tú. form: traes.
+person: él/ella/usted. form: trae.
+person: nosotros. form: traemos.
+person: ellos/ustedes. form: traen.
+Oír grew a hard -g- in oigo and nowhere else in its present. Traer does the identical thing: traigo, and then four ordinary -er endings. One club, two members so far, and neither one announces itself.
+
+Why it's said this way: here, or away.
+English lets one verb wander: bring me the bread, bring it to the café — same word, opposite journeys. Spanish will not.
+Traer moves a thing toward you. Llevar moves it away. Traigo el pan is the bread arriving here; llevo el pan is the bread leaving with me. You choose by where you are standing, never by what you are carrying.
+And llevar from Latin levāre, "to raise" — the verb already behind levantarse. To carry a load was first to lift it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "conozco, conoces, conoce, conocemos, conocen"]
+[your turn — say: "traigo, traes, trae, traemos, traen"]
 [pause 8 seconds for the answer]
-[your turn — say: "Conozco a María" then "Conozco Madrid"]
+[your turn — say: "Traigo el pan" then "Llevo el pan" — here, then away]
 [pause 8 seconds for the answer]
-[your turn — say: "traigo, consigo, juego, conozco" — the chapter's four yo-forms]
+[your turn — say: "oigo" then "traigo" — the same hard g]
 [pause 8 seconds for the answer]
-[your turn — say: "padre, father" then "conocer, know" — siblings, not borrowings]
+[your turn — say: "traer" then English "tractor, attract, abstract"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)
+Which way does traer carry a thing, and which verb goes the other way? (Toward you; llevar.) What did trahere mean, and name two English words from it. (To drag; tractor, attract, abstract, retreat.) Which form of traer misbehaves, and which verb showed you that same misbehaviour first? (Traigo; oigo.) And say you are standing. (Estoy de pie.)

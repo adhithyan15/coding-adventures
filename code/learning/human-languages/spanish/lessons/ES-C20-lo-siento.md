@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C20-lo-siento
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1540
-chapter: 128
+sequence: 1570
+chapter: 131
 type: phrase
 headword: lo siento
 gloss: I'm sorry — literally "I feel it," a naming of the feeling rather than a claim about yourself

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 105,
-  "title": "Review --- One Question, Three Answers",
+  "title": "Hablaba and Hablo --- Two Ways of Looking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8d9ef4c125841f85",
+  "sourceHash": "fnv1a64:14302acb513feb9c",
   "lessons": [
     {
-      "id": "ES-C48-repaso-dos-pasados",
-      "sequence": 1343,
-      "title": "Review — one question, three answers",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — one question, asked of every past sentence, and the three answers it can have",
+      "id": "ES-C48-dos-miradas",
+      "sequence": 1370,
+      "title": "hablaba and habló — two ways of looking",
+      "headword": "hablaba / habló",
+      "romanization": "hablaba / habló",
+      "gloss": "the two past tenses are not two times — they are two ways of looking at the same time",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8a482e92ecf8d2de",
+      "sourceHash": "fnv1a64:07ed465c46e62944",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,69 +42,65 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Before the table: do the two past tenses differ in when?"
+              "text": "You hold two past tenses. Say \"I spoke\" in both. (Hablé. Hablaba.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: not two times — two viewpoints",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three chapters, one question, three ways it gets answered."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what you are doing",
-                "tense",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.",
-                "what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.",
-                "what you are doing: naming a state. tense: imperfect. example: tenía — I had.",
-                "what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got."
-              ]
+              "text": "The obvious guess is that one is further back than the other. It is not. Both describe the same afternoon."
             },
             {
               "kind": "speech",
-              "text": "Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened."
+              "text": "Ayer hablé con Ana. — Yesterday I spoke with Ana. Ayer hablaba con Ana. — Yesterday I was speaking with Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "Same day, same conversation, same two people. What changes is where you are standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablé looks at the conversation from outside, finished, as one thing with edges. It happened, it is over, next."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaba puts you inside it, while it is still going on. No edges. It is the scenery, not the event."
+            },
+            {
+              "kind": "speech",
+              "text": "This is why the choice cannot be made by a rule about time. It is made by what you are doing with the sentence: reporting something that happened, or setting a scene where something else can happen."
+            },
+            {
+              "kind": "speech",
+              "text": "Grammar books call this aspect. The word is not important. The habit is: when you reach for a past tense, you are being asked a question about your own point of view, and you answer it every time whether you notice or not."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the question to actually ask",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Not \"which tense is this?\" — that has no answer without you."
+              "text": "English asks you the same question and lets you dodge it."
             },
             {
               "kind": "speech",
-              "text": "Am I telling you what happened, or what things were like?"
+              "text": "I spoke. I was speaking. I used to speak."
             },
             {
               "kind": "speech",
-              "text": "What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:"
+              "text": "Those are three different viewpoints, and English marks them with extra words rather than with the verb itself. Because they are optional, you can say \"I spoke\" for almost anything and be understood."
             },
             {
               "kind": "speech",
-              "text": "Estudiaba cuando habló Ana."
-            },
-            {
-              "kind": "speech",
-              "text": "And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one."
-            },
-            {
-              "kind": "speech",
-              "text": "There is no list to memorise here, and that is deliberate. Lists of \"preterite trigger words\" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking."
+              "text": "Spanish put the choice inside the verb, so it is not optional. Every past sentence commits to a viewpoint before it commits to anything else. That is why this is the piece of Spanish that stays difficult longest for English speakers: not because it is complicated, but because it asks a question your first language let you leave unanswered."
             }
           ]
         },
@@ -122,86 +118,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair",
+              "instruction": "\"hablé\" then \"hablaba\" — outside, then inside",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair]"
+              "source": "[YOU SAY: \"hablé\" then \"hablaba\" — outside, then inside]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the question aloud before each one",
+              "instruction": "\"estudié\" then \"estudiaba\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the question aloud before each one]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the question arrives before the verb does."
+              "source": "[YOU SAY: \"estudié\" then \"estudiaba\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-repaso-dos-pasados-question",
-              "prompt": "State the one question that chooses the tense.",
+              "id": "ES-C48-dos-miradas-which",
+              "prompt": "Do the two past tenses differ in when something happened?",
               "assesses": [
                 "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "am i saying what happened or what things were like",
-                "what happened versus what things were like",
-                "does it have edges"
-              ],
-              "feedback": {
-                "correct": "Edges, or no edges.",
-                "incorrect": "Am I telling what happened, or what things were like?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-repaso-dos-pasados-scene",
-              "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
-              "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT",
-                "ES-LEX-CUANDO"
-              ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "estudiaba",
-                "the imperfect one",
-                "estudiaba, the imperfect"
+                "no, in how you look at it",
+                "no",
+                "they differ in viewpoint"
               ],
               "feedback": {
-                "correct": "And hablo is what walked into it.",
-                "incorrect": "Estudiaba — the imperfect sets the room."
+                "correct": "Same time, two viewpoints.",
+                "incorrect": "No. Both can describe the same afternoon; what differs is your point of view."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-repaso-dos-pasados-state",
-              "prompt": "Which two rows of the table are NOT the same event seen twice?",
+              "id": "ES-C48-dos-miradas-outside",
+              "prompt": "Which form looks at the event from outside, finished?",
               "assesses": [
-                "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the state rows, tenia and tuve",
-                "rows three and four",
-                "tenia and tuve"
+                "hable",
+                "hablé",
+                "the preterite"
               ],
               "feedback": {
-                "correct": "There the tense changes what happened, not just the view.",
-                "incorrect": "The state rows: tenia is having, tuve is getting."
+                "correct": "One thing, with edges.",
+                "incorrect": "Hable — the preterite views it from outside, complete."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-dos-miradas-inside",
+              "prompt": "Say I was studying, putting the listener inside it.",
+              "assesses": [
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-LEX-ESTUDIAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "estudiaba",
+                "yo estudiaba"
+              ],
+              "feedback": {
+                "correct": "No edges — scenery, not event.",
+                "incorrect": "Estudiaba."
               }
             }
           ]
@@ -219,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for."
+              "text": "Do the two pasts differ in when? (No — in how you look at it.) Which one has edges? (The preterite.) Next: the word that lets both of them stand in one sentence."
             }
           ]
         }

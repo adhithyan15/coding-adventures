@@ -1,35 +1,111 @@
-Spanish, chapter 117: Wanting, Not Asserting.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 117: The Conditional --- Saying What Would Happen.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-Hablas español, Quiero que hables español — fact or wanted event?
+Lesson 1 of 3.
+hablaría — the whole infinitive meets -ía.
 
 Warm-up.
 [pause 2 seconds]
-Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+Hablaré español places speaking in the future. Hablaría español means “I would speak Spanish” in an imagined or conditional situation. Today the situation can remain unstated; learn the form and its core “would” meaning first.
 
-Grammar Lens: count the doers.
-[a table of 2 rows, read aloud]
-meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
-meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
-With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
+Grammar Lens: three familiar persons.
+Keep hablar whole, then add the learned singular conditional endings:
+[a table of 3 rows, read aloud]
+person: yo. conditional: hablaría.
+person: tú. conditional: hablarías.
+person: él / ella / usted. conditional: hablaría.
+Say hablaría, hablarías, hablaría. The first and third forms match. The accent keeps í-a in separate syllables, just as it did in comía. Plural persons wait.
+
+The second weld, taken apart.
+The conditional developed from an infinitive beside past or imperfect forms of the same “have” verb that helped form the Romance future. That is why the whole infinitive remains visible again and why the endings resemble the -ía row. The history passes through older Romance forms; modern hablaría is not made by attaching the complete modern word había.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Hablas español.”]
+[your turn — say: “hablaría, hablarías, hablaría”]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero hablar español.”]
+[your turn — say: “Hablaré español. Hablaría español.”]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero que hables español.”]
+[your turn — say: “ha-bla-rí-a”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Which form asserts that one friend speaks: hablas or hables?
-[question — say your answer, then pause 8 seconds]
-Say 'I want to speak Spanish' in Spanish.
 [question — say your answer, then pause 9 seconds]
-Say 'I want you to speak Spanish' to one friend.
+Give the learned singular conditional forms of hablar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I would speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Write hablaría with the final three syllables separated.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.
+Give the three learned forms. (Hablaría, hablarías, hablaría.) What is the core meaning? (“Would speak.”) Which older construction stands behind the row? (An infinitive plus past forms of haber.) Next: give comer the same ending set.
+
+
+Lesson 2 of 3.
+comería — keep -er before “would”.
+
+Warm-up.
+[pause 2 seconds]
+Comeré means “I will eat.” Keep comer whole and exchange the future ending for -ía: comería — “I would eat.”
+
+Grammar Lens: the singular -er row.
+[a table of 3 rows, read aloud]
+person: yo. conditional: comería.
+person: tú. conditional: comerías.
+person: él / ella / usted. conditional: comería.
+Say comería, comerías, comería. Compare hablaría / comería: one bounded ending set serves both complete infinitives. Plural persons wait.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “comería, comerías, comería”]
+[pause 8 seconds for the answer]
+[your turn — say: “comeré, comería”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular conditional forms of comer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 8 seconds]
+Give the yo pair 'I will eat; I would eat' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which endings do hablaría and comería share across the learned singular row?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned forms. (Comería, comerías, comería.) Which piece stays whole? (Comer.) Which endings match hablaría? (-ía, -ías, -ía.) Next: complete the regular pattern with vivir.
+
+
+Lesson 3 of 3.
+viviría — the regular conditional closes its small frame.
+
+Warm-up.
+[pause 2 seconds]
+You can move from comeré to comería. Apply the same move to viviré: viviría — “I would live.”
+
+Grammar Lens: the singular -ir row.
+[a table of 3 rows, read aloud]
+person: yo. conditional: viviría.
+person: tú. conditional: vivirías.
+person: él / ella / usted. conditional: viviría.
+Say viviría, vivirías, viviría. The complete regular frame is now hablaría, comería, viviría. Plural persons wait.
+
+Grammar Lens: meaning with known words.
+Viviría en Madrid says “I would live in Madrid.” The lesson adds no new place or preposition.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “viviría, vivirías, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “Viviría en Madrid.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular conditional forms of vivir: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I would live in Madrid' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Give the conditional yo forms of hablar, comer, and vivir, in that order.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three vivir forms. (Viviría, vivirías, viviría.) Which regular verb families share the ending row? (All three.) Next: three already-known verbs change the stem but keep both sets of endings.

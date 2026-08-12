@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 124,
-  "title": "No Hables --- Telling Somebody Not To",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:70f59a8b7f21dd34",
+  "title": "Synthesis --- Claiming, and Not Claiming",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:509ebd327085f66c",
   "lessons": [
     {
-      "id": "ES-C50-no-hables",
-      "sequence": 1459,
-      "title": "no hables — telling somebody not to",
-      "headword": "no hables",
-      "romanization": "no hables",
-      "gloss": "telling somebody NOT to do something — and Spanish reaches for the subjunctive, which is exactly the right place to reach",
+      "id": "ES-C18-sintesis-subjuntivo",
+      "sequence": 1486,
+      "title": "Synthesis — claiming, and not claiming",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the mood tells your listener whether you are claiming it is true",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e06fac9efc9284f1",
-      "notice": null,
+      "sourceHash": "fnv1a64:dacaf2147d70209f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,66 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "\"Speak\" is habla. So \"don't speak\" should be no habla. Say it, and then be told it is wrong."
+              "text": "Nothing new in this chapter. Say hablas, then hables."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the form you already learned for wanting",
+          "title": "Grammar Lens: what the second one is actually doing",
           "segments": [
             {
               "kind": "speech",
-              "text": "A negative command uses the subjunctive."
+              "text": "Those two forms are not two tenses. They are two stances."
             },
             {
               "kind": "speech",
-              "text": "no hables — don't speak. no comas — don't eat."
+              "text": "Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so."
             },
             {
               "kind": "speech",
-              "text": "Those are not new forms. You built them chapters ago, when you learned to say quiero que hables — \"I want you to speak.\""
+              "text": "In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert."
             },
             {
               "kind": "speech",
-              "text": "And the connection is not an accident of grammar. Think about what the subjunctive was for: the form for something not asserted — wanted, feared, hoped for, but not claimed to be happening."
+              "text": "That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table."
             },
             {
               "kind": "speech",
-              "text": "A negative command is exactly that. No hables does not describe any speaking. There is no speaking; the whole point of the sentence is that you want there to be none. Spanish reaches for the non-asserting form because nothing is being asserted."
-            },
-            {
-              "kind": "speech",
-              "text": "So this is not \"the negative command borrows the subjunctive.\" It is the subjunctive doing the thing it has always done."
+              "text": "Indicative: this is so. Subjunctive: I am not saying this is so."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "There is a lopsidedness here worth naming, because it looks like untidiness and is not."
+              "text": "— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho."
             },
             {
               "kind": "speech",
-              "text": "habla — an ordinary present form. no hables — a subjunctive form."
-            },
-            {
-              "kind": "speech",
-              "text": "Two different shapes for one verb, depending only on whether there is a no in front. Most languages would use one form for both."
-            },
-            {
-              "kind": "speech",
-              "text": "The reason Spanish does not is that the two sentences are doing genuinely different things. Habla points at an action and hands it to you. No hables points at an action and refuses it — and the refusal, not the action, is the sentence's content. The form follows the content, as it did in every subjunctive sentence you have already met."
+              "text": "Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ojalá deserves a last look, because it explains itself."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Arabic — wa-šā' allāh, \"and may God will it\" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names."
+            },
+            {
+              "kind": "speech",
+              "text": "And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -107,83 +121,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"habla\" then \"no hables\" — hear the form change with the no",
+              "instruction": "the three-line exchange, and name the stance of each line",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"habla\" then \"no hables\" — hear the form change with the no]"
+              "source": "[YOU SAY: the three-line exchange, and name the stance of each line]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"quiero que hables\" then \"no hables\" — the same form, twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"quiero que hables\" then \"no hables\" — the same form, twice]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until choosing the mood feels like choosing what you mean."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-no-hables-say",
-              "prompt": "Tell somebody not to speak.",
+              "id": "ES-C18-sintesis-subjuntivo-assert",
+              "prompt": "You are stating a fact about a friend: you speak Spanish. Hablas or hables?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-LEX-HABLAR"
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "no hables",
-                "¡no hables!"
+                "hablas",
+                "hablas - indicative"
               ],
               "feedback": {
-                "correct": "The subjunctive, doing what it always does.",
-                "incorrect": "No hables — subjunctive, not no habla."
+                "correct": "Yes — you put a fact on the table.",
+                "incorrect": "hablas. The indicative asserts."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-no-hables-eat",
-              "prompt": "Tell somebody not to eat.",
+              "id": "ES-C18-sintesis-subjuntivo-wish",
+              "prompt": "Now you only wish it were so. Which form follows ojala?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-LEX-COMER"
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "no comas",
-                "¡no comas!"
+                "hables",
+                "hables - subjunctive",
+                "ojala hables"
               ],
               "feedback": {
-                "correct": "No comas.",
-                "incorrect": "No comas."
+                "correct": "Yes — nothing is being claimed.",
+                "incorrect": "hables. A wish asserts nothing."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-no-hables-why",
-              "prompt": "Why does a negative command take the subjunctive?",
+              "id": "ES-C18-sintesis-subjuntivo-ojala",
+              "prompt": "What did ojala originally mean, and in which language?",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-COMMAND-NEGATIVE"
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "because nothing is being asserted",
-                "there is no speaking to describe",
-                "the subjunctive is the non-asserting form"
+                "may god will it, in arabic",
+                "arabic, may god will it",
+                "and may god will it",
+                "wa sha allah"
               ],
               "feedback": {
-                "correct": "The subjunctive doing the thing it has always done.",
-                "incorrect": "Nothing is asserted — no hables describes no speaking at all."
+                "correct": "Right — and that is exactly why it cannot take the asserting mood.",
+                "incorrect": "Arabic wa-sha' allah, 'and may God will it'."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Don't speak\"? (No hables.) Which form is that? (The subjunctive — the one for what is not asserted.) Next: the same form again, this time for politeness rather than negation."
+              "text": "What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)"
             }
           ]
         }

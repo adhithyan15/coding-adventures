@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C49-he-hablado
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1346
-chapter: 108
+sequence: 1376
+chapter: 111
 type: grammar
 headword: he hablado
 gloss: "I have spoken" — and haber, a verb that gave away its meaning and kept only a job

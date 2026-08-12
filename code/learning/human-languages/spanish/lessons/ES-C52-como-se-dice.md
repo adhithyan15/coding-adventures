@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C52-como-se-dice
 spine_node: SPINE-GIVE-REASONS
-sequence: 2158
-chapter: 174
+sequence: 2188
+chapter: 177
 type: phrase
 headword: ¿cómo se dice?
 gloss: the single most useful sentence a learner owns — and it is this chapter's grammar, doing exactly what the chapter said

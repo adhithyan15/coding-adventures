@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C48-cuando
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1341
-chapter: 103
+sequence: 1371
+chapter: 106
 type: word
 headword: cuando
 gloss: "when" — the word that puts a scene and an event in one sentence, so the two pasts can be seen doing different jobs

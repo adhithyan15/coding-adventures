@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C45-repaso-ocho
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1189
-chapter: 82
+sequence: 1219
+chapter: 85
 type: practice-mix
 headword: (review)
 gloss: review — the direct object pronouns, complete, and the two questions that pick any one of them

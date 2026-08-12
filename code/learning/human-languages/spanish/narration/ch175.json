@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 175,
-  "title": "Review --- The Three Se's",
+  "title": "Se Habla Espanol --- Nobody in Particular",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:11d2e140f14a1e1a",
+  "sourceHash": "fnv1a64:e4b500c56f8e672c",
   "lessons": [
     {
-      "id": "ES-C52-tres-ses",
-      "sequence": 2159,
-      "title": "Review — the three se's",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the three se's, two of which are one word and one of which is an impostor",
+      "id": "ES-C52-se-habla",
+      "sequence": 2186,
+      "title": "se habla español — nobody in particular",
+      "headword": "se habla español",
+      "romanization": "se habla español",
+      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:566383aa20779d14",
+      "sourceHash": "fnv1a64:b8406defcd4f28db",
       "notice": null,
       "blocks": [
         {
@@ -35,81 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart."
+              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: a sentence with nobody in it",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "example",
-                "what the se is"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "reflexive. example: se llama. what the se is: himself.",
-                "impersonal. example: se habla español. what the se is: nobody named.",
-                "the impostor. example: se lo digo. what the se is: le, in disguise."
-              ]
+              "kind": "speech",
+              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
             },
             {
               "kind": "speech",
-              "text": "And here is the fact that makes this a review rather than a fourth thing to learn:"
+              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
             },
             {
               "kind": "speech",
-              "text": "The first two are the same word. The third is not."
+              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
             },
             {
               "kind": "speech",
-              "text": "The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched."
+              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
             },
             {
               "kind": "speech",
-              "text": "The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish does not have three ses. It has two, and a coincidence."
+              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: how to tell them apart in the wild",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You will not have to work this out consciously for long, but while you do:"
-            },
-            {
-              "kind": "speech",
-              "text": "Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them."
-            },
-            {
-              "kind": "speech",
-              "text": "Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien."
-            },
-            {
-              "kind": "speech",
-              "text": "Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta."
-            },
-            {
-              "kind": "speech",
-              "text": "The first test is nearly free, because that direct object pronoun is sitting right there in the open."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,80 +80,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives",
+              "instruction": "\"Se habla español\" as if reading it off a window",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives]"
+              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Se come bien\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Se come bien\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-two",
-              "prompt": "Of the three se's, which two are really one word?",
+              "id": "ES-C52-se-habla-sign",
+              "prompt": "Write the sign that says Spanish is spoken here.",
               "assesses": [
                 "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the reflexive and the impersonal",
-                "se llama and se habla",
-                "reflexive and impersonal"
+                "se habla espanol",
+                "se habla español"
               ],
               "feedback": {
-                "correct": "The impersonal grew out of the reflexive.",
-                "incorrect": "The reflexive and the impersonal. The se of se lo is a different word entirely."
+                "correct": "No person named anywhere in it.",
+                "incorrect": "Se habla espanol."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-test",
-              "prompt": "What single thing right after se tells you it is the impostor?",
+              "id": "ES-C52-se-habla-who",
+              "prompt": "Who speaks Spanish, according to that sentence?",
               "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE"
+                "ES-GRAMMAR-SE-IMPERSONAL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo, la, los or las",
-                "a direct object pronoun",
-                "lo or la"
+                "nobody in particular",
+                "it does not say",
+                "no one is named"
               ],
               "feedback": {
-                "correct": "Sitting right there in the open.",
-                "incorrect": "A lo, la, los or las immediately after it."
+                "correct": "That absence is the whole point of the form.",
+                "incorrect": "It does not say, and it is not meant to."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-which",
-              "prompt": "Which se is in como se dice?",
+              "id": "ES-C52-se-habla-eat",
+              "prompt": "Say one eats well here.",
               "assesses": [
                 "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMO-SE-DICE"
+                "ES-LEX-COMER",
+                "ES-LEX-BIEN"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the impersonal",
-                "impersonal — nobody is named"
+                "se come bien",
+                "aqui se come bien"
               ],
               "feedback": {
-                "correct": "Asking how it gets said, not who says it.",
-                "incorrect": "The impersonal. Nobody is named as the sayer."
+                "correct": "Se come bien.",
+                "incorrect": "Se come bien."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -207,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it."
+              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
             }
           ]
         }

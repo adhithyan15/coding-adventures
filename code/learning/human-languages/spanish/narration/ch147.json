@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 147,
-  "title": "Escribir — Writing Is Scratching",
+  "title": "Pensar — Thinking Is Weighing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:deee33935491bc7a",
+  "sourceHash": "fnv1a64:6520300c3b88d190",
   "lessons": [
     {
-      "id": "ES-C34-escribir",
+      "id": "ES-C34-pensar",
       "sequence": 1880,
-      "title": "escribir — \"to write\", which once meant \"to scratch\"",
-      "headword": "escribir",
-      "romanization": "escribir",
-      "gloss": "to write — from a Latin verb meaning \"to scratch\", and the reason Spanish puts an e- in front",
+      "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
+      "headword": "pensar",
+      "romanization": "pensar",
+      "gloss": "to think — at root \"to weigh\", and a stem-changer that breaks e becomes ie",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38cbca60d16fac61",
+      "sourceHash": "fnv1a64:7bc4410cfdc7f589",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leer gathers letters off a page. This is the other half of the same skill — and its root remembers a time when writing was done with a sharp point in wax."
+              "text": "You can already run an -ar verb: hablo, hablas, habla. Here is one that takes those same endings and then cracks its stem in the middle, the way querer did."
             }
           ]
         },
@@ -46,82 +46,86 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "st-no-e — Spanish will not begin a word with sc-, sp-, st-, so it props one up with an e-: es-cri-BIR."
+              "text": "diphthong-ie — under stress the e breaks open: pienso = PYEN-so."
             },
             {
               "kind": "speech",
-              "text": "b-soft — between vowels the b is soft, lips barely touching."
+              "text": "The s is always a clear hissing s, never an English z buzz."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: escribir",
+          "title": "The word, taken apart: pensar",
           "segments": [
             {
               "kind": "speech",
-              "text": "escribir (\"to write\") from Latin scrībere, whose first sense was \"to scratch, to incise\". Writing was cutting a line into wax or stone before it was ever ink on paper."
+              "text": "pensar (\"to think\") from Latin pēnsāre, \"to weigh\" — the repeating form of pendere, \"to hang, to weigh out\". A Roman hung goods on a balance; the same verb slid across to weighing an idea."
             },
             {
               "kind": "speech",
-              "text": "The English family is huge, and every member still works with a pen:"
+              "text": "English kept the whole family, and most of it still smells of money and scales:"
             },
             {
               "kind": "speech",
-              "text": "scribe, scribble, script, scripture."
+              "text": "pensive — turning something over on the balance."
             },
             {
               "kind": "speech",
-              "text": "describe (de- \"down\") and description; prescribe (prae- \"before\") and prescription; subscribe (sub- \"under\" — you signed at the bottom); inscription; transcript; postscript."
+              "text": "compensate — com- \"together\" + weigh: settle one weight against another."
             },
             {
               "kind": "speech",
-              "text": "manuscript — manus \"hand\" + scriptum: written by hand."
+              "text": "expense, dispense, pension — payments were literally weighed out."
             },
             {
               "kind": "speech",
-              "text": "conscription — being written into an army."
+              "text": "peso — a coin whose name simply means \"a weight\"."
             },
             {
               "kind": "speech",
-              "text": "The Spanish past participle is escrito (\"written\"), which is English script wearing different clothes."
+              "text": "pansy — from French pensée, \"a thought\"."
+            },
+            {
+              "kind": "speech",
+              "text": "English reaches for the same picture without noticing it: you weigh your options, and an argument carries weight."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: an -ir verb, and a productive spelling rule",
+          "title": "Grammar Lens: the same endings, a broken stem",
           "segments": [
             {
               "kind": "speech",
-              "text": "Escribir is a plain -ir verb, the family vivir opened:"
+              "text": "The endings are the ordinary -ar set. Only the stressed e changes:"
             },
             {
               "kind": "table",
               "headers": [
                 "person",
                 "form",
-                "ending"
+                "stem"
               ],
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: escribo. ending: -o.",
-                "person: tú. form: escribes. ending: -es.",
-                "person: él/ella/usted. form: escribe. ending: -e.",
-                "person: nosotros. form: escribimos. ending: -imos.",
-                "person: ellos/ustedes. form: escriben. ending: -en."
+                "person: yo. form: pienso. stem: broken.",
+                "person: tú. form: piensas. stem: broken.",
+                "person: él/ella/usted. form: piensa. stem: broken.",
+                "person: nosotros. form: pensamos. stem: plain.",
+                "person: ellos/ustedes. form: piensan. stem: broken."
               ]
             },
             {
               "kind": "speech",
-              "text": "That propped-up e- is a rule you can run yourself, not a quirk of one word: Latin schola became escuela, spatha became espada (sword), stāre became estar, Hispānia became España. It is also why a Spanish speaker learning English says eh-Spain."
+              "text": "Pensamos keeps the plain e because there the stress lands on the ending, not the stem — exactly the rule querer taught you."
             },
             {
               "kind": "speech",
-              "text": "Now you can state a plan out loud: Pienso escribir — \"I mean to write.\""
+              "text": "Two small habits come with the verb: pensar en something means \"think about\" it (pienso en ti), and pensar followed by a bare infinitive means \"plan to\" (pienso hablar — I mean to speak)."
             }
           ]
         },
@@ -139,38 +143,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"escribo, escribes, escribe, escribimos, escriben\"",
+              "instruction": "\"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribo, escribes, escribe, escribimos, escriben\"]"
+              "source": "[YOU SAY: \"pensar\" then the set — \"pienso, piensas, piensa, pensamos, piensan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Leo y escribo español\" — I read and write Spanish",
+              "instruction": "\"Pienso en ti\" — I am thinking of you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Leo y escribo español\" — I read and write Spanish]"
+              "source": "[YOU SAY: \"Pienso en ti\" — I am thinking of you]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pienso escribir\" — I mean to write",
+              "instruction": "\"pensar\" then English \"pensive, compensate, peso\" — the weighing family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pienso escribir\" — I mean to write]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"escribir\" then English \"scribe, describe, manuscript\" — the scratching family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"escribir\" then English \"scribe, describe, manuscript\" — the scratching family]"
+              "source": "[YOU SAY: \"pensar\" then English \"pensive, compensate, peso\" — the weighing family]"
             }
           ]
         },
@@ -187,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did scrībere mean first? (To scratch, to incise.) Why does Spanish say escuela and España? (It refuses to open a word with sc- or sp-, so it props an e- in front.) Say \"I read and write Spanish\". (Leo y escribo español.) And what does legere mean, from the lesson before? (To gather, to pick out.) Next chapter: taking, asking, helping — and a verb that runs backwards."
+              "text": "What did pēnsāre mean literally, and name two English cousins. (To weigh; pensive, compensate, expense, peso.) Which form keeps the plain e, and why? (Pensamos — the stress falls on the ending.) Which little word follows pensar for \"think about\"? (En.) Next: entender, which cracks the same way."
             }
           ]
         }

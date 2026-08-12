@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 125,
-  "title": "Hable Usted --- The Polite Command",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d5dc15bba81ab7c7",
+  "title": "Habla --- Telling Somebody To Do Something",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e43a9f1f45c8a4c1",
   "lessons": [
     {
-      "id": "ES-C50-hable-usted",
-      "sequence": 1460,
-      "title": "hable usted — the polite command",
-      "headword": "hable usted",
-      "romanization": "hable usted",
-      "gloss": "the formal command — the subjunctive again, and the reason it is the polite one is worth knowing",
+      "id": "ES-C50-habla",
+      "sequence": 1487,
+      "title": "habla — telling somebody to do something",
+      "headword": "habla · come · vive",
+      "romanization": "habla · come · vive",
+      "gloss": "telling somebody to do something — and the form is one you have had since your seventh chapter",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5fa7f17b7fd9fa17",
-      "notice": null,
+      "sourceHash": "fnv1a64:e18e664e0d3b0750",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,67 +42,64 @@
             },
             {
               "kind": "speech",
-              "text": "Usted takes the he/she form of every verb. You have known that since you learned it. Watch what that does to a command."
+              "text": "Say \"he speaks.\" (Habla.) Hold that word. You are about to be told it does a second job you have never been shown."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the subjunctive, a third time",
+          "title": "Grammar Lens: you already have it",
           "segments": [
             {
               "kind": "speech",
-              "text": "A command to usted — positive or negative — uses the subjunctive."
+              "text": "To tell somebody you address as tú to do something, use the he/she form of the present."
             },
             {
               "kind": "speech",
-              "text": "Hable, por favor. — Speak, please. Coma, por favor. — Eat, please. No hable. — Don't speak."
+              "text": "Habla. — Speak. Come. — Eat. Vive. — Live."
             },
             {
               "kind": "speech",
-              "text": "So the subjunctive now covers three of the four boxes:"
+              "text": "That is the whole rule, and it costs you nothing. Habla was already in your mouth as \"he speaks\"; the same two syllables, said to somebody, are an order."
             },
             {
               "kind": "table",
               "headers": [
-                "",
-                "tú",
-                "usted"
+                "verb",
+                "he/she does",
+                "you, do it"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
-                "do it. tú: habla — ordinary present. usted: hable — subjunctive.",
-                "don't. tú: no hables — subjunctive. usted: no hable — subjunctive."
+                "verb: hablar. he/she does: habla. you, do it: habla.",
+                "verb: comer. he/she does: come. you, do it: come.",
+                "verb: vivir. he/she does: vive. you, do it: vive."
               ]
             },
             {
               "kind": "speech",
-              "text": "One box out of four uses an ordinary form, and it is the informal, positive one. Everything else reaches for the subjunctive."
+              "text": "The column repeats. That is not an oversight in the table."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is why the formal command is the polite one, and it is not because the subjunctive is a fancy form."
+              "text": "The name for this form is the imperative, from Latin imperāre, \"to command.\""
             },
             {
               "kind": "speech",
-              "text": "Remember what usted is: a worn-down vuestra merced, \"your grace\" — a title, and titles are third person. That is why usted takes he/she endings. So a command to usted is not grammatically aimed at the person in front of you at all. It is aimed at your grace, spoken about rather than to."
-            },
-            {
-              "kind": "speech",
-              "text": "That indirectness is the politeness. Every polite language does some version of it: you soften an order by not pointing it straight at somebody. English does it with extra words — could you possibly, would you mind — where Spanish does it with a verb form and a fossil of a title."
-            },
-            {
-              "kind": "speech",
-              "text": "Which means that if the usted command ever feels stiff to you, you are hearing it correctly. It is supposed to hold somebody at a small distance."
+              "text": "That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed."
             }
           ]
         },
@@ -113,80 +117,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Habla\" then \"Hable, por favor\" — hear the distance open up",
+              "instruction": "\"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Habla\" then \"Hable, por favor\" — hear the distance open up]"
+              "source": "[YOU SAY: \"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four boxes: \"habla, no hables, hable, no hable\"",
+              "instruction": "\"come\", \"vive\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four boxes: \"habla, no hables, hable, no hable\"]"
+              "source": "[YOU SAY: \"come\", \"vive\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-say",
-              "prompt": "Politely ask somebody you address as usted to speak.",
+              "id": "ES-C50-habla-say",
+              "prompt": "Tell somebody you call tu to eat.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-LEX-HABLAR",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-LEX-COMER"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hable, por favor",
-                "hable por favor",
-                "hable usted por favor"
+                "come",
+                "¡come!",
+                "come!"
               ],
               "feedback": {
-                "correct": "The subjunctive, plus please.",
-                "incorrect": "Hable, por favor."
+                "correct": "Same word as he eats.",
+                "incorrect": "Come — the he/she form, said to somebody."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-grid",
-              "prompt": "Of the four command boxes, how many use the subjunctive?",
+              "id": "ES-C50-habla-rule",
+              "prompt": "Which form do you use to give a tu command?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-GRAMMAR-COMMAND-NEGATIVE"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "three",
-                "3",
-                "all but the informal positive"
+                "the he/she present form",
+                "the third person singular",
+                "the el form"
               ],
               "feedback": {
-                "correct": "Only the informal positive escapes it.",
-                "incorrect": "Three. Only the tu positive uses an ordinary present form."
+                "correct": "No new form at all.",
+                "incorrect": "The he/she form of the present."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-why",
-              "prompt": "Why is the usted command the polite one?",
+              "id": "ES-C50-habla-emperor",
+              "prompt": "Which two English words share a root with imperative?",
               "assesses": [
-                "ES-GRAMMAR-USTED-THIRD-PERSON",
-                "ES-LEX-USTED"
+                "ES-ETYMON-IMPERARE"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "it is aimed at a title, not at the person",
-                "usted is third person, so the order is indirect",
-                "because it is not pointed straight at them"
+                "emperor and empire",
+                "emperor, empire"
               ],
               "feedback": {
-                "correct": "Indirectness is what politeness is made of.",
-                "incorrect": "Usted is vuestra merced, a title. The command is spoken about your grace rather than to you."
+                "correct": "One who commands, and the thing commanded.",
+                "incorrect": "Emperor and empire — both from imperare, to command."
               }
             }
           ]
@@ -204,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Speak, please,\" to usted? (Hable, por favor.) Which form? (The subjunctive again.) Why is it polite? (Because usted is a title — the order is aimed past the person, not at them.) Next: all four in one place."
+              "text": "Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable."
             }
           ]
         }

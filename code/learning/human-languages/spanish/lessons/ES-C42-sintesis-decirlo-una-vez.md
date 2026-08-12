@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C42-sintesis-decirlo-una-vez
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1185
-chapter: 78
+sequence: 1215
+chapter: 81
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — what these four words are for, which is not accuracy but not sounding like a stranger
