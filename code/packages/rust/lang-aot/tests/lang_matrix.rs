@@ -1406,6 +1406,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — statement control flow intersects independently compiled
+    // branch states. Equal integer and real assignments remain available to
+    // later static output while both runtime branches still lower normally.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; integer n; real x; flag := false; if flag then n := 40 else n := 40; if flag then x := 2.5 else x := 2.5; output(n + x) end",
+        expect: Expect::Stdout("42.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — exact unary signs stay attached to direct real literals while
     // the bounded source-spelling path continues to reject computed reals.
     Prog {

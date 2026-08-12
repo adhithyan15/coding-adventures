@@ -4619,7 +4619,6 @@ impl Compiler {
 
     fn emit_cond_stmt(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        self.disable_static_real_tracking();
         let children = direct_nodes(node);
         let cond_node = children
             .iter()
@@ -4630,6 +4629,10 @@ impl Compiler {
         if cond.ty != ScalarType::Boolean {
             return Err(CompileError::Type("if condition must be boolean".into()));
         }
+
+        let entry_real_slots = self.static_real_slots.clone();
+        let entry_integer_slots = self.static_integer_slots.clone();
+        let entry_tracking_disabled = self.static_real_tracking_disabled;
 
         let branches: Vec<&GrammarASTNode> = children
             .into_iter()
@@ -4651,6 +4654,9 @@ impl Compiler {
             "void",
         ));
         self.emit_branch_node(then_branch)?;
+        let mut then_real_slots = self.static_real_slots.clone();
+        let mut then_integer_slots = self.static_integer_slots.clone();
+        let then_tracking_disabled = self.static_real_tracking_disabled;
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -4658,10 +4664,26 @@ impl Compiler {
             "void",
         ));
         self.emit_label(&else_label);
+        self.static_real_slots = entry_real_slots;
+        self.static_integer_slots = entry_integer_slots;
+        self.static_real_tracking_disabled = entry_tracking_disabled;
         if let Some(branch) = else_branch {
             self.emit_branch_node(branch)?;
         }
+        let else_real_slots = self.static_real_slots.clone();
+        let else_integer_slots = self.static_integer_slots.clone();
+        let else_tracking_disabled = self.static_real_tracking_disabled;
         self.emit_label(&end_label);
+
+        if then_tracking_disabled || else_tracking_disabled {
+            self.disable_static_real_tracking();
+        } else {
+            then_real_slots.retain(|slot, value| else_real_slots.get(slot) == Some(value));
+            then_integer_slots.retain(|slot, value| else_integer_slots.get(slot) == Some(value));
+            self.static_real_slots = then_real_slots;
+            self.static_integer_slots = then_integer_slots;
+            self.static_real_tracking_disabled = false;
+        }
         Ok(())
     }
 
@@ -7465,13 +7487,65 @@ mod tests {
     }
 
     #[test]
-    fn al4_print_real_tracking_stops_at_statement_control_flow() {
+    fn al4_print_different_statement_branches_invalidate_snapshot() {
         let err = compile_source(
             "begin real x; boolean flag; x := 4.2; flag := false; if flag then x := 1.0 else x := 2.0; print(x) end",
             "test",
         )
         .expect_err("branch-selected scalar values still need runtime formatting");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "unexpected rejection: {err:?}"
+        );
+    }
+
+    #[test]
+    fn al4_equal_statement_branches_preserve_static_snapshots() {
+        let module = compile_source(
+            "begin boolean flag; integer n; real x; flag := false; if flag then n := 40 else n := 40; if flag then x := 2.5 else x := 2.5; output(n + x) end",
+            "test",
+        )
+        .expect("equal statement branches preserve path-independent snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| instr.op == "jmp_if_false")
+                .count(),
+            2,
+            "both runtime conditions must still execute"
+        );
+    }
+
+    #[test]
+    fn al4_missing_else_merges_with_the_unmodified_path() {
+        let module = compile_source(
+            "begin boolean flag; real x; flag := false; x := 2.5; if flag then x := 2.5; output(x) end",
+            "test",
+        )
+        .expect("an absent else branch retains the post-condition baseline");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "2.5")
+        }));
+    }
+
+    #[test]
+    fn al4_call_in_one_statement_branch_invalidates_the_merge() {
+        let err = compile_source(
+            "begin real procedure choose; choose := 2.5; boolean flag; real x; flag := false; x := 2.5; if flag then x := choose() else x := 2.5; output(x) end",
+            "test",
+        )
+        .expect_err("a call on either branch must poison the merged metadata");
+        assert!(
+            format!("{err:?}").contains("cannot print a real value"),
+            "unexpected rejection: {err:?}"
+        );
     }
 
     #[test]
