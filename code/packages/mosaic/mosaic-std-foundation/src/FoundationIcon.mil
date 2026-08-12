@@ -1,0 +1,6 @@
+// A semantic icon requires a spoken label at the package boundary. Decorative
+// icons should be authored directly with the kernel's hidden semantics.
+component FoundationIcon {
+  slot glyph : text ;
+  slot accessible-label : text ;
+}

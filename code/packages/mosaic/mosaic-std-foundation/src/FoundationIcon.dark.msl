@@ -1,0 +1,6 @@
+style FoundationIcon {
+  part foundation-icon-root {
+    color     : $foundation-color-accent ;
+    font-size : $foundation-icon-size ;
+  }
+}

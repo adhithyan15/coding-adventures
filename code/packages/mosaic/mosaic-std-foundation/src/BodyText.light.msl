@@ -1,0 +1,7 @@
+style BodyText {
+  part body-text-root {
+    color       : $foundation-color-text-light ;
+    font-size   : $foundation-font-body ;
+    font-weight : 400 ;
+  }
+}
