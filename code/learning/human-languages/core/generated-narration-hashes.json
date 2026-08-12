@@ -8786,6 +8786,76 @@
       "jsonHash": "fnv1a64:dfe757750a29c5de"
     },
     {
+      "language": "spanish",
+      "chapter": 168,
+      "sourceHash": "fnv1a64:3d2c2c2fd680fdaa",
+      "lessonIds": [
+        "ES-C54-hay"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch168.txt",
+      "json": "spanish/narration/ch168.json",
+      "textHash": "fnv1a64:62f5d8904aff156d",
+      "jsonHash": "fnv1a64:6a31c425ea68d4ed"
+    },
+    {
+      "language": "spanish",
+      "chapter": 169,
+      "sourceHash": "fnv1a64:3267c66b2bfe4a4b",
+      "lessonIds": [
+        "ES-C54-ha-mas-y"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch169.txt",
+      "json": "spanish/narration/ch169.json",
+      "textHash": "fnv1a64:ca1bc8fe5717793f",
+      "jsonHash": "fnv1a64:9230e45bb7c0174a"
+    },
+    {
+      "language": "spanish",
+      "chapter": 170,
+      "sourceHash": "fnv1a64:4105d0e28bddf44a",
+      "lessonIds": [
+        "ES-C54-hay-que"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch170.txt",
+      "json": "spanish/narration/ch170.json",
+      "textHash": "fnv1a64:7ef0198bb0712d33",
+      "jsonHash": "fnv1a64:dfb8e0b683a084a7"
+    },
+    {
+      "language": "spanish",
+      "chapter": 171,
+      "sourceHash": "fnv1a64:c76f7a5e082b10b1",
+      "lessonIds": [
+        "ES-C54-repaso-hay"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch171.txt",
+      "json": "spanish/narration/ch171.json",
+      "textHash": "fnv1a64:a97d269671bfede3",
+      "jsonHash": "fnv1a64:26816f9262ea56f0"
+    },
+    {
+      "language": "spanish",
+      "chapter": 172,
+      "sourceHash": "fnv1a64:353efb7fe0814e12",
+      "lessonIds": [
+        "ES-C54-sintesis-lo-que-hay"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch172.txt",
+      "json": "spanish/narration/ch172.json",
+      "textHash": "fnv1a64:5982c46a7d703e67",
+      "jsonHash": "fnv1a64:a2323f7fcbf2e9e4"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

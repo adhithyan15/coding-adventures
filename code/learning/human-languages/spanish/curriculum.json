@@ -1777,6 +1777,66 @@
         "ES-EXT-037-SYNTH-REL"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-015-HAY",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C54-hay"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-HAY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-015-HAY-ETYM",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C54-ha-mas-y"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-HAY-ETYM"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-015-HAY-QUE",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C54-hay-que"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-HAY-QUE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-015-REVIEW-HAY",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C54-repaso-hay"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-REVIEW-HAY"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-015-SYNTH-HAY",
+      "spine_node": "SPINE-ASK-LOCATION",
+      "lessons": [
+        "ES-C54-sintesis-lo-que-hay"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-015-SYNTH-HAY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -1880,7 +1940,12 @@
       "segments": [
         "ES-PATH-015",
         "ES-PATH-015-LOCATION",
-        "ES-PATH-015-IR"
+        "ES-PATH-015-IR",
+        "ES-PATH-015-HAY",
+        "ES-PATH-015-HAY-ETYM",
+        "ES-PATH-015-HAY-QUE",
+        "ES-PATH-015-REVIEW-HAY",
+        "ES-PATH-015-SYNTH-HAY"
       ],
       "omits": [],
       "relocates": {}
@@ -4029,6 +4094,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C53-sintesis-frases-largas"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-HAY",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C54-hay"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-HAY-ETYM",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C54-ha-mas-y"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-HAY-QUE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C54-hay-que"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-REVIEW-HAY",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C54-repaso-hay"
+      ]
+    },
+    {
+      "id": "ES-EXT-015-SYNTH-HAY",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C54-sintesis-lo-que-hay"
       ]
     }
   ]

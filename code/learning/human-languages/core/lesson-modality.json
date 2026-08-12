@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:aa85d06b2d601186",
+  "sourceHash": "fnv1a64:daa30cd1543c3c29",
   "summary": {
-    "totalLessons": 1819,
-    "voice": 1219,
-    "sight": 531,
+    "totalLessons": 1824,
+    "voice": 1222,
+    "sight": 533,
     "pen": 69,
-    "drivableLessons": 1219,
+    "drivableLessons": 1222,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 640,
-    "drivablePrefixTotal": 1032,
-    "fullyDrivableChapters": 428,
-    "unstartableChapters": 159,
+    "chapterCount": 645,
+    "drivablePrefixTotal": 1035,
+    "fullyDrivableChapters": 431,
+    "unstartableChapters": 161,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 313,
-      "voice": 278,
-      "sight": 28,
+      "lessonCount": 318,
+      "voice": 281,
+      "sight": 30,
       "pen": 7,
-      "drivablePercent": 89,
-      "drivablePrefixTotal": 265,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 268,
       "modalities": [
         "voice",
         "sight",
@@ -9524,6 +9524,82 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C53-sintesis-frases-largas"
+          ]
+        },
+        {
+          "chapter": 168,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C54-hay"
+          ]
+        },
+        {
+          "chapter": 169,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C54-ha-mas-y",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 170,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C54-hay-que"
+          ]
+        },
+        {
+          "chapter": 171,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C54-repaso-hay",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 172,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C54-sintesis-lo-que-hay"
           ]
         }
       ]
@@ -40356,6 +40432,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:23f6fa64a8c79efe"
+    },
+    {
+      "id": "ES-C54-hay",
+      "language": "spanish",
+      "chapter": 168,
+      "sequence": 2096,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ded43830e2ef76fe"
+    },
+    {
+      "id": "ES-C54-ha-mas-y",
+      "language": "spanish",
+      "chapter": 169,
+      "sequence": 2097,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5324efd8304b9bb7"
+    },
+    {
+      "id": "ES-C54-hay-que",
+      "language": "spanish",
+      "chapter": 170,
+      "sequence": 2098,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fce594ff293ac1ec"
+    },
+    {
+      "id": "ES-C54-repaso-hay",
+      "language": "spanish",
+      "chapter": 171,
+      "sequence": 2099,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d8e2ad18b5f68f2b"
+    },
+    {
+      "id": "ES-C54-sintesis-lo-que-hay",
+      "language": "spanish",
+      "chapter": 172,
+      "sequence": 2100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:826711ff45cf835a"
     },
     {
       "id": "TA-C01-vanakkam",
