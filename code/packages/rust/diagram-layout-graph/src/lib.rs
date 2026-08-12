@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -464,6 +464,17 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
                 y: min_y - 40.0,
                 width: max_x - min_x + 48.0,
                 height: max_y - min_y + 64.0,
+                style: resolve_style_with_base(
+                    group.style.as_ref(),
+                    ResolvedDiagramStyle {
+                        fill: "#f8fafc".into(),
+                        stroke: "#64748b".into(),
+                        stroke_width: 1.5,
+                        text_color: "#334155".into(),
+                        font_size: 14.0,
+                        corner_radius: 8.0,
+                    },
+                ),
             },
         );
     }
@@ -655,7 +666,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.6.0");
+        assert_eq!(VERSION, "0.7.0");
     }
 
     #[test]
@@ -845,6 +856,11 @@ mod tests {
             label: DiagramLabel::new("Processing"),
             parent_id: None,
             node_ids: vec!["A".into(), "B".into()],
+            style: Some(diagram_ir::DiagramStyle {
+                fill: Some("#fef3c7".into()),
+                stroke_width: Some(3.0),
+                ..Default::default()
+            }),
         });
         let l = layout_graph_diagram(&d, None, None);
         let group = &l.groups[0];
@@ -853,5 +869,7 @@ mod tests {
             assert!(node.x >= group.x && node.x + node.width <= group.x + group.width);
             assert!(node.y >= group.y && node.y + node.height <= group.y + group.height);
         }
+        assert_eq!(group.style.fill, "#fef3c7");
+        assert_eq!(group.style.stroke_width, 3.0);
     }
 }

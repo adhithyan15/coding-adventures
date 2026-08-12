@@ -1,4 +1,4 @@
-# @version 12
+# @version 13
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
@@ -8,7 +8,8 @@ statement = accessibility_stmt | direction_stmt | composite_state_stmt | state_s
 accessibility_stmt = ACC_TITLE text | ACC_DESCR text | ACC_DESCR_START NEWLINE multiline_accessibility_text RBRACE ;
 multiline_accessibility_text = text { NEWLINE text } { NEWLINE } ;
 direction_stmt = "direction" DIRECTION ;
-composite_state_stmt = "state" state_ref LBRACE body RBRACE ;
+composite_state_stmt = "state" composite_state_header LBRACE body RBRACE ;
+composite_state_header = state_ref | STRING "as" state_ref ;
 state_stmt = "state" ( state_ref ( CHOICE | FORK_JOIN ) | STRING "as" state_ref | state_ref [ COLON text ] ) ;
 description_stmt = state_ref COLON text ;
 transition_stmt = styled_endpoint ARROW styled_endpoint [ COLON text ] ;

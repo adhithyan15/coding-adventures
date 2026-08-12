@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.56.0";
+pub const VERSION: &str = "0.57.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1152,7 +1152,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             }
             let class_name = take_state_ref(&mut cursor)?;
             for id in &ids {
-                if !node_indices.contains_key(id) {
+                if !node_indices.contains_key(id) && !groups.iter().any(|group| &group.id == id) {
                     upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
                 }
             }
@@ -1162,6 +1162,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     class_name.clone(),
                     &mut nodes,
                     &node_indices,
+                    &mut groups,
                     &class_styles,
                     &mut pending_classes,
                 );
@@ -1244,6 +1245,11 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         } else if cursor.current().value.eq_ignore_ascii_case("style") {
             cursor.advance();
             let id = take_state_ref(&mut cursor)?;
+            if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+                parse_state_style_assignments(&mut cursor, group.style.get_or_insert_default())?;
+                cursor.skip_terminators();
+                continue;
+            }
             if !node_indices.contains_key(&id) {
                 upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
             }
@@ -1271,6 +1277,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                         label: DiagramLabel::new(id.clone()),
                         parent_id: group_stack.last().cloned(),
                         node_ids: Vec::new(),
+                        style: None,
                     });
                     group_stack.push(id);
                     cursor.skip_terminators();
@@ -1304,6 +1311,18 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 };
                 (id, label)
             };
+            if cursor.consume_if("LBRACE").is_some() {
+                groups.push(GraphGroup {
+                    id: id.clone(),
+                    label: DiagramLabel::new(label),
+                    parent_id: group_stack.last().cloned(),
+                    node_ids: Vec::new(),
+                    style: None,
+                });
+                group_stack.push(id);
+                cursor.skip_terminators();
+                continue;
+            }
             upsert_state_node(&mut nodes, &mut node_indices, id, label);
         } else {
             let from_is_edge_state = token_name(cursor.current()) == "EDGE_STATE";
@@ -1327,6 +1346,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     class_name,
                     &mut nodes,
                     &node_indices,
+                    &mut groups,
                     &class_styles,
                     &mut pending_classes,
                 );
@@ -1354,6 +1374,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     class_name,
                     &mut nodes,
                     &node_indices,
+                    &mut groups,
                     &class_styles,
                     &mut pending_classes,
                 );
@@ -1388,10 +1409,14 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             col: 1,
         })?;
         for id in ids {
-            merge_state_style(
-                nodes[node_indices[&id]].style.get_or_insert_default(),
-                class_style,
-            );
+            if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+                merge_state_style(group.style.get_or_insert_default(), class_style);
+            } else {
+                merge_state_style(
+                    nodes[node_indices[&id]].style.get_or_insert_default(),
+                    class_style,
+                );
+            }
         }
     }
 
@@ -1572,14 +1597,19 @@ fn apply_or_defer_state_class(
     class_name: String,
     nodes: &mut [GraphNode],
     node_indices: &HashMap<String, usize>,
+    groups: &mut [GraphGroup],
     class_styles: &HashMap<String, DiagramStyle>,
     pending_classes: &mut Vec<(Vec<String>, String)>,
 ) {
     if let Some(class_style) = class_styles.get(&class_name) {
-        merge_state_style(
-            nodes[node_indices[id]].style.get_or_insert_default(),
-            class_style,
-        );
+        if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+            merge_state_style(group.style.get_or_insert_default(), class_style);
+        } else {
+            merge_state_style(
+                nodes[node_indices[id]].style.get_or_insert_default(),
+                class_style,
+            );
+        }
     } else {
         pending_classes.push((vec![id.to_string()], class_name));
     }
@@ -4488,6 +4518,27 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_composite_aliases_and_styles() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef phase fill:#ecfccb,stroke:#3f6212,color:#365314\nstate \"Processing Queue\" as Processing {\nA --> B\n}\nclass Processing phase\nstyle Processing stroke-width:3px\n",
+        )
+        .expect("styled aliased composite state should parse");
+        let group = &diagram.groups[0];
+
+        assert_eq!(group.id, "Processing");
+        assert_eq!(group.label.text, "Processing Queue");
+        assert_eq!(
+            group.style.as_ref().and_then(|style| style.fill.as_deref()),
+            Some("#ecfccb")
+        );
+        assert_eq!(
+            group.style.as_ref().and_then(|style| style.stroke_width),
+            Some(3.0)
+        );
+        assert!(!diagram.nodes.iter().any(|node| node.id == "Processing"));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5258,7 +5309,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.56.0");
+        assert_eq!(crate::VERSION, "0.57.0");
     }
 
     #[test]

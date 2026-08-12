@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.7.0
+
+- Resolve composite graph-group styles into deterministic layout geometry.
+
 ## 0.6.0
 
 - Compute padded nested group bounds around composite-state members.
