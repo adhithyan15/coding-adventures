@@ -7,13 +7,14 @@ A `mosaic-package.toml` manifest answers exactly one question:
 
 > *What does a Mosaic package declare to the kernel and to other packages?*
 
-It answers with four sections:
+It answers with core sections plus optional package resources:
 
 | Section          | What it carries                                                         |
 |------------------|-------------------------------------------------------------------------|
 | `[package]`      | name (kebab-case), semver version, free-text description, SPDX license  |
 | `[components]`   | `exports = [...]` — PascalCase component names this package publishes   |
 | `[dependencies]` | map from kebab-case package name to semver string                       |
+| `[styles]`       | optional package-relative schema-v1 token palette                       |
 | `[host_assets]`  | optional per-backend files copied into generated project shells          |
 | `[kernel]`       | `version = "1"` — primitive-kernel ABI this package targets             |
 
@@ -35,6 +36,9 @@ exports = ["Grid", "Cell", "Column"]
 
 [dependencies]
 # empty for this one
+
+[styles]
+token_palette = "tokens/grid.json"
 
 [host_assets]
 files = [
@@ -64,6 +68,7 @@ assert_eq!(pkg.kernel.version, "1");
 | `package.license`        | non-empty string (SPDX id recommended)                        |
 | `components.exports[]`   | `^[A-Z][a-zA-Z0-9]*$` (PascalCase)                            |
 | `dependencies.<name>`    | name = kebab-case, value = semver-like                        |
+| `styles.token_palette`    | optional portable package-relative path ending in `.json`      |
 | `host_assets.files[]`    | optional `{ backend, source, target }` strings                 |
 | `kernel.version`         | exactly `"1"` (kernel ABI v1)                                 |
 
@@ -77,6 +82,7 @@ pub enum ManifestError {
     InvalidComponentName(String),
     InvalidKernelVersion(String),
     InvalidSemverString(String),
+    InvalidStylePath(String),
 }
 ```
 

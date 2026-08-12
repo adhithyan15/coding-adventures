@@ -12,9 +12,10 @@
 //! 2. **What does it publish?**           → `[components]` (PascalCase exports)
 //! 3. **What does it need from me?**      → `[dependencies]` and `[kernel]`
 //!
-//! These four sections answer those questions, and **nothing else** is
-//! permitted to depend on file layout or directory scanning.  The manifest is
-//! the single source of truth for what a package is.
+//! Those core sections plus optional `[styles]` and `[host_assets]` resources
+//! answer those questions, and **nothing else** is permitted to depend on file
+//! layout or directory scanning. The manifest is the single source of truth
+//! for what a package is.
 //!
 //! ## Worked example
 //!
@@ -68,6 +69,7 @@
 //! | `InvalidComponentName`  | an entry in `components.exports` not PascalCase       |
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
 //! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
+//! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //!
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
@@ -93,8 +95,20 @@ pub struct MosaicPackage {
     pub package: PackageMeta,
     pub components: ComponentsSection,
     pub dependencies: HashMap<String, String>,
+    pub styles: StylesSection,
     pub host_assets: HostAssetsSection,
     pub kernel: KernelSection,
+}
+
+/// Optional package-owned style resources.
+///
+/// `token_palette` is a package-relative path to a schema-v1 Mosaic token
+/// palette. Package builders treat it as this package's design-system
+/// defaults; a consuming package and an explicit application palette may
+/// override those values without copying the file.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct StylesSection {
+    pub token_palette: Option<String>,
 }
 
 /// The `[package]` table: identity + metadata.
@@ -165,6 +179,9 @@ pub enum ManifestError {
     /// A version string (in `[package].version` or a `[dependencies]` value)
     /// did not match the semver-like regex.
     InvalidSemverString(String),
+    /// `[styles].token_palette` was not a safe, portable package-relative
+    /// JSON path.
+    InvalidStylePath(String),
 }
 
 impl std::fmt::Display for ManifestError {
@@ -195,6 +212,10 @@ impl std::fmt::Display for ManifestError {
             Self::InvalidSemverString(v) => {
                 write!(f, "invalid semver-like version string `{v}`")
             }
+            Self::InvalidStylePath(path) => write!(
+                f,
+                "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
+            ),
         }
     }
 }
@@ -215,8 +236,15 @@ struct RawManifest {
     package: Option<RawPackage>,
     components: Option<RawComponents>,
     dependencies: Option<HashMap<String, String>>,
+    styles: Option<RawStyles>,
     host_assets: Option<RawHostAssets>,
     kernel: Option<RawKernel>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawStyles {
+    token_palette: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -328,18 +356,42 @@ pub fn parse(toml_source: &str) -> Result<MosaicPackage, ManifestError> {
     // satisfy the same kebab/semver rules as `[package]`.
     let dependencies = validate_dependencies(raw_deps)?;
 
-    // Step 6: validate optional host asset declarations.
+    // Step 6: validate optional package-owned style resources.
+    let styles = validate_styles(raw.styles)?;
+
+    // Step 7: validate optional host asset declarations.
     let host_assets = validate_host_assets(raw_host_assets)?;
 
-    // Step 7: validate `[kernel]`.
+    // Step 8: validate `[kernel]`.
     let kernel = validate_kernel(raw_kernel)?;
 
     Ok(MosaicPackage {
         package,
         components,
         dependencies,
+        styles,
         host_assets,
         kernel,
+    })
+}
+
+fn validate_styles(raw: Option<RawStyles>) -> Result<StylesSection, ManifestError> {
+    let Some(path) = raw.and_then(|styles| styles.token_palette) else {
+        return Ok(StylesSection::default());
+    };
+    let portable = !path.is_empty()
+        && !path.starts_with('/')
+        && !path.starts_with('\\')
+        && !path.contains('\\')
+        && path.ends_with(".json")
+        && path
+            .split('/')
+            .all(|component| !component.is_empty() && component != "." && component != "..");
+    if !portable {
+        return Err(ManifestError::InvalidStylePath(path));
+    }
+    Ok(StylesSection {
+        token_palette: Some(path),
     })
 }
 
@@ -513,6 +565,7 @@ version = "1"
         assert_eq!(pkg.package.license, "MIT OR Apache-2.0");
         assert_eq!(pkg.components.exports, vec!["Grid", "Cell", "Column"]);
         assert!(pkg.dependencies.is_empty());
+        assert!(pkg.styles.token_palette.is_none());
         assert!(pkg.host_assets.files.is_empty());
         assert_eq!(pkg.kernel.version, "1");
     }
@@ -695,6 +748,64 @@ version = "1"
         assert_eq!(pkg.host_assets.files[0].source, "host/web/form-host.ts");
         assert_eq!(pkg.host_assets.files[0].target, "src/form-host.ts");
         assert_eq!(pkg.host_assets.files[1].backend, "xaml");
+    }
+
+    #[test]
+    fn parses_optional_package_token_palette() {
+        let src = r#"
+[package]
+name = "mosaic-std-foundation"
+version = "0.1.0"
+description = "Foundation primitives"
+license = "MIT"
+[components]
+exports = []
+[dependencies]
+[styles]
+token_palette = "tokens/foundation.json"
+[kernel]
+version = "1"
+"#;
+        let pkg = parse(src).expect("manifest valid");
+        assert_eq!(
+            pkg.styles.token_palette.as_deref(),
+            Some("tokens/foundation.json")
+        );
+    }
+
+    #[test]
+    fn rejects_unsafe_or_non_json_package_token_palette_paths() {
+        for path in [
+            "",
+            "/tokens.json",
+            "../tokens.json",
+            "tokens/../secret.json",
+            "tokens\\windows.json",
+            "tokens/palette.toml",
+        ] {
+            let src = GOOD_MANIFEST.replace(
+                "[kernel]",
+                &format!("[styles]\ntoken_palette = {path:?}\n[kernel]"),
+            );
+            let err = parse(&src).unwrap_err();
+            assert!(
+                matches!(err, ManifestError::InvalidStylePath(ref value) if value == path),
+                "for {path:?} got {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn rejects_unknown_style_fields() {
+        let src = GOOD_MANIFEST.replace(
+            "[kernel]",
+            "[styles]\ntoken_pallete = \"tokens/theme.json\"\n[kernel]",
+        );
+        let err = parse(&src).unwrap_err();
+        assert!(
+            matches!(err, ManifestError::TomlSyntax(ref message) if message.contains("unknown field `token_pallete`")),
+            "got {err:?}"
+        );
     }
 
     #[test]

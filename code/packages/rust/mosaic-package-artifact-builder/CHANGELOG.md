@@ -5,6 +5,10 @@
 - Added token-aware composition and package-build entry points.
 - One override map now applies to root and recursively referenced package
   styles, enabling reusable components to inherit app branding.
+- Package manifests may declare scoped token defaults. Dependency palettes are
+  lower precedence than consuming-package palettes, while explicit application
+  input wins last; project-shell and degradation-analysis paths use the same
+  resolved palette.
 - Existing build and composition APIs retain the built-in Mosaic palette.
 
 ## [Unreleased] - XAML native drag capability
