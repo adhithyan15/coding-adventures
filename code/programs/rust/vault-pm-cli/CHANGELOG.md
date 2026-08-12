@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Exposed audited payment-card creation and added a second real PTY drill for
+  hidden PAN/CVV input, restart-backed redaction, separate direct-terminal
+  reveal, closed-field audit advancement, and full-PAN plaintext-tree
+  exclusion.
 - Exposed audited interactive current-secret reveal and extended the real PTY
   drill to prove direct controlling-terminal delivery with empty captured
   process stdout and restart-backed audit advancement.

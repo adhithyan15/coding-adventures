@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audited `item add card` with hidden PAN/CVV prompts, closed offline
+  validation, redacted holder/last-four/expiry rendering, durable failure
+  events, and separate VLT-PM25 reveal reuse.
 - Added audit-required `item reveal ITEM FIELD` with exact-`yes` controlling
   terminal confirmation, application-owned current-revision selection, durable
   denied/failed/succeeded outcomes, and direct escaped terminal delivery that

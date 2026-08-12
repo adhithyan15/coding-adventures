@@ -98,6 +98,16 @@ pub enum TextPrompt {
     LoginTitle,
     /// Required secure-note display title.
     SecureNoteTitle,
+    /// Required payment-card display title.
+    CardTitle,
+    /// Required payment-card holder name.
+    CardHolder,
+    /// Required payment-card expiry month.
+    CardExpiryMonth,
+    /// Required four-digit payment-card expiry year.
+    CardExpiryYear,
+    /// Optional payment-card billing postal code.
+    CardBillingPostalCode,
     /// Optional login username or account handle.
     LoginUsername,
     /// Optional primary login URL.
@@ -109,7 +119,11 @@ pub enum TextPrompt {
 impl TextPrompt {
     fn message(self) -> &'static str {
         match self {
-            Self::LoginTitle | Self::SecureNoteTitle => "Title: ",
+            Self::LoginTitle | Self::SecureNoteTitle | Self::CardTitle => "Title: ",
+            Self::CardHolder => "Cardholder: ",
+            Self::CardExpiryMonth => "Expiry month (1-12): ",
+            Self::CardExpiryYear => "Expiry year (YYYY): ",
+            Self::CardBillingPostalCode => "Billing postal code (optional): ",
             Self::LoginUsername => "Username: ",
             Self::LoginUrl => "URL (optional): ",
             Self::SecretRevealConfirmation => {
@@ -120,7 +134,13 @@ impl TextPrompt {
 
     const fn max_bytes(self) -> usize {
         match self {
-            Self::LoginTitle | Self::SecureNoteTitle => 256,
+            Self::LoginTitle
+            | Self::SecureNoteTitle
+            | Self::CardTitle
+            | Self::CardHolder
+            | Self::CardBillingPostalCode => 256,
+            Self::CardExpiryMonth => 2,
+            Self::CardExpiryYear => 4,
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
             Self::SecretRevealConfirmation => 16,
@@ -130,7 +150,10 @@ impl TextPrompt {
     const fn allows_empty(self) -> bool {
         matches!(
             self,
-            Self::LoginUsername | Self::LoginUrl | Self::SecretRevealConfirmation
+            Self::LoginUsername
+                | Self::LoginUrl
+                | Self::CardBillingPostalCode
+                | Self::SecretRevealConfirmation
         )
     }
 }
@@ -156,6 +179,10 @@ pub enum SecretPrompt {
     LoginPassword,
     /// Collect a secure-note body without terminal echo.
     SecureNoteBody,
+    /// Collect a payment-card number without terminal echo.
+    CardNumber,
+    /// Collect a payment-card verification code without terminal echo.
+    CardCvv,
 }
 
 impl SecretPrompt {
@@ -169,6 +196,8 @@ impl SecretPrompt {
             Self::ImportPassphrase => "Import passphrase: ",
             Self::LoginPassword => "Password: ",
             Self::SecureNoteBody => "Note: ",
+            Self::CardNumber => "Card number: ",
+            Self::CardCvv => "CVV: ",
         }
     }
 }
@@ -406,8 +435,21 @@ mod tests {
         );
         assert_eq!(SecretPrompt::LoginPassword.message(), "Password: ");
         assert_eq!(SecretPrompt::SecureNoteBody.message(), "Note: ");
+        assert_eq!(SecretPrompt::CardNumber.message(), "Card number: ");
+        assert_eq!(SecretPrompt::CardCvv.message(), "CVV: ");
         assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
         assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
+        assert_eq!(TextPrompt::CardTitle.message(), "Title: ");
+        assert_eq!(TextPrompt::CardHolder.message(), "Cardholder: ");
+        assert_eq!(
+            TextPrompt::CardExpiryMonth.message(),
+            "Expiry month (1-12): "
+        );
+        assert_eq!(TextPrompt::CardExpiryYear.message(), "Expiry year (YYYY): ");
+        assert_eq!(
+            TextPrompt::CardBillingPostalCode.message(),
+            "Billing postal code (optional): "
+        );
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
         assert_eq!(
@@ -416,6 +458,11 @@ mod tests {
         );
         assert!(!TextPrompt::LoginTitle.allows_empty());
         assert!(!TextPrompt::SecureNoteTitle.allows_empty());
+        assert!(!TextPrompt::CardTitle.allows_empty());
+        assert!(!TextPrompt::CardHolder.allows_empty());
+        assert!(!TextPrompt::CardExpiryMonth.allows_empty());
+        assert!(!TextPrompt::CardExpiryYear.allows_empty());
+        assert!(TextPrompt::CardBillingPostalCode.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
         assert!(TextPrompt::LoginUrl.allows_empty());
         assert!(TextPrompt::SecretRevealConfirmation.allows_empty());

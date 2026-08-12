@@ -14,6 +14,8 @@ const TARGET_PASSPHRASE: &[u8] = b"e2e separate restore target passphrase";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
 const SECURE_NOTE_BODY: &[u8] = b"e2e secure note body stays encrypted";
+const CARD_NUMBER: &[u8] = b"4242424242424242";
+const CARD_CVV: &[u8] = b"7391";
 const EXPORT_PASSPHRASE: &[u8] = b"e2e distinct portable export passphrase";
 const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n";
 
@@ -164,7 +166,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(!updated_transcript.contains("e2e updated password"));
 
     let (reveal_status, reveal_transcript, reveal_stdout) =
-        run_secret_reveal_in_pty(&home, &item_id);
+        run_secret_reveal_in_pty(&home, &item_id, "login-password", UPDATED_ITEM_PASSWORD);
     assert!(
         reveal_status.success(),
         "secret reveal failed: {reveal_transcript}"
@@ -395,6 +397,80 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_tree_excludes(&home.0, EXPORT_PASSPHRASE);
 }
 
+#[test]
+fn real_cli_creates_redacts_and_separately_reveals_a_payment_card() {
+    let home = TestHome::new();
+    let (init_status, init_transcript) = run_init_in_pty(&home);
+    assert!(init_status.success(), "init failed: {init_transcript}");
+
+    let (add_status, add_transcript) = run_add_card_in_pty(&home);
+    assert!(add_status.success(), "card add failed: {add_transcript}");
+    for prompt in [
+        "Title: ",
+        "Cardholder: ",
+        "Card number: ",
+        "Expiry month (1-12): ",
+        "Expiry year (YYYY): ",
+        "CVV: ",
+        "Billing postal code (optional): ",
+    ] {
+        assert!(add_transcript.contains(prompt), "{add_transcript}");
+    }
+    assert!(!add_transcript.contains(core::str::from_utf8(CARD_NUMBER).unwrap()));
+    assert!(!add_transcript.contains(core::str::from_utf8(CARD_CVV).unwrap()));
+    let item_id = extract_item_id(&add_transcript);
+
+    let (show_status, show_transcript) = run_unlock_in_pty(
+        &home,
+        &["item", "show", &item_id],
+        b"Billing postal code: present",
+    );
+    assert!(show_status.success(), "card show failed: {show_transcript}");
+    assert!(show_transcript.contains("Cardholder: \"Ada Lovelace\""));
+    assert!(show_transcript.contains("Last four: \"4242\""));
+    assert!(show_transcript.contains("Expiry: 12/2030"));
+    assert!(show_transcript.contains("Card number: <redacted>"));
+    assert!(show_transcript.contains("CVV: <redacted>"));
+    assert!(!show_transcript.contains(core::str::from_utf8(CARD_NUMBER).unwrap()));
+    assert!(!show_transcript.contains("CVV: \"7391\""));
+    assert!(!show_transcript.contains("Billing postal code: \"94107\""));
+
+    for (field, secret) in [("card-number", CARD_NUMBER), ("card-cvv", CARD_CVV)] {
+        let (status, transcript, stdout) = run_secret_reveal_in_pty(&home, &item_id, field, secret);
+        assert!(status.success(), "{field} reveal failed: {transcript}");
+        assert!(transcript.contains(&format!(
+            "Secret: {:?}",
+            core::str::from_utf8(secret).unwrap()
+        )));
+        assert!(stdout.is_empty(), "{field} entered process stdout");
+        assert_transcript_excludes_secrets(&transcript);
+    }
+
+    let (audit_status, audit_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_create\toutcome=succeeded",
+    );
+    assert!(
+        audit_status.success(),
+        "audit list failed: {audit_transcript}"
+    );
+    assert!(audit_transcript.contains("action=item_read\toutcome=succeeded"));
+    assert!(!audit_transcript.contains(core::str::from_utf8(CARD_NUMBER).unwrap()));
+    assert_audit_rows_have_only_closed_fields(&audit_transcript);
+
+    let (verify_status, verify_transcript) = run_unlock_in_pty(
+        &home,
+        &["audit", "verify"],
+        b"commits=6 catalogs=2 revisions=1 items=1 audit_events=6",
+    );
+    assert!(
+        verify_status.success(),
+        "card audit verification failed: {verify_transcript}"
+    );
+    assert_tree_excludes(&home.0, CARD_NUMBER);
+}
+
 fn run_export_in_pty(home: &TestHome, destination: &Path) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
@@ -547,6 +623,63 @@ fn run_add_secure_note_in_pty(home: &TestHome) -> (ExitStatus, String) {
     (status, String::from_utf8_lossy(&transcript).into_owned())
 }
 
+fn run_add_card_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["item", "add", "card"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Title: ");
+    master.write_all(b"Personal Visa\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Cardholder: ");
+    master.write_all(b"Ada Lovelace\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Card number: ");
+    master.write_all(CARD_NUMBER).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Expiry month (1-12): ");
+    master.write_all(b"12\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Expiry year (YYYY): ");
+    master.write_all(b"2030\n").unwrap();
+    read_until(&mut master, &mut transcript, b"CVV: ");
+    master.write_all(CARD_CVV).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Billing postal code (optional): ",
+    );
+    master.write_all(b"94107\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Item added: ");
+    let item_line = transcript.len() - b"Item added: ".len();
+    read_until_from(&mut master, &mut transcript, item_line, b"\n");
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
 fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String) {
     run_login_form_in_pty(
         home,
@@ -559,10 +692,15 @@ fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String)
     )
 }
 
-fn run_secret_reveal_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String, Vec<u8>) {
+fn run_secret_reveal_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    field: &str,
+    expected_secret: &[u8],
+) -> (ExitStatus, String, Vec<u8>) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
-    command.args(["item", "reveal", item_id, "login-password"]);
+    command.args(["item", "reveal", item_id, field]);
     home.configure(&mut command);
     command
         .stdin(Stdio::piped())
@@ -594,11 +732,11 @@ fn run_secret_reveal_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, Stri
         b"Reveal secret on this terminal? Type yes to continue: ",
     );
     master.write_all(b"yes\n").unwrap();
-    read_until(
-        &mut master,
-        &mut transcript,
-        b"Secret: \"e2e updated password stays encrypted\"",
+    let expected_line = format!(
+        "Secret: {:?}",
+        core::str::from_utf8(expected_secret).unwrap()
     );
+    read_until(&mut master, &mut transcript, expected_line.as_bytes());
     drain_pty(&mut master, &mut transcript);
     drop(master);
     let status = child.wait().unwrap();
@@ -873,6 +1011,29 @@ fn assert_transcript_excludes_secrets(transcript: &str) {
         .windows(TARGET_PASSPHRASE.len())
         .any(|value| value == TARGET_PASSPHRASE));
     assert!(!transcript.contains("stdin injected secret"));
+}
+
+fn assert_audit_rows_have_only_closed_fields(transcript: &str) {
+    let mut rows = 0;
+    for line in transcript.lines().filter(|line| line.contains("\taction=")) {
+        rows += 1;
+        let fields = line.split('\t').skip(1).collect::<Vec<_>>();
+        assert!(fields.len() >= 4, "malformed audit row: {line}");
+        for field in fields {
+            let name = field
+                .split_once('=')
+                .map(|(name, _)| name)
+                .expect("audit field must be named");
+            assert!(
+                matches!(
+                    name,
+                    "counter" | "action" | "outcome" | "time" | "item" | "selected" | "result"
+                ),
+                "unexpected audit field {name}: {line}"
+            );
+        }
+    }
+    assert!(rows > 0, "expected at least one audit row: {transcript}");
 }
 
 #[cfg(target_vendor = "apple")]
