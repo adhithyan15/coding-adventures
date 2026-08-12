@@ -1,0 +1,15 @@
+% ============================================================================
+% phoneme-deletion.query.adj — worked recall over the phoneme-deletion
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what word do I get if
+% I remove this sound?" (direct) or "what was the original word and which
+% sound was removed?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "phoneme-deletion.adj"
+
+? phoneme_deletion(bike, k, $New)                % expect by (direct: remove bike's last sound /k/)
+? phoneme_deletion($Orig, $Sound, by)             % expect bike, k (reverse: what changed into "by"?)
+? phoneme_deletion(cat, c, $New)                  % expect abstain -- this deletion is not tabled

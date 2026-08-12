@@ -1,0 +1,70 @@
+% ============================================================================
+% phoneme-deletion — removing one sound from a word to form a new word, a
+% SIXTH literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all five prior literacy libraries:
+% `word-families.adj` derives RHYMING, `syllable-count.adj` recalls a
+% SYLLABLE COUNT, `initial-sound.adj` recalls a BEGINNING sound,
+% `onset-rime.adj` recalls an ONSET/RIME split, and `phoneme-substitution.adj`
+% recalls the new word formed by SWAPPING one sound for another. This library
+% recalls what happens when you DELETE (remove) one sound from a word,
+% grounding the same phonemic-awareness continuum's deletion skill as a pure
+% lookup: `phoneme_deletion(original_word, removed_sound, new_word)`. Recall
+% is a binding query:
+%
+%     ? phoneme_deletion(bike, k, $New)   % by
+%
+% A native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `onset-rime.adj`): each `row` lowers to a ground relation
+% `phoneme_deletion(original_word, removed_sound, new_word)` carrying the
+% Reading Rockets citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the new word WITH its source, on the CPU, with
+% zero model calls, and abstains on any deletion not the one the cited page
+% walks through. The query also runs BACKWARD — bind the new word and recall
+% which word it came from and which sound was removed:
+%
+%     ? phoneme_deletion($Orig, $Sound, by)   % bike, k
+%
+% The one deletion this table carries, as a little truth table:
+%
+%     original_word   removed_sound   new_word
+%     -------------   -------------   --------
+%     bike            k               by
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj` and `phoneme-substitution.adj` already cite, a
+% different section of it (its "Deleting Sounds" demonstration) —
+% WebFetch-verified TWICE for consistency before writing. The exact spans,
+% composed together the same way `phoneme-substitution.adj`'s row is (two
+% distinct sentences from the same cited section, each stating one fact):
+%
+%   "I will change 'bike' to 'by'."
+%     (states the transformation: bike -> by)
+%   "The last sound in 'bike' is /k/."
+%     (states which sound was removed: k)
+%
+% `trust consensus` — the same tier `phoneme-substitution.adj`'s and
+% `syllable-count.adj`'s sibling sections of this page already earned.
+% Deliberately scoped to ONLY this ONE deletion the cited page walks through
+% step by step — honestly narrow (mirroring `phoneme-substitution.adj`'s and
+% `onset-rime.adj`'s precedent) rather than inventing a deletion the source
+% does not demonstrate. Also checked this same page's "suntan" -> "sunset"
+% demonstration before writing this table: that example changes a whole
+% SYLLABLE, not a single phoneme, so it is a distinct skill and does NOT
+% belong in either this table or `phoneme-substitution.adj` — left as a
+% future candidate for its own syllable-substitution table if revisited. A
+% future slice can add a second deletion once a comparably clean citation is
+% found. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table phoneme_deletion {
+    columns original_word, removed_sound, new_word
+
+    row (bike, k, by)
+
+    source "I will change 'bike' to 'by'."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}
