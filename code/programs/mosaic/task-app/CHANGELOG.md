@@ -4,6 +4,52 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - Board design-fidelity: 4th column, accent bars, count badges, critical border
+
+Closes the Board line of the design-fidelity gap backlog item.
+
+- **A 4th "In review" column.** Board's 3 columns were a hardcoded
+  `completed`/`percent_complete` heuristic that never touched
+  `task.status` at all. task-core already had a full `Workflow`/
+  `Status`/`Projections::kanban()` system, exported end-to-end through
+  `task-wasm` — but nothing ever created a `Workflow`, so
+  `engine.kanban(id)` always errored. Wired it in:
+  `ProjectState::ensure_default_workflow` (task-core) seeds a 4-status
+  workflow (Up next/In progress/In review/Done) and backfills any task
+  that's never had a status set, and `set_status` now cascades
+  `completed` when a status crosses a workflow's `done_status` boundary
+  — `Workflow.done_status`'s own doc comment already promised this, the
+  op just never implemented it. Board now reads real `task.status`;
+  dropping a card is one `setStatus` call, no more manual
+  `setCompleted`/`setPercentComplete` branching. See the task-core and
+  task-wasm CHANGELOGs for the full engine-side story, including the
+  disclosed one-directional-cascade limitation.
+- **A colored top accent bar + card-count badge** on each column
+  header — a real per-column count from `kanban()`, and an accent
+  color per status resolved by the host (UI36's `background` binding,
+  same mechanism as the progress ring) since the four colors are
+  theme-dependent and the controller that builds `board-columns`
+  doesn't know which theme is active.
+- **Overdue cards get a colored left border, not a text chip** — the
+  old `card-crit` text chip is gone. `HostDraggable`'s dedicated
+  `mosaic-emit-react` emitter doesn't support `state-when-` conditional
+  styling (confirmed by reading it directly), so this is a second
+  static part (`board-card-crit`) rather than a conditional spread —
+  same pattern as the icon-assets slice's `pill-warn`/`pill-ok` and
+  `theme-toggle-sun`/`theme-toggle-moon`. Both card variants declare
+  the same `border-left-*` style keys (only the values differ) —
+  otherwise a card crossing the overdue boundary while dragged between
+  columns triggers a real React dev-mode warning about mixing
+  shorthand and longhand border properties, caught live in the browser
+  during verification.
+
+Verified live in both themes: all 4 columns with correct accent colors
+and counts, a card dragged through all 4 columns and back (the
+completed flag correctly follows status crossing the done boundary,
+confirmed via the List view's done glyph and the progress ring), the
+critical border rendering correctly and cleanly swapping as a card's
+overdue-ness changes, zero console errors.
+
 ### Added - icon/SVG assets: pill dot, progress ring, real theme-toggle icon, group-count badge, composer plus, brand mark
 
 Closes most of the "Icon/SVG assets" line of the design-fidelity gap
