@@ -1531,7 +1531,13 @@ changelog, focused build, and downstream validation.
            multiple-URL editing.
 9b-3b-1. reversible authenticated item deletion and exact historical restore
          using `VLT-PM14-cli-delete-restore.md`.
-9b-3b-2. explicit authenticated current-conflict resolution.
+9b-3b-2a. completed authenticated redacted current-conflict inspection and
+           choose-existing-candidate resolution, including item-bound selector
+           validation, publish-before-error failed attempts, atomic successful
+           mutation events, immutable losing history, and command-scoped named
+           target selection, using `VLT-PM24-cli-conflict-resolution.md`.
+9b-3b-2b. remaining explicit secret-field reveal plus user-authored merged
+           document conflict resolution.
 9b-4a. completed authenticated encrypted portable export with a separately
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
@@ -1633,7 +1639,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM20-cli-portable-restore-verify.md`, and
   `VLT-PM21-audit-first-generation-zero.md`, and
   `VLT-PM22-cli-named-targets.md`, and
-  `VLT-PM23-cli-verified-restore.md` —
+  `VLT-PM23-cli-verified-restore.md`, and
+  `VLT-PM24-cli-conflict-resolution.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1643,7 +1650,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   export/import, independently audited semantic restore verification, and its
   retryable local CLI ceremony, plus an initialization audit genesis for every
   new CLI vault, independently selectable audited named targets, and automatic
-  import-plus-independent-verification composition.
+  import-plus-independent-verification composition, plus audited redacted
+  current-conflict selection and choose-existing resolution.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

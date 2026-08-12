@@ -12,11 +12,12 @@ use coding_adventures_vault_pm_application::{
     DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
     LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, PortableExportPolicyV1,
     PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
-    ReplaceItemRandomnessV1, RestoreItemRandomnessV1, V1ApplicationRepositoryFactory,
-    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
-    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
-    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
-    PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
+    ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
+    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
+    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -48,7 +49,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -377,6 +378,13 @@ enum Command {
         item_id: ItemId,
         revision_id: RevisionId,
     },
+    ConflictList {
+        item_id: ItemId,
+    },
+    ConflictChoose {
+        item_id: ItemId,
+        revision_id: RevisionId,
+    },
     Help,
 }
 
@@ -417,6 +425,7 @@ where
         "restore" => parse_restore(tail),
         "item" => parse_item(tail),
         "history" => parse_history(tail),
+        "conflict" => parse_conflict(tail),
         _ => Err(CliFailure::InvalidCommand),
     }?;
     if selected_vault.is_some()
@@ -496,6 +505,20 @@ fn parse_history(arguments: &[String]) -> Result<Command, CliFailure> {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
         [action, item, revision] if action == "restore" => Ok(Command::HistoryRestore {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+            revision_id: RevisionId::from_user_string(revision)
+                .map_err(|_| CliFailure::InvalidCommand)?,
+        }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_conflict(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, item] if action == "list" => Ok(Command::ConflictList {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
+        [action, item, revision] if action == "choose" => Ok(Command::ConflictChoose {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
             revision_id: RevisionId::from_user_string(revision)
                 .map_err(|_| CliFailure::InvalidCommand)?,
@@ -617,6 +640,20 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_id,
             revision_id,
         } => history_restore(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            item_id,
+            revision_id,
+        ),
+        Command::ConflictList { item_id } => {
+            conflict_list(host, prepared.paths(), &writer, selected_vault, item_id)
+        }
+        Command::ConflictChoose {
+            item_id,
+            revision_id,
+        } => conflict_choose(
             host,
             prepared.paths(),
             &writer,
@@ -1518,6 +1555,57 @@ fn render_history(history: Vec<ItemHistoryViewV1>) -> Result<CliOutput, CliFailu
         output.push('\n');
     }
     Ok(CliOutput::success(output))
+}
+
+fn conflict_list(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let candidates = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_conflict_candidates(item_id, wall_time_ms, randomness, &application_store)
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    render_history(candidates)
+}
+
+fn conflict_choose(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    revision_id: RevisionId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let mut mutation_random = [0_u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES];
+    host.fill_entropy(&mut mutation_random).map_err(map_host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_resolve_item_conflict_for_item(
+            item_id,
+            revision_id,
+            wall_time_ms,
+            ResolveItemConflictRandomnessV1::new(mutation_random),
+            failure_randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Conflict resolved: {}\n",
+        item_id.to_user_string()
+    )))
 }
 
 fn history_restore(
@@ -2703,6 +2791,9 @@ mod tests {
             vec!["history", "list", "not-an-item-id"],
             vec!["history", "list", "not-an-item-id", "extra"],
             vec!["history", "restore", "not-an-item-id", "not-a-revision"],
+            vec!["conflict"],
+            vec!["conflict", "list", "not-an-item-id"],
+            vec!["conflict", "choose", "not-an-item-id", "not-a-revision"],
             vec!["unlock"],
         ] {
             let output = run(arguments, &host);
@@ -2832,6 +2923,48 @@ mod tests {
                 "history",
                 "restore",
                 canonical.as_str(),
+                revision.to_lowercase().as_str(),
+            ]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
+    fn conflict_parsers_require_canonical_item_and_revision_selectors() {
+        let item_id = ItemId::new([0x5c; 16]);
+        let revision_id = RevisionId::new([0x6d; 32]);
+        let item = item_id.to_user_string();
+        let revision = revision_id.to_user_string();
+        assert_eq!(
+            parse(["conflict", "list", item.as_str()]),
+            default_invocation(Command::ConflictList { item_id })
+        );
+        assert_eq!(
+            parse([
+                "--vault",
+                "work",
+                "conflict",
+                "choose",
+                item.as_str(),
+                revision.as_str(),
+            ]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ConflictChoose {
+                    item_id,
+                    revision_id,
+                },
+            })
+        );
+        assert_eq!(
+            parse(["conflict", "list", item.to_lowercase().as_str()]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse([
+                "conflict",
+                "choose",
+                item.as_str(),
                 revision.to_lowercase().as_str(),
             ]),
             Err(CliFailure::InvalidCommand)
@@ -4235,6 +4368,62 @@ mod tests {
         );
         assert_eq!(restore.exit_code(), ExitCode::NotFound);
         assert_eq!(restore.stderr(), "vault-pm: not found\n");
+    }
+
+    #[test]
+    fn conflict_commands_audit_unconflicted_and_missing_candidate_failures() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"conflict command passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"conflict-safe note body".to_vec()],
+            ["Conflict-safe note".to_owned()],
+        );
+        let added = run(["item", "add", "secure-note"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap();
+        let item_id = ItemId::from_user_string(item).unwrap();
+        let revision_id = RevisionId::new([0x77; 32]);
+
+        let list_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 113);
+        let listed = run(["conflict", "list", item], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Conflict, "{listed:?}");
+        assert!(listed.stdout().is_empty());
+
+        let choose_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 127);
+        let chosen = run(
+            [
+                "conflict",
+                "choose",
+                item,
+                revision_id.to_user_string().as_str(),
+            ],
+            &choose_host,
+        );
+        assert_eq!(chosen.exit_code(), ExitCode::Conflict, "{chosen:?}");
+        assert!(chosen.stdout().is_empty());
+
+        let audit_host = TestHost::with_entropy_seed(paths, [passphrase], 131);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit.stdout().lines().any(|line| {
+            line.contains("action=item_history_read\toutcome=failed")
+                && line.contains(&format!("\titem={}", item_id.to_user_string()))
+        }));
+        assert!(audit.stdout().lines().any(|line| {
+            line.contains("action=item_conflict_resolve\toutcome=failed")
+                && line.contains(&format!("\titem={}", item_id.to_user_string()))
+        }));
+        assert!(!audit.stdout().contains("Conflict-safe note"));
+        assert!(!audit.stdout().contains("conflict-safe note body"));
+        assert!(!audit.stdout().contains("conflict command passphrase"));
     }
 
     #[test]

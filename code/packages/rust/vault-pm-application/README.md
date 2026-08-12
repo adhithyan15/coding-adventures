@@ -149,6 +149,12 @@ heads, device counter, prior event, selected revision where applicable, and
 result revision into the event. The event object, logical mutation objects, and
 commit share the same write-ahead journal and activation compare-exchange.
 
+The item-bound audited conflict chooser validates both the item and selected
+current candidate inside the application. Missing, unconflicted, and wrong or
+cross-item selectors publish failed `ItemConflictResolve` events before their
+closed errors; success publishes the fresh all-candidate-parent resolution and
+its selected-revision event atomically.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct

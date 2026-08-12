@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.51.0] - 2026-08-11
+
+### Added
+
+- Add item-bound audited choose-candidate conflict resolution.
+
+### Security
+
+- Publish missing, unconflicted, and wrong-selector failures before their
+  closed errors, while binding successful selected revisions atomically to the
+  all-current-parent resolution mutation.
+
 ## [0.50.0] - 2026-08-11
 
 ### Added
