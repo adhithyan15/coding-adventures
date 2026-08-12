@@ -1,6 +1,6 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/verb-type.adj`) driven through the built
-//! CLI: a native `table` naming three verb types and what each actually
+//! CLI: a native `table` naming four verb types and what each actually
 //! is, quoted verbatim from Grammarly's "Verbs: Definition and Examples"
 //! article. 0 answer-time model calls.
 
@@ -78,6 +78,44 @@ fn verb_type_reverse_binds_the_type_for_that_description() {
 }
 
 #[test]
+fn verb_type_recall_binds_a_newly_added_row_directly() {
+    let dir = scratch("direct_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"verb-type.adj\"\n\
+         ? verb_type(stative_verb, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"D\":\"describes_a_subjects_state_or_feeling\""),
+        "stative_verb describes a subject's state or feeling: {out}"
+    );
+}
+
+#[test]
+fn verb_type_reverse_binds_a_newly_added_row() {
+    let dir = scratch("reverse_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"verb-type.adj\"\n\
+         ? verb_type($T, describes_a_subjects_state_or_feeling)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"T\":\"stative_verb\""),
+        "the shipped describes_a_subjects_state_or_feeling example is stative_verb: {out}"
+    );
+}
+
+#[test]
 fn verb_type_abstains_honestly_on_an_untabled_type() {
     let dir = scratch("abstain");
     place_lib(&dir);
@@ -92,6 +130,6 @@ fn verb_type_abstains_honestly_on_an_untabled_type() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "transitive_verb is a real verb type the source covers but not one of the three tabled here -- honest abstention, never invented: {out}"
+        "transitive_verb is a real verb type the source covers but not one of the four tabled here -- honest abstention, never invented: {out}"
     );
 }
