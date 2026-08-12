@@ -1,4 +1,4 @@
-# @version 11
+# @version 12
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -16,6 +16,7 @@ ACC_TITLE    = /accTitle[ \t]*:/
 ACC_DESCR    = /accDescr[ \t]*:/
 END_NOTE     = /end[ \t]+note(?:\r?\n|;|$)/
 ARROW        = "-->"
+CONCURRENT   = "--"
 EDGE_STATE   = "[*]"
 CHOICE       = /(?:<<choice>>|\[\[choice\]\])/
 FORK_JOIN    = /(?:<<(?:fork|join)>>|\[\[(?:fork|join)\]\])/
