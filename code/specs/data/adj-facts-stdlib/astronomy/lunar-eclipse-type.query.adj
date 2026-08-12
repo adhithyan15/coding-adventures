@@ -1,0 +1,5 @@
+import "lunar-eclipse-type.adj"
+
+? lunar_eclipse_type(total_lunar_eclipse, $D)                                                        % expect the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra (direct)
+? lunar_eclipse_type($T, the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow)  % expect penumbral_eclipse (reverse)
+? lunar_eclipse_type(blood_moon, $D)                                                                  % expect abstain -- a real term the same page discusses, but as a nickname for the color a total lunar eclipse produces, not a fourth peer eclipse type
