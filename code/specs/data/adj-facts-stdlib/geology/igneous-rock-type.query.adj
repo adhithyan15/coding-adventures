@@ -1,0 +1,5 @@
+import "igneous-rock-type.adj"
+
+? igneous_rock_type(intrusive, $D)                                                     % expect solidifies_within_earth (direct)
+? igneous_rock_type($T, erupted_onto_the_surface_or_into_the_atmosphere)               % expect extrusive (reverse)
+? igneous_rock_type(hypabyssal, $D)                                                     % expect abstain -- a real geological term for shallow-depth cooling, but not one of the two broad types this source names
