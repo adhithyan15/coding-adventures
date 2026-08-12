@@ -38,6 +38,41 @@ fn runtime_c(name: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
 }
 
+/// Run `src` through **vm-core** (`vm_core::core::VMCore`, the shared
+/// cross-language register interpreter — LANG02, distinct from `twig-vm`)
+/// as the always-correct oracle, and return the `i64` result. Mirrors
+/// `lang_matrix.rs`'s `fn run_vm`, trimmed to the no-I/O expression case
+/// this file's programs are (`(+ (car (cons 41 0)) 1)` never calls
+/// `print_i64`/`putchar`, so no builtin registration is needed).
+/// vm-core interprets a *different* lowering (`lower_heap_builtins`, the
+/// structural pass — not `lower_heap_builtins_runtime`/`lower_dynamic_arith`,
+/// which are native/LLVM-AOT-pipeline-specific), so it is structurally
+/// immune to the `is_boxed`/retype bugs this file's other tests guard
+/// against — an independent cross-check, not just a second run of the same
+/// buggy code path.
+fn run_vm_i64(src: &str) -> i64 {
+    use vm_core::core::VMCore;
+    let mut module = lang_aot::compile_source_to_iir(Language::Twig, src, "main")
+        .unwrap_or_else(|e| panic!("compile {src:?} to IIR: {e}"));
+    iir_builtin_lowering::lower_global_io(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
+    let mut vm = VMCore::new();
+    vm.execute(&mut module, &entry, &[])
+        .unwrap_or_else(|e| panic!("vm-core execute {src:?}: {e:?}"))
+        .and_then(|v| v.as_i64())
+        .unwrap_or_else(|| panic!("vm-core {src:?} did not return an int"))
+}
+
+#[test]
+fn dynamic_arith_over_boxed_operand_matches_vm_core_oracle() {
+    // vm-core independently agrees the correct answer is 42 — this is the
+    // ground truth the native/LLVM assertions above are checked against,
+    // not just a hardcoded literal both happen to share.
+    assert_eq!(run_vm_i64(SRC), 42, "vm-core oracle: (+ (car (cons 41 0)) 1)");
+}
+
 /// Compile to host LLVM IR, link the full C runtime with `clang`, run, return exit code.
 fn run_llvm(src: &str, module: &str) -> i32 {
     let ll = compile_source_to_llvm_with_target(Language::Twig, src, module, &host_triple())
@@ -63,21 +98,6 @@ fn run_llvm(src: &str, module: &str) -> i32 {
 
 #[test]
 fn dynamic_arith_over_boxed_operand_runs_on_llvm() {
-    // Windows: fixing `common::gc_link_args()`'s missing dynamic-CRT import
-    // libs (see its doc comment) got this test linking for the first time —
-    // and surfaced a SEPARATE, pre-existing bug: `(+ (car (cons 41 0)) 1)`
-    // returns `329` (= `41 << 3 | 1`, i.e. the *boxed* `car` result added to
-    // `1` directly, as if the `unbox` this pass inserts never ran) instead of
-    // `42`. This is unrelated to the `is_boxed` language-gating fix in this
-    // PR: `ref<any>` (what a real `car` result is typed) is treated as
-    // unconditionally boxed in both the old and new code, so this pre-dates
-    // that fix and was simply never observed before because this test never
-    // got past the link step on Windows. Skip the assertion here pending its
-    // own investigation; every other host keeps running it for real.
-    if cfg!(target_os = "windows") {
-        eprintln!("skipping on Windows: known pre-existing box/unbox bug on the LLVM path, tracked separately");
-        return;
-    }
     if !clang_available() {
         eprintln!("clang absent — skipping E6d-2b LLVM run");
         return;
@@ -148,22 +168,6 @@ fn native_toolchain_available() -> bool { clang_available() }
 
 #[test]
 fn dynamic_arith_over_boxed_operand_runs_on_native() {
-    // Windows: enabling this arm (to close the same blind spot the
-    // parameter-comparison test below closes) surfaced a SEPARATE,
-    // pre-existing bug — `(+ (car (cons 41 0)) 1)` compiled and linked fine
-    // but returned a non-deterministic exit code across otherwise-identical
-    // runs of the same binary (observed 329, then 73 on repeat runs of the
-    // same .exe), unrelated to the `is_boxed` language-gating fix this test
-    // file's docs describe (which only touches bare-`any` operands, not
-    // `ref<any>` ones like this `car` result). That smells like a
-    // conservative-GC/stack-scan correctness bug in the native+GC boxed-int
-    // path, not a Windows-linking issue — worth its own investigation rather
-    // than blocking this PR. Skip the assertion on Windows for now; every
-    // other host keeps running it for real.
-    if cfg!(target_os = "windows") {
-        eprintln!("skipping on Windows: known non-deterministic native GC bug, tracked separately");
-        return;
-    }
     if !native_toolchain_available() {
         eprintln!("native linker absent — skipping E6d-2b native run");
         return;

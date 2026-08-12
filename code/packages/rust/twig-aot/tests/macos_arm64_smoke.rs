@@ -41,6 +41,7 @@
 // which is a strict subset of unix, so the cfg is safe.
 #[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
+use std::io::Write;
 use std::path::PathBuf;
 use std::process::Command;
 

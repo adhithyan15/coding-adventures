@@ -37,10 +37,16 @@
 //! per-backend suites, not here.
 
 use lang_aot::{
-    compile_file_to_macos_executable, compile_source_to_beam, compile_source_to_cil_artifact,
+    compile_source_to_beam, compile_source_to_cil_artifact,
     compile_source_to_iir, compile_source_to_jvm_class, compile_source_to_llvm_with_target,
     compile_source_to_wasm, run_mccarthy_on_jit, Language,
 };
+
+// `compile_file_to_macos_executable` is `#[cfg(unix)]` in `lang_aot` itself and only
+// ever called from the `#[cfg(target_os = "macos")]` native-AOT arm below — gate the
+// import to match, so a non-macOS build (which never calls it) still compiles.
+#[cfg(target_os = "macos")]
+use lang_aot::compile_file_to_macos_executable;
 
 use dynval_runtime::LispyValue;
 

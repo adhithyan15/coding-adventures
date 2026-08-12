@@ -63,6 +63,30 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#include <io.h>
+#include <fcntl.h>
+/* Windows' CRT opens stdout in TEXT mode by default, which silently
+ * translates every `\n` a program writes to `\r\n` -- so a Twig program's
+ * output (and every other AOT frontend that shares this runtime) came out
+ * "Hi\r\n" instead of "Hi\n" on Windows, diverging from every other
+ * platform/backend's byte-for-byte output. `_setmode(..., _O_BINARY)`
+ * disables that translation; called once per process (the `done` guard),
+ * lazily on first I/O rather than at a fixed init point, since there is no
+ * existing startup hook in this runtime to call it from and a
+ * GCC/Clang-only `__attribute__((constructor))` wouldn't fire under
+ * MSVC's `cl.exe`, which `cc` picks by default on this target. */
+static void twig_runtime_ensure_stdout_binary(void) {
+    static int done = 0;
+    if (!done) {
+        _setmode(_fileno(stdout), _O_BINARY);
+        done = 1;
+    }
+}
+#else
+static void twig_runtime_ensure_stdout_binary(void) {}
+#endif
+
 /* Precise-GC kind registration + allocation (gc-core-capi), used by
  * `__twig_alloc_bytes` so runtime string blocks are managed by the collector
  * (traced + reclaimed) instead of leaking via `calloc`. A Twig string is a
@@ -95,6 +119,7 @@ extern int64_t __gc_register_ref_array_kind(const int64_t *fixed, int64_t fixed_
  * line-buffered (common when redirected to a file or pipe).
  */
 void __twig_print_i64(int64_t val) {
+    twig_runtime_ensure_stdout_binary();
     printf("%lld\n", (long long)val);
     fflush(stdout);
 }
@@ -111,6 +136,7 @@ void __twig_print_i64(int64_t val) {
  * output should follow up with their own flush helper (TBD; not in V1).
  */
 void __twig_putchar(int32_t c) {
+    twig_runtime_ensure_stdout_binary();
     fputc((unsigned char)c, stdout);
 }
 
@@ -135,6 +161,7 @@ int32_t __twig_getchar(void) {
  * Null pointer or zero length is a no-op.
  */
 void __twig_print_string(const char *s, int64_t len) {
+    twig_runtime_ensure_stdout_binary();
     if (s != NULL && len > 0) {
         fwrite(s, 1, (size_t)len, stdout);
     }

@@ -29,6 +29,7 @@
 // their matching CI runner; suppress the host-specific dead_code noise here.
 #![allow(dead_code)]
 
+use std::io::Write;
 use std::process::Command;
 
 fn linker_available_windows() -> bool {
