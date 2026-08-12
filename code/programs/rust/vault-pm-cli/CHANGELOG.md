@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited static database-credential creation with restart-backed
+  redaction, separate password reveal, closed audit rows, and plaintext-tree
+  exclusion in a real PTY drill.
 - Exposed audited API-key creation and added a real PTY drill for hidden token
   input, restart-backed metadata-only rendering, separately authorized token
   reveal, closed-field audit advancement, and plaintext-tree exclusion.

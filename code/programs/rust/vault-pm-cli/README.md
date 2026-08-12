@@ -24,6 +24,7 @@ vault-pm [--vault NAME] item add login
 vault-pm [--vault NAME] item add secure-note
 vault-pm [--vault NAME] item add card
 vault-pm [--vault NAME] item add api-key
+vault-pm [--vault NAME] item add database-credential
 vault-pm [--vault NAME] item edit ITEM
 vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
@@ -69,6 +70,10 @@ terminal prompt, restarts into label/service/scope/expiry-only rendering,
 reveals the token only through the existing separately confirmed audited
 terminal ceremony, verifies the closed audit-row grammar, and scans the
 profile tree for the collision-resistant full token bytes.
+
+A database-credential drill repeats those gates for canonical static
+connection metadata and a hidden password, including restart-backed redaction,
+separate audited password reveal, and full-password plaintext-tree exclusion.
 
 ## Verification
 

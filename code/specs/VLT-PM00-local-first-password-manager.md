@@ -1541,8 +1541,12 @@ changelog, focused build, and downstream validation.
              scope/expiry validation, metadata-only rendering, separate token
              reveal, and plaintext exclusion, using
              `VLT-PM27-cli-api-key-create.md`.
-9b-3a-2b-3. remaining TOTP and database-credential creation plus richer login
-             notes and multiple-URL editing.
+9b-3a-2b-3. completed audited static database-credential creation with closed
+             engine/port validation, hidden password input, metadata-only
+             rendering, separate reveal, and plaintext exclusion, using
+             `VLT-PM28-cli-database-credential-create.md`.
+9b-3a-2b-4. remaining TOTP creation plus richer login notes and multiple-URL
+             editing.
 9b-3b-1. reversible authenticated item deletion and exact historical restore
          using `VLT-PM14-cli-delete-restore.md`.
 9b-3b-2a. completed authenticated redacted current-conflict inspection and
@@ -1657,7 +1661,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM24-cli-conflict-resolution.md`, and
   `VLT-PM25-cli-secret-reveal.md`, and
   `VLT-PM26-cli-card-create.md`, and
-  `VLT-PM27-cli-api-key-create.md` —
+  `VLT-PM27-cli-api-key-create.md`, and
+  `VLT-PM28-cli-database-credential-create.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1670,7 +1675,7 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   import-plus-independent-verification composition, plus audited redacted
   current-conflict selection and choose-existing resolution, plus audited
   interactive current-secret terminal delivery, plus audited payment-card and
-  API-key creation with redacted observation.
+  API-key and static database-credential creation with redacted observation.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

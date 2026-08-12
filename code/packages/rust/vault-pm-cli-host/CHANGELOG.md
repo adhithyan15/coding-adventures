@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add fixed bounded database label, engine, host, port, database, and username
+  prompts plus hidden wipe-on-drop password input.
 - Add fixed bounded API-key label, service, scope, and expiry prompts plus a
   hidden wipe-on-drop token prompt.
 - Add fixed bounded payment-card metadata prompts plus hidden PAN and CVV
