@@ -9,6 +9,25 @@
   left the guard permanently tripped — teaching the exact habit it exists to prevent.
 - Re-pin the Spanish chapter table from the generated manifest: 181 chapters.
 
+### Added — cited Chinese 谢 ductus (HL-C09CP)
+
+- Render **谢** in seventeen source-aligned movements across twelve strokes.
+- Preserve 讠-before-身-before-寸 order, all five joined turns, and eleven lifts in Noto Sans SC.
+
+### Added — cited Chinese 字 ductus (HL-C09CO)
+
+- Render **字** in nine source-aligned movements across six strokes.
+- Preserve 宀-before-子 order, all three joined turns, and five lifts in Noto Sans SC.
+
+### Added — cited Chinese 名 ductus (HL-C09CN)
+
+- Render **名** in eight source-aligned movements across six strokes.
+- Preserve 夕-before-口 order, both joined turns, and five lifts in Noto Sans SC.
+
+### Added — cited Chinese 不 ductus (HL-C09CM)
+
+- Render **不** in four separately placed source-aligned strokes.
+- Preserve the top-horizontal-first order and three lifts in Noto Sans SC.
 ### Added — cited Chinese 是 ductus (HL-C09CL)
 
 - Render **是** in ten source-aligned movements across nine strokes.

@@ -1,0 +1,65 @@
+% ============================================================================
+% ecosystem-factor-type — the two kinds of ecosystem factor and what
+% actually defines each (adj-facts-stdlib, ENVIRONMENT).
+% ============================================================================
+% Every ecosystem is shaped by two very different kinds of factor: a
+% biotic factor is a living thing, an abiotic factor is a non-living
+% thing — and both together are what make one ecosystem different from
+% another. Recall is a binding query:
+%
+%     ? ecosystem_factor_type(biotic, $D)
+%       % a_living_organism_that_shapes_its_environment
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `ecosystem_factor_type(factor, description)` carrying the
+% source citation, so the lookup above is the ordinary SLD binding query
+% — the engine returns the description WITH its source, on the CPU, with
+% zero model calls, and abstains on an ecosystem-related term that is not
+% one of these two. The query also runs BACKWARD — bind a description
+% and recall the factor type it names:
+%
+%     ? ecosystem_factor_type($F, a_non_living_part_of_an_ecosystem_that_shapes_its_environment)
+%       % abiotic
+%
+% The two factor types, as a little truth table:
+%
+%     factor    description                                                          quote (verbatim)
+%     --------  -------------------------------------------------------------------  --------------------------------------------------------------------------------
+%     biotic     a_living_organism_that_shapes_its_environment                        "A biotic factor is a living organism that shapes its environment."
+%     abiotic    a_non_living_part_of_an_ecosystem_that_shapes_its_environment         "An abiotic factor is a non-living part of an ecosystem that shapes its environment."
+%
+% Provenance: quoted verbatim from two sibling National Geographic
+% Education resource pages, "Biotic Factors" and "Abiotic Factors",
+% each introducing its term under its own page heading with a single
+% complete defining sentence. WebFetch-verified before writing (twice
+% per page — the second pass pulled the full surrounding paragraph for
+% each candidate sentence, confirming it stands alone grammatically and
+% that the sentence that follows it supplies examples, not a
+% qualification the definition depends on). `trust consensus` — National
+% Geographic Education is a reputable secondary reference, the same tier
+% `biome-type.adj` (a sibling library, sourced from the SAME publisher's
+% "The Five Major Types of Biomes" article) already uses.
+%
+% Unlike most sibling tables in this directory, biotic and abiotic are
+% not two items picked out of a longer enumerable list — together they
+% exhaust the two-way classification these sources describe, so there is
+% no third "real but excluded" factor type to name. Honest abstention
+% still holds for any OTHER ecological term a learner might plausibly
+% ask about here: "producer", for instance, is a real and commonly
+% taught ecology term, but it names a food-chain ROLE (already grounded
+% under its own predicate in `biology/food-chain-roles.adj`), not a
+% biotic/abiotic FACTOR TYPE — querying it against this table correctly
+% abstains rather than inventing an answer. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ecosystem_factor_type {
+    columns factor, description
+
+    row (biotic, a_living_organism_that_shapes_its_environment)
+    row (abiotic, a_non_living_part_of_an_ecosystem_that_shapes_its_environment)
+
+    source "A biotic factor is a living organism that shapes its environment."
+    locator "https://education.nationalgeographic.org/resource/resource-library-biotic-factors/"
+    trust consensus
+}

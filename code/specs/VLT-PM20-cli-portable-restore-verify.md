@@ -81,8 +81,9 @@ time, item/revision/vault identity, semantic root, mismatch position, provider,
 record body, or secret field. Failure emits no partial comparison result.
 
 This wording is “restore verified,” not “restore completed” or “backup safe.”
-Explicit target-creation/configuration switching and automatic import-to-verify
-composition remain outstanding product requirements.
+Explicit target creation and command-scoped selection are complete in VLT-PM22.
+VLT-PM23 composes import with this independently retryable verifier and reserves
+the stronger completed-and-verified wording for that composed command.
 
 ## 7. Exit policy
 
@@ -114,6 +115,6 @@ The slice is complete only when tests prove:
 
 ## 9. Remaining recovery work
 
-The next slice should add explicit in-root target creation and configuration
-switching, then compose import and verification automatically while retaining
-this standalone command as the safe retry path after interruption.
+VLT-PM22 adds explicit in-root target creation and command-scoped selection.
+VLT-PM23 composes import and verification automatically while retaining this
+standalone command as the safe retry path after interruption.

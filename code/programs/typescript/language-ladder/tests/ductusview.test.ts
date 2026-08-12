@@ -110,6 +110,14 @@ const CHINESE_I = ductusFor("我", "chinese")!;
 const chineseIOutline = chineseOutline("我");
 const CHINESE_BE = ductusFor("是", "chinese")!;
 const chineseBeOutline = chineseOutline("是");
+const CHINESE_NOT = ductusFor("不", "chinese")!;
+const chineseNotOutline = chineseOutline("不");
+const CHINESE_NAME = ductusFor("名", "chinese")!;
+const chineseNameOutline = chineseOutline("名");
+const CHINESE_CHARACTER = ductusFor("字", "chinese")!;
+const chineseCharacterOutline = chineseOutline("字");
+const CHINESE_THANK = ductusFor("谢", "chinese")!;
+const chineseThankOutline = chineseOutline("谢");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1198,6 +1206,88 @@ describe("Chinese 是 — nine cited strokes with 日 first", () => {
     expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseBeOutline.path);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_BE.strokes[8], 1),
+    );
+  });
+});
+
+describe("Chinese 不 — four separately placed cited strokes", () => {
+  const steps = ductusSteps(CHINESE_NOT);
+  const strip = ductusFilmstrip(CHINESE_NOT, chineseNotOutline);
+
+  it("keeps all four source strokes separate with three lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the final dot", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseNotOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_NOT.strokes[3], 1),
+    );
+  });
+});
+
+describe("Chinese 名 — 夕 before 口 in six cited strokes", () => {
+  const steps = ductusSteps(CHINESE_NAME);
+  const strip = ductusFilmstrip(CHINESE_NAME, chineseNameOutline);
+
+  it("preserves both joined turns and five lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 3, 4, 4, 5]);
+    expect(strip.frames).toHaveLength(8);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 8 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 口's closing stroke", () => {
+    const paths = byTag(strip.frames[7], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseNameOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_NAME.strokes[5], 1),
+    );
+  });
+});
+
+describe("Chinese 字 — 宀 before 子 in six cited strokes", () => {
+  const steps = ductusSteps(CHINESE_CHARACTER);
+  const strip = ductusFilmstrip(CHINESE_CHARACTER, chineseCharacterOutline);
+
+  it("preserves all three joined turns and five lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 2, 3, 3, 4, 4, 5]);
+    expect(strip.frames).toHaveLength(9);
+    expect(strip.penLifts).toBe(5);
+    expect(strip.summary).toBe("6 strokes · 5 pen lifts · 9 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 子's final horizontal", () => {
+    const paths = byTag(strip.frames[8], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseCharacterOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_CHARACTER.strokes[5], 1),
+    );
+  });
+});
+
+describe("Chinese 谢 — 讠 before 身 before 寸 in twelve cited strokes", () => {
+  const steps = ductusSteps(CHINESE_THANK);
+  const strip = ductusFilmstrip(CHINESE_THANK, chineseThankOutline);
+
+  it("preserves all five joined turns and eleven lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([
+      0, 1, 1, 1, 2, 3, 4, 4, 4, 5, 6, 7, 8, 9, 10, 10, 11,
+    ]);
+    expect(strip.frames).toHaveLength(17);
+    expect(strip.penLifts).toBe(11);
+    expect(strip.summary).toBe("12 strokes · 11 pen lifts · 17 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind 寸's final dot", () => {
+    const paths = byTag(strip.frames[16], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseThankOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_THANK.strokes[11], 1),
     );
   });
 });

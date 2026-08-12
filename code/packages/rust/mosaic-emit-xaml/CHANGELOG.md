@@ -1,5 +1,15 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — native UI Automation table semantics
+
+Canonical dynamic UI31 tables now emit component-scoped WinUI table, header,
+and cell controls. Their automation peers implement the native UIA Table/Grid
+and TableItem/GridItem provider patterns, publish dimensions and column-header
+associations, preserve the authored interactive cell subtree, and support
+arrow-key movement between realized cells. Unsupported or ambiguous table
+shapes keep the existing structural Grid rendering instead of overstating their
+accessibility contract.
+
 ## [Unreleased] — native-complete runtime-required shell
 
 `EmitOptions::require_runtime` now emits a direct standard-runtime WinUI host.

@@ -10,9 +10,12 @@ one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
-ITEM REVISION`. `export FILE`, `import FILE`, and `restore verify FILE` add the
-first encrypted recovery-artifact round trip plus retryable independent
-verification. The executable is a thin caller of this package.
+ITEM REVISION`. `conflict list ITEM` and `conflict choose ITEM REVISION` expose
+redacted current candidates and explicit audited choose-existing resolution.
+`export FILE`, `import FILE`, `restore verify FILE`, and the
+composed `--vault TARGET restore FILE` add the encrypted recovery-artifact
+round trip, retryable independent verification, and a completed-and-verified
+ceremony. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -131,6 +134,14 @@ tombstone, same-revision, and conflicted attempts publish a failed restore event
 before their closed error is exposed. Neither operation erases history,
 rewinds repository heads, or emits secret-bearing metadata.
 
+`conflict list ITEM` requires an active audit epoch and publishes its
+item-scoped history-read outcome before rendering the current candidates in the
+existing secret-free history row format. `conflict choose ITEM REVISION`
+reserves mutation and failure-audit entropy before unlock, validates both
+selectors inside the application, and publishes either a failed attempt or an
+atomic all-current-parent resolution event before its closed outcome. It emits
+only the resolved item selector and never deletes losing immutable history.
+
 `export FILE` reserves export and audit entropy before unlock, collects and
 constant-time confirms a distinct export passphrase through two hidden fixed
 prompts, and calls the application's canonical portable-export boundary. In an
@@ -163,6 +174,16 @@ authentication, and preparation failures publish a failed itemless
 before aggregate proof or integrity error. Success prints item, candidate, and
 conflict counts only. No path, source/target identity, semantic root, mismatch
 location, record metadata, or field value reaches output or the audit event.
+
+`--vault TARGET restore FILE` requires an explicit non-default named target and
+composes those two application boundaries. It reserves independent import and
+verification audit inputs before mutation, opens the artifact once, prepares
+the opaque expectation before consuming the snapshot, and publishes the import
+without releasing intermediate success. It then prompts for the target
+passphrase again, independently reopens the durable target, and publishes the
+verification result before emitting aggregate completed-and-verified output. A
+post-import interruption leaves `restore verify FILE` as the safe retry path;
+the command never repeats import against the now non-empty target.
 
 ## Verification
 

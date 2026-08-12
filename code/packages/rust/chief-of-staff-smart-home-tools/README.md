@@ -1,26 +1,28 @@
 # chief-of-staff-smart-home-tools
 
 `chief-of-staff-smart-home-tools` connects the D18D Chief of Staff tool runtime
-to the D23 smart-home runtime.
+to the shared D23 smart-home controller authority.
 
 The crate is intentionally a thin adapter:
 
 - it publishes `smart_home.*` D18D tool definitions
 - it registers in-process handlers on `InMemoryToolRuntime`
-- handlers translate JSON arguments into `SmartHomeRuntime` read, discover,
-  event-subscription, pair, command, event-ingest, and supervision execution
-  requests, desired-state target mutations, plus read-only D23A catalog queries
-- `SmartHomeRuntime` still owns smart-home authorization, command validation,
-  event subscriptions, pairing sessions, optimistic state, discovery scheduler
-  policy and observability, discovery pairing plans, supervision, and audit
-  decisions
+- handlers translate JSON arguments into controller transactions containing
+  `SmartHomeRuntime` read, discover, event-subscription, pair, command,
+  event-ingest, supervision, desired-state, and read-only D23A catalog requests
+- `SmartHomeControllerRuntime` serializes each invocation, persists its audit
+  and state changes, and publishes them to every shared consumer only after the
+  durable commit succeeds; authorization denials still commit their audit trail
+- the controller-owned `SmartHomeRuntime` still owns smart-home authorization,
+  command validation, event subscriptions, pairing sessions, optimistic state,
+  discovery scheduler policy and observability, discovery pairing plans,
+  supervision, and audit decisions
 - `smart-home-integration-catalog` still owns D23A integration and primitive
   catalog semantics
 - D18D still owns tool validation, policy decisions, event streams, terminal
   results, and execution journals
 
-The first slice proves an end-to-end local path with an in-memory Hue-style
-fixture:
+The test fixture proves the same path with an in-memory durable controller:
 
 ```text
 Chief of Staff job/session/agent

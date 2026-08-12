@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Exposed audited redacted conflict listing and choose-existing-candidate
+  resolution through the thin executable.
+- Exposed explicit-target `restore FILE` and moved the real-process PTY drill to
+  one artifact authentication, audited import, independent target reopen, and
+  completed-and-verified aggregate output with no intermediate import claim.
 - Exposed `vault create NAME` and command-scoped `--vault NAME`, and moved the
   real-process restore drill onto a separately keyed named target in the same
   profile with a final restart-backed source-isolation check.

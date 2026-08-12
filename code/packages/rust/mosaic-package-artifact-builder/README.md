@@ -33,7 +33,7 @@ the selected backend has a known degradation.
 
 The inventory identifies the passive drag/drop lowering on XAML,
 native table lowerings without table semantics (excluding canonical UI31/Grid
-shapes on Flutter, Compose, Qt, and SwiftUI), Flutter's
+shapes on Flutter, Compose, Qt, SwiftUI, and XAML), Flutter's
 dialog placeholder and missing URL effect
 host, ignored tri-state checkbox and radio-group properties, XAML dialog state
 that still requires code-behind, ignored XAML/SwiftUI dialog lifecycle events,
@@ -60,8 +60,8 @@ selected artifact, and launches without an injected library path. SwiftUI's iOS
 16 build remains a separate source-portability gate rather than packaging the
 macOS dylib. XAML now also bundles the concrete `task-mosaic-app` adapter, verifies
 the DLL installed beside `TaskApp.exe`, and drives the generated .NET binding with
-that app-local engine. It remains permissive while four drag/drop paths and one
-table-semantics path are explicit degradations; hosted Windows CI therefore does
+that app-local engine. It remains permissive while four drag/drop paths are
+explicit degradations; hosted Windows CI therefore does
 not close the cross-backend strict-profile milestone or claim a visible launch.
 
 Property degradations carry the exact package-expanded node and property index.

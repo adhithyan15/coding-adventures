@@ -4633,6 +4633,7 @@ impl Compiler {
         let entry_real_slots = self.static_real_slots.clone();
         let entry_integer_slots = self.static_integer_slots.clone();
         let entry_tracking_disabled = self.static_real_tracking_disabled;
+        let entry_initialized_string_slots = self.initialized_string_slots.clone();
 
         let branches: Vec<&GrammarASTNode> = children
             .into_iter()
@@ -4657,6 +4658,7 @@ impl Compiler {
         let mut then_real_slots = self.static_real_slots.clone();
         let mut then_integer_slots = self.static_integer_slots.clone();
         let then_tracking_disabled = self.static_real_tracking_disabled;
+        let then_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -4667,13 +4669,20 @@ impl Compiler {
         self.static_real_slots = entry_real_slots;
         self.static_integer_slots = entry_integer_slots;
         self.static_real_tracking_disabled = entry_tracking_disabled;
+        self.initialized_string_slots = entry_initialized_string_slots;
         if let Some(branch) = else_branch {
             self.emit_branch_node(branch)?;
         }
         let else_real_slots = self.static_real_slots.clone();
         let else_integer_slots = self.static_integer_slots.clone();
         let else_tracking_disabled = self.static_real_tracking_disabled;
+        let else_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit_label(&end_label);
+
+        self.initialized_string_slots = then_initialized_string_slots
+            .intersection(&else_initialized_string_slots)
+            .cloned()
+            .collect();
 
         if then_tracking_disabled || else_tracking_disabled {
             self.disable_static_real_tracking();
@@ -4699,7 +4708,6 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        self.disable_static_real_tracking();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
@@ -4719,13 +4727,27 @@ impl Compiler {
         if elems.is_empty() {
             return Err(CompileError::Malformed("for_list has no elements".into()));
         }
+        if elems.iter().any(|elem| {
+            direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step")
+        }) {
+            self.disable_static_real_tracking();
+        }
         let body = direct_nodes(node)
             .into_iter()
             .find(|n| n.rule_name == "statement")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
+            let entry_initialized_string_slots = self.initialized_string_slots.clone();
+            let executes_once = !direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step");
             self.emit_for_element(target, var_ty, elem, body)?;
+            if !executes_once {
+                self.initialized_string_slots = entry_initialized_string_slots;
+            }
         }
         Ok(())
     }
@@ -8244,6 +8266,95 @@ mod tests {
         let err = compile_source("begin string s; print(s) end", "test")
             .expect_err("unassigned string variables are not initialized");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_then_only_string_initialization_rejects_after_conditional() {
+        let err = compile_source(
+            "begin boolean flag; string s; flag := false; if flag then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("a then-only assignment does not definitely initialize the string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_both_string_branches_initialize_after_conditional() {
+        let module = compile_source(
+            "begin boolean flag; string s; flag := false; if flag then s := 'HI' else s := 'LO'; print(s) end",
+            "test",
+        )
+        .expect("both conditional exits definitely initialize the string");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "print_str"
+                && matches!(instr.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+        }));
+    }
+
+    #[test]
+    fn al4_initialized_string_survives_missing_else_join() {
+        compile_source(
+            "begin boolean flag; string s; flag := false; s := 'OK'; if flag then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect("an initialized baseline remains initialized on both exits");
+    }
+
+    #[test]
+    fn al4_loop_body_does_not_definitely_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 1 while false do s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("a zero-trip loop body cannot definitely initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_initialized_string_survives_loop_join() {
+        compile_source(
+            "begin integer i; string s; s := 'OK'; for i := 1 while false do s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect("a string initialized before the loop remains initialized afterward");
+    }
+
+    #[test]
+    fn al4_single_value_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a single-value for element executes its body exactly once");
+    }
+
+    #[test]
+    fn al4_mixed_loop_list_uses_later_definite_initialization() {
+        compile_source(
+            "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a later single-value element executes after a zero-trip element");
+    }
+
+    #[test]
+    fn al4_single_value_loop_retains_static_real_snapshot() {
+        compile_source(
+            "begin integer i; real r; for i := 1 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect("a single-value for list is straight-line for static snapshots");
+    }
+
+    #[test]
+    fn al4_step_loop_still_invalidates_static_real_snapshot() {
+        let err = compile_source(
+            "begin integer i; real r; for i := 1 step 1 until 1 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect_err("a step loop may execute zero times and cannot establish a snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────

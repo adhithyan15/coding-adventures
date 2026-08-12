@@ -14,6 +14,29 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Shift 241 lessons at sequence >=548 by +20 sequence and +3 chapter, and rebuild the
   capability ledger, book targets, curriculum path segments and extension nodes with them.
 
+### Added - source-verified Chinese 谢 (HL-C09CP)
+
+- Verify 谢 as twelve ordered strokes with eleven lifts against the pinned PRC source.
+- Preserve 讠-before-身-before-寸 order and all five joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 138 entries; Chinese has 7 outstanding.
+
+### Added - source-verified Chinese 字 (HL-C09CO)
+
+- Verify 字 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve 宀-before-子 component order and all three joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 139 entries; Chinese has 8 outstanding.
+
+### Added - source-verified Chinese 名 (HL-C09CN)
+
+- Verify 名 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve 夕-before-口 component order and both joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 140 entries; Chinese has 9 outstanding.
+
+### Added - source-verified Chinese 不 (HL-C09CM)
+
+- Verify 不 as four separately placed strokes with three lifts against the pinned PRC source.
+- Record that planned 叫 is outside the measured inventory and needs a separate font-resubsetting change.
+- Reduce HL-C09 debt to 141 entries; Chinese has 10 outstanding.
 ### Added - source-verified Chinese 是 (HL-C09CL)
 
 - Verify 是 as nine ordered strokes with eight lifts against the pinned PRC source.

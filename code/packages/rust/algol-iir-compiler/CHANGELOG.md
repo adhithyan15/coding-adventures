@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.124.0 — 2026-08-11 — single-value loop snapshots
+
+`for` lists containing only plain single-value elements now retain integer and
+real snapshots through their straight-line body repetitions. Lists containing
+`while` or `step`/`until` elements continue to disable snapshot tracking.
+
+## 0.123.0 — 2026-08-11 — single-value loop initialization
+
+Plain single-value `for` list elements now retain definite scalar-string
+initialization from their body because each executes exactly once. `while` and
+`step`/`until` elements remain conservative, and mixed lists join each element
+in sequence.
+
+## 0.122.0 — 2026-08-11 — loop string-initialization joins
+
+`for` statements now restore the definite scalar-string initialization state
+from loop entry at exit. This rejects body-only initialization because a
+`while` or `step` element may execute zero times, while preserving strings
+initialized before the loop.
+
+## 0.121.0 — 2026-08-11 — conditional string initialization joins
+
+Definite initialization for scalar strings now intersects the initialized-slot
+sets from both statement-conditional exits. A then-only assignment no longer
+makes a later read unsoundly valid, while assignments on both branches and an
+already initialized path without `else` remain supported.
+
 ## 0.120.0 — 2026-08-11 — conditional-statement snapshot merging
 
 Statement conditionals now compile each branch from the same post-condition

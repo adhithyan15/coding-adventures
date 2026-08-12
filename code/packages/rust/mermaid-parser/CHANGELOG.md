@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.66.0
+
+- Apply one inline state style statement to comma-delimited nodes and groups.
+
+## 0.65.0
+
+- Decode Mermaid entities and HTML line breaks in state text before layout.
+
+## 0.64.0
+
+- Preserve grammar-backed `hide empty description` rendering semantics.
+
 ## 0.63.0
 
 - Preserve grammar-backed state `scale N width` requests in graph IR.

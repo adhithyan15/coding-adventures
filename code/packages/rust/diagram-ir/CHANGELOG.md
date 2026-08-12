@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.33.0
+
+- Preserve state empty-description visibility through graph semantic and layout IR.
+
 ## 0.32.0
 
 - Preserve an optional requested graph canvas width through semantic and layout IR.

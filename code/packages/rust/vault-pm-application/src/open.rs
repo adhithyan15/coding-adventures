@@ -1700,6 +1700,69 @@ impl UnlockedVaultV1 {
         )
     }
 
+    /// Resolve one item-bound current conflict after a durable audit outcome.
+    ///
+    /// The selected revision must belong to the named item's current conflict
+    /// set. Success publishes the `ItemConflictResolve` event atomically with
+    /// the new resolution revision. Missing items, unconflicted items, and
+    /// missing or cross-item candidate selectors publish a failed event before
+    /// their closed operation error becomes observable.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_resolve_item_conflict_for_item(
+        self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+        wall_time_ms: u64,
+        mutation_randomness: ResolveItemConflictRandomnessV1,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.require_audit_epoch()?;
+        let (validation, event_revision) =
+            self.conflict_resolution_validation(item_id, selected_revision);
+        match validation {
+            Ok(()) => {
+                let active = self.resolve_item_conflict(
+                    selected_revision,
+                    wall_time_ms,
+                    mutation_randomness,
+                    local_state_store,
+                )?;
+                Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+            }
+            Err(error) => self.finish_audited_access(
+                AuditActionV1::ItemConflictResolve,
+                Some(item_id),
+                event_revision,
+                wall_time_ms,
+                failure_randomness,
+                local_state_store,
+                Err(error),
+            ),
+        }
+    }
+
+    fn conflict_resolution_validation(
+        &self,
+        item_id: ItemId,
+        selected_revision: RevisionId,
+    ) -> (Result<(), ApplicationError>, Option<RevisionId>) {
+        let Some(candidates) = self.current_catalog.items.get(&item_id) else {
+            return (Err(ApplicationError::NotFound), None);
+        };
+        if candidates.len() < 2 {
+            return (Err(ApplicationError::ConflictRequired), None);
+        }
+        if candidates
+            .iter()
+            .any(|candidate| candidate.revision_id() == selected_revision)
+        {
+            (Ok(()), Some(selected_revision))
+        } else {
+            (Err(ApplicationError::NotFound), None)
+        }
+    }
+
     /// Resolve one current conflict with a complete caller-authored document.
     ///
     /// The document must name an item with at least two current candidates and
@@ -6081,6 +6144,112 @@ mod tests {
         );
         assert_eq!(commit.added_objects().len(), 2);
         assert_eq!(commit.wall_time_ms(), 401);
+    }
+
+    #[test]
+    fn audited_item_bound_conflict_resolution_records_failure_and_atomic_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x2b; 16]);
+        let (publication, revisions) = pending_live_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(402, audited_access_randomness(0x4e), &local)
+        .unwrap();
+
+        let missing_revision = RevisionId::new([0xff; 32]);
+        let failed = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .audited_resolve_item_conflict_for_item(
+            item_id,
+            missing_revision,
+            403,
+            resolve_item_conflict_randomness(0x4f),
+            audited_access_randomness(0x50),
+            &local,
+        )
+        .unwrap();
+        assert_eq!(failed.into_operation(), Err(ApplicationError::NotFound));
+        let after_failure = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(after_failure.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&after_failure),
+            (
+                AuditActionV1::ItemConflictResolve,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+
+        let selected_revision = revisions[1].0;
+        after_failure
+            .audited_resolve_item_conflict_for_item(
+                item_id,
+                selected_revision,
+                404,
+                resolve_item_conflict_randomness(0x51),
+                audited_access_randomness(0x52),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+        let resolved = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(resolved.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&resolved),
+            (
+                AuditActionV1::ItemConflictResolve,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                Some(selected_revision),
+            )
+        );
     }
 
     #[test]

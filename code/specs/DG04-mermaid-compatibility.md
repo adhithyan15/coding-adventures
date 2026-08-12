@@ -124,7 +124,8 @@ compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
 Inline `style` statements preserve fill, stroke, text color, and stroke width
 through graph IR, layout style resolution, and backend-neutral Paint geometry
-and glyph instructions. Named `classDef` declarations and comma-delimited
+and glyph instructions, including comma-delimited node and composite targets.
+Named `classDef` declarations and comma-delimited
 `class` assignments resolve the same properties into graph IR, including
 assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
@@ -154,6 +155,11 @@ IR and arrange direct region members independently of the document direction.
 `scale N width` preserves the requested canvas width in graph IR. Layout scales
 all geometry and resolved stroke, corner, and font sizes uniformly before the
 backend-neutral Paint scene reaches Metal or another renderer.
+`hide empty description` survives graph semantic and layout IR; Paint lowering
+omits unlabeled state geometry and glyphs while retaining graph connectivity.
+State labels, transition labels, notes, titles, and accessibility text decode
+Mermaid decimal or named entities and HTML line breaks before line-aware layout
+and backend-neutral Paint glyph shaping.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.
