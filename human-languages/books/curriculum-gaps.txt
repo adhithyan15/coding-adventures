@@ -11,8 +11,8 @@ ramp: 42 lessons above 3 new atoms (582 unmeasurable, 68% measurable); 20 chapte
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest HI-W01-shirorekha-na-ma at 12
 cousin layer: 173 lessons show another script (max 26 glyphs) — context, never charged to the budget
 order: 477 lessons with no declared sequence across 17 tracks; 225 prerequisites and 267 reviews pointing forward
-reinforcement: 480 of 2805 atoms never revisited (17%); missed windows R1 902, R2 1921, R3 1456, R4 332
-forward references: 446 uses of material a later lesson teaches
+reinforcement: 480 of 2805 atoms never revisited (17%); missed windows R1 903, R2 1922, R3 1457, R4 332
+forward references: 438 uses of material a later lesson teaches
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 0 of 663 book chapters without an HL05 capability; 28 payoffs below the 0.5 representativeness floor; 12 tracks already clean
 
