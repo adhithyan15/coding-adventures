@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.12.0
+
+- Scale graph geometry and resolved styles to an explicit requested canvas width.
+
 ## 0.11.0
 
 - Apply composite state direction overrides to direct region members.

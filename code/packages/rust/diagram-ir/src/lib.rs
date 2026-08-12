@@ -1,6 +1,6 @@
-//! diagram-ir v0.31.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.32.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.31.0";
+pub const VERSION: &str = "0.32.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -129,6 +129,7 @@ pub struct GraphGroup {
 #[derive(Clone, Debug, PartialEq)]
 pub struct GraphDiagram {
     pub direction: DiagramDirection,
+    pub requested_width: Option<f64>,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -185,6 +186,7 @@ pub struct LayoutedGraphGroup {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedGraphDiagram {
     pub direction: DiagramDirection,
+    pub requested_width: Option<f64>,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -1000,7 +1002,7 @@ mod tests {
 
     #[test]
     fn version_is_0_24_0() {
-        assert_eq!(VERSION, "0.31.0");
+        assert_eq!(VERSION, "0.32.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1057,6 +1059,7 @@ mod tests {
         };
         let d = GraphDiagram {
             direction: DiagramDirection::Lr,
+            requested_width: None,
             title: Some("G".into()),
             accessibility_title: None,
             accessibility_description: None,

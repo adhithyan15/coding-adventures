@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.62.0";
+pub const VERSION: &str = "0.63.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -294,6 +294,7 @@ pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
 
     Ok(GraphDiagram {
         direction,
+        requested_width: None,
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -1058,6 +1059,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut direction = DiagramDirection::Tb;
+    let mut requested_width = None;
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
@@ -1113,6 +1115,26 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             group.regions.push(Vec::new());
             cursor.skip_terminators();
             continue;
+        } else if cursor.current().value.eq_ignore_ascii_case("scale") {
+            cursor.advance();
+            let width =
+                cursor.advance().value.parse::<f64>().map_err(|_| {
+                    token_error(cursor.current(), "expected numeric state scale width")
+                })?;
+            if width <= 0.0 {
+                return Err(token_error(
+                    cursor.current(),
+                    "state scale width must be positive",
+                ));
+            }
+            if !cursor.current().value.eq_ignore_ascii_case("width") {
+                return Err(token_error(
+                    cursor.current(),
+                    "expected width after state scale value",
+                ));
+            }
+            cursor.advance();
+            requested_width = Some(width);
         } else if cursor.current().value.eq_ignore_ascii_case("title") {
             cursor.advance();
             cursor.consume_if("COLON");
@@ -1479,6 +1501,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
 
     Ok(GraphDiagram {
         direction,
+        requested_width,
         title,
         accessibility_title,
         accessibility_description,
@@ -4677,6 +4700,14 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_requested_scale_width() {
+        let diagram = parse_state_diagram("stateDiagram-v2\nscale 640 width\nA --> B\n")
+            .expect("state scale width");
+
+        assert_eq!(diagram.requested_width, Some(640.0));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5447,7 +5478,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.62.0");
+        assert_eq!(crate::VERSION, "0.63.0");
     }
 
     #[test]

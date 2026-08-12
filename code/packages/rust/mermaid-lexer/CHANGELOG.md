@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.38.0
+
+- Recognize state scale-width statements from the pinned grammar.
+
 ## 0.37.0
 
 - Recognize state diagram title statements from the pinned grammar.

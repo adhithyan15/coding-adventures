@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -604,6 +604,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
 ///
 /// let diagram = GraphDiagram {
 ///     direction: DiagramDirection::Lr,
+///     requested_width: None,
 ///     title: None,
 ///     accessibility_title: None,
 ///     accessibility_description: None,
@@ -736,8 +737,9 @@ pub fn layout_graph_diagram(
         })
         .collect();
 
-    LayoutedGraphDiagram {
+    let mut layout = LayoutedGraphDiagram {
         direction: diagram.direction.clone(),
+        requested_width: diagram.requested_width,
         title:     diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
@@ -747,7 +749,46 @@ pub fn layout_graph_diagram(
         height,
         nodes,
         edges,
+    };
+    if let Some(target_width) = diagram.requested_width {
+        let factor = target_width / layout.width;
+        layout.width = target_width;
+        layout.height *= factor;
+        for node in &mut layout.nodes {
+            node.x *= factor;
+            node.y *= factor;
+            node.width *= factor;
+            node.height *= factor;
+            node.style.stroke_width *= factor;
+            node.style.font_size *= factor;
+            node.style.corner_radius *= factor;
+        }
+        for group in &mut layout.groups {
+            group.x *= factor;
+            group.y *= factor;
+            group.width *= factor;
+            group.height *= factor;
+            group.style.stroke_width *= factor;
+            group.style.font_size *= factor;
+            group.style.corner_radius *= factor;
+            for divider_y in &mut group.divider_y {
+                *divider_y *= factor;
+            }
+        }
+        for edge in &mut layout.edges {
+            for point in &mut edge.points {
+                point.x *= factor;
+                point.y *= factor;
+            }
+            if let Some(position) = &mut edge.label_position {
+                position.x *= factor;
+                position.y *= factor;
+            }
+            edge.style.stroke_width *= factor;
+            edge.style.font_size *= factor;
+        }
     }
+    layout
 }
 
 // ============================================================================
@@ -782,6 +823,7 @@ mod tests {
     fn two_node_diagram(dir: DiagramDirection) -> GraphDiagram {
         GraphDiagram {
             direction: dir,
+            requested_width: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -794,7 +836,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.11.0");
+        assert_eq!(VERSION, "0.12.0");
     }
 
     #[test]
@@ -849,6 +891,7 @@ mod tests {
     fn self_loop_has_five_points() {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -880,6 +923,7 @@ mod tests {
         // A -> B -> A: cycle — should not panic.
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -900,6 +944,7 @@ mod tests {
     fn node_width_respects_label_length() {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -926,6 +971,7 @@ mod tests {
     fn three_rank_chain_has_increasing_y_in_tb() {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
+            requested_width: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -1064,5 +1110,22 @@ mod tests {
         assert!(a.x < b.x);
         assert_eq!(a.y, b.y);
         assert_eq!(l.groups[0].direction, Some(DiagramDirection::Lr));
+    }
+
+    #[test]
+    fn requested_width_scales_canvas_geometry_and_styles() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        let baseline = layout_graph_diagram(&d, None, None);
+        d.requested_width = Some(640.0);
+        let scaled = layout_graph_diagram(&d, None, None);
+        let factor = 640.0 / baseline.width;
+
+        assert_eq!(scaled.width, 640.0);
+        assert_eq!(scaled.height, baseline.height * factor);
+        assert_eq!(scaled.nodes[0].width, baseline.nodes[0].width * factor);
+        assert_eq!(
+            scaled.nodes[0].style.stroke_width,
+            baseline.nodes[0].style.stroke_width * factor
+        );
     }
 }

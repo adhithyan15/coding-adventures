@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.63.0
+
+- Preserve grammar-backed state `scale N width` requests in graph IR.
+
 ## 0.62.0
 
 - Preserve local `direction` statements on composite state groups.
