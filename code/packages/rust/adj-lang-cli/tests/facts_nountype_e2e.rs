@@ -1,6 +1,6 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/noun-type.adj`) driven through the built
-//! CLI: a native `table` naming three noun types and what each actually
+//! CLI: a native `table` naming six noun types and what each actually
 //! is, quoted verbatim from Grammarly's "Nouns: Definition and Examples"
 //! article. 0 answer-time model calls.
 
@@ -92,6 +92,63 @@ fn noun_type_abstains_honestly_on_an_untabled_type() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "possessive_noun is a real noun type the source mentions but not one of the three tabled here -- honest abstention, never invented: {out}"
+        "possessive_noun is a real noun type the source mentions but not one of the six tabled here -- honest abstention, never invented: {out}"
+    );
+}
+
+#[test]
+fn noun_type_recall_binds_a_newly_added_row_directly() {
+    let dir = scratch("direct_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"noun-type.adj\"\n\
+         ? noun_type(concrete_noun, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"D\":\"perceived_by_the_senses_physical_or_tangible\""),
+        "concrete_noun means perceived_by_the_senses_physical_or_tangible: {out}"
+    );
+}
+
+#[test]
+fn noun_type_reverse_binds_a_newly_added_row() {
+    let dir = scratch("reverse_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"noun-type.adj\"\n\
+         ? noun_type($T, impossible_to_count)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"T\":\"uncountable_noun\""),
+        "the shipped impossible_to_count example is uncountable_noun: {out}"
+    );
+}
+
+#[test]
+fn noun_type_abstains_honestly_on_a_bundled_fact_candidate() {
+    let dir = scratch("abstain_bundled");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"noun-type.adj\"\n\
+         ? noun_type(proper_noun, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"abstained\":true"),
+        "proper_noun is a real noun type the same source page defines, but its sentence bundles the naming function with a separate capitalization rule -- honest abstention, never invented: {out}"
     );
 }

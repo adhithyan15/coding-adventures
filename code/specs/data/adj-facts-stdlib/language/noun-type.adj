@@ -15,43 +15,65 @@
 % relation `noun_type(type, definition)` carrying the source citation, so
 % the lookup above is the ordinary SLD binding query — the engine returns
 % the definition WITH its source, on the CPU, with zero model calls, and
-% abstains on a noun type that is not one of these three. The query also
+% abstains on a noun type that is not one of these six. The query also
 % runs BACKWARD — bind a definition and recall the noun type it names:
 %
 %     ? noun_type($T, cannot_be_perceived_by_the_senses)
 %       % abstract_noun
 %
-% The three noun types, as a little truth table:
+% The six noun types, as a little truth table:
 %
 %     type              definition                                    quote (verbatim)
 %     ----------------  --------------------------------------------  --------------------------------------------------------------------------------
 %     common_noun        generic_name_of_an_item_in_a_class_or_group   "A common noun is the generic name of an item in a class or group."
 %     collective_noun     denotes_a_group_or_collection_of_people_or_things  "A collective noun denotes a group or collection of people or things."
 %     abstract_noun       cannot_be_perceived_by_the_senses             "An abstract noun is something that cannot be perceived by the senses."
+%     concrete_noun       perceived_by_the_senses_physical_or_tangible  "A concrete noun is something that is perceived by the senses, something physical or tangible."
+%     countable_noun      can_be_counted                                "Countable nouns can be counted, even if the resulting number would be extraordinarily high"
+%     uncountable_noun    impossible_to_count                           "Uncountable nouns, or mass nouns, are nouns that are impossible to count"
 %
 % Provenance: quoted verbatim from Grammarly's "Nouns: Definition and
 % Examples" article, which gives a clean, single-sentence definition for
 % each of common, proper, concrete, abstract, collective, singular,
 % plural, countable, uncountable, and gerund nouns. WebFetch-verified
-% before writing (twice). `trust consensus` — Grammarly is a reputable,
-% widely-cited grammar-content company, the same tier this stdlib already
-% reserves for other non-.gov language sources and the same source family
-% already cited by `sentence-type.adj`/`part-of-speech.adj`/
-% `possessive-noun.adj`/`superlative-adjective-rule.adj`. Picked using the
-% mandatory full-tree-grep-before-scoping discipline —
+% before writing (three times total across this file's original three
+% rows and this extension's three added rows). `trust consensus` —
+% Grammarly is a reputable, widely-cited grammar-content company, the
+% same tier this stdlib already reserves for other non-.gov language
+% sources and the same source family already cited by
+% `sentence-type.adj`/`part-of-speech.adj`/`possessive-noun.adj`/
+% `superlative-adjective-rule.adj`. Picked using the mandatory
+% full-tree-grep-before-scoping discipline —
 % `grep -rilE "\bnoun_type\b|\bcommon_noun\b|\bcollective_noun\b|
-% \babstract_noun\b|\bconcrete_noun\b" code/specs/data/adj-facts-stdlib/`
-% found ZERO hits, confirming a completely fresh topic before this file
-% was written. A noun-related concept that is NOT one of these three —
-% "possessive_noun", a real noun type the same page also mentions and
-% describes functionally (how a noun forms its possessive), but for which
-% it gives no single formal one-sentence definition the way it does for
-% the three tabled here — is deliberately NOT a row, so a recall ABSTAINS
-% on it rather than inventing a definition. (This is a distinct concept
-% from the already-shipped `possessive-noun.adj`, whose
+% \babstract_noun\b|\bconcrete_noun\b|\bcountable_noun\b|
+% \buncountable_noun\b" code/specs/data/adj-facts-stdlib/` found ZERO hits
+% (beyond this file's own existing rows), confirming a completely fresh
+% topic before this file was written. `concrete_noun` deliberately pairs
+% with the already-shipped `abstract_noun` (perceived by the senses vs.
+% not), and `countable_noun`/`uncountable_noun` form their own natural
+% pair, extending this table's original three rows to six.
+%
+% A noun-related concept that is NOT one of these six is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a
+% definition. This includes THREE candidates from the SAME source page
+% that were deliberately excluded for bundling two distinct facts into
+% one sentence rather than stating a single clean fact the way each
+% tabled row does: `proper_noun` ("A proper noun is a specific name of a
+% person, place, or thing AND is always capitalized" — bundles the
+% naming function with a separate capitalization rule), `singular_noun`
+% ("...refers to one person, place, thing, or idea AND requires a
+% singular verb" — bundles what it refers to with a grammatical
+% agreement rule), and `gerund` ("...a verb form that ends in -ing AND
+% functions as a noun in a sentence" — bundles a morphological fact with
+% a syntactic-function fact); `plural_noun` bundles the same way as
+% `singular_noun` and is excluded for the same reason. `possessive_noun`
+% is also NOT a row here — a real noun type the same page mentions and
+% describes functionally, but for which it gives no single formal
+% one-sentence definition the way it does for the six tabled here (and a
+% distinct concept from the already-shipped `possessive-noun.adj`, whose
 % `possessive_noun(word, category)` table classifies possessive-FORM
 % examples like `dog`/`bottles`/`geese`, not the general definition of
-% "what is a possessive noun" that this file would need.) (See
+% "what is a possessive noun" that this file would need). (See
 % ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -62,6 +84,9 @@ table noun_type {
     row (common_noun, generic_name_of_an_item_in_a_class_or_group)
     row (collective_noun, denotes_a_group_or_collection_of_people_or_things)
     row (abstract_noun, cannot_be_perceived_by_the_senses)
+    row (concrete_noun, perceived_by_the_senses_physical_or_tangible)
+    row (countable_noun, can_be_counted)
+    row (uncountable_noun, impossible_to_count)
 
     source "A common noun is the generic name of an item in a class or group."
     locator "https://www.grammarly.com/blog/parts-of-speech/nouns/"
