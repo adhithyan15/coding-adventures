@@ -865,7 +865,9 @@ backend immediately) come before the enabler-dependent items.
   intersects both branch exits. Loop joins are computed per list element:
   single-value elements retain body initialization because they execute once,
   while `while` and `step`/`until` elements preserve their entry set because
-  their body may execute zero times. Labels, gotos, calls, dynamic
+  their body may execute zero times. All-single-value lists also retain static
+  integer and real snapshots as straight-line repetitions; any dynamic loop
+  element keeps snapshot tracking disabled. Labels, gotos, calls, dynamic
   reassignment, differing branches, and captured globals invalidate the tracked value. General computed/runtime
   `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.

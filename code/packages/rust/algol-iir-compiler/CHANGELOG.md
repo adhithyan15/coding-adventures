@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.124.0 — 2026-08-11 — single-value loop snapshots
+
+`for` lists containing only plain single-value elements now retain integer and
+real snapshots through their straight-line body repetitions. Lists containing
+`while` or `step`/`until` elements continue to disable snapshot tracking.
+
 ## 0.123.0 — 2026-08-11 — single-value loop initialization
 
 Plain single-value `for` list elements now retain definite scalar-string

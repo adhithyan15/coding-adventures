@@ -4708,7 +4708,6 @@ impl Compiler {
 
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        self.disable_static_real_tracking();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
@@ -4727,6 +4726,13 @@ impl Compiler {
             .collect();
         if elems.is_empty() {
             return Err(CompileError::Malformed("for_list has no elements".into()));
+        }
+        if elems.iter().any(|elem| {
+            direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step")
+        }) {
+            self.disable_static_real_tracking();
         }
         let body = direct_nodes(node)
             .into_iter()
@@ -8330,6 +8336,25 @@ mod tests {
             "test",
         )
         .expect("a later single-value element executes after a zero-trip element");
+    }
+
+    #[test]
+    fn al4_single_value_loop_retains_static_real_snapshot() {
+        compile_source(
+            "begin integer i; real r; for i := 1 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect("a single-value for list is straight-line for static snapshots");
+    }
+
+    #[test]
+    fn al4_step_loop_still_invalidates_static_real_snapshot() {
+        let err = compile_source(
+            "begin integer i; real r; for i := 1 step 1 until 1 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect_err("a step loop may execute zero times and cannot establish a snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────
