@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 157,
-  "title": "Synthesis --- What You Understand, and What You Don't",
+  "title": "Review --- Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d2ffd60457c845da",
+  "sourceHash": "fnv1a64:560f7e517464f7e8",
   "lessons": [
     {
-      "id": "ES-C34-sintesis-mente",
-      "sequence": 1926,
-      "title": "Synthesis — what you understand, and what you don't",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — the sentence you have been saying since chapter 14, finally taken apart",
+      "id": "ES-C34-repaso-mente",
+      "sequence": 1923,
+      "title": "Review — four verbs of the mind",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — four verbs of the mind, and the four physical acts hiding inside them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:077bbb3b1a0f0113",
+      "sourceHash": "fnv1a64:15e991949c75e380",
       "notice": null,
       "blocks": [
         {
@@ -35,77 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "Say the sentence you learned in the repair kit, the one that rescues a conversation. (No entiendo.)"
+              "text": "Nothing new in this chapter. Name the four verbs of the last four chapters: to think, to understand, to read, to write."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the formula was a verb all along",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have been saying no entiendo since the repair kit, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
+              "text": "Here is the thing none of the four chapters could show you on its own."
             },
             {
               "kind": "speech",
-              "text": "It has parts now. Entiendo is entender, and entender is Latin intendere, \"to stretch toward.\" Which means the sentence you have been using to admit defeat has never actually said I failed. It says:"
+              "text": "Every one of these four \"mental\" verbs began as something you do with your body:"
             },
             {
               "kind": "speech",
-              "text": "I am not managing to stretch that far."
+              "text": "pensar — Latin pēnsāre, to weigh. Thinking is putting things on a balance. English kept the scales in weigh your options, and in pensive."
             },
             {
               "kind": "speech",
-              "text": "That was true the whole time. You just could not see it yet."
+              "text": "entender — Latin intendere, to stretch toward. Understanding is reaching. English kept the reach in attention."
             },
             {
               "kind": "speech",
-              "text": "And the moment a formula has parts, it turns. No entiendo stops being the only thing you can say and becomes one option among several."
+              "text": "leer — Latin legere, to gather, pick out. Reading is picking grain from a field. English kept the gathering in collect, select, elect."
+            },
+            {
+              "kind": "speech",
+              "text": "escribir — Latin scrībere, to scratch. Writing is scratching a surface, which is exactly what it was."
+            },
+            {
+              "kind": "speech",
+              "text": "Four abstractions, four labourers. No language invents a word for thinking; it borrows one from the hands and lets the meaning drift indoors."
+            },
+            {
+              "kind": "speech",
+              "text": "And a hidden joint. Intellect is Latin inter + legere — \"to gather between.\" The root of leer is sitting inside the English word for the mind itself."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Back in the repair kit, all you could do:"
-            },
-            {
-              "kind": "speech",
-              "text": "— No entiendo. Más despacio, por favor."
-            },
-            {
-              "kind": "speech",
-              "text": "Now, the same moment, with the parts working:"
-            },
-            {
-              "kind": "speech",
-              "text": "— Perdón — leo un poco, pero no entiendo. — Más despacio, por favor. Ahora entiendo. Gracias."
-            },
-            {
-              "kind": "speech",
-              "text": "Same trouble. But the second speaker is no longer only failing — they are reporting which part works and which does not. That is the difference between a distress signal and a conversation."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four verbs is not four words. It is the ability to say where you are in a language: what you take in, what you work on, what lands, what you can produce."
+              "text": "Four verbs, and with them the four things you do with a language: take it in (leer), work on it (pensar), get it (entender), put it back out (escribir)."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -118,20 +103,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the repair-kit version — the distress signal on its own",
+              "instruction": "the four verbs in order — to read, to think, to understand, to write",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the repair-kit version — the distress signal on its own]"
+              "source": "[YOU SAY: the four verbs in order — to read, to think, to understand, to write]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the version above, where you say what does work before what doesn't",
+              "instruction": "for each one, the body word underneath it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the version above, where you say what *does* work before what doesn't]"
+              "source": "[YOU SAY: for each one, the body word underneath it]"
             },
             {
               "kind": "repeat",
@@ -139,53 +124,66 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "speech",
-              "text": "Run the second one until it sounds like a person, not a repair kit."
-            },
-            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C34-sintesis-mente-literal",
-              "prompt": "What does no entiendo literally say, given intendere?",
+              "id": "ES-C34-repaso-mente-weigh",
+              "prompt": "Which of the four verbs originally meant to weigh?",
               "assesses": [
-                "ES-ETYMON-ENTENDER-04",
-                "ES-LEX-NO-ENTIENDO-01"
+                "ES-ETYMON-PENSAR-02"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "i am not stretching that far",
-                "i am not reaching that far",
-                "not stretching toward it",
-                "i cannot stretch that far"
+                "pensar",
+                "pensar (to think)",
+                "think"
               ],
               "feedback": {
-                "correct": "Yes — not a confession of failure, a report of reach.",
-                "incorrect": "Intendere is to stretch toward: I am not managing to stretch that far."
+                "correct": "Yes — pensare, and the scales survive in pensive and peso.",
+                "incorrect": "pensar, from pensare, to weigh."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C34-sintesis-mente-now",
-              "prompt": "How do you say I understand now, once it slows down?",
+              "id": "ES-C34-repaso-mente-gather",
+              "prompt": "Which one meant to gather or pick out?",
               "assesses": [
-                "ES-LEX-ENTENDER-03"
+                "ES-ETYMON-LEER-06"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "ahora entiendo",
-                "entiendo",
-                "entiendo ahora"
+                "leer",
+                "leer (to read)",
+                "read"
               ],
               "feedback": {
-                "correct": "Yes.",
-                "incorrect": "Ahora entiendo — now I understand."
+                "correct": "Yes — legere, the root inside collect, select and intellect.",
+                "incorrect": "leer, from legere, to gather."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-repaso-mente-scratch",
+              "prompt": "And which one meant to scratch?",
+              "assesses": [
+                "ES-ETYMON-ESCRIBIR-08"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "escribir",
+                "escribir (to write)",
+                "write"
+              ],
+              "feedback": {
+                "correct": "Yes — scribere. Writing was scratching a surface.",
+                "incorrect": "escribir, from scribere, to scratch."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -197,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say back then? (Not just that you are lost — which part is lost.)"
+              "text": "What did entender physically mean? (To stretch toward.) What do all four have in common? (Each was a body word before it was a mind word.) Next chapter you will use them to say something you actually think."
             }
           ]
         }

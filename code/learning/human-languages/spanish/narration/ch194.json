@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 194,
-  "title": "Synthesis --- Describing Where You Are",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:541a6050bf836a41",
+  "title": "Review --- Three Letters",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7df9f631fb334219",
   "lessons": [
     {
-      "id": "ES-C54-sintesis-lo-que-hay",
-      "sequence": 2210,
-      "title": "Synthesis — describing where you are",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — describing a place you are standing in, which needs almost everything this book has given you",
+      "id": "ES-C54-repaso-hay",
+      "sequence": 2209,
+      "title": "Review — three letters",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — three letters, three uses, and the last piece the audit was missing",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6d21e3914f178d3a",
-      "notice": null,
+      "sourceHash": "fnv1a64:f5817e871642c875",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,57 +42,61 @@
             },
             {
               "kind": "speech",
-              "text": "Hay is the word you reach for to describe a place. Look around the room you are in and say what is there."
+              "text": "Nothing new. What does hay agree with?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "— ¿Qué hay aquí? — Hay una casa. Hay libros — los que compré. — ¿Y la comida que haces? — Lo que hay, hay que comerlo."
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "one thing, Hay una casa., There is a house.",
+                "many things, Hay libros., There are books.",
+                "an obligation, Hay que comer., One must eat.",
+                "what it is made of, ha + y, \"it has there\"."
+              ]
             },
             {
               "kind": "speech",
-              "text": "The last line is four words of grammar stacked on each other, and every piece came from a different chapter:"
+              "text": "Three letters, and everything above came out of them."
             },
             {
               "kind": "speech",
-              "text": "lo que hay — the noun-shaped hole, filled by hay."
-            },
-            {
-              "kind": "speech",
-              "text": "hay que — obligation with nobody obliged."
-            },
-            {
-              "kind": "speech",
-              "text": "comerlo — the object pronoun, riding on the end of an infinitive."
-            },
-            {
-              "kind": "speech",
-              "text": "You have not been taught that last one, and you can still read it: comer plus lo. That is what it feels like when a language starts assembling itself."
+              "text": "Notice the shape of this arc, because it is the shape of a lot of language learning: the smallest words need the most explaining. Hay is shorter than any noun you have learned and it took four chapters, while comida took one. Short words are short because they are used constantly, and constant use is what wears them into fossils that no longer explain themselves."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what you can do now",
+          "title": "Grammar Lens: what it does not do",
           "segments": [
             {
               "kind": "speech",
-              "text": "Describing a place is a small thing that needs a surprising amount: an existence word, articles that count, nouns, relative clauses to pick things out, and a way to say what has to happen. This chapter needed all of them, and you supplied them without any of it being new."
+              "text": "Two things hay never does, and both save you work:"
             },
             {
               "kind": "speech",
-              "text": "That is the honest end of a beginner's course. Not \"you are finished\" — nobody is — but the machinery is assembled. Every remaining thing in Spanish is either a word you have not met yet or a familiar structure standing somewhere you have not seen it stand."
+              "text": "It never agrees. Not with number, not with anything. One form."
             },
             {
               "kind": "speech",
-              "text": "The eleven gaps found in the original audit are now closed. What is left is not a gap. It is the ordinary, unbounded work of using the thing."
+              "text": "It never names anybody. Neither does hay que."
+            },
+            {
+              "kind": "speech",
+              "text": "So of everything you have learned about making Spanish verbs match their surroundings — six endings a tense, gender on the pronouns, number on the articles — none of it applies here. After a hundred and seventy chapters of agreement, the last word is the one that opted out."
             }
           ]
         },
@@ -103,20 +114,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole four-line exchange",
+              "instruction": "all four rows of the table",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole four-line exchange]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Lo que hay, hay que comerlo\" — and hear four chapters at once",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo que hay, hay que comerlo\" — and hear four chapters at once]"
+              "source": "[YOU SAY: all four rows of the table]"
             },
             {
               "kind": "repeat",
@@ -126,80 +128,58 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-ask",
-              "prompt": "Ask what there is here.",
+              "id": "ES-C54-repaso-hay-three",
+              "prompt": "Say there is a house, there are books, and one must eat.",
               "assesses": [
                 "ES-LEX-HAY",
-                "ES-LEX-AQUI"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "que hay aqui",
-                "¿qué hay aquí?"
-              ],
-              "feedback": {
-                "correct": "The question you will ask in every new room.",
-                "incorrect": "¿Que hay aqui?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-pick",
-              "prompt": "Say there are books, the ones I bought.",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE"
+                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-GRAMMAR-HAY-QUE"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "hay libros, los que compre",
-                "hay libros — los que compré"
+                "hay una casa, hay libros, hay que comer",
+                "hay una casa; hay libros; hay que comer"
               ],
               "feedback": {
-                "correct": "Hay, then a relative clause picking them out.",
-                "incorrect": "Hay libros, los que compre."
+                "correct": "One word, three jobs.",
+                "incorrect": "Hay una casa. Hay libros. Hay que comer."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-must",
-              "prompt": "Say what there is, one must eat.",
+              "id": "ES-C54-repaso-hay-never",
+              "prompt": "Name the two things hay never does.",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-HAY"
+                "ES-GRAMMAR-HAY-NO-AGREEMENT"
               ],
-              "responseSeconds": 16,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "lo que hay, hay que comerlo",
-                "lo que hay hay que comer"
+                "agree, and name anybody",
+                "it never agrees and never names a person"
               ],
               "feedback": {
-                "correct": "Four pieces, four different chapters.",
-                "incorrect": "Lo que hay, hay que comerlo."
+                "correct": "After all that agreement, the last word opts out of it entirely.",
+                "incorrect": "It never agrees, and it never names anybody."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-done",
-              "prompt": "What is left to learn now that the machinery is assembled?",
+              "id": "ES-C54-repaso-hay-small",
+              "prompt": "Why did a three-letter word need four chapters when comida needed one?",
               "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-ETYMON-HAY-IBI"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "words, and familiar structures in new places",
-                "vocabulary and practice",
-                "nothing structural"
+                "short words are worn down by constant use",
+                "the smallest words need the most explaining",
+                "heavy use turns them into fossils"
               ],
               "feedback": {
-                "correct": "Not a gap — the ordinary unbounded work of using it.",
-                "incorrect": "Words you have not met, and familiar structures standing somewhere new."
+                "correct": "They stop explaining themselves.",
+                "incorrect": "Short words are short because they are used constantly, and that wears them into fossils."
               }
             }
           ]
@@ -217,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask what there is here. (¿Qué hay aquí?) Say what there is, one must eat. (Lo que hay, hay que comerlo.) And what is left after this? (Words, and practice — the machinery is assembled.)"
+              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
             }
           ]
         }

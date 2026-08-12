@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 180,
-  "title": "Se Habla Espanol --- Nobody in Particular",
+  "title": "Synthesis --- The Gift and the Motive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b2c4758636542aed",
+  "sourceHash": "fnv1a64:17c3dff5eab7d6cb",
   "lessons": [
     {
-      "id": "ES-C52-se-habla",
-      "sequence": 2196,
-      "title": "se habla español — nobody in particular",
-      "headword": "se habla español",
-      "romanization": "se habla español",
-      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
+      "id": "ES-C51-sintesis-regalo-motivo",
+      "sequence": 2195,
+      "title": "Synthesis — the gift and the motive",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a short exchange in which the two-letter difference changes what one person means to another",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4fd1e3106fb366c",
+      "sourceHash": "fnv1a64:4b4484667598180a",
       "notice": null,
       "blocks": [
         {
@@ -35,39 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
+              "text": "Para ti or por ti — one of them is a present and one of them is a reason. Which is which?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: a sentence with nobody in it",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
+              "text": "Read this twice, changing only one word."
             },
             {
               "kind": "speech",
-              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
+              "text": "— Hago la comida para ti. — Gracias."
             },
             {
               "kind": "speech",
-              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
+              "text": "— Hago la comida por ti. — …gracias."
             },
             {
               "kind": "speech",
-              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
+              "text": "The first is somebody cooking you dinner. The second is somebody telling you they are cooking because of you — which, depending on the day, is an act of love or a small complaint."
             },
             {
               "kind": "speech",
-              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
+              "text": "Two letters. Nothing else in the sentence moved."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a preposition carrying the feeling",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the first place in the book where the smallest word in the sentence carries its emotional content."
+            },
+            {
+              "kind": "speech",
+              "text": "Nouns and verbs have been doing the meaning until now. Here the noun is the same, the verb is the same, the person is the same — and the sentence changes completely on a preposition. That is worth meeting deliberately, because English speakers arrive expecting the little words to be plumbing."
+            },
+            {
+              "kind": "speech",
+              "text": "They are not plumbing here. Por and para are the difference between I made this for you and I made this because of you, and no amount of context repairs the wrong one: your listener will simply hear the thing you did not mean."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is also the reassuring part. If you pick the wrong one, you have not produced nonsense or bad grammar — you have said something true about a different situation. Somebody will look faintly puzzled, and you will notice, and that is how this stops being difficult."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -80,83 +103,100 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Se habla español\" as if reading it off a window",
+              "instruction": "both versions of the dinner sentence, and hear the second one land differently",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
+              "source": "[YOU SAY: both versions of the dinner sentence, and hear the second one land differently]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Se come bien\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se come bien\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-sign",
-              "prompt": "Write the sign that says Spanish is spoken here.",
+              "id": "ES-C51-sintesis-regalo-motivo-gift",
+              "prompt": "Tell somebody you are making the meal as a gift to them.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "se habla espanol",
-                "se habla español"
-              ],
-              "feedback": {
-                "correct": "No person named anywhere in it.",
-                "incorrect": "Se habla espanol."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-se-habla-who",
-              "prompt": "Who speaks Spanish, according to that sentence?",
-              "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nobody in particular",
-                "it does not say",
-                "no one is named"
+                "hago la comida para ti",
+                "la hago para ti"
               ],
               "feedback": {
-                "correct": "That absence is the whole point of the form.",
-                "incorrect": "It does not say, and it is not meant to."
+                "correct": "They receive it.",
+                "incorrect": "Hago la comida para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-eat",
-              "prompt": "Say one eats well here.",
+              "id": "ES-C51-sintesis-regalo-motivo-cause",
+              "prompt": "Now say it meaning they are the reason you are doing it at all.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMER",
-                "ES-LEX-BIEN"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-POR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hago la comida por ti",
+                "la hago por ti"
+              ],
+              "feedback": {
+                "correct": "Love or complaint, depending on the day.",
+                "incorrect": "Hago la comida por ti."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-sintesis-regalo-motivo-thanks",
+              "prompt": "Thank somebody for the meal.",
+              "assesses": [
+                "ES-LEX-GRACIAS",
+                "ES-LEX-POR",
+                "ES-LEX-COMIDA"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "se come bien",
-                "aqui se come bien"
+                "gracias por la comida",
+                "gracias por la comida."
               ],
               "feedback": {
-                "correct": "Se come bien.",
-                "incorrect": "Se come bien."
+                "correct": "Por — the cause of your thanks.",
+                "incorrect": "Gracias por la comida."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-sintesis-regalo-motivo-wrong",
+              "prompt": "You pick the wrong one of the two. What have you produced?",
+              "assesses": [
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "a true sentence about a different situation",
+                "something correct that means something else",
+                "not nonsense, just the wrong meaning"
+              ],
+              "feedback": {
+                "correct": "Which is why this stops being difficult once you are talking to people.",
+                "incorrect": "Not bad grammar — a perfectly good sentence about something you did not mean."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -168,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
+              "text": "Para ti — a gift or a reason? (A gift.) Por ti? (A reason.) And what happens if you choose wrong? (You say something true about a different situation — and somebody will look puzzled, which is how you learn it.)"
             }
           ]
         }

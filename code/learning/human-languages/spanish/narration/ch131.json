@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 131,
-  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+  "title": "Habla --- Telling Somebody To Do Something",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8bf4b7c3e21d157c",
+  "sourceHash": "fnv1a64:6864c4c055fcd51d",
   "lessons": [
     {
-      "id": "ES-C50-ocho-cortos",
-      "sequence": 1498,
-      "title": "di, haz, ve, pon, ten, sal, sé, ven",
-      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
-      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
-      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
+      "id": "ES-C50-habla",
+      "sequence": 1497,
+      "title": "habla — telling somebody to do something",
+      "headword": "habla · come · vive",
+      "romanization": "habla · come · vive",
+      "gloss": "telling somebody to do something — and the form is one you have had since your seventh chapter",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:678036342898695b",
+      "sourceHash": "fnv1a64:d7c8dd4b4abe30be",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,51 +42,69 @@
             },
             {
               "kind": "speech",
-              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
+              "text": "Say \"he speaks.\" (Habla.) Hold that word. You are about to be told it does a second job you have never been shown."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: eight, all one syllable",
+          "title": "Grammar Lens: you already have it",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "To tell somebody you address as tú to do something, use the he/she form of the present."
+            },
+            {
+              "kind": "speech",
+              "text": "Habla. — Speak. Come. — Eat. Vive. — Live."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rule, and it costs you nothing. Habla was already in your mouth as \"he speaks\"; the same two syllables, said to somebody, are an order."
+            },
             {
               "kind": "table",
               "headers": [
                 "verb",
-                "command",
-                ""
+                "he/she does",
+                "you, do it"
               ],
               "columns": 3,
-              "rowCount": 8,
+              "rowCount": 3,
               "utterances": [
-                "verb: decir. command: di, say.",
-                "verb: hacer. command: haz, do, make.",
-                "verb: ir. command: ve, go.",
-                "verb: poner. command: pon, put.",
-                "verb: tener. command: ten, have, hold.",
-                "verb: salir. command: sal, leave.",
-                "verb: ser. command: sé, be.",
-                "verb: venir. command: ven, come."
+                "verb: hablar. he/she does: habla. you, do it: habla.",
+                "verb: comer. he/she does: come. you, do it: come.",
+                "verb: vivir. he/she does: vive. you, do it: vive."
               ]
             },
             {
               "kind": "speech",
-              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
+              "text": "The column repeats. That is not an oversight in the table."
             },
             {
               "kind": "speech",
-              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
-            },
-            {
-              "kind": "speech",
-              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
+              "text": "Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The name for this form is the imperative, from Latin imperāre, \"to command.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,90 +117,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
+              "instruction": "\"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
+              "source": "[YOU SAY: \"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each one as if calling across a room",
+              "instruction": "\"come\", \"vive\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each one as if calling across a room]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the list is a rhythm rather than eight facts."
+              "source": "[YOU SAY: \"come\", \"vive\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-ocho-cortos-list",
-              "prompt": "Give the eight irregular tu commands.",
+              "id": "ES-C50-habla-say",
+              "prompt": "Tell somebody you call tu to eat.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "di, haz, ve, pon, ten, sal, se, ven",
-                "di haz ve pon ten sal sé ven"
-              ],
-              "feedback": {
-                "correct": "Eight, and every one a single syllable.",
-                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-ocho-cortos-come",
-              "prompt": "Tell somebody to come.",
-              "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
-                "ES-LEX-VENIR"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-LEX-COMER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "ven",
-                "¡ven!"
+                "come",
+                "¡come!",
+                "come!"
               ],
               "feedback": {
-                "correct": "Ven.",
-                "incorrect": "Ven — from venir."
+                "correct": "Same word as he eats.",
+                "incorrect": "Come — the he/she form, said to somebody."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-ocho-cortos-why",
-              "prompt": "Why are these eight so much shorter than every other verb form?",
+              "id": "ES-C50-habla-rule",
+              "prompt": "Which form do you use to give a tu command?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "commands are shouted and hurried, so they wore down most",
-                "because they are the most used and most shouted",
-                "frequency and hurry"
+                "the he/she present form",
+                "the third person singular",
+                "the el form"
               ],
               "feedback": {
-                "correct": "What the most-shouted verbs look like after two thousand years.",
-                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
+                "correct": "No new form at all.",
+                "incorrect": "The he/she form of the present."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-habla-emperor",
+              "prompt": "Which two English words share a root with imperative?",
+              "assesses": [
+                "ES-ETYMON-IMPERARE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "emperor and empire",
+                "emperor, empire"
+              ],
+              "feedback": {
+                "correct": "One who commands, and the thing commanded.",
+                "incorrect": "Emperor and empire — both from imperare, to command."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -194,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
+              "text": "Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable."
             }
           ]
         }

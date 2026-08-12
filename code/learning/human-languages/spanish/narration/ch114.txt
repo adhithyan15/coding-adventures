@@ -1,42 +1,48 @@
-Spanish, chapter 114: Synthesis --- A Small Story.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 114: Review --- One Question, Three Answers.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Synthesis — a small story.
+Review — one question, three answers.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time.
+Nothing new. Before the table: do the two past tenses differ in when?
 
-The exchange.
-Four sentences. Watch the tenses take turns.
-Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana.
-Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to.
-Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order.
-The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them.
+What you've built.
+Three chapters, one question, three ways it gets answered.
+[a table of 4 rows, read aloud]
+what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.
+what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.
+what you are doing: naming a state. tense: imperfect. example: tenía — I had.
+what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got.
+Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened.
 
-Grammar Lens: what you can now do.
-Notice the third sentence. Tuve un libro is not "I had a book" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular.
-That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did.
-It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not.
+Grammar Lens: the question to actually ask.
+Not "which tense is this?" — that has no answer without you.
+Am I telling you what happened, or what things were like?
+What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:
+Estudiaba cuando habló Ana.
+And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one.
+There is no list to memorise here, and that is deliberate. Lists of "preterite trigger words" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four sentences straight through]
+[your turn — say: "hablé / hablaba", then "tenía / tuve", and name the difference in each pair]
 [pause 8 seconds for the answer]
-[your turn — say: only the imperfects, then only the preterites, and hear the two layers]
+[your turn — say: the question aloud before each one]
 [pause 8 seconds for the answer]
 [repeat that twice]
+Until the question arrives before the verb does.
+[question — say your answer, then pause 12 seconds]
+State the one question that chooses the tense.
 [question — say your answer, then pause 10 seconds]
-In the story, which two verbs are the background?
+In estudiaba cuando hablo Ana, which verb is the scene?
 [question — say your answer, then pause 12 seconds]
-Why is tuve un libro in the foreground when tenia un libro was not?
-[question — say your answer, then pause 12 seconds]
-Say I was studying when I spoke with Ana.
-[question — say your answer, then pause 14 seconds]
-Why did this take three chapters when neither tense was new?
+Which two rows of the table are NOT the same event seen twice?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)
+The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for.

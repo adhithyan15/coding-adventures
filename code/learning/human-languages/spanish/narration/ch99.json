@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 99,
-  "title": "Why Se? --- Gelo, and a Collision",
+  "title": "Se Lo --- The Pair That Does Not Exist",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7cf61ef25d9ebd3d",
+  "sourceHash": "fnv1a64:49534bfaade41e16",
   "lessons": [
     {
-      "id": "ES-C47-por-que-se",
-      "sequence": 1238,
-      "title": "Why se? — and why it is not the se you know",
-      "headword": "gelo → se lo",
-      "romanization": "gelo → se lo",
-      "gloss": "why le turns into se — and why it is not the se you already know, however much it looks like it",
+      "id": "ES-C47-se-lo",
+      "sequence": 1237,
+      "title": "se lo — the pair that does not exist",
+      "headword": "se lo",
+      "romanization": "se lo",
+      "gloss": "the one pair Spanish will not say — le lo does not exist, and something else stands in for it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a22210371eed4192",
+      "sourceHash": "fnv1a64:8d65521e5b859709",
       "notice": null,
       "blocks": [
         {
@@ -35,74 +35,47 @@
             },
             {
               "kind": "speech",
-              "text": "You have known a word se since almost the beginning: se llama, \"he calls himself.\" Now you have met a second se, in se lo digo. The obvious conclusion is that they are the same word doing a second job."
-            },
-            {
-              "kind": "speech",
-              "text": "They are not. They are two different words that arrived at the same spelling, and knowing that removes a confusion most learners carry for years."
+              "text": "Person first, then thing. So \"I tell it to him\" should be le plus lo plus digo. Say that out loud: le lo digo."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: nobody says that",
           "segments": [
             {
               "kind": "speech",
-              "text": "Old Spanish did not say se lo. It said gelo."
+              "text": "Your mouth probably objected before your grammar did. Le lo is two nearly identical syllables in a row, and Spanish will not say it."
             },
             {
               "kind": "speech",
-              "text": "That came from the two Latin pronouns you already know, run together and worn down: illī (the dative, giving le) plus illum (the accusative, giving lo) becomes gelo. One squeezed word for \"to-him it.\""
+              "text": "In front of lo, la, los or las, the pronouns le and les become se."
             },
             {
               "kind": "speech",
-              "text": "So the medieval sentence was gelo digo, and it was regular. There was no substitution and no rule to learn."
+              "text": "Le lo digo. becomes Se lo digo. — I tell it to him. Les la hago. becomes Se la hago. — I make it for them."
             },
             {
               "kind": "speech",
-              "text": "Then two things happened:"
+              "text": "Everything else about the sentence is unchanged. The order is still person then thing. The slot is still in front of the verb. Only the first word's shape changes, and it changes for one reason: what follows it."
             },
             {
               "kind": "speech",
-              "text": "The word split back into two — gelo was re-analysed as ge + lo, matching the two-pronoun pattern everywhere else in the language."
+              "text": "Note what se does not tell you. Le already refused to mark gender, and se goes further — it does not mark number either:"
             },
             {
               "kind": "speech",
-              "text": "The sound ge drifted until it was pronounced exactly like se — and once two words sound identical, spelling follows."
+              "text": "Se lo digo — to him. To her. To you. To them. To you all."
             },
             {
               "kind": "speech",
-              "text": "By the sixteenth century ge lo had become se lo, and the trail was cold."
+              "text": "Five readings, one word. Context does all the work, and if you need to be precise you add it in words rather than in the pronoun."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "This matters for a practical reason, not a historical one."
-            },
-            {
-              "kind": "speech",
-              "text": "The reflexive se in se llama means himself. If the se in se lo digo were that word, the sentence would have to mean something reflexive — and learners who assume it do spend years trying to make \"he tells it to himself\" fit sentences where it plainly does not."
-            },
-            {
-              "kind": "speech",
-              "text": "It does not fit because it is not that word. One se is Latin sē, \"himself\"; the other is illī, \"to him.\" Unrelated, and collided by accident of sound."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words wearing one shape is something this language does often — ser is built from two Latin verbs, ir borrows its present from a third. Here it happens to two of the smallest words in Spanish, which is where it is hardest to notice."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -115,74 +88,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\" then \"se lo digo\" — two different words, one sound",
+              "instruction": "\"le lo digo\" once, badly, and then \"se lo digo\" — feel why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\" then \"se lo digo\" — two different words, one sound]"
+              "source": "[YOU SAY: \"le lo digo\" once, badly, and then \"se lo digo\" — feel why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Se lo digo\" and \"Se la hago\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Se lo digo\" and \"Se la hago\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-old",
-              "prompt": "What did Old Spanish say instead of se lo?",
+              "id": "ES-C47-se-lo-say",
+              "prompt": "Say I tell it to him.",
               "assesses": [
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-SE-FOR-LE",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "gelo",
-                "ge lo"
+                "se lo digo",
+                "yo se lo digo"
               ],
               "feedback": {
-                "correct": "One squeezed word, and perfectly regular.",
-                "incorrect": "Gelo — from illi plus illum."
+                "correct": "Se lo digo — le could not stand in front of lo.",
+                "incorrect": "Se lo digo. Le becomes se before lo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-two",
-              "prompt": "Is the se of se lo digo the same word as the se of se llama?",
+              "id": "ES-C47-se-lo-when",
+              "prompt": "In front of which four words do le and les become se?",
               "assesses": [
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-SE-FOR-LE",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "no",
-                "no, they are unrelated",
-                "no, they only sound alike"
+                "lo, la, los, las",
+                "lo la los las",
+                "the direct object pronouns for things"
               ],
               "feedback": {
-                "correct": "One is Latin se, himself. The other is illi, to him.",
-                "incorrect": "No. They collided by sound; one is Latin se and the other is illi."
+                "correct": "Only those four, and always those four.",
+                "incorrect": "lo, la, los and las."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-why",
-              "prompt": "Which two Latin pronouns were squeezed together to make gelo?",
+              "id": "ES-C47-se-lo-ambiguous",
+              "prompt": "How many different people can se lo digo be about?",
               "assesses": [
-                "ES-ETYMON-GELO",
-                "ES-ETYMON-ILLI-DATIVE"
+                "ES-GRAMMAR-SE-FOR-LE",
+                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "illi and illum",
-                "illi, illum",
-                "the dative and the accusative"
+                "five: him, her, you, them, you all",
+                "five",
+                "him her you them or you all"
               ],
               "feedback": {
-                "correct": "The same two that gave you le and lo separately.",
-                "incorrect": "Illi and illum — the dative and accusative you already met."
+                "correct": "Se marks neither gender nor number. Context carries it.",
+                "incorrect": "Five — him, her, usted, them, ustedes. Se marks neither gender nor number."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -194,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What was se lo before it was se lo? (Gelo.) Is it the reflexive se? (No — a different word that came to sound the same.) Next: all of it together."
+              "text": "\"I tell it to him\"? (Se lo digo.) What happened to le? (It became se in front of lo.) Next: why it became se — and it is not the reason almost everyone assumes."
             }
           ]
         }

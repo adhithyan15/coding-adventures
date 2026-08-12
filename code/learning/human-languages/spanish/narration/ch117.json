@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 117,
-  "title": "Has, Ha, Hemos, Habeis, Han",
+  "title": "He Hablado --- A Verb With No Meaning Left",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:346e6ad5c2519b55",
+  "sourceHash": "fnv1a64:032a4645a839459d",
   "lessons": [
     {
-      "id": "ES-C49-haber-completo",
-      "sequence": 1387,
-      "title": "has, ha, hemos, habéis, han",
-      "headword": "has · ha · hemos · habéis · han",
-      "romanization": "has · ha · hemos · habéis · han",
-      "gloss": "the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short",
+      "id": "ES-C49-he-hablado",
+      "sequence": 1386,
+      "title": "he hablado — \"I have spoken\"",
+      "headword": "he hablado",
+      "romanization": "he hablado",
+      "gloss": "\"I have spoken\" — and haber, a verb that gave away its meaning and kept only a job",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79d697bb804f19aa",
+      "sourceHash": "fnv1a64:a9f15f0459837ea2",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have eaten.\" (He comido.) Now the other five people need their word."
+              "text": "You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the whole of it",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "haber",
-                "with a participle"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "I. haber: he. with a participle: he comido.",
-                "you. haber: has. with a participle: has comido.",
-                "he / she / usted. haber: ha. with a participle: ha comido.",
-                "we. haber: hemos. with a participle: hemos comido.",
-                "you all (Spain). haber: habéis. with a participle: habéis comido.",
-                "they / ustedes. haber: han. with a participle: han comido."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know."
+              "text": "silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the emptied verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "he + participle — I have done something."
+            },
+            {
+              "kind": "speech",
+              "text": "He hablado español. — I have spoken Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody."
+            },
+            {
+              "kind": "speech",
+              "text": "He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not \"I hold spoken.\" You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Haber comes from Latin habēre, \"to hold, to have\" — a completely ordinary verb with a completely ordinary meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower \"hold, grip\"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed."
+            },
+            {
+              "kind": "speech",
+              "text": "English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for \"hold\" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually."
+            },
+            {
+              "kind": "speech",
+              "text": "So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -90,110 +110,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he, has, ha, hemos, habéis, han\" until the list is one breath",
+              "instruction": "\"He hablado español\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he, has, ha, hemos, habéis, han\" until the list is one breath]"
+              "source": "[YOU SAY: \"He hablado español\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he comido, has comido, ha comido…\" through all six",
+              "instruction": "\"I have eaten\" in English, and notice that nothing is being held",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he comido, has comido, ha comido…\" through all six]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"I have eaten\" in English, and notice that nothing is being held]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-all",
-              "prompt": "Give all six forms of haber, in order.",
+              "id": "ES-C49-he-hablado-say",
+              "prompt": "Say I have spoken Spanish.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-HABER"
+                "ES-GRAMMAR-PERFECT-FIRST-PERSON",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "he hablado espanol",
+                "he hablado español",
+                "yo he hablado espanol"
+              ],
+              "feedback": {
+                "correct": "He carries the person; hablado carries the meaning.",
+                "incorrect": "He hablado espanol."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-he-hablado-mean",
+              "prompt": "What does haber mean in he hablado?",
+              "assesses": [
+                "ES-LEX-HABER",
+                "ES-ETYMON-HABERE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "he, has, ha, hemos, habeis, han",
-                "he has ha hemos habéis han"
+                "nothing on its own",
+                "nothing",
+                "it has no meaning here, only a job"
               ],
               "feedback": {
-                "correct": "Five of six are one syllable.",
-                "incorrect": "he, has, ha, hemos, habeis, han."
+                "correct": "The meaning left; the machinery stayed.",
+                "incorrect": "Nothing. Its meaning went to tener and it kept only this job."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-haber-completo-they",
-              "prompt": "Say they have eaten.",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-COMER",
-                "ES-LEX-USTEDES"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "han comido",
-                "ellos han comido",
-                "ustedes han comido"
-              ],
-              "feedback": {
-                "correct": "Han comido.",
-                "incorrect": "Han comido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-haber-completo-why",
-              "prompt": "Why is haber shorter than an ordinary verb?",
+              "id": "ES-C49-he-hablado-english",
+              "prompt": "Which English verb was hollowed out the same way?",
               "assesses": [
                 "ES-ETYMON-HABERE",
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-LEX-TENER"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "because it is said more often",
-                "frequency wears words down",
-                "it is used in every perfect sentence"
+                "have",
+                "to have",
+                "have, as in i have eaten"
               ],
               "feedback": {
-                "correct": "The same reason ser and ir are worn strange.",
-                "incorrect": "Frequency. The most-used words wear down the most."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-haber-completo-participle",
-              "prompt": "How many forms does comido take across all six rows?",
-              "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-GRAMMAR-PERFECT-COMPLETE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "one",
-                "1",
-                "it never changes"
-              ],
-              "feedback": {
-                "correct": "All the person-work is in the little word.",
-                "incorrect": "One. The participle never moves."
+                "correct": "Nobody holds anything in I have eaten.",
+                "incorrect": "Have — I have eaten holds nothing."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -205,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"They have eaten\"? (Han comido.) \"We have eaten\"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule."
+              "text": "\"I have spoken\"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it."
             }
           ]
         }

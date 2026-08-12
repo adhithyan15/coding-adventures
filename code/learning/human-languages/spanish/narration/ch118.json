@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 118,
-  "title": "Hecho, Dicho, Visto, Puesto",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3571b7c48191dd42",
+  "title": "Has, Ha, Hemos, Habeis, Han",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0a56c78041d965ba",
   "lessons": [
     {
-      "id": "ES-C49-participios-irregulares",
-      "sequence": 1388,
-      "title": "hecho, dicho, visto, puesto",
-      "headword": "hecho · dicho · visto · puesto",
-      "romanization": "hecho · dicho · visto · puesto",
-      "gloss": "four participles that refused the ending — and they are the four verbs you would have guessed",
+      "id": "ES-C49-haber-completo",
+      "sequence": 1387,
+      "title": "has, ha, hemos, habéis, han",
+      "headword": "has · ha · hemos · habéis · han",
+      "romanization": "has · ha · hemos · habéis · han",
+      "gloss": "the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d213dc03881f28d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:809ada5cc8f97083",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,78 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "By the rule, the participle of hacer should be hacido. Say it. Now be told that nobody has ever said it."
+              "text": "Say \"I have eaten.\" (He comido.) Now the other five people need their word."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: four, and you could have guessed which",
+          "title": "Grammar Lens: the whole of it",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "verb",
-                "participle",
-                "in use"
+                "",
+                "haber",
+                "with a participle"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 6,
               "utterances": [
-                "verb: hacer. participle: hecho. in use: he hecho — I have done.",
-                "verb: decir. participle: dicho. in use: he dicho — I have said.",
-                "verb: ver. participle: visto. in use: he visto — I have seen.",
-                "verb: poner. participle: puesto. in use: he puesto — I have put."
+                "I. haber: he. with a participle: he comido.",
+                "you. haber: has. with a participle: has comido.",
+                "he / she / usted. haber: ha. with a participle: ha comido.",
+                "we. haber: hemos. with a participle: hemos comido.",
+                "you all (Spain). haber: habéis. with a participle: habéis comido.",
+                "they / ustedes. haber: han. with a participle: han comido."
               ]
             },
             {
               "kind": "speech",
-              "text": "Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular."
+              "text": "Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often."
             },
             {
               "kind": "speech",
-              "text": "You already know this in English. Go/went, see/saw, do/did, put/put — and nobody struggles with them, because you meet them a hundred times a day. The same will happen here."
+              "text": "That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "These four are not broken. They are older than the rule."
-            },
-            {
-              "kind": "speech",
-              "text": "hecho from Latin factum — the thing done. English fact is that same word: a fact is literally a thing that has been done."
-            },
-            {
-              "kind": "speech",
-              "text": "dicho from Latin dictum — the thing said. English keeps dictum whole, and dictation, verdict (\"a true saying\"), contradict."
-            },
-            {
-              "kind": "speech",
-              "text": "visto from Latin vīsum — the thing seen. English vision, visible."
-            },
-            {
-              "kind": "speech",
-              "text": "puesto from Latin positum — the thing placed. English position, deposit, compose."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin already had participles for these verbs, and Spanish inherited them intact instead of rebuilding them from the stem. The regular -ado / -ido forms are the newer machinery; these four are what was there before it."
-            },
-            {
-              "kind": "speech",
-              "text": "So an irregular participle is not a form that went wrong. It is a form that was never replaced."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,104 +90,110 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hecho, dicho, visto, puesto\"",
+              "instruction": "\"he, has, ha, hemos, habéis, han\" until the list is one breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hecho, dicho, visto, puesto\"]"
+              "source": "[YOU SAY: \"he, has, ha, hemos, habéis, han\" until the list is one breath]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"",
+              "instruction": "\"he comido, has comido, ha comido…\" through all six",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"]"
+              "source": "[YOU SAY: \"he comido, has comido, ha comido…\" through all six]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-four",
-              "prompt": "Give the participles of hacer, decir, ver and poner.",
-              "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES",
-                "ES-LEX-HACER",
-                "ES-LEX-DECIR",
-                "ES-LEX-VER",
-                "ES-LEX-PONER"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "hecho, dicho, visto, puesto",
-                "hecho dicho visto puesto"
-              ],
-              "feedback": {
-                "correct": "The four commonest, as always.",
-                "incorrect": "hecho, dicho, visto, puesto."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participios-irregulares-fact",
-              "prompt": "Which everyday English noun is the same word as hecho?",
-              "assesses": [
-                "ES-ETYMON-FACTUM-DICTUM",
-                "ES-LEX-HACER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "fact",
-                "fact, from factum"
-              ],
-              "feedback": {
-                "correct": "A fact is a thing that has been done.",
-                "incorrect": "Fact — Latin factum, the thing done."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participios-irregulares-why",
-              "prompt": "Why are these four irregular rather than some other four?",
-              "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "they are the most used",
-                "because they are the commonest verbs",
-                "frequency"
-              ],
-              "feedback": {
-                "correct": "Only frequent words are used enough to survive being irregular.",
-                "incorrect": "They are the commonest verbs — the same four that break every other tense."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participios-irregulares-use",
-              "prompt": "Say we have seen it, using the participle of ver.",
+              "id": "ES-C49-haber-completo-all",
+              "prompt": "Give all six forms of haber, in order.",
               "assesses": [
                 "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VER"
+                "ES-LEX-HABER"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "lo hemos visto",
-                "hemos visto"
+                "he, has, ha, hemos, habeis, han",
+                "he has ha hemos habéis han"
               ],
               "feedback": {
-                "correct": "Hemos visto.",
-                "incorrect": "Lo hemos visto — or just hemos visto."
+                "correct": "Five of six are one syllable.",
+                "incorrect": "he, has, ha, hemos, habeis, han."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-haber-completo-they",
+              "prompt": "Say they have eaten.",
+              "assesses": [
+                "ES-GRAMMAR-PERFECT-COMPLETE",
+                "ES-LEX-COMER",
+                "ES-LEX-USTEDES"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "han comido",
+                "ellos han comido",
+                "ustedes han comido"
+              ],
+              "feedback": {
+                "correct": "Han comido.",
+                "incorrect": "Han comido."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-haber-completo-why",
+              "prompt": "Why is haber shorter than an ordinary verb?",
+              "assesses": [
+                "ES-ETYMON-HABERE",
+                "ES-GRAMMAR-PERFECT-COMPLETE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "because it is said more often",
+                "frequency wears words down",
+                "it is used in every perfect sentence"
+              ],
+              "feedback": {
+                "correct": "The same reason ser and ir are worn strange.",
+                "incorrect": "Frequency. The most-used words wear down the most."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-haber-completo-participle",
+              "prompt": "How many forms does comido take across all six rows?",
+              "assesses": [
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-GRAMMAR-PERFECT-COMPLETE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "one",
+                "1",
+                "it never changes"
+              ],
+              "feedback": {
+                "correct": "All the person-work is in the little word.",
+                "incorrect": "One. The participle never moves."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -235,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "The four? (Hecho, dicho, visto, puesto.) Are they broken forms? (No — they are older than the rule, inherited whole from Latin.) Next: all of it together."
+              "text": "\"They have eaten\"? (Han comido.) \"We have eaten\"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule."
             }
           ]
         }

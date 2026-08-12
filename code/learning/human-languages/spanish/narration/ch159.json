@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 159,
-  "title": "Preguntar — Asking, and Sounding a Depth",
+  "title": "Tomar — Taking, and a Word With No Past",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dcb0a4a5920805cb",
+  "sourceHash": "fnv1a64:6d6455bd2ad89e06",
   "lessons": [
     {
-      "id": "ES-C35-preguntar",
-      "sequence": 1940,
-      "title": "preguntar — \"to ask\", by sounding the water with a pole",
-      "headword": "preguntar",
-      "romanization": "preguntar",
-      "gloss": "to ask (a question) — and the reason English's one \"ask\" becomes two Spanish verbs",
+      "id": "ES-C35-tomar",
+      "sequence": 1930,
+      "title": "tomar — \"to take\", and nobody knows where it came from",
+      "headword": "tomar",
+      "romanization": "tomar",
+      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fae59cf7471552bd",
+      "sourceHash": "fnv1a64:cf8f0b743aecc987",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half."
+              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
             }
           ]
         },
@@ -46,63 +46,45 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pr-cluster — pre- is one crisp beat, preh, with a tapped r."
+              "text": "r-tap — one soft tap of the tongue: to-MAR."
             },
             {
               "kind": "speech",
-              "text": "g-hard — the g before u is hard, as in English gun: pre-goon-TAR."
+              "text": "vowel-o — a short, pure o, with no English glide toward ow."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: preguntar",
+          "title": "The word, taken apart: tomar",
           "segments": [
             {
               "kind": "speech",
-              "text": "preguntar (\"to ask a question\") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, \"to inquire\". And percontārī was built on contus, \"a punting pole\": to percontor was to push a pole down through water and find out how deep it was."
+              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
             },
             {
               "kind": "speech",
-              "text": "Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe."
+              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
             },
             {
               "kind": "speech",
-              "text": "The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta."
+              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one English \"ask\", two Spanish verbs",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish sorts asking by what you are after:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "what you want",
-                "verb",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.",
-                "what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee."
-              ]
+              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
             },
             {
               "kind": "speech",
-              "text": "Ask for a coffee with preguntar and you have said \"I question a coffee\". The line is simple: a question takes preguntar, a request takes pedir."
-            },
-            {
-              "kind": "speech",
-              "text": "pedir from Latin petere, \"to make for, to aim at\" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later."
+              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
             }
           ]
         },
@@ -120,38 +102,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pregunto, preguntas, pregunta, preguntamos, preguntan\"",
+              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pregunto, preguntas, pregunta, preguntamos, preguntan\"]"
+              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te pregunto la hora\" — I'm asking you the time",
+              "instruction": "\"Tomo un café\" — I'll have a coffee",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te pregunto la hora\" — I'm asking you the time]"
+              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Pido un café\" then \"Tomo un café\" — I ask for one, I have one",
+              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pido un café\" then \"Tomo un café\" — I ask for one, I have one]"
+              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pedir\" then English \"petition, appetite, compete\" — the aiming family",
+              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pedir\" then English \"petition, appetite, compete\" — the aiming family]"
+              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
             }
           ]
         },
@@ -168,7 +150,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, \"to aim at\" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid."
+              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
             }
           ]
         }
