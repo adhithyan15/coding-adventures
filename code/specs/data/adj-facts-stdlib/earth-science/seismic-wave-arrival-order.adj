@@ -1,0 +1,72 @@
+% ============================================================================
+% seismic-wave-arrival-order — the two named seismic body waves and which
+% one an earthquake sends out first (adj-facts-stdlib, EARTH SCIENCE).
+% ============================================================================
+% An earthquake does not shake a distant recording station all at once — it
+% sends out more than one kind of wave, and they arrive in a fixed order. A
+% P wave gets there first; an S wave follows. Recall is a binding query:
+%
+%     ? seismic_wave_arrival_order(p_wave, $D)
+%       % are_the_first_waves_to_arrive_after_an_earthquake
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `seismic_wave_arrival_order(wave, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a seismic-wave-related term that is not one
+% of these two. The query also runs BACKWARD — bind a description and
+% recall which wave it names:
+%
+%     ? seismic_wave_arrival_order($W, are_the_next_waves_to_arrive_after_p_waves)
+%       % s_wave
+%
+% The two waves, as a little truth table:
+%
+%     wave      description                                              quote (verbatim)
+%     --------  -------------------------------------------------------  -----------------------------------------------------------------------------
+%     p_wave     are_the_first_waves_to_arrive_after_an_earthquake         "P-waves, or Primary waves, are the first waves to arrive as soon as there's an earthquake."
+%     s_wave     are_the_next_waves_to_arrive_after_p_waves                "S-waves, or Secondary waves, are the next waves to arrive after P-waves."
+%
+% Provenance: quoted verbatim from Cal OES (California Governor's Office of
+% Emergency Services) News' "What Are P-Waves and S-Waves?" article, which
+% gives each wave its own standalone, parallel-worded defining sentence
+% under its own subsection heading. WebFetch-verified across two passes
+% before writing, the second pass pulling the full paragraph under each
+% subsection heading to confirm the target sentence stands alone as a
+% complete, single-fact definition and is not itself qualified by an
+% adjacent sentence (each subsection's OWN second and third sentences —
+% travel speed, felt-shaking intensity — are separate elaboration, not
+% folded into the quoted definition). `trust authoritative` — Cal OES is a
+% California state government (.gov) agency, the primary tier this stdlib
+% already reserves for other government sources (e.g. NASA, USGS, NOAA).
+%
+% A third wave commonly grouped alongside these two is deliberately NOT a
+% row here, so a recall ABSTAINS on it rather than inventing a description:
+% `surface_wave`. It is a real seismic wave category, but every source
+% checked either bundles its definition together with a second distinct
+% fact in the same sentence (USGS: "P waves travel through solid and
+% liquid, but S waves do not travel through liquid" contrasts two waves in
+% one sentence; MTU: "Surface waves travel more slowly ... and are
+% predominantly lower frequency" bundles speed and frequency), or defines
+% it via a different framing dimension (Wikipedia's general physics
+% definition, not the same earthquake-arrival-order framing the two tabled
+% here share) rather than stating one clean fact in the same parallel
+% pattern. Picked using the mandatory full-tree-grep-before-scoping
+% discipline — zero hits for "seismic_wave"/"p_wave"/"s_wave" before this
+% file was written; distinct from the sibling `physics/wave-types.adj`,
+% which classifies waves into the mechanical/electromagnetic FAMILY axis
+% (and explicitly abstains on seismic waves itself), not this arrival-order
+% axis. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table seismic_wave_arrival_order {
+    columns wave, description
+
+    row (p_wave, are_the_first_waves_to_arrive_after_an_earthquake)
+    row (s_wave, are_the_next_waves_to_arrive_after_p_waves)
+
+    source "P-waves, or Primary waves, are the first waves to arrive as soon as there's an earthquake."
+    locator "https://www.news.caloes.ca.gov/what-are-p-waves-and-s-waves/"
+    trust authoritative
+}
