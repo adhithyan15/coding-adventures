@@ -147,7 +147,7 @@ See `CHANGELOG.md` for the full feature matrix. The headline:
 
 - ✅ Containers (Box / Row / Column / Stack), leaves (Text / Image /
   Spacer / Divider / Icon), and the most-used host primitives
-  (HostInput / HostButton / HostCheckbox / HostRadio / HostScroll)
+  (HostInput / HostButton / HostCheckbox / HostRadio / HostSlider / HostScroll)
   are wired with a passing test each.
 - ✅ Canonical UI31 HostTable compositions lower dynamic `For`-driven headers,
   rows, and cells to Flutter's native `DataTable` family; unsupported table

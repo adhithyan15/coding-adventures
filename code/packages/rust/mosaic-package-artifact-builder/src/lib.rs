@@ -1118,7 +1118,9 @@ fn collect_native_degradations(
             "interaction.dialog-placeholder",
             "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog",
         )),
-        "HostSlider" if backend.is_native() && backend != Backend::Compose => Some((
+        "HostSlider"
+            if backend.is_native()
+                && !matches!(backend, Backend::Compose | Backend::Flutter) => Some((
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
         )),
@@ -4696,12 +4698,25 @@ layout Volume {
             compose_report.degradations
         );
 
-        for backend in [
-            Backend::Flutter,
-            Backend::Qt,
-            Backend::SwiftUI,
-            Backend::Xaml,
-        ] {
+        let flutter_out = TempDir::new().unwrap();
+        let flutter_report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: flutter_out.path().to_path_buf(),
+                backend: Backend::Flutter,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Flutter slider capability analysis");
+        assert!(
+            flutter_report.native_complete,
+            "Flutter now has a native adjustable slider lowering: {:?}",
+            flutter_report.degradations
+        );
+
+        for backend in [Backend::Qt, Backend::SwiftUI, Backend::Xaml] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {

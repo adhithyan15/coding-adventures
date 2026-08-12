@@ -525,7 +525,9 @@ unblocks multiple downstream targets; never count source generation as completio
     - [ ] Lower `HostSlider` to native widgets on all five backends.
       - [x] Compose Material `Slider`, including range, step, disabled,
         continuous change, and release-time commit semantics.
-      - [ ] Flutter, Qt, SwiftUI, and XAML native lowerings.
+      - [x] Flutter Material `Slider`, including range, divisions, disabled,
+        continuous change, and release-value commit semantics.
+      - [ ] Qt, SwiftUI, and XAML native lowerings.
     - [ ] Export the native-complete standard `Slider` facade.
   - [ ] Add native select/picker and switch contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
