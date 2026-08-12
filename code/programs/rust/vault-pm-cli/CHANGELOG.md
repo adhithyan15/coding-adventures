@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed audited redacted conflict listing and choose-existing-candidate
+  resolution through the thin executable.
 - Exposed explicit-target `restore FILE` and moved the real-process PTY drill to
   one artifact authentication, audited import, independent target reopen, and
   completed-and-verified aggregate output with no intermediate import claim.

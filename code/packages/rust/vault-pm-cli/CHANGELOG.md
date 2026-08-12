@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audit-required `conflict list ITEM` and `conflict choose ITEM REVISION`
+  with redacted candidate rows, item-bound selection, durable failed attempts,
+  and atomic choose-existing resolution.
 - Added explicit-named-target `restore FILE`, which opens the artifact once,
   publishes audited import without intermediate output, independently reopens
   the durable target, and claims completed-and-verified only after its audited

@@ -28,6 +28,8 @@ vault-pm [--vault NAME] item list
 vault-pm [--vault NAME] item show ITEM
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
+vault-pm [--vault NAME] conflict list ITEM
+vault-pm [--vault NAME] conflict choose ITEM REVISION
 ```
 
 `init` and every authenticated command require a controlling terminal even
