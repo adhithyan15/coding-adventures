@@ -51,6 +51,7 @@ use std::io::Read;
 use std::net::SocketAddr;
 use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
+use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{StorageBackend, StorageError};
 use transport_platform::{PlatformError, TransportPlatform};
 use websocket_runtime::WebSocketServerOptions;
@@ -364,7 +365,10 @@ fn compose_data_plane_service(
             backend,
             Arc::new(channel_keys),
             Arc::new(models),
-            Arc::new(D18dSmartHomeModelTools { bridge }),
+            Arc::new(D18dSmartHomeModelTools {
+                bridge,
+                clock: Arc::new(SystemUnixTimeClock),
+            }),
             metadata_source,
         ),
     ))
@@ -385,6 +389,23 @@ const PRODUCTION_SMART_HOME_MODEL_TOOLS: &[&str] = &[
 
 struct D18dSmartHomeModelTools<B> {
     bridge: SmartHomeToolBridge<B>,
+    clock: Arc<dyn UnixTimeClock>,
+}
+
+trait UnixTimeClock: Send + Sync {
+    fn now_ms(&self) -> Option<u64>;
+}
+
+struct SystemUnixTimeClock;
+
+impl UnixTimeClock for SystemUnixTimeClock {
+    fn now_ms(&self) -> Option<u64> {
+        let milliseconds = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .ok()?
+            .as_millis();
+        u64::try_from(milliseconds).ok()
+    }
 }
 
 impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTools<B> {
@@ -421,6 +442,7 @@ impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTool
             serde_json::to_string(&call.arguments).map_err(|_| DataPlaneFailure::InvalidRequest)?;
         let arguments =
             parse_json(&arguments_json).map_err(|_| DataPlaneFailure::InvalidRequest)?;
+        let requested_at = self.clock.now_ms().ok_or(DataPlaneFailure::Internal)?;
         let result = self
             .bridge
             .invoke(&ToolInvocationRequest {
@@ -432,7 +454,7 @@ impl<B: StorageBackend + 'static> ModelToolDispatcher for D18dSmartHomeModelTool
                 job_id: None,
                 agent_id: Some(binding.registration().host_name().as_str().to_string()),
                 user_id: None,
-                requested_at: 0,
+                requested_at,
                 deadline_at: None,
                 idempotency_key: None,
             })
@@ -646,10 +668,61 @@ mod tests {
     use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
+    use smart_home_core::{
+        AgentId, AuthorizationOutcome, CapabilityGrant, CapabilityGrantId, SmartHomeTool,
+    };
+    use std::convert::Infallible;
     use std::sync::atomic::{AtomicU64, Ordering};
     use storage_core::InMemoryStorageBackend;
 
     static NEXT_DIR: AtomicU64 = AtomicU64::new(0);
+
+    struct TestUnixTimeClock(AtomicU64);
+
+    impl TestUnixTimeClock {
+        fn new(now_ms: u64) -> Self {
+            Self(AtomicU64::new(now_ms))
+        }
+
+        fn set(&self, now_ms: u64) {
+            self.0.store(now_ms, Ordering::Relaxed);
+        }
+    }
+
+    impl UnixTimeClock for TestUnixTimeClock {
+        fn now_ms(&self) -> Option<u64> {
+            Some(self.0.load(Ordering::Relaxed))
+        }
+    }
+
+    struct UnavailableUnixTimeClock;
+
+    impl UnixTimeClock for UnavailableUnixTimeClock {
+        fn now_ms(&self) -> Option<u64> {
+            None
+        }
+    }
+
+    fn test_model_binding() -> HostPipelineBinding {
+        let mut pipeline_id = [0; 16];
+        pipeline_id[6] = 0x70;
+        pipeline_id[8] = 0x80;
+        HostPipelineBinding::new(
+            PipelineId::new(pipeline_id).unwrap(),
+            HostRegistration::new(
+                HostName::new("home-host").unwrap(),
+                PackagePath::new("/srv/home.agent").unwrap(),
+                [7; 32],
+                RestartPolicy::Always,
+            ),
+            ChannelAgentId::new(b"home-agent".to_vec()).unwrap(),
+            LaunchBindings::new(
+                Vec::new(),
+                Some(LevelOneModelBinding::new("test-model", 0.0, 128).unwrap()),
+            )
+            .unwrap(),
+        )
+    }
 
     const VALID_CONFIG: &str = r#"
 [orchestrator]
@@ -794,33 +867,34 @@ hardware_key_timeout = 60
     }
 
     #[test]
-    fn production_model_catalog_dispatches_through_smart_home_d18d_bridge() {
+    fn production_model_catalog_uses_host_identity_and_current_request_time() {
         let backend = InMemoryStorageBackend::new();
         let controller = SmartHomeControllerRuntime::restore(backend).unwrap();
+        let controller_probe = controller.clone();
+        controller
+            .transaction(1_000, |runtime, _| {
+                runtime.registry_mut().upsert_capability_grant(
+                    CapabilityGrant::for_tool(
+                        CapabilityGrantId::trusted("grant-list-devices"),
+                        AgentId::trusted("home-host"),
+                        SmartHomeTool::ListDevices,
+                        "user:test",
+                        1_000,
+                    )
+                    .with_expiry(2_000),
+                );
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let clock = Arc::new(TestUnixTimeClock::new(1_500));
         let tools = D18dSmartHomeModelTools {
             bridge: SmartHomeToolBridge::new(
                 controller,
                 SmartHomeAgentId::trusted("chief-daemon-model-tools"),
             ),
+            clock: clock.clone(),
         };
-        let mut pipeline_id = [0; 16];
-        pipeline_id[6] = 0x70;
-        pipeline_id[8] = 0x80;
-        let binding = HostPipelineBinding::new(
-            PipelineId::new(pipeline_id).unwrap(),
-            HostRegistration::new(
-                HostName::new("home-host").unwrap(),
-                PackagePath::new("/srv/home.agent").unwrap(),
-                [7; 32],
-                RestartPolicy::Always,
-            ),
-            ChannelAgentId::new(b"home-agent".to_vec()).unwrap(),
-            LaunchBindings::new(
-                Vec::new(),
-                Some(LevelOneModelBinding::new("test-model", 0.0, 128).unwrap()),
-            )
-            .unwrap(),
-        );
+        let binding = test_model_binding();
         let definitions = tools.definitions(&binding).unwrap();
         assert_eq!(definitions.len(), PRODUCTION_SMART_HOME_MODEL_TOOLS.len());
         assert!(definitions
@@ -829,18 +903,74 @@ hardware_key_timeout = 60
 
         let call = ModelToolCall {
             call_id: "call-1".to_string(),
-            name: SMART_HOME_GET_HEALTH_TOOL_ID.to_string(),
+            name: SMART_HOME_LIST_DEVICES_TOOL_ID.to_string(),
             arguments: serde_json::json!({}),
         };
         let result = tools.execute(&binding, &call).unwrap();
         assert_eq!(result.call, call);
         assert!(result.output.is_object());
+        assert!(!result.is_error);
+
+        clock.set(2_000);
+        let expired_call = ModelToolCall {
+            call_id: "call-2".to_string(),
+            ..call.clone()
+        };
+        let expired = tools.execute(&binding, &expired_call).unwrap();
+        assert!(expired.is_error);
+        assert_eq!(controller_probe.last_saved_at_ms().unwrap(), Some(2_000));
+
+        let runtime = controller_probe.runtime_handle();
+        let runtime = runtime.lock().unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&AgentId::trusted("home-host"));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+        assert_eq!(decisions[0].decided_at_ms, 1_500);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(decisions[1].decided_at_ms, 2_000);
 
         let mut unknown = call;
         unknown.name = "smart_home.uninstalled".to_string();
         assert_eq!(
             tools.execute(&binding, &unknown),
             Err(DataPlaneFailure::Unauthorized)
+        );
+    }
+
+    #[test]
+    fn production_model_tools_fail_closed_when_unix_time_is_unavailable() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let controller_probe = controller.clone();
+        let tools = D18dSmartHomeModelTools {
+            bridge: SmartHomeToolBridge::new(
+                controller,
+                SmartHomeAgentId::trusted("chief-daemon-model-tools"),
+            ),
+            clock: Arc::new(UnavailableUnixTimeClock),
+        };
+        let binding = test_model_binding();
+        let call = ModelToolCall {
+            call_id: "call-1".to_string(),
+            name: SMART_HOME_LIST_DEVICES_TOOL_ID.to_string(),
+            arguments: serde_json::json!({}),
+        };
+
+        assert_eq!(
+            tools.execute(&binding, &call),
+            Err(DataPlaneFailure::Internal)
+        );
+        assert_eq!(
+            controller_probe
+                .runtime_handle()
+                .lock()
+                .unwrap()
+                .registry()
+                .counts()
+                .authorization_decisions,
+            0
         );
     }
 

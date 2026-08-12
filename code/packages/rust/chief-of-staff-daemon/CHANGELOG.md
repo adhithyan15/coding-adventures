@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Evaluate model-selected smart-home tools at their real Unix-millisecond
+  invocation time. The injected clock now drives grant expiry, controller
+  transactions, and durable authorization audit timestamps, and fails closed
+  before dispatch when production time is unavailable.
 - Restore the central Smart Home controller for model-enabled deployments and
   inject a bounded core D18D catalog into authenticated host tool dispatch.
 - Expose the exact production host data-plane composition boundary so the real

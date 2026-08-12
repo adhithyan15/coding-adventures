@@ -39,6 +39,10 @@ When an Ollama model is configured, the daemon also restores the central durable
 smart-home controller and injects a bounded core `smart_home.*` D18D catalog.
 Model-offered definitions must match that catalog exactly; returned calls run
 through D18D with the authenticated host identity and return structured results.
+Grant activation and expiry plus durable authorization audit records use an
+injected Unix-millisecond clock sampled immediately before each dispatch. A
+missing, pre-epoch, or unrepresentable production timestamp fails closed before
+the tool can run.
 
 The exported production data-plane composition boundary is also used by the real
 Level 1 host integration test. That test supplies owner-only key files and a
