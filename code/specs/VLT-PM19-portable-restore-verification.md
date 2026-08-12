@@ -152,10 +152,10 @@ The slice is complete only when tests prove:
 8. the resulting audit chain verifies across restart; and
 9. formatting, Clippy, rustdoc, and the application/audit package tests pass.
 
-## 9. Remaining CLI recovery work
+## 9. CLI composition
 
-The next slice must compose this verifier with explicit target creation and
-configuration switching. It must preserve or reacquire enough authenticated
-source expectation state to retry verification after a post-import host or
-provider interruption, and it must not print “fully verified restore” until a
-durably reopened target has produced the succeeded audited aggregate proof.
+`VLT-PM20-cli-portable-restore-verify.md` defines the completed retryable CLI
+composition against the currently configured target. Explicit target creation
+and configuration switching remain the next recovery slice. No surface may
+print “fully verified restore” until a durably reopened target has produced the
+succeeded audited aggregate proof.

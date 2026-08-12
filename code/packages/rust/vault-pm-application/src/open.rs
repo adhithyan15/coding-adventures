@@ -611,6 +611,32 @@ impl UnlockedVaultV1 {
         Ok(audited.into_parts().0)
     }
 
+    /// Durably record a host-side portable-restore verification input failure.
+    ///
+    /// This boundary is used after an active-epoch target unlock when artifact
+    /// reading, passphrase collection, no-write opening, or expectation
+    /// preparation fails outside the target comparison. No source path,
+    /// artifact bytes, partial passphrase, target identity, or mismatch detail
+    /// enters the itemless event.
+    pub fn record_audited_portable_restore_verify_host_failure(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let audited = self.finish_audited_access(
+            AuditActionV1::PortableRestoreVerify,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            Err::<(), _>(ApplicationError::InvalidInput),
+        )?;
+        Ok(audited.into_parts().0)
+    }
+
     /// Run authenticated low-resolution diagnostics and release the coarse
     /// report only after its access event and next owner state are durable.
     ///

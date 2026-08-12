@@ -351,6 +351,19 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         .as_bytes()
         .windows(EXPORT_PASSPHRASE.len())
         .any(|value| value == EXPORT_PASSPHRASE));
+    let (restore_verify_status, restore_verify_transcript) =
+        run_restore_verify_in_pty(&restore_home, &export_path);
+    assert!(
+        restore_verify_status.success(),
+        "portable restore verification failed: {restore_verify_transcript}"
+    );
+    assert!(restore_verify_transcript.contains("Import passphrase: "));
+    assert!(restore_verify_transcript
+        .contains("Portable restore verified: items=2 candidates=2 conflicts=0."));
+    assert!(!restore_verify_transcript
+        .as_bytes()
+        .windows(EXPORT_PASSPHRASE.len())
+        .any(|value| value == EXPORT_PASSPHRASE));
     let (restore_list_status, restore_list_transcript) = run_unlock_in_pty(
         &restore_home,
         &["item", "list"],
@@ -448,6 +461,51 @@ fn run_import_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, String) {
         &mut master,
         &mut transcript,
         b"Portable import complete: items=2 candidates=2.",
+    );
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn run_restore_verify_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args([
+        "restore",
+        "verify",
+        source.to_str().expect("UTF-8 test restore source"),
+    ]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Import passphrase: ");
+    master.write_all(EXPORT_PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Portable restore verified: items=2 candidates=2 conflicts=0.",
     );
     drop(master);
     let status = child.wait().unwrap();

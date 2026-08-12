@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.49.0] - 2026-08-11
+
+### Added
+
+- Add a session-consuming host-failure boundary for portable restore
+  verification input and artifact-opening failures.
+
+### Security
+
+- Publish a failed itemless `PortableRestoreVerify` event before CLI
+  composition can expose a post-unlock source-read, prompt, or open failure.
+
 ## [0.48.0] - 2026-08-11
 
 ### Added

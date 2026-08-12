@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed retryable audited `restore verify FILE` and extended the real-process
+  PTY drill through another independent target reopen and hidden artifact
+  prompt before aggregate verification output.
 - Exposed audited `import FILE` and extended the real-process PTY suite through
   an independent initialized target, hidden artifact input, and restarted
   redacted observation.

@@ -10,8 +10,9 @@ one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
-ITEM REVISION`. `export FILE` and `import FILE` add the first encrypted
-recovery-artifact round trip. The executable is a thin caller of this package.
+ITEM REVISION`. `export FILE`, `import FILE`, and `restore verify FILE` add the
+first encrypted recovery-artifact round trip plus retryable independent
+verification. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -134,6 +135,17 @@ before their error; success re-identifies every item/candidate and publishes
 its event atomically with the new catalog. Output contains aggregate item and
 candidate counts only. A later list/show reopens the target through the
 ordinary audited redacted-read boundary.
+
+`restore verify FILE` is a separately retryable, no-mutation ceremony against
+the currently configured target. It reserves its trace/time/randomness before
+target authentication, requires an active audit epoch, reads the artifact
+under the same hard ceiling, collects the fixed hidden `Import passphrase:`,
+and prepares the opaque application expectation. Source-read, prompt,
+authentication, and preparation failures publish a failed itemless
+`PortableRestoreVerify`; semantic match or mismatch publishes its own event
+before aggregate proof or integrity error. Success prints item, candidate, and
+conflict counts only. No path, source/target identity, semantic root, mismatch
+location, record metadata, or field value reaches output or the audit event.
 
 ## Verification
 

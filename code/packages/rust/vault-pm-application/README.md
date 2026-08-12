@@ -348,6 +348,9 @@ causal parents, grouping drift, or any schema, timestamp, deletion, CRDT, or
 record-value change yields one closed integrity failure. Match and mismatch
 publish a dedicated itemless `PortableRestoreVerify` event before the caller
 receives an aggregate count proof or the error.
+The companion session-consuming host-failure boundary records artifact-read,
+passphrase-prompt, no-write-open, and expectation-preparation failures under
+the same action before CLI composition can expose their closed error.
 
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,

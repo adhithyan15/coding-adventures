@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added retryable audit-required `restore verify FILE`, which authenticates the
+  current target and encrypted artifact independently, prepares the opaque
+  source expectation, and releases aggregate verified counts only after a
+  succeeded `PortableRestoreVerify` event is durable.
+- Record source-read, prompt, artifact-open, expectation, and semantic mismatch
+  failures as failed itemless verification events without path or mismatch
+  detail.
 - Added audit-required `import FILE` with bounded artifact reads, hidden
   artifact-passphrase input, no-write authentication, count-derived entropy,
   and atomic cross-vault re-identification into an empty target.
