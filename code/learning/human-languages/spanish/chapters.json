@@ -3206,6 +3206,102 @@
         ],
         "note": "First place where the smallest word carries the sentence's emotional content. A wrong choice is not bad grammar -- it is a true sentence about a different situation."
       }
+    },
+    {
+      "chapter": 158,
+      "title": "Se Habla Espanol --- Nobody in Particular",
+      "label": "ch:se-impersonal",
+      "canDo": "I can read and use the impersonal se, where no person is named.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-se-habla",
+        "kind": "task",
+        "summary": "Complete ES-C52-se-habla: write the sign and say who is doing the speaking.",
+        "assesses": [
+          "ES-GRAMMAR-SE-IMPERSONAL"
+        ],
+        "note": "English needs a passive or a fake subject to be this vague. Spanish leaves the person out, and the se is the mark that says so."
+      }
+    },
+    {
+      "chapter": 159,
+      "title": "Se Compran Libros --- The Verb Tells On Itself",
+      "label": "ch:se-agreement",
+      "canDo": "I can make the verb agree with the thing, and say why it does.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-se-venden",
+        "kind": "task",
+        "summary": "Complete ES-C52-se-venden: produce se compran libros and read it as if se still meant themselves.",
+        "assesses": [
+          "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+          "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON"
+        ],
+        "note": "The agreement is the fossil: books buy themselves. The impersonal grew out of the reflexive rather than being borrowed from anywhere."
+      }
+    },
+    {
+      "chapter": 160,
+      "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
+      "label": "ch:como-se-dice",
+      "canDo": "I can ask how something is said, and say which se that is.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-como-se-dice",
+        "kind": "task",
+        "summary": "Complete ES-C52-como-se-dice: ask the question politely and say why it is impersonal rather than aimed at the listener.",
+        "assesses": [
+          "ES-LEX-COMO-SE-DICE",
+          "ES-GRAMMAR-SE-IMPERSONAL"
+        ],
+        "note": "The one sentence that lets a conversation repair itself: it gets the reader a word they do not have, from the person in front of them, mid-conversation."
+      }
+    },
+    {
+      "chapter": 161,
+      "title": "Review --- The Three Se's",
+      "label": "ch:review-three-se",
+      "canDo": "I can tell the three se's apart and say which two are really one word.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-tres-ses",
+        "kind": "task",
+        "summary": "Complete ES-C52-tres-ses: say which two se's are one word and what marks the impostor.",
+        "assesses": [
+          "ES-GRAMMAR-SE-IMPERSONAL",
+          "ES-GRAMMAR-SE-FOR-LE",
+          "ES-ETYMON-GELO"
+        ],
+        "note": "Unifies material learned a hundred chapters apart: Spanish has two se's and a coincidence, not three."
+      }
+    },
+    {
+      "chapter": 162,
+      "title": "Synthesis --- Reading the Window",
+      "label": "ch:synthesis-se",
+      "canDo": "I can read impersonal signs and ask my way past the words I do not have.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C52-sintesis-el-letrero",
+        "kind": "task",
+        "summary": "Complete ES-C52-sintesis-el-letrero: read the signs, ask for an unknown word, and say what the missing person buys a notice.",
+        "assesses": [
+          "ES-GRAMMAR-SE-IMPERSONAL",
+          "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+          "ES-LEX-COMO-SE-DICE"
+        ],
+        "note": "This construction is written at the reader rather than spoken to them, so the skill is reading it off the world -- and the missing person is what gives a sign its authority."
+      }
     }
   ]
 }

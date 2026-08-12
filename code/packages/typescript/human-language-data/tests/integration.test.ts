@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(157); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(162); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -676,6 +676,22 @@ describe("real curriculum", () => {
       "ES-C51-sintesis-regalo-motivo-gift",
       "ES-C51-sintesis-regalo-motivo-thanks",
       "ES-C51-sintesis-regalo-motivo-wrong",
+      "ES-C52-como-se-dice-ask",
+      "ES-C52-como-se-dice-full",
+      "ES-C52-como-se-dice-why",
+      "ES-C52-se-habla-eat",
+      "ES-C52-se-habla-sign",
+      "ES-C52-se-habla-who",
+      "ES-C52-se-venden-agree",
+      "ES-C52-se-venden-origin",
+      "ES-C52-se-venden-plural",
+      "ES-C52-sintesis-el-letrero-authority",
+      "ES-C52-sintesis-el-letrero-eat",
+      "ES-C52-sintesis-el-letrero-read",
+      "ES-C52-sintesis-el-letrero-unknown",
+      "ES-C52-tres-ses-test",
+      "ES-C52-tres-ses-two",
+      "ES-C52-tres-ses-which",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

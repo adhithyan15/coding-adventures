@@ -18,6 +18,11 @@
   turns, two pen lifts, and the left-to-right final héng.
 - Reduce Chinese's remaining verified-ductus inventory to 19 entries.
 
+### Changed — Spanish runs 1..162 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five impersonal-se chapters
+  appended at 158.
+
 ### Added — cited Chinese 女 ductus (HL-C09CC)
 
 - Render **女** in four source-aligned frames: descend left, turn and sweep

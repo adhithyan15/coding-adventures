@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8a43cbd6a46618ce",
+  "sourceHash": "fnv1a64:99197ac6eeae0180",
   "summary": {
-    "totalLessons": 1809,
-    "voice": 1210,
+    "totalLessons": 1814,
+    "voice": 1215,
     "sight": 530,
     "pen": 69,
-    "drivableLessons": 1210,
+    "drivableLessons": 1215,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 630,
-    "drivablePrefixTotal": 1023,
-    "fullyDrivableChapters": 419,
+    "chapterCount": 635,
+    "drivablePrefixTotal": 1028,
+    "fullyDrivableChapters": 424,
     "unstartableChapters": 158,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 303,
-      "voice": 269,
+      "lessonCount": 308,
+      "voice": 274,
       "sight": 27,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 256,
+      "drivablePrefixTotal": 261,
       "modalities": [
         "voice",
         "sight",
@@ -9366,6 +9366,86 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C51-sintesis-regalo-motivo"
+          ]
+        },
+        {
+          "chapter": 158,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C52-se-habla"
+          ]
+        },
+        {
+          "chapter": 159,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C52-se-venden"
+          ]
+        },
+        {
+          "chapter": 160,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C52-como-se-dice"
+          ]
+        },
+        {
+          "chapter": 161,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C52-tres-ses"
+          ]
+        },
+        {
+          "chapter": 162,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C52-sintesis-el-letrero"
           ]
         }
       ]
@@ -40018,6 +40098,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:b390090a285ba074"
+    },
+    {
+      "id": "ES-C52-se-habla",
+      "language": "spanish",
+      "chapter": 158,
+      "sequence": 2086,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c47e0d55b7594c77"
+    },
+    {
+      "id": "ES-C52-se-venden",
+      "language": "spanish",
+      "chapter": 159,
+      "sequence": 2087,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4b8aa53a2fdc8cc7"
+    },
+    {
+      "id": "ES-C52-como-se-dice",
+      "language": "spanish",
+      "chapter": 160,
+      "sequence": 2088,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bb7c6d8b94762f71"
+    },
+    {
+      "id": "ES-C52-tres-ses",
+      "language": "spanish",
+      "chapter": 161,
+      "sequence": 2089,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d2f10790ba92bc5b"
+    },
+    {
+      "id": "ES-C52-sintesis-el-letrero",
+      "language": "spanish",
+      "chapter": 162,
+      "sequence": 2090,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:763301449fcacb8d"
     },
     {
       "id": "TA-C01-vanakkam",

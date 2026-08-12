@@ -242,7 +242,7 @@ describe("corpus snapshot", () => {
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.
-    expect(summary.byLevel.B1).toBe(13);
+    expect(summary.byLevel.B1).toBe(18);
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
