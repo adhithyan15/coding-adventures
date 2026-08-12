@@ -6,6 +6,7 @@
 
 export * from "./types.js";
 export * from "./constants.js";
+export * from "./cousins.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 export {
   declaredStrands,
