@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.65.0";
+pub const VERSION: &str = "0.66.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1314,19 +1314,28 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             });
         } else if cursor.current().value.eq_ignore_ascii_case("style") {
             cursor.advance();
-            let id = take_state_ref(&mut cursor)?;
-            if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
-                parse_state_style_assignments(&mut cursor, group.style.get_or_insert_default())?;
-                cursor.skip_terminators();
-                continue;
+            let mut ids = vec![take_state_ref(&mut cursor)?];
+            while token_name(cursor.current()) == "COMMA"
+                && !state_comma_starts_style_assignment(&cursor)
+            {
+                cursor.advance();
+                ids.push(take_state_ref(&mut cursor)?);
             }
-            if !node_indices.contains_key(&id) {
-                upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+            let mut style = DiagramStyle::default();
+            parse_state_style_assignments(&mut cursor, &mut style)?;
+            for id in ids {
+                if let Some(group) = groups.iter_mut().find(|group| group.id == id) {
+                    merge_state_style(group.style.get_or_insert_default(), &style);
+                    continue;
+                }
+                if !node_indices.contains_key(&id) {
+                    upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
+                }
+                merge_state_style(
+                    nodes[node_indices[&id]].style.get_or_insert_default(),
+                    &style,
+                );
             }
-            parse_state_style_assignments(
-                &mut cursor,
-                nodes[node_indices[&id]].style.get_or_insert_default(),
-            )?;
         } else if cursor.current().value.eq_ignore_ascii_case("state") {
             cursor.advance();
             let (id, label) = if token_name(cursor.current()) == "STRING" {
@@ -1687,6 +1696,13 @@ fn parse_state_style_assignments(
             return Ok(());
         }
     }
+}
+
+fn state_comma_starts_style_assignment(cursor: &TokenCursor) -> bool {
+    cursor
+        .tokens
+        .get(cursor.index + 2)
+        .is_some_and(|token| token_name(token) == "COLON")
 }
 
 fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
@@ -4757,6 +4773,27 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_applies_inline_style_to_multiple_targets() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Active {\nA --> B\n}\nstyle A,B,Active fill:#dcfce7,stroke:#166534\n",
+        )
+        .expect("multi-target state style");
+
+        assert_eq!(
+            diagram.nodes[0].style.as_ref().unwrap().fill.as_deref(),
+            Some("#dcfce7")
+        );
+        assert_eq!(
+            diagram.nodes[1].style.as_ref().unwrap().stroke.as_deref(),
+            Some("#166534")
+        );
+        assert_eq!(
+            diagram.groups[0].style.as_ref().unwrap().fill.as_deref(),
+            Some("#dcfce7")
+        );
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5527,7 +5564,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.65.0");
+        assert_eq!(crate::VERSION, "0.66.0");
     }
 
     #[test]

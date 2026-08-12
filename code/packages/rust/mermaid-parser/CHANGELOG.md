@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.66.0
+
+- Apply one inline state style statement to comma-delimited nodes and groups.
+
 ## 0.65.0
 
 - Decode Mermaid entities and HTML line breaks in state text before layout.
