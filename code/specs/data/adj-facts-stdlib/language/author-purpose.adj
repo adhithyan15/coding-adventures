@@ -1,0 +1,83 @@
+% ============================================================================
+% author-purpose — the three classic reasons an author writes something and
+% what each actually is (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Every piece of writing is written for a REASON — the classic "PIE" trio
+% taught in reading comprehension: to persuade the reader toward a view, to
+% inform the reader of real-world facts, or to entertain the reader with an
+% engaging read. Recall is a binding query:
+%
+%     ? author_purpose(persuade, $D)
+%       % convince_the_reader_of_the_merits_of_a_particular_point_of_view
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `author_purpose(purpose, description)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on an author-purpose-related term that is not one of these
+% three. The query also runs BACKWARD — bind a description and recall the
+% purpose it names:
+%
+%     ? author_purpose($P, enlighten_the_readership_about_a_real_world_topic)
+%       % inform
+%
+% The three purposes, as a little truth table:
+%
+%     purpose      description                                                          quote (verbatim)
+%     -----------  -------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
+%     persuade      convince_the_reader_of_the_merits_of_a_particular_point_of_view       "When a text is written to persuade, it aims to convince the reader of the merits of a particular point of view."
+%     inform        enlighten_the_readership_about_a_real_world_topic                     "When an author aims to inform, they usually wish to enlighten their readership about a real-world topic."
+%     entertain     keep_things_as_interesting_as_possible                                "When an author's chief purpose is to entertain the reader, they will endeavour to keep things as interesting as possible."
+%
+% Provenance: quoted verbatim from LiteracyIdeas' "The Author's Purpose:
+% Ultimate Guide for Teachers and Students" article, which introduces each
+% of these three under its own "To ___" heading with a single, parallel,
+% "when an author's purpose is to X, they Y" defining sentence. This is a
+% MULTI-SOURCE-STYLE table in the sense established by `point-of-view.adj`/
+% `comma-rule.adj`/`figurative-language-type.adj` (one article, one clean
+% sentence per named section) — this `table`'s own `source` field carries
+% the first row's (persuade) quote; the other two rows' quotes are
+% documented above in this header's truth table and are independently
+% checkable against the same `locator`. WebFetch-verified across two
+% passes before writing, the second pass pulling the full first paragraph
+% under each heading to confirm the target sentence stands alone as a
+% complete, single-fact definition and isn't itself the FIRST of two
+% sentences it depends on (the persuade section's first sentence, "This is
+% a prevalent purpose of writing, particularly in nonfiction," is a
+% separate prevalence claim the quoted sentence does not depend on).
+% `trust consensus` — a reputable secondary literacy-education reference,
+% the same tier this stdlib already reserves for its other non-Grammarly
+% teaching-site citations.
+%
+% A fourth purpose the SAME article also names under its own "To Describe"
+% heading is deliberately NOT a row here, so a recall ABSTAINS on it
+% rather than inventing a description: `describe`. It is a real purpose
+% category the source covers, but its defining sentence ("Writers often
+% use words to describe something in more detail than conveyed in a
+% photograph alone") is framed as a comparison to photography rather than
+% the same parallel "when an author's purpose is to X, they Y" pattern the
+% three tabled here share, and the classic PIE mnemonic this table grounds
+% names only these three as the canonical peer set. Picked using the
+% mandatory full-tree-grep-before-scoping discipline — zero hits for
+% "author_purpose"/"persuade"/"entertain" before this file was written,
+% after checking 12 not-yet-reviewed literacy tables this window
+% (clause-type.adj, comma-rule.adj, point-of-view.adj, sound-device-type.adj,
+% figurative-language-type.adj, sentence-type.adj, idiom-meaning.adj,
+% simile-meaning.adj, past-tense-ed-sound.adj, plural-s-sound.adj,
+% silent-e-word.adj, r-controlled-vowel-word.adj — none extendable, each
+% already documenting in its own header exactly why its rejected
+% candidates don't qualify). (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table author_purpose {
+    columns purpose, description
+
+    row (persuade, convince_the_reader_of_the_merits_of_a_particular_point_of_view)
+    row (inform, enlighten_the_readership_about_a_real_world_topic)
+    row (entertain, keep_things_as_interesting_as_possible)
+
+    source "When a text is written to persuade, it aims to convince the reader of the merits of a particular point of view."
+    locator "https://literacyideas.com/authors-purpose/"
+    trust consensus
+}

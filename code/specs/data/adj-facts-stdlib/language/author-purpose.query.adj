@@ -1,0 +1,5 @@
+import "author-purpose.adj"
+
+? author_purpose(persuade, $D)                                                  % expect convince_the_reader_of_the_merits_of_a_particular_point_of_view (direct)
+? author_purpose($P, enlighten_the_readership_about_a_real_world_topic)         % expect inform (reverse)
+? author_purpose(describe, $D)                                                  % expect abstain -- a real purpose the source names, but its sentence uses a photograph comparison rather than the same parallel pattern the three tabled here share
