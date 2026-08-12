@@ -820,10 +820,29 @@ already teaches: the Arabic layer connects *azúcar/sugar*, *alcohol*, *álgebra
 the entire scientific register.
 
 This is where the multi-track repository pays off, and where HL-C48 becomes
-valuable rather than decorative: `concept_tag` already joins 1,131 lessons across
-languages, so the cousin panel can be **generated** rather than hand-typed. A
-reader who knows French sees *hijo · fils · figlio · filho*; a reader who does
-not sees nothing missing.
+valuable rather than decorative: the cousin panel can be **generated** rather
+than hand-typed. A reader who knows French sees *hijo · fils · figlio · filho*;
+a reader who does not sees nothing missing.
+
+**Generate it from `roots:`, not from `concept_tag`** — this paragraph said
+`concept_tag` until HL-C88 measured what that join actually returns, and the two
+keys mean different things. A cousin panel claims *reflexes of the same etymon*.
+`concept_tag` joins lessons that teach the **same idea**, which is not the same
+claim and is frequently not true of the words it pairs:
+
+| join | `VERB-GO` returns | is it a cousin set? |
+|---|---|---|
+| `concept_tag` | *ir · andare · aller · eō, īre* | **No.** Spanish *ir* is from *īre*, Italian *andare* from *ambitāre*, French *aller* from a third source entirely. Three unrelated verbs, presented as relatives. |
+| `roots:` (`hora-latin`) | *la hora · heure · ora · hora* | **Yes.** All four are reflexes of *hōra*. |
+
+Building the panel on `concept_tag` would therefore emit **false etymology at
+scale**, in the one layer of the course whose whole value is that its etymology
+can be trusted. Use `roots:`.
+
+Measured reach at the time of writing: **64 Spanish lessons** carry a `roots:`
+slug shared with at least one other Romance track — enough for the layer to be
+worth generating, and the honest ceiling to design against. (`concept_tag` would
+have offered 63, so the correct key costs nothing in coverage.)
 
 #### The budget and the guardrail
 
@@ -1404,7 +1423,7 @@ in full.
 - [ ] `maxNewGrammarCellsPerLesson: 1` is measured and reported.
 - [ ] No paradigm table appears before all its cells are taught (§5.3).
 - [ ] Every lesson has an etymology hook, and every root has ≥3 ledger payoffs.
-- [ ] Friends are English-anchored and never counted as taught atoms; cousin panels are generated from `concept_tag`, not hand-typed (§6.7).
+- [ ] Friends are English-anchored and never counted as taught atoms; cousin panels are generated from `roots:`, not hand-typed, and not from `concept_tag` (§6.7).
 - [ ] No lesson uses an unglossed grammar term before the metalanguage ramp introduces it (§7.5).
 - [ ] The banned-word lint (*simply*, *just*, *obviously*, *as you know*) passes (§7.4).
 - [ ] Exactly one book is generated, and no lesson assumes which edition it appears in (§11.1).
