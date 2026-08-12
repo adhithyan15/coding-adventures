@@ -156,6 +156,9 @@ all geometry and resolved stroke, corner, and font sizes uniformly before the
 backend-neutral Paint scene reaches Metal or another renderer.
 `hide empty description` survives graph semantic and layout IR; Paint lowering
 omits unlabeled state geometry and glyphs while retaining graph connectivity.
+State labels, transition labels, notes, titles, and accessibility text decode
+Mermaid decimal or named entities and HTML line breaks before line-aware layout
+and backend-neutral Paint glyph shaping.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.
