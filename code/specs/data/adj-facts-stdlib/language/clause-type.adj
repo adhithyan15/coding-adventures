@@ -1,0 +1,64 @@
+% ============================================================================
+% clause-type — the two structural kinds of clause and what makes a clause
+% one or the other (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Every clause has a subject and a verb, but only SOME clauses can stand
+% alone as a complete sentence — that single fact is what splits every
+% clause in English into exactly one of two kinds. Recall is a binding
+% query:
+%
+%     ? clause_type(independent_clause, $D)
+%       % is_a_clause_that_alone_is_a_complete_sentence
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `clause_type(type, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the description WITH its source, on the CPU, with zero model
+% calls, and abstains on a clause-related term that is not one of these
+% two structural types. The query also runs BACKWARD — bind a description
+% and recall which type it names:
+%
+%     ? clause_type($T, is_a_clause_that_alone_is_not_a_complete_sentence)
+%       % dependent_clause
+%
+% Provenance: quoted verbatim from Grammarly's "Independent and Dependent
+% Clauses: Rules and Examples" article, which states the split as two
+% clean, parallel, single-fact sentences:
+%
+%     type                  description                                          quote (verbatim)
+%     --------------------  ---------------------------------------------------  ----------------------------------------------------------------
+%     independent_clause    is_a_clause_that_alone_is_a_complete_sentence         "If the clause alone is a complete sentence, it is an independent clause."
+%     dependent_clause      is_a_clause_that_alone_is_not_a_complete_sentence     "If the clause alone is not a complete sentence, it is a dependent clause."
+%
+% WebFetch-verified twice — the second pass specifically pulled the first
+% three occurrences of each term from the top of the article, in order, to
+% confirm these two sentences (not the surrounding elaboration, which
+% bundles in extra facts like "an independent clause ... is a simple
+% sentence") are the article's own clean defining pair. `trust consensus`
+% — Grammarly is a reputable secondary reference, the same tier the
+% sibling `determiner-type.adj`/`noun-type.adj`/`verb-type.adj`/
+% `pronoun-type.adj`/`conjunction-type.adj` (the other libraries in this
+% directory) already use for their Grammarly citations.
+%
+% Unlike most sibling tables in this directory, independent/dependent is a
+% genuinely EXHAUSTIVE split, not an arbitrary subset of a longer list —
+% the article's own opening line states "every clause is either one or
+% the other." So honest abstention is instead demonstrated with
+% "noun_clause" — a real, well-documented clause category (Grammarly has
+% its own dedicated "A Comprehensive Guide to Noun Clauses" article), but
+% one that names a FUNCTIONAL role a dependent clause can play, not a
+% third structural type alongside these two — so a recall on it ABSTAINS
+% rather than inventing a description. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table clause_type {
+    columns type, description
+
+    row (independent_clause, is_a_clause_that_alone_is_a_complete_sentence)
+    row (dependent_clause, is_a_clause_that_alone_is_not_a_complete_sentence)
+
+    source "If the clause alone is a complete sentence, it is an independent clause."
+    locator "https://www.grammarly.com/blog/grammar/independent-and-dependent-clauses/"
+    trust consensus
+}

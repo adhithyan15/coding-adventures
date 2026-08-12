@@ -1,0 +1,5 @@
+import "clause-type.adj"
+
+? clause_type(independent_clause, $D)                                            % expect is_a_clause_that_alone_is_a_complete_sentence (direct)
+? clause_type($T, is_a_clause_that_alone_is_not_a_complete_sentence)              % expect dependent_clause (reverse)
+? clause_type(noun_clause, $D)                                                    % expect abstain -- a real clause category, but it names a FUNCTIONAL role (see Grammarly's noun-clause guide), not a structural independent/dependent type
