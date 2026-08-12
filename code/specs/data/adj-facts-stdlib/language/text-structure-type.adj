@@ -1,0 +1,72 @@
+% ============================================================================
+% text-structure-type — three named ways a nonfiction text organizes its
+% information and what each actually is (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A writer doesn't just pick words — they pick a SHAPE for how the whole
+% piece is organized: does it explain a cause and its effect, line two
+% things up side by side, or just paint a picture of one topic? Recall is a
+% binding query:
+%
+%     ? text_structure_type(cause_and_effect, $D)
+%       % tells_why_something_happened_and_what_happened
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `text_structure_type(type, description)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on a text-structure-related term that is not one of these three.
+% The query also runs BACKWARD — bind a description and recall the type it
+% names:
+%
+%     ? text_structure_type($T, describes_a_topic_to_give_the_reader_a_mental_picture)
+%       % description
+%
+% The three text structures, as a little truth table:
+%
+%     type                   description                                                            quote (verbatim)
+%     ---------------------  ---------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------
+%     cause_and_effect        tells_why_something_happened_and_what_happened                          "The cause and effect text structure tells why something happened (cause) and what happened (effect)."
+%     compare_and_contrast     examines_the_similarities_and_differences_between_two_or_more_things     "The compare and contrast text structure examines the similarities and differences between two or more people, events, concepts, and ideas."
+%     description              describes_a_topic_to_give_the_reader_a_mental_picture                    "The description text structure describes or explains a topic, idea, person, place, or thing to give the reader a mental picture."
+%
+% Provenance: quoted verbatim from Reading Rockets' "Teaching Text
+% Structure" article, which introduces each of these under its own
+% "___ text structure" defining sentence. WebFetch-verified across two
+% passes before writing, the second pass pulling the full entry for each
+% candidate to confirm the target sentence stands alone as a complete,
+% grammatically independent statement, not qualified by an adjacent
+% sentence. `trust consensus` — Reading Rockets is a reputable secondary
+% literacy-education reference, the same tier this stdlib already reserves
+% for other Reading Rockets citations (e.g. `word-families.adj`,
+% `vocabulary-in-context.adj`).
+%
+% Two related text structures the SAME article also names are deliberately
+% NOT rows here, so a recall ABSTAINS on them rather than inventing a
+% description: `sequence` and `problem_and_solution`. Both are real text
+% structures the source covers, but each one's own defining sentence
+% bundles in a second distinct fact rather than stating one clean fact:
+% chronology/sequence's sentence joins two different functions with "or"
+% ("describes items or events in order, OR explains the steps to follow"),
+% and problem-and-solution's sentence bundles three structural components
+% in sequence ("sets up a problem..., explains the solution, AND THEN
+% discusses the effects of the solution"). Picked using the mandatory
+% full-tree-grep-before-scoping discipline — zero hits for
+% "text_structure_type"/"cause_and_effect"/"compare_and_contrast" before
+% this file was written, after checking 7 not-yet-reviewed literacy tables
+% this window (opposites.adj, vowels.adj, word-families.adj, alphabet.adj,
+% greek-alphabet.adj -- none extendable, each already exhaustive or
+% deliberately CVC-scoped). (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table text_structure_type {
+    columns type, description
+
+    row (cause_and_effect, tells_why_something_happened_and_what_happened)
+    row (compare_and_contrast, examines_the_similarities_and_differences_between_two_or_more_things)
+    row (description, describes_a_topic_to_give_the_reader_a_mental_picture)
+
+    source "The cause and effect text structure tells why something happened (cause) and what happened (effect)."
+    locator "https://www.readingrockets.org/classroom/comprehension/teaching-text-structure"
+    trust consensus
+}

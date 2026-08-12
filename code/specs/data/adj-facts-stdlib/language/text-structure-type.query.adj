@@ -1,0 +1,5 @@
+import "text-structure-type.adj"
+
+? text_structure_type(cause_and_effect, $D)                                                       % expect tells_why_something_happened_and_what_happened (direct)
+? text_structure_type($T, describes_a_topic_to_give_the_reader_a_mental_picture)                  % expect description (reverse)
+? text_structure_type(sequence, $D)                                                                % expect abstain -- a real text structure the source names, but its sentence joins two distinct functions with "or" rather than stating one clean fact
