@@ -24,19 +24,31 @@
 % article, which gives one worked example sentence per part of speech
 % covered here:
 %
-%     word (this table's atom label)   category    example sentence (verbatim)
-%     --------------------------------  ----------  ---------------------------------------------
-%     queen                             noun        "Cleopatra was the last queen of ancient Egypt."
-%     run                                verb        "Run as fast as you can."
-%     brown                             adjective   "I have a brown dog."
+%     word (this table's atom label)   category      example sentence (verbatim)
+%     --------------------------------  ------------  ---------------------------------------------------
+%     queen                             noun          "Cleopatra was the last queen of ancient Egypt."
+%     run                                verb          "Run as fast as you can."
+%     brown                             adjective     "I have a brown dog."
+%     quietly                           adverb        "I entered the room quietly."
+%     against                           preposition   "I left my bike leaning against the garage."
 %
-% WebFetch-verified TWICE before writing. `trust consensus` — Grammarly is a
-% reputable, widely-cited grammar-content company, the same tier this
-% stdlib already reserves for other non-.gov language sources (7ESL,
-% Speakspeak) and the same source family already cited by
-% `sentence-type.adj`. A word that is NOT one of these three — e.g.
-% "slowly," a real word and an adverb, but not one of the three parts of
-% speech this table covers — is deliberately NOT a row, so a recall
+% WebFetch-verified TWICE before writing (extended from 3 to 5 rows using
+% the SAME already-cited article, which covers all 8 parts of speech —
+% zero new source needed). `trust consensus` — Grammarly is a reputable,
+% widely-cited grammar-content company, the same tier this stdlib already
+% reserves for other non-.gov language sources (7ESL, Speakspeak) and the
+% same source family already cited by `sentence-type.adj`. Three of the
+% remaining five parts of speech on the SAME page were checked and
+% rejected as extension candidates because their example is not one
+% clean, standalone, single-fact sentence: pronoun (the article's example
+% bundles two separate quoted sentences with explanatory framing around
+% them), conjunction (the article's example sentence covers TWO
+% conjunctions — "and" and "but" — bundled into one multi-clause
+% sentence), and interjection (the article gives several examples, each
+% bundled with its own punctuation demonstration, with no single isolated
+% standalone sentence). A word that is NOT one of these five — e.g.
+% "slowly," a real word and an adverb, but not one of the five example
+% words this table covers — is deliberately NOT a row, so a recall
 % ABSTAINS on it rather than inventing a classification the source never
 % gave. (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
@@ -48,6 +60,8 @@ table part_of_speech {
     row (queen, noun)
     row (run, verb)
     row (brown, adjective)
+    row (quietly, adverb)
+    row (against, preposition)
 
     source "Cleopatra was the last queen of ancient Egypt."
     locator "https://www.grammarly.com/blog/parts-of-speech/the-8-parts-of-speech/"

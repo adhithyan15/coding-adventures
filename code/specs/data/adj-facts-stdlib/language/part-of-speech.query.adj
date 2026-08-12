@@ -15,6 +15,8 @@
 
 import "part-of-speech.adj"
 
-? part_of_speech(queen, $Category)     % expect noun
-? part_of_speech($Word, verb)          % expect run
-? part_of_speech(slowly, $Category)    % expect abstain — no category is shipped for this word
+? part_of_speech(queen, $Category)          % expect noun
+? part_of_speech($Word, verb)               % expect run
+? part_of_speech(quietly, $Category)        % expect adverb (newly added row)
+? part_of_speech($Word, preposition)        % expect against (newly added row)
+? part_of_speech(slowly, $Category)         % expect abstain — no category is shipped for this word
