@@ -140,11 +140,17 @@ pub trait CliHost {
     /// Collect a login username from the controlling terminal.
     fn read_login_username(&self) -> Result<Zeroizing<String>, HostError>;
 
-    /// Collect an optional primary login URL from the controlling terminal.
-    fn read_login_url(&self) -> Result<Option<Zeroizing<String>>, HostError>;
+    /// Collect the number of login URLs from the controlling terminal.
+    fn read_login_url_count(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect one required login URL from the controlling terminal.
+    fn read_login_url(&self) -> Result<Zeroizing<String>, HostError>;
 
     /// Collect a login password with terminal echo disabled.
     fn read_login_password(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect optional private login notes with terminal echo disabled.
+    fn read_login_notes(&self) -> Result<Option<Zeroizing<String>>, HostError>;
 
     /// Collect a secure-note title from the controlling terminal.
     fn read_secure_note_title(&self) -> Result<Zeroizing<String>, HostError>;
@@ -298,15 +304,32 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
-    fn read_login_url(&self) -> Result<Option<Zeroizing<String>>, HostError> {
-        let value = ControllingTerminal
+    fn read_login_url_count(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::LoginUrlCount)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_login_url(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
             .read_text(TextPrompt::LoginUrl)
-            .map_err(map_native_cli_host)?;
-        Ok((!value.is_empty()).then_some(value))
+            .map_err(map_native_cli_host)
     }
 
     fn read_login_password(&self) -> Result<Zeroizing<String>, HostError> {
         self.read_utf8_secret(SecretPrompt::LoginPassword)
+    }
+
+    fn read_login_notes(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+        ControllingTerminal
+            .read_optional_login_notes()
+            .map_err(map_native_cli_host)?
+            .map(|value| {
+                core::str::from_utf8(&value)
+                    .map(|text| Zeroizing::new(text.to_owned()))
+                    .map_err(|_| HostError::Invalid)
+            })
+            .transpose()
     }
 
     fn read_secure_note_title(&self) -> Result<Zeroizing<String>, HostError> {
@@ -786,6 +809,7 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
 fn parse_secret_field(value: &str) -> Result<SecretFieldV1, CliFailure> {
     match value {
         "login-password" => Ok(SecretFieldV1::LoginPassword),
+        "login-notes" => Ok(SecretFieldV1::LoginNotes),
         "secure-note-body" => Ok(SecretFieldV1::SecureNoteBody),
         "card-number" => Ok(SecretFieldV1::CardNumber),
         "card-cvv" => Ok(SecretFieldV1::CardCvv),
@@ -1482,26 +1506,18 @@ fn item_add_login(
     selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
     let context = prepare_item_create(host, paths, writer, selected_vault)?;
-    let input = (|| {
-        Ok::<_, HostError>((
-            host.read_login_title()?,
-            host.read_login_username()?,
-            host.read_login_password()?,
-            host.read_login_url()?,
-        ))
-    })();
-    let (title, username, password, url) = match input {
+    let input = match read_login_form(host) {
         Ok(input) => input,
         Err(error) => return context.fail(map_host(error)),
     };
     let document = context.document(
         LOGIN_V1,
         AnyRecord::Login(Login {
-            title: title.into_inner(),
-            username: username.into_inner(),
-            password: password.into_inner(),
-            urls: url.into_iter().map(Zeroizing::into_inner).collect(),
-            notes: None,
+            title: input.title.into_inner(),
+            username: input.username.into_inner(),
+            password: input.password.into_inner(),
+            urls: input.urls.into_iter().map(Zeroizing::into_inner).collect(),
+            notes: input.notes.map(Zeroizing::into_inner),
         }),
     );
     let document = match document {
@@ -1509,6 +1525,49 @@ fn item_add_login(
         Err(error) => return context.fail(error),
     };
     context.complete(document)
+}
+
+struct LoginFormV1 {
+    title: Zeroizing<String>,
+    username: Zeroizing<String>,
+    password: Zeroizing<String>,
+    urls: Vec<Zeroizing<String>>,
+    notes: Option<Zeroizing<String>>,
+}
+
+fn read_login_form(host: &dyn CliHost) -> Result<LoginFormV1, HostError> {
+    let title = host.read_login_title()?;
+    let username = host.read_login_username()?;
+    let password = host.read_login_password()?;
+    let count = host.read_login_url_count()?;
+    let count = parse_login_url_count(&count).map_err(|_| HostError::Invalid)?;
+    let mut urls = Vec::with_capacity(count);
+    for _ in 0..count {
+        urls.push(host.read_login_url()?);
+    }
+    let notes = host.read_login_notes()?;
+    Ok(LoginFormV1 {
+        title,
+        username,
+        password,
+        urls,
+        notes,
+    })
+}
+
+fn parse_login_url_count(value: &str) -> Result<usize, CliFailure> {
+    if value.is_empty()
+        || (value.len() > 1 && value.starts_with('0'))
+        || !value.bytes().all(|byte| byte.is_ascii_digit())
+    {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let count = value
+        .parse::<usize>()
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    (count <= 16 && count.to_string() == value)
+        .then_some(count)
+        .ok_or(CliFailure::InvalidCommand)
 }
 
 fn item_add_secure_note(
@@ -2020,11 +2079,13 @@ fn item_edit_login(
 }
 
 fn read_login_edit_input(host: &dyn CliHost) -> Result<LoginEditInputV1, HostError> {
+    let input = read_login_form(host)?;
     Ok(LoginEditInputV1::new(
-        host.read_login_title()?,
-        host.read_login_username()?,
-        host.read_login_password()?,
-        host.read_login_url()?,
+        input.title,
+        input.username,
+        input.password,
+        input.urls,
+        input.notes,
     ))
 }
 
@@ -3463,15 +3524,27 @@ mod tests {
             self.text()
         }
 
-        fn read_login_url(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+        fn read_login_url_count(&self) -> Result<Zeroizing<String>, HostError> {
             self.text()
-                .map(|value| (!value.is_empty()).then_some(value))
+        }
+
+        fn read_login_url(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
         }
 
         fn read_login_password(&self) -> Result<Zeroizing<String>, HostError> {
             let value = self.secret()?;
             let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
             Ok(Zeroizing::new(text.to_owned()))
+        }
+
+        fn read_login_notes(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+            let value = self.secret()?;
+            if value.is_empty() {
+                return Ok(None);
+            }
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Some(Zeroizing::new(text.to_owned())))
         }
 
         fn read_secure_note_title(&self) -> Result<Zeroizing<String>, HostError> {
@@ -4108,11 +4181,15 @@ mod tests {
 
         let add_work = TestHost::with_texts(
             paths.clone(),
-            [work_passphrase.clone(), b"work-only secret".to_vec()],
+            [
+                work_passphrase.clone(),
+                b"work-only secret".to_vec(),
+                Vec::new(),
+            ],
             [
                 "Work-only login".to_owned(),
                 "work@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
         );
         let added = run(["--vault", "work", "item", "add", "login"], &add_work);
@@ -4241,11 +4318,15 @@ mod tests {
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
         let add_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), b"audited item secret".to_vec()],
+            [
+                passphrase.clone(),
+                b"audited item secret".to_vec(),
+                Vec::new(),
+            ],
             [
                 "Audited CLI item".to_owned(),
                 "user@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
         );
         assert_eq!(
@@ -4308,6 +4389,23 @@ mod tests {
         assert_eq!(failed.exit_code(), ExitCode::Provider, "{failed:?}");
         assert!(failed.stdout().is_empty());
 
+        let invalid_count_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"uncommitted secret".to_vec()],
+            [
+                "Invalid URL count".to_owned(),
+                "invalid@example.test".to_owned(),
+                "17".to_owned(),
+            ],
+        );
+        let invalid_count = run(["item", "add", "login"], &invalid_count_host);
+        assert_eq!(
+            invalid_count.exit_code(),
+            ExitCode::InvalidInput,
+            "{invalid_count:?}"
+        );
+        assert!(invalid_count.stdout().is_empty());
+
         let list_host = TestHost::with_entropy_seed(paths, [passphrase], 2);
         let audit = run(["audit", "list"], &list_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
@@ -4319,7 +4417,16 @@ mod tests {
             )),
             "{audit:?}"
         );
+        assert_eq!(
+            audit
+                .stdout()
+                .matches("action=item_create\toutcome=failed")
+                .count(),
+            2,
+            "{audit:?}"
+        );
         assert!(!audit.stdout().contains("audited create failure passphrase"));
+        assert!(!audit.stdout().contains("uncommitted secret"));
     }
 
     #[test]
@@ -4848,11 +4955,11 @@ mod tests {
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
         let add_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), b"delete secret".to_vec()],
+            [passphrase.clone(), b"delete secret".to_vec(), Vec::new()],
             [
                 "Delete me".to_owned(),
                 "user@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
         );
         assert_eq!(
@@ -4889,11 +4996,11 @@ mod tests {
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
         let add_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), b"restore secret".to_vec()],
+            [passphrase.clone(), b"restore secret".to_vec(), Vec::new()],
             [
                 "Restore me".to_owned(),
                 "user@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
         );
         assert_eq!(
@@ -4978,11 +5085,11 @@ mod tests {
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
         let add_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), b"original secret".to_vec()],
+            [passphrase.clone(), b"original secret".to_vec(), Vec::new()],
             [
                 "Edit me".to_owned(),
                 "original@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
         );
         assert_eq!(
@@ -4998,14 +5105,31 @@ mod tests {
         assert_eq!(failed.exit_code(), ExitCode::Provider, "{failed:?}");
         assert!(failed.stdout().is_empty());
 
+        let invalid_count_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"uncommitted replacement".to_vec()],
+            [
+                "Invalid edit".to_owned(),
+                "invalid-edit@example.test".to_owned(),
+                "17".to_owned(),
+            ],
+        );
+        let invalid_count = run(["item", "edit", item_id.as_str()], &invalid_count_host);
+        assert_eq!(
+            invalid_count.exit_code(),
+            ExitCode::InvalidInput,
+            "{invalid_count:?}"
+        );
+        assert!(invalid_count.stdout().is_empty());
+
         let replacement = b"replacement secret".to_vec();
         let edit_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), replacement],
+            [passphrase.clone(), replacement, Vec::new()],
             [
                 "Edited".to_owned(),
                 "edited@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
         );
         let edited = run(["item", "edit", item_id.as_str()], &edit_host);
@@ -5016,8 +5140,23 @@ mod tests {
         let audit_host = TestHost::new(paths, [passphrase]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("commits=4"), "{audit:?}");
-        assert!(audit.stdout().contains("audit_events=4"), "{audit:?}");
+        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=5"), "{audit:?}");
+        assert!(!audit.stdout().contains("uncommitted replacement"));
+    }
+
+    #[test]
+    fn login_url_count_accepts_only_canonical_values_within_the_bound() {
+        for value in ["0", "1", "9", "10", "16"] {
+            assert_eq!(parse_login_url_count(value), Ok(value.parse().unwrap()));
+        }
+        for value in ["", "00", "01", "+1", "-1", " 1", "1 ", "17", "999"] {
+            assert_eq!(
+                parse_login_url_count(value),
+                Err(CliFailure::InvalidCommand),
+                "unexpected URL count result for {value:?}"
+            );
+        }
     }
 
     #[test]
@@ -5026,16 +5165,19 @@ mod tests {
         let paths = root.paths();
         let passphrase = b"correct horse battery staple".to_vec();
         let password = b"item password must stay secret".to_vec();
+        let notes = b"private recovery details stay secret".to_vec();
         let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
 
         let add_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), password.clone()],
+            [passphrase.clone(), password.clone(), notes.clone()],
             [
                 "Example account".to_string(),
                 "ada@example.test".to_string(),
+                "2".to_string(),
                 "https://example.test".to_string(),
+                "https://accounts.example.test/login".to_string(),
             ],
         );
         let added = run(["item", "add", "login"], &add_host);
@@ -5060,21 +5202,24 @@ mod tests {
         assert_eq!(
             shown.stdout(),
             format!(
-                "Item: {expected_id}\nType: {LOGIN_V1}\nTitle: \"Example account\"\nUsername: \"ada@example.test\"\nURL: \"https://example.test\"\nPassword: <redacted>\nNotes: absent\nFavorite: no\nUpdated: 1700000000000\n"
+                "Item: {expected_id}\nType: {LOGIN_V1}\nTitle: \"Example account\"\nUsername: \"ada@example.test\"\nURL: \"https://example.test\"\nURL: \"https://accounts.example.test/login\"\nPassword: <redacted>\nNotes: present\nFavorite: no\nUpdated: 1700000000000\n"
             )
         );
         assert!(!shown
             .stdout()
             .contains(core::str::from_utf8(&password).unwrap()));
+        assert!(!shown
+            .stdout()
+            .contains(core::str::from_utf8(&notes).unwrap()));
 
         let updated_password = b"replacement password stays secret".to_vec();
         let edit_host = TestHost::with_texts(
             paths.clone(),
-            [passphrase.clone(), updated_password.clone()],
+            [passphrase.clone(), updated_password.clone(), Vec::new()],
             [
                 "Updated account".to_string(),
                 "grace@example.test".to_string(),
-                String::new(),
+                "0".to_string(),
             ],
         );
         let edited = run(["item", "edit", expected_id.as_str()], &edit_host);
@@ -5109,7 +5254,7 @@ mod tests {
             let revision = line.split('\t').next().unwrap();
             assert!(RevisionId::from_user_string(revision).is_ok());
         }
-        for secret in [&password, &updated_password] {
+        for secret in [&password, &updated_password, &notes] {
             assert!(!history
                 .stdout()
                 .contains(core::str::from_utf8(secret).unwrap()));
@@ -5176,7 +5321,7 @@ mod tests {
             .stdout()
             .contains("Title: \"Example account\""));
         assert!(restored_show.stdout().contains("Password: <redacted>"));
-        for secret in [&password, &updated_password] {
+        for secret in [&password, &updated_password, &notes] {
             assert!(!restored_show
                 .stdout()
                 .contains(core::str::from_utf8(secret).unwrap()));
@@ -5711,7 +5856,7 @@ mod tests {
 
         let add_host = TestHost::with_texts_and_entropy_seed(
             paths.clone(),
-            [passphrase.clone(), password.clone()],
+            [passphrase.clone(), password.clone(), Vec::new()],
             texts(),
             43,
         );
@@ -5962,16 +6107,17 @@ mod tests {
         let paths = root.paths();
         let passphrase = b"secret reveal passphrase".to_vec();
         let password = b"line one\n\"terminal-safe\"".to_vec();
+        let notes = b"private login note 8c54d782".to_vec();
         let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
 
         let add_host = TestHost::with_texts_and_entropy_seed(
             paths.clone(),
-            [passphrase.clone(), password.clone()],
+            [passphrase.clone(), password.clone(), notes.clone()],
             [
                 "Revealable login".to_owned(),
                 "ada@example.test".to_owned(),
-                String::new(),
+                "0".to_owned(),
             ],
             41,
         );
@@ -6038,6 +6184,21 @@ mod tests {
         assert!(revealed.stderr().is_empty());
         assert!(reveal_host.revealed_equals(&password));
 
+        let notes_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            93,
+        );
+        let revealed_notes = run(["item", "reveal", item, "login-notes"], &notes_host);
+        assert_eq!(
+            revealed_notes.exit_code(),
+            ExitCode::Success,
+            "{revealed_notes:?}"
+        );
+        assert!(revealed_notes.stdout().is_empty());
+        assert!(notes_host.revealed_equals(&notes));
+
         let locked_host = TestHost::with_texts_and_entropy_seed(
             paths.clone(),
             [b"wrong passphrase".to_vec()],
@@ -6076,6 +6237,9 @@ mod tests {
         assert!(!audit
             .stdout()
             .contains(core::str::from_utf8(&password).unwrap()));
+        assert!(!audit
+            .stdout()
+            .contains(core::str::from_utf8(&notes).unwrap()));
         assert!(!audit.stdout().contains("secret reveal passphrase"));
     }
 

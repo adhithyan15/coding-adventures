@@ -38,7 +38,8 @@ pub struct LoginEditInputV1 {
     title: Zeroizing<String>,
     username: Zeroizing<String>,
     password: Zeroizing<String>,
-    url: Option<Zeroizing<String>>,
+    urls: Vec<Zeroizing<String>>,
+    notes: Option<Zeroizing<String>>,
 }
 
 impl LoginEditInputV1 {
@@ -47,13 +48,15 @@ impl LoginEditInputV1 {
         title: Zeroizing<String>,
         username: Zeroizing<String>,
         password: Zeroizing<String>,
-        url: Option<Zeroizing<String>>,
+        urls: Vec<Zeroizing<String>>,
+        notes: Option<Zeroizing<String>>,
     ) -> Self {
         Self {
             title,
             username,
             password,
-            url,
+            urls,
+            notes,
         }
     }
 }
@@ -109,7 +112,7 @@ impl LoginEditPreparationV1 {
         input: LoginEditInputV1,
         updated_at_ms: u64,
     ) -> Result<ItemDocument, ApplicationError> {
-        let AnyRecord::Login(current_login) = self.current.payload() else {
+        let AnyRecord::Login(_) = self.current.payload() else {
             return Err(ApplicationError::InternalInvariant);
         };
         ItemDocument::new(
@@ -124,8 +127,8 @@ impl LoginEditPreparationV1 {
                 title: input.title.into_inner(),
                 username: input.username.into_inner(),
                 password: input.password.into_inner(),
-                urls: input.url.into_iter().map(Zeroizing::into_inner).collect(),
-                notes: current_login.notes.clone(),
+                urls: input.urls.into_iter().map(Zeroizing::into_inner).collect(),
+                notes: input.notes.map(Zeroizing::into_inner),
             }),
             self.current.attachments().clone(),
         )
@@ -1488,12 +1491,9 @@ impl UnlockedVaultV1 {
             Ok(current) => current,
             Err(error) => return (Err(error), Some(expected_revision)),
         };
-        let AnyRecord::Login(login) = current.payload() else {
+        let AnyRecord::Login(_) = current.payload() else {
             return (Err(ApplicationError::Unsupported), Some(expected_revision));
         };
-        if login.urls.len() > 1 {
-            return (Err(ApplicationError::Unsupported), Some(expected_revision));
-        }
         (Ok((expected_revision, current)), Some(expected_revision))
     }
 
@@ -2630,6 +2630,30 @@ mod tests {
 
     fn new_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
         login_document_with_times(item_id, title, password, 300, 300)
+    }
+
+    fn rich_login_document(item_id: ItemId, title: &str, password: &str) -> ItemDocument {
+        ItemDocument::new(
+            item_id,
+            ContentType::new(LOGIN_V1).unwrap(),
+            300,
+            300,
+            LwwRegister::new(false, 300, OperationId::new([0x71; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(Login {
+                title: title.to_owned(),
+                username: "multi@example.test".to_owned(),
+                password: password.to_owned(),
+                urls: vec![
+                    "https://one.example.test".to_owned(),
+                    "https://two.example.test".to_owned(),
+                ],
+                notes: Some("old private notes".to_owned()),
+            }),
+            ObservedSet::new(),
+        )
+        .unwrap()
     }
 
     fn login_document_with_times(
@@ -7893,7 +7917,7 @@ mod tests {
         )
         .unwrap()
         .add_item(
-            new_login_document(item_id, "Edit audit", "original-secret"),
+            rich_login_document(item_id, "Edit audit", "original-secret"),
             440,
             add_randomness,
             &local,
@@ -7979,7 +8003,11 @@ mod tests {
                     Zeroizing::new("Edited".to_owned()),
                     Zeroizing::new("edited@example.test".to_owned()),
                     Zeroizing::new("replacement-secret".to_owned()),
-                    None,
+                    vec![
+                        Zeroizing::new("https://replacement.example.test".to_owned()),
+                        Zeroizing::new("https://backup.example.test".to_owned()),
+                    ],
+                    Some(Zeroizing::new("replacement private notes".to_owned())),
                 ),
                 replace_item_randomness(0x76),
                 &local,
@@ -8004,6 +8032,19 @@ mod tests {
                 Some(expected_revision),
             )
         );
+        let current_revision = session.current_item_revision(item_id).unwrap().unwrap();
+        let current = session.reveal_item_revision(current_revision).unwrap();
+        let AnyRecord::Login(login) = current.payload() else {
+            panic!("edited record must remain a login")
+        };
+        assert_eq!(
+            login.urls,
+            [
+                "https://replacement.example.test",
+                "https://backup.example.test"
+            ]
+        );
+        assert_eq!(login.notes.as_deref(), Some("replacement private notes"));
         let report = session.audit_verify().unwrap();
         assert_eq!(report.commit_count(), 6);
         assert_eq!(report.audit_event_count(), 4);

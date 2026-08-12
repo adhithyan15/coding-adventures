@@ -11,6 +11,8 @@ use coding_adventures_zeroize::Zeroize;
 pub enum SecretFieldV1 {
     /// The password in a login record.
     LoginPassword,
+    /// The optional private notes in a login record.
+    LoginNotes,
     /// The body in a secure-note record.
     SecureNoteBody,
     /// The primary account number in a card record.
@@ -127,6 +129,11 @@ pub(crate) fn select_secret(
         (AnyRecord::Login(value), SecretFieldV1::LoginPassword) => {
             Ok(RevealedSecretV1::text(&value.password))
         }
+        (AnyRecord::Login(value), SecretFieldV1::LoginNotes) => value
+            .notes
+            .as_deref()
+            .map(RevealedSecretV1::text)
+            .ok_or(ApplicationError::NotFound),
         (AnyRecord::SecureNote(value), SecretFieldV1::SecureNoteBody) => {
             Ok(RevealedSecretV1::text(&value.body))
         }
@@ -195,6 +202,18 @@ mod tests {
                 }),
                 SecretFieldV1::LoginPassword,
                 b"login-secret".as_slice(),
+                RevealedSecretEncodingV1::Utf8,
+            ),
+            (
+                AnyRecord::Login(Login {
+                    title: "login".into(),
+                    username: "user".into(),
+                    password: "login-secret".into(),
+                    urls: vec![],
+                    notes: Some("login-notes-secret".into()),
+                }),
+                SecretFieldV1::LoginNotes,
+                b"login-notes-secret".as_slice(),
                 RevealedSecretEncodingV1::Utf8,
             ),
             (
@@ -298,6 +317,10 @@ mod tests {
         assert!(matches!(
             select_secret(&login, SecretFieldV1::CardCvv),
             Err(ApplicationError::InvalidInput)
+        ));
+        assert!(matches!(
+            select_secret(&login, SecretFieldV1::LoginNotes),
+            Err(ApplicationError::NotFound)
         ));
 
         let opaque = AnyRecord::Opaque {

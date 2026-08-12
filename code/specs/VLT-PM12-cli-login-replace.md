@@ -1,6 +1,6 @@
 # VLT-PM12 - Revision-Safe Login Replacement CLI
 
-Status: normative Phase 1A slice
+Status: normative Phase 1A slice, extended by VLT-PM30
 
 Depends on: VLT-PM03, VLT-PM05, VLT-PM08, VLT-PM09, VLT-PM10, VLT-PM11
 
@@ -18,7 +18,7 @@ otherwise contain only immutable one-revision items. Replacement establishes
 the current-revision capability and causal history that later history,
 restore, delete, and conflict commands consume.
 
-The command is a complete replacement form for the fields VLT-PM11 can create.
+The command is a complete replacement form for the fields VLT-PM30 can create.
 It does not implement an interactive full-screen editor, secret-preserving
 blank defaults, or patch semantics.
 
@@ -32,13 +32,14 @@ blank defaults, or patch semantics.
 4. The application returns the current revision ID only as an optimistic
    mutation capability. It is never rendered.
 5. The exact current live document is opened inside a wipe-on-drop wrapper.
-6. Non-login records and logins with more than one current URL fail as
-   unsupported before item prompts, preventing silent field loss.
-7. Title, username, password, and zero-or-one URL are collected again through
-   the VLT-PM11 controlling-terminal contract. No old secret is rendered or
-   used as a prompt default.
+6. Non-login records fail as unsupported before item prompts. Every valid
+   login is editable regardless of its current URL count.
+7. Title, username, password, zero-to-sixteen URLs, and optional private notes
+   are collected again through the VLT-PM30 controlling-terminal contract. No
+   old secret is rendered or used as a prompt default.
 8. Stable item identity, schema, creation time, favorite register,
-   collections, tags, attachments, and optional notes are preserved exactly.
+   collections, tags, and attachments are preserved exactly; the complete URL
+   list and notes are explicitly replaced.
 9. Fresh host CSPRNG bytes protect every replacement publication frame.
 10. `replace_item` compares the selected revision with the sole current live
     revision before publishing. A stale selection or new conflict fails
@@ -94,8 +95,9 @@ After strict parsing, the command:
 7. completes authenticated repository open;
 8. resolves the sole current live revision for `ITEM`;
 9. reveals that exact revision in a wipe-on-drop document;
-10. proves the schema is `vault/login/v1` and URL count is at most one;
-11. collects the replacement login form using the fixed VLT-PM11 prompts;
+10. proves the schema is `vault/login/v1`;
+11. collects the complete replacement login form using the fixed VLT-PM30
+    prompts;
 12. reads advisory wall time and fresh replacement randomness;
 13. constructs the complete replacement document;
 14. drops the old revealed document before publication; and
@@ -114,20 +116,19 @@ The replacement preserves from the authenticated current document:
 - complete favorite last-writer-wins register, including operation ID;
 - collection observed set;
 - tag observed set;
-- attachment observed set; and
-- optional login notes.
+- attachment observed set.
 
-It replaces title, username, password, and the complete URL list with zero or
-one collected URL.
+It replaces title, username, password, the complete ordered URL list, and
+optional private notes.
 
 The new document update time is `max(host_wall_time, current_update_time)`.
 This prevents an advisory host-clock rollback from making the document older
 than itself or its preserved favorite register. Publication commit time remains
 the exact host wall time and does not establish causality.
 
-The command rejects a current login containing multiple URLs. It must not
-truncate, reorder, or silently preserve an uneditable tail. A later richer
-editor will own multiple URLs and notes explicitly.
+The command accepts current logins with any valid URL count. It never truncates
+or silently preserves an uneditable tail: VLT-PM30 owns the complete ordered
+list and notes explicitly.
 
 ## 7. Optimistic and crash-safe publication
 
@@ -166,7 +167,7 @@ Item updated: ITEM_ID
 | current conflict, stale revision, or concurrent writer | 5 | fixed recovery-or-conflict error |
 | malformed, unauthenticated, replayed, or cross-vault state | 6 | fixed integrity error |
 | terminal, local state, or repository unavailable | 7 | fixed storage-unavailable error |
-| non-login, multi-URL login, config, or format unsupported | 8 | fixed unsupported error |
+| non-login, config, or format unsupported | 8 | fixed unsupported error |
 | internal invariant failure | 10 | fixed internal error |
 
 Failures have empty stdout. No output includes the expected revision, old or
@@ -187,9 +188,9 @@ CLI package tests prove:
 
 1. only a canonical item ID is accepted by `item edit`;
 2. add, edit, show, and audit succeed across fresh one-shot hosts;
-3. title, username, password, and URL are replaced;
-4. an empty URL becomes `URL: none`;
-5. normal output contains neither old nor replacement password;
+3. title, username, password, complete ordered URL list, and notes are replaced;
+4. a zero URL count becomes `URL: none` and empty notes become `Notes: absent`;
+5. normal output contains neither old nor replacement password or notes;
 6. the complete audit observes two reachable revisions for one current item;
 7. a missing item returns exit 4 before item input; and
 8. a wrong passphrase returns exit 3 before item input.
@@ -202,17 +203,17 @@ The real executable PTY suite additionally:
 4. proves the replacement metadata is durable and the password remains
    redacted;
 5. injects decoy process-stdin data into every authenticated process; and
-6. recursively proves the master, original item, and replacement item
-   passwords are absent from the isolated filesystem tree.
+6. recursively proves the master, original and replacement passwords, and
+   original and replacement notes are absent from the isolated filesystem tree.
 
 Linux, macOS, and Windows CI must compile and test the affected packages.
 Unix runs the real PTY suite; Windows compiles the native console path.
 
 ## 10. Explicit non-goals and backlog
 
-This slice does not add notes/multiple-URL editing, non-login records, partial
-field preservation, secret reveal/copy, search, history output, delete,
-restore, conflict resolution, import/export commands, or the foreground shell.
+VLT-PM30 completes notes and multiple-URL editing. This boundary still does not
+add non-login editing, partial field preservation, external editors, browser
+matching, or the foreground shell.
 
 After this slice:
 

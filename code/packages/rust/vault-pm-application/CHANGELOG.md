@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.53.0] - 2026-08-11
+
+### Added
+
+- Add audited typed disclosure of optional login notes.
+
+### Changed
+
+- Make login replacement own and replace the complete ordered URL list and
+  optional notes while retaining immutable identity and unrelated metadata.
+- Accept existing multi-URL logins during edit preparation.
+
 ## [0.52.0] - 2026-08-11
 
 ### Added

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a fixed canonical URL-count prompt, repeated required URL input, and
+  optional hidden wipe-on-drop login-notes input for complete login forms.
 - Add fixed bounded TOTP label, issuer, algorithm, digits, and period prompts
   plus hidden wipe-on-drop Base32 seed input.
 - Add fixed bounded database label, engine, host, port, database, and username
