@@ -127,7 +127,7 @@ const PRIMITIVES: &[&str] = &[
     // (currently both nodes coexist as siblings in `children`).
     "If",
     "Else",
-    // UI29 §2.1 / UI29-1 / UI29-2 / UI29-4 — host primitives. Each
+    // UI29 §2.1 / UI29-1 / UI29-2 / UI29-3 / UI29-4 — host primitives. Each
     // lowers to the host platform's native widget (DOM <input>,
     // SwiftUI TextField, Qt TextInput, etc.). HostDialog (UI29-1) is
     // the 16th kernel primitive, added after mosaic-pkg-dialog v0.1.0
@@ -150,6 +150,9 @@ const PRIMITIVES: &[&str] = &[
     // keyboard, ± stepper buttons (Qt SpinBox / WinUI NumberBox), and
     // min/max validation. See code/specs/UI29-4-form-and-nav-
     // candidates-survey.md for the full inclusion-criteria audit.
+    // HostSlider (UI29-3) preserves the platform slider's adjustable
+    // accessibility role, announced range/value, keyboard increments,
+    // pointer/touch drag behavior, and native thumb/track rendering.
     "HostInput",
     "HostButton",
     "HostTable",
@@ -162,6 +165,7 @@ const PRIMITIVES: &[&str] = &[
     "HostLink",
     "HostTooltip",
     "HostNumberInput",
+    "HostSlider",
     // UI31 — `HostTable` sibling primitives. Recognised by the React
     // emitter's HostTable dispatcher pre-UI31; promoting to PRIMITIVES
     // here so the parser stops routing them through the unknown-
@@ -2830,6 +2834,10 @@ mod tests {
             PRIMITIVES.contains(&"HostNumberInput"),
             "UI29-4 added HostNumberInput as the 21st kernel primitive"
         );
+        assert!(
+            PRIMITIVES.contains(&"HostSlider"),
+            "UI29-3 registered HostSlider as a kernel primitive"
+        );
         // UI31 — HostTable family structural sub-tags.
         assert!(
             PRIMITIVES.contains(&"HostTableColGroup"),
@@ -2851,6 +2859,26 @@ mod tests {
             PRIMITIVES.contains(&"Col"),
             "UI31 added Col as the cell-definition sub-tag inside HostTableColGroup"
         );
+    }
+
+    #[test]
+    fn host_slider_compiles_as_a_kernel_primitive() {
+        let source = r#"
+layout Volume {
+  HostSlider [ volume ] (
+    value: 35,
+    min: 0,
+    max: 100,
+    step: 1,
+    disabled: false,
+    onChange: emit: onVolumeChange,
+    onCommit: emit: onVolumeCommit
+  )
+}
+"#;
+        let output = compile(source, None).expect("HostSlider layout must compile");
+        assert_eq!(output.def.root.tag, "HostSlider");
+        assert_eq!(output.def.root.props.len(), 7);
     }
 
     #[test]

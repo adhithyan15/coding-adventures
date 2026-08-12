@@ -101,8 +101,8 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "Else",
     "For",
     // Host primitives (§2.1 "Host*" rows + UI29-1's HostDialog +
-    // UI29-2's HostCheckbox/HostRadio + UI29-4's HostLink/HostTooltip/
-    // HostNumberInput).
+    // UI29-2's HostCheckbox/HostRadio + UI29-3's HostSlider + UI29-4's
+    // HostLink/HostTooltip/HostNumberInput).
     // HostDialog was added in UI29-1 after mosaic-pkg-dialog v0.1.0
     // demonstrated that composing a dialog from Box+Column+Text loses
     // modal/focus/top-layer/accessibility semantics that only the
@@ -122,6 +122,9 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // trigger heuristics) and the number-input's mobile-numeric-
     // keyboard / SpinBox-with-stepper-buttons are not reachable
     // via composition from existing kernel primitives.
+    // HostSlider preserves the native adjustable role, announced
+    // range/value, keyboard increments, drag behavior, and platform
+    // thumb/track rendering that layout composition cannot reproduce.
     "HostInput",
     "HostButton",
     "HostTable",
@@ -133,6 +136,7 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostLink",
     "HostTooltip",
     "HostNumberInput",
+    "HostSlider",
     // UI31 — `HostTable` sibling primitives. The structural sub-tags
     // (HostTableColGroup / HostTableHead / HostTableBody /
     // HostTableFoot) plus the cell-defining `Col` lower together with
@@ -1395,14 +1399,15 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The twenty-seven primitives — fifteen from UI29 §2.1, plus
+        // The twenty-eight primitives — fifteen from UI29 §2.1, plus
         // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
         // HostRadio added in UI29-2 (#3978), plus HostLink,
         // HostTooltip, and HostNumberInput added in UI29-4, plus the
         // five UI31 HostTable structural sub-tags (HostTableColGroup,
         // HostTableHead, HostTableBody, HostTableFoot, Col), plus the
-        // typed HostSurface native composition boundary.
-        let expected_27 = [
+        // typed HostSurface native composition boundary, plus the
+        // UI29-3 HostSlider range-input primitive.
+        let expected_28 = [
             "Box",
             "Row",
             "Column",
@@ -1425,13 +1430,14 @@ version = "1"
             "HostLink",
             "HostTooltip",
             "HostNumberInput",
+            "HostSlider",
             "HostTableColGroup",
             "HostTableHead",
             "HostTableBody",
             "HostTableFoot",
             "Col",
         ];
-        for name in &expected_27 {
+        for name in &expected_28 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"

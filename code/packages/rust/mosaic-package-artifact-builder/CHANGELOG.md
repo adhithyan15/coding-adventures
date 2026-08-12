@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - HostSlider capability tracking
+
+- Native-complete analysis reports `primitive.slider-unimplemented` on every
+  native backend until its real adjustable range-control lowering ships.
+- This keeps newly registered `HostSlider` packages from being mislabeled as
+  native-complete while emitter work proceeds one backend at a time.
+
 ## [Unreleased] - default authored-child package expansion
 
 - Package references splice their default inline MLL child block into a typed
