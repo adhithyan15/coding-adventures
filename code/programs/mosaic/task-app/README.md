@@ -49,8 +49,9 @@ gate is source portability rather than a claim that a macOS dylib can run on iOS
 XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte beside
 `TaskApp.exe`. A task-specific console fixture drives startup props and a semantic
 event through the generated .NET binding without an injected path. XAML remains a
-permissive build until its four drag/drop reports and one missing table-semantics
-report are closed. GitHub-hosted Windows workers do not provide a reliable
+permissive build until its four drag/drop reports are closed. Its canonical Sheet
+now exposes native UI Automation table semantics. GitHub-hosted Windows workers
+do not provide a reliable
 interactive desktop, so visible WinUI launch is deliberately reserved for a local
 or self-hosted interactive Windows gate.
 

@@ -959,7 +959,9 @@ fn collect_native_degradations(
                     || (backend == Backend::Qt
                         && mosaic_emit_qt::pipeline::host_table_has_native_semantics(node))
                     || (backend == Backend::SwiftUI
-                        && mosaic_emit_swiftui::pipeline::host_table_has_native_semantics(node))) => Some((
+                        && mosaic_emit_swiftui::pipeline::host_table_has_native_semantics(node))
+                    || (backend == Backend::Xaml
+                        && mosaic_emit_xaml::pipeline::host_table_has_native_semantics(node))) => Some((
             "accessibility.table-semantics-missing",
             "the backend preserves the visual rows and cells but does not expose native table semantics",
         )),
@@ -4238,6 +4240,91 @@ version = "1"
                 Vec::new()
             ))
         );
+    }
+
+    #[test]
+    fn xaml_native_table_semantics_shape_is_conservative() {
+        let node = |tag: &str, props: Vec<LayoutProp>, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props,
+            children,
+        };
+        let indexed_for =
+            |each: LayoutPropValue, as_name: &str, index: &str, children: Vec<LayoutNode>| {
+                node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".to_string(),
+                            value: each,
+                        },
+                        LayoutProp {
+                            name: "as".to_string(),
+                            value: LayoutPropValue::Keyword(as_name.to_string()),
+                        },
+                        LayoutProp {
+                            name: "index".to_string(),
+                            value: LayoutPropValue::Keyword(index.to_string()),
+                        },
+                    ],
+                    children,
+                )
+            };
+        let canonical = node(
+            "HostTable",
+            Vec::new(),
+            vec![
+                node(
+                    "HostTableHead",
+                    Vec::new(),
+                    vec![node(
+                        "Row",
+                        Vec::new(),
+                        vec![indexed_for(
+                            LayoutPropValue::SlotRef("headers".to_string()),
+                            "header",
+                            "headerIndex",
+                            vec![node("Box", Vec::new(), Vec::new())],
+                        )],
+                    )],
+                ),
+                node(
+                    "HostTableBody",
+                    Vec::new(),
+                    vec![indexed_for(
+                        LayoutPropValue::SlotRef("rows".to_string()),
+                        "row",
+                        "rowIndex",
+                        vec![node(
+                            "Row",
+                            Vec::new(),
+                            vec![indexed_for(
+                                LayoutPropValue::Keyword("row".to_string()),
+                                "cell",
+                                "columnIndex",
+                                vec![node("Box", Vec::new(), Vec::new())],
+                            )],
+                        )],
+                    )],
+                ),
+            ],
+        );
+        assert!(mosaic_emit_xaml::pipeline::host_table_has_native_semantics(
+            &canonical
+        ));
+
+        let mut with_foot = canonical.clone();
+        with_foot
+            .children
+            .push(node("HostTableFoot", Vec::new(), Vec::new()));
+        assert!(!mosaic_emit_xaml::pipeline::host_table_has_native_semantics(&with_foot));
+
+        let mut missing_index = canonical;
+        missing_index.children[0].children[0].children[0]
+            .props
+            .retain(|prop| prop.name != "index");
+        assert!(!mosaic_emit_xaml::pipeline::host_table_has_native_semantics(&missing_index));
     }
 
     #[test]
