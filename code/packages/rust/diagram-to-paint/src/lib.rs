@@ -3277,11 +3277,6 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
         }));
-        assert!(scene.instructions.iter().any(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path)
-                if path.stroke.as_deref() == Some("#b45309")
-                    && path.stroke_width == Some(3.0))
-        }));
     }
 
     #[test]
@@ -3359,6 +3354,11 @@ mod tests {
                     && rect.fill.as_deref() == Some("#fef3c7")
                     && rect.stroke.as_deref() == Some("#b45309")
                     && rect.stroke_width == Some(3.0))
+        }));
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke.as_deref() == Some("#b45309")
+                    && path.stroke_width == Some(3.0))
         }));
     }
 
