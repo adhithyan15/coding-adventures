@@ -719,6 +719,36 @@ impl UnlockedVaultV1 {
         }
     }
 
+    /// Independently compare a reopened target with its authenticated source semantics.
+    ///
+    /// The expectation is opaque to hosts and normalizes only identities that
+    /// cross-vault import must replace. Match or mismatch publishes a dedicated
+    /// itemless audit event before the aggregate report or closed error can be
+    /// observed. Source/target identity overlap, retained causal parents, and
+    /// any schema, timestamp, deletion, grouping, CRDT, or record-value change
+    /// fail with the same integrity class.
+    pub fn audited_verify_portable_restore(
+        self,
+        expectation: crate::PortableRestoreExpectationV1,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<crate::PortableRestoreVerificationV1>, ApplicationError>
+    {
+        self.require_audit_epoch()?;
+        let operation =
+            expectation.verify_target(self.active.vault_id(), &self.current_catalog.items);
+        self.finish_audited_access(
+            AuditActionV1::PortableRestoreVerify,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            operation,
+        )
+    }
+
     /// Return the ordinary redacted view for one unambiguous live item.
     ///
     /// A missing item and a current tombstone both return `None`. Multiple
@@ -4866,6 +4896,11 @@ mod tests {
             crate::PortableOpenPolicyV1::new(8 * 1024, 1, 1).unwrap(),
         )
         .unwrap();
+        let restore_expectation = opened.prepare_restore_verification().unwrap();
+        assert_eq!(
+            format!("{restore_expectation:?}"),
+            "PortableRestoreExpectationV1(<redacted>)"
+        );
         let import_random_byte_count = crate::portable_import_random_bytes(&opened).unwrap();
         assert_eq!(import_random_byte_count, 2 * 16 + 6 * 80 + 32);
         assert_eq!(
@@ -4904,6 +4939,17 @@ mod tests {
         )
         .unwrap();
         assert_ne!(target_session.vault_id(), source_vault_id);
+        target_session
+            .activate_audit_epoch(900, audited_access_randomness(0x89), &target_local)
+            .unwrap();
+        let target_session = open_active_vault(
+            Zeroizing::new(b"independent target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
         target_local.fail_next_compare(LocalStateStoreError::Unavailable);
         assert_eq!(
             target_session
@@ -4931,7 +4977,7 @@ mod tests {
         let imported_active = target_session
             .import_opened_portable_snapshot(opened, 901, import_randomness, &target_local)
             .unwrap();
-        assert_eq!(imported_active.last_device_counter(), 2);
+        assert_eq!(imported_active.last_device_counter(), 3);
 
         drop(source_session);
         let restored = open_active_vault(
@@ -4983,11 +5029,111 @@ mod tests {
             restored_login,
             Some(("Restored portal".to_owned(), "restored-secret".to_owned()))
         );
+
+        let mismatched_expectation = crate::PortableRestoreExpectationV1::from_source(
+            VaultId::new([0xe9; 16]),
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let failed = restored
+            .audited_verify_portable_restore(
+                mismatched_expectation,
+                902,
+                audited_access_randomness(0x8a),
+                &target_local,
+            )
+            .unwrap();
+        assert!(!failed.operation_succeeded());
+        assert_eq!(
+            failed.into_operation(),
+            Err(ApplicationError::IntegrityFailure)
+        );
+        let restored = open_active_vault(
+            Zeroizing::new(b"independent target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&restored),
+            (
+                AuditActionV1::PortableRestoreVerify,
+                AuditOutcomeV1::Failed,
+                None,
+                None,
+            )
+        );
+        let verified = restored
+            .audited_verify_portable_restore(
+                restore_expectation,
+                903,
+                audited_access_randomness(0x8b),
+                &target_local,
+            )
+            .unwrap();
+        assert!(verified.operation_succeeded());
+        let report = verified.into_operation().unwrap();
+        assert_eq!(report.item_count(), 2);
+        assert_eq!(report.candidate_count(), 3);
+        assert_eq!(report.conflicted_item_count(), 1);
+        assert_eq!(
+            format!("{report:?}"),
+            "PortableRestoreVerificationV1 { item_count: 2, candidate_count: 3, conflicted_item_count: 1 }"
+        );
+        let restored = open_active_vault(
+            Zeroizing::new(b"independent target passphrase".to_vec()),
+            target_locator,
+            &target_local,
+            &target_bootstrap,
+            &target_factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&restored),
+            (
+                AuditActionV1::PortableRestoreVerify,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+            )
+        );
         let audit = restored.audit_verify().unwrap();
-        assert_eq!(audit.commit_count(), 2);
+        assert_eq!(audit.commit_count(), 5);
         assert_eq!(audit.catalog_count(), 2);
         assert_eq!(audit.revision_count(), 3);
         assert_eq!(audit.item_count(), 2);
+        assert_eq!(audit.audit_event_count(), 4);
+    }
+
+    #[test]
+    fn portable_restore_verification_refuses_pre_audit_target_without_comparison() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        let expectation = crate::PortableRestoreExpectationV1::from_source(
+            VaultId::new([0xe8; 16]),
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        assert!(matches!(
+            session.audited_verify_portable_restore(
+                expectation,
+                904,
+                audited_access_randomness(0x8c),
+                &local,
+            ),
+            Err(ApplicationError::InvalidInput)
+        ));
+        assert_eq!(*local.0.lock().unwrap(), Some(exact_active));
     }
 
     #[test]

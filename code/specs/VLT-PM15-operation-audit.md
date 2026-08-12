@@ -33,7 +33,7 @@ encrypted-object read. V1 assigns closed actions for:
 - authenticated repository verification, diagnostics, and audit-history access;
 - item create, list, read, update, delete, restore, history access, search, and
   conflict resolution; and
-- portable import and export.
+- portable import, export, and independent restore verification.
 
 An `item show`, future secret reveal, clipboard copy, autofill, history show,
 attachment export, TOTP display, browser fill, or API retrieval is an access.
@@ -108,8 +108,10 @@ The V1 action registry is:
 | 16 | item history read | item |
 | 17 | item search | vault |
 | 18 | item conflict resolve | item |
+| 19 | item conflict merge | item |
 | 20 | portable import | vault |
 | 21 | portable export | vault |
+| 22 | portable restore verify | vault |
 
 Outcome codes are 1 succeeded, 2 denied, and 3 failed. Unassigned action and
 outcome codes are unsupported rather than caller-defined extensions.

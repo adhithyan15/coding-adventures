@@ -1390,8 +1390,11 @@ changelog, focused build, and downstream validation.
    7d-2b. completed atomic cross-vault portable import, consuming the opaque
        opened snapshot into an untouched generation-zero vault, allocating new
        item/revision/object/encryption identities, preserving every current
-       live, tombstone, and conflict candidate, and independently reopening and
-       comparing the restored target; and
+       live, tombstone, and conflict candidate; and
+   7d-2c. completed opaque source-semantic expectation plus independently
+       reopened target comparison, proving exact current state, candidate
+       grouping, removed source parents, and identity disjointness before an
+       audited aggregate result is released;
    7e-1. completed safe five-state status workflow, strictly decoding bounded
        owner state while locked and exposing only authenticated aggregate item,
        candidate, and conflict counts while unlocked;
@@ -1534,9 +1537,14 @@ changelog, focused build, and downstream validation.
           traceable host/artifact failures, retry-safe audit-only prefixes,
           fresh target identities, and restart-backed redacted observation,
           using `VLT-PM18-cli-portable-import.md`.
-9b-4b-2. remaining explicit target creation/configuration switching plus an
-          application-owned independent semantic restore comparison before a
-          fully verified-restore claim.
+9b-4b-2a. completed opaque application-owned semantic expectation and
+           independently reopened target comparison, including exact candidate
+           grouping/value equality, cross-vault identity disjointness, removed
+           source parents, and publish-before-release succeeded/failed audit
+           events, using `VLT-PM19-portable-restore-verification.md`.
+9b-4b-2b. remaining explicit target creation/configuration switching and CLI
+           composition of the independent verifier before a fully
+           verified-restore claim.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
@@ -1599,15 +1607,15 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
   `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`,
   `VLT-PM15-operation-audit.md`, `VLT-PM16-cli-secure-note-create.md`, and
-  `VLT-PM17-cli-portable-export.md`, and
-  `VLT-PM18-cli-portable-import.md` —
+  `VLT-PM17-cli-portable-export.md`, `VLT-PM18-cli-portable-import.md`, and
+  `VLT-PM19-portable-restore-verification.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
   first CRUD vertical, revision-safe replacement, redacted history, and
   reversible delete/restore, first-class operation-audit contracts, and
-  secure-note CLI composition, and audited encrypted recovery-artifact
-  export/import.
+  secure-note CLI composition, audited encrypted recovery-artifact
+  export/import, and independently audited semantic restore verification.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

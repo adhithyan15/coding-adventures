@@ -19,6 +19,7 @@ mod lifecycle;
 mod mutation;
 mod open;
 mod repository;
+mod restore;
 mod search;
 mod state;
 mod status;
@@ -69,6 +70,7 @@ pub use repository::{
     ApplicationRepository, ApplicationRepositoryError, ApplicationRepositoryFactory,
     V1ApplicationRepositoryFactory,
 };
+pub use restore::{PortableRestoreExpectationV1, PortableRestoreVerificationV1};
 pub use state::{
     ActiveStateV1, AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError,
     LocalStateStore, LocalStateStoreError, LocalVaultStateV1, PreparedInitV1, PublicationJournalV1,

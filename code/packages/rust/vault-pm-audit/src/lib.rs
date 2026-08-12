@@ -60,6 +60,8 @@ pub enum AuditActionV1 {
     PortableImport,
     /// Export a portable snapshot.
     PortableExport,
+    /// Independently verify one portable restore against its authenticated source snapshot.
+    PortableRestoreVerify,
 }
 
 impl AuditActionV1 {
@@ -83,6 +85,7 @@ impl AuditActionV1 {
             Self::ItemConflictMerge => "item_conflict_merge",
             Self::PortableImport => "portable_import",
             Self::PortableExport => "portable_export",
+            Self::PortableRestoreVerify => "portable_restore_verify",
         }
     }
 
@@ -105,6 +108,7 @@ impl AuditActionV1 {
             Self::ItemConflictMerge => 19,
             Self::PortableImport => 20,
             Self::PortableExport => 21,
+            Self::PortableRestoreVerify => 22,
         }
     }
 
@@ -127,6 +131,7 @@ impl AuditActionV1 {
             19 => Ok(Self::ItemConflictMerge),
             20 => Ok(Self::PortableImport),
             21 => Ok(Self::PortableExport),
+            22 => Ok(Self::PortableRestoreVerify),
             _ => Err(AuditError::Unsupported),
         }
     }
@@ -750,6 +755,10 @@ mod tests {
             (AuditActionV1::ItemConflictMerge, "item_conflict_merge"),
             (AuditActionV1::PortableImport, "portable_import"),
             (AuditActionV1::PortableExport, "portable_export"),
+            (
+                AuditActionV1::PortableRestoreVerify,
+                "portable_restore_verify",
+            ),
         ];
         for (action, label) in actions {
             assert_eq!(action.label(), label);
