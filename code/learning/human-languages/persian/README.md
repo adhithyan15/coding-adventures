@@ -54,6 +54,23 @@ than an inheritance — *kardan* and Sanskrit **karma**, or *porsidan* and Engli
 *khub* is inherited, **وقت** *vaqt* and **فهم** *fahm* are Arabic, and **کمک**
 *komak* is Turkic.
 
+Chapters 9 through 11 turn from verbs to vocabulary, and close the one social
+spine node the track had left empty since Chapter 1: polite request and
+repair. Chapter 9 builds Persian's first “please,” **لطفاً** *lotfan*, and
+runs it against four words that carry all three of Persian's vocabulary
+layers at once — inherited **آب** *âb*, “water” (whose root Hindi and
+Marathi's everyday water-word does not share, though Sanskrit still holds
+it); an untraceable **نان** *nân*, “bread,” whose only afterlife is as a loan
+inside English **naan**; an overland Chinese loan, **چای** *chây*, “tea,”
+that later travelled onward into Urdu as **چائے**; and a Greek loan from the
+Hellenistic centuries, **کلید** *kelid*, “key.” Chapter 10 finally teaches
+four family cousins Chapter 6 only named in passing — **مادر**, **پدر**,
+**برادر**, **دختر** — and Chapter 11 adds **چشم**, **دست**, **پا**, and
+**زبان**, closing on the one word Persian uses for both “tongue” and
+“language.” **دست** *dast*, “hand,” is the tranche's most instructive
+cousin: it looks nothing like Sanskrit **हस्त** *hasta*, yet the two descend
+from the identical Indo-Iranian word by a completely regular sound law.
+
 Later chapters will add the present and past tenses on top of these stems,
 colloquial contractions, and more joined shapes.
 
@@ -69,6 +86,6 @@ Persian.
   sitting, and when to come back to each one.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) collects the
   script and sound facts for lookup; it is never a prerequisite chapter.
-- [`lessons/`](./lessons/) contains the thirty-three canonical short practice
+- [`lessons/`](./lessons/) contains the forty-five canonical short practice
   lessons.
 

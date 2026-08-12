@@ -2144,6 +2144,33 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 9,
+      "title": "Please: Water, Bread, Tea, Key",
+      "label": "ch:fa-please-requests",
+      "output": "persian/book/chapters/ch09-please-requests.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 10,
+      "title": "Mother, Father, Brother, Daughter",
+      "label": "ch:fa-family",
+      "output": "persian/book/chapters/ch10-family.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 11,
+      "title": "Eye, Hand, Foot, Tongue",
+      "label": "ch:fa-body",
+      "output": "persian/book/chapters/ch11-body.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "title": "How Are You?",
