@@ -104,6 +104,7 @@ import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 // record has to exist and be trustworthy before anything is allowed to depend
 // on it.
 import { practiseAll } from "./atommastery.ts";
+import { type ReviewPick, refreshesOf, reviewPicks } from "./atomschedule.ts";
 import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
@@ -1360,6 +1361,50 @@ function renderFrontierEncounter(
   return card;
 }
 
+/** Every lesson id the learner has passed, across all selected paths. */
+function completedLessonIds(): Set<string> {
+  const done = new Set<string>();
+  for (const completed of learnCompletion.values()) {
+    for (const id of completed) done.add(id);
+  }
+  return done;
+}
+
+/**
+ * The review the learner owes, chosen by atom rather than by lesson.
+ *
+ * Each row says what it would refresh, because "review this" with no reason is
+ * the thing that makes review feel arbitrary. The learner can see that these
+ * three lessons are between them carrying nine atoms they have started to lose.
+ */
+function renderDueReview(picks: ReviewPick[]): HTMLElement {
+  const section = el("section", "due-review");
+  const heading = el("h2", "learn__concept");
+  const owed = new Set(picks.flatMap((pick) => pick.covers)).size;
+  heading.textContent = `Due for review — ${owed} atom${owed === 1 ? "" : "s"}`;
+  section.appendChild(heading);
+  const gloss = el("p", "muted learn__gloss");
+  gloss.textContent =
+    "Chosen from your own record rather than from lesson order: these are the lessons that" +
+    " refresh the most of what you have started to forget.";
+  section.appendChild(gloss);
+  for (const pick of picks) {
+    const lesson = LESSONS.find((candidate) => candidate.id === pick.lessonId);
+    if (!lesson) continue;
+    const card = el("article", "due-review__card");
+    const title = el("p", "due-review__head");
+    title.textContent = `${languageName(pick.language)} · ${lesson.headword}`;
+    const covers = el("p", "muted due-review__covers");
+    covers.textContent =
+      `Refreshes ${pick.covers.length} due atom${pick.covers.length === 1 ? "" : "s"}: ` +
+      pick.covers.slice(0, 4).join(", ") +
+      (pick.covers.length > 4 ? `, and ${pick.covers.length - 4} more` : "");
+    card.append(title, covers, renderLessonBody(lesson));
+    section.appendChild(card);
+  }
+  return section;
+}
+
 function renderLearn(): HTMLElement {
   const wrap = el("div", "learn");
   wrap.appendChild(renderLanguagePicker());
@@ -1386,6 +1431,21 @@ function renderLearn(): HTMLElement {
     notice.textContent = learnNotice;
     wrap.appendChild(notice);
   }
+
+  // Atom-driven review (HL10 §10.1). Everything below this point schedules by
+  // lesson; this one section schedules by what the learner has actually
+  // forgotten, and it goes first because a debt is more urgent than a frontier.
+  const duePicks = reviewPicks(
+    MASTERY,
+    LESSONS.filter((lesson) => selectedLanguages.includes(lesson.language)).map((lesson) => ({
+      id: lesson.id,
+      language: lesson.language,
+      refreshes: refreshesOf(lesson),
+    })),
+    completedLessonIds(),
+    Date.now(),
+  );
+  if (duePicks.length > 0) wrap.appendChild(renderDueReview(duePicks));
 
   const frontier = mixedCurriculumFrontier(selectedLanguages, learnCompletion);
   const activeAttempt = focusedAttempt && frontier.steps.some((step) => step.lessonId === focusedAttempt!.lessonId);
