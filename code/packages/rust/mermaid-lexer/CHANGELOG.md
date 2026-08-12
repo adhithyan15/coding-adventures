@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.36.0
+
+- Tokenize state concurrent-region dividers distinctly from transition arrows.
+
 ## 0.35.0
 
 - Tokenize state composite-group braces from the pinned grammar.

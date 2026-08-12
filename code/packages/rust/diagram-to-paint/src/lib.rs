@@ -376,6 +376,22 @@ where
             stroke_dash: None,
             stroke_dash_offset: None,
         }));
+        for divider_y in &group.divider_y {
+            instructions.push(PaintInstruction::Path(line_path(
+                &[
+                    Point {
+                        x: group.x,
+                        y: *divider_y,
+                    },
+                    Point {
+                        x: group.x + group.width,
+                        y: *divider_y,
+                    },
+                ],
+                &group.style.stroke,
+                group.style.stroke_width,
+            )));
+        }
     }
 
     // ── 2. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
@@ -3261,6 +3277,11 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
         }));
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke.as_deref() == Some("#b45309")
+                    && path.stroke_width == Some(3.0))
+        }));
     }
 
     #[test]
@@ -3316,6 +3337,7 @@ mod tests {
             y: 8.0,
             width: 340.0,
             height: 100.0,
+            divider_y: vec![58.0],
             style: ResolvedDiagramStyle {
                 fill: "#fef3c7".into(),
                 stroke: "#b45309".into(),

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.57.0";
+pub const VERSION: &str = "0.58.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1076,13 +1076,43 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         record_new_state_group_members(&group_stack, &mut groups, &nodes, membership_cursor);
         membership_cursor = nodes.len();
         if cursor.consume_if("RBRACE").is_some() {
-            group_stack.pop().ok_or_else(|| {
+            let group_id = group_stack.pop().ok_or_else(|| {
                 token_error(cursor.current(), "unexpected composite state closing brace")
             })?;
+            let group = groups
+                .iter()
+                .find(|group| group.id == group_id)
+                .expect("open composite group must exist");
+            if group.regions.len() > 1 && group.regions.last().is_some_and(Vec::is_empty) {
+                return Err(token_error(
+                    cursor.current(),
+                    "concurrent state region cannot be empty",
+                ));
+            }
             cursor.skip_terminators();
             continue;
         }
-        if token_name(cursor.current()) == "ACC_TITLE" {
+        if cursor.consume_if("CONCURRENT").is_some() {
+            let group_id = group_stack.last().ok_or_else(|| {
+                token_error(
+                    cursor.current(),
+                    "concurrent state divider requires a composite state",
+                )
+            })?;
+            let group = groups
+                .iter_mut()
+                .find(|group| &group.id == group_id)
+                .expect("open composite group must exist");
+            if group.regions.last().is_none_or(Vec::is_empty) {
+                return Err(token_error(
+                    cursor.current(),
+                    "concurrent state region cannot be empty",
+                ));
+            }
+            group.regions.push(Vec::new());
+            cursor.skip_terminators();
+            continue;
+        } else if token_name(cursor.current()) == "ACC_TITLE" {
             cursor.advance();
             accessibility_title = Some(take_state_text(&mut cursor));
         } else if token_name(cursor.current()) == "ACC_DESCR" {
@@ -1277,6 +1307,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                         label: DiagramLabel::new(id.clone()),
                         parent_id: group_stack.last().cloned(),
                         node_ids: Vec::new(),
+                        regions: vec![Vec::new()],
                         style: None,
                     });
                     group_stack.push(id);
@@ -1317,6 +1348,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     label: DiagramLabel::new(label),
                     parent_id: group_stack.last().cloned(),
                     node_ids: Vec::new(),
+                    regions: vec![Vec::new()],
                     style: None,
                 });
                 group_stack.push(id);
@@ -1507,6 +1539,13 @@ fn record_new_state_group_members(
     for node in &nodes[node_count_before..] {
         if !group.node_ids.contains(&node.id) {
             group.node_ids.push(node.id.clone());
+        }
+        let region = group
+            .regions
+            .last_mut()
+            .expect("composite groups always have a current region");
+        if !region.contains(&node.id) {
+            region.push(node.id.clone());
         }
     }
 }
@@ -4539,6 +4578,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_concurrent_region_membership() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate Active {\nOff --> On\n--\nIdle --> Busy\n}\n",
+        )
+        .expect("concurrent state regions should parse");
+        let group = &diagram.groups[0];
+
+        assert_eq!(group.regions, vec![vec!["Off", "On"], vec!["Idle", "Busy"]]);
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5309,7 +5359,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.57.0");
+        assert_eq!(crate::VERSION, "0.58.0");
     }
 
     #[test]

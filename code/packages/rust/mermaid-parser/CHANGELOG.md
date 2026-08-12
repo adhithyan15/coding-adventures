@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.58.0
+
+- Preserve grammar-backed concurrent state regions as ordered group membership.
+
 ## 0.57.0
 
 - Parse quoted composite-state aliases and apply inline or named styles to graph groups.

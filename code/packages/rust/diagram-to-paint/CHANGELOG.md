@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower concurrent state-region dividers to backend-neutral Paint paths.
 - Lower resolved composite graph-group colors and stroke geometry to Paint.
 - Lower composite graph groups to backend-neutral background rectangles and shaped labels.
 - Export graph node URLs, tooltips, and hit-test bounds through PaintScene metadata.

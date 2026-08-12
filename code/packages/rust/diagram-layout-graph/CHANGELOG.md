@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.8.0
+
+- Stack concurrent state regions and resolve horizontal group dividers.
+
 ## 0.7.0
 
 - Resolve composite graph-group styles into deterministic layout geometry.

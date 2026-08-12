@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -418,6 +418,43 @@ fn route_edge(
 // Public API
 // ============================================================================
 
+fn stack_concurrent_regions(diagram: &GraphDiagram, nodes: &mut [LayoutedGraphNode], gap: f64) {
+    for group in &diagram.groups {
+        if group.regions.len() < 2 {
+            continue;
+        }
+        let Some(mut next_top) = nodes
+            .iter()
+            .filter(|node| group.node_ids.contains(&node.id))
+            .map(|node| node.y)
+            .reduce(f64::min)
+        else {
+            continue;
+        };
+        for region in &group.regions {
+            let indices: Vec<_> = nodes
+                .iter()
+                .enumerate()
+                .filter(|(_, node)| region.contains(&node.id))
+                .map(|(index, _)| index)
+                .collect();
+            let Some(min_y) = indices.iter().map(|index| nodes[*index].y).reduce(f64::min) else {
+                continue;
+            };
+            let max_y = indices
+                .iter()
+                .map(|index| nodes[*index].y + nodes[*index].height)
+                .reduce(f64::max)
+                .unwrap_or(min_y);
+            let shift = next_top - min_y;
+            for index in indices {
+                nodes[index].y += shift;
+            }
+            next_top += max_y - min_y + gap;
+        }
+    }
+}
+
 fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<LayoutedGraphGroup> {
     let mut computed: std::collections::HashMap<String, LayoutedGraphGroup> =
         std::collections::HashMap::new();
@@ -454,6 +491,23 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
             .chain(child_groups.iter().map(|child| child.y + child.height))
             .reduce(f64::max)
             .unwrap_or(min_y + 52.0);
+        let divider_y = group
+            .regions
+            .windows(2)
+            .filter_map(|regions| {
+                let upper = nodes
+                    .iter()
+                    .filter(|node| regions[0].contains(&node.id))
+                    .map(|node| node.y + node.height)
+                    .reduce(f64::max)?;
+                let lower = nodes
+                    .iter()
+                    .filter(|node| regions[1].contains(&node.id))
+                    .map(|node| node.y)
+                    .reduce(f64::min)?;
+                Some((upper + lower) / 2.0)
+            })
+            .collect();
         computed.insert(
             group.id.clone(),
             LayoutedGraphGroup {
@@ -464,6 +518,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
                 y: min_y - 40.0,
                 width: max_x - min_x + 48.0,
                 height: max_y - min_y + 64.0,
+                divider_y,
                 style: resolve_style_with_base(
                     group.style.as_ref(),
                     ResolvedDiagramStyle {
@@ -558,6 +613,7 @@ pub fn layout_graph_diagram(
         note.y = state.y + (state.height - note.height) / 2.0;
     }
 
+    stack_concurrent_regions(diagram, &mut nodes, opts.node_gap);
     let mut groups = layout_groups(diagram, &nodes);
 
     let min_x = nodes
@@ -579,6 +635,9 @@ pub fn layout_graph_diagram(
     for group in &mut groups {
         group.x += shift_x;
         group.y += shift_y;
+        for divider_y in &mut group.divider_y {
+            *divider_y += shift_y;
+        }
     }
     let width = nodes
         .iter()
@@ -666,7 +725,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.7.0");
+        assert_eq!(VERSION, "0.8.0");
     }
 
     #[test]
@@ -856,6 +915,7 @@ mod tests {
             label: DiagramLabel::new("Processing"),
             parent_id: None,
             node_ids: vec!["A".into(), "B".into()],
+            regions: vec![vec!["A".into(), "B".into()]],
             style: Some(diagram_ir::DiagramStyle {
                 fill: Some("#fef3c7".into()),
                 stroke_width: Some(3.0),
@@ -871,5 +931,25 @@ mod tests {
         }
         assert_eq!(group.style.fill, "#fef3c7");
         assert_eq!(group.style.stroke_width, 3.0);
+    }
+
+    #[test]
+    fn concurrent_regions_stack_with_a_horizontal_divider() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Active".into(),
+            label: DiagramLabel::new("Active"),
+            parent_id: None,
+            node_ids: vec!["A".into(), "B".into()],
+            regions: vec![vec!["A".into()], vec!["B".into()]],
+            style: None,
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let group = &l.groups[0];
+        let a = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let b = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(a.y + a.height < group.divider_y[0]);
+        assert!(group.divider_y[0] < b.y);
     }
 }

@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.30.0
+
+- Preserve ordered concurrent-region membership and resolved group dividers.
+
 ## 0.29.0
 
 - Preserve composite graph-group styles through semantic and layout IR.

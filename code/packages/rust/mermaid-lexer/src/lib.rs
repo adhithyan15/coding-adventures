@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.35.0";
+pub const VERSION: &str = "0.36.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -208,7 +208,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.35.0");
+        assert_eq!(VERSION, "0.36.0");
     }
 
     #[test]
@@ -362,6 +362,17 @@ mod tests {
             tokenize_mermaid_state("stateDiagram-v2\nstate Processing {\nQueued --> Running\n}\n");
         assert!(tokens.iter().any(|token| token.value == "{"));
         assert!(tokens.iter().any(|token| token.value == "}"));
+    }
+
+    #[test]
+    fn tokenizes_state_concurrent_region_divider() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nstate Active {\nOff --> On\n--\nIdle --> Busy\n}\n",
+        );
+
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("CONCURRENT")));
     }
 
     #[test]
