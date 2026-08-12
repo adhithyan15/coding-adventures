@@ -48,7 +48,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -352,6 +352,9 @@ enum Command {
     PortableImport {
         source: PathBuf,
     },
+    PortableRestore {
+        source: PathBuf,
+    },
     PortableRestoreVerify {
         source: PathBuf,
     },
@@ -424,6 +427,9 @@ where
     {
         return Err(CliFailure::InvalidCommand);
     }
+    if matches!(&command, Command::PortableRestore { .. }) && selected_vault.is_none() {
+        return Err(CliFailure::InvalidCommand);
+    }
     Ok(Invocation {
         selected_vault,
         command,
@@ -441,6 +447,9 @@ fn parse_vault(arguments: &[String]) -> Result<Command, CliFailure> {
 
 fn parse_restore(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
+        [source] if !source.is_empty() => Ok(Command::PortableRestore {
+            source: PathBuf::from(source),
+        }),
         [action, source] if action == "verify" && !source.is_empty() => {
             Ok(Command::PortableRestoreVerify {
                 source: PathBuf::from(source),
@@ -581,6 +590,9 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::PortableImport { source } => {
             portable_import(host, prepared.paths(), &writer, selected_vault, &source)
         }
+        Command::PortableRestore { source } => {
+            portable_restore(host, prepared.paths(), &writer, selected_vault, &source)
+        }
         Command::PortableRestoreVerify { source } => {
             portable_restore_verify(host, prepared.paths(), &writer, selected_vault, &source)
         }
@@ -651,6 +663,34 @@ fn audited_access_inputs(
     let mut random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
     host.fill_entropy(&mut random).map_err(map_host)?;
     Ok((wall_time_ms, AuditedAccessRandomnessV1::new(random)))
+}
+
+struct PortableRestoreAuditInputs {
+    import: (u64, AuditedAccessRandomnessV1),
+    verify: (u64, AuditedAccessRandomnessV1),
+}
+
+fn portable_restore_audit_inputs(
+    host: &dyn CliHost,
+) -> Result<PortableRestoreAuditInputs, CliFailure> {
+    let import_wall_time_ms = host.now_ms().map_err(map_host)?;
+    let verify_wall_time_ms = host.now_ms().map_err(map_host)?;
+    let mut combined = [0_u8; AUDITED_ACCESS_RANDOM_BYTES * 2];
+    host.fill_entropy(&mut combined).map_err(map_host)?;
+    let mut import_random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
+    let mut verify_random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
+    import_random.copy_from_slice(&combined[..AUDITED_ACCESS_RANDOM_BYTES]);
+    verify_random.copy_from_slice(&combined[AUDITED_ACCESS_RANDOM_BYTES..]);
+    Ok(PortableRestoreAuditInputs {
+        import: (
+            import_wall_time_ms,
+            AuditedAccessRandomnessV1::new(import_random),
+        ),
+        verify: (
+            verify_wall_time_ms,
+            AuditedAccessRandomnessV1::new(verify_random),
+        ),
+    })
 }
 
 fn portable_export(
@@ -871,9 +911,9 @@ impl PortableRestoreVerifyContext {
     fn complete(
         self,
         expectation: coding_adventures_vault_pm_application::PortableRestoreExpectationV1,
-    ) -> Result<CliOutput, CliFailure> {
-        let report = self
-            .access
+    ) -> Result<coding_adventures_vault_pm_application::PortableRestoreVerificationV1, CliFailure>
+    {
+        self.access
             .into_unlocked()
             .map_err(map_application)?
             .audited_verify_portable_restore(
@@ -884,14 +924,105 @@ impl PortableRestoreVerifyContext {
             )
             .map_err(map_application)?
             .into_operation()
-            .map_err(map_application)?;
-        Ok(CliOutput::success(format!(
-            "Portable restore verified: items={} candidates={} conflicts={}.\n",
-            report.item_count(),
-            report.candidate_count(),
-            report.conflicted_item_count(),
-        )))
+            .map_err(map_application)
     }
+}
+
+fn portable_restore(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    source: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let selected_vault = selected_vault.ok_or(CliFailure::InvalidCommand)?;
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    if config.default_vault() == selected_vault {
+        return Err(CliFailure::InvalidCommand);
+    }
+
+    let (memory_kib, iterations, lanes) = host.portable_open_kdf();
+    let open_policy =
+        PortableOpenPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
+    let PortableRestoreAuditInputs {
+        import: (import_wall_time_ms, import_failure_randomness),
+        verify: (verify_wall_time_ms, verify_randomness),
+    } = portable_restore_audit_inputs(host)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, Some(selected_vault))?;
+    if !access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        access.lock();
+        return Err(CliFailure::InvalidCommand);
+    }
+    let import_context = PortableImportContext {
+        access,
+        application_store,
+        wall_time_ms: import_wall_time_ms,
+        failure_randomness: import_failure_randomness,
+    };
+    let artifact = match host.read_portable_export(source) {
+        Ok(artifact) => artifact,
+        Err(error) => return import_context.fail(map_host(error)),
+    };
+    let passphrase = match host.read_import_passphrase() {
+        Ok(passphrase) => passphrase,
+        Err(error) => return import_context.fail(map_host(error)),
+    };
+    let snapshot = match open_portable_with_passphrase(&artifact, passphrase, open_policy) {
+        Ok(snapshot) => snapshot,
+        Err(error) => return import_context.fail(map_application(error)),
+    };
+    let expectation = match snapshot.prepare_restore_verification() {
+        Ok(expectation) => expectation,
+        Err(error) => return import_context.fail(map_application(error)),
+    };
+    let item_count = snapshot.item_count();
+    let candidate_count = snapshot.candidate_count();
+    let random_bytes = match portable_import_random_bytes(&snapshot) {
+        Ok(count) => count,
+        Err(error) => return import_context.fail(map_application(error)),
+    };
+    let mut random = vec![0_u8; random_bytes];
+    if let Err(error) = host.fill_entropy(&mut random) {
+        return import_context.fail(map_host(error));
+    }
+    let randomness = match PortableImportRandomnessV1::new(random, &snapshot) {
+        Ok(randomness) => randomness,
+        Err(error) => return import_context.fail(map_application(error)),
+    };
+    import_context.complete(snapshot, randomness, item_count, candidate_count)?;
+
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, Some(selected_vault))?;
+    if !access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        access.lock();
+        return Err(CliFailure::InvalidCommand);
+    }
+    let report = PortableRestoreVerifyContext {
+        access,
+        application_store,
+        wall_time_ms: verify_wall_time_ms,
+        randomness: verify_randomness,
+    }
+    .complete(expectation)?;
+    Ok(CliOutput::success(format!(
+        "Portable restore completed and verified: items={} candidates={} conflicts={}.\n",
+        report.item_count(),
+        report.candidate_count(),
+        report.conflicted_item_count(),
+    )))
 }
 
 fn portable_restore_verify(
@@ -937,7 +1068,13 @@ fn portable_restore_verify(
         Ok(expectation) => expectation,
         Err(error) => return context.fail(map_application(error)),
     };
-    context.complete(expectation)
+    let report = context.complete(expectation)?;
+    Ok(CliOutput::success(format!(
+        "Portable restore verified: items={} candidates={} conflicts={}.\n",
+        report.item_count(),
+        report.candidate_count(),
+        report.conflicted_item_count(),
+    )))
 }
 
 struct ItemCreateContext {
@@ -2546,6 +2683,7 @@ mod tests {
             vec!["import", "backup.vpm", "extra"],
             vec!["import", "--passphrase", "secret"],
             vec!["restore"],
+            vec!["restore", "backup.vpm"],
             vec!["restore", "verify"],
             vec!["restore", "verify", "backup.vpm", "extra"],
             vec!["restore", "verify", "--passphrase", "secret"],
@@ -2758,6 +2896,28 @@ mod tests {
         );
         assert_eq!(
             parse(["restore", "verify", "backup.vpm", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
+    fn portable_restore_parser_requires_an_explicit_named_target() {
+        let work = ConfigName::new("work".to_owned()).unwrap();
+        assert_eq!(
+            parse(["--vault", "work", "restore", "backup.vpm"]),
+            Ok(Invocation {
+                selected_vault: Some(work),
+                command: Command::PortableRestore {
+                    source: PathBuf::from("backup.vpm"),
+                },
+            })
+        );
+        assert_eq!(
+            parse(["restore", "backup.vpm"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["--vault", "work", "restore", "backup.vpm", "extra"]),
             Err(CliFailure::InvalidCommand)
         );
     }
@@ -3341,6 +3501,248 @@ mod tests {
             "{source_items:?}"
         );
         assert!(source_items.stdout().contains("Restored secure note"));
+    }
+
+    #[test]
+    fn portable_restore_composes_import_and_independent_verification_on_named_target() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let source_passphrase = b"composed restore source passphrase".to_vec();
+        let target_passphrase = b"composed restore target passphrase".to_vec();
+        let artifact_passphrase = b"composed restore artifact passphrase".to_vec();
+        let init_source = TestHost::new(paths.clone(), [source_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_source).exit_code(), ExitCode::Success);
+        let add_source = TestHost::with_texts(
+            paths.clone(),
+            [
+                source_passphrase.clone(),
+                b"composed restore note body".to_vec(),
+            ],
+            ["Composed restore note".to_owned()],
+        );
+        assert_eq!(
+            run(["item", "add", "secure-note"], &add_source).exit_code(),
+            ExitCode::Success
+        );
+        let artifact_path = root.0.join("composed-restore.vpm");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [source_passphrase.clone(), artifact_passphrase.clone()],
+        );
+        assert_eq!(
+            run(
+                [
+                    "export",
+                    artifact_path.to_str().expect("UTF-8 test artifact path"),
+                ],
+                &export_host,
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let exact_artifact = fs::read(&artifact_path).unwrap();
+
+        let create_target =
+            TestHost::with_entropy_seed(paths.clone(), [target_passphrase.clone()], 79);
+        let created = run(["vault", "create", "restore"], &create_target);
+        assert_eq!(created.exit_code(), ExitCode::Success, "{created:?}");
+
+        let selected_default = TestHost::new(
+            paths.clone(),
+            [
+                source_passphrase.clone(),
+                artifact_passphrase.clone(),
+                source_passphrase.clone(),
+            ],
+        );
+        let rejected = run(
+            [
+                "--vault",
+                "personal",
+                "restore",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &selected_default,
+        );
+        assert_eq!(rejected.exit_code(), ExitCode::InvalidInput, "{rejected:?}");
+
+        let unused_secret = b"must remain unused".to_vec();
+        let restore_host = TestHost::with_entropy_seed(
+            paths.clone(),
+            [
+                target_passphrase.clone(),
+                artifact_passphrase.clone(),
+                target_passphrase.clone(),
+                unused_secret.clone(),
+            ],
+            83,
+        );
+        let restored = run(
+            [
+                "--vault",
+                "restore",
+                "restore",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &restore_host,
+        );
+        assert_eq!(restored.exit_code(), ExitCode::Success, "{restored:?}");
+        assert_eq!(
+            restored.stdout(),
+            "Portable restore completed and verified: items=1 candidates=1 conflicts=0.\n"
+        );
+        assert_eq!(&*restore_host.secret().unwrap(), unused_secret.as_slice());
+        assert_eq!(fs::read(&artifact_path).unwrap(), exact_artifact);
+
+        let target_list = TestHost::new(paths.clone(), [target_passphrase.clone()]);
+        let listed = run(["--vault", "restore", "item", "list"], &target_list);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("Composed restore note"));
+        assert!(!listed.stdout().contains("composed restore note body"));
+
+        let target_audit = TestHost::with_entropy_seed(paths.clone(), [target_passphrase], 89);
+        let audit = run(["--vault", "restore", "audit", "list"], &target_audit);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit
+            .stdout()
+            .contains("action=portable_import\toutcome=succeeded"));
+        assert!(audit
+            .stdout()
+            .contains("action=portable_restore_verify\toutcome=succeeded"));
+        assert!(!audit.stdout().contains("composed-restore.vpm"));
+        assert!(!audit
+            .stdout()
+            .contains("composed restore artifact passphrase"));
+        assert!(!audit
+            .stdout()
+            .contains("composed restore target passphrase"));
+
+        let source_list = TestHost::new(paths, [source_passphrase]);
+        let source_items = run(["item", "list"], &source_list);
+        assert_eq!(
+            source_items.exit_code(),
+            ExitCode::Success,
+            "{source_items:?}"
+        );
+        assert!(source_items.stdout().contains("Composed restore note"));
+    }
+
+    #[test]
+    fn portable_restore_interruption_after_import_uses_standalone_verification_retry() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let source_passphrase = b"retry source passphrase".to_vec();
+        let target_passphrase = b"retry target passphrase".to_vec();
+        let artifact_passphrase = b"retry artifact passphrase".to_vec();
+        let init_source = TestHost::new(paths.clone(), [source_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_source).exit_code(), ExitCode::Success);
+        let add_source = TestHost::with_texts(
+            paths.clone(),
+            [source_passphrase.clone(), b"retry note body".to_vec()],
+            ["Retry note".to_owned()],
+        );
+        assert_eq!(
+            run(["item", "add", "secure-note"], &add_source).exit_code(),
+            ExitCode::Success
+        );
+        let artifact_path = root.0.join("retry-restore.vpm");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [source_passphrase, artifact_passphrase.clone()],
+        );
+        assert_eq!(
+            run(
+                [
+                    "export",
+                    artifact_path.to_str().expect("UTF-8 test artifact path"),
+                ],
+                &export_host,
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        let create_target =
+            TestHost::with_entropy_seed(paths.clone(), [target_passphrase.clone()], 97);
+        assert_eq!(
+            run(["vault", "create", "retry"], &create_target).exit_code(),
+            ExitCode::Success
+        );
+
+        let interrupted_host = TestHost::with_entropy_seed(
+            paths.clone(),
+            [
+                target_passphrase.clone(),
+                artifact_passphrase.clone(),
+                b"wrong second unlock".to_vec(),
+            ],
+            101,
+        );
+        let interrupted = run(
+            [
+                "--vault",
+                "retry",
+                "restore",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &interrupted_host,
+        );
+        assert_eq!(interrupted.exit_code(), ExitCode::Locked, "{interrupted:?}");
+        assert!(interrupted.stdout().is_empty());
+
+        let repeated_import = TestHost::with_entropy_seed(
+            paths.clone(),
+            [target_passphrase.clone(), artifact_passphrase.clone()],
+            103,
+        );
+        let repeated = run(
+            [
+                "--vault",
+                "retry",
+                "import",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &repeated_import,
+        );
+        assert_eq!(repeated.exit_code(), ExitCode::InvalidInput, "{repeated:?}");
+        assert!(repeated.stdout().is_empty());
+
+        let retry_host = TestHost::with_entropy_seed(
+            paths.clone(),
+            [target_passphrase.clone(), artifact_passphrase],
+            107,
+        );
+        let verified = run(
+            [
+                "--vault",
+                "retry",
+                "restore",
+                "verify",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &retry_host,
+        );
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+        assert_eq!(
+            verified.stdout(),
+            "Portable restore verified: items=1 candidates=1 conflicts=0.\n"
+        );
+
+        let audit_host = TestHost::with_entropy_seed(paths, [target_passphrase], 109);
+        let audit = run(["--vault", "retry", "audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .matches("action=portable_import\toutcome=succeeded")
+                .count(),
+            1
+        );
+        assert!(audit
+            .stdout()
+            .contains("action=portable_import\toutcome=failed"));
+        assert!(audit
+            .stdout()
+            .contains("action=portable_restore_verify\toutcome=succeeded"));
     }
 
     #[test]

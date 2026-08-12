@@ -18,6 +18,7 @@ vault-pm [--vault NAME] audit show TRACE
 vault-pm [--vault NAME] doctor [--unlock]
 vault-pm [--vault NAME] export FILE
 vault-pm [--vault NAME] import FILE
+vault-pm --vault NAME restore FILE
 vault-pm [--vault NAME] restore verify FILE
 vault-pm [--vault NAME] item add login
 vault-pm [--vault NAME] item add secure-note
@@ -42,10 +43,11 @@ same verified history in newest-first order, select the failed edit by its
 canonical trace in another process, verify both history accesses became
 durable, produce a separately passphrase-encrypted portable artifact through
 two hidden prompts, create a separately keyed named target in the same profile,
-select it without changing the source default, import the artifact through
-another hidden prompt, restart into redacted restored items, independently
-reopen the target again for audited semantic verification, reopen the untouched
-source, and inspect the shared profile tree for plaintext secret bytes.
+select it without changing the source default, open the artifact through
+another hidden prompt, publish import with no intermediate output, independently
+reopen the target in the same command for audited semantic verification,
+restart into redacted restored items, reopen the untouched source, and inspect
+the shared profile tree for plaintext secret bytes.
 
 ## Verification
 

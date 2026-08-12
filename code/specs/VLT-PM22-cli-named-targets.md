@@ -130,3 +130,9 @@ Automated tests must prove:
    selected authenticated commands advance only the chosen chain; and
 7. a real process can create a target, select it for portable import and restore
    verification, restart between commands, and observe no source-vault change.
+
+## 10. Verified-restore composition
+
+`VLT-PM23-cli-verified-restore.md` uses the explicit named selector to compose
+portable import with an independently reopened target verification. It retains
+the commands defined here and by VLT-PM20 as interruption-safe retry surfaces.
