@@ -1,6 +1,6 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/part-of-speech.adj`) driven through the
-//! built CLI: a native `table` naming three example words and their
+//! built CLI: a native `table` naming five example words and their
 //! grammatical part of speech, per Grammarly's "The 8 Parts of Speech"
 //! article. 0 answer-time model calls.
 
@@ -74,6 +74,44 @@ fn part_of_speech_reverse_binds_the_word_for_that_category() {
     assert!(
         out.contains("\"Word\":\"run\""),
         "the shipped verb example is run: {out}"
+    );
+}
+
+#[test]
+fn part_of_speech_recall_binds_a_newly_added_row_directly() {
+    let dir = scratch("direct_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"part-of-speech.adj\"\n\
+         ? part_of_speech(quietly, $Category)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"Category\":\"adverb\""),
+        "quietly is an adverb: {out}"
+    );
+}
+
+#[test]
+fn part_of_speech_reverse_binds_a_newly_added_row() {
+    let dir = scratch("reverse_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"part-of-speech.adj\"\n\
+         ? part_of_speech($Word, preposition)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"Word\":\"against\""),
+        "the shipped preposition example is against: {out}"
     );
 }
 
