@@ -225,6 +225,16 @@ impl OpenedPortableSnapshotV1 {
         self.candidates.values().map(Vec::len).sum()
     }
 
+    /// Bind the complete authenticated source semantics for later restore verification.
+    ///
+    /// The opaque result retains source identities only to prove cross-vault
+    /// disjointness and exposes no record, schema, timestamp, or field value.
+    pub fn prepare_restore_verification(
+        &self,
+    ) -> Result<crate::PortableRestoreExpectationV1, ApplicationError> {
+        crate::PortableRestoreExpectationV1::from_source(self.source_vault_id, &self.candidates)
+    }
+
     pub(crate) fn into_import_parts(self) -> (VaultId, BTreeMap<ItemId, Vec<ItemCandidate>>) {
         let Self {
             _exact_bootstrap,

@@ -2,6 +2,21 @@
 
 All notable changes to this package are documented here.
 
+## [0.48.0] - 2026-08-11
+
+### Added
+
+- Add an opaque portable-restore expectation over canonical normalized
+  candidate-group semantics and source identity sets.
+- Add independently reopened target verification with aggregate-only results.
+
+### Security
+
+- Compare exact live/tombstone values, timestamps, schemas, CRDT state,
+  candidate grouping, parent removal, and cross-vault identity disjointness.
+- Publish dedicated succeeded or failed `PortableRestoreVerify` events before
+  releasing the aggregate proof or integrity failure.
+
 ## [0.47.0] - 2026-08-11
 
 ### Added

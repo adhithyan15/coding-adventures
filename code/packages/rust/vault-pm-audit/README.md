@@ -12,7 +12,9 @@ layers can seal events at rest and publish them atomically with the commit that
 contains the operation, allowing filesystem, Google Drive, WebDAV, S3, and
 future stores to remain opaque byte stores. Conflict choice and authored
 conflict merge are distinct actions so a merge never invents one selected
-parent.
+parent. Portable import and independent portable-restore verification are also
+distinct so the audit chain records mutation and post-reopen comparison as
+separate operations.
 
 The event contains no title, username, URL, query text, password, notes body,
 TOTP seed, attachment name, provider identity, path, or arbitrary detail field.

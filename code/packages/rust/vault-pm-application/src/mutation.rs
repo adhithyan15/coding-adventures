@@ -1,3 +1,4 @@
+use crate::restore::remap_imported_item_state;
 use crate::{
     encode_item_revision, encode_signed_audit_event, encode_signed_commit, seal_object,
     ActiveStateV1, ApplicationError, ApplicationRepository, ApplicationRepositoryError, CatalogV1,
@@ -549,31 +550,6 @@ fn prepare_portable_import_publication(
     match audit_event.map(|(_, id)| id) {
         Some(head) => publication.with_audit_event_head(head),
         None => Ok(publication),
-    }
-}
-
-fn remap_imported_item_state(
-    state: &ItemState,
-    item_id: ItemId,
-) -> Result<ItemState, ApplicationError> {
-    match state {
-        ItemState::Live(document) => ItemDocument::new(
-            item_id,
-            document.schema().clone(),
-            document.created_at_ms(),
-            document.updated_at_ms(),
-            document.favorite().clone(),
-            document.collection_ids().clone(),
-            document.tags().clone(),
-            document.payload().clone(),
-            document.attachments().clone(),
-        )
-        .map(|document| ItemState::Live(Box::new(document)))
-        .map_err(|_| ApplicationError::IntegrityFailure),
-        ItemState::Tombstone(tombstone) => Ok(ItemState::Tombstone(Tombstone {
-            item_id,
-            deleted_at_ms: tombstone.deleted_at_ms,
-        })),
     }
 }
 

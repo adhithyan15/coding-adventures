@@ -163,8 +163,8 @@ The slice is complete only when tests prove:
 ## 10. Remaining restore work
 
 This slice does not create or switch target configurations automatically and
-does not claim a field-by-field semantic restore comparison in the CLI. The
-next recovery slice should add an explicit target-creation/switch ceremony and
-an application-owned verifier token that independently reopens the target and
-compares item, candidate, conflict, schema, timestamp, deletion, and revealed
-field values before reporting a fully verified restore.
+does not claim a field-by-field semantic restore comparison in the CLI.
+`VLT-PM19-portable-restore-verification.md` defines the completed
+application-owned expectation, independent target comparison, and dedicated
+audit boundary. Explicit target creation/configuration switching and CLI
+composition of that verifier remain the next recovery slice.

@@ -338,11 +338,22 @@ remaining logically empty. Host/artifact failures publish itemless failed
 closed error, and success keeps its `PortableImport` event atomic with every
 re-identified candidate and the new catalog.
 
+Before import consumes an authenticated snapshot, the application can derive
+an opaque `PortableRestoreExpectationV1`. It normalizes only the item identity
+that import replaces, canonical-encodes every complete live or tombstone state,
+hashes sorted candidate groups, and retains source identities for disjointness
+checks. An independently reopened target can consume that token through
+`audited_verify_portable_restore`: source vault/item/revision reuse, retained
+causal parents, grouping drift, or any schema, timestamp, deletion, CRDT, or
+record-value change yields one closed integrity failure. Match and mismatch
+publish a dedicated itemless `PortableRestoreVerify` event before the caller
+receives an aggregate count proof or the error.
+
 The crate accepts key and randomness material from its caller. It does not own
 a filesystem path, provider SDK, network client, process, environment, clock,
 credential store, or entropy source. Host field clipboard implementation,
-portable target creation and restore verification, and richer host-side path,
-authorization, quota, and cache checks land in later slices.
+portable target creation and CLI restore-verification composition, and richer
+host-side path, authorization, quota, and cache checks land in later slices.
 There is no unchecked
 repository verification path: construction decrypts and
 authority-verifies the exact locally pinned certificate frame and object ID,
@@ -394,15 +405,18 @@ tombstone selection, authored merged-secret persistence, complete multi-parent
 causality, immutable live-identity preservation, immutable losing-candidate
 retention, missing/unconflicted/all-tombstone rejection before
 compare-exchange, and entropy redaction/wiping.
-Portable-export/open/import tests prove the exact canonical encrypted vector, separate
-passphrase authentication, header/ciphertext tamper rejection, exact active
-bootstrap binding, plaintext-secret exclusion, complete snapshot count/hash,
-signed-bootstrap validation, host KDF-ceiling enforcement, candidate identity
-and ordering validation, live-document recovery, bounded credential rejection,
-lossless retention of every current conflicting tombstone, exact import entropy
-sizing, cross-vault item/revision re-identification, target-only encryption,
-atomic publication, conflict/deletion preservation, and independent target
-reopen with aggregate and revealed-secret comparison.
+Portable-export/open/import tests prove the exact canonical encrypted vector,
+separate passphrase authentication, header/ciphertext tamper rejection, exact
+active bootstrap binding, plaintext-secret exclusion, complete snapshot
+count/hash, signed-bootstrap validation, host KDF-ceiling enforcement,
+candidate identity and ordering validation, live-document recovery, bounded
+credential rejection, lossless retention of every current conflicting
+tombstone, exact import entropy sizing, cross-vault item/revision
+re-identification, target-only encryption, atomic publication, and
+conflict/deletion preservation. Restore-verifier tests independently reopen the
+target, match canonical normalized candidate groups, reject same-count semantic
+drift, source identity reuse, and retained parents, and prove failed/succeeded
+comparison events are durable before their result.
 
 ## Development
 

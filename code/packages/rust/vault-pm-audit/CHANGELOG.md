@@ -11,3 +11,6 @@
   single selected revision for a merge that intentionally retains all parents.
 - Added stable lowercase action and outcome labels for explicit redacted audit
   surfaces without changing the canonical signed representation.
+- Added a distinct `PortableRestoreVerify` action so independent semantic
+  restore comparison never masquerades as another import mutation or generic
+  vault verification.
