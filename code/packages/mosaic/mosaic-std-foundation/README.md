@@ -36,9 +36,11 @@ Flutter, and Compose.
 
 ## Deliberate v0.1 boundary
 
-A general `Surface` must accept arbitrary Mosaic children. UI29-2 child
-pass-through is not implemented yet, and a native `node` slot is not a portable
-substitute because Flutter's JSON runtime cannot materialize a Dart `Widget`.
-Foundation therefore does not claim a fake text-only surface. Surface
-components land after that composition contract is available; the palette
-already reserves surface and border tokens for them.
+A general `Surface` must accept arbitrary Mosaic children. UI29-2 now preserves
+one default authored child region when a package reference is expanded, but
+standalone exported-component child parameters and named regions are not yet
+implemented. A host-native `node` slot is not a portable substitute because
+Flutter's JSON runtime cannot materialize a Dart `Widget`. Foundation therefore
+does not claim a fake text-only surface. Surface components land after the
+remaining composition contract is available; the palette already reserves
+surface and border tokens for them.

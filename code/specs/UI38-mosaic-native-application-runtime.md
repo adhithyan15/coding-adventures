@@ -504,6 +504,11 @@ unblocks multiple downstream targets; never count source generation as completio
     native `node` adapter. Flutter's JSON runtime makes a native widget slot an
     intentionally non-portable substitute, so v0.1 reserves surface tokens but
     does not claim a text-only surface abstraction.
+    - [x] Preserve one default inline child region through typed MLL mounts and
+      package expansion, with all-five-native acceptance and fail-closed
+      rejection when a referenced component has no mount.
+    - [ ] Add named child regions and standalone exported-component child
+      parameters before `Surface` itself can pass `native-complete` directly.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
