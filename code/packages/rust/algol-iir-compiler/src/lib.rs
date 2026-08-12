@@ -4709,6 +4709,7 @@ impl Compiler {
     fn emit_for(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
         self.disable_static_real_tracking();
+        let entry_initialized_string_slots = self.initialized_string_slots.clone();
         let target = first_direct_node(node, "variable")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
         let var_ty = self.for_target_type(target)?;
@@ -4736,6 +4737,7 @@ impl Compiler {
         for elem in elems {
             self.emit_for_element(target, var_ty, elem, body)?;
         }
+        self.initialized_string_slots = entry_initialized_string_slots;
         Ok(())
     }
 
@@ -8286,6 +8288,25 @@ mod tests {
             "test",
         )
         .expect("an initialized baseline remains initialized on both exits");
+    }
+
+    #[test]
+    fn al4_loop_body_does_not_definitely_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 1 while false do s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("a zero-trip loop body cannot definitely initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_initialized_string_survives_loop_join() {
+        compile_source(
+            "begin integer i; string s; s := 'OK'; for i := 1 while false do s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect("a string initialized before the loop remains initialized afterward");
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────

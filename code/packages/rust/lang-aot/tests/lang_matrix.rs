@@ -2133,6 +2133,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("LO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a zero-trip loop cannot erase definite initialization from
+    // before the loop. The body is skipped, and the pre-loop typed string is
+    // still the value printed by every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; string s; s := 'OK'; for i := 1 while false do s := 'HI'; print(s) end",
+        expect: Expect::Stdout("OK"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
     // comparisons over string literals and literal-backed scalar variables
     // through the shared E4 `str_eq` / `str_cmp` ops, then compares their
