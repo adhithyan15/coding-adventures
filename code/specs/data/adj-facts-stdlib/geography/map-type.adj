@@ -1,0 +1,60 @@
+% ============================================================================
+% map-type — three named types of map and what each actually shows
+% (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% Not every map shows the same thing: a political map shows human-made
+% boundaries, a physical map shows the natural landscape, and a
+% topographic map shows the shape of the land itself. Recall is a binding
+% query:
+%
+%     ? map_type(political, $D)
+%       % shows_boundaries_between_countries_states_counties_and_other_political_units
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `map_type(type, description)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on a map-related term that is not one of these three. The
+% query also runs BACKWARD — bind a description and recall the type it
+% names:
+%
+%     ? map_type($T, shows_the_shape_of_earths_surface)
+%       % topographic
+%
+% The three map types, as a little truth table:
+%
+%     type           description                                                                    quote (verbatim)
+%     -------------  -----------------------------------------------------------------------------  --------------------------------------------------------------------------------
+%     political       shows_boundaries_between_countries_states_counties_and_other_political_units    "Political maps show boundaries between countries, states, counties, and other political units."
+%     physical        shows_the_natural_landscape_features_of_earth                                   "Physical maps are designed to show the natural landscape features of Earth."
+%     topographic     shows_the_shape_of_earths_surface                                               "Topographic maps are reference maps that show the shape of Earth's surface."
+%
+% Provenance: quoted verbatim from Geology.com's "Types of Maps" article,
+% which introduces each of these three map types under its own section
+% heading, each with a complete defining sentence. WebFetch-verified
+% before writing (twice — the second pass specifically confirmed each
+% sentence's exact wording, the section heading it appears under, and
+% that no additional clause is attached as part of the same defining
+% thought). `trust consensus` — Geology.com is a reputable secondary
+% reference, the same tier the sibling `rock-type.adj` (in `geology/`,
+% a sibling directory) uses for some of its non-USGS citations. A map
+% type that is NOT one of these three — "weather maps", a real category
+% the same page also covers, but one whose own section describes its
+% uses across several sentences without ever stating a single, complete
+% defining sentence the way the three tabled here do — is deliberately
+% NOT a row, so a recall ABSTAINS on it rather than inventing a
+% description. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table map_type {
+    columns type, description
+
+    row (political, shows_boundaries_between_countries_states_counties_and_other_political_units)
+    row (physical, shows_the_natural_landscape_features_of_earth)
+    row (topographic, shows_the_shape_of_earths_surface)
+
+    source "Political maps show boundaries between countries, states, counties, and other political units."
+    locator "https://geology.com/maps/types-of-maps/"
+    trust consensus
+}
