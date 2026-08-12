@@ -124,7 +124,8 @@ compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
 Inline `style` statements preserve fill, stroke, text color, and stroke width
 through graph IR, layout style resolution, and backend-neutral Paint geometry
-and glyph instructions. Named `classDef` declarations and comma-delimited
+and glyph instructions, including comma-delimited node and composite targets.
+Named `classDef` declarations and comma-delimited
 `class` assignments resolve the same properties into graph IR, including
 assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
