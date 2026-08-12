@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 71,
-  "title": "Le --- To Him, To Her, To You",
+  "title": "Nos --- Us, and the Word Inside -mos",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:600195461c741b18",
+  "sourceHash": "fnv1a64:449c54ca72254001",
   "lessons": [
     {
-      "id": "ES-C46-le",
-      "sequence": 1121,
-      "title": "le — \"to him,\" \"to her,\" \"to you\"",
-      "headword": "le",
-      "romanization": "le",
-      "gloss": "\"to him, to her, to you\" — a Latin case Spanish kept and English threw away",
+      "id": "ES-C45-nos",
+      "sequence": 1136,
+      "title": "nos — \"us\"",
+      "headword": "nos",
+      "romanization": "nos",
+      "gloss": "\"us\" — and the word hiding inside the verb ending you have used since hablamos",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:837dc555410f538f",
+      "sourceHash": "fnv1a64:f15abd0524a1f7b5",
       "notice": null,
       "blocks": [
         {
@@ -35,42 +35,34 @@
             },
             {
               "kind": "speech",
-              "text": "Lo and la answer the question what. This chapter answers a different one: to whom."
+              "text": "Say \"you love me.\" (Me quieres.) And \"I love you.\" (Te quiero.) Both of those are about one person on the receiving end. Here is more than one."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the other question",
+          "title": "Grammar Lens: the third person in the room",
           "segments": [
             {
               "kind": "speech",
-              "text": "le — to him, to her, to you (with usted)."
+              "text": "nos — us."
             },
             {
               "kind": "speech",
-              "text": "Le digo. — I tell him. Or her. Or you."
+              "text": "Nos quieren. — They love us."
             },
             {
               "kind": "speech",
-              "text": "Some verbs land on a thing: you have it, you make it, you want it. Others land on a person you are aiming at — you tell them, you speak to them, you give them something. Spanish uses a different pronoun for the second kind, and le is it."
+              "text": "Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else."
             },
             {
               "kind": "speech",
-              "text": "Same slot. Still in front of the verb. Nothing about the shape of a sentence has changed in eleven chapters."
+              "text": "Me quieren. — They love me. Nos quieren. — They love us."
             },
             {
               "kind": "speech",
-              "text": "And here is the relief: le does not mark gender."
-            },
-            {
-              "kind": "speech",
-              "text": "Le digo. — I tell him. and I tell her. and I tell you."
-            },
-            {
-              "kind": "speech",
-              "text": "After four chapters of choosing between lo and la by the gender of a noun, this one asks you for nothing. One form covers three people. If you need to say which, you add it in words — but the pronoun itself does not care."
+              "text": "One letter of difference, and the difference is how many people you are speaking for."
             }
           ]
         },
@@ -81,27 +73,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Lo and le are the same Latin word again — and this time the difference is not wear, it is grammar."
+              "text": "Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words."
             },
             {
               "kind": "speech",
-              "text": "Latin changed a word's ending to show its job in the sentence. Ille, \"that one,\" had one form for the thing an action hit and another for the person it was aimed at:"
+              "text": "You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said \"we speak,\" you were saying nos twice: once in the ending, and once by not needing to say it at all."
             },
             {
               "kind": "speech",
-              "text": "illum — the one the verb acts on becomes Spanish lo."
+              "text": "And the word for \"we\" itself:"
             },
             {
               "kind": "speech",
-              "text": "illī — the one it is aimed at becomes Spanish le."
+              "text": "nosotros — we, literally nos + otros, \"we others.\""
             },
             {
               "kind": "speech",
-              "text": "Latin called these the accusative and the dative. Almost all of that system collapsed on the way to Spanish; nouns lost their endings entirely. But in these small, constantly-used pronouns, two of the cases survived, and you are looking at them."
-            },
-            {
-              "kind": "speech",
-              "text": "English had the same distinction and lost it more completely. It survives in a word order rather than a shape: I told him the story — him is doing exactly what le does, and English simply stopped marking it."
+              "text": "Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word."
             }
           ]
         },
@@ -119,79 +107,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo tengo\" then \"Le digo\" — what, then to whom",
+              "instruction": "\"Me quieren\" then \"Nos quieren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo tengo\" then \"Le digo\" — what, then to whom]"
+              "source": "[YOU SAY: \"Me quieren\" then \"Nos quieren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Le digo\" three times, meaning him, then her, then usted",
+              "instruction": "\"hablamos\" and hear the nos at the end of it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Le digo\" three times, meaning him, then her, then usted]"
+              "source": "[YOU SAY: \"hablamos\" and hear the *nos* at the end of it]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-say",
-              "prompt": "Say I tell him.",
+              "id": "ES-C45-nos-say",
+              "prompt": "Say they love us.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-LEX-LE-OBJECT",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-LEX-NOS-OBJECT"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "le digo",
-                "yo le digo"
+                "nos quieren",
+                "ellos nos quieren"
               ],
               "feedback": {
-                "correct": "And the same two words mean I tell her.",
-                "incorrect": "Le digo."
+                "correct": "Same slot, in front of the verb.",
+                "incorrect": "Nos quieren."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-gender",
-              "prompt": "How many genders does le have?",
+              "id": "ES-C45-nos-ending",
+              "prompt": "Which verb ending is the same ancient word as nos?",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-ETYMON-NOS-OTROS",
+                "ES-GRAMMAR-AR-PRESENT-1PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "none",
-                "one form for all",
-                "it does not mark gender"
+                "-mos",
+                "the -mos ending",
+                "mos"
               ],
               "feedback": {
-                "correct": "One form for him, her and usted.",
-                "incorrect": "None — unlike lo and la, le does not mark gender at all."
+                "correct": "Hablamos carries it on the back of the verb.",
+                "incorrect": "The -mos of hablamos: nos worn down and glued on."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-case",
-              "prompt": "Lo comes from Latin illum. Which Latin form does le come from, and what was it for?",
+              "id": "ES-C45-nos-word",
+              "prompt": "What are the two pieces inside nosotros, and what do they mean together?",
               "assesses": [
-                "ES-ETYMON-ILLI-DATIVE",
-                "ES-ETYMON-ILLE-ILLA"
+                "ES-LEX-NOSOTROS"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "illi, for the one the action is aimed at",
-                "illi, the dative",
-                "illi"
+                "nos and otros, we others",
+                "nos + otros",
+                "we others"
               ],
               "feedback": {
-                "correct": "Two Latin cases, both still alive in these two small words.",
-                "incorrect": "Illi — the dative, the form for whoever the verb was aimed at."
+                "correct": "The seam is still visible.",
+                "incorrect": "nos + otros, literally we others."
               }
             }
           ]
@@ -209,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I tell him.\" (Le digo.) And \"I tell her.\" (Le digo — the same.) Which Latin case is le? (The dative, illī.) Next: its plural, and a discovery about how little of this system is actually new."
+              "text": "Say \"they love us.\" (Nos quieren.) What is nosotros made of? (Nos + otros — \"we others.\") Next: the plural of lo and la, and you will not need to be told what they are."
             }
           ]
         }

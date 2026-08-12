@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 125,
-  "title": "Telling Time",
+  "title": "The Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3eaa4d4e1fe52570",
+  "sourceHash": "fnv1a64:7f45f7414b7a0645",
   "lessons": [
     {
-      "id": "ES-C29-la-hora",
-      "sequence": 1660,
-      "title": "la hora — Spanish's barely-changed Latin hour",
-      "headword": "la hora",
-      "romanization": "la hora",
-      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
+      "id": "ES-C25-las-estaciones",
+      "sequence": 1620,
+      "title": "la primavera, el verano, el otoño, el invierno — three plain, one surprising",
+      "headword": "la primavera, el verano, el otoño, el invierno",
+      "romanization": "la primavera, el verano, el otoño, el invierno",
+      "gloss": "the four seasons — three straightforward, and one whose MEANING quietly shifted from \"spring\" to \"summer\"",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41d8e3e56b14b878",
+      "sourceHash": "fnv1a64:48355d4ddce09e64",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,41 @@
             },
             {
               "kind": "speech",
-              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
+              "text": "Three of Spanish's four seasons are exactly what you'd expect from Latin. The fourth hides a genuine surprise: its meaning itself drifted from one season to another."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: hora",
+          "title": "The words, taken apart: three straightforward seasons",
           "segments": [
             {
               "kind": "speech",
-              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
+              "text": "la primavera (\"spring\") from Latin prīma vēra, literally \"first spring\" (vēr, \"spring,\" + prīma, \"first\"). Italian still says the identical phrase, primavera, unchanged. (Old French once said primevère too, before switching to printemps.)"
             },
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word",
-                "what happened"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
-                "language: French. word: heure. what happened: inherited, but worn down further.",
-                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
-                "language: English. word: hour. what happened: inherited via French, silent h."
-              ]
+              "kind": "speech",
+              "text": "el otoño (\"autumn\") from Latin autumnus — the same root behind French automne and English autumn itself."
+            },
+            {
+              "kind": "speech",
+              "text": "el invierno (\"winter\") from Latin hībernum (tempus), \"the wintry [season]\" — the same root as French hiver and English hibernate, \"to spend the winter.\""
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Son las and telling time",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: verano",
           "segments": [
             {
               "kind": "speech",
-              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
+              "text": "You might expect verano (\"summer\") to come from Latin aestas, \"heat\" — the way French été does. It doesn't. The standard account (per Spanish etymological dictionaries) traces verano to Latin vērānum (tempus), \"of spring\" — built on the very same vēr, \"spring,\" behind primavera."
             },
             {
               "kind": "speech",
-              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
+              "text": "So how did a word meaning \"spring-ish\" end up naming summer? The honest answer is a shift in meaning over time, not a sound change — though the exact story is murkier than a tidy one-line explanation. The traditional, simplified account says that as primavera (\"first spring\") rose to become the standard word for spring, verano's meaning drifted forward into the season right after, summer; the fuller picture likely also involves Vulgar Latin agricultural usage (a \"vernal\" grazing or working period that stretched from late spring into early summer), so the drift may not be purely a case of one word simply vacating a job for the other. Either way, two Spanish words both rooted in vēr, \"spring,\" ended up naming two different seasons."
             }
           ]
         },
@@ -99,29 +87,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
+              "instruction": "\"primavera, verano, otoño, invierno\" — the four seasons",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
+              "source": "[YOU SAY: \"primavera, verano, otoño, invierno\" — the four seasons]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
+              "instruction": "\"primavera = prima vera, first spring\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
+              "source": "[YOU SAY: \"primavera = prima vera, first spring\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
+              "instruction": "the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
+              "source": "[YOU SAY: the surprise — \"verano ALSO comes from vēr, 'spring' — but its meaning moved to summer\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"invierno hibernate\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"invierno ~ hibernate\"]"
             }
           ]
         },
@@ -138,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
+              "text": "What does primavera literally mean? (\"First spring\" — prīma vēra.) Does verano come from Latin aestas, like French été? (No — from vērānum, \"of spring,\" the same vēr root as primavera; its meaning shifted toward summer over time — traditionally linked to primavera taking over the job of naming spring, though the fuller history is murkier than that alone.) What English word is invierno the cousin of? (Hibernate.)"
             }
           ]
         }

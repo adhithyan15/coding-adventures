@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 164,
-  "title": "El Libro Que Compro --- One Sentence Out of Two",
+  "title": "Se Habla Espanol --- Nobody in Particular",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0d2518d8642eb832",
+  "sourceHash": "fnv1a64:13ed9d2a11746c9b",
   "lessons": [
     {
-      "id": "ES-C53-que-relativo",
-      "sequence": 2091,
-      "title": "el libro que compro — one sentence out of two",
-      "headword": "el libro que compro",
-      "romanization": "el libro que compro",
-      "gloss": "joining two sentences into one — with a word you have had since you learned to want things",
+      "id": "ES-C52-se-habla",
+      "sequence": 2106,
+      "title": "se habla español — nobody in particular",
+      "headword": "se habla español",
+      "romanization": "se habla español",
+      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3993a0a89a9d263a",
+      "sourceHash": "fnv1a64:1d434ce3cb06b6ad",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I want you to speak.\" (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short."
+              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: stapling two sentences together",
+          "title": "Grammar Lens: a sentence with nobody in it",
           "segments": [
             {
               "kind": "speech",
-              "text": "You have two sentences about one book:"
+              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro. — I have the book. Compro el libro. — I buy the book."
+              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
             },
             {
               "kind": "speech",
-              "text": "Que joins them, and the repeated noun disappears:"
+              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro que compro. — I have the book that I buy."
+              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
             },
             {
               "kind": "speech",
-              "text": "That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length."
+              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement."
-            },
-            {
-              "kind": "speech",
-              "text": "So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,84 +80,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two short sentences, then the joined one",
+              "instruction": "\"Se habla español\" as if reading it off a window",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two short sentences, then the joined one]"
+              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el libro que compro\", \"la casa que tengo\"",
+              "instruction": "\"Se come bien\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el libro que compro\", \"la casa que tengo\"]"
+              "source": "[YOU SAY: \"Se come bien\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-relativo-join",
-              "prompt": "Join Tengo el libro and Compro el libro into one sentence.",
+              "id": "ES-C52-se-habla-sign",
+              "prompt": "Write the sign that says Spanish is spoken here.",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-LEX-LIBRO",
-                "ES-LEX-COMPRAR-07"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "tengo el libro que compro",
-                "el libro que compro"
+                "se habla espanol",
+                "se habla español"
               ],
               "feedback": {
-                "correct": "Name the thing once, hang the rest off que.",
-                "incorrect": "Tengo el libro que compro."
+                "correct": "No person named anywhere in it.",
+                "incorrect": "Se habla espanol."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-relativo-what",
-              "prompt": "What happens to the repeated noun when que joins two sentences?",
+              "id": "ES-C52-se-habla-who",
+              "prompt": "Who speaks Spanish, according to that sentence?",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE"
+                "ES-GRAMMAR-SE-IMPERSONAL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "it disappears",
-                "you only say it once",
-                "it is not repeated"
+                "nobody in particular",
+                "it does not say",
+                "no one is named"
               ],
               "feedback": {
-                "correct": "Once is enough — que carries it into the second half.",
-                "incorrect": "It disappears. You name it once."
+                "correct": "That absence is the whole point of the form.",
+                "incorrect": "It does not say, and it is not meant to."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-que-relativo-family",
-              "prompt": "Which question words share que's root?",
+              "id": "ES-C52-se-habla-eat",
+              "prompt": "Say one eats well here.",
               "assesses": [
-                "ES-ETYMON-QUI-RELATIVE",
-                "ES-LEX-QUE"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-COMER",
+                "ES-LEX-BIEN"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "que, quien, como, cuando",
-                "qué, quién, cómo, cuándo",
-                "the qu- family"
+                "se come bien",
+                "aqui se come bien"
               ],
               "feedback": {
-                "correct": "A question fills a gap; so does a relative clause.",
-                "incorrect": "Qué, quién, cómo, cuándo — the same qu- root."
+                "correct": "Se come bien.",
+                "incorrect": "Se come bien."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -192,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "Join \"I have the book\" and \"I buy the book.\" (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner."
+              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
             }
           ]
         }

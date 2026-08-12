@@ -1,41 +1,43 @@
-Spanish, chapter 66: Nos --- Us, and the Word Inside -mos.
+Spanish, chapter 66: Lo --- Saying It Without Naming It.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-nos — "us".
+lo — "it".
 
 Warm-up.
 [pause 2 seconds]
-Say "you love me." (Me quieres.) And "I love you." (Te quiero.) Both of those are about one person on the receiving end. Here is more than one.
+Say "my name is" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?
 
-Grammar Lens: the third person in the room.
-nos — us.
-Nos quieren. — They love us.
-Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else.
-Me quieren. — They love me. Nos quieren. — They love us.
-One letter of difference, and the difference is how many people you are speaking for.
+Grammar Lens: a slot you have been using all along.
+Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name.
+Here is a second word for that same slot.
+lo — it, standing in for something masculine.
+Watch what it does:
+Tengo el libro. — I have the book. Lo tengo. — I have it.
+The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own.
+Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first.
 
 The word, taken apart.
-Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words.
-You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said "we speak," you were saying nos twice: once in the ending, and once by not needing to say it at all.
-And the word for "we" itself:
-nosotros — we, literally nos + otros, "we others."
-Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word.
+Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause.
+Latin ille, "that one," changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:
+Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el.
+Standing alone in the verb's slot, it kept the vowel: illum becomes lo.
+So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Me quieren" then "Nos quieren"]
+[your turn — say: "Tengo el libro" then "Lo tengo" — hear the noun disappear]
 [pause 8 seconds for the answer]
-[your turn — say: "hablamos" and hear the nos at the end of it]
+[your turn — say: "me llamo" then "lo tengo" — the same slot, twice]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say they love us.
+Say I have it, replacing el libro.
+[question — say your answer, then pause 8 seconds]
+Does the pronoun go before or after the conjugated verb?
 [question — say your answer, then pause 10 seconds]
-Which verb ending is the same ancient word as nos?
-[question — say your answer, then pause 12 seconds]
-What are the two pieces inside nosotros, and what do they mean together?
+Which everyday Spanish word comes from the same Latin word as lo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "they love us." (Nos quieren.) What is nosotros made of? (Nos + otros — "we others.") Next: the plural of lo and la, and you will not need to be told what they are.
+What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all.

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 54,
-  "title": "El Libro --- And a Word Made of Tree Bark",
+  "title": "Venir --- Coming",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fdc9bf7b52675528",
+  "sourceHash": "fnv1a64:60c5360a96a56072",
   "lessons": [
     {
-      "id": "ES-C43-libro",
-      "sequence": 1081,
-      "title": "el libro — \"book\"",
-      "headword": "el libro",
-      "romanization": "el libro",
-      "gloss": "book — named after the part of a tree people wrote on before paper",
+      "id": "ES-C13-venir",
+      "sequence": 1080,
+      "title": "venir — coming with three singular forms",
+      "headword": "venir",
+      "romanization": "venir",
+      "gloss": "to come — with the singular present forms vengo, vienes, and viene",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7fe7ae1df599405",
+      "sourceHash": "fnv1a64:ec401c446ed4baf0",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the house.\" (La casa.) Why la and not el? (Casa is feminine.) Here is one that goes the other way."
+              "text": "You can say salgo de Madrid, and you already know tengo, tienes, tiene. Now learn venir, “to come,” inside exactly the same three singular persons."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — a single flick of the tongue: LEE-broh. One tap, not a roll."
+              "text": "The g in vengo is hard. In vienes and viene, let ie move as one smooth vowel sequence."
             }
           ]
         },
@@ -57,50 +57,53 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "el libro — the book."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin liber did not mean \"book.\" It meant the inner bark of a tree — the thin, pale layer just under the rough outside, which is what Romans wrote on before they had anything better."
-            },
-            {
-              "kind": "speech",
-              "text": "So the word travelled the way these words usually do: from the material, to the thing made of it, to the thing itself long after the material is gone. Nobody has written on bark for two thousand years, and the word has not noticed."
-            },
-            {
-              "kind": "speech",
-              "text": "English took the same root and kept it in the places books live:"
-            },
-            {
-              "kind": "speech",
-              "text": "library — and French livre, Italian libro."
-            },
-            {
-              "kind": "speech",
-              "text": "libretto — Italian for \"little book,\" the words of an opera."
-            },
-            {
-              "kind": "speech",
-              "text": "English's own word went the same route from a different tree: book is related to beech, whose bark the Germanic peoples wrote on. Two languages, two trees, the same idea."
+              "text": "venir descends from Latin venīre, “to come.” English convene means “come together”; an event is something that “comes out”; and adventure passed through the idea of what may “come to” a person. The recurring ven- or vent- shape marks this old coming family."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a masculine noun to sit beside the feminine one",
+          "title": "Grammar Lens: one known comparison, still singular",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Libro ends in -o and is masculine, so it takes el."
+              "kind": "table",
+              "headers": [
+                "person",
+                "present of venir",
+                "known tener comparison"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present of venir: vengo. known tener comparison: tengo.",
+                "person: tú. present of venir: vienes. known tener comparison: tienes.",
+                "person: él / ella / usted. present of venir: viene. known tener comparison: tiene."
+              ]
             },
             {
               "kind": "speech",
-              "text": "el libro — the book. Tengo un libro. — I have a book. la casa — the house. Tengo una casa. — I have a house."
+              "text": "Say vengo, vienes, viene. The learned singular forms line up closely with tengo, tienes, tiene: the yo form ends in -go, while the other two show ie. This comparison describes two complete learned sets; it does not introduce a plural “boot” table or license guesses about other verbs."
             },
             {
               "kind": "speech",
-              "text": "Two nouns, one of each gender, side by side. That pairing is worth more than either noun alone: from here on, when something in Spanish depends on gender, you have a plain example of both to test it against."
+              "text": "Now contrast leaving and coming with known de and Madrid:"
+            },
+            {
+              "kind": "speech",
+              "text": "Salgo de Madrid. — “I leave Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Vengo de Madrid. — “I come from Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Vienes de Madrid. — “You come from Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons and free-standing arrival vocabulary wait for later lessons."
             }
           ]
         },
@@ -118,77 +121,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el libro\" — one tap on the r",
+              "instruction": "“venir — vengo, vienes, viene”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el libro\" — one tap on the *r*]"
+              "source": "[YOU SAY: “venir — vengo, vienes, viene”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun",
+              "instruction": "“Vengo de Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun]"
+              "source": "[YOU SAY: “Vengo de Madrid.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vengo / tengo — vienes / tienes”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “vengo / tengo — vienes / tienes”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-libro-article",
-              "prompt": "Say the book in Spanish.",
+              "id": "ES-C13-venir-singular-forms",
+              "prompt": "Give the learned singular present forms of venir: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-NOUN-GENDER"
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vengo, vienes, viene",
+                "vengo vienes viene",
+                "vengo / vienes / viene"
+              ],
+              "feedback": {
+                "correct": "Right: vengo, vienes, viene.",
+                "incorrect": "Retrieve the bounded set: vengo, vienes, viene."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-venir-come-from-madrid",
+              "prompt": "Say 'I come from Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "el libro",
-                "libro"
+                "vengo de madrid.",
+                "vengo de madrid"
               ],
               "feedback": {
-                "correct": "Masculine, so el.",
-                "incorrect": "El libro."
+                "correct": "Right: Vengo de Madrid.",
+                "incorrect": "Use vengo, then the known de plus Madrid."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-libro-have",
-              "prompt": "Say I have a book.",
+              "id": "ES-C13-venir-tener-contrast",
+              "prompt": "Give the tú forms of venir and tener, in that order.",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
-                "ES-LEX-LIBRO"
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "tengo un libro",
-                "yo tengo un libro"
+                "vienes, tienes",
+                "vienes tienes",
+                "vienes / tienes"
               ],
               "feedback": {
-                "correct": "Tengo un libro.",
-                "incorrect": "Tengo un libro — masculine, so un."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C43-libro-bark",
-              "prompt": "What did Latin liber originally mean?",
-              "assesses": [
-                "ES-ETYMON-LIBER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the inner bark of a tree",
-                "tree bark",
-                "bark"
-              ],
-              "feedback": {
-                "correct": "The writing surface came first; the book came after.",
-                "incorrect": "The inner bark of a tree — what Romans wrote on."
+                "correct": "Right: vienes, tienes.",
+                "incorrect": "Both learned tú forms show ie: vienes, tienes."
               }
             }
           ]
@@ -206,7 +220,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"The book\"? (El libro.) \"The house\"? (La casa.) What was liber before it was a book? (Tree bark.) Next: a noun you can build yourself, out of a verb you already have."
+              "text": "What does venir mean? (“To come.”) Give its three learned forms. (Vengo, vienes, viene.) Which learned verb provides the close comparison? (Tener: tengo, tienes, tiene.) Which Latin source and English cousin help explain it? (Venīre; convene, event, or adventure.) Next: compare all six learned yo forms only after retrieving this chapter's three verbs."
             }
           ]
         }

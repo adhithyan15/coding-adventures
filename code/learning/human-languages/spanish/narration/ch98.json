@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 98,
-  "title": "Review --- A Tense You Build",
+  "title": "Synthesis --- A Small Story",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f31d1621f6b197dc",
+  "sourceHash": "fnv1a64:d5e93133a3d29309",
   "lessons": [
     {
-      "id": "ES-C49-repaso-perfecto",
-      "sequence": 1279,
-      "title": "Review — a tense you build",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — a whole tense assembled from two pieces, neither of which changes with the other",
+      "id": "ES-C48-sintesis-una-historia",
+      "sequence": 1294,
+      "title": "Synthesis — a small story",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:619fc680ba5c085c",
+      "sourceHash": "fnv1a64:3b6e4cf8d3cdf2e9",
       "notice": null,
       "blocks": [
         {
@@ -35,73 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Two questions: how many words is this tense, and which of them carries the person?"
+              "text": "Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Piece one — the person: he, has, ha, hemos, habéis, han."
+              "text": "Four sentences. Watch the tenses take turns."
             },
             {
               "kind": "speech",
-              "text": "Piece two — the meaning: the participle, which never changes."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "regular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "-ar. regular: -ado, hablado.",
-                "-er / -ir. regular: -ido, comido, vivido."
-              ]
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "irregular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "hacer. irregular: hecho, decir becomes dicho.",
-                "ver. irregular: visto, poner becomes puesto."
-              ]
+              "text": "Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana."
             },
             {
               "kind": "speech",
-              "text": "Six little words times any participle you can form. That is the whole tense."
+              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
+            },
+            {
+              "kind": "speech",
+              "text": "The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: why this one was cheap",
+          "title": "Grammar Lens: what you can now do",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another."
+              "text": "Notice the third sentence. Tuve un libro is not \"I had a book\" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular."
             },
             {
               "kind": "speech",
-              "text": "This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount."
+              "text": "That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did."
             },
             {
               "kind": "speech",
-              "text": "That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did."
+              "text": "It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not."
             }
           ]
         },
@@ -119,11 +99,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"",
+              "instruction": "the four sentences straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"]"
+              "source": "[YOU SAY: the four sentences straight through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "only the imperfects, then only the preterites, and hear the two layers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: only the imperfects, then only the preterites, and hear the two layers]"
             },
             {
               "kind": "repeat",
@@ -131,81 +120,82 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "speech",
-              "text": "Until the little word arrives without thought."
-            },
-            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-pieces",
-              "prompt": "What are the two pieces of this tense, and which carries the person?",
+              "id": "ES-C48-sintesis-una-historia-layers",
+              "prompt": "In the story, which two verbs are the background?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "haber and the participle; haber carries the person",
-                "a form of haber plus a participle"
-              ],
-              "feedback": {
-                "correct": "And the participle never moves.",
-                "incorrect": "A form of haber, which carries the person, plus a participle, which carries the meaning."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-repaso-perfecto-build",
-              "prompt": "Say we have lived.",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hemos vivido",
-                "nosotros hemos vivido"
-              ],
-              "feedback": {
-                "correct": "Hemos vivido.",
-                "incorrect": "Hemos vivido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-repaso-perfecto-irreg",
-              "prompt": "Say you have said it, using the participle of decir.",
-              "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo has dicho",
-                "has dicho"
+                "estudiaba and tenia",
+                "estudiaba, tenía",
+                "the imperfects"
               ],
               "feedback": {
-                "correct": "Has dicho.",
-                "incorrect": "Lo has dicho — dicho, not decido."
+                "correct": "What things were like.",
+                "incorrect": "Estudiaba and tenia — the imperfects."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-cost",
-              "prompt": "Why did this tense cost less than the present or the preterite?",
+              "id": "ES-C48-sintesis-una-historia-third",
+              "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "it is built from two pieces rather than conjugated per verb",
-                "six words once, not endings on every verb"
+                "tuve is the moment of getting it",
+                "because it is an event, not a state",
+                "getting has edges"
               ],
               "feedback": {
-                "correct": "A fixed cost instead of a per-verb one.",
-                "incorrect": "Six words learned once, plus one participle per verb — not a new ending set for every family."
+                "correct": "Same verb, both layers, nothing irregular.",
+                "incorrect": "Tuve is the moment you got one — an event with edges."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-sintesis-una-historia-tell",
+              "prompt": "Say I was studying when I spoke with Ana.",
+              "assesses": [
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO",
+                "ES-LEX-ESTUDIAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "estudiaba cuando hable con ana",
+                "estudiaba cuando hablé con ana"
+              ],
+              "feedback": {
+                "correct": "Background, then the thing that walked into it.",
+                "incorrect": "Estudiaba cuando hable con Ana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-sintesis-una-historia-why",
+              "prompt": "Why did this take three chapters when neither tense was new?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "because the choice is the difficulty, not the forms",
+                "english lets you leave the question unanswered",
+                "the forms were never the hard part"
+              ],
+              "feedback": {
+                "correct": "Spanish asks a question your first language let you skip.",
+                "incorrect": "The forms were never the difficulty. The choice is."
               }
             }
           ]
@@ -223,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
+              "text": "Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)"
             }
           ]
         }

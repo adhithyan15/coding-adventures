@@ -1,43 +1,118 @@
-Spanish, chapter 57: Los --- The One That Does Not Add -s.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 57: Deriving the Rest.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
-los libros — "the books".
+Lesson 1 of 3.
+queremos, quieren — work them out first.
 
 Warm-up.
-[pause 2 seconds]
-Last chapter: la casa becomes las casas. Apply the same move to el libro and say what you get, out loud, before reading on.
+[pause 3 seconds]
+Before you read on: you have the singular of querer, and you have the stem-change rule. What is "we want"? Say your answer out loud, then continue.
 
-Grammar Lens: not els.
-If you said els libros, you did exactly the right thing and Spanish did not.
-los — the, for more than one masculine thing.
-el libro becomes los libros — the books.
-The noun behaved. The article did not: el became los, not els. Out of four articles this is the only one that changes more than its ending, and it is worth two minutes rather than a shrug.
-
-The word, taken apart.
-You have met this exact story before, three chapters ago, wearing different clothes.
-El is not a whole word that lost its way. It is a worn-down one: Latin illum gave elo, and elo lost its final vowel to become el. The plural came from illos — and it did not lose that vowel. It kept it, dropped the front instead, and arrived as los.
-So the pair is not el + s. It is two forms of one Latin word that wore down in two different directions:
-[a table of 2 rows, read aloud]
-masculine. singular: elo becomes el. plural: illos becomes los.
-feminine. singular: illam becomes la. plural: illas becomes las.
-This is the same shape as el and lo, which you met when the object pronouns started: the masculine forms lost a vowel where the feminine ones had none to lose. One sound change, showing up for the third time.
-An "irregular" article turns out to be a regular word that was worn down twice.
+Grammar Lens: you were right.
+queremos — we want., quieren — they want. podemos — we can., pueden — they can.
+If you said queremos rather than quieremos, you did not remember it. You derived it, from a rule you were given one chapter ago: the stem breaks exactly where it is stressed, so nosotros never breaks.
+And quieren breaks, because there the stress is back on the stem.
+That is the difference between a course that hands you tables and one that hands you rules. Four forms you had never seen, and none of them needed teaching.
+A test you can run yourself. You have puedo and puedes. Without being told, what are we can and they can?
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "el libro" then "los libros"]
+[your turn — say: the yo, nosotros and ellos forms of querer — break, no break, break]
 [pause 8 seconds for the answer]
-[your turn — say: "el, la, los, las" — the whole set, in order]
+[your turn — say: the same three for poder]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say the books.
-[question — say your answer, then pause 12 seconds]
-Why is it los and not els?
+We want.
+[question — say your answer, then pause 8 seconds]
+They can.
 [question — say your answer, then pause 10 seconds]
-Give all four forms of the Spanish word for the.
+Poder changes o to ue. What is we can?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"The books"? (Los libros.) Why not els? (El is worn down from elo; the plural kept the vowel.) Next: the plural rule your first chapter promised and did not give you.
+What is "we want"? (Queremos.) Why no break? (The stress is on the ending.) And could you have produced these without this lesson? (Yes — which is the point of it.)
+
+
+Lesson 2 of 3.
+hacemos, hacen — and the club has no plural at all.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Name the six -go verbs. And say where in each one the -go appears.
+
+Grammar Lens: an oddity that was only ever in one slot.
+You were told, when the club closed, that the -go lives in the yo form and nowhere else. Here is what that is worth:
+hacemos, hacéis, hacen — plain -er endings. ponemos, ponéis, ponen — plain -er endings. salimos, salís, salen — plain -ir endings.
+Nothing to learn. The -go club has no plural forms of its own, because the thing that made it a club was never in the plural to begin with.
+Two of the six do something in the plural, and it is not the -go:
+decimos but dicen, venimos but vienen.
+Those are stem changes, and they follow the rule you already have — the stem breaks where it is stressed, and nosotros is never stressed on the stem. So even the exceptions are not exceptions.
+
+What you've built.
+Two rules — the -go is yo-only, and stems break under stress — now generate the entire present tense of every irregular verb in this book, in every person.
+That is what a rule buys that a table does not: the table stops at the forms printed on it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all six -go verbs in the we form — and hear that none is odd]
+[pause 8 seconds for the answer]
+[your turn — say: "decimos, dicen" and "venimos, vienen" — the two that break, and why]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+We do or make.
+[question — say your answer, then pause 8 seconds]
+They leave.
+[question — say your answer, then pause 10 seconds]
+Decir stem-changes. What are we say and they say?
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many special plural forms does the -go club have? (None — the -go was only ever in yo.) Which two do something in the plural, and what? (Decir and venir — a stem change, following the stress.) How many rules now generate every irregular present in this book? (Two.)
+
+
+Lesson 3 of 3.
+Synthesis — a verb you have never met.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new in this chapter, and nothing to memorise. Say the six endings of a regular -er verb.
+
+What you've built.
+Everything you hold about the present tense now fits in three lines:
+Three families, six endings each; -er and -ir differ only in nosotros and vosotros.
+A stem breaks exactly where it is stressed — so nosotros and vosotros never break.
+A -go sits in the yo form and nowhere else.
+That is the whole system. Not a summary of it — the system.
+And a system, unlike a table, works on words it has never seen.
+
+The exchange.
+Here is a verb this book has not taught you: beber, "to drink" — you have met the word, but never its full set.
+Do not look anything up. It is a regular -er verb, so:
+bebo, bebes, bebe, bebemos, bebéis, beben.
+Six forms, and the only thing you needed was rule 1.
+Now one that uses all three rules. Salir is an -ir verb, and it is in the -go club. Rules 1 and 3 give you every form, and you can produce them before reading on:
+salgo, sales, sale, salimos, salís, salen.
+One odd form, in the one slot rule 3 names. The other five are plain -ir.
+Four broken, two whole, and the two whole ones are the two the stress leaves alone. Every time.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all six of beber, without looking]
+[pause 8 seconds for the answer]
+[your turn — say: all six of salir, and name the only odd one]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until deriving is faster than remembering.
+[question — say your answer, then pause 10 seconds]
+Salir is a -go verb. What is we leave?
+[question — say your answer, then pause 8 seconds]
+And they leave?
+[question — say your answer, then pause 8 seconds]
+How many rules generate the whole present tense?
+
+Wrap-up Recall.
+[pause 3 seconds]
+State the three rules. (Three families, stems break under stress, the -go is yo-only.) Which two forms never break? (Nosotros, vosotros.) And what can you do now that a table could not give you? (Conjugate a verb nobody taught me.)

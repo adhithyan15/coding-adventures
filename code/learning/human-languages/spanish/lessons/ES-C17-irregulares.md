@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-irregulares
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1334
-chapter: 102
+sequence: 1354
+chapter: 107
 type: grammar
 headword: haré · tendré · podré
 gloss: three bounded stems shared by the future and conditional

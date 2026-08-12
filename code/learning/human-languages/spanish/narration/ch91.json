@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 91,
-  "title": "Tenia and Tuve --- When the Tense Changes the Meaning",
+  "title": "Ver --- Seeing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ce77e9a5496a3f8e",
+  "sourceHash": "fnv1a64:7d42aaabe667ca95",
   "lessons": [
     {
-      "id": "ES-C48-tenia-tuve",
+      "id": "ES-C16-ver",
       "sequence": 1272,
-      "title": "tenía and tuve — when the tense changes the meaning",
-      "headword": "tenía / tuve",
-      "romanization": "tenía / tuve",
-      "gloss": "the place where the choice stops being a viewpoint and becomes a different meaning outright",
+      "title": "ver — learn the verb before its past",
+      "headword": "ver",
+      "romanization": "ver",
+      "gloss": "to see — veo, ves, ve",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d6486ff0810d764",
+      "sourceHash": "fnv1a64:7909d3caf7c495e1",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,43 @@
             },
             {
               "kind": "speech",
-              "text": "So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events."
+              "text": "Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: having, and getting",
+          "title": "Grammar Lens: three present forms",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Tenía una casa. — I had a house. Tuve una casa. — I got a house."
+              "kind": "table",
+              "headers": [
+                "person",
+                "present"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present: veo.",
+                "person: tú. present: ves.",
+                "person: él / ella / usted. present: ve."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Read those twice. The second one is not \"I had a house, viewed as finished.\" It is a different verb in English altogether."
-            },
-            {
-              "kind": "speech",
-              "text": "The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something."
-            },
-            {
-              "kind": "speech",
-              "text": "Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting."
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English."
+              "text": "The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”"
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started."
-            },
-            {
-              "kind": "speech",
-              "text": "It also explains a frustration you may already have had. English \"I had\" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began."
+              "text": "Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson."
             }
           ]
         },
@@ -95,80 +89,85 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tenía una casa\" then \"Tuve una casa\" — hear the English change",
+              "instruction": "“ver — to see”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tenía una casa\" then \"Tuve una casa\" — hear the English change]"
+              "source": "[YOU SAY: “ver — to see”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the rule aloud — a state in the preterite gives you its beginning",
+              "instruction": "“veo, ves, ve”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the rule aloud — a state in the preterite gives you its beginning]"
+              "source": "[YOU SAY: “veo, ves, ve”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“ver comes through veer from vidēre”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “ver comes through veer from vidēre”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-tenia-tuve-had",
-              "prompt": "Say I had a house, meaning it was simply so.",
+              "id": "ES-C16-ver-meaning",
+              "prompt": "What does Spanish ver mean?",
               "assesses": [
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-                "ES-LEX-TENER",
-                "ES-LEX-CASA"
+                "ES-LEX-VER"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 5,
               "acceptedResponses": [
-                "tenia una casa",
-                "tenía una casa",
-                "yo tenia una casa"
+                "to see",
+                "see"
               ],
               "feedback": {
-                "correct": "A state, so the imperfect.",
-                "incorrect": "Tenia una casa — having is a state, and states take the imperfect."
+                "correct": "Right: ver means 'to see'.",
+                "incorrect": "Ver is the infinitive 'to see'."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-tenia-tuve-got",
-              "prompt": "What does tuve una casa actually mean?",
+              "id": "ES-C16-ver-present-singular",
+              "prompt": "Give the learned present forms of ver: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
+                "ES-LEX-VER",
+                "ES-GRAMMAR-VER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "i got a house",
-                "i received a house",
-                "the moment i came to have one"
+                "veo, ves, ve",
+                "veo ves ve",
+                "veo / ves / ve"
               ],
               "feedback": {
-                "correct": "The edge of having is getting.",
-                "incorrect": "I got a house — the preterite gives you the moment the state began."
+                "correct": "Right: veo, ves, ve.",
+                "incorrect": "Retrieve the short row: veo, ves, ve."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-tenia-tuve-rule",
-              "prompt": "You meet a new verb that names a state. What will its preterite mean?",
+              "id": "ES-C16-ver-history",
+              "prompt": "Which Latin verb stands behind Spanish ver: vidēre or īre?",
               "assesses": [
-                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
-                "ES-GRAMMAR-ASPECT-NOT-TIME"
+                "ES-ETYMON-VER-VIDERE",
+                "ES-LEX-VER"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "the moment the state began",
-                "when it started",
-                "the start of the state"
+                "vidēre",
+                "videre"
               ],
               "feedback": {
-                "correct": "So you will never need a list for these.",
-                "incorrect": "The moment that state began — the same rule, every time."
+                "correct": "Right: ver continues Latin vidēre.",
+                "incorrect": "Choose the sight verb vidēre; īre is the source of ir."
               }
             }
           ]
@@ -186,7 +185,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place."
+              "text": "What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past."
             }
           ]
         }

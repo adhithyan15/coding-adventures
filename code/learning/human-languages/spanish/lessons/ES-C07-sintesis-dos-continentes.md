@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-sintesis-dos-continentes
 spine_node: SPINE-ASK-LOCATION
-sequence: 750
-chapter: 33
+sequence: 770
+chapter: 38
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — the same sentence in Madrid and in Mexico City, and neither is the correction

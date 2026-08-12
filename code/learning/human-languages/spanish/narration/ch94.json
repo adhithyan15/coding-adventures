@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 94,
-  "title": "Hablado, Comido, Vivido --- The Participle",
+  "title": "Hablaba and Hablo --- Two Ways of Looking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bbc2b6290bd119b1",
+  "sourceHash": "fnv1a64:d728718d0e55006f",
   "lessons": [
     {
-      "id": "ES-C49-participio",
-      "sequence": 1275,
-      "title": "hablado, comido, vivido — the participle",
-      "headword": "hablado / comido / vivido",
-      "romanization": "hablado / comido / vivido",
-      "gloss": "the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite",
+      "id": "ES-C48-dos-miradas",
+      "sequence": 1290,
+      "title": "hablaba and habló — two ways of looking",
+      "headword": "hablaba / habló",
+      "romanization": "hablaba / habló",
+      "gloss": "the two past tenses are not two times — they are two ways of looking at the same time",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:df9d2c40b86dea7c",
+      "sourceHash": "fnv1a64:d03d65017729c454",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,57 +42,65 @@
             },
             {
               "kind": "speech",
-              "text": "Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one."
+              "text": "You hold two past tenses. Say \"I spoke\" in both. (Hablé. Hablaba.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: two endings, not three",
+          "title": "Grammar Lens: not two times — two viewpoints",
           "segments": [
             {
               "kind": "speech",
-              "text": "hablar becomes hablado, comer becomes comido, vivir becomes vivido."
+              "text": "The obvious guess is that one is further back than the other. It is not. Both describe the same afternoon."
             },
             {
               "kind": "speech",
-              "text": "-ar verbs take -ado."
+              "text": "Ayer hablé con Ana. — Yesterday I spoke with Ana. Ayer hablaba con Ana. — Yesterday I was speaking with Ana."
             },
             {
               "kind": "speech",
-              "text": "-er and -ir verbs both take -ido."
+              "text": "Same day, same conversation, same two people. What changes is where you are standing."
             },
             {
               "kind": "speech",
-              "text": "You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing."
+              "text": "Hablé looks at the conversation from outside, finished, as one thing with edges. It happened, it is over, next."
             },
             {
               "kind": "speech",
-              "text": "So this is one new ending and one you can predict."
+              "text": "Hablaba puts you inside it, while it is still going on. No edges. It is the scenery, not the event."
             },
             {
               "kind": "speech",
-              "text": "The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back."
+              "text": "This is why the choice cannot be made by a rule about time. It is made by what you are doing with the sentence: reporting something that happened, or setting a scene where something else can happen."
+            },
+            {
+              "kind": "speech",
+              "text": "Grammar books call this aspect. The word is not important. The habit is: when you reach for a past tense, you are being asked a question about your own point of view, and you answer it every time whether you notice or not."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Grammarians call this a participle, from Latin participium — \"the form that takes part.\" It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective."
+              "text": "English asks you the same question and lets you dodge it."
             },
             {
               "kind": "speech",
-              "text": "You can see the adjective half immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
+              "text": "I spoke. I was speaking. I used to speak."
             },
             {
               "kind": "speech",
-              "text": "Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all."
+              "text": "Those are three different viewpoints, and English marks them with extra words rather than with the verb itself. Because they are optional, you can say \"I spoke\" for almost anything and be understood."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish put the choice inside the verb, so it is not optional. Every past sentence commits to a viewpoint before it commits to anything else. That is why this is the piece of Spanish that stays difficult longest for English speakers: not because it is complicated, but because it asks a question your first language let you leave unanswered."
             }
           ]
         },
@@ -110,76 +118,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablado, comido, vivido\" — one ending, then the shared one",
+              "instruction": "\"hablé\" then \"hablaba\" — outside, then inside",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablado, comido, vivido\" — one ending, then the shared one]"
+              "source": "[YOU SAY: \"hablé\" then \"hablaba\" — outside, then inside]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comí, viví\" then \"comido, vivido\" — the same merger, twice",
+              "instruction": "\"estudié\" then \"estudiaba\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comí, viví\" then \"comido, vivido\" — the same merger, twice]"
+              "source": "[YOU SAY: \"estudié\" then \"estudiaba\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participio-ar",
-              "prompt": "Give the participle of hablar.",
+              "id": "ES-C48-dos-miradas-which",
+              "prompt": "Do the two past tenses differ in when something happened?",
               "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no, in how you look at it",
+                "no",
+                "they differ in viewpoint"
+              ],
+              "feedback": {
+                "correct": "Same time, two viewpoints.",
+                "incorrect": "No. Both can describe the same afternoon; what differs is your point of view."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-dos-miradas-outside",
+              "prompt": "Which form looks at the event from outside, finished?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
                 "ES-LEX-HABLAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "hablado",
-                "habl-ado"
+                "hable",
+                "hablé",
+                "the preterite"
               ],
               "feedback": {
-                "correct": "-ar takes -ado.",
-                "incorrect": "Hablado."
+                "correct": "One thing, with edges.",
+                "incorrect": "Hable — the preterite views it from outside, complete."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participio-erir",
-              "prompt": "Give the participles of comer and vivir.",
+              "id": "ES-C48-dos-miradas-inside",
+              "prompt": "Say I was studying, putting the listener inside it.",
               "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-LEX-COMER",
-                "ES-LEX-VIVIR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "comido, vivido",
-                "comido vivido"
-              ],
-              "feedback": {
-                "correct": "Both -ido — the two families merge again.",
-                "incorrect": "Comido and vivido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participio-person",
-              "prompt": "Does the participle change for who is speaking?",
-              "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE"
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-LEX-ESTUDIAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "no",
-                "no, it stays the same"
+                "estudiaba",
+                "yo estudiaba"
               ],
               "feedback": {
-                "correct": "The first verb form you hold that carries no person.",
-                "incorrect": "No — hablado is hablado for everybody."
+                "correct": "No edges — scenery, not event.",
+                "incorrect": "Estudiaba."
               }
             }
           ]
@@ -197,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense."
+              "text": "Do the two pasts differ in when? (No — in how you look at it.) Which one has edges? (The preterite.) Next: the word that lets both of them stand in one sentence."
             }
           ]
         }

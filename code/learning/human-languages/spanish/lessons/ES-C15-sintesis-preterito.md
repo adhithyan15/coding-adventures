@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C15-sintesis-preterito
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1238
-chapter: 84
+sequence: 1258
+chapter: 89
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — two pasts with two histories, and you can hear which is which

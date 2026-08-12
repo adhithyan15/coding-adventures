@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 64,
-  "title": "Review --- Four Pronouns, One Slot",
+  "title": "Review --- All Four Words for The",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:583599c69c351766",
+  "sourceHash": "fnv1a64:90bf7bbda8ef9840",
   "lessons": [
     {
-      "id": "ES-C42-repaso-objeto",
-      "sequence": 1113,
-      "title": "Review — four pronouns, one slot",
+      "id": "ES-C44-repaso-articulos",
+      "sequence": 1111,
+      "title": "Review — all four words for \"the\"",
       "headword": "(review)",
       "romanization": "(review)",
-      "gloss": "review — four pronouns, one slot, and the single question that chooses between them",
+      "gloss": "review — the four words for \"the,\" complete at last, and the two plural rules that feed them",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8a636fba4cd411c4",
+      "sourceHash": "fnv1a64:bf8145a3306272f8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,7 +42,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Before the table: where does an object pronoun go?"
+              "text": "Nothing new here. Before the table: how many words does Spanish have for \"the\"?"
             }
           ]
         },
@@ -53,58 +53,56 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here."
+              "text": "Four. And you have now met every one of them separately, which is why they are allowed to appear together."
             },
             {
               "kind": "table",
               "headers": [
-                "the one it happens to",
-                "pronoun",
-                "example"
+                "",
+                "singular",
+                "plural"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
-                "the one it happens to: me. pronoun: me. example: me quieres — you love me.",
-                "the one it happens to: you. pronoun: te. example: te quiero — I love you.",
-                "the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.",
-                "the one it happens to: it (feminine). pronoun: la. example: la hago — I make it."
+                "masculine. singular: el libro. plural: los libros.",
+                "feminine. singular: la casa. plural: las casas."
               ]
             },
             {
               "kind": "speech",
-              "text": "Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time."
+              "text": "English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid."
+            },
+            {
+              "kind": "speech",
+              "text": "The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: the single question",
+          "title": "Grammar Lens: the two plural rules",
           "segments": [
             {
               "kind": "speech",
-              "text": "Choosing between these looks like four decisions. It is one:"
+              "text": "And underneath the grid, one rule with a repair:"
             },
             {
               "kind": "speech",
-              "text": "Who or what is the verb landing on?"
+              "text": "Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead."
             },
             {
               "kind": "speech",
-              "text": "If it is you speaking becomes me."
+              "text": "casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s."
             },
             {
               "kind": "speech",
-              "text": "If it is the person you are speaking to becomes te."
+              "text": "usted becomes ustedes, español becomes españoles — consonants, -es."
             },
             {
               "kind": "speech",
-              "text": "If it is a thing or somebody else becomes lo or la, and the noun decides which, not you."
-            },
-            {
-              "kind": "speech",
-              "text": "That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against."
+              "text": "You held the first half from chapter one and the second half from ustedes without knowing it had a name."
             }
           ]
         },
@@ -122,20 +120,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four in order, then the four examples",
+              "instruction": "\"el, la, los, las\" until the order is automatic",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four in order, then the four examples]"
+              "source": "[YOU SAY: \"el, la, los, las\" until the order is automatic]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking",
+              "instruction": "\"el libro, los libros, la casa, las casas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking]"
+              "source": "[YOU SAY: \"el libro, los libros, la casa, las casas\"]"
             },
             {
               "kind": "repeat",
@@ -144,67 +142,65 @@
             },
             {
               "kind": "speech",
-              "text": "Until the choice arrives before the sentence does."
+              "text": "Until the grid is a reflex rather than a lookup."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-repaso-objeto-four",
-              "prompt": "Name the four object pronouns you now hold.",
+              "id": "ES-C44-repaso-articulos-four",
+              "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-GRAMMAR-DEFINITE-ARTICLES",
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "me, te, lo, la",
-                "me te lo la",
-                "me / te / lo / la"
+                "el, la, los, las",
+                "el la los las",
+                "el / la / los / las"
               ],
               "feedback": {
-                "correct": "Four, each earned separately.",
-                "incorrect": "me, te, lo, la."
+                "correct": "That is the whole set.",
+                "incorrect": "el, la, los, las."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-repaso-objeto-question",
-              "prompt": "What single question chooses between all four?",
+              "id": "ES-C44-repaso-articulos-grid",
+              "prompt": "Say the books and then the houses.",
               "assesses": [
-                "ES-GRAMMAR-OBJECT-PRONOUN"
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-LEX-LIBRO"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "who or what the verb lands on",
-                "who is receiving the action",
-                "what the object is"
+                "los libros, las casas",
+                "los libros las casas"
               ],
               "feedback": {
-                "correct": "One question, four answers.",
-                "incorrect": "Who or what the verb lands on — that is the only decision."
+                "correct": "Gender picks the row, number picks the column.",
+                "incorrect": "Los libros, las casas."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-repaso-objeto-hard",
-              "prompt": "Which two of the four depend on knowing a noun's gender?",
+              "id": "ES-C44-repaso-articulos-rule",
+              "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-COMIDA"
+                "ES-GRAMMAR-NOUN-PLURAL-ES",
+                "ES-GRAMMAR-NOUN-NUMBER"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "lo and la",
-                "lo, la",
-                "la and lo"
+                "add -s, or -es when the bare s would be unsayable",
+                "-s after a vowel and -es after a consonant"
               ],
               "feedback": {
-                "correct": "Yes — and that is where the work is.",
-                "incorrect": "Lo and la. Me and te are decided by the conversation instead."
+                "correct": "One rule and a repair.",
+                "incorrect": "Add -s; after a consonant add -es, because the bare -s could not be said."
               }
             }
           ]
@@ -222,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for."
+              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 78,
-  "title": "Why Se? --- Gelo, and a Collision",
+  "title": "Which One Is the Verb Asking For?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e2cf2c70f325a5eb",
+  "sourceHash": "fnv1a64:ed4eb9906d9ae52e",
   "lessons": [
     {
-      "id": "ES-C47-por-que-se",
-      "sequence": 1128,
-      "title": "Why se? — and why it is not the se you know",
-      "headword": "gelo → se lo",
-      "romanization": "gelo → se lo",
-      "gloss": "why le turns into se — and why it is not the se you already know, however much it looks like it",
+      "id": "ES-C46-cual-pide",
+      "sequence": 1143,
+      "title": "Which one is the verb asking for?",
+      "headword": "lo tengo / le hablo",
+      "romanization": "lo tengo / le hablo",
+      "gloss": "how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05177343972f144d",
+      "sourceHash": "fnv1a64:c44d0cb1a9f3bf46",
       "notice": null,
       "blocks": [
         {
@@ -35,46 +35,42 @@
             },
             {
               "kind": "speech",
-              "text": "You have known a word se since almost the beginning: se llama, \"he calls himself.\" Now you have met a second se, in se lo digo. The obvious conclusion is that they are the same word doing a second job."
-            },
-            {
-              "kind": "speech",
-              "text": "They are not. They are two different words that arrived at the same spelling, and knowing that removes a confusion most learners carry for years."
+              "text": "You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: ask the verb one question",
           "segments": [
             {
               "kind": "speech",
-              "text": "Old Spanish did not say se lo. It said gelo."
+              "text": "Does the verb do something to this, or aim something at this?"
             },
             {
               "kind": "speech",
-              "text": "That came from the two Latin pronouns you already know, run together and worn down: illī (the dative, giving le) plus illum (the accusative, giving lo) becomes gelo. One squeezed word for \"to-him it.\""
+              "text": "That is the whole test."
             },
             {
               "kind": "speech",
-              "text": "So the medieval sentence was gelo digo, and it was regular. There was no substitution and no rule to learn."
+              "text": "Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect."
             },
             {
               "kind": "speech",
-              "text": "Then two things happened:"
+              "text": "Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:"
             },
             {
               "kind": "speech",
-              "text": "The word split back into two — gelo was re-analysed as ge + lo, matching the two-pronoun pattern everywhere else in the language."
+              "text": "I speak to her becomes le hablo. Fits."
             },
             {
               "kind": "speech",
-              "text": "The sound ge drifted until it was pronounced exactly like se — and once two words sound identical, spelling follows."
+              "text": "I have to the book becomes nonsense. So lo tengo."
             },
             {
               "kind": "speech",
-              "text": "By the sixteenth century ge lo had become se lo, and the trail was cold."
+              "text": "English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le."
             }
           ]
         },
@@ -85,19 +81,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This matters for a practical reason, not a historical one."
+              "text": "One thing the test will not settle, said now rather than met later as a shock."
             },
             {
               "kind": "speech",
-              "text": "The reflexive se in se llama means himself. If the se in se lo digo were that word, the sentence would have to mean something reflexive — and learners who assume it do spend years trying to make \"he tells it to himself\" fit sentences where it plainly does not."
+              "text": "In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it."
             },
             {
               "kind": "speech",
-              "text": "It does not fit because it is not that word. One se is Latin sē, \"himself\"; the other is illī, \"to him.\" Unrelated, and collided by accident of sound."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words wearing one shape is something this language does often — ser is built from two Latin verbs, ir borrows its present from a third. Here it happens to two of the smallest words in Spanish, which is where it is hardest to notice."
+              "text": "So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere."
             }
           ]
         },
@@ -115,68 +107,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\" then \"se lo digo\" — two different words, one sound",
+              "instruction": "\"Lo tengo\" then \"Le hablo\" — which question does each answer?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\" then \"se lo digo\" — two different words, one sound]"
+              "source": "[YOU SAY: \"Lo tengo\" then \"Le hablo\" — which question does each answer?]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-old",
-              "prompt": "What did Old Spanish say instead of se lo?",
+              "id": "ES-C46-cual-pide-test",
+              "prompt": "State the one-question test in your own words.",
               "assesses": [
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-WHICH-OBJECT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "does the verb act on it or aim at it",
+                "can you put to in front of it in english",
+                "to whom versus what"
+              ],
+              "feedback": {
+                "correct": "Acts on it, or aims at it.",
+                "incorrect": "Ask whether the verb acts ON the thing, or aims something AT the person."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-speak",
+              "prompt": "Say I speak to her.",
+              "assesses": [
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRESENT-1SG"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "gelo",
-                "ge lo"
+                "le hablo",
+                "yo le hablo"
               ],
               "feedback": {
-                "correct": "One squeezed word, and perfectly regular.",
-                "incorrect": "Gelo — from illi plus illum."
+                "correct": "Aimed at her, so le.",
+                "incorrect": "Le hablo — the speaking is aimed at somebody."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-por-que-se-two",
-              "prompt": "Is the se of se lo digo the same word as the se of se llama?",
+              "id": "ES-C46-cual-pide-have",
+              "prompt": "Say I have it, about the book, and say which set that is.",
               "assesses": [
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo tengo, direct",
+                "lo tengo"
+              ],
+              "feedback": {
+                "correct": "The having lands on the book.",
+                "incorrect": "Lo tengo — direct, because the verb acts on the thing."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-leismo",
+              "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
+              "assesses": [
+                "ES-GRAMMAR-WHICH-OBJECT",
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
+                "no, it is leismo and it is accepted",
                 "no",
-                "no, they are unrelated",
-                "no, they only sound alike"
+                "no, that is normal in spain"
               ],
               "feedback": {
-                "correct": "One is Latin se, himself. The other is illi, to him.",
-                "incorrect": "No. They collided by sound; one is Latin se and the other is illi."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C47-por-que-se-why",
-              "prompt": "Which two Latin pronouns were squeezed together to make gelo?",
-              "assesses": [
-                "ES-ETYMON-GELO",
-                "ES-ETYMON-ILLI-DATIVE"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "illi and illum",
-                "illi, illum",
-                "the dative and the accusative"
-              ],
-              "feedback": {
-                "correct": "The same two that gave you le and lo separately.",
-                "incorrect": "Illi and illum — the dative and accusative you already met."
+                "correct": "Two answers, both somebody's normal.",
+                "incorrect": "No. That is leismo, it is old and accepted for people, and about a fifth of speakers do it."
               }
             }
           ]
@@ -194,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "What was se lo before it was se lo? (Gelo.) Is it the reflexive se? (No — a different word that came to sound the same.) Next: all of it together."
+              "text": "What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place."
             }
           ]
         }

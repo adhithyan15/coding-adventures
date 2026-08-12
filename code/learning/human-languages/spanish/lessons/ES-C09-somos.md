@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-somos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 912
-chapter: 41
+sequence: 932
+chapter: 46
 type: grammar
 headword: somos
 gloss: "we are" — from a different Latin verb than soy, and that is why it looks nothing like it

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C37-levantarse
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1930
-chapter: 144
+sequence: 1950
+chapter: 149
 type: word
 headword: levantarse
 gloss: to get up, to stand up — "to raise oneself", built from a participle exactly as sentarse was

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C40-esperar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2020
-chapter: 152
+sequence: 2040
+chapter: 157
 type: word
 headword: esperar
 gloss: to wait — and to hope, and to expect, all in one verb

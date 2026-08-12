@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-estamos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 920
-chapter: 42
+sequence: 940
+chapter: 47
 type: grammar
 headword: estamos
 gloss: "we are" — the other one, and the plural where estar behaves and ser does not

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C43-comida
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1083
-chapter: 55
+sequence: 1103
+chapter: 60
 type: word
 headword: la comida
 gloss: food, a meal — a noun you can build yourself out of a verb you already own

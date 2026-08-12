@@ -1,42 +1,46 @@
-Spanish, chapter 95: He Hablado --- A Verb With No Meaning Left.
+Spanish, chapter 95: Cuando --- Both Pasts in One Sentence.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-he hablado — "I have spoken".
+cuando — putting both pasts in one sentence.
 
 Warm-up.
 [pause 2 seconds]
-You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word.
+One tense is the scenery and one is the event. So far you have only been able to use one at a time. This chapter's word lets them share a sentence.
 
 Sounds you'll need.
-silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh.
-
-Grammar Lens: the emptied verb.
-he + participle — I have done something.
-He hablado español. — I have spoken Spanish.
-Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody.
-He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not "I hold spoken." You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place.
+diphthong-ua — cua is one syllable, not two: KWAN-doh.
 
 The word, taken apart.
-Haber comes from Latin habēre, "to hold, to have" — a completely ordinary verb with a completely ordinary meaning.
-Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower "hold, grip"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed.
-English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for "hold" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually.
-So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word.
+cuando — when.
+From Latin quandō, and the qu- at the front is not decoration. It is the same question-marker sitting inside qué, quién and cómo — a family you have been collecting since your very first questions.
+Latin built its question words from one root and Spanish kept the whole set, so cuándo with an accent asks a question and cuando without one simply joins two things. Same word, and the accent is doing the same job it always does: marking the stressed, questioning one.
+
+Grammar Lens: the scene and the thing that interrupts it.
+Now the two tenses can do their jobs side by side:
+Estudiaba cuando habló Ana. — I was studying when Ana spoke.
+Read what each tense is doing:
+Estudiaba — imperfect. The scene. Already going, no edges, and it does not stop being true when something else happens.
+Habló — preterite. The event. One thing, with edges, dropped into that scene.
+This is the shape most Spanish stories are built from, and it is worth hearing the pattern rather than memorising a rule: the imperfect sets the room, the preterite is what walks into it.
+Turn it around and the sentence changes meaning, not just style:
+Estudié cuando hablaba Ana. — I studied while Ana was talking.
+Now the talking is the room and the studying is the event. Neither version is more correct. They are about different things.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "He hablado español"]
+[your turn — say: "Estudiaba cuando habló Ana"]
 [pause 8 seconds for the answer]
-[your turn — say: "I have eaten" in English, and notice that nothing is being held]
+[your turn — say: the reversed version, and notice the story changed]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Say I have spoken Spanish.
 [question — say your answer, then pause 12 seconds]
-What does haber mean in he hablado?
+Say I was studying when Ana spoke.
+[question — say your answer, then pause 12 seconds]
+Which tense sets the room, and which one walks into it?
 [question — say your answer, then pause 10 seconds]
-Which English verb was hollowed out the same way?
+Which other Spanish question words share the front of cuando?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have spoken"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it.
+Which tense is the room? (The imperfect.) Which one walks into it? (The preterite.) Next: two verbs where the choice does not change the picture — it changes the meaning.

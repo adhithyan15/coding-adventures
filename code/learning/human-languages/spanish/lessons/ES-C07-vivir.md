@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-vivir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 600
-chapter: 26
+sequence: 620
+chapter: 31
 type: word
 headword: vivir
 gloss: to live — your first -ir verb, and a family that asks you to learn nothing new

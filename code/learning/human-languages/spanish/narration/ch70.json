@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 70,
-  "title": "Synthesis --- The Conversation Without Them",
+  "title": "Synthesis --- Saying It Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f22a55162fde9857",
+  "sourceHash": "fnv1a64:25a7710b472235d7",
   "lessons": [
     {
-      "id": "ES-C45-sintesis-sin-repetir",
-      "sequence": 1120,
-      "title": "Synthesis — the conversation without them",
+      "id": "ES-C42-sintesis-decirlo-una-vez",
+      "sequence": 1135,
+      "title": "Synthesis — saying it once",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — a conversation that would collapse without these eight words, and one that shows what they cost",
+      "gloss": "synthesis — what these four words are for, which is not accuracy but not sounding like a stranger",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89cf2b1718b9baed",
+      "sourceHash": "fnv1a64:0390980fd4e4465c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes los libros? Answer yes without saying libros."
+              "text": "Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro."
             }
           ]
         },
@@ -46,42 +46,46 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four turns, with the pronouns:"
+              "text": "Here are the same two exchanges, twice. Read both versions aloud."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes los libros? — Sí, los tengo. — ¿Y las comidas? — Las hago hoy."
+              "text": "Version one:"
             },
             {
               "kind": "speech",
-              "text": "Now the same four turns without them:"
+              "text": "— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida."
             },
             {
               "kind": "speech",
-              "text": "— ¿Tienes los libros? — Sí, tengo los libros. — ¿Y las comidas? — Hago las comidas hoy."
+              "text": "Version two:"
             },
             {
               "kind": "speech",
-              "text": "Read the second version aloud, all four lines. It is not wrong anywhere. It is exhausting, and by the fourth line it sounds like somebody being careful with a stranger rather than talking."
+              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago."
+            },
+            {
+              "kind": "speech",
+              "text": "Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what a pronoun buys, and what it costs",
+          "title": "Grammar Lens: what the pronoun is actually for",
           "segments": [
             {
               "kind": "speech",
-              "text": "The pronoun buys speed, and it is paid for with attention."
+              "text": "These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise."
             },
             {
               "kind": "speech",
-              "text": "Los tengo is only clear because both of you remember what los points at. If the last three sentences were about meals and you say los tengo, your listener hunts for a masculine thing and finds none. A pronoun is a promise that the thing is still in the room."
+              "text": "A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book."
             },
             {
               "kind": "speech",
-              "text": "That is the real skill, and it is not on the grid: hold what has been said, and point back at it accurately. English asks the same of you and you have done it since you were three, which is why nobody taught it to you. Here the pointer must also agree in gender and number — which is why lo and la were the hard quarter of that table."
+              "text": "So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that."
             }
           ]
         },
@@ -99,100 +103,101 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the four-turn exchange, and hear the second one tire",
+              "instruction": "both versions of the book exchange, and hear the difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the four-turn exchange, and hear the second one tire]"
+              "source": "[YOU SAY: both versions of the book exchange, and hear the difference]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it",
+              "instruction": "\"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it]"
+              "source": "[YOU SAY: \"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-sintesis-sin-repetir-books",
-              "prompt": "Answer yes to Tienes los libros, without the noun.",
+              "id": "ES-C42-sintesis-decirlo-una-vez-book",
+              "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
                 "ES-LEX-LIBRO",
                 "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "si, los tengo",
-                "los tengo",
-                "si los tengo"
+                "si, lo tengo",
+                "lo tengo",
+                "si lo tengo"
               ],
               "feedback": {
-                "correct": "Los tengo.",
-                "incorrect": "Si, los tengo."
+                "correct": "That is what a speaker would actually say.",
+                "incorrect": "Si, lo tengo. The noun was already named once; that was enough."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-sintesis-sin-repetir-meals",
-              "prompt": "Answer the question about las comidas, saying you make them.",
+              "id": "ES-C42-sintesis-decirlo-una-vez-meal",
+              "prompt": "Answer yes to Haces la comida, without repeating the noun.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
                 "ES-LEX-COMIDA",
                 "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "las hago",
-                "si, las hago",
-                "las hago hoy"
+                "si, la hago",
+                "la hago",
+                "si la hago"
               ],
               "feedback": {
-                "correct": "Feminine plural, so las.",
-                "incorrect": "Las hago."
+                "correct": "La, because comida is feminine.",
+                "incorrect": "Si, la hago. The pronoun carries the gender of the noun that left."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-sintesis-sin-repetir-us",
-              "prompt": "Say they love us.",
+              "id": "ES-C42-sintesis-decirlo-una-vez-people",
+              "prompt": "Somebody says Te quiero. Say the answering half.",
               "assesses": [
-                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
+                "ES-GRAMMAR-ME-DIRECT-OBJECT",
+                "ES-GRAMMAR-TE-DIRECT-OBJECT",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "nos quieren",
-                "ellos nos quieren"
+                "me quieres",
+                "y yo te quiero",
+                "te quiero"
               ],
               "feedback": {
-                "correct": "Nos quieren.",
-                "incorrect": "Nos quieren."
+                "correct": "Two people, four words, a complete exchange.",
+                "incorrect": "Me quieres — or turn it back with te quiero."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-sintesis-sin-repetir-cost",
-              "prompt": "You have been talking about meals and you say los tengo. What goes wrong for your listener?",
+              "id": "ES-C42-sintesis-decirlo-una-vez-point",
+              "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "they look for a masculine thing and there is not one",
-                "the pronoun points at nothing",
-                "the gender does not match what was said"
+                "it named the same thing twice",
+                "it repeated the noun",
+                "nobody talks like that"
               ],
               "feedback": {
-                "correct": "A pronoun is a promise that the thing is still in the room.",
-                "incorrect": "Los is masculine, and nothing masculine has been named. The pointer misses."
+                "correct": "Right — correct is not the same as what a speaker would say.",
+                "incorrect": "Nothing was ungrammatical. It just repeated a thing both people already had in mind."
               }
             }
           ]
@@ -210,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes los libros? (Sí, los tengo.) ¿Y las comidas? (Las hago.) What does a pronoun promise? (That the thing it points at is still in the room.) Next: the past tense."
+              "text": "¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there."
             }
           ]
         }

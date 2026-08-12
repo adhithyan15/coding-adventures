@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 115,
-  "title": "Lo Siento",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:47d63230463a19c2",
+  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ef4ca7ed7798ea02",
   "lessons": [
     {
-      "id": "ES-C20-lo-siento",
-      "sequence": 1470,
-      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
-      "headword": "lo siento",
-      "romanization": "lo siento",
-      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
+      "id": "ES-C50-ocho-cortos",
+      "sequence": 1408,
+      "title": "di, haz, ve, pon, ten, sal, sé, ven",
+      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
+      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
+      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c5b2f791ada457d4",
-      "notice": null,
+      "sourceHash": "fnv1a64:167695ce526e08e6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,172 +42,51 @@
             },
             {
               "kind": "speech",
-              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
+              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: eight, all one syllable",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
-            },
-            {
-              "kind": "speech",
-              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
-            },
-            {
-              "kind": "speech",
-              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lo siento mucho\" — I'm so sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C20-perdon",
-      "sequence": 1480,
-      "title": "perdón — the sorry that asks for something back",
-      "headword": "perdón",
-      "romanization": "perdón",
-      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:024558c8ab061321",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: which one to reach for",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
-            },
             {
               "kind": "table",
               "headers": [
-                "",
-                "lo siento",
-                "perdón"
+                "verb",
+                "command",
+                ""
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 8,
               "utterances": [
-                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
-                "points at. lo siento: your feeling. perdón: their forgiveness.",
-                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
+                "verb: decir. command: di, say.",
+                "verb: hacer. command: haz, do, make.",
+                "verb: ir. command: ve, go.",
+                "verb: poner. command: pon, put.",
+                "verb: tener. command: ten, have, hold.",
+                "verb: salir. command: sal, leave.",
+                "verb: ser. command: sé, be.",
+                "verb: venir. command: ven, come."
               ]
             },
             {
               "kind": "speech",
-              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
+              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
             },
             {
               "kind": "speech",
-              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
+              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
+            },
+            {
+              "kind": "speech",
+              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
             }
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -213,34 +99,90 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"perdón\" — pardon / excuse me",
+              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
+              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
+              "instruction": "each one as if calling across a room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
+              "source": "[YOU SAY: each one as if calling across a room]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
-              "spoken": true,
-              "scored": false,
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the list is a rhythm rather than eight facts."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-list",
+              "prompt": "Give the eight irregular tu commands.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "di, haz, ve, pon, ten, sal, se, ven",
+                "di haz ve pon ten sal sé ven"
+              ],
+              "feedback": {
+                "correct": "Eight, and every one a single syllable.",
+                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-come",
+              "prompt": "Tell somebody to come.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+                "ES-LEX-VENIR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
+              "acceptedResponses": [
+                "ven",
+                "¡ven!"
+              ],
+              "feedback": {
+                "correct": "Ven.",
+                "incorrect": "Ven — from venir."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-why",
+              "prompt": "Why are these eight so much shorter than every other verb form?",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "commands are shouted and hurried, so they wore down most",
+                "because they are the most used and most shouted",
+                "frequency and hurry"
+              ],
+              "feedback": {
+                "correct": "What the most-shouted verbs look like after two thousand years.",
+                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -252,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
+              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
             }
           ]
         }

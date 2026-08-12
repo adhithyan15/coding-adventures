@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 169,
-  "title": "Hay --- There Is, There Are, Same Word",
+  "title": "El Libro Que Compro --- One Sentence Out of Two",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5ca182cac4f463de",
+  "sourceHash": "fnv1a64:e1e79a72fa169d36",
   "lessons": [
     {
-      "id": "ES-C54-hay",
-      "sequence": 2096,
-      "title": "hay — \"there is,\" \"there are,\" same word",
-      "headword": "hay",
-      "romanization": "hay",
-      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
+      "id": "ES-C53-que-relativo",
+      "sequence": 2111,
+      "title": "el libro que compro — one sentence out of two",
+      "headword": "el libro que compro",
+      "romanization": "el libro que compro",
+      "gloss": "joining two sentences into one — with a word you have had since you learned to want things",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c044fc040d24ab37",
+      "sourceHash": "fnv1a64:83ca905c53648e70",
       "notice": null,
       "blocks": [
         {
@@ -35,45 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
+              "text": "Say \"I want you to speak.\" (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: stapling two sentences together",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
+              "text": "You have two sentences about one book:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo el libro. — I have the book. Compro el libro. — I buy the book."
+            },
+            {
+              "kind": "speech",
+              "text": "Que joins them, and the repeated noun disappears:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo el libro que compro. — I have the book that I buy."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: one form, and it does not count",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "hay — there is, and there are."
+              "text": "Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions."
             },
             {
               "kind": "speech",
-              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
+              "text": "That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement."
             },
             {
               "kind": "speech",
-              "text": "Read those twice. One book or a hundred, hay does not move."
-            },
-            {
-              "kind": "speech",
-              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
-            },
-            {
-              "kind": "speech",
-              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
+              "text": "So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints."
             }
           ]
         },
@@ -91,68 +103,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
+              "instruction": "the two short sentences, then the joined one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
+              "source": "[YOU SAY: the two short sentences, then the joined one]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-hay-one",
-              "prompt": "Say there is a house.",
-              "assesses": [
-                "ES-LEX-HAY",
-                "ES-LEX-CASA"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el libro que compro\", \"la casa que tengo\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "hay una casa",
-                "hay una casa."
-              ],
-              "feedback": {
-                "correct": "Hay una casa.",
-                "incorrect": "Hay una casa."
-              }
+              "source": "[YOU SAY: \"el libro que compro\", \"la casa que tengo\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-many",
-              "prompt": "Say there are books.",
+              "id": "ES-C53-que-relativo-join",
+              "prompt": "Join Tengo el libro and Compro el libro into one sentence.",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-GRAMMAR-RELATIVE-QUE",
                 "ES-LEX-LIBRO",
-                "ES-GRAMMAR-BARE-PLURAL-NOUN"
+                "ES-LEX-COMPRAR-07"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "hay libros",
-                "hay libros."
+                "tengo el libro que compro",
+                "el libro que compro"
               ],
               "feedback": {
-                "correct": "The same hay — it never goes plural.",
-                "incorrect": "Hay libros. Hay does not change."
+                "correct": "Name the thing once, hang the rest off que.",
+                "incorrect": "Tengo el libro que compro."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-unique",
-              "prompt": "What does hay agree with?",
+              "id": "ES-C53-que-relativo-what",
+              "prompt": "What happens to the repeated noun when que joins two sentences?",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+                "ES-GRAMMAR-RELATIVE-QUE"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "nothing",
-                "nothing at all",
-                "it never changes"
+                "it disappears",
+                "you only say it once",
+                "it is not repeated"
               ],
               "feedback": {
-                "correct": "The one common verb form in Spanish that counts nothing.",
-                "incorrect": "Nothing. Not the number, not the person."
+                "correct": "Once is enough — que carries it into the second half.",
+                "incorrect": "It disappears. You name it once."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-que-relativo-family",
+              "prompt": "Which question words share que's root?",
+              "assesses": [
+                "ES-ETYMON-QUI-RELATIVE",
+                "ES-LEX-QUE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "que, quien, como, cuando",
+                "qué, quién, cómo, cuándo",
+                "the qu- family"
+              ],
+              "feedback": {
+                "correct": "A question fills a gap; so does a relative clause.",
+                "incorrect": "Qué, quién, cómo, cuándo — the same qu- root."
               }
             }
           ]
@@ -170,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
+              "text": "Join \"I have the book\" and \"I buy the book.\" (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner."
             }
           ]
         }

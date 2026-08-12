@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 162,
-  "title": "Review --- The Three Se's",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8a17f27ea13b4c9b",
+  "title": "Review --- One Arrow",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b8b51352c459e6cb",
   "lessons": [
     {
-      "id": "ES-C52-tres-ses",
-      "sequence": 2089,
-      "title": "Review — the three se's",
+      "id": "ES-C51-repaso-flecha",
+      "sequence": 2104,
+      "title": "Review — one arrow",
       "headword": "(review)",
       "romanization": "(review)",
-      "gloss": "review — the three se's, two of which are one word and one of which is an impostor",
+      "gloss": "review — one arrow, two directions, and the phrases you already owned lined up under it",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b665f0d8bf34441e",
-      "notice": null,
+      "sourceHash": "fnv1a64:fecebc33ccec1048",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,7 +42,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart."
+              "text": "Nothing new. One question before the table: which way does each preposition point?"
             }
           ]
         },
@@ -48,63 +55,51 @@
               "kind": "table",
               "headers": [
                 "",
-                "example",
-                "what the se is"
+                "para — toward",
+                "por — through, because"
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 7,
               "utterances": [
-                "reflexive. example: se llama. what the se is: himself.",
-                "impersonal. example: se habla español. what the se is: nobody named.",
-                "the impostor. example: se lo digo. what the se is: le, in disguise."
+                "built from. para — toward: ad, \"toward\". por — through, because: per, \"through\".",
+                "the arrow. para — toward: points at it. por — through, because: comes from it.",
+                "a person. para — toward: para ti — you get it. por — through, because: por ti — you caused it.",
+                "a time. para — toward: para mañana — by then. por — through, because: —.",
+                "thanks. para — toward: —. por — through, because: gracias por — for what caused it.",
+                "asking. para — toward: —. por — through, because: por favor — through a favour.",
+                "asking why. para — toward: —. por — through, because: ¿por qué? — through what?"
               ]
             },
             {
               "kind": "speech",
-              "text": "And here is the fact that makes this a review rather than a fourth thing to learn:"
+              "text": "Look at the right-hand column. Four of those six por entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it."
             },
             {
               "kind": "speech",
-              "text": "The first two are the same word. The third is not."
-            },
-            {
-              "kind": "speech",
-              "text": "The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched."
-            },
-            {
-              "kind": "speech",
-              "text": "The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish does not have three ses. It has two, and a coincidence."
+              "text": "That happens more than a course usually admits. A great deal of what looks like new grammar late in a book is a name for something you have been doing correctly and blindly for a long time."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: how to tell them apart in the wild",
+          "title": "Grammar Lens: what to do when you are unsure",
           "segments": [
             {
               "kind": "speech",
-              "text": "You will not have to work this out consciously for long, but while you do:"
+              "text": "You will still hesitate sometimes. Two things help, in this order:"
             },
             {
               "kind": "speech",
-              "text": "Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them."
+              "text": "Ask what the sentence is about. A destination, a deadline, a recipient, a purpose — para. A cause, a route, a swap, a duration — por."
             },
             {
               "kind": "speech",
-              "text": "Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien."
+              "text": "If it is genuinely both, it is genuinely both. Lo hago para ti and lo hago por ti are both good Spanish; you are not choosing right from wrong, you are choosing which thing to say."
             },
             {
               "kind": "speech",
-              "text": "Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta."
-            },
-            {
-              "kind": "speech",
-              "text": "The first test is nearly free, because that direct object pronoun is sitting right there in the open."
+              "text": "That second point matters more than it looks. Most por/para anxiety comes from believing every sentence has one correct answer waiting to be found. Plenty of sentences take either, and the choice is the meaning."
             }
           ]
         },
@@ -122,11 +117,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives",
+              "instruction": "\"para ti / por ti\", \"para mañana\", \"gracias por la comida\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives]"
+              "source": "[YOU SAY: \"para ti / por ti\", \"para mañana\", \"gracias por la comida\"]"
             },
             {
               "kind": "repeat",
@@ -136,60 +131,60 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-two",
-              "prompt": "Of the three se's, which two are really one word?",
+              "id": "ES-C51-repaso-flecha-two",
+              "prompt": "Give the two directions in one line.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-ETYMON-GELO"
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "para points at it, por comes from it",
+                "para toward, por through or because"
+              ],
+              "feedback": {
+                "correct": "One arrow, two directions.",
+                "incorrect": "Para points at the thing; por comes from it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-repaso-flecha-old",
+              "prompt": "Name three phrases you already knew that turn out to contain por.",
+              "assesses": [
+                "ES-LEX-POR-FAVOR",
+                "ES-LEX-PORQUE-03",
+                "ES-LEX-GRACIAS"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "the reflexive and the impersonal",
-                "se llama and se habla",
-                "reflexive and impersonal"
+                "por favor, por que, gracias por",
+                "por favor, porque, gracias por"
               ],
               "feedback": {
-                "correct": "The impersonal grew out of the reflexive.",
-                "incorrect": "The reflexive and the impersonal. The se of se lo is a different word entirely."
+                "correct": "Old Spanish, newly explained.",
+                "incorrect": "por favor, ¿por qué?, porque, gracias por — any three."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-tres-ses-test",
-              "prompt": "What single thing right after se tells you it is the impostor?",
+              "id": "ES-C51-repaso-flecha-both",
+              "prompt": "A sentence takes either por or para. What should you conclude?",
               "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-POR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "lo, la, los or las",
-                "a direct object pronoun",
-                "lo or la"
+                "that it means two different things",
+                "both are correct and the choice is the meaning",
+                "neither is wrong"
               ],
               "feedback": {
-                "correct": "Sitting right there in the open.",
-                "incorrect": "A lo, la, los or las immediately after it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-tres-ses-which",
-              "prompt": "Which se is in como se dice?",
-              "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMO-SE-DICE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the impersonal",
-                "impersonal — nobody is named"
-              ],
-              "feedback": {
-                "correct": "Asking how it gets said, not who says it.",
-                "incorrect": "The impersonal. Nobody is named as the sayer."
+                "correct": "Not right versus wrong — which thing you are saying.",
+                "incorrect": "That both are good Spanish and the choice is the meaning."
               }
             }
           ]
@@ -207,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it."
+              "text": "Para — which way? (At it.) Por — which way? (From it.) And when a sentence takes either? (Both are right — the choice is the meaning.) Next: the two of them in a conversation, where the choice does real work."
             }
           ]
         }

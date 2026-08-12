@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 114,
-  "title": "Synthesis --- Asking Without Sounding Rude",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9417dafeb65a1ada",
+  "title": "Habla --- Telling Somebody To Do Something",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:9cecc5246d3896e3",
   "lessons": [
     {
-      "id": "ES-C50-sintesis-pedir-bien",
-      "sequence": 1392,
-      "title": "Synthesis — asking without sounding rude",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a command in Spanish is not the blunt thing a bare English imperative is, and knowing why keeps you from sounding rude by accident",
+      "id": "ES-C50-habla",
+      "sequence": 1407,
+      "title": "habla — telling somebody to do something",
+      "headword": "habla · come · vive",
+      "romanization": "habla · come · vive",
+      "gloss": "telling somebody to do something — and the form is one you have had since your seventh chapter",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:75e46a4ca4263ddf",
-      "notice": null,
+      "sourceHash": "fnv1a64:8b8fe5795fc43fcc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,53 +42,64 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"eat\" to a friend. (Come.) In English, saying \"Eat.\" to somebody lands hard. You are about to learn that it does not land the same way here."
+              "text": "Say \"he speaks.\" (Habla.) Hold that word. You are about to be told it does a second job you have never been shown."
             }
           ]
         },
         {
           "index": 1,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: you already have it",
           "segments": [
             {
               "kind": "speech",
-              "text": "English has almost no polite imperative. Eat. Sit. Bare, they sound like orders to a dog, so English speakers pad them: could you, would you mind."
+              "text": "To tell somebody you address as tú to do something, use the he/she form of the present."
             },
             {
               "kind": "speech",
-              "text": "Spanish needs no padding, because it spends its politeness elsewhere — on the choice of person."
+              "text": "Habla. — Speak. Come. — Eat. Vive. — Live."
             },
             {
               "kind": "speech",
-              "text": "Come. — to a friend. Perfectly warm. Coma, por favor. — to a stranger. Perfectly polite."
+              "text": "That is the whole rule, and it costs you nothing. Habla was already in your mouth as \"he speaks\"; the same two syllables, said to somebody, are an order."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "he/she does",
+                "you, do it"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "verb: hablar. he/she does: habla. you, do it: habla.",
+                "verb: comer. he/she does: come. you, do it: come.",
+                "verb: vivir. he/she does: vive. you, do it: vive."
+              ]
             },
             {
               "kind": "speech",
-              "text": "The tú command is not blunt; it is intimate. Using it says we are on those terms, which between friends is friendly rather than bossy. The usted command is not cold; it is respectful, for the same reason."
+              "text": "The column repeats. That is not an oversight in the table."
             },
             {
               "kind": "speech",
-              "text": "So an English speaker's mistake here is not tone. It is picking the wrong person: usted with a friend sounds stiff, tú with a stranger presumptuous. The politeness lives in the pronoun you chose before the command left your mouth. Por favor helps and costs nothing, but here it is a garnish rather than the structure."
+              "text": "Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The same four things said twice — once to a friend, once to a stranger."
+              "text": "The name for this form is the imperative, from Latin imperāre, \"to command.\""
             },
             {
               "kind": "speech",
-              "text": "To a friend: Ven. Come. No hables. Ten. To a stranger: Venga. Coma, por favor. No hable. Tenga."
-            },
-            {
-              "kind": "speech",
-              "text": "Read both aloud. The first is not ruder; it is closer. Say the second to somebody you have known for years and you have not been polite — you have put a small distance between you, and they will hear it."
+              "text": "That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed."
             }
           ]
         },
@@ -99,104 +117,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ven\" then \"Venga\" — hear the distance, not the rudeness",
+              "instruction": "\"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ven\" then \"Venga\" — hear the distance, not the rudeness]"
+              "source": "[YOU SAY: \"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the friend row, then the stranger row, straight through",
+              "instruction": "\"come\", \"vive\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the friend row, then the stranger row, straight through]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"come\", \"vive\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-friend",
-              "prompt": "Tell a friend to come.",
+              "id": "ES-C50-habla-say",
+              "prompt": "Tell somebody you call tu to eat.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
-                "ES-LEX-VENIR"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-LEX-COMER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "ven",
-                "¡ven!"
+                "come",
+                "¡come!",
+                "come!"
               ],
               "feedback": {
-                "correct": "Warm, not blunt.",
-                "incorrect": "Ven."
+                "correct": "Same word as he eats.",
+                "incorrect": "Come — the he/she form, said to somebody."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-stranger",
-              "prompt": "Ask a stranger to eat, politely.",
+              "id": "ES-C50-habla-rule",
+              "prompt": "Which form do you use to give a tu command?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-LEX-COMER",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "coma, por favor",
-                "coma por favor"
+                "the he/she present form",
+                "the third person singular",
+                "the el form"
               ],
               "feedback": {
-                "correct": "Coma, por favor.",
-                "incorrect": "Coma, por favor — the usted form."
+                "correct": "No new form at all.",
+                "incorrect": "The he/she form of the present."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-where",
-              "prompt": "In Spanish, where does the politeness of a command mostly live?",
+              "id": "ES-C50-habla-emperor",
+              "prompt": "Which two English words share a root with imperative?",
               "assesses": [
-                "ES-CULTURE-COMMAND-REGISTER",
-                "ES-LEX-TU",
-                "ES-LEX-USTED"
+                "ES-ETYMON-IMPERARE"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "in the choice of tu or usted",
-                "in which person you chose",
-                "in the pronoun"
+                "emperor and empire",
+                "emperor, empire"
               ],
               "feedback": {
-                "correct": "Chosen before the command ever left your mouth.",
-                "incorrect": "In whether you chose tu or usted — not in extra words."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-mistake",
-              "prompt": "You use usted commands with an old friend. What have you done?",
-              "assesses": [
-                "ES-CULTURE-COMMAND-REGISTER",
-                "ES-GRAMMAR-COMMAND-USTED"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "put distance between you",
-                "sounded stiff",
-                "been cold rather than polite"
-              ],
-              "feedback": {
-                "correct": "Politeness in the wrong place reads as distance.",
-                "incorrect": "Not been extra polite — you have opened a small distance, and they will hear it."
+                "correct": "One who commands, and the thing commanded.",
+                "incorrect": "Emperor and empire — both from imperare, to command."
               }
             }
           ]
@@ -214,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is Come rude to a friend? (No — it is close.) Where does the politeness of a Spanish command live? (In the person you chose.) And what does usted with an old friend sound like? (Distance, not courtesy.)"
+              "text": "Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable."
             }
           ]
         }

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 113,
-  "title": "Review --- Four Boxes",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1eb32b261f2500b4",
+  "title": "Synthesis --- Claiming, and Not Claiming",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0e5e35e89cc93713",
   "lessons": [
     {
-      "id": "ES-C50-repaso-mandatos",
-      "sequence": 1391,
-      "title": "Review — four boxes",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four boxes, one of which is free and three of which you already had",
+      "id": "ES-C18-sintesis-subjuntivo",
+      "sequence": 1406,
+      "title": "Synthesis — claiming, and not claiming",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the mood tells your listener whether you are claiming it is true",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8c31142e9b47bed4",
-      "notice": null,
+      "sourceHash": "fnv1a64:8745dd4a121328e1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,68 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Before the grid: which single box does not use the subjunctive?"
+              "text": "Nothing new in this chapter. Say hablas, then hables."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: what the second one is actually doing",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "tú",
-                "usted"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "do it. tú: habla, come. usted: hable, coma.",
-                "don't. tú: no hables, no comas. usted: no hable, no coma."
-              ]
+              "kind": "speech",
+              "text": "Those two forms are not two tenses. They are two stances."
             },
             {
               "kind": "speech",
-              "text": "Three of the four boxes are the subjunctive, which you built chapters ago for wanting and hoping. The fourth is the ordinary he/she present, which you built long before that."
+              "text": "Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so."
             },
             {
               "kind": "speech",
-              "text": "Now count what this rung actually cost you. A whole grammatical mood — the one every phrasebook opens with — and the only genuinely new material in it was eight one-syllable words: di, haz, ve, pon, ten, sal, sé, ven."
+              "text": "In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert."
             },
             {
               "kind": "speech",
-              "text": "Everything else was a form you already owned, doing one more job."
+              "text": "That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "Indicative: this is so. Subjunctive: I am not saying this is so."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: why the odd box is the odd one",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "It is worth asking why the informal positive command is the exception."
+              "text": "— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho."
             },
             {
               "kind": "speech",
-              "text": "Because it is the one that is said most. Come, ven, habla, ten — said to children, friends, dogs, and across kitchens, thousands of times a day for two thousand years. That is the box under the most pressure, and heavy use keeps old short forms alive rather than letting them be replaced by tidier ones."
-            },
-            {
-              "kind": "speech",
-              "text": "The same pressure explains the eight irregulars, which live in exactly that box and nowhere else. There are no irregular negative commands to learn, because negatives are said less and had time to be regularised."
-            },
-            {
-              "kind": "speech",
-              "text": "The messiest corner of this grid is the most-used corner. That has been true of every irregularity in this book."
+              "text": "Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ojalá deserves a last look, because it explains itself."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Arabic — wa-šā' allāh, \"and may God will it\" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names."
+            },
+            {
+              "kind": "speech",
+              "text": "And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,20 +121,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four boxes for hablar, then for comer",
+              "instruction": "the three-line exchange, and name the stance of each line",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four boxes for *hablar*, then for *comer*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the eight irregulars once more",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the eight irregulars once more]"
+              "source": "[YOU SAY: the three-line exchange, and name the stance of each line]"
             },
             {
               "kind": "repeat",
@@ -130,68 +133,71 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "Until choosing the mood feels like choosing what you mean."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-grid",
-              "prompt": "Give all four command forms of comer: tu do it, tu don't, usted do it, usted don't.",
+              "id": "ES-C18-sintesis-subjuntivo-assert",
+              "prompt": "You are stating a fact about a friend: you speak Spanish. Hablas or hables?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-LEX-COMER"
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "come, no comas, coma, no coma",
-                "come no comas coma no coma"
+                "hablas",
+                "hablas - indicative"
               ],
               "feedback": {
-                "correct": "One ordinary form and three subjunctives.",
-                "incorrect": "come, no comas, coma, no coma."
+                "correct": "Yes — you put a fact on the table.",
+                "incorrect": "hablas. The indicative asserts."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-cost",
-              "prompt": "What was the only genuinely new material in this whole rung?",
+              "id": "ES-C18-sintesis-subjuntivo-wish",
+              "prompt": "Now you only wish it were so. Which form follows ojala?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the eight irregular tu commands",
-                "eight one-syllable words",
-                "di haz ve pon ten sal se ven"
+                "hables",
+                "hables - subjunctive",
+                "ojala hables"
               ],
               "feedback": {
-                "correct": "Everything else was a form you already had.",
-                "incorrect": "The eight one-syllable irregulars. Every other box reused a form you held."
+                "correct": "Yes — nothing is being claimed.",
+                "incorrect": "hables. A wish asserts nothing."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-odd",
-              "prompt": "Why is the informal positive command the one box that keeps old irregular forms?",
+              "id": "ES-C18-sintesis-subjuntivo-ojala",
+              "prompt": "What did ojala originally mean, and in which language?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE"
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "it is said the most",
-                "because it is the most used",
-                "heavy use keeps old forms alive"
+                "may god will it, in arabic",
+                "arabic, may god will it",
+                "and may god will it",
+                "wa sha allah"
               ],
               "feedback": {
-                "correct": "The messiest corner is always the most-used corner.",
-                "incorrect": "It is said most often, and heavy use keeps short old forms alive."
+                "correct": "Right — and that is exactly why it cannot take the asserting mood.",
+                "incorrect": "Arabic wa-sha' allah, 'and may God will it'."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -203,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many of the four boxes use the subjunctive? (Three.) What did this rung genuinely cost? (Eight one-syllable words.) Next: what a command sounds like to the person receiving it."
+              "text": "What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)"
             }
           ]
         }

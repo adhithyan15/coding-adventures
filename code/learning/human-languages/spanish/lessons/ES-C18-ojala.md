@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-ojala
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1378
-chapter: 107
+sequence: 1398
+chapter: 112
 type: etymology
 headword: ojalá + subjunctive
 gloss: a wish trigger borrowed through Hispanic Arabic

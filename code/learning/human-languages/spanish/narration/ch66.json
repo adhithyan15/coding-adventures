@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 66,
-  "title": "Nos --- Us, and the Word Inside -mos",
+  "title": "Lo --- Saying It Without Naming It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e692afa9d027150",
+  "sourceHash": "fnv1a64:908aa2fe06ae8b85",
   "lessons": [
     {
-      "id": "ES-C45-nos",
-      "sequence": 1116,
-      "title": "nos — \"us\"",
-      "headword": "nos",
-      "romanization": "nos",
-      "gloss": "\"us\" — and the word hiding inside the verb ending you have used since hablamos",
+      "id": "ES-C42-lo",
+      "sequence": 1125,
+      "title": "lo — \"it\"",
+      "headword": "lo",
+      "romanization": "lo",
+      "gloss": "\"it\" — a word you have been saying since your fourth chapter, in a job you have not met yet",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:147778c8e51f9877",
+      "sourceHash": "fnv1a64:870b987d0416974d",
       "notice": null,
       "blocks": [
         {
@@ -35,34 +35,42 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"you love me.\" (Me quieres.) And \"I love you.\" (Te quiero.) Both of those are about one person on the receiving end. Here is more than one."
+              "text": "Say \"my name is\" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the third person in the room",
+          "title": "Grammar Lens: a slot you have been using all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "nos — us."
+              "text": "Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name."
             },
             {
               "kind": "speech",
-              "text": "Nos quieren. — They love us."
+              "text": "Here is a second word for that same slot."
             },
             {
               "kind": "speech",
-              "text": "Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else."
+              "text": "lo — it, standing in for something masculine."
             },
             {
               "kind": "speech",
-              "text": "Me quieren. — They love me. Nos quieren. — They love us."
+              "text": "Watch what it does:"
             },
             {
               "kind": "speech",
-              "text": "One letter of difference, and the difference is how many people you are speaking for."
+              "text": "Tengo el libro. — I have the book. Lo tengo. — I have it."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first."
             }
           ]
         },
@@ -73,23 +81,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words."
+              "text": "Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause."
             },
             {
               "kind": "speech",
-              "text": "You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said \"we speak,\" you were saying nos twice: once in the ending, and once by not needing to say it at all."
+              "text": "Latin ille, \"that one,\" changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:"
             },
             {
               "kind": "speech",
-              "text": "And the word for \"we\" itself:"
+              "text": "Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el."
             },
             {
               "kind": "speech",
-              "text": "nosotros — we, literally nos + otros, \"we others.\""
+              "text": "Standing alone in the verb's slot, it kept the vowel: illum becomes lo."
             },
             {
               "kind": "speech",
-              "text": "Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word."
+              "text": "So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job."
             }
           ]
         },
@@ -107,77 +115,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Me quieren\" then \"Nos quieren\"",
+              "instruction": "\"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Me quieren\" then \"Nos quieren\"]"
+              "source": "[YOU SAY: \"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablamos\" and hear the nos at the end of it",
+              "instruction": "\"me llamo\" then \"lo tengo\" — the same slot, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablamos\" and hear the *nos* at the end of it]"
+              "source": "[YOU SAY: \"me llamo\" then \"lo tengo\" — the same slot, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-nos-say",
-              "prompt": "Say they love us.",
+              "id": "ES-C42-lo-replace",
+              "prompt": "Say I have it, replacing el libro.",
               "assesses": [
-                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
-                "ES-LEX-NOS-OBJECT"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-LO-OBJECT"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "nos quieren",
-                "ellos nos quieren"
+                "lo tengo",
+                "yo lo tengo"
               ],
               "feedback": {
-                "correct": "Same slot, in front of the verb.",
-                "incorrect": "Nos quieren."
+                "correct": "Yes — and note the order: the little word comes first.",
+                "incorrect": "Lo tengo. The pronoun goes in front of the verb, exactly where me goes."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-nos-ending",
-              "prompt": "Which verb ending is the same ancient word as nos?",
+              "id": "ES-C42-lo-place",
+              "prompt": "Does the pronoun go before or after the conjugated verb?",
               "assesses": [
-                "ES-ETYMON-NOS-OTROS",
-                "ES-GRAMMAR-AR-PRESENT-1PL"
+                "ES-GRAMMAR-OBJECT-PRONOUN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "before",
+                "in front of it",
+                "before the verb"
+              ],
+              "feedback": {
+                "correct": "Before — the same slot me has always taken.",
+                "incorrect": "Before the verb, just like the me in me llamo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-lo-origin",
+              "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
+              "assesses": [
+                "ES-ETYMON-ILLE-ILLA",
+                "ES-GRAMMAR-DEFINITE-ARTICLES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "-mos",
-                "the -mos ending",
-                "mos"
+                "el",
+                "the article el",
+                "el, the article"
               ],
               "feedback": {
-                "correct": "Hablamos carries it on the back of the verb.",
-                "incorrect": "The -mos of hablamos: nos worn down and glued on."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C45-nos-word",
-              "prompt": "What are the two pieces inside nosotros, and what do they mean together?",
-              "assesses": [
-                "ES-LEX-NOSOTROS"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "nos and otros, we others",
-                "nos + otros",
-                "we others"
-              ],
-              "feedback": {
-                "correct": "The seam is still visible.",
-                "incorrect": "nos + otros, literally we others."
+                "correct": "Right — one Latin word, worn down two different ways.",
+                "incorrect": "El. Both descend from illum; the article lost the vowel and the pronoun kept it."
               }
             }
           ]
@@ -195,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"they love us.\" (Nos quieren.) What is nosotros made of? (Nos + otros — \"we others.\") Next: the plural of lo and la, and you will not need to be told what they are."
+              "text": "What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all."
             }
           ]
         }

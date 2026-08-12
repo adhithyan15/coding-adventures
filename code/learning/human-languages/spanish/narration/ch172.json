@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 172,
-  "title": "Review --- Three Letters",
+  "title": "Review --- Three Jobs, No New Words",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6a1e70c45364697a",
+  "sourceHash": "fnv1a64:cdb4e658b1bcf725",
   "lessons": [
     {
-      "id": "ES-C54-repaso-hay",
-      "sequence": 2099,
-      "title": "Review — three letters",
+      "id": "ES-C53-repaso-que",
+      "sequence": 2114,
+      "title": "Review — three jobs, no new words",
       "headword": "(review)",
       "romanization": "(review)",
-      "gloss": "review — three letters, three uses, and the last piece the audit was missing",
+      "gloss": "review — a whole grammatical machine assembled from two words you already had",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d7b37640e1827304",
+      "sourceHash": "fnv1a64:f9ab9d55ff322297",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,7 +42,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. What does hay agree with?"
+              "text": "Nothing new. One question first: how many new words did this rung teach you?"
             }
           ]
         },
@@ -52,51 +52,58 @@
           "title": "What you've built",
           "segments": [
             {
+              "kind": "speech",
+              "text": "None. Here is the whole rung:"
+            },
+            {
               "kind": "table",
               "headers": [
                 "",
-                "",
-                ""
+                "Spanish",
+                "English"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 3,
               "utterances": [
-                "one thing, Hay una casa., There is a house.",
-                "many things, Hay libros., There are books.",
-                "an obligation, Hay que comer., One must eat.",
-                "what it is made of, ha + y, \"it has there\"."
+                "joining to a noun. Spanish: el libro que compro. English: the book that I buy.",
+                "the same, with English's that dropped. Spanish: la casa que tengo. English: the house I have.",
+                "no noun to join to. Spanish: lo que digo. English: what I say."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three letters, and everything above came out of them."
+              "text": "Que you have held since quiero que hables. Lo you have held since the object pronouns. This rung put them to work and added nothing."
             },
             {
               "kind": "speech",
-              "text": "Notice the shape of this arc, because it is the shape of a lot of language learning: the smallest words need the most explaining. Hay is shorter than any noun you have learned and it took four chapters, while comida took one. Short words are short because they are used constantly, and constant use is what wears them into fossils that no longer explain themselves."
+              "text": "That is worth pausing on, because it is the last big structural piece a beginner's course owes you, and it turned out to cost no vocabulary at all. Almost everything in a language is like this eventually: the pieces stop being new and start being rearranged."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what it does not do",
+          "title": "Grammar Lens: what to actually watch for",
           "segments": [
             {
               "kind": "speech",
-              "text": "Two things hay never does, and both save you work:"
+              "text": "One error will outlive the others, so it gets the last word here."
             },
             {
               "kind": "speech",
-              "text": "It never agrees. Not with number, not with anything. One form."
+              "text": "English deletes its joint. Spanish never does."
             },
             {
               "kind": "speech",
-              "text": "It never names anybody. Neither does hay que."
+              "text": "You will think the book I bought, translate what you thought, and produce el libro compré. It will feel complete because your English was complete."
             },
             {
               "kind": "speech",
-              "text": "So of everything you have learned about making Spanish verbs match their surroundings — six endings a tense, gender on the pronouns, number on the articles — none of it applies here. After a hundred and seventy chapters of agreement, the last word is the one that opted out."
+              "text": "The check is mechanical and takes a second: a noun, then a new subject and verb, with nothing in between — that gap needs a que."
+            },
+            {
+              "kind": "speech",
+              "text": "And when there is no noun to begin with, lo supplies one so that que has something to hang from. Which means both chapters were about the same thing: Spanish will not let the joint go missing."
             }
           ]
         },
@@ -114,11 +121,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four rows of the table",
+              "instruction": "all three rows of the table",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four rows of the table]"
+              "source": "[YOU SAY: all three rows of the table]"
             },
             {
               "kind": "repeat",
@@ -126,60 +133,63 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "Until the missing English that is loud."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-three",
-              "prompt": "Say there is a house, there are books, and one must eat.",
+              "id": "ES-C53-repaso-que-none",
+              "prompt": "How many new words did this rung introduce?",
               "assesses": [
-                "ES-LEX-HAY",
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
-                "ES-GRAMMAR-HAY-QUE"
+                "ES-GRAMMAR-RELATIVE-QUE",
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hay una casa, hay libros, hay que comer",
-                "hay una casa; hay libros; hay que comer"
+                "none",
+                "zero",
+                "0"
               ],
               "feedback": {
-                "correct": "One word, three jobs.",
-                "incorrect": "Hay una casa. Hay libros. Hay que comer."
+                "correct": "Que and lo were both already yours.",
+                "incorrect": "None."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-never",
-              "prompt": "Name the two things hay never does.",
+              "id": "ES-C53-repaso-que-drop",
+              "prompt": "Say the house I have, and name the trap.",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "agree, and name anybody",
-                "it never agrees and never names a person"
+                "la casa que tengo; english drops the that",
+                "la casa que tengo"
               ],
               "feedback": {
-                "correct": "After all that agreement, the last word opts out of it entirely.",
-                "incorrect": "It never agrees, and it never names anybody."
+                "correct": "You think the English, and the que goes missing with it.",
+                "incorrect": "La casa que tengo. The trap is that English deletes its that."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-small",
-              "prompt": "Why did a three-letter word need four chapters when comida needed one?",
+              "id": "ES-C53-repaso-que-hole",
+              "prompt": "When there is no noun to join to, what supplies one?",
               "assesses": [
-                "ES-ETYMON-HAY-IBI"
+                "ES-GRAMMAR-LO-QUE"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "short words are worn down by constant use",
-                "the smallest words need the most explaining",
-                "heavy use turns them into fossils"
+                "lo",
+                "lo, as in lo que"
               ],
               "feedback": {
-                "correct": "They stop explaining themselves.",
-                "incorrect": "Short words are short because they are used constantly, and that wears them into fossils."
+                "correct": "So that que has something to hang from.",
+                "incorrect": "Lo — giving que something to attach to."
               }
             }
           ]
@@ -197,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+              "text": "New words this rung? (None.) The error that outlives the others? (Dropping que, because English drops that.) Next: sentences long enough to be worth saying."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 35,
-  "title": "Comeis and Vivis",
+  "title": "Hablan --- They, and Ustedes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9f4219a78826042e",
+  "sourceHash": "fnv1a64:e1bea02bbe0a16a8",
   "lessons": [
     {
-      "id": "ES-C07-comeis-vivis",
-      "sequence": 762,
-      "title": "coméis and vivís — the second difference, and the last",
-      "headword": "coméis · vivís",
-      "romanization": "coméis · vivís",
-      "gloss": "the vosotros forms — the second and last place the two families differ",
+      "id": "ES-C07-hablan",
+      "sequence": 710,
+      "title": "hablan — \"they speak,\" and \"you all speak\"",
+      "headword": "hablan",
+      "romanization": "hablan",
+      "gloss": "they speak\" — and, across most of the Spanish-speaking world, \"you all speak",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a790efcc9cbd4f56",
+      "sourceHash": "fnv1a64:6edc767040f81d72",
       "notice": null,
       "blocks": [
         {
@@ -35,45 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "Which form goes with vosotros for hablar? (Habláis.) And where is that word used? (Spain.)"
+              "text": "Say \"we speak.\" (Hablamos.) And what was the form for he speaks? (Habla.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: two families, two endings, one lesson",
+          "title": "Grammar Lens: add the plural -n",
           "segments": [
             {
               "kind": "speech",
-              "text": "coméis — you all eat., vivís — you all live."
+              "text": "Take habla, the form for one other person, and add -n:"
             },
             {
               "kind": "speech",
-              "text": "These two are taught together, and it is worth saying why, because this book has otherwise insisted on one form per lesson."
+              "text": "hablan — they speak."
             },
             {
               "kind": "speech",
-              "text": "You already know the fact they demonstrate. The -er and -ir families differ in exactly two slots — nosotros, which you met last chapter, and vosotros, which is this one. Learning them apart would teach the same single fact twice and hide the pattern that makes it easy."
-            },
-            {
-              "kind": "speech",
-              "text": "And after this, the two families agree again. They eat and they live take the same ending, as every singular form did."
+              "text": "That is the whole operation, and it is the same one Spanish uses everywhere: a final -n on a verb means the subject is plural and is not you."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the form does a second job, exactly as habla did",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both descend from Latin's -tis: comeditis, vīvitis. Spanish lost the -t- between vowels — as it lost most of them — and what was left collapsed differently in each family. The -er line kept two vowels, -éis. The -ir line kept one, -ís."
+              "text": "ustedes — you all. And it takes hablan, the they form."
             },
             {
               "kind": "speech",
-              "text": "Same ending, same erosion, two outcomes. That is most of what sound change looks like."
+              "text": "You have seen this exact move before. Usted takes the he/she form because it grew out of vuestra merced, \"your grace\" — a thing you talk about. Ustedes is simply that phrase made plural, vuestras mercedes, \"your graces\". Same origin, same consequence."
+            },
+            {
+              "kind": "speech",
+              "text": "Where this is the ordinary word. Across all of Latin America, and in the Canary Islands and parts of Andalusia, ustedes is how you address any group — friends, family, strangers alike. There is no separate familiar plural. For most Spanish speakers alive, this lesson is the complete answer to \"how do I talk to more than one person?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spain uses a different word for friends, and it has the next chapter to itself."
             }
           ]
         },
@@ -90,82 +94,76 @@
             },
             {
               "kind": "prompt",
-              "action": "HEAR",
-              "instruction": "\"coméis\", \"vivís\"",
+              "action": "SAY",
+              "instruction": "\"habla\" then \"hablan\" — one other person, then several",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: \"coméis\", \"vivís\"]"
-            },
-            {
-              "kind": "speech",
-              "text": "becomes a Spaniard, addressing friends."
+              "source": "[YOU SAY: \"habla\" then \"hablan\" — one other person, then several]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comemos, coméis\" then \"vivimos, vivís\" — the two differing slots, side by side",
+              "instruction": "\"ustedes hablan\", addressing a group you have just met",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comemos, coméis\" then \"vivimos, vivís\" — the two differing slots, side by side]"
+              "source": "[YOU SAY: \"ustedes hablan\", addressing a group you have just met]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comeis-vivis-eat",
-              "prompt": "Vosotros, from comer.",
+              "id": "ES-C07-hablan-form",
+              "prompt": "Turn hablar into they speak.",
               "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-2PL"
+                "ES-GRAMMAR-AR-PRESENT-3PL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "comeis",
-                "coméis",
-                "vosotros comeis"
+                "hablan",
+                "ellos hablan"
               ],
               "feedback": {
-                "correct": "Yes — comeis.",
-                "incorrect": "comeis."
+                "correct": "Right — habla plus -n.",
+                "incorrect": "hablan."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comeis-vivis-live",
-              "prompt": "Vosotros, from vivir.",
+              "id": "ES-C07-hablan-ustedes",
+              "prompt": "Which form goes with ustedes?",
               "assesses": [
-                "ES-GRAMMAR-IR-PRESENT-2PL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "vivis",
-                "vivís",
-                "vosotros vivis"
-              ],
-              "feedback": {
-                "correct": "Yes — vivis, one vowel where comeis has two.",
-                "incorrect": "vivis."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-comeis-vivis-count",
-              "prompt": "In how many of the six slots do -er and -ir actually differ?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-2PL",
-                "ES-GRAMMAR-IR-PRESENT-1PL"
+                "ES-LEX-USTEDES",
+                "ES-GRAMMAR-AR-PRESENT-3PL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "two",
-                "2",
-                "nosotros and vosotros"
+                "hablan",
+                "ustedes hablan"
               ],
               "feedback": {
-                "correct": "Two — nosotros and vosotros. The other four are identical.",
-                "incorrect": "Two: nosotros and vosotros."
+                "correct": "Yes — ustedes takes the they form, for the same reason usted takes the he form.",
+                "incorrect": "Hablan."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-hablan-why",
+              "prompt": "What phrase is ustedes worn down from?",
+              "assesses": [
+                "ES-ETYMON-VUESTRA-MERCED"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vuestras mercedes",
+                "your graces",
+                "vuestra merced plural"
+              ],
+              "feedback": {
+                "correct": "Yes — your graces, the plural of the phrase behind usted.",
+                "incorrect": "Vuestras mercedes, your graces."
               }
             }
           ]
@@ -183,7 +181,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give both vosotros forms. (Coméis, vivís.) In how many slots do the two families differ? (Two — and you have now met both.) What Latin ending is behind them? (-tis.)"
+              "text": "What is \"they speak\"? (Hablan.) What does a final -n on a verb tell you? (The subject is plural, and not you.) And who does ustedes address in Latin America? (Any group at all.) Next: the word Spain uses instead, for friends."
             }
           ]
         }

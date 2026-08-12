@@ -1,44 +1,35 @@
-Spanish, chapter 109: Habla --- Telling Somebody To Do Something.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 109: Wanting, Not Asserting.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-habla — telling somebody to do something.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Hablas español, Quiero que hables español — fact or wanted event?
 
 Warm-up.
 [pause 2 seconds]
-Say "he speaks." (Habla.) Hold that word. You are about to be told it does a second job you have never been shown.
+Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
 
-Grammar Lens: you already have it.
-To tell somebody you address as tú to do something, use the he/she form of the present.
-Habla. — Speak. Come. — Eat. Vive. — Live.
-That is the whole rule, and it costs you nothing. Habla was already in your mouth as "he speaks"; the same two syllables, said to somebody, are an order.
-[a table of 3 rows, read aloud]
-verb: hablar. he/she does: habla. you, do it: habla.
-verb: comer. he/she does: come. you, do it: come.
-verb: vivir. he/she does: vive. you, do it: vive.
-The column repeats. That is not an oversight in the table.
-Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two.
-
-The word, taken apart.
-The name for this form is the imperative, from Latin imperāre, "to command."
-That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed.
+Grammar Lens: count the doers.
+[a table of 2 rows, read aloud]
+meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
+meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
+With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "habla" as a statement, then "¡Habla!" as an order — same word, different job]
+[your turn — say: “Hablas español.”]
 [pause 8 seconds for the answer]
-[your turn — say: "come", "vive"]
+[your turn — say: “Quiero hablar español.”]
 [pause 8 seconds for the answer]
+[your turn — say: “Quiero que hables español.”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 6 seconds]
+Which form asserts that one friend speaks: hablas or hables?
 [question — say your answer, then pause 8 seconds]
-Tell somebody you call tu to eat.
-[question — say your answer, then pause 10 seconds]
-Which form do you use to give a tu command?
-[question — say your answer, then pause 10 seconds]
-Which two English words share a root with imperative?
+Say 'I want to speak Spanish' in Spanish.
+[question — say your answer, then pause 9 seconds]
+Say 'I want you to speak Spanish' to one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable.
+Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.

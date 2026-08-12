@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C10-van
 spine_node: SPINE-ASK-LOCATION
-sequence: 944
-chapter: 44
+sequence: 964
+chapter: 49
 type: grammar
 headword: van
 gloss: "they go" — three letters, and the high-frequency verbs are complete

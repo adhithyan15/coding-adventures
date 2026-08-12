@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 33,
-  "title": "Synthesis --- the Same Sentence, Two Continents",
+  "title": "Synthesis --- Asking, and Answering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d5e16456f482c8a",
+  "sourceHash": "fnv1a64:f0e7ac9fb6d487e6",
   "lessons": [
     {
-      "id": "ES-C07-sintesis-dos-continentes",
-      "sequence": 750,
-      "title": "Synthesis — the same sentence, two continents",
+      "id": "ES-C07-sintesis-preguntar",
+      "sequence": 680,
+      "title": "Synthesis — asking, and answering",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — the same sentence in Madrid and in Mexico City, and neither is the correction",
+      "gloss": "synthesis — three verb families and two question words become a conversation",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed5e84b1d5a8c742",
+      "sourceHash": "fnv1a64:8d87e8939074f7f4",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Say hablan, then habláis."
+              "text": "Nothing new in this chapter. Say \"I eat\" and \"I live.\" (Como. Vivo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: a choice that is not about grammar",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Every other choice this book has asked you to make has been about meaning. Tú or usted — how close are you to this person? El or un — does your listener already know which one you mean?"
-            },
-            {
-              "kind": "speech",
-              "text": "This one is different. It is about where you are."
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Habláis español? — asked in Madrid, to friends. — ¿Hablan ustedes español? — asked in Bogotá, to the same friends."
-            },
-            {
-              "kind": "speech",
-              "text": "Identical meaning. Identical register. The speaker chose by geography, and nothing else."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "notice",
           "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "This matters more than a regional footnote, because it settles what \"correct Spanish\" means in this book."
+              "text": "Something quietly enormous happened over the last four chapters, and it is worth saying out loud before you use it."
             },
             {
               "kind": "speech",
-              "text": "Neither of those sentences is the correction of the other. Roughly 40 million people use vosotros daily; several hundred million have never used it in their lives and never will. A course that taught only ustedes would leave you unable to follow a Spanish film. One that taught only vosotros would leave you sounding strange in nineteen countries."
+              "text": "Spanish has three verb families. You now hold the singular of all three. That is not three facts — it is a machine: hand it any regular verb you meet for the rest of your life, and you can already say what you do with it, what a friend does, and what somebody else does."
             },
             {
               "kind": "speech",
-              "text": "So you learn both, and you learn which is which — which is exactly what you have just done across four chapters."
+              "text": "Two question words turn that machine outward. ¿Qué? asks what. ¿Dónde? asks where. With them, the forms stop being an exercise and start being a conversation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Qué bebes? — Bebo café. ¿Y tú? — Yo también. ¿Dónde vives? — Vivo en Madrid."
             },
             {
               "kind": "speech",
-              "text": "If you must pick one to produce: ustedes. It is understood everywhere, Spain included, and in the Americas it is the only option."
+              "text": "Four lines, and every single word in them is something you built yourself. No new vocabulary was needed to get here — only the endings, one slot at a time."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what the questions cost: nothing. You did not learn a question form. You put ¿qué? or ¿dónde? in front of a verb you already had."
             }
           ]
         },
@@ -99,20 +91,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Madrid version, then the Bogotá version",
+              "instruction": "the exchange above, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Madrid version, then the Bogotá version]"
+              "source": "[YOU SAY: the exchange above, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the one you would actually use, and say why",
+              "instruction": "it again, swapping in comes for bebes",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the one you would actually use, and say why]"
+              "source": "[YOU SAY: it again, swapping in *comes* for *bebes*]"
             },
             {
               "kind": "repeat",
@@ -120,61 +112,68 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-sintesis-dos-continentes-madrid",
-              "prompt": "In Madrid, to a group of friends: which verb form?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2PL",
-                "ES-LEX-VOSOTROS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablais",
-                "habláis",
-                "vosotros hablais"
-              ],
-              "feedback": {
-                "correct": "Yes — vosotros hablais.",
-                "incorrect": "Hablais, the vosotros form."
-              }
+              "kind": "speech",
+              "text": "Run it until the question and the answer arrive together."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-sintesis-dos-continentes-bogota",
-              "prompt": "The same friends, in Bogota: which form?",
+              "id": "ES-C07-sintesis-preguntar-what",
+              "prompt": "Ask a friend what they eat.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-3PL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablan",
-                "ustedes hablan"
-              ],
-              "feedback": {
-                "correct": "Yes — ustedes hablan.",
-                "incorrect": "Hablan, because ustedes covers every group there."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-sintesis-dos-continentes-which",
-              "prompt": "Which of the two is the correct one?",
-              "assesses": [
-                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT"
+                "ES-LEX-QUE",
+                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "neither, they are regional",
-                "neither",
-                "both are correct",
-                "it depends where you are"
+                "que comes",
+                "¿que comes?",
+                "qué comes",
+                "que comes tu"
               ],
               "feedback": {
-                "correct": "Right. The choice is geography, not correctness.",
-                "incorrect": "Neither. Both are ordinary Spanish, in different places."
+                "correct": "Yes — the question word, then the tu form.",
+                "incorrect": "Que comes. The question word goes in front of the form you already have."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-sintesis-preguntar-where",
+              "prompt": "Ask a friend where they live.",
+              "assesses": [
+                "ES-LEX-DONDE",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "donde vives",
+                "¿donde vives?",
+                "dónde vives"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Donde vives."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-sintesis-preguntar-families",
+              "prompt": "How many verb families do you now hold in the singular?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "three",
+                "3",
+                "all three"
+              ],
+              "feedback": {
+                "correct": "All three — and that covers every regular verb.",
+                "incorrect": "Three: -ar, -er and -ir."
               }
             }
           ]
@@ -192,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "What decides between habláis and hablan? (Where you are — not what you mean.) Which is correct? (Both.) And which one will carry you everywhere? (Ustedes hablan.)"
+              "text": "How many verb families do you hold? (Three — and that is all of them.) What did the question words cost you? (Nothing — they sit in front of forms you already had.) Ask where somebody lives. (¿Dónde vives?)"
             }
           ]
         }

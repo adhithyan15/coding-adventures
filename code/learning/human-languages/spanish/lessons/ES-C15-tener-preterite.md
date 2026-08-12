@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C15-tener-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1220
-chapter: 83
+sequence: 1240
+chapter: 88
 type: grammar
 headword: tuve
 gloss: the strong singular preterite of tener — tuve, tuviste, tuvo

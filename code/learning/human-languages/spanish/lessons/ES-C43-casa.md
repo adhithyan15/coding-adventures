@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C43-casa
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1079
-chapter: 53
+sequence: 1099
+chapter: 58
 type: word
 headword: la casa
 gloss: house, home — and a word French wore down so far it stopped looking like a noun

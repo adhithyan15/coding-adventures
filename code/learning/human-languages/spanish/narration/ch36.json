@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 36,
-  "title": "Comen and Viven --- Agreeing Again",
+  "title": "Hablais --- the Form Spain Keeps",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f8596dd842bf5d3b",
+  "sourceHash": "fnv1a64:9cb0b508eed7b446",
   "lessons": [
     {
-      "id": "ES-C07-comen-viven",
-      "sequence": 770,
-      "title": "comen and viven — agreeing again",
-      "headword": "comen · viven",
-      "romanization": "comen · viven",
-      "gloss": "\"they eat,\" \"they live\" — and the families agree again",
+      "id": "ES-C07-hablais",
+      "sequence": 730,
+      "title": "habláis — the form Spain keeps",
+      "headword": "habláis",
+      "romanization": "habláis",
+      "gloss": "\"you all speak\" in Spain — a whole form that half the Spanish world does not use",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e0ed84469b378e2",
+      "sourceHash": "fnv1a64:453a1201282edae8",
       "notice": null,
       "blocks": [
         {
@@ -35,43 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"they speak\"? (Hablan.) And who else does that form address? (Ustedes.)"
+              "text": "How do you say \"you all speak\" to a group in Mexico? (Ustedes hablan.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: one ending for both",
+          "title": "Grammar Lens: a second plural you",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both families take -en:"
+              "text": "In Spain, addressing a group of friends uses a different word and a different verb form:"
             },
             {
               "kind": "speech",
-              "text": "comen — they eat, ustedes eat. viven — they live, ustedes live."
+              "text": "vosotros habláis — you all speak, informally."
             },
             {
               "kind": "speech",
-              "text": "No split here. After two chapters of divergence the families fall back into step, and they stay there."
+              "text": "vosotros — you all, familiar. Its ending is -áis, and it is the last of the six."
             },
             {
               "kind": "speech",
-              "text": "That is the shape of the whole system, and it is worth holding as one sentence:"
-            },
-            {
-              "kind": "speech",
-              "text": "-er and -ir are identical in four of the six slots. They differ only in nosotros and vosotros."
-            },
-            {
-              "kind": "speech",
-              "text": "Two exceptions in a system of twelve forms. You have now met both, and everything else you already knew."
+              "text": "This is not an ornament. In Spain it is the ordinary, everyday way to speak to more than one friend, and a Spaniard hears ustedes to a group of friends as oddly formal — roughly as an English speaker hears sir from someone they know well."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met vos long ago: Latin's plural you, which drifted into the singular across much of the Americas."
+            },
+            {
+              "kind": "speech",
+              "text": "That drift left Spain with a problem. If vos was being used for one polite person, what was left for an actual group? Spaniards added a word to disambiguate: vos + otros, \"you others\" — hence vosotros, and its feminine vosotras."
+            },
+            {
+              "kind": "speech",
+              "text": "The Americas never needed the repair, because ustedes had already taken the plural job. So the split is not a difference of taste. Two regions solved the same problem in two different ways, and both solutions are still in use."
+            },
+            {
+              "kind": "speech",
+              "text": "What you owe this form. Recognition, at minimum — you will meet it in every book, film and song from Spain. Produce it if you are learning for Spain; otherwise ustedes will carry you anywhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -83,84 +98,88 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comen, viven\" — one ending, both families",
+              "action": "HEAR",
+              "instruction": "\"habláis\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comen, viven\" — one ending, both families]"
+              "source": "[YOU HEAR: \"habláis\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "becomes a Spaniard, talking to friends."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ustedes comen\", addressing a group",
+              "instruction": "\"ustedes hablan\" then \"vosotros habláis\" — the same sentence, two continents",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ustedes comen\", addressing a group]"
+              "source": "[YOU SAY: \"ustedes hablan\" then \"vosotros habláis\" — the same sentence, two continents]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-eat",
-              "prompt": "They eat.",
+              "id": "ES-C07-hablais-form",
+              "prompt": "Which form goes with vosotros?",
               "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3PL"
+                "ES-GRAMMAR-AR-PRESENT-2PL"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "comen",
-                "ellos comen",
-                "ustedes comen"
+                "hablais",
+                "habláis",
+                "vosotros hablais"
               ],
               "feedback": {
-                "correct": "Yes.",
-                "incorrect": "comen."
+                "correct": "Yes — the -ais ending.",
+                "incorrect": "hablais."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-live",
-              "prompt": "They live.",
+              "id": "ES-C07-hablais-where",
+              "prompt": "You are addressing a group of friends in Argentina. Vosotros or ustedes?",
               "assesses": [
-                "ES-GRAMMAR-IR-PRESENT-3PL"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "viven",
-                "ellos viven",
-                "ustedes viven"
-              ],
-              "feedback": {
-                "correct": "Yes — the same ending as comen.",
-                "incorrect": "viven."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-comen-viven-where",
-              "prompt": "In which two slots do -er and -ir differ?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3PL",
-                "ES-GRAMMAR-IR-PRESENT-3PL"
+                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
+                "ES-LEX-USTEDES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nosotros and vosotros",
-                "nosotros, vosotros",
-                "we and you all"
+                "ustedes",
+                "ustedes hablan"
               ],
               "feedback": {
-                "correct": "Those two, and no others.",
-                "incorrect": "Nosotros and vosotros only."
+                "correct": "Right — vosotros is Spain only.",
+                "incorrect": "Ustedes. Vosotros is not used in the Americas."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-hablais-why",
+              "prompt": "What two words is vosotros built from?",
+              "assesses": [
+                "ES-LEX-VOSOTROS",
+                "ES-ETYMON-VOS-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vos and otros",
+                "vos otros",
+                "you others"
+              ],
+              "feedback": {
+                "correct": "Yes — you others, added to keep the plural apart from singular vos.",
+                "incorrect": "Vos plus otros, you others."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -172,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give they eat and they live. (Comen, viven.) In how many of the six slots do the two families agree? (Four.) Next chapter: all three families, whole."
+              "text": "What is vosotros built from? (Vos + otros — \"you others\".) Why did Spain need it and the Americas not? (Because vos had drifted singular in the Americas, where ustedes already covered the plural.) Which will carry you anywhere? (Ustedes.)"
             }
           ]
         }

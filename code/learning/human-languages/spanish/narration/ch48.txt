@@ -1,45 +1,66 @@
-Spanish, chapter 48: Salir --- Leaving.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 48: Tener in the Plural, and the Stem-Change Rule.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 1.
-salir — leaving with three singular forms.
+Lesson 1 of 2.
+tenemos — and the stem change disappears.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You can retrieve pongo, pones, pone, and you already use de with a place name. Keep that frontier while adding salir, “to leave” or “to go out.”
+Say "I have" and "you have." (Tengo, tienes.) And "we eat." (Comemos.)
 
-Sounds you'll need.
-The g in salgo is hard. Keep the l clear in every form: salgo, sales, sale.
-
-The word, taken apart.
-salir descends from Latin salīre, “to leap” or “to jump.” The older image of leaping outward developed into the everyday meaning “to go out.” English salient first carried the sense “leaping” or “springing,” and a sally is a sudden movement outward. Those cousins preserve the same motion without requiring a long list of uncertain relatives.
-
-Grammar Lens: one more singular set.
-[a table of 3 rows, read aloud]
-person: yo. present of salir: salgo.
-person: tú. present of salir: sales.
-person: él / ella / usted. present of salir: sale.
-Say salgo, sales, sale. Only the learned yo form contains g. Compare it with pongo because both forms are now known, not because one form could have predicted the other.
-Reuse the known word de and the familiar place name Madrid:
-Salgo de Madrid. — “I leave Madrid.”
-Sales de Madrid. — “You leave Madrid.”
-Sale de Madrid. — “He, she, or formal you leaves Madrid.”
-Plural persons, dating expressions, house vocabulary, and the noun for “exit” wait until their own lessons.
+Grammar Lens: the break is gone.
+tenemos — we have., tenéis — you all have.
+Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem.
+You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress.
+Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole.
+The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “salir — salgo, sales, sale”]
+[your turn — say: "tienes" then "tenemos" — and hear the stress move off the stem]
 [pause 8 seconds for the answer]
-[your turn — say: “Salgo de Madrid.”]
+[your turn — say: "comemos, tenemos" — the same endings]
 [pause 8 seconds for the answer]
-[your turn — say: “salīre — salient — salir”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Give the learned singular present forms of salir: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Say 'I leave Madrid' in Spanish.
+Say we have.
+[question — say your answer, then pause 10 seconds]
+Why does tienes break its stem but tenemos does not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does salir mean? (“To leave” or “to go out.”) Give the three learned forms. (Salgo, sales, sale.) What did Latin salīre mean? (“To leap” or “to jump.”) Name one English cousin. (Salient or sally.) Next: add venir and compare it only with already-learned tener.
+What is "we have"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back.
+
+
+Lesson 2 of 2.
+tienen — the break comes back.
+
+Warm-up.
+[pause 2 seconds]
+Say "we have", then "you have" to a friend. (Tenemos, tienes.) Which one has the broken stem?
+
+Grammar Lens: the rule, stated once and for all.
+tienen — they have, and ustedes tienen, you all have.
+The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:
+A stem change happens exactly where the stem is stressed, and nowhere else.
+That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language.
+Learners are usually told to memorise a shape called "the boot" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tienes, tenemos, tienen" — break, no break, break]
+[pause 8 seconds for the answer]
+[your turn — say: the two forms that never break, for any verb]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say they have.
+[question — say your answer, then pause 10 seconds]
+In any stem-changing verb, which two forms never break?
+[question — say your answer, then pause 8 seconds]
+What actually decides whether the stem breaks?
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "they have"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)

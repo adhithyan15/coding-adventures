@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 161,
-  "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
+  "title": "Which Way Is the Arrow Pointing?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:184553855bc8b21e",
+  "sourceHash": "fnv1a64:edff339a1befdef5",
   "lessons": [
     {
-      "id": "ES-C52-como-se-dice",
-      "sequence": 2088,
-      "title": "¿cómo se dice? — the sentence that unlocks the rest",
-      "headword": "¿cómo se dice?",
-      "romanization": "¿cómo se dice?",
-      "gloss": "the single most useful sentence a learner owns — and it is this chapter's grammar, doing exactly what the chapter said",
+      "id": "ES-C51-la-flecha",
+      "sequence": 2103,
+      "title": "Which way is the arrow pointing?",
+      "headword": "por vs para",
+      "romanization": "por vs para",
+      "gloss": "the one question that replaces the twelve rules — which way is the arrow pointing?",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad4f8ba63fa02586",
+      "sourceHash": "fnv1a64:ba4c4693a10d8fd3",
       "notice": null,
       "blocks": [
         {
@@ -35,39 +35,74 @@
             },
             {
               "kind": "speech",
-              "text": "You know cómo. You know the impersonal se. Put them in front of dice and you have the sentence that will teach you more Spanish than this book will."
+              "text": "One points forward at a target. One points back at a cause. Say which is which before you read on."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The two words",
+          "type": "grammar",
+          "title": "Grammar Lens: the same sentence, twice",
           "segments": [
             {
               "kind": "speech",
-              "text": "¿Cómo se dice? — How do you say it? / How is it said?"
+              "text": "The pair that makes the difference visible:"
             },
             {
               "kind": "speech",
-              "text": "Take it apart with what this chapter gave you. Se dice is the impersonal: it asks how a thing gets said, without asking who says it. Not how do you say it, though that is the natural English — Spanish is not pointing at the person you are talking to. It is asking about the language itself."
+              "text": "Lo hago para ti. — I'm doing it for you. (you receive it) Lo hago por ti. — I'm doing it because of you. (you are the reason)."
             },
             {
               "kind": "speech",
-              "text": "Which is exactly right, because you are not asking for their personal opinion. You are asking what the word is."
+              "text": "Two letters apart, and two different sentences about your relationship with somebody. The first is a gift; the second is a motive."
             },
             {
               "kind": "speech",
-              "text": "¿Cómo se dice \"book\" en español? — How do you say \"book\" in Spanish? ¿Cómo se dice, por favor?"
+              "text": "English says for in both and lets context carry the rest. Spanish makes you choose, and once you hear the choice you notice English was hiding it."
             },
             {
               "kind": "speech",
-              "text": "This is the most valuable sentence in the book, and it is worth saying why. Every other sentence you have learned lets you say something you already know. This one gets you the thing you do not know, from the person in front of you, mid-conversation. A learner with this sentence and some patience out-learns one with twice the vocabulary and no way to ask."
+              "text": "The test:"
+            },
+            {
+              "kind": "speech",
+              "text": "Draw an arrow. Does it point at the thing (para), or come from it (por)?"
+            },
+            {
+              "kind": "speech",
+              "text": "Es para ti — arrow at you. You get it."
+            },
+            {
+              "kind": "speech",
+              "text": "Es por ti — arrow from you. You caused it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rung: one arrow, two directions."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The test works because it is not a trick. It is what the two words are made of: para contains ad (\"toward\"), por contains per (\"through\")."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not memorising which preposition suits which situation. You are reading a direction built into each word before Spanish existed."
+            },
+            {
+              "kind": "speech",
+              "text": "That keeps working on uses this book never showed you: meeting por in an unfamiliar sentence, ask what it comes through or because of."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -80,20 +115,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Cómo se dice?\" until it is one word",
+              "instruction": "\"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice?\" until it is one word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cómo se dice en español, por favor?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice en español, por favor?\"]"
+              "source": "[YOU SAY: \"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships]"
             },
             {
               "kind": "repeat",
@@ -102,72 +128,88 @@
             },
             {
               "kind": "speech",
-              "text": "This is the one to over-practise."
+              "text": "Until the arrow arrives before the word does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-como-se-dice-ask",
-              "prompt": "Ask how something is said.",
+              "id": "ES-C51-la-flecha-gift",
+              "prompt": "Say I am doing it for you, meaning you will receive it.",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-COMO"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-TU"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice",
-                "¿cómo se dice?",
-                "¿como se dice?"
+                "lo hago para ti",
+                "para ti"
               ],
               "feedback": {
-                "correct": "The sentence that repairs every conversation.",
-                "incorrect": "¿Como se dice?"
+                "correct": "Arrow points at you.",
+                "incorrect": "Lo hago para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-como-se-dice-full",
-              "prompt": "Ask how something is said in Spanish, politely.",
+              "id": "ES-C51-la-flecha-cause",
+              "prompt": "Now say it meaning you are the reason.",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-ESPANOL",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-POR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice en espanol, por favor",
-                "¿cómo se dice en español, por favor?"
+                "lo hago por ti",
+                "por ti"
               ],
               "feedback": {
-                "correct": "Ask this all day and the day will teach you.",
-                "incorrect": "¿Como se dice en espanol, por favor?"
+                "correct": "Arrow points from you.",
+                "incorrect": "Lo hago por ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-como-se-dice-why",
-              "prompt": "Why is it se dice rather than a form aimed at the person you are asking?",
+              "id": "ES-C51-la-flecha-test",
+              "prompt": "State the test in one sentence.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "you are asking about the language, not about them",
-                "it is impersonal",
-                "nobody is being named"
+                "does the arrow point at it or come from it",
+                "at the thing is para, from the thing is por"
               ],
               "feedback": {
-                "correct": "Not their opinion — what the word is.",
-                "incorrect": "Because you are asking how the thing gets said, not what they personally would say."
+                "correct": "One arrow, two directions.",
+                "incorrect": "Does the arrow point at the thing (para) or come from it (por)?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-la-flecha-why",
+              "prompt": "Why is the arrow test not just a mnemonic?",
+              "assesses": [
+                "ES-ETYMON-PER-AD",
+                "ES-ETYMON-PRO-PER"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the directions are inside the words, ad and per",
+                "para contains ad, toward; por contains per, through"
+              ],
+              "feedback": {
+                "correct": "You are reading the words, not remembering a trick.",
+                "incorrect": "Para contains ad (toward) and por contains per (through). The test describes the words."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -179,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask how something is said. (¿Cómo se dice?) Which se is that? (The impersonal one — asking about the language, not the person.) Next: the three ses, side by side, for the first time."
+              "text": "Para ti — who gets it? (You do.) Por ti — who caused it? (You did.) And why does the test keep working on sentences this book never showed you? (Because the directions are inside the words.) Next: both in one place."
             }
           ]
         }
