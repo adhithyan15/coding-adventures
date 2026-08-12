@@ -1928,6 +1928,42 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 35,
+      "output": "malayalam/book/chapters/ch35-family-and-friend.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 36,
+      "output": "malayalam/book/chapters/ch36-child-son-daughter.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 37,
+      "output": "malayalam/book/chapters/ch37-face-words.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 38,
+      "output": "malayalam/book/chapters/ch38-two-hearts.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 39,
+      "output": "malayalam/book/chapters/ch39-tea-coffee-milk.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 40,
+      "output": "malayalam/book/chapters/ch40-the-meal.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
@@ -2022,6 +2058,27 @@
       "language": "persian",
       "chapter": 8,
       "output": "persian/book/chapters/ch08-doing-verbs.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 9,
+      "output": "persian/book/chapters/ch09-please-requests.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 10,
+      "output": "persian/book/chapters/ch10-family.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 11,
+      "output": "persian/book/chapters/ch11-body.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "fa"
     },
@@ -3653,6 +3710,42 @@
       "language": "telugu",
       "chapter": 34,
       "output": "telugu/book/chapters/ch34-verbs-between-people.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 35,
+      "output": "telugu/book/chapters/ch35-family-and-friends.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 36,
+      "output": "telugu/book/chapters/ch36-son-and-daughter.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 37,
+      "output": "telugu/book/chapters/ch37-face-words.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 38,
+      "output": "telugu/book/chapters/ch38-heart.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 39,
+      "output": "telugu/book/chapters/ch39-tea-and-milk.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 40,
+      "output": "telugu/book/chapters/ch40-a-meal.tex",
       "scriptSet": "telugu-comparisons"
     },
     {

@@ -126,8 +126,8 @@ enter cross-language review only after focused retrieval.
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
 | [Tamil](./tamil/README.md) | Dravidian / Tamil | 132 | 128 | 39 chapters; through Ch. 39; 34 generated |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada | 88 | 84 | 40 chapters; through Ch. 40; 35 generated |
-| [Telugu](./telugu/README.md) | Dravidian / Telugu | 74 | 70 | 34 chapters; through Ch. 34; 29 generated |
-| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 78 | 74 | 34 chapters; through Ch. 34; 29 generated |
+| [Telugu](./telugu/README.md) | Dravidian / Telugu | 87 | 83 | 40 chapters; through Ch. 40; 35 generated |
+| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 93 | 89 | 40 chapters; through Ch. 40; 35 generated |
 | [Italian](./italian/README.md) | Romance / Latin | 88 | 87 | 25 chapters; through Ch. 25; 24 generated |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | 96 | 95 | 26 chapters; through Ch. 26; 25 generated |
 | [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 57 | 13 chapters; through Ch. 13; 8 generated |
@@ -136,7 +136,7 @@ enter cross-language review only after focused retrieval.
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 59 | 55 | 12 chapters; through Ch. 12; 7 generated |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | 50 | 42 | 10 chapters; through Ch. 10; 8 generated |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 59 | 56 | 13 chapters; through Ch. 13; 8 generated |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | 33 | 33 | 8 chapters; through Ch. 8; 6 generated |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | 45 | 45 | 11 chapters; through Ch. 11; 9 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 46 | 46 | 12 chapters; through Ch. 12; 10 generated |
 | [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 7 | 7 | 1 chapter; through Ch. 1; 1 generated |
 | [Japanese](./japanese/README.md) | Japonic / Japanese | 8 | 8 | 1 chapter; through Ch. 1; 1 generated |

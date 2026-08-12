@@ -68,6 +68,7 @@ use std::sync::Mutex;
 
 use mosaic_package_manifest::MosaicPackage;
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
+use mosmodel_compiler::SlotDefault;
 
 // ---------------------------------------------------------------------------
 // Kernel set
@@ -585,7 +586,13 @@ impl std::error::Error for LayoutResolveError {}
 /// layout tree containing no qualified tags.
 pub struct LayoutPackageResolver {
     search_paths: Vec<PathBuf>,
-    cache: Mutex<HashMap<(String, String), LayoutDef>>,
+    cache: Mutex<HashMap<(String, String), ResolvedComponent>>,
+}
+
+#[derive(Clone)]
+struct ResolvedComponent {
+    layout: LayoutDef,
+    default_bindings: HashMap<String, LayoutPropValue>,
 }
 
 impl LayoutPackageResolver {
@@ -642,7 +649,7 @@ impl LayoutPackageResolver {
     fn substitute(
         &self,
         target: &mut LayoutNode,
-        resolved: LayoutDef,
+        resolved: ResolvedComponent,
         pkg: &str,
         comp: &str,
     ) -> Result<(), LayoutResolveError> {
@@ -650,12 +657,13 @@ impl LayoutPackageResolver {
         let consumer_part = target.part_name.take();
         let call_children = std::mem::take(&mut target.children);
 
-        target.tag = resolved.root.tag;
-        target.part_name = consumer_part.or(resolved.root.part_name);
-        target.props = resolved.root.props;
-        target.children = resolved.root.children;
+        target.tag = resolved.layout.root.tag;
+        target.part_name = consumer_part.or(resolved.layout.root.part_name);
+        target.props = resolved.layout.root.props;
+        target.children = resolved.layout.root.children;
 
-        let bindings = build_binding_map(&call_props);
+        let mut bindings = resolved.default_bindings;
+        bindings.extend(build_binding_map(&call_props));
         rewrite_bindings(target, &bindings);
 
         let exports = self.package_exports(pkg)?;
@@ -674,7 +682,11 @@ impl LayoutPackageResolver {
         Ok(())
     }
 
-    fn resolve_component(&self, pkg: &str, comp: &str) -> Result<LayoutDef, LayoutResolveError> {
+    fn resolve_component(
+        &self,
+        pkg: &str,
+        comp: &str,
+    ) -> Result<ResolvedComponent, LayoutResolveError> {
         let key = (pkg.to_string(), comp.to_string());
         if let Some(cached) = self.cache.lock().unwrap().get(&key).cloned() {
             return Ok(cached);
@@ -722,9 +734,12 @@ impl LayoutPackageResolver {
                 detail: format!("{errs:?}"),
             })?;
 
-        let def = layout_out.def;
-        self.cache.lock().unwrap().insert(key, def.clone());
-        Ok(def)
+        let resolved = ResolvedComponent {
+            layout: layout_out.def,
+            default_bindings: build_default_binding_map(&mosmodel_out.component.slots),
+        };
+        self.cache.lock().unwrap().insert(key, resolved.clone());
+        Ok(resolved)
     }
 
     fn package_exports(&self, pkg: &str) -> Result<Vec<String>, LayoutResolveError> {
@@ -836,6 +851,28 @@ fn build_binding_map(call_props: &[LayoutProp]) -> HashMap<String, LayoutPropVal
         let camel = to_camel_case_first_lower(&prop.name);
         if camel != prop.name {
             bindings.insert(camel, prop.value.clone());
+        }
+    }
+    bindings
+}
+
+fn build_default_binding_map(
+    slots: &[mosmodel_compiler::SlotDecl],
+) -> HashMap<String, LayoutPropValue> {
+    let mut bindings = HashMap::new();
+    for slot in slots {
+        let Some(default) = &slot.default else {
+            continue;
+        };
+        let value = match default {
+            SlotDefault::Text(value) => LayoutPropValue::String(value.clone()),
+            SlotDefault::Number(value) => LayoutPropValue::Number(*value),
+            SlotDefault::Bool(value) => LayoutPropValue::Keyword(value.to_string()),
+        };
+        bindings.insert(slot.name.clone(), value.clone());
+        let camel = to_camel_case_first_lower(&slot.name);
+        if camel != slot.name {
+            bindings.insert(camel, value);
         }
     }
     bindings
@@ -1535,6 +1572,81 @@ version = "1"
                     && prop.value == LayoutPropValue::EmitRef("outer-click".to_string())
             }),
             "emit binding should be rewritten to the consumer emit"
+        );
+    }
+
+    #[test]
+    fn layout_inliner_applies_omitted_slot_defaults_and_callers_override_them() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let mini = make_pkg(&pkgs, "mosaic-pkg-mini", "mosaic-pkg-mini", &["Input"]);
+        write_component(
+            &mini,
+            "Input",
+            r#"component Input {
+  slot value : text = "" ;
+  slot disabled : bool = false ;
+  slot scale : number = 1 ;
+}"#,
+            r#"layout Input {
+  HostInput (
+    value: slot: value,
+    disabled: slot: disabled,
+    scale: slot: scale
+  )
+}"#,
+        );
+
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut defaults = consumer_layout(r#"layout Demo { pkg::mosaic-pkg-mini::Input }"#);
+        resolver.resolve(&mut defaults).expect("defaults resolve");
+        assert_eq!(
+            defaults.root.props,
+            vec![
+                LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::String(String::new()),
+                },
+                LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::Keyword("false".to_string()),
+                },
+                LayoutProp {
+                    name: "scale".to_string(),
+                    value: LayoutPropValue::Number(1.0),
+                },
+            ]
+        );
+
+        let mut overridden = consumer_layout(
+            r#"layout Demo {
+  pkg::mosaic-pkg-mini::Input (
+    value: "hello",
+    disabled: true,
+    scale: 2
+  )
+}"#,
+        );
+        resolver
+            .resolve(&mut overridden)
+            .expect("overrides resolve");
+        assert_eq!(
+            overridden.root.props,
+            vec![
+                LayoutProp {
+                    name: "value".to_string(),
+                    value: LayoutPropValue::String("hello".to_string()),
+                },
+                LayoutProp {
+                    name: "disabled".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                },
+                LayoutProp {
+                    name: "scale".to_string(),
+                    value: LayoutPropValue::Number(2.0),
+                },
+            ]
         );
     }
 

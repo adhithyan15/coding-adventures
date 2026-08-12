@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited `search QUERY` and extended the primary restart drill through
+  a URL metadata match, non-echoed query, redacted result row, audit-chain
+  advancement, and closed audit-field verification.
 - Extended the real-process login lifecycle through two ordered URLs, hidden
   notes creation and replacement, notes-presence redaction, separate audited
   notes reveal, history restoration, and plaintext-tree exclusion.

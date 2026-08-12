@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+- Preserve default `text`, `number`, and `bool` MIL slot values while inlining
+  package components; explicit call-site bindings continue to take precedence.
+
 ### Added
 - Default UI29-2 authored children are spliced into a dependency component's
   typed child mount during package expansion. Caller-owned slot bindings retain

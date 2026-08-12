@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 38,
+  "title": "The Heart, Two Ways",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d56eb8750d2c6131",
+  "lessons": [
+    {
+      "id": "TE-C38-gunde",
+      "sequence": 830,
+      "title": "గుండె (guṇḍe) — \"heart,\" the everyday native word",
+      "headword": "గుండె",
+      "romanization": "guṇḍe",
+      "gloss": "heart — the everyday native Dravidian word, cognate with Kannada's own native heart-word",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ba33370891940c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four face words done, one of them an honest gap. This chapter gives you a fifth body word — and then, unusually, a second word for the very same thing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గుండె",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుండె — guṇḍe — heart."
+            },
+            {
+              "kind": "speech",
+              "text": "నా గుండె. — nā guṇḍe. — \"My heart.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - native, and matched in Kannada",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గుండె (guṇḍe) is inherited from Proto-Dravidian kuṇṭV, and it is cognate with Kannada's own native heart-word, ಗುಂಡಿಗೆ (guṇḍige) — plainly the same root, wearing a different Telugu and Kannada shape. Guṇḍe is the plain, physical, everyday word: the organ beating in your chest. The next lesson gives Telugu's other word for heart — not a synonym so much as a different register entirely."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nā guṇḍe\" — my heart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nā guṇḍe\" — my heart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Kannada cognate — \"guṇḍe … guṇḍige\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Kannada cognate — \"guṇḍe … guṇḍige\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "five body words — \"kannu … cevi … mukku … nōru … guṇḍe\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: five body words — \"kannu … cevi … mukku … nōru … guṇḍe\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my heart.\" (Nā guṇḍe.) Is guṇḍe native or borrowed? (Native Dravidian, from Proto-Dravidian kuṇṭV.) Which language carries a matching native heart-word? (Kannada, guṇḍige.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C38-hrudayam",
+      "sequence": 840,
+      "title": "హృదయం (hṛdayaṁ) — \"heart,\" and a genuine cousin of the English word",
+      "headword": "హృదయం",
+      "romanization": "hṛdayaṁ",
+      "gloss": "heart — the literary Sanskrit word for the same organ, a genuine Indo-European cousin of English \"heart\"",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:43307899618fc6da",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Guṇḍe is the heart beating in your chest. This word is the heart Telugu reaches for in a poem, a speech, or a love letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: హృదయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హృదయం — hṛdayaṁ — heart (literary, emotional register)."
+            },
+            {
+              "kind": "speech",
+              "text": "నా హృదయం నీది. — nā hṛdayaṁ nīdi. — \"My heart is yours.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హృ is హ (ha) carrying the vocalic-r vowel sign ృ — the dependent form of the same vowel taught earlier as the independent letter ఋ, standing alone at the front of ఋతువు. Same vowel, two shapes: one when it opens a word, another when it rides on a consonant. దయం closes with the familiar అనుస్వార ం."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart - a real cousin of \"heart,\" not just a resemblance",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "హృదయం (hṛdayaṁ) is Sanskrit हृदय, built on हृद् (hṛd), \"heart.\" That Sanskrit root and the English word heart are not a coincidence of sound — both descend from the same reconstructed Proto-Indo-European root, ḱērd-. Latin's cor (genitive cordis, the source of English cordial and courage) and Greek's kardía (behind cardiac) come from that exact same root. Four languages, one ancient word."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu keeps hṛdayaṁ beside native guṇḍe the same way it keeps Sanskrit bhōjanaṁ beside native tiṇḍi: the plain, physical word stays Dravidian; the word for ceremony, poetry, and feeling is layered on top from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nā hṛdayaṁ nīdi\" — my heart is yours",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nā hṛdayaṁ nīdi\" — my heart is yours]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four cousins — \"hṛd … heart … cor … kardía\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four cousins — \"hṛd … heart … cor … kardía\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "native, then literary — \"guṇḍe … hṛdayaṁ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: native, then literary — \"guṇḍe … hṛdayaṁ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six body words now — \"kannu … cevi … mukku … nōru … guṇḍe … hṛdayaṁ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six body words now — \"kannu … cevi … mukku … nōru … guṇḍe … hṛdayaṁ\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my heart is yours.\" (Nā hṛdayaṁ nīdi.) Is hṛdayaṁ a real Indo-European cousin of English \"heart,\" or just a coincidence of sound? (A real cousin — both from PIE ḱērd-, alongside Latin cor and Greek kardía.) Which is the everyday, physical word for heart, and which is literary? (గుండె (guṇḍe) everyday; హృదయం literary.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

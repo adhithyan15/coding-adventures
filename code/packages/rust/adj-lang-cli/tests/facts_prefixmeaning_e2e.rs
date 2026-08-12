@@ -1,6 +1,6 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/prefix-meaning.adj`) driven through the
-//! built CLI: a native `table` naming three common prefixes and what
+//! built CLI: a native `table` naming six common prefixes and what
 //! each actually means, quoted verbatim from Grammarly's "Prefixes:
 //! Definition and Examples" article. 0 answer-time model calls.
 
@@ -79,6 +79,44 @@ fn prefix_meaning_reverse_binds_the_prefix_for_that_meaning() {
 }
 
 #[test]
+fn prefix_meaning_recall_binds_a_newly_added_row_directly() {
+    let dir = scratch("direct_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"prefix-meaning.adj\"\n\
+         ? prefix_meaning(inter_, $M)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"M\":\"among_between\""),
+        "inter- means among_between: {out}"
+    );
+}
+
+#[test]
+fn prefix_meaning_reverse_binds_a_newly_added_row() {
+    let dir = scratch("reverse_new");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"prefix-meaning.adj\"\n\
+         ? prefix_meaning($P, happening_before)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("\"P\":\"pre_\""),
+        "the shipped happening_before example is pre_: {out}"
+    );
+}
+
+#[test]
 fn prefix_meaning_abstains_honestly_on_an_untabled_prefix() {
     let dir = scratch("abstain");
     place_lib(&dir);
@@ -93,6 +131,6 @@ fn prefix_meaning_abstains_honestly_on_an_untabled_prefix() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "over_ is a real prefix but not one of the three tabled here -- honest abstention, never invented: {out}"
+        "over_ is a real prefix the same source page also covers, but not one of the six tabled here -- honest abstention, never invented: {out}"
     );
 }

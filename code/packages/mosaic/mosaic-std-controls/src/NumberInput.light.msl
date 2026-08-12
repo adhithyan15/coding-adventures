@@ -1,0 +1,11 @@
+style NumberInput {
+  part number-input-root {
+    background    : $foundation-color-surface-light ;
+    color         : $foundation-color-text-light ;
+    border-color  : $foundation-color-border-light ;
+    border-width  : 1 ;
+    border-radius : $foundation-radius-sm ;
+    padding       : $foundation-space-sm ;
+    font-size     : $foundation-font-body ;
+  }
+}

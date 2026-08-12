@@ -3296,11 +3296,7 @@ fn emit_host_input(
         None => inherited_text,
     };
 
-    let value_expr = match find_prop_value(node, "value") {
-        Some(LayoutPropValue::SlotRef(slot)) => to_camel_case_first_lower(slot),
-        Some(LayoutPropValue::Expr(text)) => text.clone(),
-        _ => "\"\"".to_string(),
-    };
+    let value_expr = text_prop_expr(node, "value")?.unwrap_or_else(|| "\"\"".to_string());
 
     let mut out = String::new();
     writeln!(out, "{pad}BasicTextField(").unwrap();
@@ -3399,11 +3395,21 @@ fn emit_host_input(
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
     }
 
+    if let Some(placeholder) = text_prop_expr(node, "placeholder")? {
+        writeln!(out, "{inner}decorationBox = {{ innerTextField ->").unwrap();
+        writeln!(out, "{inner}    Box {{").unwrap();
+        writeln!(out, "{inner}        if ({value_expr}.isEmpty()) {{").unwrap();
+        writeln!(out, "{inner}            Text(text = {placeholder})").unwrap();
+        writeln!(out, "{inner}        }}").unwrap();
+        writeln!(out, "{inner}        innerTextField()").unwrap();
+        writeln!(out, "{inner}    }}").unwrap();
+        writeln!(out, "{inner}}},").unwrap();
+    }
+
     // read-only -> enabled when the optional flag is not explicitly true.
-    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(out, "{inner}enabled = !_mosaicTruthy({camel}),").unwrap();
+    if find_prop_value(node, "read-only").is_some() {
+        let read_only = bool_prop_expr(node, "read-only", "false")?;
+        writeln!(out, "{inner}enabled = !({read_only}),").unwrap();
     }
 
     writeln!(out, "{pad})").unwrap();
@@ -5053,7 +5059,42 @@ mod tests {
             out.contains("FormulaBarEvent.FormulaChange(v)"),
             "expected real dispatch call, got:\n{out}"
         );
-        assert!(out.contains("enabled = !_mosaicTruthy(readOnly),"));
+        assert!(out.contains("enabled = !(_mosaicTruthy(readOnly)),"));
+    }
+
+    #[test]
+    fn host_input_preserves_literal_value_placeholder_and_read_only() {
+        let m = component("Search", vec![], vec![]);
+        let l = layout(
+            "Search",
+            node(
+                "HostInput",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::String("query".into()),
+                    },
+                    LayoutProp {
+                        name: "placeholder".into(),
+                        value: LayoutPropValue::String("Search cards".into()),
+                    },
+                    LayoutProp {
+                        name: "read-only".into(),
+                        value: LayoutPropValue::Keyword("true".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Search"))
+            .expect("emit literal input contract")
+            .output;
+
+        assert!(out.contains("value = \"query\","), "got:\n{out}");
+        assert!(out.contains("if (\"query\".isEmpty()) {"), "got:\n{out}");
+        assert!(out.contains("Text(text = \"Search cards\")"), "got:\n{out}");
+        assert!(out.contains("innerTextField()"), "got:\n{out}");
+        assert!(out.contains("enabled = !(true),"), "got:\n{out}");
     }
 
     #[test]

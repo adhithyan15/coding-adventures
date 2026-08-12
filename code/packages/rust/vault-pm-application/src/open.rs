@@ -6365,7 +6365,7 @@ mod tests {
                 &factory,
             )
             .unwrap();
-            let session = open_active_vault(
+            let mut session = open_active_vault(
                 Zeroizing::new(b"active passphrase".to_vec()),
                 locator,
                 &local,
@@ -6395,6 +6395,57 @@ mod tests {
                 assert_eq!(
                     session.search_items(Zeroizing::new("anything".to_owned()), None, 10),
                     Err(ApplicationError::ConflictRequired)
+                );
+                activate_audit_epoch_for_test(
+                    &session.active,
+                    &session._keys,
+                    &session._local_secret,
+                    session._repository.as_ref(),
+                    297,
+                    None,
+                    None,
+                    [0x30; AUDIT_ONLY_TEST_RANDOM_BYTES],
+                    &local,
+                )
+                .unwrap();
+                drop(session);
+                let conflict = open_active_vault(
+                    Zeroizing::new(b"active passphrase".to_vec()),
+                    locator,
+                    &local,
+                    &bootstrap,
+                    &factory,
+                )
+                .unwrap()
+                .audited_search_items(
+                    Zeroizing::new("anything".to_owned()),
+                    None,
+                    10,
+                    298,
+                    audited_access_randomness(0x32),
+                    &local,
+                )
+                .unwrap();
+                assert_eq!(
+                    conflict.into_operation(),
+                    Err(ApplicationError::ConflictRequired)
+                );
+                session = open_active_vault(
+                    Zeroizing::new(b"active passphrase".to_vec()),
+                    locator,
+                    &local,
+                    &bootstrap,
+                    &factory,
+                )
+                .unwrap();
+                assert_eq!(
+                    latest_audit_facts(&session),
+                    (
+                        AuditActionV1::ItemSearch,
+                        AuditOutcomeV1::Failed,
+                        None,
+                        None,
+                    )
                 );
             }
             let expected_revision = session.current_catalog.items[&item_id][0].revision_id();

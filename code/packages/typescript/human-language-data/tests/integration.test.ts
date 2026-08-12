@@ -111,7 +111,11 @@ describe("real curriculum", () => {
         ?.chapters.map((chapter) => chapter.chapter),
       // 6 -> 8: the eight-verb tranche added Chapters 7 and 8 (mind verbs, then
       // taking/asking/helping/loving), split 4+4 to stay inside maxNewAtomsPerChapter.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+      // 8 -> 11: the pre-A1 vocabulary tranche (HL-C41 continuation). Chapter 9 closes
+      // SPINE-POLITE-REQUEST-REPAIR (âb, nân, chây, kelid); Chapter 10 adds family words
+      // onto SPINE-EXCHANGE-NAMES (mâdar, pedar, barâdar, dokhtar); Chapter 11 adds body
+      // words onto SPINE-CHECK-WELLBEING (cheshm, dast, pâ, zabân).
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -813,6 +817,18 @@ describe("real curriculum", () => {
       "FA-C08-gereftan-stem",
       "FA-C08-komak-kardan-verb",
       "FA-C08-porsidan-stem",
+      "FA-C09-ab-request",
+      "FA-C09-chay-request",
+      "FA-C09-kelid-request",
+      "FA-C09-nan-request",
+      "FA-C10-baradar-meaning",
+      "FA-C10-dokhtar-meaning",
+      "FA-C10-madar-meaning",
+      "FA-C10-pedar-meaning",
+      "FA-C11-cheshm-meaning",
+      "FA-C11-dast-meaning",
+      "FA-C11-pa-meaning",
+      "FA-C11-zaban-meaning",
       "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",

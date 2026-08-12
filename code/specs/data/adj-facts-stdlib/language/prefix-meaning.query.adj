@@ -9,6 +9,8 @@
 
 import "prefix-meaning.adj"
 
-? prefix_meaning(un_, $M)          % expect negation_or_absence (direct)
-? prefix_meaning($P, doing_again)  % expect re_ (reverse)
-? prefix_meaning(over_, $M)        % expect abstain -- a real prefix, but not one of the three tabled examples
+? prefix_meaning(un_, $M)            % expect negation_or_absence (direct)
+? prefix_meaning($P, doing_again)    % expect re_ (reverse)
+? prefix_meaning(inter_, $M)         % expect among_between (direct, new row)
+? prefix_meaning($P, happening_before) % expect pre_ (reverse, new row)
+? prefix_meaning(over_, $M)          % expect abstain -- a real prefix the same source page also covers, but not one of the six tabled examples
