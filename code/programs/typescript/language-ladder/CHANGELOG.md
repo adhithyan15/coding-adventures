@@ -10,6 +10,19 @@
   hook, two pen lifts, and the source order.
 - Reduce Chinese's remaining verified-ductus inventory to 15 entries.
 
+### Added — the app schedules from atom strength (HL-C87, HL10 §10.1)
+
+- Add `atomschedule.ts`: greedy set cover over the learner's due atoms, picking
+  the completed lessons that refresh the most of them. Deterministic — ties
+  break on lesson id, so the queue never reshuffles between renders.
+- Show a **Due for review** section at the top of Learn, naming what each pick
+  refreshes rather than asking for review without a reason.
+- Fix a credit/schedule mismatch found by driving the built app: scheduling read
+  only activity `assesses` while a meaning check credits `introducesAtoms`, so a
+  lesson with no authored activity — including the first lesson of the Spanish
+  course — could come due and never be clearable. `refreshesOf()` now unions
+  both, with a test pinning the invariant.
+
 ### Added — cited Chinese 氵 ductus (HL-C09CG)
 
 - Render **氵** in four source-aligned frames: draw its two falling dots, then
