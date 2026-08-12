@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 146,
-  "title": "Synthesis --- Saying Something About Your Own Life",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5e7d09e4b7ede1e2",
+  "title": "Green and Yellow",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:4fd989078e7ef37d",
   "lessons": [
     {
-      "id": "ES-C40-sintesis-describir",
-      "sequence": 1875,
-      "title": "Synthesis — saying something about your own life",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — fourteen chapters of words, and the first time you are asked to say something with them",
+      "id": "ES-C33-verde",
+      "sequence": 1860,
+      "title": "verde — the colour named after being alive",
+      "headword": "verde",
+      "romanization": "verde",
+      "gloss": "green — from a verb meaning \"to flourish,\" and a cousin of verdant but not of English green",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cdc7ac5a9efd253",
+      "sourceHash": "fnv1a64:1b218429cf03d83a",
       "notice": null,
       "blocks": [
         {
@@ -35,65 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say the words for dog and for black."
+              "text": "After azul's long journey from Afghanistan, here is a colour that stayed exactly where it started. It is also the one that names a process rather than a thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart: verde",
           "segments": [
             {
               "kind": "speech",
-              "text": "Something has been accumulating quietly for fourteen chapters and has never once been put to work."
+              "text": "verde (\"green\") from Latin viridis (worn down through virdis), which comes from the verb virēre, \"to be green, to flourish, to be vigorous.\""
             },
             {
               "kind": "speech",
-              "text": "You have six colours. Parents and brothers and sisters. A head and a hand. Water, wine and bread. The seasons, the months, the hours. Hot weather and cold. Numbers to twenty. A dog and a cat."
+              "text": "So the adjective is built on a verb of thriving. Latin did not name the colour of leaves; it named what leaves are doing, and let the colour follow. The same root gives vigour its neighbours in English: verdant, verdure, and the green-tinged verdigris (\"green of Greece\")."
             },
             {
               "kind": "speech",
-              "text": "That is not a vocabulary list any more. It is enough to describe the room you are sitting in, and this chapter is the first that asks you to."
+              "text": "One careful non-connection: verde is not a cousin of English green. Green comes from a completely separate Germanic root, tied to grow and grass — which, funnily enough, is the same idea arrived at independently. Two families, two words, one metaphor: green is the colour of things that are growing."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the word that made this possible",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Notice which article you need here, because it is not the one you have used most."
-            },
-            {
-              "kind": "speech",
-              "text": "el perro — the dog. A particular one. The one we were talking about. un perro — a dog. Any dog. One you are mentioning for the first time."
-            },
-            {
-              "kind": "speech",
-              "text": "Describing your own life means introducing things your listener does not know about yet — and that is exactly the job un does. Almost every sentence below needs it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— ¿Tienes un perro? — Sí, tengo un perro negro. ¿Y tú? — Tengo un gato blanco."
-            },
-            {
-              "kind": "speech",
-              "text": "Every word in those three lines is one you built yourself, across fourteen chapters that never asked you to combine them. Nothing here is new. What is new is that it is a conversation rather than a list."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,91 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts",
+              "instruction": "\"verde\" — green",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts]"
+              "source": "[YOU SAY: \"verde\" — green]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again about a real animal you know, with a real colour",
+              "instruction": "the root — \"virēre, to flourish\" becomes \"verde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again about a real animal you know, with a real colour]"
+              "source": "[YOU SAY: the root — \"virēre, to flourish\" → \"verde\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until you are describing rather than translating."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C40-sintesis-describir-have",
-              "prompt": "Say I have a black dog.",
-              "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "tengo un perro negro",
-                "yo tengo un perro negro"
-              ],
-              "feedback": {
-                "correct": "Yes — and note it is un, not el.",
-                "incorrect": "Tengo un perro negro."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C40-sintesis-describir-article",
-              "prompt": "You are mentioning your cat for the first time. Un gato or el gato?",
-              "assesses": [
-                "ES-GRAMMAR-DEFINITE-ARTICLES",
-                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "un gato",
-                "un",
-                "un gato blanco"
-              ],
-              "feedback": {
-                "correct": "Right — un introduces something new to the listener.",
-                "incorrect": "Un gato. El would mean your listener already knew about it."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C40-sintesis-describir-weather",
-              "prompt": "Say it is cold.",
-              "assesses": [
-                "ES-LEX-WEATHER-03"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde\" then English \"verdant\" — and not \"green\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "hace frio",
-                "hace frío"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "Hace frio."
-              }
+              "source": "[YOU SAY: \"verde\" then English \"verdant\" — and *not* \"green\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -202,7 +111,118 @@
             },
             {
               "kind": "speech",
-              "text": "Which article introduces something your listener does not yet know about? (Un.) And which points at something you have both already mentioned? (El.) Say one true sentence about an animal, with its colour."
+              "text": "What Latin verb gives verde, and what does it mean? (Virēre, \"to be green, to flourish.\") Is verde related to English green? (No — green is Germanic, from the same family as grow and grass; the two languages reached the same metaphor separately.) Next: a colour that is not named after a colour at all."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C33-amarillo",
+      "sequence": 1870,
+      "title": "amarillo — the colour that started as a taste",
+      "headword": "amarillo",
+      "romanization": "amarillo",
+      "gloss": "yellow — from \"a little bitter,\" not from any Latin word for yellow at all",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:390dd6ad267218a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Verde was exactly what you would expect from Latin. This one is not. Latin had three perfectly good words for yellow, and Spanish took none of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: amarillo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amarillo (\"yellow\") does not trace to flāvus, gilvus or lūteus — Latin's actual yellow words. It comes from Late Latin amarellus, \"a little bitter,\" a diminutive of amarus, \"bitter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A colour named after a taste. The bridge is medicine: yellow was the colour of bile and of jaundice (which Spanish still calls ictericia, but which folk speech long tied to bitterness), and of a great many bitter-tasting plants. A word meaning \"somewhat bitter\" came to mean \"the yellowish look of a bitter thing,\" then simply \"yellowish,\" and by Spanish's Golden Age it had dropped the taste entirely and kept only the colour."
+            },
+            {
+              "kind": "speech",
+              "text": "You can still check the family in a living word: amargo (\"bitter\") is amarillo's cousin, straight from the same amarus. Say them together and the shared amar- is right there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"verde, amarillo\" — green and yellow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"verde, amarillo\" — green and yellow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"amarillo, amargo\" — hear the shared amar-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"amarillo, amargo\" — hear the shared *amar-*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the path — \"a little bitter\" becomes \"yellowish\" becomes \"yellow\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the path — \"a little bitter\" → \"yellowish\" → \"yellow\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does amarillo come from a Latin word for yellow? (No — from amarellus, \"a little bitter,\" a diminutive of amarus.) What everyday Spanish word is its cousin? (Amargo, \"bitter.\") And verde? (From virēre, \"to flourish\" — a colour named after being alive, as this one is named after a taste.)"
             }
           ]
         }

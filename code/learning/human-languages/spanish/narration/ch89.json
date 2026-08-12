@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 89,
-  "title": "Which One Is the Verb Asking For?",
+  "title": "Les --- And What the Second System Costs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fd51d8a43cf54f56",
+  "sourceHash": "fnv1a64:f81b44bbd65fe087",
   "lessons": [
     {
-      "id": "ES-C46-cual-pide",
-      "sequence": 1223,
-      "title": "Which one is the verb asking for?",
-      "headword": "lo tengo / le hablo",
-      "romanization": "lo tengo / le hablo",
-      "gloss": "how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb",
+      "id": "ES-C46-les",
+      "sequence": 1222,
+      "title": "les — \"to them,\" and what this system really costs",
+      "headword": "les",
+      "romanization": "les",
+      "gloss": "\"to them\" — and the discovery that a whole second system costs exactly two new words",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1aa785b824bced9",
+      "sourceHash": "fnv1a64:93c3c7d3b0bbc0b3",
       "notice": null,
       "blocks": [
         {
@@ -35,61 +35,71 @@
             },
             {
               "kind": "speech",
-              "text": "You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not."
+              "text": "Lo became los. So what does le become? Say it before you read on."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: ask the verb one question",
+          "title": "Grammar Lens: right again, and then something better",
           "segments": [
             {
               "kind": "speech",
-              "text": "Does the verb do something to this, or aim something at this?"
+              "text": "les — to them, to you all."
             },
             {
               "kind": "speech",
-              "text": "That is the whole test."
+              "text": "Le digo. — I tell him. becomes Les digo. — I tell them."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect."
+              "text": "Add -s. That is the second time an object pronoun has pluralised without argument, and it will not be the last."
             },
             {
               "kind": "speech",
-              "text": "Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:"
-            },
-            {
-              "kind": "speech",
-              "text": "I speak to her becomes le hablo. Fits."
-            },
-            {
-              "kind": "speech",
-              "text": "I have to the book becomes nonsense. So lo tengo."
-            },
-            {
-              "kind": "speech",
-              "text": "English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le."
+              "text": "Now the part worth the chapter. You have just met the sixth and last indirect object pronoun — and you have only ever been taught two of them."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "One thing the test will not settle, said now rather than met later as a shock."
+              "text": "Here are the two sets, side by side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "direct (what)",
+                "indirect (to whom)"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "me. direct (what): me. indirect (to whom): me.",
+                "you. direct (what): te. indirect (to whom): te.",
+                "him / her / you. direct (what): lo, la. indirect (to whom): le.",
+                "us. direct (what): nos. indirect (to whom): nos.",
+                "you all (Spain). direct (what): os. indirect (to whom): os.",
+                "them / you all. direct (what): los, las. indirect (to whom): les."
+              ]
             },
             {
               "kind": "speech",
-              "text": "In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it."
+              "text": "Look down the two columns. Four of the six rows are identical. Me, te, nos and os do not change at all — the same word does both jobs, and Spanish never asks you to choose."
             },
             {
               "kind": "speech",
-              "text": "So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere."
+              "text": "So a \"whole second system\" turns out to cost exactly two new words: le and les. Everything else you already owned, and you owned it before you knew there were two systems to own it in."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth holding onto beyond this chapter. A grammar book will show you two complete tables and it will look like twelve things. Count what is actually different and it is two."
             }
           ]
         },
@@ -107,89 +117,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo tengo\" then \"Le hablo\" — which question does each answer?",
+              "instruction": "\"le digo\" then \"les digo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo tengo\" then \"Le hablo\" — which question does each answer?]"
+              "source": "[YOU SAY: \"le digo\" then \"les digo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"me, te, nos, os\" and note that this list is finished for both systems at once",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"me, te, nos, os\" and note that this list is finished for both systems at once]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-test",
-              "prompt": "State the one-question test in your own words.",
+              "id": "ES-C46-les-say",
+              "prompt": "Say I tell them.",
               "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "does the verb act on it or aim at it",
-                "can you put to in front of it in english",
-                "to whom versus what"
-              ],
-              "feedback": {
-                "correct": "Acts on it, or aims at it.",
-                "incorrect": "Ask whether the verb acts ON the thing, or aims something AT the person."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-cual-pide-speak",
-              "prompt": "Say I speak to her.",
-              "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-1SG"
+                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "le hablo",
-                "yo le hablo"
+                "les digo",
+                "yo les digo"
               ],
               "feedback": {
-                "correct": "Aimed at her, so le.",
-                "incorrect": "Le hablo — the speaking is aimed at somebody."
+                "correct": "Les digo.",
+                "incorrect": "Les digo — le plus -s."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-have",
-              "prompt": "Say I have it, about the book, and say which set that is.",
+              "id": "ES-C46-les-count",
+              "prompt": "How many genuinely new words does the indirect set add?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "two",
+                "2",
+                "le and les"
+              ],
+              "feedback": {
+                "correct": "Two: le and les. The other four you already had.",
+                "incorrect": "Two — le and les."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-les-same",
+              "prompt": "Which four pronouns are identical in both sets?",
+              "assesses": [
+                "ES-GRAMMAR-ME-DIRECT-OBJECT",
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo tengo, direct",
-                "lo tengo"
+                "me, te, nos, os",
+                "me te nos os"
               ],
               "feedback": {
-                "correct": "The having lands on the book.",
-                "incorrect": "Lo tengo — direct, because the verb acts on the thing."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-cual-pide-leismo",
-              "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
-              "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT",
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "no, it is leismo and it is accepted",
-                "no",
-                "no, that is normal in spain"
-              ],
-              "feedback": {
-                "correct": "Two answers, both somebody's normal.",
-                "incorrect": "No. That is leismo, it is old and accepted for people, and about a fifth of speakers do it."
+                "correct": "One word, both jobs, no choice to make.",
+                "incorrect": "me, te, nos and os."
               }
             }
           ]
@@ -207,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place."
+              "text": "\"I tell them\"? (Les digo.) How many new words did the whole indirect system cost you? (Two.) Next: how to know which of the two a verb is asking for."
             }
           ]
         }

@@ -1,48 +1,38 @@
-Spanish, chapter 108: Review --- One Question, Three Answers.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 108: Tenia and Tuve --- When the Tense Changes the Meaning.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — one question, three answers.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+tenía and tuve — when the tense changes the meaning.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new. Before the table: do the two past tenses differ in when?
+So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events.
 
-What you've built.
-Three chapters, one question, three ways it gets answered.
-[a table of 4 rows, read aloud]
-what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.
-what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.
-what you are doing: naming a state. tense: imperfect. example: tenía — I had.
-what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got.
-Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened.
+Grammar Lens: having, and getting.
+Tenía una casa. — I had a house. Tuve una casa. — I got a house.
+Read those twice. The second one is not "I had a house, viewed as finished." It is a different verb in English altogether.
+The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something.
+Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting.
+Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English.
 
-Grammar Lens: the question to actually ask.
-Not "which tense is this?" — that has no answer without you.
-Am I telling you what happened, or what things were like?
-What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:
-Estudiaba cuando habló Ana.
-And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one.
-There is no list to memorise here, and that is deliberate. Lists of "preterite trigger words" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking.
+Why it's said this way.
+This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started.
+It also explains a frustration you may already have had. English "I had" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablé / hablaba", then "tenía / tuve", and name the difference in each pair]
+[your turn — say: "Tenía una casa" then "Tuve una casa" — hear the English change]
 [pause 8 seconds for the answer]
-[your turn — say: the question aloud before each one]
+[your turn — say: the rule aloud — a state in the preterite gives you its beginning]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the question arrives before the verb does.
-[question — say your answer, then pause 12 seconds]
-State the one question that chooses the tense.
 [question — say your answer, then pause 10 seconds]
-In estudiaba cuando hablo Ana, which verb is the scene?
+Say I had a house, meaning it was simply so.
 [question — say your answer, then pause 12 seconds]
-Which two rows of the table are NOT the same event seen twice?
+What does tuve una casa actually mean?
+[question — say your answer, then pause 12 seconds]
+You meet a new verb that names a state. What will its preterite mean?
 
 Wrap-up Recall.
 [pause 3 seconds]
-The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for.
+Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place.

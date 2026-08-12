@@ -1,35 +1,43 @@
-Spanish, chapter 120: Wanting, Not Asserting.
+Spanish, chapter 120: Synthesis --- Promising, and Supposing.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Hablas español, Quiero que hables español — fact or wanted event?
+Synthesis — promising, and supposing.
 
 Warm-up.
 [pause 2 seconds]
-Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
+Nothing new in this chapter. Say hablaré, then hablaría.
 
-Grammar Lens: count the doers.
-[a table of 2 rows, read aloud]
-meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
-meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
-With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
+Grammar Lens: the two endings are one word, twice.
+Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you.
+Both are the verb haber — Latin habēre, "to have" — glued onto the back of the infinitive. Romance speakers stopped saying "I have to speak" as two words and fused it into one:
+hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak.
+That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments.
+
+What you've built.
+And the meaning follows from the grammar rather than being extra to it.
+Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical.
+Promise from the present. Suppose from the past.
+English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía.
+
+The exchange.
+— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien.
+One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “Hablas español.”]
+[your turn — say: hablaré then hablaría, and hear a promise turn into a guess]
 [pause 8 seconds for the answer]
-[your turn — say: “Quiero hablar español.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Quiero que hables español.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Which form asserts that one friend speaks: hablas or hables?
+[repeat that twice]
+Until the choice is about what you mean, not which ending it was.
 [question — say your answer, then pause 8 seconds]
-Say 'I want to speak Spanish' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to speak Spanish' to one friend.
+You are committing to it. I will speak: which form?
+[question — say your answer, then pause 8 seconds]
+Now you are only supposing. I would speak: which form?
+[question — say your answer, then pause 10 seconds]
+What single word is glued onto the infinitive in BOTH tenses?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.
+What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)

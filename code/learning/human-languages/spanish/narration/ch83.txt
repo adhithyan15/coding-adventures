@@ -1,44 +1,41 @@
-Spanish, chapter 83: Los and Las --- Them, Derived.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 83: Nos --- Us, and the Word Inside -mos.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-los and las — "them".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+nos — "us".
 
 Warm-up.
 [pause 2 seconds]
-Tengo el libro becomes lo tengo. Now: Tengo los libros. Say the short version out loud before reading on.
+Say "you love me." (Me quieres.) And "I love you." (Te quiero.) Both of those are about one person on the receiving end. Here is more than one.
 
-Grammar Lens: you were right.
-los — them, masculine. las — them, feminine.
-Tengo los libros. becomes Los tengo. — I have them. Hago las comidas. becomes Las hago. — I make them.
-Add -s. That is the whole lesson, and you did it yourself in the warm-up.
-Two chapters have now asked you for a plural and this is the first one that behaved exactly as you would guess. That is worth noticing rather than passing over: most of what is ahead of you in Spanish is like this, and the memorable exceptions are memorable because they are rare.
+Grammar Lens: the third person in the room.
+nos — us.
+Nos quieren. — They love us.
+Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else.
+Me quieren. — They love me. Nos quieren. — They love us.
+One letter of difference, and the difference is how many people you are speaking for.
 
 The word, taken apart.
-There is one genuinely satisfying thing here.
-The article could not do this. El did not become els; it became los, because el is a worn-down elo that had lost its vowel and the plural had kept it.
-The pronoun never lost that vowel. Lo is illum with the vowel intact — which is exactly why it was not el in the first place. So when the plural came, lo had nothing to repair:
-[a table of 2 rows, read aloud]
-article. singular: el (worn down). plural: los.
-pronoun. singular: lo (vowel kept). plural: los.
-The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in one column and none in the other, from one Latin word, decided entirely by which one got leaned on.
+Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words.
+You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said "we speak," you were saying nos twice: once in the ending, and once by not needing to say it at all.
+And the word for "we" itself:
+nosotros — we, literally nos + otros, "we others."
+Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "lo tengo" then "los tengo"; "la hago" then "las hago"]
+[your turn — say: "Me quieren" then "Nos quieren"]
 [pause 8 seconds for the answer]
-[your turn — say: "el / los" then "lo / los" — one pair changed shape, one did not]
+[your turn — say: "hablamos" and hear the nos at the end of it]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I have them, about los libros.
-[question — say your answer, then pause 8 seconds]
-Say I make them, about las comidas.
+Say they love us.
+[question — say your answer, then pause 10 seconds]
+Which verb ending is the same ancient word as nos?
 [question — say your answer, then pause 12 seconds]
-The article el had to change shape for its plural. Why did the pronoun lo not?
+What are the two pieces inside nosotros, and what do they mean together?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have them," about books? (Los tengo.) About meals? (Las hago.) How do you make an object pronoun plural? (Add -s.) Next: one more form, and it belongs to one part of the world.
+Say "they love us." (Nos quieren.) What is nosotros made of? (Nos + otros — "we others.") Next: the plural of lo and la, and you will not need to be told what they are.

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 70,
-  "title": "El Libro --- And a Word Made of Tree Bark",
+  "title": "La Casa --- Your First Everyday Noun",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0a4163ab186554bc",
+  "sourceHash": "fnv1a64:22cc0c03254308ef",
   "lessons": [
     {
-      "id": "ES-C43-libro",
-      "sequence": 1181,
-      "title": "el libro — \"book\"",
-      "headword": "el libro",
-      "romanization": "el libro",
-      "gloss": "book — named after the part of a tree people wrote on before paper",
+      "id": "ES-C43-casa",
+      "sequence": 1179,
+      "title": "la casa — \"house,\" and \"home\"",
+      "headword": "la casa",
+      "romanization": "la casa",
+      "gloss": "house, home — and a word French wore down so far it stopped looking like a noun",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a93db90d71a32b2c",
+      "sourceHash": "fnv1a64:e138938eeb9d58ae",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"the house.\" (La casa.) Why la and not el? (Casa is feminine.) Here is one that goes the other way."
+              "text": "You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — a single flick of the tongue: LEE-broh. One tap, not a roll."
+              "text": "s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah."
             }
           ]
         },
@@ -57,50 +57,38 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "el libro — the book."
+              "text": "la casa — the house, and just as often home."
             },
             {
               "kind": "speech",
-              "text": "Latin liber did not mean \"book.\" It meant the inner bark of a tree — the thin, pale layer just under the rough outside, which is what Romans wrote on before they had anything better."
+              "text": "Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa."
             },
             {
               "kind": "speech",
-              "text": "So the word travelled the way these words usually do: from the material, to the thing made of it, to the thing itself long after the material is gone. Nobody has written on bark for two thousand years, and the word has not noticed."
+              "text": "French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, \"at the house of me.\""
             },
             {
               "kind": "speech",
-              "text": "English took the same root and kept it in the places books live:"
-            },
-            {
-              "kind": "speech",
-              "text": "library — and French livre, Italian libro."
-            },
-            {
-              "kind": "speech",
-              "text": "libretto — Italian for \"little book,\" the words of an opera."
-            },
-            {
-              "kind": "speech",
-              "text": "English's own word went the same route from a different tree: book is related to beech, whose bark the Germanic peoples wrote on. Two languages, two trees, the same idea."
+              "text": "Italian kept a small one too: casino is casa plus a diminutive ending — literally \"little house.\""
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a masculine noun to sit beside the feminine one",
+          "title": "Grammar Lens: a feminine noun, behaving exactly as promised",
           "segments": [
             {
               "kind": "speech",
-              "text": "Libro ends in -o and is masculine, so it takes el."
+              "text": "Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones."
             },
             {
               "kind": "speech",
-              "text": "el libro — the book. Tengo un libro. — I have a book. la casa — the house. Tengo una casa. — I have a house."
+              "text": "la casa — the house. Tengo una casa. — I have a house."
             },
             {
               "kind": "speech",
-              "text": "Two nouns, one of each gender, side by side. That pairing is worth more than either noun alone: from here on, when something in Spanish depends on gender, you have a plain example of both to test it against."
+              "text": "Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it."
             }
           ]
         },
@@ -118,77 +106,75 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el libro\" — one tap on the r",
+              "instruction": "\"la casa\" — KAH-sah, a clean s",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el libro\" — one tap on the *r*]"
+              "source": "[YOU SAY: \"la casa\" — *KAH-sah*, a clean *s*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun",
+              "instruction": "\"Tengo una casa\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun]"
+              "source": "[YOU SAY: \"Tengo una casa\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-libro-article",
-              "prompt": "Say the book in Spanish.",
+              "id": "ES-C43-casa-article",
+              "prompt": "Say the house in Spanish.",
               "assesses": [
-                "ES-LEX-LIBRO",
+                "ES-LEX-CASA",
                 "ES-GRAMMAR-NOUN-GENDER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "el libro",
-                "libro"
+                "la casa",
+                "casa"
               ],
               "feedback": {
-                "correct": "Masculine, so el.",
-                "incorrect": "El libro."
+                "correct": "Feminine, so la.",
+                "incorrect": "La casa — it ends in -a and is feminine."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-libro-have",
-              "prompt": "Say I have a book.",
+              "id": "ES-C43-casa-have",
+              "prompt": "Say I have a house.",
               "assesses": [
                 "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
-                "ES-LEX-LIBRO"
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "tengo un libro",
-                "yo tengo un libro"
+                "tengo una casa",
+                "yo tengo una casa"
               ],
               "feedback": {
-                "correct": "Tengo un libro.",
-                "incorrect": "Tengo un libro — masculine, so un."
+                "correct": "Yes — and note you needed no new grammar for it.",
+                "incorrect": "Tengo una casa."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-libro-bark",
-              "prompt": "What did Latin liber originally mean?",
+              "id": "ES-C43-casa-french",
+              "prompt": "Which French word is casa worn all the way down?",
               "assesses": [
-                "ES-ETYMON-LIBER"
+                "ES-ETYMON-CASA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the inner bark of a tree",
-                "tree bark",
-                "bark"
+                "chez",
+                "chez, as in chez moi"
               ],
               "feedback": {
-                "correct": "The writing surface came first; the book came after.",
-                "incorrect": "The inner bark of a tree — what Romans wrote on."
+                "correct": "Chez moi is literally at the house of me.",
+                "incorrect": "Chez. The noun wore down until it became a preposition."
               }
             }
           ]
@@ -206,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"The book\"? (El libro.) \"The house\"? (La casa.) What was liber before it was a book? (Tree bark.) Next: a noun you can build yourself, out of a verb you already have."
+              "text": "What is \"the house\"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree."
             }
           ]
         }

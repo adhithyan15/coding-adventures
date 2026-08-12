@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 172,
-  "title": "Which Way Is the Arrow Pointing?",
+  "title": "Por --- And Three Phrases You Already Owned",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f7d42251ff3fd376",
+  "sourceHash": "fnv1a64:dbbad3f13521a1c5",
   "lessons": [
     {
-      "id": "ES-C51-la-flecha",
-      "sequence": 2183,
-      "title": "Which way is the arrow pointing?",
-      "headword": "por vs para",
-      "romanization": "por vs para",
-      "gloss": "the one question that replaces the twelve rules — which way is the arrow pointing?",
+      "id": "ES-C51-por",
+      "sequence": 2182,
+      "title": "por — and you already know three of these",
+      "headword": "por",
+      "romanization": "por",
+      "gloss": "\"for\" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf78f3b6e92b7557",
+      "sourceHash": "fnv1a64:e0fe195aa3924caa",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,73 @@
             },
             {
               "kind": "speech",
-              "text": "One points forward at a target. One points back at a cause. Say which is which before you read on."
+              "text": "Say \"please.\" (Por favor.) Say \"why.\" (¿Por qué?) Say \"because.\" (Porque.) You have been carrying this word since your first page and nobody has told you what it means."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the same sentence, twice",
+          "title": "Grammar Lens: the arrow points back, or through",
           "segments": [
             {
               "kind": "speech",
-              "text": "The pair that makes the difference visible:"
+              "text": "por — for, when something is the cause, the route, or what is given in exchange."
             },
             {
               "kind": "speech",
-              "text": "Lo hago para ti. — I'm doing it for you. (you receive it) Lo hago por ti. — I'm doing it because of you. (you are the reason)."
+              "text": "Gracias por la comida. — Thanks for the meal. (the cause) Por ti. — Because of you. (the cause)."
             },
             {
               "kind": "speech",
-              "text": "Two letters apart, and two different sentences about your relationship with somebody. The first is a gift; the second is a motive."
+              "text": "Where para pointed forward at a target, por points back at a reason or through a middle — what something came through, not what it heads toward."
             },
             {
               "kind": "speech",
-              "text": "English says for in both and lets context carry the rest. Spanish makes you choose, and once you hear the choice you notice English was hiding it."
+              "text": "Now look again at the three phrases you already own:"
             },
             {
               "kind": "speech",
-              "text": "The test:"
+              "text": "por favor — literally by way of a favour. You are not aiming at a favour; you are asking through one."
             },
             {
               "kind": "speech",
-              "text": "Draw an arrow. Does it point at the thing (para), or come from it (por)?"
+              "text": "¿por qué? — literally through what? — that is, caused by what?"
             },
             {
               "kind": "speech",
-              "text": "Es para ti — arrow at you. You get it."
+              "text": "porque — the same two words fused into an answer: because."
             },
             {
               "kind": "speech",
-              "text": "Es por ti — arrow from you. You caused it."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole rung: one arrow, two directions."
+              "text": "Three of your oldest phrases turn out to be the same preposition, doing exactly what this chapter says it does. You knew por before you knew hola meant anything."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The test works because it is not a trick. It is what the two words are made of: para contains ad (\"toward\"), por contains per (\"through\")."
+              "text": "Por is two Latin words run together: pro (\"in front of, on behalf of\") and per (\"through\")."
             },
             {
               "kind": "speech",
-              "text": "You are not memorising which preposition suits which situation. You are reading a direction built into each word before Spanish existed."
+              "text": "The per half is still alive and unchanged in English, in the least poetic corner of the language:"
             },
             {
               "kind": "speech",
-              "text": "That keeps working on uses this book never showed you: meeting por in an unfamiliar sentence, ask what it comes through or because of."
+              "text": "per hour, per person, per cent — cent being hundred, so literally through each hundred."
+            },
+            {
+              "kind": "speech",
+              "text": "percolate, permeate, perforate — all piercing through."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept per meaning \"through\" and Spanish kept it inside por. Saying por favor, you are using the same word as miles per hour."
             }
           ]
         },
@@ -115,95 +119,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships",
+              "instruction": "\"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships]"
+              "source": "[YOU SAY: \"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the arrow arrives before the word does."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Gracias por la comida\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Gracias por la comida\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-la-flecha-gift",
-              "prompt": "Say I am doing it for you, meaning you will receive it.",
+              "id": "ES-C51-por-thanks",
+              "prompt": "Say thanks for the meal.",
               "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-PARA",
-                "ES-LEX-TU"
+                "ES-LEX-POR",
+                "ES-LEX-GRACIAS",
+                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo hago para ti",
-                "para ti"
+                "gracias por la comida",
+                "gracias por la comida."
               ],
               "feedback": {
-                "correct": "Arrow points at you.",
-                "incorrect": "Lo hago para ti."
+                "correct": "Por — the cause of the thanks.",
+                "incorrect": "Gracias por la comida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-la-flecha-cause",
-              "prompt": "Now say it meaning you are the reason.",
+              "id": "ES-C51-por-favor",
+              "prompt": "What does por favor literally say?",
               "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-POR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "lo hago por ti",
-                "por ti"
-              ],
-              "feedback": {
-                "correct": "Arrow points from you.",
-                "incorrect": "Lo hago por ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-la-flecha-test",
-              "prompt": "State the test in one sentence.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST"
+                "ES-LEX-POR-FAVOR",
+                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "does the arrow point at it or come from it",
-                "at the thing is para, from the thing is por"
+                "by way of a favour",
+                "through a favour",
+                "by means of a favour"
               ],
               "feedback": {
-                "correct": "One arrow, two directions.",
-                "incorrect": "Does the arrow point at the thing (para) or come from it (por)?"
+                "correct": "Not aimed at a favour — asked through one.",
+                "incorrect": "By way of a favour."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-la-flecha-why",
-              "prompt": "Why is the arrow test not just a mnemonic?",
+              "id": "ES-C51-por-per",
+              "prompt": "Which everyday English word is the per inside por, still meaning through?",
               "assesses": [
-                "ES-ETYMON-PER-AD",
                 "ES-ETYMON-PRO-PER"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "the directions are inside the words, ad and per",
-                "para contains ad, toward; por contains per, through"
+                "per, as in per hour",
+                "per",
+                "per hour, per cent"
               ],
               "feedback": {
-                "correct": "You are reading the words, not remembering a trick.",
-                "incorrect": "Para contains ad (toward) and por contains per (through). The test describes the words."
+                "correct": "Per cent is literally through each hundred.",
+                "incorrect": "Per — per hour, per person, per cent."
               }
             }
           ]
@@ -221,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti — who gets it? (You do.) Por ti — who caused it? (You did.) And why does the test keep working on sentences this book never showed you? (Because the directions are inside the words.) Next: both in one place."
+              "text": "Which direction does por point? (Back at a cause, or through something.) What is por favor literally? (By way of a favour.) Which English word is the per inside it? (Per, as in per hour.) Next: the two side by side."
             }
           ]
         }

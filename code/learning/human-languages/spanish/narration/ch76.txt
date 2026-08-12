@@ -1,42 +1,46 @@
-Spanish, chapter 76: Synthesis --- More Than One.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 76: Review --- All Four Words for The.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Synthesis — more than one.
+Review — all four words for "the".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have a book." (Tengo un libro.) Now say "I have books," and notice where you hesitate.
+Nothing new here. Before the table: how many words does Spanish have for "the"?
 
-Grammar Lens: the article that leaves.
-The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because "a" and "more than one" disagree by definition.
-English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:
-Tengo un libro. — I have a book. Tengo libros. — I have books.
-The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase.
-This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less.
+What you've built.
+Four. And you have now met every one of them separately, which is why they are allowed to appear together.
+[a table of 2 rows, read aloud]
+masculine. singular: el libro. plural: los libros.
+feminine. singular: la casa. plural: las casas.
+English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid.
+The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built.
 
-The exchange.
-Read this aloud and watch the two plurals doing different jobs.
-— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no.
-Bare libros means "books, some books, books in general." Los libros means "the books" — particular ones, already known to both of you.
-That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before.
+Grammar Lens: the two plural rules.
+And underneath the grid, one rule with a repair:
+Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead.
+casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s.
+usted becomes ustedes, español becomes españoles — consonants, -es.
+You held the first half from chapter one and the second half from ustedes without knowing it had a name.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tengo un libro" then "Tengo libros" — hear the article vanish]
+[your turn — say: "el, la, los, las" until the order is automatic]
 [pause 8 seconds for the answer]
-[your turn — say: "libros" then "los libros", twice, until the two feel like different questions]
+[your turn — say: "el libro, los libros, la casa, las casas"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say I have books.
-[question — say your answer, then pause 8 seconds]
-Now say I have the books.
+[repeat that twice]
+Until the grid is a reflex rather than a lookup.
 [question — say your answer, then pause 10 seconds]
-Say I make meals, meaning meals in general.
+Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.
+[question — say your answer, then pause 10 seconds]
+Say the books and then the houses.
 [question — say your answer, then pause 12 seconds]
-What is the difference in meaning between casas and las casas?
+State the plural rule in one sentence, including what happens after a consonant.
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have books"? (Tengo libros — no article.) "I have the books"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named.
+Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect.

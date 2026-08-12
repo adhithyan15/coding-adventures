@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 131,
-  "title": "Lo Siento",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b5edfdb63c96227e",
+  "title": "Synthesis --- Asking Without Sounding Rude",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b25cde9a144ae789",
   "lessons": [
     {
-      "id": "ES-C20-lo-siento",
-      "sequence": 1570,
-      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
-      "headword": "lo siento",
-      "romanization": "lo siento",
-      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
+      "id": "ES-C50-sintesis-pedir-bien",
+      "sequence": 1492,
+      "title": "Synthesis — asking without sounding rude",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a command in Spanish is not the blunt thing a bare English imperative is, and knowing why keeps you from sounding rude by accident",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25c4364b95179dcf",
+      "sourceHash": "fnv1a64:a6d9cf79b401ce85",
       "notice": null,
       "blocks": [
         {
@@ -35,167 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
+              "text": "Say \"eat\" to a friend. (Come.) In English, saying \"Eat.\" to somebody lands hard. You are about to learn that it does not land the same way here."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
-            },
-            {
-              "kind": "speech",
-              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
-            },
-            {
-              "kind": "speech",
-              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lo siento mucho\" — I'm so sorry",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C20-perdon",
-      "sequence": 1580,
-      "title": "perdón — the sorry that asks for something back",
-      "headword": "perdón",
-      "romanization": "perdón",
-      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3f3c1361332ed666",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
-            },
-            {
-              "kind": "speech",
-              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: which one to reach for",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "lo siento",
-                "perdón"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
-                "points at. lo siento: your feeling. perdón: their forgiveness.",
-                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
-              ]
+              "text": "English has almost no polite imperative. Eat. Sit. Bare, they sound like orders to a dog, so English speakers pad them: could you, would you mind."
             },
             {
               "kind": "speech",
-              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
+              "text": "Spanish needs no padding, because it spends its politeness elsewhere — on the choice of person."
             },
             {
               "kind": "speech",
-              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
+              "text": "Come. — to a friend. Perfectly warm. Coma, por favor. — to a stranger. Perfectly polite."
+            },
+            {
+              "kind": "speech",
+              "text": "The tú command is not blunt; it is intimate. Using it says we are on those terms, which between friends is friendly rather than bossy. The usted command is not cold; it is respectful, for the same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "So an English speaker's mistake here is not tone. It is picking the wrong person: usted with a friend sounds stiff, tú with a stranger presumptuous. The politeness lives in the pronoun you chose before the command left your mouth. Por favor helps and costs nothing, but here it is a garnish rather than the structure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same four things said twice — once to a friend, once to a stranger."
+            },
+            {
+              "kind": "speech",
+              "text": "To a friend: Ven. Come. No hables. Ten. To a stranger: Venga. Coma, por favor. No hable. Tenga."
+            },
+            {
+              "kind": "speech",
+              "text": "Read both aloud. The first is not ruder; it is closer. Say the second to somebody you have known for years and you have not been polite — you have put a small distance between you, and they will hear it."
             }
           ]
         },
@@ -213,29 +99,105 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"perdón\" — pardon / excuse me",
+              "instruction": "\"Ven\" then \"Venga\" — hear the distance, not the rudeness",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
+              "source": "[YOU SAY: \"Ven\" then \"Venga\" — hear the distance, not the rudeness]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
+              "instruction": "the friend row, then the stranger row, straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
+              "source": "[YOU SAY: the friend row, then the stranger row, straight through]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
-              "spoken": true,
-              "scored": false,
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-friend",
+              "prompt": "Tell a friend to come.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+                "ES-LEX-VENIR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
+              "acceptedResponses": [
+                "ven",
+                "¡ven!"
+              ],
+              "feedback": {
+                "correct": "Warm, not blunt.",
+                "incorrect": "Ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-stranger",
+              "prompt": "Ask a stranger to eat, politely.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-USTED",
+                "ES-LEX-COMER",
+                "ES-LEX-POR-FAVOR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "coma, por favor",
+                "coma por favor"
+              ],
+              "feedback": {
+                "correct": "Coma, por favor.",
+                "incorrect": "Coma, por favor — the usted form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-where",
+              "prompt": "In Spanish, where does the politeness of a command mostly live?",
+              "assesses": [
+                "ES-CULTURE-COMMAND-REGISTER",
+                "ES-LEX-TU",
+                "ES-LEX-USTED"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "in the choice of tu or usted",
+                "in which person you chose",
+                "in the pronoun"
+              ],
+              "feedback": {
+                "correct": "Chosen before the command ever left your mouth.",
+                "incorrect": "In whether you chose tu or usted — not in extra words."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-sintesis-pedir-bien-mistake",
+              "prompt": "You use usted commands with an old friend. What have you done?",
+              "assesses": [
+                "ES-CULTURE-COMMAND-REGISTER",
+                "ES-GRAMMAR-COMMAND-USTED"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "put distance between you",
+                "sounded stiff",
+                "been cold rather than polite"
+              ],
+              "feedback": {
+                "correct": "Politeness in the wrong place reads as distance.",
+                "incorrect": "Not been extra polite — you have opened a small distance, and they will hear it."
+              }
             }
           ]
         },
@@ -252,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
+              "text": "Is Come rude to a friend? (No — it is close.) Where does the politeness of a Spanish command live? (In the person you chose.) And what does usted with an old friend sound like? (Distance, not courtesy.)"
             }
           ]
         }

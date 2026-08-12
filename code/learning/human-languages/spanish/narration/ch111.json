@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 111,
-  "title": "He Hablado --- A Verb With No Meaning Left",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:685a69432b69aaee",
+  "title": "Hablado, Comido, Vivido --- The Participle",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5b12ac5f28a52915",
   "lessons": [
     {
-      "id": "ES-C49-he-hablado",
-      "sequence": 1376,
-      "title": "he hablado — \"I have spoken\"",
-      "headword": "he hablado",
-      "romanization": "he hablado",
-      "gloss": "\"I have spoken\" — and haber, a verb that gave away its meaning and kept only a job",
+      "id": "ES-C49-participio",
+      "sequence": 1375,
+      "title": "hablado, comido, vivido — the participle",
+      "headword": "hablado / comido / vivido",
+      "romanization": "hablado / comido / vivido",
+      "gloss": "the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:92fcf6076eac4f37",
-      "notice": null,
+      "sourceHash": "fnv1a64:68d511f37a65c98d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,69 +42,62 @@
             },
             {
               "kind": "speech",
-              "text": "You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word."
+              "text": "Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: two endings, not three",
           "segments": [
             {
               "kind": "speech",
-              "text": "silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh."
+              "text": "hablar becomes hablado, comer becomes comido, vivir becomes vivido."
+            },
+            {
+              "kind": "speech",
+              "text": "-ar verbs take -ado."
+            },
+            {
+              "kind": "speech",
+              "text": "-er and -ir verbs both take -ido."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is one new ending and one you can predict."
+            },
+            {
+              "kind": "speech",
+              "text": "The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the emptied verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "he + participle — I have done something."
-            },
-            {
-              "kind": "speech",
-              "text": "He hablado español. — I have spoken Spanish."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody."
-            },
-            {
-              "kind": "speech",
-              "text": "He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not \"I hold spoken.\" You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Haber comes from Latin habēre, \"to hold, to have\" — a completely ordinary verb with a completely ordinary meaning."
+              "text": "Grammarians call this a participle, from Latin participium — \"the form that takes part.\" It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective."
             },
             {
               "kind": "speech",
-              "text": "Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower \"hold, grip\"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed."
+              "text": "You can see the adjective half immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
             },
             {
               "kind": "speech",
-              "text": "English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for \"hold\" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually."
-            },
-            {
-              "kind": "speech",
-              "text": "So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word."
+              "text": "Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,86 +110,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He hablado español\"",
+              "instruction": "\"hablado, comido, vivido\" — one ending, then the shared one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He hablado español\"]"
+              "source": "[YOU SAY: \"hablado, comido, vivido\" — one ending, then the shared one]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I have eaten\" in English, and notice that nothing is being held",
+              "instruction": "\"comí, viví\" then \"comido, vivido\" — the same merger, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I have eaten\" in English, and notice that nothing is being held]"
+              "source": "[YOU SAY: \"comí, viví\" then \"comido, vivido\" — the same merger, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-say",
-              "prompt": "Say I have spoken Spanish.",
+              "id": "ES-C49-participio-ar",
+              "prompt": "Give the participle of hablar.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-FIRST-PERSON",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "he hablado espanol",
-                "he hablado español",
-                "yo he hablado espanol"
+                "hablado",
+                "habl-ado"
               ],
               "feedback": {
-                "correct": "He carries the person; hablado carries the meaning.",
-                "incorrect": "He hablado espanol."
+                "correct": "-ar takes -ado.",
+                "incorrect": "Hablado."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-mean",
-              "prompt": "What does haber mean in he hablado?",
+              "id": "ES-C49-participio-erir",
+              "prompt": "Give the participles of comer and vivir.",
               "assesses": [
-                "ES-LEX-HABER",
-                "ES-ETYMON-HABERE"
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-LEX-COMER",
+                "ES-LEX-VIVIR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "nothing on its own",
-                "nothing",
-                "it has no meaning here, only a job"
+                "comido, vivido",
+                "comido vivido"
               ],
               "feedback": {
-                "correct": "The meaning left; the machinery stayed.",
-                "incorrect": "Nothing. Its meaning went to tener and it kept only this job."
+                "correct": "Both -ido — the two families merge again.",
+                "incorrect": "Comido and vivido."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-english",
-              "prompt": "Which English verb was hollowed out the same way?",
+              "id": "ES-C49-participio-person",
+              "prompt": "Does the participle change for who is speaking?",
               "assesses": [
-                "ES-ETYMON-HABERE",
-                "ES-LEX-TENER"
+                "ES-GRAMMAR-PAST-PARTICIPLE"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "have",
-                "to have",
-                "have, as in i have eaten"
+                "no",
+                "no, it stays the same"
               ],
               "feedback": {
-                "correct": "Nobody holds anything in I have eaten.",
-                "incorrect": "Have — I have eaten holds nothing."
+                "correct": "The first verb form you hold that carries no person.",
+                "incorrect": "No — hablado is hablado for everybody."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have spoken\"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it."
+              "text": "Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense."
             }
           ]
         }

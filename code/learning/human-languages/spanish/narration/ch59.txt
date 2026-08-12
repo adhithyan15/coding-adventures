@@ -1,66 +1,59 @@
-Spanish, chapter 59: Tener in the Plural, and the Stem-Change Rule.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 59: -oso --- a Shelf of Words You Were Never Taught.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-tenemos — and the stem change disappears.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 1.
+-oso — full of — the ending that hands you a shelf of describing words you were never taught.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have" and "you have." (Tengo, tienes.) And "we eat." (Comemos.)
+Name your two describing words. (Grande, cansado.)
+[pause 1 second]
+Two is a short shelf. You are about to have a long one.
 
-Grammar Lens: the break is gone.
-tenemos — we have., tenéis — you all have.
-Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem.
-You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress.
-Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole.
-The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere.
+Grammar Lens: full of.
+Spanish -oso is English -ous.
+Latin -ōsus meant full of. Stick it on a noun and you get an adjective: fāma is fame or report, so famōsus is full of fame.
+English holds the same suffix, worn down through French to -ous. Not a resemblance — the same ending, arriving by two roads, exactly like -ción and -tion.
+[a table of 5 rows, read aloud]
+famoso means famous.
+delicioso means delicious.
+curioso means curious.
+precioso means precious.
+nervioso means nervous.
+You were taught none of those. You can read all of them.
+
+Grammar Lens: and you already know what to do with it.
+An -oso word is an ordinary describing word, so every rule you just learned applies without being restated:
+it goes after the noun — un profesor famoso.
+it ends in -o, so it shifts — famoso / famosa.
+and the verb depends on what you mean:
+[a table of 2 rows, read aloud]
+Es famoso., He is famous — that is what he is.
+Estoy nervioso., I am nervous — right now.
+That last pair is the whole ser/estar contrast again, and you did not have to be told which verb to use. You worked it out from the meaning.
+
+Why it's said this way.
+The ending is reliable. The root still has to be shared.
+Hermoso is beautiful, not hermous — because the root is formōsus, from forma, and English simply never borrowed that one.
+So -oso tells you the word is an adjective and roughly how it is built. It only hands you the meaning when English took the same root. That is the same deal every rule in this book has offered: a lead, not a guarantee.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tienes" then "tenemos" — and hear the stress move off the stem]
+[your turn — say: famoso, delicioso, curioso]
 [pause 8 seconds for the answer]
-[your turn — say: "comemos, tenemos" — the same endings]
+[your turn — say: Estoy nervioso]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say we have.
+[repeat that twice]
 [question — say your answer, then pause 10 seconds]
-Why does tienes break its stem but tenemos does not?
+You have never seen misterioso. What is it?
+[question — say your answer, then pause 14 seconds]
+Say: a famous teacher, about a woman.
+[question — say your answer, then pause 14 seconds]
+Ser or estar for nervioso, and why?
 
 Wrap-up Recall.
-[pause 3 seconds]
-What is "we have"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back.
-
-
-Lesson 2 of 2.
-tienen — the break comes back.
-
-Warm-up.
 [pause 2 seconds]
-Say "we have", then "you have" to a friend. (Tenemos, tienes.) Which one has the broken stem?
-
-Grammar Lens: the rule, stated once and for all.
-tienen — they have, and ustedes tienen, you all have.
-The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:
-A stem change happens exactly where the stem is stressed, and nowhere else.
-That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language.
-Learners are usually told to memorise a shape called "the boot" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tienes, tenemos, tienen" — break, no break, break]
-[pause 8 seconds for the answer]
-[your turn — say: the two forms that never break, for any verb]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say they have.
-[question — say your answer, then pause 10 seconds]
-In any stem-changing verb, which two forms never break?
-[question — say your answer, then pause 8 seconds]
-What actually decides whether the stem breaks?
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is "they have"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)
+-oso in English? (-ous.) Does it shift for a woman? (Yes — it ends in -o.)
+[pause 2 seconds]
+And what does the ending not promise? (That English took the same root.)

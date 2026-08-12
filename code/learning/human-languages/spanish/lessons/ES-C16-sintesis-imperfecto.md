@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-sintesis-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1369
-chapter: 104
+chapter: 105
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — the kindest tense in Spanish, and the three verbs that break it
