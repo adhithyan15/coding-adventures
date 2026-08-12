@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 import subprocess
 from pathlib import Path
@@ -28,6 +29,12 @@ ACCEPTANCE_PACKAGES = frozenset(
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("unknown/mosaic-pkg-",)
 CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
+TASKAPP_DEGRADATIONS = Counter(
+    {
+        "interaction.drag-drop-inert": 4,
+        "accessibility.table-semantics-missing": 1,
+    }
+)
 
 
 def requires_mosaic_xaml_windows(
@@ -69,12 +76,50 @@ def workflow_changed(repo_root: Path, diff_base: str) -> bool:
     return result.returncode == 1
 
 
+def validate_taskapp_report(report: dict[str, Any]) -> None:
+    """Require exactly the five documented XAML TaskApp UI degradations."""
+
+    if report.get("backend") != "xaml":
+        raise ValueError("TaskApp degradation report backend must be xaml")
+    if report.get("nativeComplete") is not False:
+        raise ValueError("TaskApp XAML must remain incomplete until its five UI gaps close")
+    degradations = report.get("degradations")
+    if not isinstance(degradations, list):
+        raise ValueError("TaskApp degradation report must contain a degradations array")
+    codes = Counter(
+        item.get("code")
+        for item in degradations
+        if isinstance(item, dict) and isinstance(item.get("code"), str)
+    )
+    if codes != TASKAPP_DEGRADATIONS or len(degradations) != 5:
+        raise ValueError(
+            "TaskApp XAML report differs from the five documented gaps: "
+            f"expected {dict(TASKAPP_DEGRADATIONS)}, observed {dict(codes)} "
+            f"across {len(degradations)} entries"
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("plan", type=Path)
+    parser.add_argument("plan", type=Path, nargs="?")
     parser.add_argument("--repo-root", type=Path)
     parser.add_argument("--diff-base")
+    parser.add_argument("--validate-taskapp-report", type=Path)
     args = parser.parse_args()
+
+    if args.validate_taskapp_report is not None:
+        if args.plan is not None or args.repo_root is not None or args.diff_base is not None:
+            parser.error("--validate-taskapp-report cannot be combined with plan detection")
+        with args.validate_taskapp_report.open(encoding="utf-8") as handle:
+            report = json.load(handle)
+        if not isinstance(report, dict):
+            raise ValueError("TaskApp degradation report root must be an object")
+        validate_taskapp_report(report)
+        print("TaskApp XAML degradation report matches the five documented gaps")
+        return 0
+
+    if args.plan is None:
+        parser.error("plan is required unless --validate-taskapp-report is used")
 
     if (args.repo_root is None) != (args.diff_base is None):
         parser.error("--repo-root and --diff-base must be provided together")

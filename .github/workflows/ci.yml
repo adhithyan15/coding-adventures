@@ -1295,12 +1295,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             throw "TaskApp XAML generation failed with exit code $LASTEXITCODE"
           }
-          $taskReport = Get-Content (Join-Path $output 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
-          $taskDegradations = @($taskReport.degradations)
-          $dragDegradations = @($taskDegradations | Where-Object { $_.code -eq 'interaction.drag-drop-inert' })
-          $tableDegradations = @($taskDegradations | Where-Object { $_.code -eq 'accessibility.table-semantics-missing' })
-          if ($taskReport.nativeComplete -or $taskDegradations.Count -ne 5 -or $dragDegradations.Count -ne 4 -or $tableDegradations.Count -ne 1) {
-            throw 'TaskApp XAML report differs from the five documented native interaction/accessibility gaps'
+          python3 code/scripts/mosaic_xaml_windows_ci_acceptance.py --validate-taskapp-report (Join-Path $output 'xaml/mosaic-degradations.json')
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML degradation validation failed with exit code $LASTEXITCODE"
           }
 
           $project = Join-Path $output 'xaml/TaskApp.csproj'

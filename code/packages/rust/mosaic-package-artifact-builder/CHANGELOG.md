@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - selected runtimes are required
+
+- Passing `--runtime-library` now emits a runtime-required native shell even
+  under the permissive degradation-reporting profile. This removes the sample
+  fallback without suppressing unrelated capability reports, allowing XAML
+  TaskApp to bundle its concrete engine while its drag/drop and table gaps
+  remain explicit.
+
 ## [Unreleased] - SwiftUI native table capability
 
 - Native-complete analysis recognizes the canonical dynamic UI31/Grid shape

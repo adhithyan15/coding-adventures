@@ -110,7 +110,10 @@ runner edits. The Compose and SwiftUI bindings resolve their installed
 resources, while the Qt and XAML bindings resolve the engine beside the
 installed executable before global lookup. A strict project build on any of the
 five native backends without that selection reports
-`runtime.library-not-bundled`.
+`runtime.library-not-bundled`. Selecting a runtime also makes the generated
+shell require that engine even under the permissive reporting profile. This
+allows an app with unrelated, explicitly reported UI degradations to ship a
+fail-closed engine boundary without retaining preview/sample props.
 Every exported Compose component is mirrored into the generated Gradle source
 set, so `gradle compileKotlin` type-checks the complete package even though the
 shell mounts the manifest's first export as its entry component.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 import tempfile
@@ -113,6 +114,52 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             )
         self.assertEqual(result.stdout, "required=true\n")
 
+    def test_taskapp_report_requires_exact_documented_gaps(self) -> None:
+        report = {
+            "backend": "xaml",
+            "nativeComplete": False,
+            "degradations": [
+                *({"code": "interaction.drag-drop-inert"} for _ in range(4)),
+                {"code": "accessibility.table-semantics-missing"},
+            ],
+        }
+        MODULE.validate_taskapp_report(report)
+        report["degradations"].append({"code": "runtime.sample-fallback"})
+        with self.assertRaisesRegex(ValueError, "observed"):
+            MODULE.validate_taskapp_report(report)
+
+    def test_cli_validates_taskapp_report(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / "mosaic-degradations.json"
+            report.write_text(
+                json.dumps(
+                    {
+                        "backend": "xaml",
+                        "nativeComplete": False,
+                        "degradations": [
+                            *(
+                                {"code": "interaction.drag-drop-inert"}
+                                for _ in range(4)
+                            ),
+                            {"code": "accessibility.table-semantics-missing"},
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--validate-taskapp-report",
+                    str(report),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        self.assertIn("matches the five documented gaps", result.stdout)
+
     def test_workflow_routes_windows_toolchains_and_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn(
@@ -136,10 +183,8 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             "--backend xaml --output $output --emit-project --runtime-library $taskLibrary.Path",
             workflow,
         )
-        self.assertIn("TaskApp XAML report differs from the five documented", workflow)
-        self.assertIn("$taskDegradations.Count -ne 5", workflow)
-        self.assertIn("$dragDegradations.Count -ne 4", workflow)
-        self.assertIn("$tableDegradations.Count -ne 1", workflow)
+        self.assertIn("--validate-taskapp-report", workflow)
+        self.assertIn("TaskApp XAML degradation validation failed", workflow)
         self.assertIn("dotnet build (Split-Path -Leaf $project)", workflow)
         self.assertIn("selected by generated global.json", workflow)
         self.assertIn("TaskApp.binlog", workflow)
