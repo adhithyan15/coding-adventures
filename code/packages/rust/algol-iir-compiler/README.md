@@ -187,6 +187,8 @@ expressions can also print its canonical decimal value while execution remains
 straight-line. Copies between tracked real locals preserve independent value
 snapshots even if the source is later reassigned, and tracked locals may feed
 the same bounded finite arithmetic and exact standard-function evaluator.
+Integer literals also enter that real evaluator when their magnitude is within
+binary64's exact integer range; larger widenings remain unsupported.
 Labels, branches, loops,
 gotos, calls, dynamic reassignment, and captured globals invalidate that shortcut.
 Real literal bases also accept the existing

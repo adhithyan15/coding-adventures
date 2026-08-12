@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.220.88 - 2026-08-11 (ALGOL static mixed numeric output — seven backends)
+
+The LANG matrix now widens an exact integer literal into a tracked real scalar,
+copies its snapshot, and composes it with a real literal before printing on all
+seven standard backends.
+
 ## 0.220.87 - 2026-08-11 (ALGOL static real scalar expressions — seven backends)
 
 The LANG matrix now composes a copied static real local with additional finite
