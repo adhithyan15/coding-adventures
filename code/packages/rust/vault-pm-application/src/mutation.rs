@@ -333,7 +333,10 @@ pub(crate) fn import_opened_portable_snapshot(
     if report.heads() != active.pinned_heads() {
         return Err(ApplicationError::ConcurrentHost);
     }
-    if active.last_device_counter() != 1 || !current_items.is_empty() {
+    // Audit-only events are allowed before the first import so failed artifact
+    // reads, credentials, and retries can remain traceable. Any prior logical
+    // item mutation leaves a live or tombstone candidate and still fails here.
+    if !current_items.is_empty() {
         return Err(ApplicationError::InvalidInput);
     }
     if randomness.item_count != snapshot.item_count()
@@ -1012,10 +1015,9 @@ pub(crate) fn publish_audited_access(
         || (action.is_item_mutation() && outcome == AuditOutcomeV1::Succeeded)
         || matches!(
             action,
-            AuditActionV1::AuditEpochStart
-                | AuditActionV1::VaultInitialize
-                | AuditActionV1::PortableImport
+            AuditActionV1::AuditEpochStart | AuditActionV1::VaultInitialize
         )
+        || (action == AuditActionV1::PortableImport && outcome == AuditOutcomeV1::Succeeded)
     {
         return Err(ApplicationError::InvalidInput);
     }

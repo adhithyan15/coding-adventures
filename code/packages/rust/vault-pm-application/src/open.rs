@@ -586,6 +586,31 @@ impl UnlockedVaultV1 {
         Ok(audited.into_parts().0)
     }
 
+    /// Durably record a host-side portable-import input failure.
+    ///
+    /// This boundary is used after an active-epoch target unlock when artifact
+    /// reading, passphrase collection, no-write opening, or entropy collection
+    /// fails outside the application. No source path, artifact bytes, partial
+    /// passphrase, or target item identity enters the itemless event.
+    pub fn record_audited_portable_import_host_failure(
+        self,
+        wall_time_ms: u64,
+        randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let audited = self.finish_audited_access(
+            AuditActionV1::PortableImport,
+            None,
+            None,
+            wall_time_ms,
+            randomness,
+            local_state_store,
+            Err::<(), _>(ApplicationError::InvalidInput),
+        )?;
+        Ok(audited.into_parts().0)
+    }
+
     /// Run authenticated low-resolution diagnostics and release the coarse
     /// report only after its access event and next owner state are durable.
     ///
@@ -646,6 +671,52 @@ impl UnlockedVaultV1 {
             randomness,
             local_state_store,
         )
+    }
+
+    /// Atomically import an opened snapshot or publish its failed target-side attempt.
+    ///
+    /// Success uses the mutation's own `PortableImport` event in the same
+    /// repository publication as every re-identified candidate. A target
+    /// precondition, identity, bound, or repository-preparation failure instead
+    /// advances the audit-only chain before the closed error is returned.
+    #[allow(clippy::too_many_arguments)]
+    pub fn audited_import_opened_portable_snapshot(
+        self,
+        snapshot: crate::OpenedPortableSnapshotV1,
+        wall_time_ms: u64,
+        import_randomness: PortableImportRandomnessV1,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        let operation = import_opened_portable_snapshot(
+            &self.active,
+            &self.report,
+            &self.current_catalog.items,
+            &self._keys,
+            &self._local_secret,
+            self._repository.as_ref(),
+            snapshot,
+            wall_time_ms,
+            import_randomness,
+            local_state_store,
+        );
+        match operation {
+            Ok(active) => Ok(active),
+            Err(error) => {
+                self.finish_audited_access(
+                    AuditActionV1::PortableImport,
+                    None,
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err::<(), _>(error),
+                )?
+                .into_operation()?;
+                Err(ApplicationError::InternalInvariant)
+            }
+        }
     }
 
     /// Return the ordinary redacted view for one unambiguous live item.

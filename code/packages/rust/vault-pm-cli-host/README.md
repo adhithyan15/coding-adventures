@@ -1,7 +1,7 @@
 # `coding_adventures_vault_pm_cli_host`
 
 This crate is the native secret-input and entropy boundary for the local
-password-manager CLI. It gives the `vault-pm` executable three narrow,
+password-manager CLI. It gives the `vault-pm` executable four narrow,
 auditable adapters:
 
 - `ControllingTerminal` opens `/dev/tty` on Unix or `CONIN$`/`CONOUT$` on
@@ -13,7 +13,9 @@ auditable adapters:
   payload-free failure; and
 - `write_portable_export` creates one explicit encrypted artifact destination
   without following or replacing an existing final path, synchronizes the
-  bytes, and requests owner-only mode on Unix.
+  bytes, and requests owner-only mode on Unix; and
+- `read_portable_export` reads one non-empty regular artifact under an exact
+  metadata and streaming byte ceiling before application authentication.
 
 Secret input never comes from process stdin, argv, an environment variable, a
 configuration value, or a URL. Redirecting stdin therefore cannot inject a
@@ -41,10 +43,10 @@ and contain no secret, OS error, terminal path, user name, or caller payload.
 This crate deliberately does not parse commands, choose vault storage, persist
 configuration, calibrate Argon2id, or prepare vault bytes.
 
-Ten Unix tests exercise stable diagnostics, text/secret bounds, constant-time
+Eleven Unix tests exercise stable diagnostics, text/secret bounds, constant-time
 confirmation behavior, real OS entropy, pseudo-terminal ordinary and hidden
 input, mode restoration, oversized-line draining, non-terminal refusal, and
-create-new durable export persistence.
+create-new durable export persistence, and bounded artifact reads.
 Windows adds three target-specific tests for console names and strict bounded
 UTF-16 conversion; cross-target Clippy validates the native Windows API
 surface from Unix.

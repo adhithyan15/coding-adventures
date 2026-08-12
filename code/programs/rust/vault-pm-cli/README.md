@@ -16,6 +16,7 @@ vault-pm audit list
 vault-pm audit show TRACE
 vault-pm doctor [--unlock]
 vault-pm export FILE
+vault-pm import FILE
 vault-pm item add login
 vault-pm item add secure-note
 vault-pm item edit ITEM
@@ -38,8 +39,10 @@ a later process, verify that failure event from another process, inspect the
 same verified history in newest-first order, select the failed edit by its
 canonical trace in another process, verify both history accesses became
 durable, produce a separately passphrase-encrypted portable artifact through
-two hidden prompts, and inspect the isolated filesystem tree for plaintext
-secret bytes.
+two hidden prompts, initialize and audit-enable an independent application
+root, import the artifact through another hidden prompt, restart into redacted
+restored items, and inspect both isolated filesystem trees for plaintext secret
+bytes.
 
 ## Verification
 

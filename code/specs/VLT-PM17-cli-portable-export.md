@@ -217,7 +217,6 @@ The slice is complete only when tests prove:
 This slice does not add portable import, plaintext interoperability export,
 repository mirroring, backup scheduling, retention, provider upload status,
 Google Drive APIs, or a restore-completed claim. The prioritized follow-up is
-an import-only ceremony that opens the artifact without writes, initializes an
-independent empty target, allocates fresh cross-vault identities, atomically
-imports all candidates, independently reopens the target, and compares the
-restored logical state.
+the bounded audited import ceremony in `VLT-PM18-cli-portable-import.md`.
+Explicit target creation/configuration switching and application-owned
+field-by-field semantic restore comparison remain later recovery work.

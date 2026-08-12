@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added audit-required `import FILE` with bounded artifact reads, hidden
+  artifact-passphrase input, no-write authentication, count-derived entropy,
+  and atomic cross-vault re-identification into an empty target.
+- Record artifact/host failures as failed itemless `PortableImport` events and
+  retain retry eligibility across audit-only attempts.
 - Added `export FILE` with a separately confirmed hidden passphrase, canonical
   encrypted portable artifact, publish-before-release audit ordering, and an
   explicit create-new destination that never overwrites an existing path.

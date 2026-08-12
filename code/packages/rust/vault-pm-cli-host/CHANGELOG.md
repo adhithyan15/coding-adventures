@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a bounded regular-file portable-artifact reader and reuse the fixed
+  hidden import-passphrase prompt through CLI composition.
 - Add fixed hidden portable-export passphrase and confirmation prompts with
   constant-time comparison.
 - Add create-new durable encrypted-artifact persistence with Unix mode `0600`,

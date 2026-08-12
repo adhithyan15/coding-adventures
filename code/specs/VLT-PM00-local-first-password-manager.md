@@ -1529,8 +1529,14 @@ changelog, focused build, and downstream validation.
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
         destination policy, using `VLT-PM17-cli-portable-export.md`.
-9b-4b. remaining no-write portable opening plus atomic cross-vault import CLI
-        host composition and independently verified restore ceremony.
+9b-4b-1. completed bounded no-write portable opening and audited atomic
+          cross-vault import into a separately initialized empty target, with
+          traceable host/artifact failures, retry-safe audit-only prefixes,
+          fresh target identities, and restart-backed redacted observation,
+          using `VLT-PM18-cli-portable-import.md`.
+9b-4b-2. remaining explicit target creation/configuration switching plus an
+          application-owned independent semantic restore comparison before a
+          fully verified-restore claim.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
@@ -1593,13 +1599,15 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM11-cli-login-create-read.md`, `VLT-PM12-cli-login-replace.md`,
   `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`,
   `VLT-PM15-operation-audit.md`, `VLT-PM16-cli-secure-note-create.md`, and
-  `VLT-PM17-cli-portable-export.md` —
+  `VLT-PM17-cli-portable-export.md`, and
+  `VLT-PM18-cli-portable-import.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
   first CRUD vertical, revision-safe replacement, redacted history, and
   reversible delete/restore, first-class operation-audit contracts, and
-  secure-note CLI composition, and audited encrypted recovery-artifact export.
+  secure-note CLI composition, and audited encrypted recovery-artifact
+  export/import.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

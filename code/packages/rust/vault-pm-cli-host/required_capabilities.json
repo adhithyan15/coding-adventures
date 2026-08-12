@@ -11,6 +11,12 @@
     },
     {
       "category": "fs",
+      "action": "read",
+      "target": "one caller-selected portable-import source",
+      "justification": "Reads one encrypted regular-file artifact under exact metadata and streaming byte ceilings before application authentication."
+    },
+    {
+      "category": "fs",
       "action": "write",
       "target": "/dev/tty or the attached Windows console",
       "justification": "Writes fixed secret and item-field prompts plus post-secret newlines directly to the controlling terminal."

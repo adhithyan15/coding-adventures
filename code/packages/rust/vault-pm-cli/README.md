@@ -10,8 +10,8 @@ one-shot boundary now supports revision-safe login replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
-ITEM REVISION`. `export FILE` adds the first encrypted recovery-artifact
-ceremony. The executable is a thin caller of this package.
+ITEM REVISION`. `export FILE` and `import FILE` add the first encrypted
+recovery-artifact round trip. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -123,6 +123,17 @@ following or replacing an existing final path, requests mode `0600` on Unix,
 writes and synchronizes the complete artifact, and returns only a path-free
 success line. A destination write failure occurs after artifact release and
 therefore does not rewrite the truthful successful access event.
+
+`import FILE` requires the configured target to be independently initialized,
+logically empty, and audit-enabled. After target unlock it reads one bounded
+regular artifact, collects its passphrase through the fixed hidden
+`Import passphrase:` prompt, authenticates and validates the complete snapshot
+without writes, and obtains the exact count-derived CSPRNG block. Host,
+artifact, and target failures publish a failed itemless `PortableImport`
+before their error; success re-identifies every item/candidate and publishes
+its event atomically with the new catalog. Output contains aggregate item and
+candidate counts only. A later list/show reopens the target through the
+ordinary audited redacted-read boundary.
 
 ## Verification
 

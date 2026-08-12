@@ -5,21 +5,23 @@
 
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
-    complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
-    AddItemRandomnessV1, ApplicationError, AuditEventViewV1, AuditVerificationV1,
-    AuditedAccessRandomnessV1, BootstrapLocator, BootstrapStore, BootstrapStoreError,
-    DeleteItemRandomnessV1, GenerationZeroPolicyV1, GenerationZeroRandomness, ItemHistoryViewV1,
-    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1,
-    PortableExportPolicyV1, PortableExportRandomnessV1, ReplaceItemRandomnessV1,
+    complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
+    prepare_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1, ApplicationError,
+    AuditEventViewV1, AuditVerificationV1, AuditedAccessRandomnessV1, BootstrapLocator,
+    BootstrapStore, BootstrapStoreError, DeleteItemRandomnessV1, GenerationZeroPolicyV1,
+    GenerationZeroRandomness, ItemHistoryViewV1, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1, LoginEditInputV1, PortableExportPolicyV1, PortableExportRandomnessV1,
+    PortableImportRandomnessV1, PortableOpenPolicyV1, ReplaceItemRandomnessV1,
     RestoreItemRandomnessV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
     VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
     DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    GENERATION_ZERO_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
-    RESTORE_ITEM_RANDOM_BYTES,
+    GENERATION_ZERO_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
+    REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
-    write_portable_export, CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
+    read_portable_export, write_portable_export, CliHostError, ControllingTerminal, OsEntropy,
+    SecretPrompt, TextPrompt,
 };
 use coding_adventures_vault_pm_config::{
     parse_config, render_config, ConfigName, CredentialRef, StorageConfigV1, StorageKind,
@@ -46,7 +48,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm export FILE\n  vault-pm item add login\n  vault-pm item add secure-note\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm export FILE\n  vault-pm import FILE\n  vault-pm item add login\n  vault-pm item add secure-note\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -151,6 +153,12 @@ pub trait CliHost {
     /// Durably create one explicit encrypted portable-export destination.
     fn write_portable_export(&self, destination: &Path, artifact: &[u8]) -> Result<(), HostError>;
 
+    /// Read one explicit encrypted portable artifact under the V1 size ceiling.
+    fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError>;
+
+    /// Collect the passphrase for an existing portable artifact without echo.
+    fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
+
     /// Fill the entire generation-zero randomness block.
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError>;
 
@@ -163,6 +171,11 @@ pub trait CliHost {
     /// Return the bounded Argon2id policy for a portable export.
     fn portable_export_kdf(&self) -> (u32, u32, u8) {
         self.generation_zero_kdf()
+    }
+
+    /// Return the maximum accepted Argon2id policy for opening an artifact.
+    fn portable_open_kdf(&self) -> (u32, u32, u8) {
+        self.portable_export_kdf()
     }
 }
 
@@ -241,6 +254,17 @@ impl CliHost for NativeCliHost {
         write_portable_export(destination, artifact).map_err(map_native_cli_host)
     }
 
+    fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError> {
+        read_portable_export(source, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        ControllingTerminal
+            .read_secret(SecretPrompt::ImportPassphrase)
+            .map_err(map_native_cli_host)
+    }
+
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
         OsEntropy.fill(output).map_err(map_native_cli_host)
     }
@@ -316,6 +340,9 @@ enum Command {
     PortableExport {
         destination: PathBuf,
     },
+    PortableImport {
+        source: PathBuf,
+    },
     ItemAddLogin,
     ItemAddSecureNote,
     ItemEdit {
@@ -362,8 +389,18 @@ where
         "audit" => parse_audit(&values[1..]),
         "doctor" => parse_doctor(&values[1..]),
         "export" => parse_export(&values[1..]),
+        "import" => parse_import(&values[1..]),
         "item" => parse_item(&values[1..]),
         "history" => parse_history(&values[1..]),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_import(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [source] if !source.is_empty() => Ok(Command::PortableImport {
+            source: PathBuf::from(source),
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -476,6 +513,9 @@ fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure
         Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
         Command::PortableExport { destination } => {
             portable_export(host, prepared.paths(), &writer, &destination)
+        }
+        Command::PortableImport { source } => {
+            portable_import(host, prepared.paths(), &writer, &source)
         }
         Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
         Command::ItemAddSecureNote => item_add_secure_note(host, prepared.paths(), &writer),
@@ -618,6 +658,105 @@ fn portable_export(
     host.write_portable_export(destination, artifact.as_bytes())
         .map_err(map_host)?;
     Ok(CliOutput::success("Portable export written.\n"))
+}
+
+struct PortableImportContext {
+    access: VaultAccessV1,
+    application_store: StorageCoreApplicationStore<FsStorageBackend>,
+    wall_time_ms: u64,
+    failure_randomness: AuditedAccessRandomnessV1,
+}
+
+impl PortableImportContext {
+    fn fail(self, error: CliFailure) -> Result<CliOutput, CliFailure> {
+        self.access
+            .into_unlocked()
+            .map_err(map_application)?
+            .record_audited_portable_import_host_failure(
+                self.wall_time_ms,
+                self.failure_randomness,
+                &self.application_store,
+            )
+            .map_err(map_application)?;
+        Err(error)
+    }
+
+    fn complete(
+        self,
+        snapshot: coding_adventures_vault_pm_application::OpenedPortableSnapshotV1,
+        randomness: PortableImportRandomnessV1,
+        item_count: usize,
+        candidate_count: usize,
+    ) -> Result<CliOutput, CliFailure> {
+        self.access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_import_opened_portable_snapshot(
+                snapshot,
+                self.wall_time_ms,
+                randomness,
+                self.failure_randomness,
+                &self.application_store,
+            )
+            .map_err(map_application)?;
+        Ok(CliOutput::success(format!(
+            "Portable import complete: items={item_count} candidates={candidate_count}.\n"
+        )))
+    }
+}
+
+fn portable_import(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    source: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let (memory_kib, iterations, lanes) = host.portable_open_kdf();
+    let open_policy =
+        PortableOpenPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    if !access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        access.lock();
+        return Err(CliFailure::InvalidCommand);
+    }
+    let context = PortableImportContext {
+        access,
+        application_store,
+        wall_time_ms,
+        failure_randomness,
+    };
+    let artifact = match host.read_portable_export(source) {
+        Ok(artifact) => artifact,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    let passphrase = match host.read_import_passphrase() {
+        Ok(passphrase) => passphrase,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    let snapshot = match open_portable_with_passphrase(&artifact, passphrase, open_policy) {
+        Ok(snapshot) => snapshot,
+        Err(error) => return context.fail(map_application(error)),
+    };
+    let item_count = snapshot.item_count();
+    let candidate_count = snapshot.candidate_count();
+    let random_bytes = match portable_import_random_bytes(&snapshot) {
+        Ok(count) => count,
+        Err(error) => return context.fail(map_application(error)),
+    };
+    let mut random = vec![0_u8; random_bytes];
+    if let Err(error) = host.fill_entropy(&mut random) {
+        return context.fail(map_host(error));
+    }
+    let randomness = match PortableImportRandomnessV1::new(random, &snapshot) {
+        Ok(randomness) => randomness,
+        Err(error) => return context.fail(map_application(error)),
+    };
+    context.complete(snapshot, randomness, item_count, candidate_count)
 }
 
 struct ItemCreateContext {
@@ -1719,6 +1858,7 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::InvalidText
         | CliHostError::InvalidExportDestination
         | CliHostError::ExportDestinationExists
+        | CliHostError::InvalidImportSource
         | CliHostError::InvalidEntropyRequest => HostError::Invalid,
         CliHostError::UnsupportedPlatform => HostError::Unsupported,
         CliHostError::TerminalUnavailable
@@ -1727,6 +1867,7 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::SecretInputFailed
         | CliHostError::TextInputFailed
         | CliHostError::ExportWriteFailed
+        | CliHostError::ImportReadFailed
         | CliHostError::EntropyUnavailable => HostError::Unavailable,
     }
 }
@@ -1926,6 +2067,15 @@ mod tests {
             write_portable_export(destination, artifact).map_err(map_native_cli_host)
         }
 
+        fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError> {
+            read_portable_export(source, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES)
+                .map_err(map_native_cli_host)
+        }
+
+        fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            self.secret()
+        }
+
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
             for (index, byte) in output.iter_mut().enumerate() {
                 *byte = u8::try_from(index % 251)
@@ -1970,6 +2120,9 @@ mod tests {
             vec!["export"],
             vec!["export", "backup.vpm", "extra"],
             vec!["export", "--passphrase", "secret"],
+            vec!["import"],
+            vec!["import", "backup.vpm", "extra"],
+            vec!["import", "--passphrase", "secret"],
             vec!["audit"],
             vec!["audit", "enable", "extra"],
             vec!["audit", "verify", "extra"],
@@ -2128,6 +2281,21 @@ mod tests {
         assert_eq!(parse(["export"]), Err(CliFailure::InvalidCommand));
         assert_eq!(
             parse(["export", "backup.vpm", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
+    fn portable_import_parser_accepts_exactly_one_explicit_source() {
+        assert_eq!(
+            parse(["import", "backup.vpm"]),
+            Ok(Command::PortableImport {
+                source: PathBuf::from("backup.vpm")
+            })
+        );
+        assert_eq!(parse(["import"]), Err(CliFailure::InvalidCommand));
+        assert_eq!(
+            parse(["import", "backup.vpm", "extra"]),
             Err(CliFailure::InvalidCommand)
         );
     }
@@ -2369,6 +2537,130 @@ mod tests {
             .contains("action=portable_export\toutcome=failed"));
         assert!(!audit.stdout().contains("never-written.vpm"));
         assert!(!audit.stdout().contains("portable failure passphrase"));
+    }
+
+    #[test]
+    fn portable_import_requires_auditing_logs_failure_then_restores_independently() {
+        let source_root = TestRoot::new();
+        let source_paths = source_root.paths();
+        let source_passphrase = b"portable source vault passphrase".to_vec();
+        let export_passphrase = b"portable artifact passphrase".to_vec();
+        let init_source = TestHost::new(source_paths.clone(), [source_passphrase.clone()]);
+        assert_eq!(run(["init"], &init_source).exit_code(), ExitCode::Success);
+        let add_source = TestHost::with_texts(
+            source_paths.clone(),
+            [
+                source_passphrase.clone(),
+                b"restored secure note body".to_vec(),
+            ],
+            ["Restored secure note".to_owned()],
+        );
+        assert_eq!(
+            run(["item", "add", "secure-note"], &add_source).exit_code(),
+            ExitCode::Success
+        );
+        activate_test_audit_epoch(&source_paths, source_passphrase.clone());
+        let artifact_path = source_root.0.join("restore-source.vpm");
+        let export_host = TestHost::new(
+            source_paths.clone(),
+            [source_passphrase.clone(), export_passphrase.clone()],
+        );
+        assert_eq!(
+            run(
+                [
+                    "export",
+                    artifact_path.to_str().expect("UTF-8 test artifact path"),
+                ],
+                &export_host,
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let target_root = TestRoot::new();
+        let target_paths = target_root.paths();
+        let target_passphrase = b"independent target passphrase".to_vec();
+        let init_target =
+            TestHost::with_entropy_seed(target_paths.clone(), [target_passphrase.clone()], 23);
+        assert_eq!(run(["init"], &init_target).exit_code(), ExitCode::Success);
+
+        let pre_audit = TestHost::new(
+            target_paths.clone(),
+            [target_passphrase.clone(), export_passphrase.clone()],
+        );
+        let rejected = run(
+            [
+                "import",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &pre_audit,
+        );
+        assert_eq!(rejected.exit_code(), ExitCode::InvalidInput, "{rejected:?}");
+        activate_test_audit_epoch(&target_paths, target_passphrase.clone());
+
+        let wrong_host = TestHost::new(
+            target_paths.clone(),
+            [
+                target_passphrase.clone(),
+                b"wrong artifact passphrase".to_vec(),
+            ],
+        );
+        let wrong = run(
+            [
+                "import",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &wrong_host,
+        );
+        assert_eq!(wrong.exit_code(), ExitCode::Locked, "{wrong:?}");
+        assert!(wrong.stdout().is_empty());
+
+        let import_host = TestHost::with_entropy_seed(
+            target_paths.clone(),
+            [target_passphrase.clone(), export_passphrase.clone()],
+            41,
+        );
+        let imported = run(
+            [
+                "import",
+                artifact_path.to_str().expect("UTF-8 test artifact path"),
+            ],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Portable import complete: items=1 candidates=1.\n"
+        );
+
+        let list_host = TestHost::new(target_paths.clone(), [target_passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("vault/note/v1\t\"Restored secure note\""));
+        assert!(!listed.stdout().contains("restored secure note body"));
+
+        let audit_host = TestHost::with_entropy_seed(target_paths, [target_passphrase], 17);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit
+            .stdout()
+            .contains("action=portable_import\toutcome=failed"));
+        assert!(audit
+            .stdout()
+            .contains("action=portable_import\toutcome=succeeded"));
+        assert!(!audit.stdout().contains("restore-source.vpm"));
+        assert!(!audit.stdout().contains("portable artifact passphrase"));
+
+        let source_list = TestHost::new(source_paths, [source_passphrase]);
+        let source_items = run(["item", "list"], &source_list);
+        assert_eq!(
+            source_items.exit_code(),
+            ExitCode::Success,
+            "{source_items:?}"
+        );
+        assert!(source_items.stdout().contains("Restored secure note"));
     }
 
     #[test]
