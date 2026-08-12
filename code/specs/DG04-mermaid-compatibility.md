@@ -111,9 +111,9 @@ aliases, standalone `State: description` labels, labeled transitions, document
 direction, and `[*]` start/end edge states. It lowers into the shared graph IR,
 graph layout, and backend-neutral
 PaintScene instructions, with a Metal-to-PNG fixture. Choice pseudostates accept
-both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. Transitions
-targeting a composite boundary remain an explicit gap, so the family is marked
-partial.
+both `<<choice>>` and `[[choice]]` and lower to graph-IR diamonds. The family
+remains partial until the pinned upstream corpus passes without unsupported
+forms or lossy semantics.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
@@ -144,6 +144,9 @@ and display labels through the same pipeline.
 `--` dividers preserve ordered concurrent-region membership in graph-group IR.
 Graph layout stacks direct region members into deterministic lanes and Paint
 lowering emits horizontal divider paths for every backend.
+Transitions entering or leaving a composite retain the group ID as their
+semantic endpoint. Graph layout attaches those edges to the resolved group
+boundary before existing Paint paths and arrowheads render them.
 
 ### Sequence Native Slice
 

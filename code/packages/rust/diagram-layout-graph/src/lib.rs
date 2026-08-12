@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -166,12 +166,18 @@ fn node_dimensions(
 /// declaration order.
 fn assign_ranks(diagram: &GraphDiagram) -> Vec<Vec<String>> {
     let mut g = Graph::new_allow_self_loops();
+    let node_ids: std::collections::HashSet<_> =
+        diagram.nodes.iter().map(|node| node.id.as_str()).collect();
     for node in &diagram.nodes {
         g.add_node(&node.id);
     }
     for edge in &diagram.edges {
         // Ignore self-loops for rank assignment (they don't change depth).
-        if edge.from != edge.to && edge.kind != diagram_ir::EdgeKind::NoteAssociation {
+        if edge.from != edge.to
+            && edge.kind != diagram_ir::EdgeKind::NoteAssociation
+            && node_ids.contains(edge.from.as_str())
+            && node_ids.contains(edge.to.as_str())
+        {
             let _ = g.add_edge(&edge.from, &edge.to);
         }
     }
@@ -652,8 +658,24 @@ pub fn layout_graph_diagram(
         .fold(0.0, f64::max)
         + opts.margin;
 
-    let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> =
-        nodes.iter().map(|n| (n.id.clone(), n)).collect();
+    let group_anchors: Vec<_> = groups
+        .iter()
+        .map(|group| LayoutedGraphNode {
+            id: group.id.clone(),
+            label: group.label.clone(),
+            shape: DiagramShape::RoundedRect,
+            x: group.x,
+            y: group.y,
+            width: group.width,
+            height: group.height,
+            style: group.style.clone(),
+        })
+        .collect();
+    let nodes_by_id: std::collections::HashMap<String, &LayoutedGraphNode> = nodes
+        .iter()
+        .chain(group_anchors.iter())
+        .map(|node| (node.id.clone(), node))
+        .collect();
 
     let edges = diagram
         .edges
@@ -725,7 +747,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.8.0");
+        assert_eq!(VERSION, "0.9.0");
     }
 
     #[test]
@@ -951,5 +973,25 @@ mod tests {
 
         assert!(a.y + a.height < group.divider_y[0]);
         assert!(group.divider_y[0] < b.y);
+    }
+
+    #[test]
+    fn transitions_attach_to_composite_group_boundaries() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.edges[0].to = "Active".into();
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Active".into(),
+            label: DiagramLabel::new("Active"),
+            parent_id: None,
+            node_ids: vec!["B".into()],
+            regions: vec![vec!["B".into()]],
+            style: None,
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let group = &l.groups[0];
+        let edge = &l.edges[0];
+
+        assert_eq!(edge.to_node_id, "Active");
+        assert_eq!(edge.points.last().unwrap().x, group.x);
     }
 }
