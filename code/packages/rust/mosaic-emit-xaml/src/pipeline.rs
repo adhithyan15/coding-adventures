@@ -2697,6 +2697,43 @@ fn emit_text(
         .map(|(setter, value)| format!(" {setter}=\"{value}\""))
         .collect::<String>();
 
+    let mut accessibility_attrs = String::new();
+    match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            write!(
+                accessibility_attrs,
+                " AutomationProperties.Name=\"{}\"",
+                escape_xaml_attr(label)
+            )
+            .unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let property = ctx.slot_property_name(slot);
+            if !is_safe_identifier(&property) {
+                return Err(PipelineEmitError::UnsafeSlotName(property));
+            }
+            write!(
+                accessibility_attrs,
+                " AutomationProperties.Name=\"{{x:Bind {}}}\"",
+                ctx.slot_xbind_path(slot)
+            )
+            .unwrap();
+        }
+        _ => {}
+    }
+    match find_prop_keyword(node, "a11y-role") {
+        Some("heading") => accessibility_attrs
+            .push_str(" AutomationProperties.HeadingLevel=\"Level2\""),
+        Some("none") => accessibility_attrs
+            .push_str(" AutomationProperties.AccessibilityView=\"Raw\""),
+        _ => {}
+    }
+    if matches!(find_prop_keyword(node, "a11y-hidden"), Some("true"))
+        && !matches!(find_prop_keyword(node, "a11y-role"), Some("none"))
+    {
+        accessibility_attrs.push_str(" AutomationProperties.AccessibilityView=\"Raw\"");
+    }
+
     let text_attr = match find_prop_value(node, "content") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let property = ctx.slot_property_name(slot);
@@ -2737,10 +2774,12 @@ fn emit_text(
     };
 
     if container_style.is_empty() {
-        Ok(format!("{pad}<TextBlock{text_attr}{text_style}/>\n"))
+        Ok(format!(
+            "{pad}<TextBlock{text_attr}{accessibility_attrs}{text_style}/>\n"
+        ))
     } else {
         Ok(format!(
-            "{pad}<Border{container_style}>\n{inner_pad}<TextBlock{text_attr}{text_style}/>\n{pad}</Border>\n"
+            "{pad}<Border{container_style}>\n{inner_pad}<TextBlock{text_attr}{accessibility_attrs}{text_style}/>\n{pad}</Border>\n"
         ))
     }
 }
@@ -9125,6 +9164,60 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    #[test]
+    fn text_accessibility_metadata_lowers_to_automation_properties() {
+        let c = component(
+            "Title",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Title",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::String("Visible title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::SlotRef("spoken-title".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-role".to_string(),
+                        value: LayoutPropValue::Keyword("heading".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        );
+        let out = compile(&c, &l, &empty_style("Title")).xaml;
+        assert!(out.contains("AutomationProperties.Name=\"{x:Bind SpokenTitle}\""));
+        assert!(out.contains("AutomationProperties.HeadingLevel=\"Level2\""));
+
+        let hidden = layout_with_root(
+            "Hidden",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "a11y-role".to_string(),
+                    value: LayoutPropValue::Keyword("none".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let hidden_out = compile(
+            &component("Hidden", vec![], vec![]),
+            &hidden,
+            &empty_style("Hidden"),
+        )
+        .xaml;
+        assert!(hidden_out.contains("AutomationProperties.AccessibilityView=\"Raw\""));
     }
 
     #[test]

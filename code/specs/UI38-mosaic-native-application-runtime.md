@@ -349,6 +349,10 @@ unblocks multiple downstream targets; never count source generation as completio
       state and radio-group behavior, including package-expanded paths.
     - [x] Report known XAML/SwiftUI dialog lifecycle and external-link event
       losses, including XAML dialog state that still requires app code-behind.
+    - [x] Lower portable `Text` accessible names, heading roles, and hidden
+      semantics across SwiftUI, Compose, Flutter, Qt/QML, and XAML; report
+      unsupported text roles and dynamic hidden/name forms as stable
+      property-level degradations.
     - [ ] Inventory the remaining ignored layout properties, MSL styles,
       effects, accessibility metadata, and dialog/link target semantics.
     - [ ] Define a serializable native-view reference contract for `node` and

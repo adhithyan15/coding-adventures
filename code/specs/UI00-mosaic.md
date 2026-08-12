@@ -630,6 +630,14 @@ a curated, unambiguous subset designed to have deterministic behavior across all
 | `a11y-role` | enum | Semantic role: `button`, `heading`, `image`, `list`, `listitem`, `link`, `none` |
 | `a11y-hidden` | bool | Hide from accessibility tree |
 
+For the `Text` primitive, every native backend must support the portable v1
+subset: a string- or slot-backed `a11y-label`, `a11y-role: heading`,
+`a11y-role: none`, and a static boolean `a11y-hidden`. SwiftUI maps these to
+accessibility modifiers, Compose and Flutter to semantic wrappers, Qt/QML to
+the `Accessible` attached type, and XAML to UI Automation properties. Other
+roles or dynamic hidden values are not silently discarded: the
+`native-complete` profile reports them as explicit degradations.
+
 ### Platform Mapping Examples
 
 Each backend maps abstract properties to native equivalents:

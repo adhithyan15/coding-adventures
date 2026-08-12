@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - portable Text accessibility
+
+`Text` now lowers literal or slot-backed accessible names, heading traits, and
+intentional accessibility hiding to native SwiftUI modifiers. Mosaic-authored
+headings no longer lose their semantic level when emitted outside the web
+backend.
+
 ### Added - native accessible dynamic tables
 
 Canonical UI31/Grid `HostTable` trees now lower to SwiftUI's native `Table`
