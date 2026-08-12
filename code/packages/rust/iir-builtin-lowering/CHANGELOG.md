@@ -1,5 +1,38 @@
 # Changelog — iir-builtin-lowering
 
+## 0.33.0 - 2026-08-12 - `dyn_car`/`dyn_cons`/`dyn_cdr` retype fix (boxed-`car` arithmetic miscompiled)
+
+Fixes a second, closely-related confirmed bug: `(+ (car (cons 41 0)) 1)` returned
+`329` instead of `42` on native x86-64 AND LLVM Windows builds — the `+` ran
+directly on the *boxed* (tagged, `<<3`'d) `car` result instead of unboxing it
+first.
+
+Root cause: `heap.rs::lower_heap_function_runtime` renames `car`/`cons`/`cdr`/
+`pair?`/`equal?`/`null?` to their `dyn_*` runtime-call form but never updated
+the instruction's `type_hint` — it stayed at whatever bare `"any"` the
+frontend originally gave it. That bare `"any"` then reached `dynamic_arith.rs`'s
+`is_boxed` (fixed in 0.32.0 to only treat bare `"any"` as boxed for lisp
+modules, correctly closing the *parameter*-comparison bug that release fixed)
+— so a genuinely-boxed `dyn_car` result was now *also* misclassified as
+unboxed for Twig, the exact same symptom via a different producer. `ref<any>`
+(what a `dyn_car` result should have been typed) is treated as unconditionally
+boxed regardless of language, so this was never affected by the 0.32.0 gate
+itself — it's a gap that predates it, just newly visible once the parameter
+case stopped masking it as "boxed-by-default."
+
+Fix: `lower_heap_function_runtime` now stamps every `RUNTIME_RENAMES` result
+`"ref<any>"` — matching `dynamic_arith.rs`'s own doc comment, which already
+described `ref<any>` as "a heap-typed dynamic value ... never a placeholder,"
+it just was never actually stamped that way. New regression test
+`runtime_renames_retype_result_to_ref_any`; existing
+`runtime_car_and_cdr_are_renamed` was previously silent on `type_hint`.
+
+Verified against three independent oracles per the fix (not just a hardcoded
+literal): native Windows x86-64 AOT, LLVM/clang, and `vm-core` (the shared
+cross-language interpreter, structurally immune to this bug since it never
+runs this lowering pass at all) all now agree `(+ (car (cons 41 0)) 1)` = 42
+— see `lang-aot` 0.222.0's `e6d2b_dynamic_arith.rs`.
+
 ## 0.32.0 - 2026-08-12 - `lower_dynamic_arith` language-gate fix (bare-`any` Twig parameters miscompiled)
 
 Fixes a confirmed correctness bug: any Twig comparison or arithmetic op with a

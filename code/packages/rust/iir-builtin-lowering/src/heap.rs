@@ -494,10 +494,32 @@ const RUNTIME_RENAMES: &[(&str, &str)] = &[
     ("null?", "dyn_null_p"),
 ];
 
+/// The frontend type hint every `RUNTIME_RENAMES` result is retyped to.
+/// Matches `dynamic_arith.rs`'s own definition (kept as a separate literal,
+/// not a shared import, since the two crates' modules don't otherwise
+/// depend on each other's private constants — `dynamic_arith.rs`'s doc
+/// comment already documents `"ref<any>"` as the one true spelling).
+const RUNTIME_RESULT_HINT: &str = "ref<any>";
+
 /// Rename the cons/car/cdr `call_builtin`s in `fn_` to their `dyn_*`
 /// runtime-call form (see the module note above).  In-place, allocation-free
 /// (a rename never expands an instruction), and a no-op for any
 /// `call_builtin` not in [`RUNTIME_RENAMES`].
+///
+/// Also retypes the instruction's result to `"ref<any>"` (was left at
+/// whatever bare hint the frontend gave it, almost always `"any"`). Every
+/// renamed builtin produces a genuine tagged dynamic value — the result of
+/// `dyn_car`/`dyn_cons`/`dyn_cdr`/`dyn_pair_p`/`dyn_equal`/`dyn_null_p` is
+/// never a placeholder, in any source language. Without this, a downstream
+/// pass that only recognises boxed-ness by type hint (`dynamic_arith.rs`'s
+/// `is_boxed`) sees the frontend's bare `"any"` and — after #11026 gated
+/// bare-`any` boxed-ness on `is_lisp_language` to stop misreading a Twig
+/// *parameter* as boxed — now also misses a genuinely-boxed `dyn_car` result
+/// for Twig specifically, silently running raw arithmetic on the tagged word
+/// (`(+ (car (cons 41 0)) 1)` returned `329` = `(41<<3)+1` instead of `42`).
+/// `dynamic_arith.rs`'s own `is_boxed` already treats `ref<any>` as
+/// unconditionally boxed regardless of language, so this retype alone closes
+/// the gap without touching `is_boxed` itself.
 pub fn lower_heap_function_runtime(fn_: &mut IIRFunction) {
     for instr in &mut fn_.instructions {
         if instr.op != "call_builtin" {
@@ -509,6 +531,7 @@ pub fn lower_heap_function_runtime(fn_: &mut IIRFunction) {
         if let Some(Operand::Var(name)) = instr.srcs.first_mut() {
             if let Some((_, runtime)) = RUNTIME_RENAMES.iter().find(|(orig, _)| orig == name) {
                 *name = (*runtime).to_string();
+                instr.type_hint = RUNTIME_RESULT_HINT.to_string();
             }
         }
     }
@@ -933,6 +956,32 @@ mod tests {
         // car/cdr stay 1-arg, dest preserved.
         assert_eq!(m.functions[0].instructions[0].srcs[1], Operand::Var("%pair".into()));
         assert_eq!(m.functions[0].instructions[0].dest.as_deref(), Some("%head"));
+    }
+
+    /// Regression: every `RUNTIME_RENAMES` result is a genuine tagged dynamic
+    /// value and must be retyped `ref<any>`, not left at the frontend's bare
+    /// `any` — `dynamic_arith.rs::is_boxed` only recognises `ref<any>`
+    /// unconditionally; a bare `any` result is (correctly, since #11026)
+    /// treated as unboxed for Twig, which silently corrupted arithmetic over
+    /// a `car`/`cdr` result before this fix (`(+ (car (cons 41 0)) 1)` = 329
+    /// instead of 42).
+    #[test]
+    fn runtime_renames_retype_result_to_ref_any() {
+        let car = IIRInstr::new(
+            "call_builtin",
+            Some("%head".into()),
+            vec![Operand::Var("car".into()), Operand::Var("%pair".into())],
+            "any",
+        );
+        let mut m = make_module(vec![cons_call("%h", "%t"), car]);
+        lower_heap_builtins_runtime(&mut m);
+        for instr in &m.functions[0].instructions {
+            assert_eq!(
+                instr.type_hint, "ref<any>",
+                "{} result must be retyped ref<any>, not left at the frontend's bare any",
+                builtin_name(instr)
+            );
+        }
     }
 
     #[test]

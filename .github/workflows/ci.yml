@@ -1526,7 +1526,7 @@ jobs:
 
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
-        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || (needs.detect.outputs.needs_swift == 'true' && false))
+        if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true')
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi

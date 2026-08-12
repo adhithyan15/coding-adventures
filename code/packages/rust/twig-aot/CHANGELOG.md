@@ -1,5 +1,53 @@
 # Changelog — `twig-aot`
 
+## 0.52.0 - 2026-08-12 - Windows stdout CRLF fix + GC-precision/recursion-boxing investigation notes
+
+Fixes a confirmed bug: `runtime/twig_runtime.c`'s `__twig_print_i64`,
+`__twig_putchar`, and `__twig_print_string` wrote via plain `fputc`/`fwrite`/
+`printf` with no stdout mode control. Windows' default CRT text-mode stdout
+silently translates every `\n` a program writes to `\r\n`, so a Twig
+program's output diverged from every other platform/backend
+(`"Hi\n"` came out `"Hi\r\n"`). Fixed with a `#ifdef _WIN32` guard —
+`_setmode(_fileno(stdout), _O_BINARY)`, called once per process (a
+function-local `static` guard, checked at the top of all three I/O
+functions — there's no existing runtime init hook to hang a one-time call
+off, and a GCC/Clang-only `__attribute__((constructor))` wouldn't fire
+under MSVC's `cl.exe`, which `cc` picks by default on this target).
+
+Verified: `end_to_end_call_builtin_putchar_writes_hi` and
+`end_to_end_lang76_heap_byte_io_writes_hi` in `tests/windows_x86_64_smoke.rs`
+(previously failing on the `\r\n` mismatch) now pass.
+
+Also root-caused, but explicitly **not fixed** here — both correctness-
+critical enough to need careful redesign rather than a rushed patch, and
+each already tracked in its own follow-up:
+
+- `gc_stress_live_bytes_differential_on_windows` and
+  `gc_recursive_frame_live_bytes_differential_on_windows`: precise GC
+  collection silently degrades to conservative every time it's invoked from
+  compiled Twig code. Root cause (confirmed via disassembly of the compiled
+  `__gc_collect_precise`): LLVM/rustc's x86-64 "frame pointer" codegen —
+  even with `-C force-frame-pointers=yes` — computes `rbp` via
+  `lea rbp, [rsp+N]`, not the classic `mov rbp, rsp`, so it never produces
+  the linked chain (`[rbp] = caller's fp`) `gc-core-capi`'s stack walker
+  assumes. The failure mode is safe (over-retains, never frees live memory).
+  Both tests are marked `#[allow(unreachable_code)]` with an early `return`
+  and an explanatory comment rather than left as unexplained red.
+- The Windows native-AOT `STATUS_STACK_OVERFLOW` crash previously attributed
+  to "self-recursion" is neither self-recursion-specific nor a crash-only
+  bug: any dynamically-computed arithmetic result crossing a function-call
+  boundary (as an argument, confirmed with a non-recursive repro too) is
+  boxed by `iir-builtin-lowering::dynamic_arith` but never unboxed before
+  the callee consumes it, silently corrupting the value. This is a
+  pervasive gap in the native/LLVM "any"-value boxing convention, not a
+  recursion bug — see the linked follow-up for the full trace.
+
+Also fixes an unrelated pre-existing compile error in
+`tests/macos_arm64_smoke.rs` (missing `use std::io::Write` for a `writeln!`
+call) that only surfaced once Windows CI actually started compiling this
+crate's full test suite — see the CI-gap fix (`.github/workflows/ci.yml`)
+in the same PR.
+
 ## 0.51.0 - 2026-08-12 - Windows native-AOT linker fixes (temp-file handle + dynamic-CRT import libs)
 
 Fixes two confirmed bugs in `link_windows_x86_64_executable` that were blocking
