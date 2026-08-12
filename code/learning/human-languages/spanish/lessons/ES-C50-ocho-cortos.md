@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C50-ocho-cortos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1458
-chapter: 123
+sequence: 1488
+chapter: 126
 type: grammar
 headword: di · haz · ve · pon · ten · sal · sé · ven
 gloss: the eight irregular commands — and every one of them is a single syllable, for a reason

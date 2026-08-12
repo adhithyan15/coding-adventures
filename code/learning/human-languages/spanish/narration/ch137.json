@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 137,
-  "title": "Noon and Midnight",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:578ccfe9f2822a46",
+  "title": "Water, Wine, and Bread",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ac74b0fb1678efc4",
   "lessons": [
     {
-      "id": "ES-C28-mediodia-medianoche",
-      "sequence": 1720,
-      "title": "mediodía, medianoche — noon and midnight, spelled out in full",
-      "headword": "mediodía, medianoche",
-      "romanization": "mediodía, medianoche",
-      "gloss": "noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit",
+      "id": "ES-C26-agua",
+      "sequence": 1710,
+      "title": "el agua — water, and an article that is not what it looks like",
+      "headword": "el agua",
+      "romanization": "el agua",
+      "gloss": "water — a word that barely changed from Latin, and takes el without ever stopping being feminine",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45af243f114e7873",
+      "sourceHash": "fnv1a64:4bafb82c7b6c4df7",
       "notice": null,
       "blocks": [
         {
@@ -35,44 +35,181 @@
             },
             {
               "kind": "speech",
-              "text": "Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does."
+              "text": "One of the least changed words in Spanish, carrying one of its most misunderstood rules. The \"masculine\" article on this feminine noun is not a mistake and not an exception to gender."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The two words, taken apart",
+          "title": "The word, taken apart: agua",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "agua (\"water\") from Latin aqua — almost unchanged in two thousand years. Compare French, where the very same word was worn all the way down to a bare \"eau,\" just the sound \"oh.\" Same starting point, same span of time, wildly different amounts of erosion: how fast a language wears its words down is not fixed."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the whole Latin word too, but as a learned borrowing rather than an inherited everyday one: aquatic, aquarium, aqueduct, aqualung."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: el agua's article and gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice: el agua, not la agua — yet agua is genuinely feminine. You can prove it: el agua fría, \"the cold water,\" keeps the feminine adjective ending, and the plural is las aguas, never los aguas."
+            },
+            {
+              "kind": "speech",
+              "text": "The rule is phonological, not grammatical. Spanish swaps la for el directly before a singular feminine noun beginning with a stressed a-sound, to avoid running two identical vowels together (la agua). It is the same instinct that makes English pick \"an apple\" over \"a apple.\""
+            },
             {
               "kind": "table",
               "headers": [
-                "Spanish",
-                "from Latin",
-                "literally"
+                "",
+                "singular",
+                "plural"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
-                "Spanish: mediodía. from Latin: medius diēs. literally: \"mid-day\" (medio \"middle\" + día \"day\").",
-                "Spanish: medianoche. from Latin: media nox. literally: \"mid-night\" (media \"middle\" + noche \"night\")."
+                "the water. singular: el agua. plural: las aguas.",
+                "the eagle. singular: el águila. plural: las águilas.",
+                "the axe. singular: el hacha. plural: las hachas."
               ]
             },
             {
               "kind": "speech",
-              "text": "Both halves are fully alive, ordinary Spanish words on their own: medio/media (\"middle\" — cousin of English medium, mid, middle) and día/noche (\"day/night,\" words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for \"night\" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for \"day\" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept \"night\" transparent and lost \"day,\" while Spanish kept both."
+              "text": "Only the article changes. The noun's gender never moves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el agua\" — water, feminine, but takes el",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el agua\" — water, feminine, but takes *el*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the proof — \"el agua fría\" and \"las aguas\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the proof — \"el agua fría\" and \"las aguas\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — \"agua\" barely changed; French's \"eau\" wore all the way down]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:"
+              "text": "Is agua masculine or feminine? (Feminine — el replaces la only because agua begins with a stressed a.) How would you prove it? (El agua fría; las aguas.) How does Spanish's erosion of aqua compare with French's? (Much less — Spanish kept nearly the whole word; French wore it to \"eau.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-vino",
+      "sequence": 1720,
+      "title": "el vino — one word, three separate arrivals in English",
+      "headword": "el vino",
+      "romanization": "el vino",
+      "gloss": "wine — one Latin root that reached English by three separate roads, plus one English built at home",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc6f67b2872b9bca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Es mediodía. — \"It is noon.\" Es medianoche. — \"It is midnight.\""
+              "text": "The second drink is grammatically boring — plain masculine, plain el vino, no stressed-a trick. Its history makes up for that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: vino",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vino (\"wine\") from Latin vīnum — which held its shape well, as French's vin did too."
             },
             {
               "kind": "speech",
-              "text": "(Fun aside: English noon comes from Latin nōna hōra, \"the ninth hour\" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent \"mid-day\" instead.)"
+              "text": "English shares the very same root by more than one road, and the roads are worth separating, because they show three different ways a word can travel:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English word",
+                "how it got there"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "English word: wine. how it got there: vīnum borrowed directly into old Germanic, very early.",
+                "English word: vine, vinegar. how it got there: borrowed centuries later, secondhand via French (vin + aigre, \"sour wine\").",
+                "English word: vineyard. how it got there: not borrowed at all — English built it at home from the already-borrowed wine plus native yard."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So wine and vine are the same Latin word twice, arriving a thousand years apart by different routes, and vineyard is a homemade compound made out of the first arrival. One Latin noun; three English histories."
             }
           ]
         },
@@ -90,38 +227,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"mediodía\" (noon), \"medianoche\" (midnight)",
+              "instruction": "\"el agua, el vino\" — the two drinks",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"mediodía\" (noon), \"medianoche\" (midnight)]"
+              "source": "[YOU SAY: \"el agua, el vino\" — the two drinks]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "break them — \"medio + día\", \"media + noche\" — both halves still ordinary words",
+              "instruction": "\"vino\" then English \"wine, vine, vinegar\" — one root, three roads",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: break them — \"medio + día\", \"media + noche\" — both halves still ordinary words]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Es mediodía. Es medianoche.\" — they stand in for the hour",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es mediodía. Es medianoche.\" — they stand in for the hour]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)]"
+              "source": "[YOU SAY: \"vino\" then English \"wine, vine, vinegar\" — one root, three roads]"
             }
           ]
         },
@@ -138,7 +257,137 @@
             },
             {
               "kind": "speech",
-              "text": "What do mediodía and medianoche literally mean, and from what Latin? (\"Mid-day\" from medius diēs; \"mid-night\" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media \"middle,\" día/noche \"day/night.\") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for \"day\" is actually jour.) How do you say \"it is noon\"? (Es mediodía.)"
+              "text": "What Latin word gives vino? (Vīnum.) Name three English cousins and say how each arrived. (Wine — direct, early, into Germanic; vine/vinegar — later, via French; vineyard — built at home from wine plus yard.) And why is it el agua but las aguas? (The el is a sound rule for a stressed a, singular only.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C26-pan",
+      "sequence": 1730,
+      "title": "el pan — bread, and the friend who shares it",
+      "headword": "el pan",
+      "romanization": "el pan",
+      "gloss": "bread — and the compañero who shares it with you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d545d3579916a0a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: pan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan (\"bread\") from Latin pānis. Masculine: el pan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: bread and friendship",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Latin root pān- (\"bread\") gives Spanish its own word for a close friend:"
+            },
+            {
+              "kind": "speech",
+              "text": "compañero / compañera (\"companion, friend, partner\") from com- (\"with\")."
+            },
+            {
+              "kind": "speech",
+              "text": "pānis — literally \"one you share bread with.\" Spanish built this word from the very same recipe as English companion and company (which come from the identical Latin pieces) — but where English only kept the friendship sense, Spanish still visibly uses the same root for the actual bread (pan) too."
+            },
+            {
+              "kind": "speech",
+              "text": "panadería (\"bakery\") and panadero (\"baker\") — both transparently built on pan."
+            },
+            {
+              "kind": "speech",
+              "text": "So pan and compañero are the same word-family doing double duty in Spanish: name the food, and name the friend you'd share it with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el pan\" — bread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el pan\" — bread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"compañero\" — literally, one you share bread with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"compañero\" — literally, one you share bread with]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"panadería, panadero\" — bakery, baker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"panadería, panadero\" — bakery, baker]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"bread\" with its article. (El pan.) What does compañero literally mean, and what's it built from? (\"One you share bread with\" — com- + pānis.) Does English keep this same double meaning? (No — English's companion only kept the friendship sense; Spanish still uses the same root for the actual bread, pan, too.)"
             }
           ]
         }

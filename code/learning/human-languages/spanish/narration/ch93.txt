@@ -1,43 +1,36 @@
-Spanish, chapter 93: Synthesis --- Two at a Time.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 93: Se Lo --- The Pair That Does Not Exist.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — two at a time.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+se lo — the pair that does not exist.
 
 Warm-up.
 [pause 2 seconds]
-"I tell it to him," in three words. (Se lo digo.)
+Person first, then thing. So "I tell it to him" should be le plus lo plus digo. Say that out loud: le lo digo.
 
-The exchange.
-— ¿Tienes el libro? — Sí. ¿Te lo digo? — Sí, y se lo dices a Ana. — Y la comida — se la hago hoy.
-Look at the last three lines. After the first sentence names the book, not one noun does any work. Te lo, se lo, se la — six words that name nothing, and the conversation is perfectly clear to both speakers.
-That is what all of this has been for. Fifteen chapters of object pronouns exist so that a conversation can stop repeating itself, and this is the point where the machinery is complete enough to see it happen.
-
-Grammar Lens: two words carrying a whole sentence.
-Se la hago is three words and it means "I make the meal for her, today." Two of the three are pronouns; between them they carry a person and a thing, neither of which is named anywhere in the sentence.
-English cannot compress like this. I'll make it for her needs five words and still spells out for. Spanish puts both jobs in front of the verb, in a fixed order, and gets on with it.
-The cost is the one you already know, doubled. Two pronouns are two promises that both things are still in the room. When you lose track of one of them, the sentence does not become wrong — it becomes about somebody else, and nobody will notice until it matters.
-So the practice that pays here is not conjugation. It is keeping a conversation's furniture in mind while you talk.
+Grammar Lens: nobody says that.
+Your mouth probably objected before your grammar did. Le lo is two nearly identical syllables in a row, and Spanish will not say it.
+In front of lo, la, los or las, the pronouns le and les become se.
+Le lo digo. becomes Se lo digo. — I tell it to him. Les la hago. becomes Se la hago. — I make it for them.
+Everything else about the sentence is unchanged. The order is still person then thing. The slot is still in front of the verb. Only the first word's shape changes, and it changes for one reason: what follows it.
+Note what se does not tell you. Le already refused to mark gender, and se goes further — it does not mark number either:
+Se lo digo — to him. To her. To you. To them. To you all.
+Five readings, one word. Context does all the work, and if you need to be precise you add it in words rather than in the pronoun.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four-turn exchange straight through]
+[your turn — say: "le lo digo" once, badly, and then "se lo digo" — feel why]
 [pause 8 seconds for the answer]
-[your turn — say: "te lo digo, se lo dices, se la hago" until the pairs feel like single words]
+[your turn — say: "Se lo digo" and "Se la hago"]
 [pause 8 seconds for the answer]
-[repeat that twice]
 [question — say your answer, then pause 8 seconds]
-Say shall I tell it to you.
+Say I tell it to him.
 [question — say your answer, then pause 10 seconds]
-Say I make it for her, about la comida.
-[question — say your answer, then pause 10 seconds]
-In se la hago, how many of the three words name anything?
+In front of which four words do le and les become se?
 [question — say your answer, then pause 12 seconds]
-You lose track of which thing se la points at. Does the sentence become wrong?
+How many different people can se lo digo be about?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I make it for her"? (Se la hago.) How many nouns are in that sentence? (None.) And what does each pronoun promise? (That its thing is still in the room.) Next: the past tense.
+"I tell it to him"? (Se lo digo.) What happened to le? (It became se in front of lo.) Next: why it became se — and it is not the reason almost everyone assumes.

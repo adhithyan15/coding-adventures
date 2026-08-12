@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-hacer-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1444
-chapter: 119
+sequence: 1474
+chapter: 122
 type: grammar
 headword: haga · hagas · haga
 gloss: the singular present subjunctive of hacer

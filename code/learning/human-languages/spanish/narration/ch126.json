@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 126,
-  "title": "Review --- Four Boxes",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:874b809628577832",
+  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:dae6fffb8c80d8f8",
   "lessons": [
     {
-      "id": "ES-C50-repaso-mandatos",
-      "sequence": 1461,
-      "title": "Review — four boxes",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four boxes, one of which is free and three of which you already had",
+      "id": "ES-C50-ocho-cortos",
+      "sequence": 1488,
+      "title": "di, haz, ve, pon, ten, sal, sé, ven",
+      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
+      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
+      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ceb29c8b9547edd2",
-      "notice": null,
+      "sourceHash": "fnv1a64:6fecac52d0f817b4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,68 +42,51 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Before the grid: which single box does not use the subjunctive?"
+              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: eight, all one syllable",
           "segments": [
             {
               "kind": "table",
               "headers": [
-                "",
-                "tú",
-                "usted"
+                "verb",
+                "command",
+                ""
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 8,
               "utterances": [
-                "do it. tú: habla, come. usted: hable, coma.",
-                "don't. tú: no hables, no comas. usted: no hable, no coma."
+                "verb: decir. command: di, say.",
+                "verb: hacer. command: haz, do, make.",
+                "verb: ir. command: ve, go.",
+                "verb: poner. command: pon, put.",
+                "verb: tener. command: ten, have, hold.",
+                "verb: salir. command: sal, leave.",
+                "verb: ser. command: sé, be.",
+                "verb: venir. command: ven, come."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three of the four boxes are the subjunctive, which you built chapters ago for wanting and hoping. The fourth is the ordinary he/she present, which you built long before that."
+              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
             },
             {
               "kind": "speech",
-              "text": "Now count what this rung actually cost you. A whole grammatical mood — the one every phrasebook opens with — and the only genuinely new material in it was eight one-syllable words: di, haz, ve, pon, ten, sal, sé, ven."
+              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
             },
             {
               "kind": "speech",
-              "text": "Everything else was a form you already owned, doing one more job."
+              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: why the odd box is the odd one",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "It is worth asking why the informal positive command is the exception."
-            },
-            {
-              "kind": "speech",
-              "text": "Because it is the one that is said most. Come, ven, habla, ten — said to children, friends, dogs, and across kitchens, thousands of times a day for two thousand years. That is the box under the most pressure, and heavy use keeps old short forms alive rather than letting them be replaced by tidier ones."
-            },
-            {
-              "kind": "speech",
-              "text": "The same pressure explains the eight irregulars, which live in exactly that box and nowhere else. There are no irregular negative commands to learn, because negatives are said less and had time to be regularised."
-            },
-            {
-              "kind": "speech",
-              "text": "The messiest corner of this grid is the most-used corner. That has been true of every irregularity in this book."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -109,20 +99,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four boxes for hablar, then for comer",
+              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four boxes for *hablar*, then for *comer*]"
+              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the eight irregulars once more",
+              "instruction": "each one as if calling across a room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the eight irregulars once more]"
+              "source": "[YOU SAY: each one as if calling across a room]"
             },
             {
               "kind": "repeat",
@@ -130,68 +120,69 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-repaso-mandatos-grid",
-              "prompt": "Give all four command forms of comer: tu do it, tu don't, usted do it, usted don't.",
-              "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "come, no comas, coma, no coma",
-                "come no comas coma no coma"
-              ],
-              "feedback": {
-                "correct": "One ordinary form and three subjunctives.",
-                "incorrect": "come, no comas, coma, no coma."
-              }
+              "kind": "speech",
+              "text": "Until the list is a rhythm rather than eight facts."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-cost",
-              "prompt": "What was the only genuinely new material in this whole rung?",
+              "id": "ES-C50-ocho-cortos-list",
+              "prompt": "Give the eight irregular tu commands.",
               "assesses": [
                 "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 14,
               "acceptedResponses": [
-                "the eight irregular tu commands",
-                "eight one-syllable words",
-                "di haz ve pon ten sal se ven"
+                "di, haz, ve, pon, ten, sal, se, ven",
+                "di haz ve pon ten sal sé ven"
               ],
               "feedback": {
-                "correct": "Everything else was a form you already had.",
-                "incorrect": "The eight one-syllable irregulars. Every other box reused a form you held."
+                "correct": "Eight, and every one a single syllable.",
+                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-odd",
-              "prompt": "Why is the informal positive command the one box that keeps old irregular forms?",
+              "id": "ES-C50-ocho-cortos-come",
+              "prompt": "Tell somebody to come.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE"
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+                "ES-LEX-VENIR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ven",
+                "¡ven!"
+              ],
+              "feedback": {
+                "correct": "Ven.",
+                "incorrect": "Ven — from venir."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-why",
+              "prompt": "Why are these eight so much shorter than every other verb form?",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "it is said the most",
-                "because it is the most used",
-                "heavy use keeps old forms alive"
+                "commands are shouted and hurried, so they wore down most",
+                "because they are the most used and most shouted",
+                "frequency and hurry"
               ],
               "feedback": {
-                "correct": "The messiest corner is always the most-used corner.",
-                "incorrect": "It is said most often, and heavy use keeps short old forms alive."
+                "correct": "What the most-shouted verbs look like after two thousand years.",
+                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -203,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many of the four boxes use the subjunctive? (Three.) What did this rung genuinely cost? (Eight one-syllable words.) Next: what a command sounds like to the person receiving it."
+              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
             }
           ]
         }

@@ -1,98 +1,99 @@
-Spanish, chapter 118: The Subjunctive, Regular.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 118: One Stem, Two Tenses.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
-hable, hables, hable — the singular -ar row.
-
-Warm-up.
-[pause 2 seconds]
-You already used hables for one friend. Today add only the other two singular slots:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: hable.
-person: tú. present subjunctive: hables.
-person: él / ella / usted. present subjunctive: hable.
-Plural forms wait. Say the small row: hable, hables, hable.
-
-Grammar Lens: the yo stem, then a vowel swap.
-Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.
-
-The name, taken apart.
-Spanish subjuntivo descends from Latin subiūnctīvus, “subjoined,” from sub- “under” plus iungere “join.” English join, junction, and conjunction belong to the same word family; yoke is a more distant cousin. The name helps you picture the wanted clause joined under quiero que. It is history, not a complete usage rule.
-
-Guided Practice.
-[pause 1 second]
-Build each answer only from the learned singular row.
-[question — say your answer, then pause 9 seconds]
-Give the learned singular present-subjunctive forms of hablar: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which present form gives the stem for regular hable: hablo or habla?
-[question — say your answer, then pause 7 seconds]
-What joining idea sits inside the Latin source of subjuntivo?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three forms. (Hable, hables, hable.) Which present form supplies the stem? (Hablo.) What did the family vowel do? (a becomes e.) What does the name remember? (A clause subjoined, or joined under another.)
-
-
-Lesson 2 of 3.
-coma, comas, coma — let -er cross to a.
+Lesson 1 of 2.
+haré, tendré, podré — three stems, two ending sets.
 
 Warm-up.
 [pause 2 seconds]
-Start from como, remove -o, and keep com-. A regular -er verb crosses to the a family:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: coma.
-person: tú. present subjunctive: comas.
-person: él / ella / usted. present subjunctive: coma.
-Say only the singular row: coma, comas, coma.
+Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional.
 
-Grammar Lens: meaning before machinery.
-Comes can assert “you eat.” Quiero que comas presents your eating as what I want. The e becomes a contrast helps you hear the two meanings. It does not mean that every a form is subjunctive; use the learned frame as a whole.
+Grammar Lens: hacer becomes har-.
+[a table of 3 rows, read aloud]
+person: yo. future: haré. conditional: haría.
+person: tú. future: harás. conditional: harías.
+person: él / ella / usted. future: hará. conditional: haría.
+Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”
+
+Grammar Lens: tener becomes tendr-.
+[a table of 3 rows, read aloud]
+person: yo. future: tendré. conditional: tendría.
+person: tú. future: tendrás. conditional: tendrías.
+person: él / ella / usted. future: tendrá. conditional: tendría.
+The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb.
+
+Grammar Lens: poder becomes podr-.
+[a table of 3 rows, read aloud]
+person: yo. future: podré. conditional: podría.
+person: tú. future: podrás. conditional: podrías.
+person: él / ella / usted. future: podrá. conditional: podría.
+Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”
+These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned.
 
 Guided Practice.
 [pause 1 second]
-Keep comer inside the learned singular frame.
+[your turn — say: “haré, haría”]
+[pause 8 seconds for the answer]
+[your turn — say: “tendré, tendría”]
+[pause 8 seconds for the answer]
+[your turn — say: “podré, podría”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of comer: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which form belongs after quiero que for one friend: comes or comas?
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
 [question — say your answer, then pause 8 seconds]
-Say 'I want you to eat' to one friend.
+Give the future and conditional yo forms of tener, in that order.
+[question — say your answer, then pause 10 seconds]
+Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Coma, comas, coma.) Which form asserts “you eat”? (Comes.) Which belongs after quiero que? (Comas.) Next, test whether regular -ir behaves differently.
+Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter.
 
 
-Lesson 3 of 3.
-viva, vivas, viva — -ir joins -er.
+Lesson 2 of 2.
+Practice — one infinitive frame, two futures of thought.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Start from vivo, remove -o, then add the same a endings you just used with comer:
-[a table of 3 rows, read aloud]
-person: yo. present subjunctive: viva.
-person: tú. present subjunctive: vivas.
-person: él / ella / usted. present subjunctive: viva.
-Regular -er and -ir match in this singular row:
-comer: coma, comas, coma.
-vivir: viva, vivas, viva.
-Plural differences wait.
+This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”
 
-Grammar Lens: meaning in a known frame.
-Vives en Madrid asserts where one friend lives. Quiero que vivas en Madrid makes that living a wanted event. Nothing new is being smuggled into the sentence: en and Madrid have appeared in the earlier location frame.
+Grammar Lens: the regular frame.
+There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped.
+All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait.
+
+Grammar Lens: three learned stems.
+There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped.
+The stems change; the ending sets do not. Other irregular stems remain outside this chapter.
+
+The ending, taken apart.
+Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber.
 
 Guided Practice.
 [pause 1 second]
-Keep vivir inside the learned singular frame.
+[your turn — say: “hablaré, comeré, viviré”]
+[pause 8 seconds for the answer]
+[your turn — say: “hablaría, comería, viviría”]
+[pause 8 seconds for the answer]
+[your turn — say: “haré/haría, tendré/tendría, podré/podría”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive forms of vivir: yo, tú, then él/ella/usted.
+Give the future yo forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the conditional yo forms of hablar, comer, and vivir, in that order.
 [question — say your answer, then pause 7 seconds]
-Which two regular verb families share -a, -as, -a here?
+Say 'I will speak Spanish' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I would live in Madrid' in Spanish.
 [question — say your answer, then pause 9 seconds]
-Say 'I want you to live in Madrid' to one friend.
+Give the pair 'I will make coffee; I would make coffee' in Spanish.
+[question — say your answer, then pause 8 seconds]
+Give the learned stems for hacer, tener, and poder, in that order.
+[question — say your answer, then pause 7 seconds]
+Which Latin 'have' verb contributed material to both Romance constructions?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three forms. (Viva, vivas, viva.) Which regular family matches -ir here? (-er.) Which form fits one friend after quiero que? (Vivas.)
+Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary.

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 106,
-  "title": "Synthesis --- A Small Story",
+  "title": "Cuando --- Both Pasts in One Sentence",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a88bc482c3c9b3b7",
+  "sourceHash": "fnv1a64:a010c2a4e580a3a8",
   "lessons": [
     {
-      "id": "ES-C48-sintesis-una-historia",
-      "sequence": 1344,
-      "title": "Synthesis — a small story",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once",
+      "id": "ES-C48-cuando",
+      "sequence": 1371,
+      "title": "cuando — putting both pasts in one sentence",
+      "headword": "cuando",
+      "romanization": "cuando",
+      "gloss": "\"when\" — the word that puts a scene and an event in one sentence, so the two pasts can be seen doing different jobs",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f16d92879f453c0d",
+      "sourceHash": "fnv1a64:59e9f42f5624aece",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,85 @@
             },
             {
               "kind": "speech",
-              "text": "Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time."
+              "text": "One tense is the scenery and one is the event. So far you have only been able to use one at a time. This chapter's word lets them share a sentence."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four sentences. Watch the tenses take turns."
-            },
-            {
-              "kind": "speech",
-              "text": "Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana."
-            },
-            {
-              "kind": "speech",
-              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
-            },
-            {
-              "kind": "speech",
-              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
-            },
-            {
-              "kind": "speech",
-              "text": "The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them."
+              "text": "diphthong-ua — cua is one syllable, not two: KWAN-doh."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what you can now do",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Notice the third sentence. Tuve un libro is not \"I had a book\" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular."
+              "text": "cuando — when."
             },
             {
               "kind": "speech",
-              "text": "That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did."
+              "text": "From Latin quandō, and the qu- at the front is not decoration. It is the same question-marker sitting inside qué, quién and cómo — a family you have been collecting since your very first questions."
             },
             {
               "kind": "speech",
-              "text": "It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not."
+              "text": "Latin built its question words from one root and Spanish kept the whole set, so cuándo with an accent asks a question and cuando without one simply joins two things. Same word, and the accent is doing the same job it always does: marking the stressed, questioning one."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the scene and the thing that interrupts it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the two tenses can do their jobs side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudiaba cuando habló Ana. — I was studying when Ana spoke."
+            },
+            {
+              "kind": "speech",
+              "text": "Read what each tense is doing:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudiaba — imperfect. The scene. Already going, no edges, and it does not stop being true when something else happens."
+            },
+            {
+              "kind": "speech",
+              "text": "Habló — preterite. The event. One thing, with edges, dropped into that scene."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the shape most Spanish stories are built from, and it is worth hearing the pattern rather than memorising a rule: the imperfect sets the room, the preterite is what walks into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Turn it around and the sentence changes meaning, not just style:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudié cuando hablaba Ana. — I studied while Ana was talking."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the talking is the room and the studying is the event. Neither version is more correct. They are about different things."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,109 +126,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four sentences straight through",
+              "instruction": "\"Estudiaba cuando habló Ana\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four sentences straight through]"
+              "source": "[YOU SAY: \"Estudiaba cuando habló Ana\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "only the imperfects, then only the preterites, and hear the two layers",
+              "instruction": "the reversed version, and notice the story changed",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: only the imperfects, then only the preterites, and hear the two layers]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: the reversed version, and notice the story changed]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-sintesis-una-historia-layers",
-              "prompt": "In the story, which two verbs are the background?",
+              "id": "ES-C48-cuando-say",
+              "prompt": "Say I was studying when Ana spoke.",
               "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT"
+                "ES-LEX-CUANDO",
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-ESTUDIAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "estudiaba cuando hablo ana",
+                "estudiaba cuando habló ana"
+              ],
+              "feedback": {
+                "correct": "Scene in the imperfect, event in the preterite.",
+                "incorrect": "Estudiaba cuando hablo Ana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-cuando-which",
+              "prompt": "Which tense sets the room, and which one walks into it?",
+              "assesses": [
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the imperfect sets the room, the preterite walks in",
+                "imperfect is the scene, preterite is the event"
+              ],
+              "feedback": {
+                "correct": "That is the shape most Spanish stories are built from.",
+                "incorrect": "The imperfect is the scene; the preterite is the event."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-cuando-family",
+              "prompt": "Which other Spanish question words share the front of cuando?",
+              "assesses": [
+                "ES-ETYMON-QUANDO",
+                "ES-LEX-QUE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "estudiaba and tenia",
-                "estudiaba, tenía",
-                "the imperfects"
+                "que, quien, como",
+                "qué, quién, cómo",
+                "que and quien"
               ],
               "feedback": {
-                "correct": "What things were like.",
-                "incorrect": "Estudiaba and tenia — the imperfects."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-sintesis-una-historia-third",
-              "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
-              "assesses": [
-                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "tuve is the moment of getting it",
-                "because it is an event, not a state",
-                "getting has edges"
-              ],
-              "feedback": {
-                "correct": "Same verb, both layers, nothing irregular.",
-                "incorrect": "Tuve is the moment you got one — an event with edges."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-sintesis-una-historia-tell",
-              "prompt": "Say I was studying when I spoke with Ana.",
-              "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT",
-                "ES-LEX-CUANDO",
-                "ES-LEX-ESTUDIAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "estudiaba cuando hable con ana",
-                "estudiaba cuando hablé con ana"
-              ],
-              "feedback": {
-                "correct": "Background, then the thing that walked into it.",
-                "incorrect": "Estudiaba cuando hable con Ana."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-sintesis-una-historia-why",
-              "prompt": "Why did this take three chapters when neither tense was new?",
-              "assesses": [
-                "ES-GRAMMAR-ASPECT-NOT-TIME"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "because the choice is the difficulty, not the forms",
-                "english lets you leave the question unanswered",
-                "the forms were never the hard part"
-              ],
-              "feedback": {
-                "correct": "Spanish asks a question your first language let you skip.",
-                "incorrect": "The forms were never the difficulty. The choice is."
+                "correct": "One Latin root, a whole family kept.",
+                "incorrect": "Qué, quién and cómo — the same qu- question-marker."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -213,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)"
+              "text": "Which tense is the room? (The imperfect.) Which one walks into it? (The preterite.) Next: two verbs where the choice does not change the picture — it changes the meaning."
             }
           ]
         }

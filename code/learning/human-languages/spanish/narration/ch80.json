@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 80,
-  "title": "Los and Las --- Them, Derived",
+  "title": "Review --- Four Pronouns, One Slot",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6d5d191509b2262f",
+  "sourceHash": "fnv1a64:43b4b082680ceea7",
   "lessons": [
     {
-      "id": "ES-C45-los-las",
-      "sequence": 1187,
-      "title": "los and las — \"them\"",
-      "headword": "los, las",
-      "romanization": "los, las",
-      "gloss": "\"them\" — the two forms you can produce before being told, and the one place the pronoun is tidier than the article",
+      "id": "ES-C42-repaso-objeto",
+      "sequence": 1213,
+      "title": "Review — four pronouns, one slot",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — four pronouns, one slot, and the single question that chooses between them",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8d0a02d76b296f35",
+      "sourceHash": "fnv1a64:68f02a8d30998407",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,67 +42,69 @@
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro becomes lo tengo. Now: Tengo los libros. Say the short version out loud before reading on."
+              "text": "Nothing new in this chapter. Before the table: where does an object pronoun go?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: you were right",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "los — them, masculine. las — them, feminine."
+              "text": "Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the one it happens to",
+                "pronoun",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "the one it happens to: me. pronoun: me. example: me quieres — you love me.",
+                "the one it happens to: you. pronoun: te. example: te quiero — I love you.",
+                "the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.",
+                "the one it happens to: it (feminine). pronoun: la. example: la hago — I make it."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Tengo los libros. becomes Los tengo. — I have them. Hago las comidas. becomes Las hago. — I make them."
-            },
-            {
-              "kind": "speech",
-              "text": "Add -s. That is the whole lesson, and you did it yourself in the warm-up."
-            },
-            {
-              "kind": "speech",
-              "text": "Two chapters have now asked you for a plural and this is the first one that behaved exactly as you would guess. That is worth noticing rather than passing over: most of what is ahead of you in Spanish is like this, and the memorable exceptions are memorable because they are rare."
+              "text": "Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the single question",
           "segments": [
             {
               "kind": "speech",
-              "text": "There is one genuinely satisfying thing here."
+              "text": "Choosing between these looks like four decisions. It is one:"
             },
             {
               "kind": "speech",
-              "text": "The article could not do this. El did not become els; it became los, because el is a worn-down elo that had lost its vowel and the plural had kept it."
+              "text": "Who or what is the verb landing on?"
             },
             {
               "kind": "speech",
-              "text": "The pronoun never lost that vowel. Lo is illum with the vowel intact — which is exactly why it was not el in the first place. So when the plural came, lo had nothing to repair:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "article. singular: el (worn down). plural: los.",
-                "pronoun. singular: lo (vowel kept). plural: los."
-              ]
+              "text": "If it is you speaking becomes me."
             },
             {
               "kind": "speech",
-              "text": "The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in one column and none in the other, from one Latin word, decided entirely by which one got leaned on."
+              "text": "If it is the person you are speaking to becomes te."
+            },
+            {
+              "kind": "speech",
+              "text": "If it is a thing or somebody else becomes lo or la, and the noun decides which, not you."
+            },
+            {
+              "kind": "speech",
+              "text": "That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against."
             }
           ]
         },
@@ -120,79 +122,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"los tengo\"; \"la hago\" then \"las hago\"",
+              "instruction": "the four in order, then the four examples",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"los tengo\"; \"la hago\" then \"las hago\"]"
+              "source": "[YOU SAY: the four in order, then the four examples]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el / los\" then \"lo / los\" — one pair changed shape, one did not",
+              "instruction": "\"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el / los\" then \"lo / los\" — one pair changed shape, one did not]"
+              "source": "[YOU SAY: \"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the choice arrives before the sentence does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-los-las-books",
-              "prompt": "Say I have them, about los libros.",
+              "id": "ES-C42-repaso-objeto-four",
+              "prompt": "Name the four object pronouns you now hold.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-ME-DIRECT-OBJECT",
+                "ES-GRAMMAR-TE-DIRECT-OBJECT",
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "los tengo",
-                "yo los tengo"
+                "me, te, lo, la",
+                "me te lo la",
+                "me / te / lo / la"
               ],
               "feedback": {
-                "correct": "Just an -s on the pronoun you already had.",
-                "incorrect": "Los tengo."
+                "correct": "Four, each earned separately.",
+                "incorrect": "me, te, lo, la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-los-las-meals",
-              "prompt": "Say I make them, about las comidas.",
+              "id": "ES-C42-repaso-objeto-question",
+              "prompt": "What single question chooses between all four?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-OBJECT-PRONOUN"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "las hago",
-                "yo las hago"
+                "who or what the verb lands on",
+                "who is receiving the action",
+                "what the object is"
               ],
               "feedback": {
-                "correct": "Las hago.",
-                "incorrect": "Las hago — feminine plural."
+                "correct": "One question, four answers.",
+                "incorrect": "Who or what the verb lands on — that is the only decision."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-los-las-tidy",
-              "prompt": "The article el had to change shape for its plural. Why did the pronoun lo not?",
+              "id": "ES-C42-repaso-objeto-hard",
+              "prompt": "Which two of the four depend on knowing a noun's gender?",
               "assesses": [
-                "ES-ETYMON-ILLE-ILLA",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE"
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-COMIDA"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "lo never lost the vowel el lost",
-                "it kept its vowel",
-                "there was nothing to repair"
+                "lo and la",
+                "lo, la",
+                "la and lo"
               ],
               "feedback": {
-                "correct": "Same word, two roads, and the pronoun took the plain one.",
-                "incorrect": "El is a worn-down elo; lo kept the vowel, so its plural is just lo plus -s."
+                "correct": "Yes — and that is where the work is.",
+                "incorrect": "Lo and la. Me and te are decided by the conversation instead."
               }
             }
           ]
@@ -210,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have them,\" about books? (Los tengo.) About meals? (Las hago.) How do you make an object pronoun plural? (Add -s.) Next: one more form, and it belongs to one part of the world."
+              "text": "Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for."
             }
           ]
         }

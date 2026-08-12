@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C17-sintesis-futuro-condicional
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1412
-chapter: 116
+sequence: 1442
+chapter: 119
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — one stem, two endings, and the difference between promising and supposing

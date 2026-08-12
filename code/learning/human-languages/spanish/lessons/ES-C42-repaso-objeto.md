@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C42-repaso-objeto
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1183
-chapter: 77
+sequence: 1213
+chapter: 80
 type: practice-mix
 headword: (review)
 gloss: review — four pronouns, one slot, and the single question that chooses between them

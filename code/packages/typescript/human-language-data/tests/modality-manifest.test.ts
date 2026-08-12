@@ -902,7 +902,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 1838, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
+      totalLessons: 1841, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -911,7 +911,7 @@ describe("corpus regression", () => {
       // All eight Chapter-17 lessons remain voice-first.
       // +6, and it is the same six lessons that leave `sight` below.
       // +8, the eight chapter 4-5 lessons that drop their inline script sections.
-      voice: 1234,
+      voice: 1236,
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -931,7 +931,7 @@ describe("corpus regression", () => {
       // -poy-varugiren, -naalai, -mindum-sandippom and TA-C05-pesu, -velai-sey, -vaazh,
       // -naan-tamizh-pesugiren all flip ["script-block"] -> ["no-visual-dependency"]
       // with an empty detachableSegments, verified against the GENERATED manifest.
-      sight: 535,
+      sight: 536,
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -948,10 +948,10 @@ describe("corpus regression", () => {
       pen: 69,
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
-      drivableLessons: 1234,
+      drivableLessons: 1236,
       drivablePercent: 67,
       trackCount: 22,
-      chapterCount: 659,
+      chapterCount: 662,
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -995,7 +995,7 @@ describe("corpus regression", () => {
       // +6, and only two chapters move, both upward this time: Tamil chapter 4 gains 4
       // and chapter 5 gains 2. Nothing is lost, because TA-W14/15/16 are placed to skip
       // chapter 32 — see the ramp test for why — so no chapter's prefix is cut short.
-      drivablePrefixTotal: 1047,
+      drivablePrefixTotal: 1049,
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
@@ -1009,12 +1009,12 @@ describe("corpus regression", () => {
       // classifies a `type: writing` lesson as pen without reading its body, so all four
       // record `coreDrivable: false`. It holds because the six lessons that flipped were
       // already core-drivable and the four new ones were never counted.
-      fullyDrivableChapters: 443, // +6: shorter chapters are more often drivable end to end
+      fullyDrivableChapters: 445, // +6: shorter chapters are more often drivable end to end
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.
       // -2 more: Tamil chapters 4 and 5 now start by ear as well.
-      unstartableChapters: 163,
+      unstartableChapters: 164,
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     });

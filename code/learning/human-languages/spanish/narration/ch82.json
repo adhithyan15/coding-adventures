@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 82,
-  "title": "Review --- All Eight",
+  "title": "Nos --- Us, and the Word Inside -mos",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:be383e16b469fe51",
+  "sourceHash": "fnv1a64:9e7493bc06f23db5",
   "lessons": [
     {
-      "id": "ES-C45-repaso-ocho",
-      "sequence": 1189,
-      "title": "Review — all eight",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the direct object pronouns, complete, and the two questions that pick any one of them",
+      "id": "ES-C45-nos",
+      "sequence": 1216,
+      "title": "nos — \"us\"",
+      "headword": "nos",
+      "romanization": "nos",
+      "gloss": "\"us\" — and the word hiding inside the verb ending you have used since hablamos",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5395d167a3eaeb2e",
+      "sourceHash": "fnv1a64:741f9ab183243644",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Before the grid: where does an object pronoun sit, and has that ever changed?"
+              "text": "Say \"you love me.\" (Me quieres.) And \"I love you.\" (Te quiero.) Both of those are about one person on the receiving end. Here is more than one."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the third person in the room",
           "segments": [
             {
               "kind": "speech",
-              "text": "Never, in nine chapters. Here is the complete set:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "me. singular: me. plural: nos.",
-                "you. singular: te. plural: os (Spain).",
-                "it / them — masculine. singular: lo. plural: los.",
-                "it / them — feminine. singular: la. plural: las."
-              ]
+              "text": "nos — us."
             },
             {
               "kind": "speech",
-              "text": "Eight cells, built one at a time, and this is the first page on which they have all appeared together. That is deliberate. A grid handed to you on the day you met the first one would have been eight things to memorise; here it is a picture of ground you already hold."
+              "text": "Nos quieren. — They love us."
             },
             {
               "kind": "speech",
-              "text": "Count the genuinely new shapes you had to learn across those chapters: me was already yours from chapter four, te was one, nos one, os one, lo one, la one — and los and las were free, because you produced them yourself from an -s."
+              "text": "Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else."
+            },
+            {
+              "kind": "speech",
+              "text": "Me quieren. — They love me. Nos quieren. — They love us."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter of difference, and the difference is how many people you are speaking for."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two questions",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Reading the grid as eight decisions is the hard way. It is two:"
+              "text": "Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words."
             },
             {
               "kind": "speech",
-              "text": "Who is on the receiving end — me, you, or something else?"
+              "text": "You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said \"we speak,\" you were saying nos twice: once in the ending, and once by not needing to say it at all."
             },
             {
               "kind": "speech",
-              "text": "How many, and if it is a thing, which gender?"
+              "text": "And the word for \"we\" itself:"
             },
             {
               "kind": "speech",
-              "text": "The second question only bites in the bottom two rows, because only there does a noun decide. Me, te, nos and os are settled by the conversation itself: you always know who is talking."
+              "text": "nosotros — we, literally nos + otros, \"we others.\""
             },
             {
               "kind": "speech",
-              "text": "So the difficulty is not eight-eighths of this table. It is one quarter of it."
+              "text": "Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word."
             }
           ]
         },
@@ -115,88 +107,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the eight in grid order, twice",
+              "instruction": "\"Me quieren\" then \"Nos quieren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the eight in grid order, twice]"
+              "source": "[YOU SAY: \"Me quieren\" then \"Nos quieren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me quieres, te quiero, nos quieren, os quiero\"",
+              "instruction": "\"hablamos\" and hear the nos at the end of it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me quieres, te quiero, nos quieren, os quiero\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the grid is a reflex rather than a lookup."
+              "source": "[YOU SAY: \"hablamos\" and hear the *nos* at the end of it]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-repaso-ocho-all",
-              "prompt": "Give all eight direct object pronouns.",
+              "id": "ES-C45-nos-say",
+              "prompt": "Say they love us.",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
                 "ES-GRAMMAR-NOS-DIRECT-OBJECT",
-                "ES-GRAMMAR-OS-DIRECT-OBJECT"
+                "ES-LEX-NOS-OBJECT"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "nos quieren",
+                "ellos nos quieren"
+              ],
+              "feedback": {
+                "correct": "Same slot, in front of the verb.",
+                "incorrect": "Nos quieren."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-nos-ending",
+              "prompt": "Which verb ending is the same ancient word as nos?",
+              "assesses": [
+                "ES-ETYMON-NOS-OTROS",
+                "ES-GRAMMAR-AR-PRESENT-1PL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "-mos",
+                "the -mos ending",
+                "mos"
+              ],
+              "feedback": {
+                "correct": "Hablamos carries it on the back of the verb.",
+                "incorrect": "The -mos of hablamos: nos worn down and glued on."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-nos-word",
+              "prompt": "What are the two pieces inside nosotros, and what do they mean together?",
+              "assesses": [
+                "ES-LEX-NOSOTROS"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "me, te, lo, la, nos, os, los, las",
-                "me te lo la nos os los las"
+                "nos and otros, we others",
+                "nos + otros",
+                "we others"
               ],
               "feedback": {
-                "correct": "Eight, each earned separately.",
-                "incorrect": "me, te, lo, la, nos, os, los, las."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C45-repaso-ocho-quarter",
-              "prompt": "Which four of the eight need you to know a noun's gender?",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "lo, la, los, las",
-                "lo la los las",
-                "the bottom two rows"
-              ],
-              "feedback": {
-                "correct": "One quarter of the grid carries all of the difficulty.",
-                "incorrect": "lo, la, los and las. The rest are settled by who is speaking."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C45-repaso-ocho-free",
-              "prompt": "Which two of the eight did you never have to be taught?",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "los and las",
-                "los, las"
-              ],
-              "feedback": {
-                "correct": "You made them yourself with an -s.",
-                "incorrect": "Los and las — the plural of lo and la, and nothing more."
+                "correct": "The seam is still visible.",
+                "incorrect": "nos + otros, literally we others."
               }
             }
           ]
@@ -214,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many direct object pronouns are there? (Eight.) How many of them depend on a noun? (Four.) Next: what all eight are for, in a conversation that would be unbearable without them."
+              "text": "Say \"they love us.\" (Nos quieren.) What is nosotros made of? (Nos + otros — \"we others.\") Next: the plural of lo and la, and you will not need to be told what they are."
             }
           ]
         }

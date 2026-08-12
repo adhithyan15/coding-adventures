@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 90,
-  "title": "Se Lo --- The Pair That Does Not Exist",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9ebf0ee71dce15d7",
+  "title": "Review --- Two Systems, Two New Words",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d9e65c29bbe54545",
   "lessons": [
     {
-      "id": "ES-C47-se-lo",
-      "sequence": 1197,
-      "title": "se lo — the pair that does not exist",
-      "headword": "se lo",
-      "romanization": "se lo",
-      "gloss": "the one pair Spanish will not say — le lo does not exist, and something else stands in for it",
+      "id": "ES-C46-repaso-dos-sistemas",
+      "sequence": 1224,
+      "title": "Review — two systems, two new words",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — two systems, twelve cells, and only two of them new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:41cba26463f56778",
-      "notice": null,
+      "sourceHash": "fnv1a64:7d8edd0161ff28b6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,47 +42,68 @@
             },
             {
               "kind": "speech",
-              "text": "Person first, then thing. So \"I tell it to him\" should be le plus lo plus digo. Say that out loud: le lo digo."
+              "text": "Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: nobody says that",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Your mouth probably objected before your grammar did. Le lo is two nearly identical syllables in a row, and Spanish will not say it."
+              "kind": "table",
+              "headers": [
+                "",
+                "direct — what",
+                "indirect — to whom"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "me. direct — what: me. indirect — to whom: me.",
+                "you. direct — what: te. indirect — to whom: te.",
+                "him / her / usted. direct — what: lo, la. indirect — to whom: le.",
+                "us. direct — what: nos. indirect — to whom: nos.",
+                "you all (Spain). direct — what: os. indirect — to whom: os.",
+                "them / ustedes. direct — what: los, las. indirect — to whom: les."
+              ]
             },
             {
               "kind": "speech",
-              "text": "In front of lo, la, los or las, the pronouns le and les become se."
+              "text": "Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s."
             },
             {
               "kind": "speech",
-              "text": "Le lo digo. becomes Se lo digo. — I tell it to him. Les la hago. becomes Se la hago. — I make it for them."
-            },
-            {
-              "kind": "speech",
-              "text": "Everything else about the sentence is unchanged. The order is still person then thing. The slot is still in front of the verb. Only the first word's shape changes, and it changes for one reason: what follows it."
-            },
-            {
-              "kind": "speech",
-              "text": "Note what se does not tell you. Le already refused to mark gender, and se goes further — it does not mark number either:"
-            },
-            {
-              "kind": "speech",
-              "text": "Se lo digo — to him. To her. To you. To them. To you all."
-            },
-            {
-              "kind": "speech",
-              "text": "Five readings, one word. Context does all the work, and if you need to be precise you add it in words rather than in the pronoun."
+              "text": "Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the one asymmetry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:"
+            },
+            {
+              "kind": "speech",
+              "text": "direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole."
+            },
+            {
+              "kind": "speech",
+              "text": "It is good news. The row that carries all the difficulty in one column carries none in the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -88,84 +116,95 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le lo digo\" once, badly, and then \"se lo digo\" — feel why",
+              "instruction": "the direct six, then the indirect six, and hear how much is the same",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le lo digo\" once, badly, and then \"se lo digo\" — feel why]"
+              "source": "[YOU SAY: the direct six, then the indirect six, and hear how much is the same]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Se lo digo\" and \"Se la hago\"",
+              "instruction": "\"lo tengo, le hablo, los tengo, les hablo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se lo digo\" and \"Se la hago\"]"
+              "source": "[YOU SAY: \"lo tengo, le hablo, los tengo, les hablo\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the shared four stop feeling like two separate lists."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-se-lo-say",
-              "prompt": "Say I tell it to him.",
+              "id": "ES-C46-repaso-dos-sistemas-indirect",
+              "prompt": "Give the six indirect object pronouns.",
               "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "se lo digo",
-                "yo se lo digo"
-              ],
-              "feedback": {
-                "correct": "Se lo digo — le could not stand in front of lo.",
-                "incorrect": "Se lo digo. Le becomes se before lo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C47-se-lo-when",
-              "prompt": "In front of which four words do le and les become se?",
-              "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
+                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo, la, los, las",
-                "lo la los las",
-                "the direct object pronouns for things"
+                "me, te, le, nos, os, les",
+                "me te le nos os les"
               ],
               "feedback": {
-                "correct": "Only those four, and always those four.",
-                "incorrect": "lo, la, los and las."
+                "correct": "Four of them were already yours.",
+                "incorrect": "me, te, le, nos, os, les."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-se-lo-ambiguous",
-              "prompt": "How many different people can se lo digo be about?",
+              "id": "ES-C46-repaso-dos-sistemas-row",
+              "prompt": "Which row is the only one where the two sets differ in shape, and how?",
               "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "five: him, her, you, them, you all",
-                "five",
-                "him her you them or you all"
+                "the him/her row: lo and la versus le",
+                "the third row",
+                "lo la versus le"
               ],
               "feedback": {
-                "correct": "Se marks neither gender nor number. Context carries it.",
-                "incorrect": "Five — him, her, usted, them, ustedes. Se marks neither gender nor number."
+                "correct": "Two forms in one column, one in the other.",
+                "incorrect": "The him/her/usted row: direct has lo and la, indirect has only le."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-repaso-dos-sistemas-count",
+              "prompt": "Across both tables, how many distinct word shapes are there in total?",
+              "assesses": [
+                "ES-GRAMMAR-OBJECT-SETS-OVERLAP",
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "nine",
+                "9",
+                "me te lo la le nos os los las les"
+              ],
+              "feedback": {
+                "correct": "Nine shapes covering twelve cells, because four do double duty.",
+                "incorrect": "Nine: me, te, lo, la, le, nos, os, los, las, les — with four shared between the systems."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I tell it to him\"? (Se lo digo.) What happened to le? (It became se in front of lo.) Next: why it became se — and it is not the reason almost everyone assumes."
+              "text": "How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast."
             }
           ]
         }

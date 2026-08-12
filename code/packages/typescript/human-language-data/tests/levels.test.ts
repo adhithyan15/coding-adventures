@@ -238,7 +238,7 @@ describe("corpus snapshot", () => {
     // +3: TA-C39-vendum, TA-C39-evvalavu and TA-C39-oru. Tamil's curriculum.json had
     // already declared SPINE-SAY-WHAT-I-WANT with an empty segment list and VERB-WANT
     // in `omits`; chapter 39 realizes the node, so the omission is removed with it.
-    expect(summary.byLevel.A2).toBe(471); // +39: Spanish chapters 11-18 plus prerequisite closure
+    expect(summary.byLevel.A2).toBe(474); // +39: Spanish chapters 11-18 plus prerequisite closure
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
     // B2-C2 remain authored-but-unrealized, in every track.

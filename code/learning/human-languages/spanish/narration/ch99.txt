@@ -1,39 +1,129 @@
-Spanish, chapter 99: Ver --- Seeing.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 99: The Strong Preterites.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-ver — learn the verb before its past.
+Lesson 1 of 3.
+tuve — let the strong stem carry the stress.
 
 Warm-up.
 [pause 2 seconds]
-Ver means “to see.” Its written v uses the Spanish sound you already know: it is not contrasted with a separate English-style v sound. Say ver.
+You know present tengo, tienes, tiene. Its completed past changes the stem to tuv- and uses tuve, tuviste, tuvo. Unlike comí and comió, none of these three forms carries a written accent.
 
-Grammar Lens: three present forms.
+Grammar Lens: one strong singular pattern.
 [a table of 3 rows, read aloud]
-person: yo. present: veo.
-person: tú. present: ves.
-person: él / ella / usted. present: ve.
-The tú and third-person forms resemble the familiar -er row. The yo form keeps an extra vowel: veo. Reuse known café: Veo café — “I see coffee.”
+person: yo. present: tengo. completed past: tuve.
+person: tú. present: tienes. completed past: tuviste.
+person: él / ella / usted. present: tiene. completed past: tuvo.
+The strong stem tuv- takes -e, -iste, -o. Say tuve, tuviste, tuvo. Stress remains in the stem, so normal spelling needs no accent mark. Reuse known café:
+Tuve café. — “I had coffee.”
+¿Tuviste café? — “Did you have coffee?”
+Tuvo café. — “He, she, or you-formal had coffee.”
+“Strong” describes the stem-stressed historical pattern. It does not mean that the meaning is forceful. Plural endings wait.
 
-The word, taken apart.
-Spanish ver continues Latin vidēre, “to see,” through Old Spanish veer. Loss of the consonant between vowels helps explain the shorter shape; the two adjacent vowels later contracted in the infinitive. English video belongs to the same Latin family, a memory bridge rather than a new Spanish word for this lesson.
+The stem, taken apart.
+Tener continues Latin tenēre. Its past also belongs to an older strong history associated with Latin tenuī. Spanish sound change and analogy reshaped that material into the tuv- family. Tenuī becomes tuve is therefore a historical relationship, not a promise that every letter passed across intact.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “ver — to see”]
+[your turn — say: “tuve, tuviste, tuvo”]
 [pause 8 seconds for the answer]
-[your turn — say: “veo, ves, ve”]
+[your turn — say: “Tuve café.”]
 [pause 8 seconds for the answer]
-[your turn — say: “ver comes through veer from vidēre”]
+[your turn — say: “comí has final stress; tuve has stem stress”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 5 seconds]
-What does Spanish ver mean?
+[question — say your answer, then pause 9 seconds]
+Give the singular completed-past forms of tener: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I had coffee' in Spanish.
 [question — say your answer, then pause 8 seconds]
-Give the learned present forms of ver: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 6 seconds]
-Which Latin verb stands behind Spanish ver: vidēre or īre?
+Which phrase best describes tuve: a letter-for-letter copy of tenuī, or a historically reshaped strong form?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ver mean? (“To see.”) Give its three learned present forms. (Veo, ves, ve.) Which Latin verb stands behind it? (Vidēre.) Next: add ser to the open past.
+Give the three learned tener forms. (Tuve, tuviste, tuvo.) Which endings attach to tuv-? (-e, -iste, -o.) Why are there no written accents? (The strong stem carries the stress.) What shaped tuve historically? (Older strong-perfect material, sound change, and analogy.) Next: reuse the strong endings with hacer.
+
+
+Lesson 2 of 3.
+hice — the strong pattern with one third-person swerve.
+
+Warm-up.
+[pause 2 seconds]
+You know present hago, haces, hace and strong past tuve, tuviste, tuvo. Hacer reuses the strong endings: hice, hiciste, hizo. Watch the third form: the stem is hiz- there, not hic-.
+
+Grammar Lens: hacer in the completed past.
+[a table of 3 rows, read aloud]
+person: yo. completed past: hice. stem plus ending: hic- + -e.
+person: tú. completed past: hiciste. stem plus ending: hic- + -iste.
+person: él / ella / usted. completed past: hizo. stem plus ending: hiz- + -o.
+Say hice, hiciste, hizo. These are strong, stem-stressed forms with no written accents. Hizo is an irregular stem alternation inside this family; it is not a general rule that c must become z before o. Reuse known café:
+Hice café. — “I made coffee.”
+¿Hiciste café? — “Did you make coffee?”
+Hizo café. — “He, she, or you-formal made coffee.”
+
+The form, taken apart.
+Hacer continues Latin facere, and hice continues the history of its strong perfect fēcī. Long sound changes help explain Spanish h- and the changed vowel and consonant; this is not a direct spelling recipe. The pattern links hice historically to strong tuve, while each verb keeps its own stem.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “hice, hiciste, hizo”]
+[pause 8 seconds for the answer]
+[your turn — say: “Hice café.”]
+[pause 8 seconds for the answer]
+[your turn — say: “hizo is a learned hiz- alternation, not a general c-before-o rule”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the singular completed-past forms of hacer: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I made coffee' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which Latin strong-perfect form lies behind the historical development of hice?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned hacer forms. (Hice, hiciste, hizo.) What changes in the third form? (Hic- becomes hiz-.) Is that a general c-before-o spelling rule? (No; learn it inside this irregular family.) What older form lies behind hice? (Latin fēcī, through substantial historical change.) Next: add strong estar without adding plural forms.
+
+
+Lesson 3 of 3.
+estuve — a third known verb joins the strong pattern.
+
+Warm-up.
+[pause 2 seconds]
+You know present estoy, estás, está and the strong past pairs tuve, tuviste, tuvo and hice, hiciste, hizo. Now use the same strong endings with estuv-: estuve, estuviste, estuvo.
+
+Grammar Lens: estar in the completed past.
+[a table of 3 rows, read aloud]
+person: yo. completed past: estuve.
+person: tú. completed past: estuviste.
+person: él / ella / usted. completed past: estuvo.
+Say estuve, estuviste, estuvo. The strong stem estuv- takes -e, -iste, -o. These forms carry no written accents. Reuse known bien:
+Estuve bien. — “I was well.”
+¿Estuviste bien? — “Were you well?”
+Estuvo bien. — “He, she, or you-formal was well.”
+
+Grammar Lens: three strong singular rows.
+yo: tuve, hice, estuve.
+tú: tuviste, hiciste, estuviste.
+él / ella / usted: tuvo, hizo, estuvo.
+All three rows use the learned strong endings. Only hacer changes its stem shape from hic- to hiz- before third-person -o. Plural forms and other irregular verbs still wait.
+
+The -uv- shape, taken apart.
+Estar grew from a Romance verb related to Latin stāre, “stand.” But modern estuve is not a direct, tidy wearing-down of Latin stetī. Historical analogy helped reshape its past beside other strong forms, including the -uv- pattern visible in tuve. This explains the family resemblance without pretending that each modern letter came straight from one Latin form.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “estuve, estuviste, estuvo”]
+[pause 8 seconds for the answer]
+[your turn — say: “Estuve bien.”]
+[pause 8 seconds for the answer]
+[your turn — say: “tuve and estuve share -uv- through historical analogy”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the singular completed-past forms of estar: yo, tú, then él/ella/usted.
+[question — say your answer, then pause 7 seconds]
+Say 'I was well' as a completed past statement in Spanish.
+[question — say your answer, then pause 6 seconds]
+Which known strong form helped shape the family resemblance in estuve: tuve or hice?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give the three learned estar forms. (Estuve, estuviste, estuvo.) Which known strong verb shares their -uv- shape? (Tener: tuve.) Why should estuve not be shown as a direct wearing-down of stetī? (Analogy reshaped the Spanish family.) Next: retrieve all six bounded patterns.

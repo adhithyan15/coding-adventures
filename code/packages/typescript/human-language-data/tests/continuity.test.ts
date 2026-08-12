@@ -422,7 +422,7 @@ describe("the real corpus", () => {
     // not number the family; ch19's ஆகிறது is described the same way), so it practises
     // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
     // rather than re-teaching it.
-    expect(report.summary.atomsTaught).toBe(2798); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG
+    expect(report.summary.atomsTaught).toBe(2803); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -485,7 +485,7 @@ describe("the real corpus", () => {
     // would put the prerequisite AFTER its dependent and fail the ordering rule). The
     // tie is carried by `reviews_of` instead, which does not count as a revisit.
     // Chapters 40 and 41 are planned to close this.
-    expect(report.summary.atomsNeverRevisited).toBe(476); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach
+    expect(report.summary.atomsNeverRevisited).toBe(478); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach
     expect(report.summary.neverRevisitedPercent).toBe(17);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -569,7 +569,7 @@ describe("the real corpus", () => {
     // measure the distance against and stayed silent. Naming a teacher is what made
     // the existing early use visible. It also argues ஒரு belongs earlier than 39,
     // which the runway did not allow.
-    expect(report.summary.forwardReferences).toBe(438); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list
+    expect(report.summary.forwardReferences).toBe(446); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -648,7 +648,7 @@ describe("the real corpus", () => {
     // READ-MUUNRU-02 gained a real revisit at the same time (0 -> 1, TA-W20 re-reads
     // மூன்று beside ஒன்று) and still misses R1, because TA-W20 is 4 lessons later and
     // R1 stops at 3.
-    expect(report.summary.missedByWindow.R1).toBe(898); // +2: HL-C98
+    expect(report.summary.missedByWindow.R1).toBe(900); // +2: HL-C98
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(1917); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
+    expect(report.summary.missedByWindow.R2).toBe(1919); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings.
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 332, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
+      lessonCount: 335, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -781,8 +781,8 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 522, // +3: HL-C98's per-cell atoms
-      atomsNeverRevisited: 67, // +2: HL-C98
+      atomsTaught: 527, // +3: HL-C98's per-cell atoms
+      atomsNeverRevisited: 69, // +2: HL-C98
     });
   });
 

@@ -1,0 +1,208 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 188,
+  "title": "Review --- Three Letters",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ca287b70991f0d3c",
+  "lessons": [
+    {
+      "id": "ES-C54-repaso-hay",
+      "sequence": 2199,
+      "title": "Review — three letters",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — three letters, three uses, and the last piece the audit was missing",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1146346cfe1df642",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new. What does hay agree with?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "one thing, Hay una casa., There is a house.",
+                "many things, Hay libros., There are books.",
+                "an obligation, Hay que comer., One must eat.",
+                "what it is made of, ha + y, \"it has there\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters, and everything above came out of them."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the shape of this arc, because it is the shape of a lot of language learning: the smallest words need the most explaining. Hay is shorter than any noun you have learned and it took four chapters, while comida took one. Short words are short because they are used constantly, and constant use is what wears them into fossils that no longer explain themselves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what it does not do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two things hay never does, and both save you work:"
+            },
+            {
+              "kind": "speech",
+              "text": "It never agrees. Not with number, not with anything. One form."
+            },
+            {
+              "kind": "speech",
+              "text": "It never names anybody. Neither does hay que."
+            },
+            {
+              "kind": "speech",
+              "text": "So of everything you have learned about making Spanish verbs match their surroundings — six endings a tense, gender on the pronouns, number on the articles — none of it applies here. After a hundred and seventy chapters of agreement, the last word is the one that opted out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four rows of the table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four rows of the table]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-repaso-hay-three",
+              "prompt": "Say there is a house, there are books, and one must eat.",
+              "assesses": [
+                "ES-LEX-HAY",
+                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-GRAMMAR-HAY-QUE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "hay una casa, hay libros, hay que comer",
+                "hay una casa; hay libros; hay que comer"
+              ],
+              "feedback": {
+                "correct": "One word, three jobs.",
+                "incorrect": "Hay una casa. Hay libros. Hay que comer."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-repaso-hay-never",
+              "prompt": "Name the two things hay never does.",
+              "assesses": [
+                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "agree, and name anybody",
+                "it never agrees and never names a person"
+              ],
+              "feedback": {
+                "correct": "After all that agreement, the last word opts out of it entirely.",
+                "incorrect": "It never agrees, and it never names anybody."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-repaso-hay-small",
+              "prompt": "Why did a three-letter word need four chapters when comida needed one?",
+              "assesses": [
+                "ES-ETYMON-HAY-IBI"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "short words are worn down by constant use",
+                "the smallest words need the most explaining",
+                "heavy use turns them into fossils"
+              ],
+              "feedback": {
+                "correct": "They stop explaining themselves.",
+                "incorrect": "Short words are short because they are used constantly, and that wears them into fossils."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

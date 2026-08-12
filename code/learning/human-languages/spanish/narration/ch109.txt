@@ -1,42 +1,42 @@
-Spanish, chapter 109: Has, Ha, Hemos, Habeis, Han.
+Spanish, chapter 109: Synthesis --- A Small Story.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-has, ha, hemos, habéis, han — the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short.
+Synthesis — a small story.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have eaten." (He comido.) Now the other five people need their word.
+Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time.
 
-Grammar Lens: the whole of it.
-[a table of 6 rows, read aloud]
-I. haber: he. with a participle: he comido.
-you. haber: has. with a participle: has comido.
-he / she / usted. haber: ha. with a participle: ha comido.
-we. haber: hemos. with a participle: hemos comido.
-you all (Spain). haber: habéis. with a participle: habéis comido.
-they / ustedes. haber: han. with a participle: han comido.
-Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often.
-That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in.
-Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know.
+The exchange.
+Four sentences. Watch the tenses take turns.
+Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana.
+Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to.
+Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order.
+The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them.
+
+Grammar Lens: what you can now do.
+Notice the third sentence. Tuve un libro is not "I had a book" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular.
+That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did.
+It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "he, has, ha, hemos, habéis, han" until the list is one breath]
+[your turn — say: the four sentences straight through]
 [pause 8 seconds for the answer]
-[your turn — say: "he comido, has comido, ha comido…" through all six]
+[your turn — say: only the imperfects, then only the preterites, and hear the two layers]
 [pause 8 seconds for the answer]
 [repeat that twice]
+[question — say your answer, then pause 10 seconds]
+In the story, which two verbs are the background?
 [question — say your answer, then pause 12 seconds]
-Give all six forms of haber, in order.
-[question — say your answer, then pause 8 seconds]
-Say they have eaten.
+Why is tuve un libro in the foreground when tenia un libro was not?
 [question — say your answer, then pause 12 seconds]
-Why is haber shorter than an ordinary verb?
-[question — say your answer, then pause 8 seconds]
-How many forms does comido take across all six rows?
+Say I was studying when I spoke with Ana.
+[question — say your answer, then pause 14 seconds]
+Why did this take three chapters when neither tense was new?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"They have eaten"? (Han comido.) "We have eaten"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule.
+Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)

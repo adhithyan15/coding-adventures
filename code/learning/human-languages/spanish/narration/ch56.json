@@ -2,180 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 56,
-  "title": "Tener in the Plural, and the Stem-Change Rule",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:29428f18fbaa6b7a",
+  "title": "Grande --- the First Word for What a Thing Is Like",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7bbc4215de1d576d",
   "lessons": [
     {
-      "id": "ES-C08-tenemos",
+      "id": "ES-C09-grande",
       "sequence": 1000,
-      "title": "tenemos — and the stem change disappears",
-      "headword": "tenemos · tenéis",
-      "romanization": "tenemos · tenéis",
-      "gloss": "\"we have,\" \"you all have\" — and the stem change vanishes, for a reason you already know",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:f8e51a479b8207ca",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I have\" and \"you have.\" (Tengo, tienes.) And \"we eat.\" (Comemos.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the break is gone",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tenemos — we have., tenéis — you all have."
-            },
-            {
-              "kind": "speech",
-              "text": "Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem."
-            },
-            {
-              "kind": "speech",
-              "text": "You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress."
-            },
-            {
-              "kind": "speech",
-              "text": "Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole."
-            },
-            {
-              "kind": "speech",
-              "text": "The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tienes\" then \"tenemos\" — and hear the stress move off the stem",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tienes\" then \"tenemos\" — and hear the stress move off the stem]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comemos, tenemos\" — the same endings",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"comemos, tenemos\" — the same endings]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tenemos-form",
-              "prompt": "Say we have.",
-              "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-1PL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tenemos",
-                "nosotros tenemos"
-              ],
-              "feedback": {
-                "correct": "Yes — and no ie.",
-                "incorrect": "tenemos, with a plain e."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tenemos-why",
-              "prompt": "Why does tienes break its stem but tenemos does not?",
-              "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-1PL",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the stress is on the stem in tienes and on the ending in tenemos",
-                "stress",
-                "because of where the stress falls",
-                "tenemos stresses the ending"
-              ],
-              "feedback": {
-                "correct": "Right — the break follows the stress, not the verb.",
-                "incorrect": "Stress. Tienes stresses the stem; tenemos stresses the ending."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is \"we have\"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C08-tienen",
-      "sequence": 1004,
-      "title": "tienen — the break comes back",
-      "headword": "tienen",
-      "romanization": "tienen",
-      "gloss": "\"they have\" — where the stress returns to the stem, and so does the break",
+      "title": "grande",
+      "headword": "grande",
+      "romanization": "grande",
+      "gloss": "big — the first word in this book for what something is like, and it does not change for gender",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:628ccd8bf8b7ec05",
+      "sourceHash": "fnv1a64:a1d49c97ee56c9e7",
       "notice": null,
       "blocks": [
         {
@@ -191,39 +35,91 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"we have\", then \"you have\" to a friend. (Tenemos, tienes.) Which one has the broken stem?"
+              "text": "Say \"she is.\" (Es.) You can say who someone is and what they do."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You still cannot say what anything is like. That starts here."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the rule, stated once and for all",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "tienen — they have, and ustedes tienen, you all have."
+              "text": "grande — big."
             },
             {
               "kind": "speech",
-              "text": "The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:"
+              "text": "Latin grandis meant full-grown. English took it whole and never changed it: a grand piano is the big one, a grandiose plan is oversized, and a grandmother is — literally — the full-grown mother."
             },
             {
               "kind": "speech",
-              "text": "A stem change happens exactly where the stem is stressed, and nowhere else."
+              "text": "grande from grandis becomes grand, grandiose, aggrandise."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language."
-            },
-            {
-              "kind": "speech",
-              "text": "Learners are usually told to memorise a shape called \"the boot\" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do."
+              "text": "Say it: grande."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: where it goes, and what it does not do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A describing word usually comes after the noun in Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "English puts it in front — a big house. Spanish puts it behind:"
+            },
+            {
+              "kind": "speech",
+              "text": "una casa grande — a big house."
+            },
+            {
+              "kind": "speech",
+              "text": "And grande does not change for a man or a woman:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "el libro grande, the big book.",
+                "la casa grande, the big house."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You have met that already. Estudiante and artista do not shift either. Some Spanish words agree with gender and some simply do not, and the ending tells you which: -o/-a words like bueno/buena shift, -e words like grande sit still."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -236,94 +132,107 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tienes, tenemos, tienen\" — break, no break, break",
+              "instruction": "una casa grande",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tienes, tenemos, tienen\" — break, no break, break]"
+              "source": "[YOU SAY: *una casa grande*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two forms that never break, for any verb",
+              "instruction": "el libro grande",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two forms that never break, for any verb]"
+              "source": "[YOU SAY: *el libro grande*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tienen-form",
-              "prompt": "Say they have.",
+              "id": "ES-C09-grande-order",
+              "prompt": "Say: a big house.",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-3PL"
+                "ES-GRAMMAR-ADJECTIVE-AFTER-NOUN"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "tienen",
-                "ellos tienen",
-                "ustedes tienen"
+                "una casa grande",
+                "casa grande"
               ],
               "feedback": {
-                "correct": "Yes — the break is back.",
-                "incorrect": "tienen."
+                "correct": "Behind the noun, where Spanish keeps it.",
+                "incorrect": "Una casa grande — the describing word goes after."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tienen-rule",
-              "prompt": "In any stem-changing verb, which two forms never break?",
+              "id": "ES-C09-grande-invariant",
+              "prompt": "Does grande change for la casa?",
               "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
+                "ES-LEX-GRANDE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nosotros and vosotros",
-                "nosotros, vosotros",
-                "we and you all"
+                "no",
+                "no it stays grande"
               ],
               "feedback": {
-                "correct": "Those two, always — because the stress is on the ending there.",
-                "incorrect": "Nosotros and vosotros, in every stem-changing verb."
+                "correct": "-e words sit still.",
+                "incorrect": "No — grande does not shift."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tienen-boot",
-              "prompt": "What actually decides whether the stem breaks?",
+              "id": "ES-C09-grande-cousin",
+              "prompt": "What did Latin grandis mean?",
               "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
+                "ES-ETYMON-GRANDIS"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "whether the stem is stressed",
-                "stress",
-                "where the stress falls"
+                "full-grown",
+                "fully grown",
+                "grown up"
               ],
               "feedback": {
-                "correct": "Stress — that is the whole rule.",
-                "incorrect": "Whether the stem carries the stress."
+                "correct": "Which is still there in grandmother.",
+                "incorrect": "Full-grown."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "What is \"they have\"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)"
+              "text": "Where does a describing word go? (After the noun.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which endings sit still? (-e ones, like grande.)"
             }
           ]
         }

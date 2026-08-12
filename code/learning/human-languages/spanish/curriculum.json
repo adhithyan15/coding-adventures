@@ -540,6 +540,42 @@
       "after": []
     },
     {
+      "id": "ES-PATH-030-GRANDE",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-grande"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-GRANDE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-CANSADO",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-cansado"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-CANSADO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-SYNTH-DESC",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-sintesis-describir"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-SYNTH-DESC"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-011-SER-ESTAR",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
@@ -2186,6 +2222,9 @@
         "ES-PATH-030-ESTUDIANTE",
         "ES-PATH-030-ISTA",
         "ES-PATH-030-SYNTH-WORK",
+        "ES-PATH-030-GRANDE",
+        "ES-PATH-030-CANSADO",
+        "ES-PATH-030-SYNTH-DESC",
         "ES-PATH-030-ABILITY-CH11",
         "ES-PATH-030-HACER-CH12",
         "ES-PATH-030-DECIR-CH12",
@@ -4485,6 +4524,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C09-sintesis-trabajo"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-GRANDE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-grande"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-CANSADO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-cansado"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-SYNTH-DESC",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-sintesis-describir"
       ]
     }
   ]

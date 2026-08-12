@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C18-querer-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1436
-chapter: 119
+sequence: 1466
+chapter: 122
 type: grammar
 headword: quiera · quieras · quiera
 gloss: the singular present subjunctive of querer

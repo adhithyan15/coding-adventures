@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(2759); // +5: vos-latin slug and ES-ETYMON-VOS-03
-    expect(l.summary.underspent).toBe(2653); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time
-    expect(l.summary.neverSpent).toBe(1819); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98
+    expect(l.summary.roots).toBe(2763); // +5: vos-latin slug and ES-ETYMON-VOS-03
+    expect(l.summary.underspent).toBe(2657); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time
+    expect(l.summary.neverSpent).toBe(1823); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -201,7 +201,7 @@ describe("the committed corpus", () => {
       return acc;
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
-    expect(byNamespace).toEqual({ roots: 1985, "etymon-atom": 774 });
+    expect(byNamespace).toEqual({ roots: 1987, "etymon-atom": 776 });
   });
 
   it("pins Spanish, the pilot track", () => {
@@ -210,10 +210,10 @@ describe("the committed corpus", () => {
       minReuse,
     );
     expect(l.summary).toMatchObject({
-      roots: 345, // +3: HL-C88 slice 4 adds profiteri-latin, istes-greek and ES-ETYMON-PROFITERI
-      underspent: 319, // +2: HL-C88 slice 4
-      neverSpent: 202, // +3: HL-C88 slice 4 introduces three roots not yet re-spent
-      underspentPercent: 92,
+      roots: 349, // +4: HL-C88 slice 5 adds grandis-latin, campsare-latin and their etymon atoms
+      underspent: 323, // +4: HL-C88 slice 5
+      neverSpent: 206, // +4: HL-C88 slice 5 introduces four not yet re-spent
+      underspentPercent: 93,
     });
   });
 });

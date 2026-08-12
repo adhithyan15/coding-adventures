@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 112,
-  "title": "Synthesis --- Two Shores, Two Answers",
+  "title": "Has, Ha, Hemos, Habeis, Han",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c01b1217b0b39e66",
+  "sourceHash": "fnv1a64:879447cb0328352b",
   "lessons": [
     {
-      "id": "ES-C49-sintesis-dos-orillas",
-      "sequence": 1350,
-      "title": "Synthesis — two shores, two answers",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — when to reach for this tense instead of the preterite, and why the honest answer is a map rather than a rule",
+      "id": "ES-C49-haber-completo",
+      "sequence": 1377,
+      "title": "has, ha, hemos, habéis, han",
+      "headword": "has · ha · hemos · habéis · han",
+      "romanization": "has · ha · hemos · habéis · han",
+      "gloss": "the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bac675a04476bcfb",
+      "sourceHash": "fnv1a64:8f8f5d22ef2a0178",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "You can now say \"I spoke\" two ways: hablé and he hablado. The obvious question is which one to use, and it has an unusual answer."
+              "text": "Say \"I have eaten.\" (He comido.) Now the other five people need their word."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: what the perfect is for",
+          "title": "Grammar Lens: the whole of it",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Start with the part everybody agrees on. The perfect reaches into now:"
+              "kind": "table",
+              "headers": [
+                "",
+                "haber",
+                "with a participle"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "I. haber: he. with a participle: he comido.",
+                "you. haber: has. with a participle: has comido.",
+                "he / she / usted. haber: ha. with a participle: ha comido.",
+                "we. haber: hemos. with a participle: hemos comido.",
+                "you all (Spain). haber: habéis. with a participle: habéis comido.",
+                "they / ustedes. haber: han. with a participle: han comido."
+              ]
             },
             {
               "kind": "speech",
-              "text": "He comido. — I have eaten. (so I am not hungry) Comí. — I ate. (a finished event, back there)."
+              "text": "Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often."
             },
             {
               "kind": "speech",
-              "text": "The preterite puts an event in the past and leaves it there. The perfect drags it forward and makes it matter now — the tense is telling your listener what to do with the information, not when it happened. English agrees: I have eaten and I ate are not interchangeable for you either."
+              "text": "That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the part nobody agrees on, and it is worth having straight before you are corrected by two people who contradict each other."
-            },
-            {
-              "kind": "speech",
-              "text": "For something that happened today, Spain and most of Latin America choose differently:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hoy he hablado con Ana. — Spain. Hoy hablé con Ana. — most of Latin America."
-            },
-            {
-              "kind": "speech",
-              "text": "Same day, same conversation, both entirely correct. Spain uses the perfect for anything inside the current stretch of time; much of Latin America uses the preterite and saves the perfect for things whose relevance is still open."
-            },
-            {
-              "kind": "speech",
-              "text": "Third split in this book decided by geography rather than meaning, after vosotros and os. There is no version of Spanish that is the real one, and no choice here that will make you wrong."
-            },
-            {
-              "kind": "speech",
-              "text": "A default, if you want one: the Latin American pattern is understood everywhere and is what most learners meet first, so leaning on the preterite for finished events is a safe habit. In Spain you will hear the perfect constantly and pick it up in a week."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,20 +90,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He comido\" then \"Comí\" — one reaches into now, one does not",
+              "instruction": "\"he, has, ha, hemos, habéis, han\" until the list is one breath",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He comido\" then \"Comí\" — one reaches into now, one does not]"
+              "source": "[YOU SAY: \"he, has, ha, hemos, habéis, han\" until the list is one breath]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hoy he hablado con Ana\" then \"Hoy hablé con Ana\" — two shores",
+              "instruction": "\"he comido, has comido, ha comido…\" through all six",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hoy he hablado con Ana\" then \"Hoy hablé con Ana\" — two shores]"
+              "source": "[YOU SAY: \"he comido, has comido, ha comido…\" through all six]"
             },
             {
               "kind": "repeat",
@@ -126,85 +113,87 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-now",
-              "prompt": "Say I have eaten, meaning you are not hungry now.",
+              "id": "ES-C49-haber-completo-all",
+              "prompt": "Give all six forms of haber, in order.",
               "assesses": [
                 "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "he comido",
-                "yo he comido"
-              ],
-              "feedback": {
-                "correct": "The perfect drags it forward into now.",
-                "incorrect": "He comido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-split",
-              "prompt": "For something that happened today, which tense would a speaker in Madrid pick, and one in Mexico City?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "madrid the perfect, mexico the preterite",
-                "he hablado in spain, hable in latin america"
-              ],
-              "feedback": {
-                "correct": "Both correct; the difference is a map, not a rule.",
-                "incorrect": "Madrid: he hablado. Mexico City: hable."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-wrong",
-              "prompt": "Two speakers correct you in opposite directions. Which of them is right?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT"
+                "ES-LEX-HABER"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "both, for their own variety",
-                "both",
-                "neither is wrong"
+                "he, has, ha, hemos, habeis, han",
+                "he has ha hemos habéis han"
               ],
               "feedback": {
-                "correct": "Third split in this book decided by geography, after vosotros and os.",
-                "incorrect": "Both. Neither variety is the real Spanish."
+                "correct": "Five of six are one syllable.",
+                "incorrect": "he, has, ha, hemos, habeis, han."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-build",
-              "prompt": "Say we have spoken Spanish.",
+              "id": "ES-C49-haber-completo-they",
+              "prompt": "Say they have eaten.",
               "assesses": [
                 "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-LEX-COMER",
+                "ES-LEX-USTEDES"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hemos hablado espanol",
-                "hemos hablado español"
+                "han comido",
+                "ellos han comido",
+                "ustedes han comido"
               ],
               "feedback": {
-                "correct": "Hemos hablado espanol.",
-                "incorrect": "Hemos hablado espanol."
+                "correct": "Han comido.",
+                "incorrect": "Han comido."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-haber-completo-why",
+              "prompt": "Why is haber shorter than an ordinary verb?",
+              "assesses": [
+                "ES-ETYMON-HABERE",
+                "ES-GRAMMAR-PERFECT-COMPLETE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "because it is said more often",
+                "frequency wears words down",
+                "it is used in every perfect sentence"
+              ],
+              "feedback": {
+                "correct": "The same reason ser and ir are worn strange.",
+                "incorrect": "Frequency. The most-used words wear down the most."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-haber-completo-participle",
+              "prompt": "How many forms does comido take across all six rows?",
+              "assesses": [
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-GRAMMAR-PERFECT-COMPLETE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "one",
+                "1",
+                "it never changes"
+              ],
+              "feedback": {
+                "correct": "All the person-work is in the little word.",
+                "incorrect": "One. The participle never moves."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -216,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the perfect do that the preterite does not? (Reaches into now.) And for something that happened today? (Spain says he hablado; much of Latin America says hablé — and both are right.)"
+              "text": "\"They have eaten\"? (Han comido.) \"We have eaten\"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule."
             }
           ]
         }

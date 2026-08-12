@@ -1,41 +1,96 @@
-Spanish, chapter 66: La Casa --- Your First Everyday Noun.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 66: Review --- Six Verbs, One Ending.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-la casa — "house," and "home".
+Lesson 1 of 2.
+Review — six verbs, one ending.
 
 Warm-up.
 [pause 2 seconds]
-You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with.
+Nothing new in this chapter. Say the yo forms of the three verbs you have just met: poner, salir, venir.
 
-Sounds you'll need.
-s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah.
+What you've built.
+The set is closed. Six of the commonest verbs in Spanish put an unexpected -go on the yo form and nowhere else:
+[a table of 6 rows, read aloud]
+verb: tener. yo: tengo. and the rest behaves: normally.
+verb: hacer. yo: hago. and the rest behaves: normally.
+verb: decir. yo: digo. and the rest behaves: normally.
+verb: poner. yo: pongo. and the rest behaves: normally.
+verb: salir. yo: salgo. and the rest behaves: normally.
+verb: venir. yo: vengo. and the rest behaves: normally.
+Six verbs, one oddity, and it lives in exactly one slot. That is a much smaller thing to carry than "six irregular verbs."
 
 The word, taken apart.
-la casa — the house, and just as often home.
-Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa.
-French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, "at the house of me."
-Italian kept a small one too: casino is casa plus a diminutive ending — literally "little house."
-
-Grammar Lens: a feminine noun, behaving exactly as promised.
-Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones.
-la casa — the house. Tengo una casa. — I have a house.
-Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it.
+Here is what the six chapters could not show you separately.
+They are not a family. Nobody decided these six belonged together. They came from different Latin verbs, by different routes, and arrived at the same ending by accident — a g that was already in some of the stems, and a sound change that pulled the others into line behind them.
+The club is a result, not a rule. Spanish learners are taught "the -go verbs" as though someone had drawn up a membership list; what actually happened is that six unrelated words drifted into the same shape and then reinforced each other.
+That is worth knowing for a practical reason: it tells you the list is closed. A pattern with a cause keeps recruiting. A pattern that is an accident stops.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la casa" — KAH-sah, a clean s]
+[your turn — say: all six yo forms in one breath — tengo, hago, digo, pongo, salgo, vengo]
 [pause 8 seconds for the answer]
-[your turn — say: "Tengo una casa"]
+[your turn — say: for each, the plain infinitive it came from]
 [pause 8 seconds for the answer]
+[repeat that twice]
+Until the six run together as one list.
 [question — say your answer, then pause 8 seconds]
-Say the house in Spanish.
+How many verbs are in the -go set?
+[question — say your answer, then pause 8 seconds]
+Which slot does the -go appear in?
 [question — say your answer, then pause 10 seconds]
-Say I have a house.
-[question — say your answer, then pause 10 seconds]
-Which French word is casa worn all the way down?
+Are these six related to each other?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "the house"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree.
+How many verbs take -go? (Six.) In how many slots? (One — the yo form.) And why does the list not grow? (Because it was never a rule — six unrelated verbs happened to converge.)
+
+
+Lesson 2 of 2.
+Practice — putting, leaving, and coming in the singular.
+
+Warm-up.
+[pause 2 seconds]
+This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six.
+
+Grammar Lens: the complete frame for this chapter.
+putting or placing: pongo, pones, pone.
+leaving or going out: salgo, sales, sale.
+coming: vengo, vienes, viene.
+known-word contrast: Salgo de Madrid. Vengo de Madrid.
+known singular comparison: vengo / tengo, vienes / tienes, viene / tiene.
+Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb.
+Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint.
+
+The words, taken apart — retrieve the history.
+poner continues Latin pōnere, the placing family of position.
+salir continues Latin salīre, the leaping family of salient.
+venir continues Latin venīre, the coming family of convene.
+different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “pongo, pones, pone”]
+[pause 8 seconds for the answer]
+[your turn — say: “salgo, sales, sale”]
+[pause 8 seconds for the answer]
+[your turn — say: “vengo, vienes, viene”]
+[pause 8 seconds for the answer]
+[your turn — say: “tengo, hago, digo, pongo, salgo, vengo”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of poner: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of salir: yo, tú, then usted.
+[question — say your answer, then pause 9 seconds]
+Give the learned singular forms of venir: yo, tú, then usted.
+[question — say your answer, then pause 11 seconds]
+Say 'I leave Madrid; I come from Madrid' in Spanish.
+[question — say your answer, then pause 12 seconds]
+Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.
+[question — say your answer, then pause 10 seconds]
+Match each Spanish verb to one English cousin: poner, salir, venir.
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter.

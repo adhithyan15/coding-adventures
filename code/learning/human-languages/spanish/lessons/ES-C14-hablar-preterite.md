@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C14-hablar-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1260
-chapter: 94
+sequence: 1290
+chapter: 97
 type: grammar
 headword: hablé
 gloss: the regular singular -ar preterite — hablé, hablaste, habló

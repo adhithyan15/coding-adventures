@@ -1,42 +1,38 @@
-Spanish, chapter 107: Hablado, Comido, Vivido --- The Participle.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 107: Tenia and Tuve --- When the Tense Changes the Meaning.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-hablado, comido, vivido — the participle.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+tenía and tuve — when the tense changes the meaning.
 
 Warm-up.
 [pause 2 seconds]
-Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one.
+So far the two pasts have shown you the same event from two places. With one very common verb, they show you two different events.
 
-Grammar Lens: two endings, not three.
-hablar becomes hablado, comer becomes comido, vivir becomes vivido.
--ar verbs take -ado.
--er and -ir verbs both take -ido.
-You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing.
-So this is one new ending and one you can predict.
-The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back.
+Grammar Lens: having, and getting.
+Tenía una casa. — I had a house. Tuve una casa. — I got a house.
+Read those twice. The second one is not "I had a house, viewed as finished." It is a different verb in English altogether.
+The reason follows from everything you already know. Tener means a state — having something is not an event, it is a condition that simply continues. So the imperfect, which has no edges, fits it perfectly: tenía is the ordinary way to say you had something.
+Force that state into the preterite and you are demanding edges for something that does not have any. Spanish resolves the clash the only way it can: it gives you the moment the state began. The edge of having is getting.
+Nothing irregular is happening. It is the same aspect rule you met two chapters ago, applied to a verb where the result is a new word in English.
 
-The word, taken apart.
-Grammarians call this a participle, from Latin participium — "the form that takes part." It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective.
-You can see the adjective half immediately. Cansado ("tired") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work.
-Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all.
+Why it's said this way.
+This is worth more than one verb, because the same thing happens to every verb that names a state rather than an action. When you meet those verbs later, you will not need a list — you will already know what their preterite is going to mean: the moment the state started.
+It also explains a frustration you may already have had. English "I had" covers both sentences above, so an English speaker reaching for tuve is often reaching for the wrong one. The fix is not to memorise which is which. It is to notice that you are describing a state, and states live in the imperfect unless you specifically mean the moment they began.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablado, comido, vivido" — one ending, then the shared one]
+[your turn — say: "Tenía una casa" then "Tuve una casa" — hear the English change]
 [pause 8 seconds for the answer]
-[your turn — say: "comí, viví" then "comido, vivido" — the same merger, twice]
+[your turn — say: the rule aloud — a state in the preterite gives you its beginning]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the participle of hablar.
 [question — say your answer, then pause 10 seconds]
-Give the participles of comer and vivir.
-[question — say your answer, then pause 8 seconds]
-Does the participle change for who is speaking?
+Say I had a house, meaning it was simply so.
+[question — say your answer, then pause 12 seconds]
+What does tuve una casa actually mean?
+[question — say your answer, then pause 12 seconds]
+You meet a new verb that names a state. What will its preterite mean?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense.
+Tenía una casa? (I had one.) Tuve una casa? (I got one.) And why? (A state forced into the preterite gives you the moment it began.) Next: all of it in one place.

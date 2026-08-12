@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 71,
-  "title": "-es --- The Plural Chapter One Promised",
+  "title": "La Comida --- A Noun You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:12aace7f48207ea3",
+  "sourceHash": "fnv1a64:529609cce36eb43e",
   "lessons": [
     {
-      "id": "ES-C44-plural-es",
-      "sequence": 1159,
-      "title": "-es — the plural your first chapter owed you",
-      "headword": "-es",
-      "romanization": "-es",
-      "gloss": "the plural ending for words that end in a consonant — a rule you have been using since you learned ustedes",
+      "id": "ES-C43-comida",
+      "sequence": 1183,
+      "title": "la comida — \"food,\" built from a verb you have",
+      "headword": "la comida",
+      "romanization": "la comida",
+      "gloss": "food, a meal — a noun you can build yourself out of a verb you already own",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b41e5783a8a0a91e",
+      "sourceHash": "fnv1a64:98e03c95bc958d69",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,88 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"you,\" formally. (Usted.) Now say it to a group. (Ustedes.) Hold both of those in your mouth for a moment."
+              "text": "Say \"to eat.\" (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: you have been doing this for fifty chapters",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Your first chapter gave you half a rule and said the rest was for later. This is later."
-            },
-            {
-              "kind": "speech",
-              "text": "A word ending in a vowel adds -s. A word ending in a consonant adds -es."
-            },
-            {
-              "kind": "speech",
-              "text": "And you already know the second half, because you have been saying it since the day you learned to address a group:"
-            },
-            {
-              "kind": "speech",
-              "text": "usted becomes ustedes."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not a special word. That is the consonant rule, and nobody told you. Here it is again on something you also hold:"
-            },
-            {
-              "kind": "speech",
-              "text": "español becomes españoles — Spanish people, Spanish speakers. los españoles — with the plural article from last chapter."
+              "text": "d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The extra e is not decoration and not an exception. Try saying usteds out loud. Then españols."
+              "text": "la comida — food, and also a meal."
             },
             {
               "kind": "speech",
-              "text": "Spanish does not let a word end in that pile of consonants. So when the plural -s would land somewhere unsayable, the language puts in the vowel it needs to get the -s out — and that vowel is e."
+              "text": "Take comer, drop the ending, add -ida:"
             },
             {
               "kind": "speech",
-              "text": "Which means the rule is really one rule with a repair attached: add -s; if you cannot say it, make room. That is a better thing to hold than two rules, because it will keep explaining things long after this chapter."
+              "text": "comer becomes comida — literally the eaten thing."
+            },
+            {
+              "kind": "speech",
+              "text": "That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Comer itself comes from Latin comedere — ed- is \"eat,\" the same ancient root as English eat, with com- (\"thoroughly\") in front. So comida is, at the bottom, \"the thoroughly-eaten thing.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -ida nouns are feminine",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender."
+            },
+            {
+              "kind": "speech",
+              "text": "la comida — the food. Hago la comida. — I make the meal."
+            },
+            {
+              "kind": "speech",
+              "text": "Set your three nouns side by side and the pattern is doing all the work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "gender",
+                "article"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "noun: libro. gender: masculine. article: el.",
+                "noun: casa. gender: feminine. article: la.",
+                "noun: comida. gender: feminine. article: la."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,93 +129,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"usted\" then \"ustedes\" — the rule you already had",
+              "instruction": "\"comer\" then \"comida\" — hear the verb inside the noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"usted\" then \"ustedes\" — the rule you already had]"
+              "source": "[YOU SAY: \"comer\" then \"comida\" — hear the verb inside the noun]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"los españoles\"",
+              "instruction": "\"Hago la comida\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"los españoles\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "try \"usteds\" and hear why the e exists",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: try \"usteds\" and hear why the *e* exists]"
+              "source": "[YOU SAY: \"Hago la comida\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-plural-es-espanol",
-              "prompt": "Make espanol plural.",
+              "id": "ES-C43-comida-build",
+              "prompt": "Build the noun for food from the verb comer.",
               "assesses": [
-                "ES-GRAMMAR-NOUN-PLURAL-ES",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-LEX-COMER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "espanoles",
-                "los espanoles"
+                "comida",
+                "la comida"
               ],
               "feedback": {
-                "correct": "Consonant ending, so -es.",
-                "incorrect": "Espanoles — the consonant takes -es."
+                "correct": "Comer plus -ida: the eaten thing.",
+                "incorrect": "Comida — drop the -er, add -ida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-plural-es-already",
-              "prompt": "Which word have you been using this rule on since long before this chapter?",
+              "id": "ES-C43-comida-make",
+              "prompt": "Say I make the meal.",
               "assesses": [
-                "ES-LEX-USTEDES",
-                "ES-LEX-USTED",
-                "ES-GRAMMAR-NOUN-PLURAL-ES"
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-LEX-COMIDA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "ustedes",
-                "usted becomes ustedes",
-                "usted"
+                "hago la comida",
+                "yo hago la comida"
               ],
               "feedback": {
-                "correct": "You had the rule before you had the rule.",
-                "incorrect": "Ustedes — that is usted plus the consonant plural."
+                "correct": "Hago la comida.",
+                "incorrect": "Hago la comida — feminine, so la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-plural-es-why",
-              "prompt": "Why -es rather than plain -s after a consonant?",
+              "id": "ES-C43-comida-gender",
+              "prompt": "What gender is any noun built with -ida?",
               "assesses": [
-                "ES-GRAMMAR-NOUN-PLURAL-ES"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-GRAMMAR-NOUN-GENDER"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the bare s would be unsayable",
-                "you cannot pronounce it",
-                "spanish needs a vowel to get the s out"
+                "feminine",
+                "always feminine"
               ],
               "feedback": {
-                "correct": "One rule and a repair, not two rules.",
-                "incorrect": "Try saying ustedes without the e. The vowel is there to make the -s pronounceable."
+                "correct": "Always — the ending settles it.",
+                "incorrect": "Feminine, every time."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Vowel ending — which plural? (-s.) Consonant ending? (-es.) And why? (A bare -s there would be unsayable.) Next: the four articles in one place, now that every one of them has been earned."
+              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something."
             }
           ]
         }

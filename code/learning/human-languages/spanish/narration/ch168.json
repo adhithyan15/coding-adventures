@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 168,
-  "title": "Por --- And Three Phrases You Already Owned",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7d061fd2481559a5",
+  "title": "Waiting, Answering, Buying",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ffa05503a28e02f5",
   "lessons": [
     {
-      "id": "ES-C51-por",
-      "sequence": 2152,
-      "title": "por — and you already know three of these",
-      "headword": "por",
-      "romanization": "por",
-      "gloss": "\"for\" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page",
+      "id": "ES-C40-esperar",
+      "sequence": 2120,
+      "title": "esperar — one verb for waiting, hoping and expecting",
+      "headword": "esperar",
+      "romanization": "esperar",
+      "gloss": "to wait — and to hope, and to expect, all in one verb",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ca8c9c48905bd18",
+      "sourceHash": "fnv1a64:57ae7461edcb639e",
       "notice": null,
       "blocks": [
         {
@@ -35,78 +35,75 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"please.\" (Por favor.) Say \"why.\" (¿Por qué?) Say \"because.\" (Porque.) You have been carrying this word since your first page and nobody has told you what it means."
+              "text": "Four verbs that each did something odd to themselves — juego the strangest of them. Here is one that does nothing odd at all, and is still the hardest word in these two chapters."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the arrow points back, or through",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "por — for, when something is the cause, the route, or what is given in exchange."
+              "text": "st-no-e — the e- is a run-up: es-pe-RAR, never spe-."
             },
             {
               "kind": "speech",
-              "text": "Gracias por la comida. — Thanks for the meal. (the cause) Por ti. — Because of you. (the cause)."
-            },
-            {
-              "kind": "speech",
-              "text": "Where para pointed forward at a target, por points back at a reason or through a middle — what something came through, not what it heads toward."
-            },
-            {
-              "kind": "speech",
-              "text": "Now look again at the three phrases you already own:"
-            },
-            {
-              "kind": "speech",
-              "text": "por favor — literally by way of a favour. You are not aiming at a favour; you are asking through one."
-            },
-            {
-              "kind": "speech",
-              "text": "¿por qué? — literally through what? — that is, caused by what?"
-            },
-            {
-              "kind": "speech",
-              "text": "porque — the same two words fused into an answer: because."
-            },
-            {
-              "kind": "speech",
-              "text": "Three of your oldest phrases turn out to be the same preposition, doing exactly what this chapter says it does. You knew por before you knew hola meant anything."
+              "text": "r-tap — one flick for the r in the middle."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart: esperar",
           "segments": [
             {
               "kind": "speech",
-              "text": "Por is two Latin words run together: pro (\"in front of, on behalf of\") and per (\"through\")."
+              "text": "esperar from Latin spērāre, \"to hope\", from spēs, \"hope\". That front e- is the same run-up that turned scrībere into escribir and studēre into estudiar: Spanish will not start a word with s plus a consonant."
             },
             {
               "kind": "speech",
-              "text": "The per half is still alive and unchanged in English, in the least poetic corner of the language:"
+              "text": "English took the root by its negative: despair from dēspērāre, dē- + spērāre — literally to un-hope — and with it desperate, and desperado, which English shaped from Spanish desesperado. Prosper is traditionally read as prō + spēs, \"according to one's hope\", though that reading is the traditional one rather than a settled one."
             },
             {
               "kind": "speech",
-              "text": "per hour, per person, per cent — cent being hundred, so literally through each hundred."
-            },
-            {
-              "kind": "speech",
-              "text": "percolate, permeate, perforate — all piercing through."
-            },
-            {
-              "kind": "speech",
-              "text": "English kept per meaning \"through\" and Spanish kept it inside por. Saying por favor, you are using the same word as miles per hour."
+              "text": "Spanish keeps the hope in plain sight: la esperanza. So does Esperanto — its inventor published as Doktoro Esperanto, \"Doctor One-Who-Hopes\"."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: three English verbs, one Spanish word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Espero a María means I am waiting for María.",
+                "Espero el pan means I am expecting the bread.",
+                "Espero que sí means I hope so."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One verb, three English words, and nothing in the Spanish tells them apart. Context does all of it, and a learner has to stop translating and start reading the situation. Hope and expect were never far from waiting: to wait for a thing is to think it is coming."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the small a before a person, the same one that stands in conozco a María. And after three chapters of cracking stems, esperar is perfectly regular: espero, esperas, espera, esperamos, esperan."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,84 +116,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word",
+              "instruction": "\"espero, esperas, espera, esperamos, esperan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word]"
+              "source": "[YOU SAY: \"espero, esperas, espera, esperamos, esperan\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Gracias por la comida\"",
+              "instruction": "\"Espero a María\" then \"Espero el pan\" then \"Espero que sí\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Gracias por la comida\"]"
+              "source": "[YOU SAY: \"Espero a María\" then \"Espero el pan\" then \"Espero que sí\"]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-por-thanks",
-              "prompt": "Say thanks for the meal.",
-              "assesses": [
-                "ES-LEX-POR",
-                "ES-LEX-GRACIAS",
-                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "gracias por la comida",
-                "gracias por la comida."
-              ],
-              "feedback": {
-                "correct": "Por — the cause of the thanks.",
-                "incorrect": "Gracias por la comida."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-por-favor",
-              "prompt": "What does por favor literally say?",
-              "assesses": [
-                "ES-LEX-POR-FAVOR",
-                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "by way of a favour",
-                "through a favour",
-                "by means of a favour"
-              ],
-              "feedback": {
-                "correct": "Not aimed at a favour — asked through one.",
-                "incorrect": "By way of a favour."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-por-per",
-              "prompt": "Which everyday English word is the per inside por, still meaning through?",
-              "assesses": [
-                "ES-ETYMON-PRO-PER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "per, as in per hour",
-                "per",
-                "per hour, per cent"
-              ],
-              "feedback": {
-                "correct": "Per cent is literally through each hundred.",
-                "incorrect": "Per — per hour, per person, per cent."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"spērāre, esperanza\" then English \"despair, desperate\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"spērāre, esperanza\" then English \"despair, desperate\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -208,7 +155,319 @@
             },
             {
               "kind": "speech",
-              "text": "Which direction does por point? (Back at a cause, or through something.) What is por favor literally? (By way of a favour.) Which English word is the per inside it? (Per, as in per hour.) Next: the two side by side."
+              "text": "Give the three English verbs esperar covers. (Wait, hope, expect.) What does dēspērāre take apart into? (Dē- + spērāre, to un-hope.) Name two other Spanish verbs whose e- is a run-up, with their Latin roots. (Escribir from scrībere, estudiar from studēre.) Would you use conocer or saber for a city? (Conocer.) And what did the -sc- inside cognōscere mark? (Beginning — to come to know.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C40-contestar",
+      "sequence": 2130,
+      "title": "contestar — \"to answer\", from a Roman courtroom",
+      "headword": "contestar",
+      "romanization": "contestar",
+      "gloss": "to answer — a Roman courtroom word that English turned into a fight and Spanish turned into a reply",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae158ed8b02659cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pregunto pushes the pole down to sound the water. Espero waits. Now the other half of a conversation — and a word that began as an oath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s-clear — a clean s in the middle: con-tes-TAR."
+            },
+            {
+              "kind": "speech",
+              "text": "stress-final — the beat lands on the last syllable, with no written accent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: contestar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contestar (\"to answer\") from Latin contestārī, \"to call witnesses\": com- + testārī, from testis, \"a witness\". In Roman law, contestārī lītem was the formal opening of a lawsuit — both sides calling their witnesses so the argument could begin."
+            },
+            {
+              "kind": "speech",
+              "text": "From that one act the two languages walked in opposite directions. English kept the fight: to contest a thing is to dispute it. Spanish kept the reply — first \"say back what the other side said\", then simply answer."
+            },
+            {
+              "kind": "speech",
+              "text": "The testis family is shared: testify, testimony, testament, attest, protest, detest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: contestar and responder",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has a second answering verb, and it is built on a different promise."
+            },
+            {
+              "kind": "speech",
+              "text": "responder from Latin respondēre, re- + spondēre, \"to pledge solemnly\". Answering is pledging back. English holds that whole branch: respond, response, responsible, sponsor, and spouse, from spōnsus, \"one who has been pledged\"."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "where it lives"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "verb: contestar. where it lives: the everyday one: a question, the phone, a letter.",
+                "verb: responder. where it lives: weightier — responding to something."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are regular, one -ar and one -er: contesto, contestas, contesta, contestamos, contestan; respondo, respondes, responde. The noun is the odd part: the answer is la respuesta, borrowed from responder, never from contestar."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"contesto, contestas, contesta, contestamos, contestan\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"contesto, contestas, contesta, contestamos, contestan\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Te pregunto la hora y me contestas\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Te pregunto la hora y me contestas\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"testis, testify, contest\" then \"contestar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"testis, testify, contest\" then \"contestar\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did contestārī mean literally, and what did English make of it? (To call witnesses; contest.) What does respondēre take apart into? (Re- + spondēre, to pledge back.) Which verb asks for information and which asks for a thing? (Preguntar; pedir.) And name the three English verbs inside esperar. (Wait, hope, expect.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C40-comprar",
+      "sequence": 2140,
+      "title": "comprar — \"to buy\", and a cousin that is not one",
+      "headword": "comprar",
+      "romanization": "comprar",
+      "gloss": "to buy — from Latin's \"get ready, procure\", and not from the verb behind English compare",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:782beb4dbfe9314a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can ask, answer and wait. Now pay for the bread, with a verb whose obvious English relative turns out to be a stranger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pr-cluster — -pr- is one beat: kom-PRAR, never kom-pe-rar."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-o — a short pure o, with no glide toward ow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: comprar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comprar (\"to buy\") from Latin comparāre: com- + parāre, \"to make ready, to furnish, to procure\". Latin already used it for buying — you procured a thing — and the middle syllable wore away, comparāre to comprar."
+            },
+            {
+              "kind": "speech",
+              "text": "Parāre stocked English well: prepare, repair, apparatus, apparel, separate, parade, and emperor, from imperāre, \"to give orders\". Spanish keeps preparar, and parar, \"to stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "That com- is the same one already inside compañero — \"the one you share bread with\" — and inside conseguir, conocer and contestar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the lookalike",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English compare looks like the obvious relative. It is not one."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin had two verbs spelled comparāre. One is com- + parāre, \"procure\", and Spanish comprar comes from it. The other is built on compār, \"equal, matched\", and means \"to set side by side\" — that is the one English compare comes from. Two different words that fell together in spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "Comprender is a stranger too: it is comprehendere, \"to seize together\". Same prefix, unrelated second halves. A resemblance is a question, never an answer."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"compro, compras, compra, compramos, compran\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"compro, compras, compra, compramos, compran\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Compro el pan y el vino\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Compro el pan y el vino\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Un café, por favor\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Un café, por favor\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"parāre, prepare, repair\" then \"comprar\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"parāre, prepare, repair\" then \"comprar\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run the chapter: espero, contesto, compro — three verbs that break nothing, whose difficulty is meaning. Give each root and what it meant. (Spērāre to hope, contestārī to call witnesses, comparāre to procure.) Is English compare a relative of comprar? (No — a different Latin comparāre, built on compār, \"equal\".) Now buy: compro el pan, el vino y un café, por favor — then say what pānis gave compañero, which English words vīnum reached, why café is masculine, and what por favor is word for word. (One who shares bread; wine, vine, vinegar; café arrived as a masculine loan out of Arabic qahwa; \"for a favour\".) And which verb gets a thing by following it? (Conseguir.)"
             }
           ]
         }

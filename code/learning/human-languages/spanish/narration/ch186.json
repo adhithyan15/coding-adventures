@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 186,
-  "title": "Synthesis --- Describing Where You Are",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dad2d84addceaa10",
+  "title": "Ha + Y --- The Fossil in a Three-Letter Word",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:a0e3bc393f8eb23d",
   "lessons": [
     {
-      "id": "ES-C54-sintesis-lo-que-hay",
-      "sequence": 2170,
-      "title": "Synthesis — describing where you are",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — describing a place you are standing in, which needs almost everything this book has given you",
+      "id": "ES-C54-ha-mas-y",
+      "sequence": 2197,
+      "title": "ha + y — the fossil in a three-letter word",
+      "headword": "ha + y",
+      "romanization": "ha + y",
+      "gloss": "the fossil inside hay — a word for \"there\" that exists nowhere else in Spanish, and survives whole in French",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f69821c5a267cb08",
-      "notice": null,
+      "sourceHash": "fnv1a64:285359dcc8b52d8f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,62 +42,51 @@
             },
             {
               "kind": "speech",
-              "text": "Hay is the word you reach for to describe a place. Look around the room you are in and say what is there."
+              "text": "Hay looks like nothing. Say the haber form for he/she. (Ha.) Now look at hay again with that in mind."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Qué hay aquí? — Hay una casa. Hay libros — los que compré. — ¿Y la comida que haces? — Lo que hay, hay que comerlo."
+              "text": "Hay is two words fused:"
             },
             {
               "kind": "speech",
-              "text": "The last line is four words of grammar stacked on each other, and every piece came from a different chapter:"
+              "text": "ha + y."
             },
             {
               "kind": "speech",
-              "text": "lo que hay — the noun-shaped hole, filled by hay."
+              "text": "The ha you already hold: it is haber, third person. The y is the interesting half. It is Latin ibi, meaning \"there\" — and Spanish otherwise lost that word completely."
             },
             {
               "kind": "speech",
-              "text": "hay que — obligation with nobody obliged."
+              "text": "There is no y meaning \"there\" anywhere else in modern Spanish. It survives in exactly one place, welded to the front of a verb, because words that get glued to something else stop being available to be replaced. Hay is a museum case with one object in it."
             },
             {
               "kind": "speech",
-              "text": "comerlo — the object pronoun, riding on the end of an infinitive."
+              "text": "So the literal reading is: \"it has there.\" Which is a strange way to say something exists, until you notice that the neighbours do the same:"
             },
             {
               "kind": "speech",
-              "text": "You have not been taught that last one, and you can still read it: comer plus lo. That is what it feels like when a language starts assembling itself."
+              "text": "French: il y a — \"it there has.\" Same haber verb, same ibi, same order, three words instead of one. French kept its y separate, so its fossil is still visible on the surface."
+            },
+            {
+              "kind": "speech",
+              "text": "English: there is — which also starts with a place-word doing a job that has nothing to do with place. Nobody is pointing anywhere when they say there is a problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Three languages, three different verbs, and all of them reached for a word meaning \"there\" to announce that something exists. That is not borrowing; it is the same instinct arriving three times."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what you can do now",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Describing a place is a small thing that needs a surprising amount: an existence word, articles that count, nouns, relative clauses to pick things out, and a way to say what has to happen. This chapter needed all of them, and you supplied them without any of it being new."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the honest end of a beginner's course. Not \"you are finished\" — nobody is — but the machinery is assembled. Every remaining thing in Spanish is either a word you have not met yet or a familiar structure standing somewhere you have not seen it stand."
-            },
-            {
-              "kind": "speech",
-              "text": "The eleven gaps found in the original audit are now closed. What is left is not a gap. It is the ordinary, unbounded work of using the thing."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,109 +99,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole four-line exchange",
+              "instruction": "\"ha\" then \"hay\" — hear the extra piece",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole four-line exchange]"
+              "source": "[YOU SAY: \"ha\" then \"hay\" — hear the extra piece]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo que hay, hay que comerlo\" — and hear four chapters at once",
+              "instruction": "\"hay\", \"il y a\", \"there is\" — three languages, one instinct",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo que hay, hay que comerlo\" — and hear four chapters at once]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"hay\", \"il y a\", \"there is\" — three languages, one instinct]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-ask",
-              "prompt": "Ask what there is here.",
+              "id": "ES-C54-ha-mas-y-parts",
+              "prompt": "What two pieces make up hay?",
               "assesses": [
-                "ES-LEX-HAY",
-                "ES-LEX-AQUI"
+                "ES-ETYMON-HAY-IBI",
+                "ES-LEX-HABER"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "que hay aqui",
-                "¿qué hay aquí?"
+                "ha and y",
+                "ha plus y",
+                "ha + y"
               ],
               "feedback": {
-                "correct": "The question you will ask in every new room.",
-                "incorrect": "¿Que hay aqui?"
+                "correct": "The haber you know, plus a word for there.",
+                "incorrect": "Ha, from haber, plus y."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-pick",
-              "prompt": "Say there are books, the ones I bought.",
+              "id": "ES-C54-ha-mas-y-fossil",
+              "prompt": "Where else in modern Spanish does that y meaning there appear?",
               "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE"
+                "ES-ETYMON-HAY-IBI"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hay libros, los que compre",
-                "hay libros — los que compré"
+                "nowhere",
+                "nowhere else",
+                "only in hay"
               ],
               "feedback": {
-                "correct": "Hay, then a relative clause picking them out.",
-                "incorrect": "Hay libros, los que compre."
+                "correct": "A museum case with one object in it.",
+                "incorrect": "Nowhere else. It survived only because it was glued to a verb."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-must",
-              "prompt": "Say what there is, one must eat.",
+              "id": "ES-C54-ha-mas-y-french",
+              "prompt": "Which French phrase is the same three pieces, kept separate?",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-LEX-HAY"
+                "ES-ETYMON-HAY-IBI"
               ],
-              "responseSeconds": 16,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "lo que hay, hay que comerlo",
-                "lo que hay hay que comer"
+                "il y a",
+                "il y a — it there has"
               ],
               "feedback": {
-                "correct": "Four pieces, four different chapters.",
-                "incorrect": "Lo que hay, hay que comerlo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-sintesis-lo-que-hay-done",
-              "prompt": "What is left to learn now that the machinery is assembled?",
-              "assesses": [
-                "ES-GRAMMAR-HAY-QUE",
-                "ES-GRAMMAR-SE-IMPERSONAL"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "words, and familiar structures in new places",
-                "vocabulary and practice",
-                "nothing structural"
-              ],
-              "feedback": {
-                "correct": "Not a gap — the ordinary unbounded work of using it.",
-                "incorrect": "Words you have not met, and familiar structures standing somewhere new."
+                "correct": "French left its fossil on the surface.",
+                "incorrect": "Il y a — literally it there has."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -217,7 +186,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask what there is here. (¿Qué hay aquí?) Say what there is, one must eat. (Lo que hay, hay que comerlo.) And what is left after this? (Words, and practice — the machinery is assembled.)"
+              "text": "What is hay made of? (Ha + y.) What does the y mean, and where else is it? (\"There\" — and nowhere else in Spanish.) What did French do with the same pieces? (Kept them apart: il y a.) Next: hay with a verb after it."
             }
           ]
         }

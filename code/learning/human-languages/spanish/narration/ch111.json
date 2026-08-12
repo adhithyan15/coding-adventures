@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 111,
-  "title": "Review --- A Tense You Build",
+  "title": "He Hablado --- A Verb With No Meaning Left",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d62b6e445fa574e8",
+  "sourceHash": "fnv1a64:685a69432b69aaee",
   "lessons": [
     {
-      "id": "ES-C49-repaso-perfecto",
-      "sequence": 1349,
-      "title": "Review — a tense you build",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — a whole tense assembled from two pieces, neither of which changes with the other",
+      "id": "ES-C49-he-hablado",
+      "sequence": 1376,
+      "title": "he hablado — \"I have spoken\"",
+      "headword": "he hablado",
+      "romanization": "he hablado",
+      "gloss": "\"I have spoken\" — and haber, a verb that gave away its meaning and kept only a job",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77a6e08e93fc8ec2",
+      "sourceHash": "fnv1a64:92fcf6076eac4f37",
       "notice": null,
       "blocks": [
         {
@@ -35,78 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Two questions: how many words is this tense, and which of them carries the person?"
+              "text": "You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Piece one — the person: he, has, ha, hemos, habéis, han."
-            },
-            {
-              "kind": "speech",
-              "text": "Piece two — the meaning: the participle, which never changes."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "regular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "-ar. regular: -ado, hablado.",
-                "-er / -ir. regular: -ido, comido, vivido."
-              ]
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "irregular",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "hacer. irregular: hecho, decir becomes dicho.",
-                "ver. irregular: visto, poner becomes puesto."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Six little words times any participle you can form. That is the whole tense."
+              "text": "silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: why this one was cheap",
+          "title": "Grammar Lens: the emptied verb",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another."
+              "text": "he + participle — I have done something."
             },
             {
               "kind": "speech",
-              "text": "This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount."
+              "text": "He hablado español. — I have spoken Spanish."
             },
             {
               "kind": "speech",
-              "text": "That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did."
+              "text": "Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody."
+            },
+            {
+              "kind": "speech",
+              "text": "He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not \"I hold spoken.\" You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place."
             }
           ]
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Haber comes from Latin habēre, \"to hold, to have\" — a completely ordinary verb with a completely ordinary meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower \"hold, grip\"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed."
+            },
+            {
+              "kind": "speech",
+              "text": "English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for \"hold\" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually."
+            },
+            {
+              "kind": "speech",
+              "text": "So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,99 +110,86 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"",
+              "instruction": "\"He hablado español\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"]"
+              "source": "[YOU SAY: \"He hablado español\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the little word arrives without thought."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-repaso-perfecto-pieces",
-              "prompt": "What are the two pieces of this tense, and which carries the person?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "haber and the participle; haber carries the person",
-                "a form of haber plus a participle"
-              ],
-              "feedback": {
-                "correct": "And the participle never moves.",
-                "incorrect": "A form of haber, which carries the person, plus a participle, which carries the meaning."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-repaso-perfecto-build",
-              "prompt": "Say we have lived.",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VIVIR"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have eaten\" in English, and notice that nothing is being held",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "hemos vivido",
-                "nosotros hemos vivido"
-              ],
-              "feedback": {
-                "correct": "Hemos vivido.",
-                "incorrect": "Hemos vivido."
-              }
+              "source": "[YOU SAY: \"I have eaten\" in English, and notice that nothing is being held]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-irreg",
-              "prompt": "Say you have said it, using the participle of decir.",
+              "id": "ES-C49-he-hablado-say",
+              "prompt": "Say I have spoken Spanish.",
               "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+                "ES-GRAMMAR-PERFECT-FIRST-PERSON",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo has dicho",
-                "has dicho"
+                "he hablado espanol",
+                "he hablado español",
+                "yo he hablado espanol"
               ],
               "feedback": {
-                "correct": "Has dicho.",
-                "incorrect": "Lo has dicho — dicho, not decido."
+                "correct": "He carries the person; hablado carries the meaning.",
+                "incorrect": "He hablado espanol."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-repaso-perfecto-cost",
-              "prompt": "Why did this tense cost less than the present or the preterite?",
+              "id": "ES-C49-he-hablado-mean",
+              "prompt": "What does haber mean in he hablado?",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE"
+                "ES-LEX-HABER",
+                "ES-ETYMON-HABERE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "it is built from two pieces rather than conjugated per verb",
-                "six words once, not endings on every verb"
+                "nothing on its own",
+                "nothing",
+                "it has no meaning here, only a job"
               ],
               "feedback": {
-                "correct": "A fixed cost instead of a per-verb one.",
-                "incorrect": "Six words learned once, plus one participle per verb — not a new ending set for every family."
+                "correct": "The meaning left; the machinery stayed.",
+                "incorrect": "Nothing. Its meaning went to tener and it kept only this job."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-he-hablado-english",
+              "prompt": "Which English verb was hollowed out the same way?",
+              "assesses": [
+                "ES-ETYMON-HABERE",
+                "ES-LEX-TENER"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "have",
+                "to have",
+                "have, as in i have eaten"
+              ],
+              "feedback": {
+                "correct": "Nobody holds anything in I have eaten.",
+                "incorrect": "Have — I have eaten holds nothing."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -223,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
+              "text": "\"I have spoken\"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it."
             }
           ]
         }
