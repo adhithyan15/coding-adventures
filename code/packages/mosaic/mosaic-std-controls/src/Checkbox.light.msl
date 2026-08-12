@@ -1,0 +1,6 @@
+style Checkbox {
+  part checkbox-root {
+    padding   : $foundation-space-xs ;
+    font-size : $foundation-font-body ;
+  }
+}

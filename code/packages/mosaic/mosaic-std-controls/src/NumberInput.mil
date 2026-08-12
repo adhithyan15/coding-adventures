@@ -1,0 +1,7 @@
+// Standard numeric input with native editing and commit semantics.
+component NumberInput {
+  slot value : number = 0 ;
+  slot placeholder : text = "" ;
+  slot disabled : bool = false ;
+  emit onChange ( value : number ) ;
+}

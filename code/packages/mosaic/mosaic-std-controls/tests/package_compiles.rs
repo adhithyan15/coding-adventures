@@ -6,7 +6,7 @@ use mosaic_package_artifact_builder::{
 };
 use tempfile::{Builder, TempDir};
 
-const COMPONENTS: &[&str] = &["Button", "Input"];
+const COMPONENTS: &[&str] = &["Button", "Input", "Checkbox", "NumberInput"];
 const NATIVE_BACKENDS: &[Backend] = &[
     Backend::SwiftUI,
     Backend::Qt,
@@ -39,7 +39,7 @@ fn manifest_exposes_the_core_standard_controls() {
         manifest["package"]["name"].as_str(),
         Some("mosaic-std-controls")
     );
-    assert_eq!(manifest["package"]["version"].as_str(), Some("0.1.0"));
+    assert_eq!(manifest["package"]["version"].as_str(), Some("0.2.0"));
     let exports = manifest["components"]["exports"]
         .as_array()
         .expect("exports array")
@@ -103,7 +103,7 @@ license = "MIT OR Apache-2.0"
 exports = ["Consumer"]
 
 [dependencies]
-mosaic-std-controls = "0.1.0"
+mosaic-std-controls = "0.2.0"
 mosaic-std-foundation = "0.1.0"
 
 [kernel]
@@ -117,6 +117,8 @@ version = "1"
   emit onContinue ;
   emit onEmailChange ( value : text ) ;
   emit onEmailCommit ;
+  emit onRememberChange ( checked : bool ) ;
+  emit onTeamSizeChange ( value : number ) ;
 }
 "#,
     )
@@ -130,6 +132,14 @@ version = "1"
       placeholder: "Email address",
       onChange: emit: onEmailChange,
       onCommit: emit: onEmailCommit
+    )
+    pkg::mosaic-std-controls::NumberInput (
+      placeholder: "Team size",
+      onChange: emit: onTeamSizeChange
+    )
+    pkg::mosaic-std-controls::Checkbox (
+      label: "Remember this device",
+      onChange: emit: onRememberChange
     )
     pkg::mosaic-std-controls::Button (
       label: "Continue",
@@ -170,6 +180,14 @@ fn included_controls_build_a_native_complete_sign_in_surface_everywhere() {
             emitted.contains("Continue"),
             "{backend:?} lost button label"
         );
+        assert!(
+            emitted.contains("Team size"),
+            "{backend:?} lost number placeholder:\n{emitted}"
+        );
+        assert!(
+            emitted.contains("Remember this device"),
+            "{backend:?} lost checkbox label:\n{emitted}"
+        );
         assert!(!emitted.contains("$foundation-"));
         assert!(!emitted.contains("pkg::"));
         assert!(!emitted.contains("$mosaic-child-slot"));
@@ -185,7 +203,7 @@ fn included_controls_build_a_native_complete_sign_in_surface_everywhere() {
         .filter_map(|path| fs::read_to_string(path).ok())
         .collect::<Vec<_>>()
         .join("\n");
-    for value in ["#5b5bd6", "#d8dee8", "6px", "16px"] {
+    for value in ["#5b5bd6", "#d8dee8", "4px", "6px", "16px"] {
         assert!(
             html.contains(value),
             "missing Foundation control value {value}"

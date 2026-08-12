@@ -9,6 +9,7 @@
     "foundation-color-border-dark": "#3b4350",
     "foundation-color-accent": "#5b5bd6",
     "foundation-font-body": "16px",
+    "foundation-space-xs": "4px",
     "foundation-space-sm": "8px",
     "foundation-radius-sm": "6px"
   }
