@@ -239,6 +239,30 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(!history_transcript.contains("e2e updated password"));
     let original_revision = extract_history_revision(&history_transcript, "Example account");
 
+    let (denied_candidate_status, denied_candidate_transcript, denied_candidate_stdout) =
+        run_conflict_reveal_failure_in_pty(
+            &home,
+            &item_id,
+            &original_revision,
+            b"no",
+            b"vault-pm: invalid command",
+        );
+    assert_eq!(denied_candidate_status.code(), Some(2));
+    assert!(denied_candidate_stdout.is_empty());
+    assert_transcript_excludes_secrets(&denied_candidate_transcript);
+
+    let (failed_candidate_status, failed_candidate_transcript, failed_candidate_stdout) =
+        run_conflict_reveal_failure_in_pty(
+            &home,
+            &item_id,
+            &original_revision,
+            b"yes",
+            b"vault-pm: recovery or conflict required",
+        );
+    assert_eq!(failed_candidate_status.code(), Some(5));
+    assert!(failed_candidate_stdout.is_empty());
+    assert_transcript_excludes_secrets(&failed_candidate_transcript);
+
     let expected_delete = format!("Item deleted: {item_id}");
     let (delete_status, delete_transcript) = run_unlock_in_pty(
         &home,
@@ -318,7 +342,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(
         post_failure_transcript
-            .contains("commits=21 catalogs=6 revisions=5 items=2 audit_events=21"),
+            .contains("commits=23 catalogs=6 revisions=5 items=2 audit_events=23"),
         "unexpected post-failure audit totals: {post_failure_transcript}"
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
@@ -337,6 +361,8 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         "{audit_list_transcript}"
     );
     assert!(audit_list_transcript.contains("action=item_search\toutcome=succeeded"));
+    assert!(audit_list_transcript.contains("action=item_read\toutcome=denied"));
+    assert!(audit_list_transcript.contains("action=item_read\toutcome=failed"));
     assert!(audit_list_transcript.contains("action=audit_read\toutcome=succeeded"));
     assert!(audit_list_transcript.contains("action=vault_verify\toutcome=succeeded"));
     assert_transcript_excludes_secrets(&audit_list_transcript);
@@ -374,7 +400,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         "final audit verification failed: {final_audit_transcript}"
     );
     assert!(
-        final_audit_transcript.contains("audit_events=25"),
+        final_audit_transcript.contains("audit_events=27"),
         "unexpected final audit total: {final_audit_transcript}"
     );
     assert_transcript_excludes_secrets(&final_audit_transcript);
@@ -1172,6 +1198,67 @@ fn run_secret_reveal_in_pty(
     );
     read_until(&mut master, &mut transcript, expected_line.as_bytes());
     drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let mut stdout = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        stdout,
+    )
+}
+
+fn run_conflict_reveal_failure_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    revision_id: &str,
+    confirmation: &[u8],
+    expected_error: &[u8],
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["conflict", "reveal", item_id, revision_id, "login-password"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Reveal secret on this terminal? Type yes to continue: ",
+    );
+    master.write_all(confirmation).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, expected_error);
+    let error_line = transcript.len() - expected_error.len();
+    read_until_from(&mut master, &mut transcript, error_line, b"\n");
     drop(master);
     let status = child.wait().unwrap();
     let mut stdout = Vec::new();

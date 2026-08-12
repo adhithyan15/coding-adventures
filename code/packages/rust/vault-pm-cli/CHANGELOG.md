@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added audit-required `conflict reveal ITEM REVISION FIELD`, which accepts
+  only an exact current conflict candidate, reuses the exact-`yes` ceremony,
+  publishes denial/failure/success before release, and writes the selected
+  secret only to the controlling terminal.
 - Added audited `search QUERY` over the application-owned wipe-on-lock
   projection, with zeroizing/redacted query ownership, a fixed 100-result cap,
   deterministic list-row rendering, and durable failed semantic queries.

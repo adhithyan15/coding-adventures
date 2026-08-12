@@ -254,6 +254,13 @@ publication failure withholds the capability, secret, and original error.
 The item-bound current-field boundary records refusal as `Denied` without item
 traversal, ambiguity or absence as `Failed` without a revision, schema mismatch
 as `Failed` with the reached revision, and success with that exact revision.
+The conflict-candidate field boundary adds a stricter current-membership gate:
+the named item must have at least two candidates and the named revision must be
+one of them. Denial still avoids traversal; an unconflicted item or historical
+noncandidate fails without binding a revision; a tombstone or wrong field
+fails with the authenticated current revision; and success releases only the
+selected field after its item-and-revision event is durable. The conflict set
+and all immutable candidate bytes remain unchanged.
 
 Long-lived hosts can retain an explicit `VaultAccessV1` lifecycle boundary.
 It begins with only a redacted `LockedVaultV1` locator handle, authenticates a
