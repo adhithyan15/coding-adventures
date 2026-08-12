@@ -5,7 +5,7 @@ manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit enable` and
 `audit verify`, explicit `audit list`/`audit show TRACE`, and opt-in full
 `doctor --unlock` workflows. It now also owns the first usable item vertical:
-authenticated login, secure-note, and payment-card creation plus durable
+authenticated login, secure-note, payment-card, and API-key creation plus durable
 redacted list/show. The same one-shot boundary now supports revision-safe login
 replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
@@ -106,9 +106,16 @@ or validation failures publish `ItemCreate Failed`; success atomically
 publishes the typed encrypted card and `ItemCreate Succeeded`. Show renders
 only holder, last four, expiry, postal-presence, and explicit PAN/CVV redaction;
 the complete PAN and CVV require the separate audited `item reveal` ceremony.
+`item add api-key` composes the existing typed record through the same
+audit-first boundary. It collects bounded label, service, scope, and optional
+expiry metadata plus one hidden wipe-on-drop token. Scope and expiry
+validation failures become durable failed `ItemCreate` events; success
+atomically publishes the encrypted record and succeeded event. Show renders
+only label, service, scopes, expiry, and explicit token redaction. Complete
+token access remains a separate audited `item reveal ITEM api-key-token`.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; login passwords, note bodies, PANs,
-CVVs, and postal values are never available to the renderer. In an active
+CVVs, postal values, and API-key tokens are never available to the renderer. In an active
 epoch, both commands first make their exact signed access outcome durable.
 
 `item edit ITEM` asks the application for an opaque edit preparation that owns

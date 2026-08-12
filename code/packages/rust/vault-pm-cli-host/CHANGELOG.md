@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add fixed bounded API-key label, service, scope, and expiry prompts plus a
+  hidden wipe-on-drop token prompt.
 - Add fixed bounded payment-card metadata prompts plus hidden PAN and CVV
   prompts, retaining controlling-terminal input and wipe-on-drop ownership.
 - Add exact-`yes` controlling-terminal confirmation and direct quoted,

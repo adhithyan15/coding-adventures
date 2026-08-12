@@ -23,6 +23,7 @@ vault-pm [--vault NAME] restore verify FILE
 vault-pm [--vault NAME] item add login
 vault-pm [--vault NAME] item add secure-note
 vault-pm [--vault NAME] item add card
+vault-pm [--vault NAME] item add api-key
 vault-pm [--vault NAME] item edit ITEM
 vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
@@ -62,6 +63,12 @@ verifies the advanced audit chain and its closed event-field grammar, and scans
 the profile tree for the collision-resistant full PAN bytes. Exact typed
 round-trips and redacted rendering cover the necessarily short CVV value
 without relying on a collision-prone raw substring scan of random ciphertext.
+
+A separate API-key drill collects a token only through the hidden controlling
+terminal prompt, restarts into label/service/scope/expiry-only rendering,
+reveals the token only through the existing separately confirmed audited
+terminal ceremony, verifies the closed audit-row grammar, and scans the
+profile tree for the collision-resistant full token bytes.
 
 ## Verification
 

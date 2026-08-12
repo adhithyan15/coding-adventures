@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited API-key creation and added a real PTY drill for hidden token
+  input, restart-backed metadata-only rendering, separately authorized token
+  reveal, closed-field audit advancement, and plaintext-tree exclusion.
 - Exposed audited payment-card creation and added a second real PTY drill for
   hidden PAN/CVV input, restart-backed redaction, separate direct-terminal
   reveal, closed-field audit advancement, and full-PAN plaintext-tree
