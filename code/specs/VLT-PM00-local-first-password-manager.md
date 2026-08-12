@@ -1542,9 +1542,14 @@ changelog, focused build, and downstream validation.
            grouping/value equality, cross-vault identity disjointness, removed
            source parents, and publish-before-release succeeded/failed audit
            events, using `VLT-PM19-portable-restore-verification.md`.
-9b-4b-2b. remaining explicit target creation/configuration switching and CLI
-           composition of the independent verifier before a fully
-           verified-restore claim.
+9b-4b-2b-1. completed retryable audit-required CLI semantic verification against
+             the current target, including bounded artifact reopen, fixed
+             hidden passphrase input, host-failure events, aggregate-only
+             success, and real-process restart proof, using
+             `VLT-PM20-cli-portable-restore-verify.md`.
+9b-4b-2b-2. remaining explicit target creation/configuration switching and
+             automatic verifier composition before a fully verified-restore
+             claim.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
@@ -1608,14 +1613,16 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM13-cli-history-list.md`, `VLT-PM14-cli-delete-restore.md`,
   `VLT-PM15-operation-audit.md`, `VLT-PM16-cli-secure-note-create.md`, and
   `VLT-PM17-cli-portable-export.md`, `VLT-PM18-cli-portable-import.md`, and
-  `VLT-PM19-portable-restore-verification.md` —
+  `VLT-PM19-portable-restore-verification.md`, and
+  `VLT-PM20-cli-portable-restore-verify.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
   first CRUD vertical, revision-safe replacement, redacted history, and
   reversible delete/restore, first-class operation-audit contracts, and
   secure-note CLI composition, audited encrypted recovery-artifact
-  export/import, and independently audited semantic restore verification.
+  export/import, independently audited semantic restore verification, and its
+  retryable local CLI ceremony.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.
