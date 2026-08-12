@@ -10,6 +10,11 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Replaced the actor-local `Rc<RefCell<SmartHomeRuntime>>` bridge with a
+  thread-safe adapter over `SmartHomeControllerRuntime`; every Chief tool
+  invocation now serializes, durably commits, and publishes its runtime and
+  audit changes through the shared controller authority, including audit state
+  produced by denied calls.
 - Expose stable MQTT-broker and custom-HTTP-domain command labels.
 - Expose stable country and cloud-upload command labels plus the reusable data
   governance primitive label.
