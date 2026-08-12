@@ -127,7 +127,7 @@ const PRIMITIVES: &[&str] = &[
     // (currently both nodes coexist as siblings in `children`).
     "If",
     "Else",
-    // UI29 §2.1 / UI29-1 / UI29-2 / UI29-3 / UI29-4 — host primitives. Each
+    // UI29 §2.1 / UI29-1 / UI29-2 / UI29-3 / UI29-4 / UI38 — host primitives. Each
     // lowers to the host platform's native widget (DOM <input>,
     // SwiftUI TextField, Qt TextInput, etc.). HostDialog (UI29-1) is
     // the 16th kernel primitive, added after mosaic-pkg-dialog v0.1.0
@@ -153,6 +153,8 @@ const PRIMITIVES: &[&str] = &[
     // HostSlider (UI29-3) preserves the platform slider's adjustable
     // accessibility role, announced range/value, keyboard increments,
     // pointer/touch drag behavior, and native thumb/track rendering.
+    // HostSwitch (UI38) preserves the platform switch role, announced
+    // on/off state, keyboard/touch behavior, and native track/thumb rendering.
     "HostInput",
     "HostButton",
     "HostTable",
@@ -166,6 +168,7 @@ const PRIMITIVES: &[&str] = &[
     "HostTooltip",
     "HostNumberInput",
     "HostSlider",
+    "HostSwitch",
     // UI31 — `HostTable` sibling primitives. Recognised by the React
     // emitter's HostTable dispatcher pre-UI31; promoting to PRIMITIVES
     // here so the parser stops routing them through the unknown-
@@ -2838,6 +2841,10 @@ mod tests {
             PRIMITIVES.contains(&"HostSlider"),
             "UI29-3 registered HostSlider as a kernel primitive"
         );
+        assert!(
+            PRIMITIVES.contains(&"HostSwitch"),
+            "UI38 registered HostSwitch as a kernel primitive"
+        );
         // UI31 — HostTable family structural sub-tags.
         assert!(
             PRIMITIVES.contains(&"HostTableColGroup"),
@@ -2879,6 +2886,23 @@ layout Volume {
         let output = compile(source, None).expect("HostSlider layout must compile");
         assert_eq!(output.def.root.tag, "HostSlider");
         assert_eq!(output.def.root.props.len(), 7);
+    }
+
+    #[test]
+    fn host_switch_compiles_as_a_kernel_primitive() {
+        let source = r#"
+layout Notifications {
+  HostSwitch [ notifications ] (
+    label: "Notifications",
+    checked: true,
+    disabled: false,
+    onToggle: emit: onNotificationsChange
+  )
+}
+"#;
+        let output = compile(source, None).expect("HostSwitch layout must compile");
+        assert_eq!(output.def.root.tag, "HostSwitch");
+        assert_eq!(output.def.root.props.len(), 4);
     }
 
     #[test]

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - HostSwitch capability tracking
+
+- Native-complete analysis reports `primitive.switch-unimplemented` on every
+  native backend until its real switch lowering ships.
+- This keeps newly registered `HostSwitch` packages from being mislabeled as
+  native-complete or silently lowered as checkboxes while emitter work proceeds.
+
 ## [Unreleased] - all-five-native HostSlider capability
 
 - Native-complete analysis now accepts `HostSlider` on XAML after its native

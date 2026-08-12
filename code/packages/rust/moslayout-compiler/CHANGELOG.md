@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added - HostSwitch kernel contract
+
+- Registered `HostSwitch` as the portable native on/off control, keeping
+  authored label, checked, disabled, and change-event bindings in shared layout
+  IR for backend lowering.
+
 ### Added - HostSlider kernel contract
 
 - Registered `HostSlider` as the portable native range-input primitive, keeping

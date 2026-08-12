@@ -102,7 +102,7 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "For",
     // Host primitives (§2.1 "Host*" rows + UI29-1's HostDialog +
     // UI29-2's HostCheckbox/HostRadio + UI29-3's HostSlider + UI29-4's
-    // HostLink/HostTooltip/HostNumberInput).
+    // HostLink/HostTooltip/HostNumberInput + UI38's HostSwitch).
     // HostDialog was added in UI29-1 after mosaic-pkg-dialog v0.1.0
     // demonstrated that composing a dialog from Box+Column+Text loses
     // modal/focus/top-layer/accessibility semantics that only the
@@ -125,6 +125,8 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // HostSlider preserves the native adjustable role, announced
     // range/value, keyboard increments, drag behavior, and platform
     // thumb/track rendering that layout composition cannot reproduce.
+    // HostSwitch similarly preserves the native switch role, announced
+    // on/off state, keyboard/touch behavior, and platform rendering.
     "HostInput",
     "HostButton",
     "HostTable",
@@ -137,6 +139,7 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     "HostTooltip",
     "HostNumberInput",
     "HostSlider",
+    "HostSwitch",
     // UI31 — `HostTable` sibling primitives. The structural sub-tags
     // (HostTableColGroup / HostTableHead / HostTableBody /
     // HostTableFoot) plus the cell-defining `Col` lower together with
@@ -1399,15 +1402,16 @@ version = "1"
 
     #[test]
     fn kernel_set_covers_ui29_section_2_1() {
-        // The twenty-eight primitives — fifteen from UI29 §2.1, plus
+        // The twenty-nine primitives — fifteen from UI29 §2.1, plus
         // HostDialog added in UI29-1 (#3846), plus HostCheckbox and
         // HostRadio added in UI29-2 (#3978), plus HostLink,
         // HostTooltip, and HostNumberInput added in UI29-4, plus the
         // five UI31 HostTable structural sub-tags (HostTableColGroup,
         // HostTableHead, HostTableBody, HostTableFoot, Col), plus the
         // typed HostSurface native composition boundary, plus the
-        // UI29-3 HostSlider range-input primitive.
-        let expected_28 = [
+        // UI29-3 HostSlider range-input primitive, plus the UI38
+        // HostSwitch on/off primitive.
+        let expected_29 = [
             "Box",
             "Row",
             "Column",
@@ -1431,13 +1435,14 @@ version = "1"
             "HostTooltip",
             "HostNumberInput",
             "HostSlider",
+            "HostSwitch",
             "HostTableColGroup",
             "HostTableHead",
             "HostTableBody",
             "HostTableFoot",
             "Col",
         ];
-        for name in &expected_28 {
+        for name in &expected_29 {
             assert!(
                 KERNEL_PRIMITIVES.contains(name),
                 "kernel must include `{name}`"

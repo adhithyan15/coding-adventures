@@ -1131,6 +1131,10 @@ fn collect_native_degradations(
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
         )),
+        "HostSwitch" if backend.is_native() => Some((
+            "primitive.switch-unimplemented",
+            "the backend does not yet lower HostSwitch to its native on/off control",
+        )),
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -4776,6 +4780,61 @@ layout Volume {
             "XAML now has a native adjustable slider lowering: {:?}",
             xaml_report.degradations
         );
+    }
+
+    #[test]
+    fn host_switch_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-settings", &["Settings"]);
+        fs::write(
+            pkg.path().join("src/Settings.mll"),
+            r#"
+layout Settings {
+  HostSwitch [ root ] (
+    label: "Notifications",
+    checked: true,
+    disabled: false
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("switch capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
+            assert_eq!(
+                report.degradations[0].code,
+                "primitive.switch-unimplemented"
+            );
+            assert_eq!(report.degradations[0].layout_path, "root");
+            assert_eq!(
+                report.degradations[0].primitive.as_deref(),
+                Some("HostSwitch")
+            );
+        }
     }
 
     #[test]
