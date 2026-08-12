@@ -529,7 +529,9 @@ unblocks multiple downstream targets; never count source generation as completio
         continuous change, and release-value commit semantics.
       - [x] Qt Quick Controls `Slider`, including range, step, disabled,
         continuous movement, and release-time commit semantics.
-      - [ ] SwiftUI and XAML native lowerings.
+      - [x] SwiftUI `Slider`, including range, step, disabled, continuous
+        movement, and exact release-value commit semantics.
+      - [ ] XAML native lowering.
     - [ ] Export the native-complete standard `Slider` facade.
   - [ ] Add native select/picker and switch contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.

@@ -1122,7 +1122,7 @@ fn collect_native_degradations(
             if backend.is_native()
                 && !matches!(
                     backend,
-                    Backend::Compose | Backend::Flutter | Backend::Qt
+                    Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI
                 ) => Some((
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
@@ -4737,32 +4737,43 @@ layout Volume {
             qt_report.degradations
         );
 
-        for backend in [Backend::SwiftUI, Backend::Xaml] {
-            let out = TempDir::new().unwrap();
-            let report = analyze_package_degradations(
-                &BuildOptions {
-                    package_root: pkg.path().to_path_buf(),
-                    output_root: out.path().to_path_buf(),
-                    backend,
-                    emit_project: false,
-                    theme: None,
-                },
-                BuildProfile::NativeComplete,
-            )
-            .expect("slider capability analysis");
+        let swiftui_out = TempDir::new().unwrap();
+        let swiftui_report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: swiftui_out.path().to_path_buf(),
+                backend: Backend::SwiftUI,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("SwiftUI slider capability analysis");
+        assert!(
+            swiftui_report.native_complete,
+            "SwiftUI now has a native adjustable slider lowering: {:?}",
+            swiftui_report.degradations
+        );
 
-            assert!(!report.native_complete, "{backend:?} must remain honest");
-            assert_eq!(
-                report.degradations.len(),
-                1,
-                "unexpected {backend:?} report"
-            );
-            assert_eq!(
-                report.degradations[0].code,
-                "primitive.slider-unimplemented"
-            );
-            assert_eq!(report.degradations[0].layout_path, "root");
-        }
+        let xaml_out = TempDir::new().unwrap();
+        let xaml_report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: xaml_out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("XAML slider capability analysis");
+        assert!(!xaml_report.native_complete, "XAML must remain honest");
+        assert_eq!(xaml_report.degradations.len(), 1);
+        assert_eq!(
+            xaml_report.degradations[0].code,
+            "primitive.slider-unimplemented"
+        );
+        assert_eq!(xaml_report.degradations[0].layout_path, "root");
     }
 
     #[test]

@@ -897,6 +897,72 @@ struct PartStyleEntry {
 type PartStyleMap = HashMap<String, PartStyleEntry>;
 const CONCRETE_MODIFIER_HELPERS_KEY: &str = "_mosaic:concrete-modifier-helpers";
 
+const SLIDER_HELPER_SWIFT: &str = r#"private struct _MosaicSlider: View {
+    let value: Double
+    let minimum: Double
+    let maximum: Double
+    let step: Double?
+    let disabled: Bool
+    let onChange: ((Double) -> Void)?
+    let onCommit: ((Double) -> Void)?
+    @State private var liveValue: Double
+
+    init(
+        value: Double,
+        minimum: Double,
+        maximum: Double,
+        step: Double?,
+        disabled: Bool,
+        onChange: ((Double) -> Void)?,
+        onCommit: ((Double) -> Void)?
+    ) {
+        self.value = value
+        self.minimum = minimum
+        self.maximum = maximum
+        self.step = step
+        self.disabled = disabled
+        self.onChange = onChange
+        self.onCommit = onCommit
+        _liveValue = State(initialValue: value)
+    }
+
+    private var binding: Binding<Double> {
+        Binding(
+            get: { liveValue },
+            set: { newValue in
+                liveValue = newValue
+                onChange?(newValue)
+            }
+        )
+    }
+
+    private func editingChanged(_ editing: Bool) {
+        if !editing { onCommit?(liveValue) }
+    }
+
+    var body: some View {
+        Group {
+            if let step, step > 0 {
+                Slider(
+                    value: binding,
+                    in: minimum...maximum,
+                    step: step,
+                    onEditingChanged: editingChanged
+                )
+            } else {
+                Slider(
+                    value: binding,
+                    in: minimum...maximum,
+                    onEditingChanged: editingChanged
+                )
+            }
+        }
+        .disabled(disabled)
+        .onChange(of: value) { liveValue = $0 }
+    }
+}
+"#;
+
 const HOVER_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicHoverState: View {
     @State private var isHovered = false
     private let content: (Bool) -> AnyView
@@ -2124,6 +2190,10 @@ pub fn from_pipeline(
         out.push_str(PRESS_STATE_HELPER_SWIFT);
         writeln!(out).unwrap();
     }
+    if layout_contains_tag(&layout.root, "HostSlider") {
+        out.push_str(SLIDER_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
     if layout_contains_native_table(&layout.root) {
         out.push_str(TABLE_ROW_HELPER_SWIFT);
         writeln!(out).unwrap();
@@ -3099,6 +3169,7 @@ fn emit_view_tree(
         // platform-conditional emission; for v1 the default style ships.
         "HostCheckbox" => emit_host_checkbox(node, indent)?,
         "HostRadio" => emit_host_radio(node, indent)?,
+        "HostSlider" => emit_host_slider(node, indent, emits)?,
 
         // UI29-4 kernel — `HostLink` lowers to SwiftUI's `Link`
         // (iOS 14+/macOS 11+), `HostTooltip` to the `.help(...)`
@@ -4387,6 +4458,107 @@ fn emit_host_radio(node: &LayoutNode, indent: usize) -> Result<String, PipelineE
     }
 
     Ok(out)
+}
+
+/// Lower `HostSlider` to SwiftUI's native adjustable `Slider`.
+///
+/// A generated state wrapper retains the exact live drag value until SwiftUI's
+/// `onEditingChanged(false)` release callback. Rust-driven value changes still
+/// synchronize into that buffer, preserving Mosaic's controlled-state model.
+fn emit_host_slider(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let inner = " ".repeat(indent + 4);
+    let number_expr = |name: &str, default: &str| -> Result<String, PipelineEmitError> {
+        Ok(match find_prop_value(node, name) {
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                let field = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+                field
+            }
+            Some(LayoutPropValue::Number(number)) => number.to_string(),
+            Some(LayoutPropValue::Expr(expression)) => expression.clone(),
+            _ => default.to_string(),
+        })
+    };
+    let callback = |prop: &str| -> Result<String, PipelineEmitError> {
+        let Some(emit_name) = find_emit_ref_prop(node, prop) else {
+            return Ok("nil".to_string());
+        };
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        let args = emits
+            .iter()
+            .find(|emit| emit.name == *emit_name)
+            .map(host_slider_event_args)
+            .transpose()?
+            .unwrap_or_default();
+        let event = if args.is_empty() {
+            format!(".{case_name}")
+        } else {
+            format!(".{case_name}({args})")
+        };
+        Ok(format!("{{ value in dispatch({event}) }}"))
+    };
+
+    let step = match find_prop_value(node, "step") {
+        Some(LayoutPropValue::Number(step)) if *step > 0.0 => step.to_string(),
+        Some(LayoutPropValue::Number(_)) => "nil".to_string(),
+        _ => "1".to_string(),
+    };
+    let disabled = match find_prop_value(node, "disabled") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let field = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            field
+        }
+        Some(LayoutPropValue::Keyword(value)) if value == "true" || value == "false" => {
+            value.clone()
+        }
+        _ => "false".to_string(),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_MosaicSlider(").unwrap();
+    writeln!(out, "{inner}value: {},", number_expr("value", "0")?).unwrap();
+    writeln!(out, "{inner}minimum: {},", number_expr("min", "0")?).unwrap();
+    writeln!(out, "{inner}maximum: {},", number_expr("max", "100")?).unwrap();
+    writeln!(out, "{inner}step: {step},").unwrap();
+    writeln!(out, "{inner}disabled: {disabled},").unwrap();
+    writeln!(out, "{inner}onChange: {},", callback("onChange")?).unwrap();
+    writeln!(out, "{inner}onCommit: {}", callback("onCommit")?).unwrap();
+    write!(out, "{pad})").unwrap();
+    if let Some(part_name) = &node.part_name {
+        write!(
+            out,
+            ".accessibilityIdentifier(\"{}\")",
+            escape_swift_string(part_name)
+        )
+        .unwrap();
+    }
+    writeln!(out).unwrap();
+    Ok(out)
+}
+
+fn host_slider_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+    emit.params
+        .iter()
+        .map(|param| {
+            let field = to_camel_case_first_lower(&param.name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            let value = match &param.r#type {
+                EmitPayloadType::Number => "value",
+                EmitPayloadType::Text | EmitPayloadType::Color => "String(value)",
+                EmitPayloadType::Bool => "value != 0",
+                EmitPayloadType::Component(_) => "AnyView(EmptyView())",
+            };
+            Ok(format!("{field}: {value}"))
+        })
+        .collect::<Result<Vec<_>, _>>()
+        .map(|parts| parts.join(", "))
 }
 
 // =====================================================================
@@ -9374,6 +9546,80 @@ mod tests {
             ),
             "expected positive-transition Binding, got:\n{out}"
         );
+    }
+
+    #[test]
+    fn host_slider_lowers_native_range_step_disabled_and_events() {
+        let m = component(
+            "Volume",
+            vec![
+                slot("value", SlotType::Number, true),
+                slot("disabled", SlotType::Bool, true),
+            ],
+            vec![
+                emit("onChange", vec![param("value", EmitPayloadType::Number)]),
+                emit("onCommit", vec![param("value", EmitPayloadType::Number)]),
+            ],
+        );
+        let l = layout_with(
+            "Volume",
+            leaf(
+                "HostSlider",
+                vec![
+                    prop_slot_ref("value", "value"),
+                    LayoutProp {
+                        name: "min".to_string(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".to_string(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".to_string(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    prop_slot_ref("disabled", "disabled"),
+                    prop_emit_ref("onChange", "onChange"),
+                    prop_emit_ref("onCommit", "onCommit"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Volume"))
+            .expect("emit native SwiftUI slider")
+            .output;
+        assert!(out.contains("private struct _MosaicSlider: View"));
+        assert!(out.contains("Slider(\n                    value: binding"));
+        assert!(out.contains("value: value,"));
+        assert!(out.contains("minimum: 0,"));
+        assert!(out.contains("maximum: 100,"));
+        assert!(out.contains("step: 5,"));
+        assert!(out.contains("disabled: disabled,"));
+        assert!(out.contains("onChange: { value in dispatch(.change(value: value)) },"));
+        assert!(out.contains("onCommit: { value in dispatch(.commit(value: value)) }"));
+        assert!(out.contains("if !editing { onCommit?(liveValue) }"));
+        assert!(out.contains(".onChange(of: value) { liveValue = $0 }"));
+    }
+
+    #[test]
+    fn host_slider_step_zero_is_continuous_and_callbacks_are_optional() {
+        let m = component("Opacity", vec![], vec![]);
+        let l = layout_with(
+            "Opacity",
+            leaf(
+                "HostSlider",
+                vec![LayoutProp {
+                    name: "step".to_string(),
+                    value: LayoutPropValue::Number(0.0),
+                }],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Opacity"))
+            .expect("emit continuous SwiftUI slider")
+            .output;
+        assert!(out.contains("step: nil,"));
+        assert!(out.contains("onChange: nil,"));
+        assert!(out.contains("onCommit: nil"));
     }
 
     /// UI29-2 SwiftUI test 9a — regression: a `group:` string with an

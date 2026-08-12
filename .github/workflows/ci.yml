@@ -1027,6 +1027,15 @@ jobs:
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
           swift build --package-path "$toolkit_output/swiftui"
 
+          slider_output="$RUNNER_TEMP/mosaic-swift-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-swiftui/fixtures/host-slider --backend swiftui --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$slider_output/swiftui"
+          (
+            cd "$slider_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-host-slider-ios" CODE_SIGNING_ALLOWED=NO build
+          )
+
       - name: Round-trip Rust engine through standard Qt binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
         shell: bash

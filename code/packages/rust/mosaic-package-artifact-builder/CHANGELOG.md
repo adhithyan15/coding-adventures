@@ -1,10 +1,10 @@
 # Changelog
 
-## [Unreleased] - Qt HostSlider capability
+## [Unreleased] - SwiftUI HostSlider capability
 
-- Native-complete analysis now accepts `HostSlider` on Compose, Flutter, and Qt
-  after their real adjustable range-control lowerings, while continuing to
-  report `primitive.slider-unimplemented` on SwiftUI and XAML.
+- Native-complete analysis now accepts `HostSlider` on Compose, Flutter, Qt,
+  and SwiftUI after their real adjustable range-control lowerings, while
+  continuing to report `primitive.slider-unimplemented` on XAML.
 - This keeps newly registered `HostSlider` packages from being mislabeled as
   native-complete while emitter work proceeds one backend at a time.
 
