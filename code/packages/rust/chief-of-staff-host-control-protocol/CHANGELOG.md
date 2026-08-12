@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an authenticated installed-model-tool catalog request/response pair using
+  the same exact bounded definition encoding required by tool completions.
 - Add a distinct authenticated execute-tool request/response pair so a
   model-returned call can cross to parent-owned D18D execution and return its
   exact structured result without giving the child direct tool authority.

@@ -746,6 +746,17 @@ impl AuthorityBackedHostDataPlaneService {
         })
     }
 
+    fn list_model_tools(
+        &self,
+        binding: &HostPipelineBinding,
+        id: chief_of_staff_host_control_protocol::RequestId,
+    ) -> Result<DataPlaneResponse, DataPlaneFailure> {
+        Ok(DataPlaneResponse::ModelToolsListed {
+            id,
+            tools: self.model_tools.definitions(binding)?,
+        })
+    }
+
     fn execute_tool(
         &self,
         binding: &HostPipelineBinding,
@@ -875,12 +886,15 @@ impl HostDataPlaneService for AuthorityBackedHostDataPlaneService {
                 self.complete_with_tools(binding, *id, call)
             }
             DataPlaneRequest::ExecuteTool { id, call } => self.execute_tool(binding, *id, call),
+            DataPlaneRequest::ListModelTools { id } => self.list_model_tools(binding, *id),
         }?;
         validate_data_plane_response(&response).map_err(|_| match request {
             DataPlaneRequest::Complete { .. } | DataPlaneRequest::CompleteWithTools { .. } => {
                 DataPlaneFailure::Completion
             }
-            DataPlaneRequest::ExecuteTool { .. } => DataPlaneFailure::Internal,
+            DataPlaneRequest::ExecuteTool { .. } | DataPlaneRequest::ListModelTools { .. } => {
+                DataPlaneFailure::Internal
+            }
             _ => DataPlaneFailure::Channel,
         })?;
         Ok(response)
@@ -998,7 +1012,7 @@ fn request_is_authorized(binding: &HostPipelineBinding, request: &DataPlaneReque
                     && model.temperature().to_bits() == call.completion.temperature.to_bits()
                     && Some(model.max_tokens()) == call.completion.max_tokens
             }),
-        DataPlaneRequest::ExecuteTool { .. } => {
+        DataPlaneRequest::ExecuteTool { .. } | DataPlaneRequest::ListModelTools { .. } => {
             binding.launch_bindings().level_one_model().is_some()
         }
     }
@@ -1331,6 +1345,10 @@ mod tests {
                     failure: DataPlaneFailure::Completion,
                 },
                 DataPlaneRequest::ExecuteTool { id, .. } => DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Internal,
+                },
+                DataPlaneRequest::ListModelTools { id } => DataPlaneResponse::Failed {
                     id: *id,
                     failure: DataPlaneFailure::Internal,
                 },
@@ -1798,6 +1816,17 @@ mod tests {
         };
         assert_eq!(completion_result.text, "Bring an umbrella");
         assert_eq!(completion_result.provider.vendor, "fixture");
+
+        let listed = service
+            .execute(
+                &binding,
+                &DataPlaneRequest::ListModelTools { id: request_id(5) },
+            )
+            .unwrap();
+        let DataPlaneResponse::ModelToolsListed { tools, .. } = listed else {
+            panic!("expected model-tools-listed response");
+        };
+        assert_eq!(tools, tool_call.tools);
 
         let tool_completed = service
             .execute(

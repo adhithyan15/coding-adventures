@@ -26,7 +26,8 @@ pub use data_plane::{
 use data_plane::{DataRecord, ACKNOWLEDGED_RESPONSE_TAG, ACKNOWLEDGE_REQUEST_TAG};
 use data_plane::{
     COMPLETED_RESPONSE_TAG, COMPLETE_REQUEST_TAG, COMPLETE_WITH_TOOLS_REQUEST_TAG,
-    EXECUTE_TOOL_REQUEST_TAG, FAILED_RESPONSE_TAG, PUBLISHED_RESPONSE_TAG, PUBLISH_REQUEST_TAG,
+    EXECUTE_TOOL_REQUEST_TAG, FAILED_RESPONSE_TAG, LIST_MODEL_TOOLS_REQUEST_TAG,
+    MODEL_TOOLS_LISTED_RESPONSE_TAG, PUBLISHED_RESPONSE_TAG, PUBLISH_REQUEST_TAG,
     RECEIVED_RESPONSE_TAG, RECEIVE_REQUEST_TAG, TOOL_COMPLETED_RESPONSE_TAG,
     TOOL_EXECUTED_RESPONSE_TAG,
 };
@@ -553,6 +554,11 @@ impl ChildControl {
         })
     }
 
+    /// Encrypt one request for the exact parent-installed model tool catalog.
+    pub fn request_model_tools(&mut self) -> Result<(RequestId, Vec<u8>), ControlError> {
+        self.send_request(|id| DataPlaneRequest::ListModelTools { id })
+    }
+
     /// Authenticate and apply one exact next orchestrator record.
     pub fn receive_orchestrator(
         &mut self,
@@ -802,7 +808,8 @@ fn decode_record(bytes: &[u8]) -> Result<ControlRecord, ControlError> {
         | ACKNOWLEDGE_REQUEST_TAG
         | COMPLETE_REQUEST_TAG
         | COMPLETE_WITH_TOOLS_REQUEST_TAG
-        | EXECUTE_TOOL_REQUEST_TAG => {
+        | EXECUTE_TOOL_REQUEST_TAG
+        | LIST_MODEL_TOOLS_REQUEST_TAG => {
             match data_plane::decode(header[5], &bytes[HEADER_BYTES..])? {
                 DataRecord::Request(request) => Ok(ControlRecord::Request(request)),
                 DataRecord::Response(_) => Err(ControlError::InvalidDataPlaneRecord),
@@ -814,6 +821,7 @@ fn decode_record(bytes: &[u8]) -> Result<ControlRecord, ControlError> {
         | COMPLETED_RESPONSE_TAG
         | TOOL_COMPLETED_RESPONSE_TAG
         | TOOL_EXECUTED_RESPONSE_TAG
+        | MODEL_TOOLS_LISTED_RESPONSE_TAG
         | FAILED_RESPONSE_TAG => match data_plane::decode(header[5], &bytes[HEADER_BYTES..])? {
             DataRecord::Response(response) => Ok(ControlRecord::Response(response)),
             DataRecord::Request(_) => Err(ControlError::InvalidDataPlaneRecord),
@@ -1075,10 +1083,26 @@ mod tests {
         );
 
         let tool_call = tool_completion_call();
-        let (tool_completion_id, frame) = child.request_tool_completion(tool_call.clone()).unwrap();
-        assert_eq!(tool_completion_id.get(), 5);
+        let (model_tools_id, frame) = child.request_model_tools().unwrap();
+        assert_eq!(model_tools_id.get(), 5);
         assert_eq!(
             orchestrator.receive_child(&frame, 6).unwrap(),
+            ChildEvent::Request(DataPlaneRequest::ListModelTools { id: model_tools_id })
+        );
+        let model_tools_listed = DataPlaneResponse::ModelToolsListed {
+            id: model_tools_id,
+            tools: tool_call.tools.clone(),
+        };
+        let frame = orchestrator.respond(model_tools_listed.clone()).unwrap();
+        assert_eq!(
+            child.receive_orchestrator(&frame).unwrap(),
+            OrchestratorEvent::Response(model_tools_listed)
+        );
+
+        let (tool_completion_id, frame) = child.request_tool_completion(tool_call.clone()).unwrap();
+        assert_eq!(tool_completion_id.get(), 6);
+        assert_eq!(
+            orchestrator.receive_child(&frame, 7).unwrap(),
             ChildEvent::Request(DataPlaneRequest::CompleteWithTools {
                 id: tool_completion_id,
                 call: Box::new(tool_call),
@@ -1112,9 +1136,9 @@ mod tests {
             arguments: serde_json::json!({}),
         };
         let (tool_execution_id, frame) = child.request_tool_execution(model_call.clone()).unwrap();
-        assert_eq!(tool_execution_id.get(), 6);
+        assert_eq!(tool_execution_id.get(), 7);
         assert_eq!(
-            orchestrator.receive_child(&frame, 7).unwrap(),
+            orchestrator.receive_child(&frame, 8).unwrap(),
             ChildEvent::Request(DataPlaneRequest::ExecuteTool {
                 id: tool_execution_id,
                 call: Box::new(model_call.clone()),
@@ -1135,7 +1159,7 @@ mod tests {
         );
 
         let (failure_id, frame) = child.request_receive(uuid_v7(5), 1).unwrap();
-        orchestrator.receive_child(&frame, 8).unwrap();
+        orchestrator.receive_child(&frame, 9).unwrap();
         let failed = DataPlaneResponse::Failed {
             id: failure_id,
             failure: DataPlaneFailure::Unavailable,
