@@ -839,10 +839,22 @@ Building the panel on `concept_tag` would therefore emit **false etymology at
 scale**, in the one layer of the course whose whole value is that its etymology
 can be trusted. Use `roots:`.
 
-Measured reach at the time of writing: **64 Spanish lessons** carry a `roots:`
-slug shared with at least one other Romance track — enough for the layer to be
-worth generating, and the honest ceiling to design against. (`concept_tag` would
-have offered 63, so the correct key costs nothing in coverage.)
+Measured reach at the time of writing: **76 Spanish lessons** carry a `roots:`
+slug shared with at least one other Romance track. (`concept_tag` would have
+offered 63, so the correct key costs nothing in coverage.)
+
+**But `roots:` is not yet sufficient either, and this is the open blocker.** The
+field records every etymon a lesson *discusses*, not the etymon of its
+**headword**, and a cousin panel needs the latter. `IT-C20-incontrare` declares
+`cognoscere-latin` because a second meeting-verb hides in its past tense — true
+of the lesson, false as a claim that *incontrare* descends from *cognoscere* —
+and that pairs it with Spanish *conocer*. Auditing the strict candidate set by
+hand found three such pairs out of 25.
+
+Before the panel can be generated, the schema needs to answer the question the
+panel asks: either a `headword_root:` field, or a convention that the first
+entry in `roots:` is the headword's own. A one-root heuristic gets 20 of 21
+pairs right, which is a proxy, not a fix.
 
 #### The budget and the guardrail
 
